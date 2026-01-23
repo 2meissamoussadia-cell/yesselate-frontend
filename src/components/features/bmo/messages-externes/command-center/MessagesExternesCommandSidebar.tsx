@@ -198,7 +198,7 @@ export const MessagesExternesCommandSidebar = React.memo(function MessagesExtern
 
                     {category.badge !== undefined && (
                       <Badge
-                        variant="outline"
+                        variant="default"
                         className={cn(
                           'h-5 min-w-5 px-1.5 text-xs font-medium transition-all duration-200',
                           category.badgeType === 'critical'
@@ -215,7 +215,7 @@ export const MessagesExternesCommandSidebar = React.memo(function MessagesExtern
                 )}
 
                 {/* Collapsed Badge */}
-                {collapsed && category.badge !== undefined && category.badge > 0 && (
+                {collapsed && category.badge !== undefined && Number(category.badge) > 0 && (
                   <div
                     className={cn(
                       'absolute -top-1 -right-1 h-4 min-w-4 px-1 rounded-full text-xs flex items-center justify-center font-medium transition-transform duration-200',

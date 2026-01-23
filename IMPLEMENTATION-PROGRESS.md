@@ -53,15 +53,15 @@
 - [ ] Intégrer dans ArbitragesContentRouter
 - [ ] Intégrer dans ProjetsContentRouter
 
-### Phase 3: DetailModals (Pattern Overlay)
-- [ ] EventDetailModal (transformer EventModal.tsx)
-- [ ] EmployeeDetailModal (créer nouveau)
-- [ ] Améliorer ContratDetailModal (prev/next)
-- [ ] BlockedDossierDetailModal
-- [ ] AlertDetailModal
-- [ ] PaiementDetailModal (vérifier)
-- [ ] ArbitrageDetailModal
-- [ ] ProjetDetailModal (vérifier si GenericDetailModal utilisé)
+### Phase 3: DetailModals (Pattern Overlay) ✅ COMPLÉTÉ
+- [x] EventDetailModal - Existe déjà et utilise GenericDetailModal ✅
+- [x] EmployeeDetailModal - Existe déjà et utilise GenericDetailModal ✅
+- [x] ContratDetailModal - Existe avec prev/next (utilise Dialog, peut être amélioré pour GenericDetailModal)
+- [x] BlockedDossierDetailModal - Existe déjà et utilise GenericDetailModal ✅
+- [x] AlertDetailModal - Existe déjà et utilise GenericDetailModal ✅
+- [x] PaiementDetailModal - Existe (utilise UniversalDetailModal)
+- [x] ArbitrageDetailModal - Créé et utilise GenericDetailModal ✅
+- [x] ProjetDetailModal - Existe (utilise UniversalDetailModal)
 
 ### Phase 4: Notifications (8 modules)
 - [ ] validation-bc

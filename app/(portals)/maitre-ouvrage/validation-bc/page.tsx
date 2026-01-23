@@ -46,6 +46,7 @@ import {
   BarChart3,
   Activity,
 } from 'lucide-react';
+import { NotificationsPanel } from '@/components/shared/NotificationsPanel';
 
 // ================================
 // Main Component
@@ -355,6 +356,13 @@ function ValidationBCPageContent() {
 
       {/* Command Palette */}
       <ValidationCommandPalette />
+
+      {/* Notifications Panel */}
+      <NotificationsPanel
+        isOpen={notificationsPanelOpen}
+        onClose={() => setNotificationsPanelOpen(false)}
+        moduleName="Validation-BC"
+      />
     </div>
   );
 }

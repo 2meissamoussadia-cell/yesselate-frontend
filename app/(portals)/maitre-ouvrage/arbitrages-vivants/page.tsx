@@ -46,6 +46,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { NotificationsPanel } from '@/components/shared/NotificationsPanel';
 
 // ================================
 // Types
@@ -477,9 +478,11 @@ export default function ArbitragesVivantsPage() {
       />
 
       {/* Notifications Panel */}
-      {notificationsPanelOpen && (
-        <NotificationsPanel onClose={() => setNotificationsPanelOpen(false)} />
-      )}
+      <NotificationsPanel
+        isOpen={notificationsPanelOpen}
+        onClose={() => setNotificationsPanelOpen(false)}
+        moduleName="Arbitrages Vivants"
+      />
 
       {/* Help Modal */}
       <ArbitragesHelpModal

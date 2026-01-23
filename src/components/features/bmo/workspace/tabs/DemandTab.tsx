@@ -12,6 +12,7 @@ import { AssignModal } from '@/components/features/bmo/modals/AssignModal';
 import { RequestComplementModal } from '@/components/features/bmo/modals/RequestComplementModal';
 import { Demand360Panel } from '@/components/features/bmo/workspace/tabs/Demand360Panel';
 import { Check, Clock, RefreshCw } from 'lucide-react';
+import { getPriorityText } from '@/domain/demandes/service';
 
 type DemandEvent = {
   id: string;
@@ -29,7 +30,7 @@ type DemandWithEvents = Demand & {
   requestedAt?: string | Date;
 };
 
-const prioText = (p: Priority) => (p === 'urgent' ? 'Urgent' : p === 'high' ? 'Élevée' : p === 'normal' ? 'Normale' : 'Basse');
+// prioText est maintenant importé depuis domain/demandes/service (getPriorityText)
 
 export function DemandTab({ id }: { id: string }) {
   const { updateTabTitle } = useWorkspaceStore();
@@ -154,7 +155,7 @@ export function DemandTab({ id }: { id: string }) {
 
                 <div className="mt-2 flex flex-wrap gap-2 text-xs">
                   <span className={cn('px-2 py-0.5 rounded-full border border-[rgb(var(--border)/0.5)] text-[rgb(var(--muted))]')}>
-                    Priorité: {prioText(priority)}
+                    Priorité: {getPriorityText(priority)}
                   </span>
                   <span className={cn('px-2 py-0.5 rounded-full border border-[rgb(var(--border)/0.5)] text-[rgb(var(--muted))]')}>
                     Statut: {status}

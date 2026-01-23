@@ -92,3 +92,9 @@ export interface ApproverLevel {
   threshold?: number;
 }
 
+// ============================================
+// Types utilitaires
+// ============================================
+
+export type RiskScore = number; // 0-25 (probabilité 1-5 × impact 1-5)
+

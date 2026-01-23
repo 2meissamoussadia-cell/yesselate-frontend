@@ -9,6 +9,7 @@ import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Calendar, Users, Clock, ArrowUpRight } from 'lucide-react';
+import { VirtualizedList } from '@/presentation/components/VirtualizedList/VirtualizedList';
 
 export function ScheduledInstancesView() {
   const instances = [
@@ -41,12 +42,16 @@ export function ScheduledInstancesView() {
         </p>
       </div>
 
-      <div className="space-y-4">
-        {instances.map((instance) => (
-          <div
-            key={instance.id}
-            className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-4"
-          >
+      {/* ✅ Liste virtualisée pour performance */}
+      <VirtualizedList
+        items={instances}
+        estimateSize={250}
+        overscan={3}
+        containerClassName="h-[600px]"
+        className="space-y-4"
+        getItemKey={(instance) => instance.id}
+        renderItem={(instance) => (
+          <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-4">
             <div className="flex items-start justify-between mb-3">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
@@ -96,8 +101,8 @@ export function ScheduledInstancesView() {
               </Button>
             </div>
           </div>
-        ))}
-      </div>
+        )}
+      />
     </div>
   );
 }

@@ -386,6 +386,7 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
                            disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                 disabled={!canAct || actionLoading}
                 onClick={() => setConfirmAction('validate')}
+                data-testid="validate-button"
               >
                 <Check className="w-4 h-4" />
                 <span>Valider</span>
@@ -396,6 +397,7 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
                            disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                 disabled={!canAct || actionLoading}
                 onClick={() => setConfirmAction('reject')}
+                data-testid="reject-button"
               >
                 <X className="w-4 h-4" />
                 <span>Rejeter</span>
@@ -468,22 +470,25 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
                 </div>
               </div>
               
-              <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/50">
+              <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/50" data-testid="risk-score">
                 <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
                   <Shield className="w-3 h-3" />
                   Risque global
                 </div>
-                <div className={cn(
-                  "font-semibold",
-                  riskLevel === 'critical' ? "text-rose-500" : 
-                  riskLevel === 'high' ? "text-amber-500" : 
-                  riskLevel === 'medium' ? "text-yellow-500" : 
-                  "text-emerald-500"
-                )}>
+                <div 
+                  className={cn(
+                    "font-semibold",
+                    riskLevel === 'critical' ? "text-rose-500" : 
+                    riskLevel === 'high' ? "text-amber-500" : 
+                    riskLevel === 'medium' ? "text-yellow-500" : 
+                    "text-emerald-500"
+                  )}
+                  data-testid="risk-score-value"
+                >
                   {maxRiskScore > 0 ? `${maxRiskScore}/100` : '—'}
                 </div>
                 {riskLevel && (
-                  <div className="text-xs mt-1 capitalize text-slate-400">{riskLevel}</div>
+                  <div className="text-xs mt-1 capitalize text-slate-400" data-testid="risk-level">{riskLevel}</div>
                 )}
               </div>
             </div>
@@ -640,7 +645,7 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
                   </div>
                   
                   {budgetUsage !== null && (
-                    <div className="mt-3 space-y-2">
+                    <div className="mt-3 space-y-2" data-testid="budget-usage">
                       <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                         <div 
                           className={cn(

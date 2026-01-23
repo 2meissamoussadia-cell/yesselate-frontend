@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { FluentCard } from '@/components/ui/fluent-card';
 import { FluentButton as Button } from '@/components/ui/fluent-button';
 import { Input } from '@/components/ui/input';
+import { calculateRiskScore } from '@/domain/demandes/service';
 
 type Stakeholder = {
   id: string;
@@ -31,7 +32,7 @@ type Risk = {
   ownerName?: string | null;
 };
 
-const score = (p: number, i: number) => p * i;
+// score est maintenant importé depuis domain/demandes/service (calculateRiskScore)
 
 export function Demand360Panel({ demandId }: { demandId: string }) {
   const [tab, setTab] = useState<'stakeholders' | 'tasks' | 'risks'>('stakeholders');
@@ -76,8 +77,8 @@ export function Demand360Panel({ demandId }: { demandId: string }) {
   const riskSummary = useMemo(() => {
     const worst = [...risks]
       .filter((r) => !r.opportunity)
-      .sort((a, b) => score(b.probability, b.impact) - score(a.probability, a.impact))[0];
-    return worst ? `${worst.category} (score ${score(worst.probability, worst.impact)})` : '—';
+      .sort((a, b) => calculateRiskScore(b.probability, b.impact) - calculateRiskScore(a.probability, a.impact))[0];
+    return worst ? `${worst.category} (score ${calculateRiskScore(worst.probability, worst.impact)})` : '—';
   }, [risks]);
 
   return (
@@ -257,7 +258,7 @@ export function Demand360Panel({ demandId }: { demandId: string }) {
             }}
             disabled={!riskCat.trim()}
           >
-            Ajouter (score {score(riskP, riskI)})
+            Ajouter (score {calculateRiskScore(riskP, riskI)})
           </Button>
 
           <div className="rounded-xl border border-[rgb(var(--border)/0.5)] overflow-hidden">
@@ -271,7 +272,7 @@ export function Demand360Panel({ demandId }: { demandId: string }) {
                       {r.opportunity ? 'Opportunité' : 'Risque'} — {r.category}
                     </div>
                     <div className="text-xs text-[rgb(var(--muted))]">
-                      P{r.probability} × I{r.impact} = <span className="font-semibold">{score(r.probability, r.impact)}</span>
+                      P{r.probability} × I{r.impact} = <span className="font-semibold">{calculateRiskScore(r.probability, r.impact)}</span>
                     </div>
                   </div>
                 </div>

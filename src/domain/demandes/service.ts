@@ -3,7 +3,7 @@
  * Version consolidée - Extrait de la logique métier des composants
  */
 
-import type { Demande, ValidationResult, ApproverLevel, BudgetInfo, Risk } from './types';
+import type { Demande, ValidationResult, ApproverLevel, BudgetInfo, Risk, DemandePriority } from './types';
 
 // ============================================
 // Règles de validation

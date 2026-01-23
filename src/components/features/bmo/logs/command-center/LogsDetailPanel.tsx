@@ -131,6 +131,8 @@ function LogDetailContent({ data }: { data: Record<string, unknown> }) {
 
   const SourceIcon = sourceIcons[source as keyof typeof sourceIcons] || Terminal;
 
+  const hasValue = data.value !== undefined && data.value !== null;
+
   return (
     <div className="space-y-4">
       {/* Title / Message */}
@@ -155,7 +157,7 @@ function LogDetailContent({ data }: { data: Record<string, unknown> }) {
         </div>
       </div>
 
-      {data.value !== undefined && data.value !== null && (
+      {hasValue && (
         <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-bold text-slate-100">{String(data.value)}</span>

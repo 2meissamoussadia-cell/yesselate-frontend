@@ -50,15 +50,13 @@ jest.mock('@/lib/data/employees-mock-data', () => ({
 }));
 
 describe('DelegationsApiService', () => {
-  let service: DelegationsApiService;
-
   beforeEach(() => {
-    service = new DelegationsApiService();
+    jest.clearAllMocks();
   });
 
   describe('getAll', () => {
     it('should return all delegations without filter', async () => {
-      const result = await service.getAll();
+      const result = await delegationsApiService.getAll();
 
       expect(result.data.length).toBeGreaterThan(0);
       expect(result.total).toBeGreaterThan(0);
@@ -68,35 +66,35 @@ describe('DelegationsApiService', () => {
 
     it('should filter by type', async () => {
       const filter: DelegationFilter = { type: 'temporary' };
-      const result = await service.getAll(filter);
+      const result = await delegationsApiService.getAll(filter);
 
       expect(result.data.every(d => d.type === 'temporary')).toBe(true);
     });
 
     it('should filter by status', async () => {
       const filter: DelegationFilter = { status: 'active' };
-      const result = await service.getAll(filter);
+      const result = await delegationsApiService.getAll(filter);
 
       expect(result.data.every(d => d.status === 'active')).toBe(true);
     });
 
     it('should filter by bureau', async () => {
       const filter: DelegationFilter = { bureau: 'BMO' };
-      const result = await service.getAll(filter);
+      const result = await delegationsApiService.getAll(filter);
 
       expect(result.data.every(d => d.fromUser.bureau === 'BMO')).toBe(true);
     });
 
     it('should filter by fromUserId', async () => {
       const filter: DelegationFilter = { fromUserId: 'user-1' };
-      const result = await service.getAll(filter);
+      const result = await delegationsApiService.getAll(filter);
 
       expect(result.data.every(d => d.fromUserId === 'user-1')).toBe(true);
     });
 
     it('should filter by search query', async () => {
       const filter: DelegationFilter = { search: 'Jean' };
-      const result = await service.getAll(filter);
+      const result = await delegationsApiService.getAll(filter);
 
       expect(result.data.length).toBeGreaterThan(0);
       expect(
@@ -119,7 +117,7 @@ describe('DelegationsApiService', () => {
 
   describe('getById', () => {
     it('should return delegation by id', async () => {
-      const result = await service.getById('1');
+      const result = await delegationsApiService.getById('1');
 
       expect(result.id).toBe('1');
       expect(result.fromUserId).toBe('user-1');
@@ -127,7 +125,7 @@ describe('DelegationsApiService', () => {
     });
 
     it('should throw error if delegation not found', async () => {
-      await expect(service.getById('invalid-id')).rejects.toThrow('Delegation invalid-id not found');
+      await expect(delegationsApiService.getById('invalid-id')).rejects.toThrow('Delegation invalid-id not found');
     });
   });
 
@@ -142,7 +140,7 @@ describe('DelegationsApiService', () => {
         validUntil: '2025-02-15'
       };
 
-      const result = await service.create(data);
+      const result = await delegationsApiService.create(data);
 
       expect(result.fromUserId).toBe('user-1');
       expect(result.toUserId).toBe('user-2');

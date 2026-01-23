@@ -5,12 +5,14 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { useDemandesCommandCenterStore } from '@/lib/stores/demandesCommandCenterStore';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { VirtualizedList } from '@/components/shared/VirtualizedList';
+import { useDebounce } from '@/application/hooks/useDebounce';
 import {
   Search,
   CheckCircle,
@@ -29,19 +31,23 @@ const mockValidated = [
 export function DemandesValidatedView() {
   const { openModal } = useDemandesCommandCenterStore();
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // Debounce search query for better performance
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
   const formatAmount = (amount: number) => {
     if (amount >= 1000000) return `${(amount / 1000000).toFixed(1)}M`;
     return amount.toLocaleString('fr-FR');
   };
 
-  const filtered = searchQuery
-    ? mockValidated.filter(
-        (d) =>
-          d.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          d.title.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : mockValidated;
+  const filtered = useMemo(() => {
+    if (!debouncedSearchQuery) return mockValidated;
+    return mockValidated.filter(
+      (d) =>
+        d.id.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+        d.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
+    );
+  }, [debouncedSearchQuery]);
 
   return (
     <div className="p-6 space-y-6 max-w-[1800px] mx-auto">
@@ -68,13 +74,20 @@ export function DemandesValidatedView() {
         </div>
       </div>
 
-      {/* List */}
-      <div className="space-y-2">
-        {filtered.map((demande) => (
-          <div
-            key={demande.id}
-            className="flex items-center gap-4 p-4 rounded-xl border border-slate-700/50 bg-slate-800/30 hover:bg-slate-800/50 transition-colors"
-          >
+      {/* List - Virtualized for performance */}
+      {filtered.length > 0 ? (
+        <VirtualizedList
+          items={filtered}
+          estimateSize={80}
+          overscan={5}
+          containerHeight="calc(100vh - 400px)"
+          containerClassName="rounded-xl border border-slate-700/50 bg-slate-800/30"
+          className="p-2"
+          renderItem={(demande) => (
+            <div
+              key={demande.id}
+              className="flex items-center gap-4 p-4 rounded-xl border border-slate-700/50 bg-slate-800/30 hover:bg-slate-800/50 transition-colors mb-2"
+            >
             {/* Icon */}
             <div className="p-2 rounded-lg bg-emerald-500/10 flex-shrink-0">
               <CheckCircle className="w-5 h-5 text-emerald-400" />
@@ -123,8 +136,13 @@ export function DemandesValidatedView() {
               <ArrowRight className="h-4 w-4" />
             </Button>
           </div>
-        ))}
-      </div>
+        )}
+        />
+      ) : (
+        <div className="p-8 text-center text-slate-500 rounded-xl border border-slate-700/50 bg-slate-800/30">
+          <p className="text-sm">Aucune demande validée trouvée</p>
+        </div>
+      )}
     </div>
   );
 }

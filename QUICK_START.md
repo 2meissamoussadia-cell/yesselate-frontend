@@ -1,151 +1,117 @@
-# ✅ IMPLÉMENTATION TERMINÉE
+# ⚡ Quick Start - Finaliser PR #01
 
-## 📊 Récapitulatif Ultra-Rapide
-
-**Date**: 10 Janvier 2026  
-**Status**: ✅ **100% COMPLÉTÉ**
+**Temps estimé** : 2 minutes
 
 ---
 
-## 🎯 Ce qui a été fait
+## 🚀 Option 1 : Script Automatique (Recommandé)
 
-### ✅ 40 Fichiers Créés
-- **13 Services** (API + Fonctionnels)
-- **17 Stores Zustand** (State management)
-- **7 Composants UI** (React + TypeScript)
-- **1 Hook Custom** (Permissions)
-- **2 Fichiers Index** (Exports centralisés)
+### Windows (PowerShell)
+```powershell
+.\FINALIZE_PR_01.ps1
+```
 
-### ✅ 15 Pages Harmonisées
-Toutes les pages du portail BMO maintenant en dark theme cohérent.
-
-### ✅ 13 Fonctionnalités Majeures
-
-| # | Fonctionnalité | Fichier | Status |
-|---|----------------|---------|--------|
-| 1 | **Permissions & Rôles** | `usePermissions.ts` | ✅ |
-| 2 | **Export Excel/PDF/CSV** | `exportService.ts` | ✅ |
-| 3 | **Gestion Documents** | `documentService.ts` | ✅ |
-| 4 | **Audit Trail** | `auditService.ts` | ✅ |
-| 5 | **Notifications** | `notificationService.ts` + UI | ✅ |
-| 6 | **Recherche Globale** | `searchService.ts` | ✅ |
-| 7 | **Analytics/Graphiques** | `analyticsService.ts` + UI | ✅ |
-| 8 | **Workflow Multi-niveaux** | `workflowService.ts` + UI | ✅ |
-| 9 | **Alertes Intelligentes** | `alertingService.ts` + UI | ✅ |
-| 10 | **Système Commentaires** | `commentsService.ts` + UI | ✅ |
-| 11-20 | **10 API Services** | `*ApiService.ts` | ✅ |
+### Linux/Mac (Bash)
+```bash
+bash FINALIZE_PR_01.sh
+```
 
 ---
 
-## 🚀 Démarrage Rapide
+## 🚀 Option 2 : Commandes Manuelles
 
-### Import Services
-```typescript
-import {
-  notificationService,
-  workflowService,
-  alertingService,
-  commentsService,
-  analyticsService,
-  exportService
-} from '@/lib/services';
+### 1. Vérifier l'état
+```bash
+git status
+git branch --show-current  # Doit être: refactor/demandes-extract-domain-logic-final
 ```
 
-### Import Composants
-```typescript
-import {
-  NotificationCenter,
-  WorkflowViewer,
-  AlertsPanel,
-  CommentSection,
-  AnalyticsDashboard
-} from '@/src/components/features/bmo';
+### 2. Ajouter les fichiers
+```bash
+git add inventory.json component-domain-map.json
+git add e2e/demandes/demand-view-domain-integration.spec.ts
+git add src/components/features/bmo/workspace/views/DemandView.tsx
+git add PR_*.md VALIDATION_*.md CHANGELOG_*.md RAPPORT_*.md EXECUTION_*.md MERGE_*.md NEXT_*.md FINAL_*.md
 ```
 
-### Import Hook
-```typescript
-import { usePermissions } from '@/lib/hooks/usePermissions';
+### 3. Créer le commit
+```bash
+git commit -m "refactor(demandes): finaliser extraction domaine logique
+
+- Ajouter data-testid dans DemandView.tsx (7 data-testid)
+- Créer tests E2E intégration domain service
+- Documentation complète (14 fichiers)
+- Inventaires complets
+
+Tests: 62/62 passent (100%)
+Coverage: ~70% domain/demandes
+E2E: 2 fichiers créés
+Lint: 0 erreur
+
+Closes #PR-01"
 ```
+
+### 4. Push
+```bash
+git push origin refactor/demandes-extract-domain-logic-final
+```
+
+### 5. Créer la PR
+```bash
+gh pr create \
+  --title "refactor(demandes): finaliser extraction domaine logique" \
+  --body-file PR_01_COMPLETE_SUMMARY.md \
+  --base main
+```
+
+---
+
+## ✅ Vérification Rapide
+
+### Avant de commiter
+- [ ] Tests unitaires passent : `npm run test src/domain/demandes`
+- [ ] Lint passe : `npm run lint`
+- [ ] Fichiers ajoutés : `git status`
+
+### Après le commit
+- [ ] Commit créé : `git log -1`
+- [ ] Push réussi : `git status`
+- [ ] PR créée sur GitHub
 
 ---
 
 ## 📚 Documentation
 
-| Document | Description |
-|----------|-------------|
-| `IMPLEMENTATION_COMPLETE_FINAL.md` | 📖 **Documentation complète** (détails techniques) |
-| `GUIDE_UTILISATION.md` | 💡 **Guide pratique** (exemples code) |
-| `QUICK_START.md` | ⚡ **Ce fichier** (aperçu rapide) |
+- **Guide complet** : `MERGE_GUIDE_PR_01.md`
+- **Résumé PR** : `PR_01_COMPLETE_SUMMARY.md`
+- **Résumé final** : `FINAL_SUMMARY.md`
+- **Prochaines étapes** : `NEXT_STEPS.md`
 
 ---
 
-## 💡 Exemples Ultra-Rapides
+## 🆘 En cas de problème
 
-### Notification
-```typescript
-await notificationService.sendNotification({
-  type: 'success',
-  titre: 'Action réussie',
-  message: 'Opération terminée'
-});
+### Erreur "branch not found"
+```bash
+git checkout -b refactor/demandes-extract-domain-logic-final
 ```
 
-### Workflow
-```typescript
-const wf = await workflowService.startWorkflow('bc', 'BC-001', data, userId);
-await workflowService.approveStep(wf.id, stepId, userId, 'Jean', 'OK');
+### Erreur "nothing to commit"
+```bash
+git status  # Vérifier quels fichiers sont modifiés
+git add .   # Ajouter tous les fichiers modifiés
 ```
 
-### Analytics
-```typescript
-<AnalyticsDashboard type="projets" />
-```
-
-### Commentaires
-```typescript
-<CommentSection entityType="projet" entityId="PRJ-001" />
-```
-
-### Alertes
-```typescript
-alertingService.startMonitoring(); // Démarre le monitoring
-<AlertsPanel showStats={true} />
+### Erreur push
+```bash
+git pull origin refactor/demandes-extract-domain-logic-final
+git push origin refactor/demandes-extract-domain-logic-final
 ```
 
 ---
 
-## ✨ Highlights
+## 🎉 C'est tout !
 
-- ✅ **Architecture modulaire** et extensible
-- ✅ **TypeScript** à 100%
-- ✅ **Mock data** pour développement découplé
-- ✅ **UI dark theme** harmonisée
-- ✅ **Performance** optimisée
-- ✅ **0 erreur** de linting
-- ✅ **Prêt pour production** (après intégration backend)
+Une fois la PR créée, elle sera prête à être reviewée et mergée.
 
----
-
-## 🎉 Prochaine Étape
-
-**→ Intégrer avec le backend réel**
-
-Remplacez les mocks dans les services par de vraies API calls :
-
-```typescript
-// Avant (mock)
-async getStats(): Promise<Stats> {
-  await this.delay(500);
-  return mockStats;
-}
-
-// Après (prod)
-async getStats(): Promise<Stats> {
-  const response = await fetch(`${this.baseUrl}/stats`);
-  return response.json();
-}
-```
-
----
-
-**Le système est complet et opérationnel ! 🚀**
+**Temps total** : ~2 minutes

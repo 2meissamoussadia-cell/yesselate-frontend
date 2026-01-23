@@ -11,7 +11,7 @@ global.fetch = jest.fn() as jest.MockedFunction<typeof fetch>;
 
 describe('validationBCAnomaliesAPI', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   describe('getAnomalies', () => {
@@ -30,10 +30,12 @@ describe('validationBCAnomaliesAPI', () => {
         }
       ];
 
-      (global.fetch as any).mockResolvedValueOnce({
+      (global.fetch as jest.MockedFunction<typeof fetch>).mockResolvedValueOnce({
         ok: true,
-        json: async () => mockAnomalies
-      });
+        json: async () => mockAnomalies,
+        status: 200,
+        statusText: 'OK'
+      } as Response);
 
       const result = await validationBCAnomaliesAPI.getAnomalies('doc-1');
 
@@ -77,10 +79,12 @@ describe('validationBCAnomaliesAPI', () => {
         }
       ];
 
-      (global.fetch as any).mockResolvedValueOnce({
+      (global.fetch as jest.MockedFunction<typeof fetch>).mockResolvedValueOnce({
         ok: true,
-        json: async () => mockAnnotations
-      });
+        json: async () => mockAnnotations,
+        status: 200,
+        statusText: 'OK'
+      } as Response);
 
       const result = await validationBCAnomaliesAPI.getAnnotations('doc-1');
 
@@ -106,10 +110,12 @@ describe('validationBCAnomaliesAPI', () => {
         resolvedBy: 'user-1'
       };
 
-      (global.fetch as any).mockResolvedValueOnce({
+      (global.fetch as jest.MockedFunction<typeof fetch>).mockResolvedValueOnce({
         ok: true,
-        json: async () => mockResolvedAnomaly
-      });
+        json: async () => mockResolvedAnomaly,
+        status: 200,
+        statusText: 'OK'
+      } as Response);
 
       const result = await validationBCAnomaliesAPI.resolveAnomaly('1', {
         comment: 'Corrigé'
@@ -139,10 +145,12 @@ describe('validationBCAnomaliesAPI', () => {
         createdAt: new Date().toISOString()
       };
 
-      (global.fetch as any).mockResolvedValueOnce({
+      (global.fetch as jest.MockedFunction<typeof fetch>).mockResolvedValueOnce({
         ok: true,
-        json: async () => mockAnnotation
-      });
+        json: async () => mockAnnotation,
+        status: 200,
+        statusText: 'OK'
+      } as Response);
 
       const result = await validationBCAnomaliesAPI.createAnnotation({
         documentId: 'doc-1',
@@ -176,10 +184,12 @@ describe('validationBCAnomaliesAPI', () => {
         createdAt: new Date().toISOString()
       };
 
-      (global.fetch as any).mockResolvedValueOnce({
+      (global.fetch as jest.MockedFunction<typeof fetch>).mockResolvedValueOnce({
         ok: true,
-        json: async () => mockUpdatedAnnotation
-      });
+        json: async () => mockUpdatedAnnotation,
+        status: 200,
+        statusText: 'OK'
+      } as Response);
 
       const result = await validationBCAnomaliesAPI.updateAnnotation('1', {
         comment: 'Annotation mise à jour'

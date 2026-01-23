@@ -3,10 +3,8 @@
  */
 
 import { describe, it, expect, jest } from '@jest/globals';
-import { congesRules, depensesRules } from '../rhBusinessRules';
-import type { Agent } from '../rhBusinessRules';
 
-// Mock rhBusinessService
+// Mock rhBusinessService avant l'import
 jest.mock('../rhBusinessService', () => ({
   rhBusinessService: {
     calculateWorkingDays: jest.fn((start: Date, end: Date) => {
@@ -20,6 +18,9 @@ jest.mock('../rhBusinessService', () => ({
     })
   }
 }));
+
+import { congesRules, depensesRules } from '../rhBusinessRules';
+import type { Agent } from '../rhBusinessRules';
 
 describe('rhBusinessRules', () => {
   describe('congesRules', () => {
@@ -205,9 +206,9 @@ describe('rhBusinessRules', () => {
   });
 
   describe('depensesRules', () => {
-    describe('validateDepense', () => {
+    describe('checkBudget', () => {
       it('should validate depense within budget', () => {
-        const budget = {
+        const budgetControl = {
           bureau: 'BMO',
           annee: 2025,
           budgets: {
@@ -232,20 +233,16 @@ describe('rhBusinessRules', () => {
           }
         };
 
-        const depense = {
-          montant: 100000,
-          type: 'depenses',
-          bureau: 'BMO'
-        };
+        const montant = 100000;
 
-        const result = depensesRules.validateDepense(depense, budget);
+        const result = depensesRules.checkBudget(montant, 'BMO', budgetControl);
 
-        expect(result.valid).toBe(true);
-        expect(result.errors.length).toBe(0);
+        expect(result.available).toBe(true);
+        expect(result.pourcentageUtilise).toBeLessThan(90);
       });
 
-      it('should reject depense exceeding budget', () => {
-        const budget = {
+      it('should warn when budget > 90%', () => {
+        const budgetControl = {
           bureau: 'BMO',
           annee: 2025,
           budgets: {
@@ -264,23 +261,70 @@ describe('rhBusinessRules', () => {
             depenses: {
               alloue: 2000000,
               utilise: 1900000,
-              restant: 100000, // Restant faible
+              restant: 100000,
               pourcentage: 95
             }
           }
         };
 
-        const depense = {
-          montant: 200000, // > restant
-          type: 'depenses',
-          bureau: 'BMO'
+        const montant = 50000;
+
+        const result = depensesRules.checkBudget(montant, 'BMO', budgetControl);
+
+        expect(result.available).toBe(true);
+        expect(result.pourcentageUtilise).toBeGreaterThan(90);
+        expect(result.message).toContain('Attention');
+      });
+
+      it('should reject depense exceeding budget', () => {
+        const budgetControl = {
+          bureau: 'BMO',
+          annee: 2025,
+          budgets: {
+            deplacements: {
+              alloue: 1000000,
+              utilise: 500000,
+              restant: 500000,
+              pourcentage: 50
+            },
+            formations: {
+              alloue: 500000,
+              utilise: 200000,
+              restant: 300000,
+              pourcentage: 40
+            },
+            depenses: {
+              alloue: 2000000,
+              utilise: 1900000,
+              restant: 100000,
+              pourcentage: 95
+            }
+          }
         };
 
-        const result = depensesRules.validateDepense(depense, budget);
+        const montant = 200000; // > restant
 
-        expect(result.valid).toBe(false);
-        expect(result.errors.length).toBeGreaterThan(0);
-        expect(result.errors.some(e => e.includes('budget'))).toBe(true);
+        const result = depensesRules.checkBudget(montant, 'BMO', budgetControl);
+
+        expect(result.available).toBe(false);
+        expect(result.message).toContain('dépassé');
+      });
+    });
+
+    describe('calculateFraisKm', () => {
+      it('should calculate frais for voiture', () => {
+        const result = depensesRules.calculateFraisKm(100, 'voiture');
+        expect(result).toBe(1500); // 100 km * 15 DZD/km
+      });
+
+      it('should calculate frais for moto', () => {
+        const result = depensesRules.calculateFraisKm(50, 'moto');
+        expect(result).toBe(400); // 50 km * 8 DZD/km
+      });
+
+      it('should calculate frais for velo', () => {
+        const result = depensesRules.calculateFraisKm(20, 'velo');
+        expect(result).toBe(60); // 20 km * 3 DZD/km
       });
     });
   });

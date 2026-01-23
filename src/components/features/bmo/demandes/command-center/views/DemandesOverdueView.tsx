@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 import { useDemandesCommandCenterStore } from '@/lib/stores/demandesCommandCenterStore';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { VirtualizedList } from '@/components/shared/VirtualizedList';
 import {
   TimerOff,
   Clock,
@@ -66,16 +67,23 @@ export function DemandesOverdueView() {
         </div>
       </div>
 
-      {/* List */}
-      <div className="space-y-3">
-        {mockOverdue.map((demande) => {
-          const overdueBy = demande.delay - demande.slaLimit;
+      {/* List - Virtualized for performance */}
+      {mockOverdue.length > 0 ? (
+        <VirtualizedList
+          items={mockOverdue}
+          estimateSize={120}
+          overscan={5}
+          containerHeight="calc(100vh - 400px)"
+          containerClassName="rounded-xl border border-slate-700/50 bg-slate-800/30"
+          className="p-2"
+          renderItem={(demande) => {
+            const overdueBy = demande.delay - demande.slaLimit;
 
-          return (
-            <div
-              key={demande.id}
-              className="p-4 rounded-xl border-l-4 border-l-orange-500 bg-orange-500/5 hover:bg-orange-500/10 transition-colors"
-            >
+            return (
+              <div
+                key={demande.id}
+                className="p-4 rounded-xl border-l-4 border-l-orange-500 bg-orange-500/5 hover:bg-orange-500/10 transition-colors mb-3"
+              >
               <div className="flex items-center gap-4">
                 {/* Icon */}
                 <div className="p-2 rounded-lg bg-orange-500/10 flex-shrink-0">

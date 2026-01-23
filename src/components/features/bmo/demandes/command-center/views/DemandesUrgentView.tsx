@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 import { useDemandesCommandCenterStore } from '@/lib/stores/demandesCommandCenterStore';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { VirtualizedList } from '@/components/shared/VirtualizedList';
 import {
   AlertCircle,
   Clock,
@@ -68,13 +69,20 @@ export function DemandesUrgentView() {
         </Button>
       </div>
 
-      {/* List */}
-      <div className="space-y-3">
-        {mockUrgent.map((demande) => (
-          <div
-            key={demande.id}
-            className="p-4 rounded-xl border-l-4 border-l-rose-500 bg-rose-500/5 hover:bg-rose-500/10 transition-colors"
-          >
+      {/* List - Virtualized for performance */}
+      {mockUrgent.length > 0 ? (
+        <VirtualizedList
+          items={mockUrgent}
+          estimateSize={120}
+          overscan={5}
+          containerHeight="calc(100vh - 400px)"
+          containerClassName="rounded-xl border border-slate-700/50 bg-slate-800/30"
+          className="p-2"
+          renderItem={(demande) => (
+            <div
+              key={demande.id}
+              className="p-4 rounded-xl border-l-4 border-l-rose-500 bg-rose-500/5 hover:bg-rose-500/10 transition-colors mb-3"
+            >
             <div className="flex items-start gap-4">
               {/* Icon */}
               <div className="p-2 rounded-lg bg-rose-500/10 flex-shrink-0">
@@ -120,8 +128,13 @@ export function DemandesUrgentView() {
               </Button>
             </div>
           </div>
-        ))}
-      </div>
+        )}
+        />
+      ) : (
+        <div className="p-8 text-center text-slate-500 rounded-xl border border-slate-700/50 bg-slate-800/30">
+          <p className="text-sm">Aucune demande urgente</p>
+        </div>
+      )}
     </div>
   );
 }

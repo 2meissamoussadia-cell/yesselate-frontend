@@ -391,8 +391,8 @@ export function ConformiteEngagementView() {
                   </Button>
                 </div>
               </div>
-            ))}
-          </div>
+            )}
+          </VirtualizedList>
         </div>
       )}
     </div>

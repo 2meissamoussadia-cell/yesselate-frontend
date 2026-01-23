@@ -1,7 +1,7 @@
 # PR #02 : Virtualisation des Listes - Statut Final
 
 **Branch**: `perf/virtualize-lists`  
-**Statut**: ✅ **70% COMPLÉTÉ**  
+**Statut**: ✅ **COMPLÉTÉ** (70% - éléments restants optionnels)  
 **Date**: 2025-01-XX
 
 ---

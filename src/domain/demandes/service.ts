@@ -308,3 +308,53 @@ export class DemandesService {
   }
 }
 
+// ============================================
+// Utilitaires de formatage (extraits des composants)
+// ============================================
+
+/**
+ * Formate un montant en FCFA
+ */
+export function formatCurrency(amount: number | null | undefined): string {
+  if (amount == null) return '—';
+  return new Intl.NumberFormat('fr-SN', { style: 'decimal' }).format(amount) + ' FCFA';
+}
+
+/**
+ * Formate une date au format français
+ */
+export function formatDate(dateStr: string | null | undefined): string {
+  if (!dateStr) return '—';
+  return new Date(dateStr).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+/**
+ * Retourne les classes CSS pour le niveau de risque
+ */
+export function getRiskColor(score: number): string {
+  if (score >= 15) return 'bg-rose-500/20 text-rose-400 border-rose-500/30';
+  if (score >= 9) return 'bg-amber-500/20 text-amber-400 border-amber-500/30';
+  return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
+}
+
+/**
+ * Retourne le texte de la priorité
+ */
+export function getPriorityText(priority: DemandePriority): string {
+  const labels: Record<DemandePriority, string> = {
+    urgent: 'Urgent',
+    high: 'Élevée',
+    normal: 'Normale',
+    low: 'Basse',
+    critical: 'Critique'
+  };
+  return labels[priority] || priority;
+}
+
+/**
+ * Calcule le score de risque (probabilité × impact)
+ */
+export function calculateRiskScore(probability: number, impact: number): number {
+  return probability * impact;
+}
+

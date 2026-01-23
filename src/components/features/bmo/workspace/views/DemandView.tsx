@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { adaptLocalDemandToDomain } from '@/domain/demandes/adapters/demande.adapter';
 import { useDemandeService } from '@/hooks/useDemandeService';
 import { VirtualizedList } from '@/presentation/components/VirtualizedList/VirtualizedList';
+import { formatCurrency, formatDate, getRiskColor } from '@/domain/demandes/service';
 import { 
   RefreshCw, Check, X, UserPlus, MessageSquare, FileText, 
   Clock, Building2, Tag, DollarSign, AlertTriangle, User,
@@ -793,7 +794,7 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
             {/* Risques - ✅ Utilise les risques évalués par le service */}
             {/* ============================================ */}
             {evaluatedRisks && evaluatedRisks.length > 0 && (
-              <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-4 dark:border-slate-800 dark:bg-[#1f1f1f]/70">
+              <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-4 dark:border-slate-800 dark:bg-[#1f1f1f]/70" data-testid="risks-section">
                 <h3 className="font-semibold mb-3 flex items-center gap-2">
                   <Shield className="w-4 h-4 text-orange-500" />
                   Risques identifiés

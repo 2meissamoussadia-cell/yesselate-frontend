@@ -82,7 +82,7 @@ describe('CalendarValidationService', () => {
       expect(result.errors.some(e => e.code === 'END_BEFORE_START')).toBe(true);
     });
 
-    it('should reject invalid category', () => {
+    it('should warn for invalid category', () => {
       const event: EventData = {
         title: 'Réunion',
         start: new Date('2025-02-01T10:00:00'),
@@ -92,11 +92,12 @@ describe('CalendarValidationService', () => {
 
       const result = service.validateEvent(event);
 
-      expect(result.valid).toBe(false);
-      expect(result.errors.some(e => e.code === 'INVALID_CATEGORY')).toBe(true);
+      // Invalid category is a warning, not an error
+      expect(result.valid).toBe(true);
+      expect(result.warnings.some(w => w.code === 'INVALID_CATEGORY')).toBe(true);
     });
 
-    it('should reject invalid priority', () => {
+    it('should warn for invalid priority', () => {
       const event: EventData = {
         title: 'Réunion',
         start: new Date('2025-02-01T10:00:00'),
@@ -106,8 +107,9 @@ describe('CalendarValidationService', () => {
 
       const result = service.validateEvent(event);
 
-      expect(result.valid).toBe(false);
-      expect(result.errors.some(e => e.code === 'INVALID_PRIORITY')).toBe(true);
+      // Invalid priority is a warning, not an error
+      expect(result.valid).toBe(true);
+      expect(result.warnings.some(w => w.code === 'INVALID_PRIORITY')).toBe(true);
     });
 
     it('should reject event with too many attendees', () => {

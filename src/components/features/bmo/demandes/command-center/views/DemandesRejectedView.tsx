@@ -9,6 +9,7 @@ import React from 'react';
 import { useDemandesCommandCenterStore } from '@/lib/stores/demandesCommandCenterStore';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { VirtualizedList } from '@/components/shared/VirtualizedList';
 import {
   XCircle,
   ArrowRight,
@@ -37,13 +38,20 @@ export function DemandesRejectedView() {
         </p>
       </div>
 
-      {/* List */}
-      <div className="space-y-2">
-        {mockRejected.map((demande) => (
-          <div
-            key={demande.id}
-            className="flex items-center gap-4 p-4 rounded-xl border border-slate-700/50 bg-slate-800/30 hover:bg-slate-800/50 transition-colors"
-          >
+      {/* List - Virtualized for performance */}
+      {mockRejected.length > 0 ? (
+        <VirtualizedList
+          items={mockRejected}
+          estimateSize={100}
+          overscan={5}
+          containerHeight="calc(100vh - 400px)"
+          containerClassName="rounded-xl border border-slate-700/50 bg-slate-800/30"
+          className="p-2"
+          renderItem={(demande) => (
+            <div
+              key={demande.id}
+              className="flex items-center gap-4 p-4 rounded-xl border border-slate-700/50 bg-slate-800/30 hover:bg-slate-800/50 transition-colors mb-2"
+            >
             {/* Icon */}
             <div className="p-2 rounded-lg bg-slate-700/50 flex-shrink-0">
               <XCircle className="w-5 h-5 text-slate-400" />

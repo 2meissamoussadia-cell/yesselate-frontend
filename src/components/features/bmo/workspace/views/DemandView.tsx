@@ -6,6 +6,7 @@ import { FluentModal } from '@/components/ui/fluent-modal';
 import { cn } from '@/lib/utils';
 import { adaptLocalDemandToDomain } from '@/domain/demandes/adapters/demande.adapter';
 import { useDemandeService } from '@/hooks/useDemandeService';
+import { VirtualizedList } from '@/presentation/components/VirtualizedList/VirtualizedList';
 import { 
   RefreshCw, Check, X, UserPlus, MessageSquare, FileText, 
   Clock, Building2, Tag, DollarSign, AlertTriangle, User,

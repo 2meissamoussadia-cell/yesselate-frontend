@@ -9,6 +9,7 @@ import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { VirtualizedList } from '@/presentation/components/VirtualizedList/VirtualizedList';
 import {
   ShieldCheck,
   ClipboardCheck,
@@ -340,10 +341,15 @@ export function ConformiteEngagementView() {
               </h3>
             </div>
           </div>
-          <div className="divide-y divide-slate-800/50">
-            {nonConformities.map((item) => (
+          {/* ✅ Liste virtualisée pour performance */}
+          <VirtualizedList
+            items={nonConformities}
+            estimateSize={80}
+            overscan={5}
+            containerClassName="h-[500px] divide-y divide-slate-800/50"
+            getItemKey={(item) => item.id}
+            renderItem={(item) => (
               <div
-                key={item.id}
                 className="flex items-center justify-between px-4 py-3 hover:bg-slate-800/30 transition-colors cursor-pointer"
                 onClick={() => openModal('commitment-detail' as any, item)}
               >

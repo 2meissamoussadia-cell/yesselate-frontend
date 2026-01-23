@@ -992,12 +992,14 @@ const DashboardContent = memo(function DashboardContent() {
     <>
       <div className="h-full w-full flex min-h-0">
         {/* ===== SIDEBAR DASHBOARD (utilise useDashboardNavigationStore) ===== */}
-        <DashboardSidebar
-          collapsed={sidebarCollapsed}
-          stats={stats}
-          onToggleCollapse={toggleSidebar}
-          onOpenCommandPalette={toggleCommandPalette}
-        />
+        <ErrorBoundary>
+          <DashboardSidebar
+            collapsed={sidebarCollapsed}
+            stats={stats}
+            onToggleCollapse={toggleSidebar}
+            onOpenCommandPalette={toggleCommandPalette}
+          />
+        </ErrorBoundary>
 
         {/* ===== CONTENT PRINCIPAL ===== */}
         <section 
@@ -1007,15 +1009,18 @@ const DashboardContent = memo(function DashboardContent() {
         >
         
         {/* Sub Navigation (niveaux 2 et 3) - utilise useDashboardNavigationStore */}
-        <div className="relative">
-          <DashboardSubNavigation stats={stats} />
-        </div>
+        <ErrorBoundary>
+          <div className="relative">
+            <DashboardSubNavigation stats={stats} />
+          </div>
+        </ErrorBoundary>
 
         {/* Breadcrumbs - Fil d'Ariane pour la navigation */}
         {/* DashboardBreadcrumbs supprimé - à réimplémenter si nécessaire */}
 
         {/* KPI Strip - Utilise le composant DashboardKPIBar */}
-        <DashboardKPIBar
+        <ErrorBoundary>
+          <DashboardKPIBar
           kpis={allKpis}
           onKPIClick={handleKPIClick}
           onExport={exportKPIs}
@@ -1037,6 +1042,7 @@ const DashboardContent = memo(function DashboardContent() {
           lastUpdate={lastUpdate}
           performanceMetrics={performanceMetrics}
         />
+        </ErrorBoundary>
 
         {/* ARIA Live Region pour les annonces d'accessibilité */}
         <div 
@@ -1093,7 +1099,11 @@ const DashboardContent = memo(function DashboardContent() {
       )}
 
       {/* Modals */}
-      <DashboardModals />
+      <ErrorBoundary>
+        <Suspense fallback={null}>
+          <DashboardModals />
+        </Suspense>
+      </ErrorBoundary>
     </>
   );
 });

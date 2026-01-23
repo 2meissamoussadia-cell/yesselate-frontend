@@ -33,7 +33,7 @@ interface IndicatorGroup {
   indicators: Indicator[];
 }
 
-export default function SummaryPointsPage() {
+export const SummaryPointsPage = memo(function SummaryPointsPage() {
   // Regroupement des indicateurs par thème
   const indicatorGroups: IndicatorGroup[] = [
     {
@@ -317,4 +317,4 @@ export default function SummaryPointsPage() {
       </div>
     </div>
   );
-}
+});

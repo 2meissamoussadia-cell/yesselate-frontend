@@ -108,16 +108,24 @@ export function SubstitutionDetailModal({
         id: `CMT-${Date.now()}`,
         entityType: 'substitution',
         entityId: substitution.id,
-        authorId: 'current-user',
-        author: {
+        userId: 'current-user',
+        user: {
           id: 'current-user',
           name: 'Vous',
+          email: 'user@example.com',
+          phone: '',
+          bureau: '',
           role: 'Utilisateur',
+          competences: [],
+          disponibilite: 'available',
+          chargeActuelle: 0,
+          score: 0,
           avatar: undefined,
         },
         content: newComment,
-        timestamp: new Date(),
-        resolved: false,
+        mentions: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
 
       setComments([...comments, comment]);
@@ -202,7 +210,7 @@ export function SubstitutionDetailModal({
                 <Badge className={cn('text-white', getUrgencyColor(substitution.urgency))}>
                   {substitution.urgency}
                 </Badge>
-                <Badge variant="outline" className="text-slate-400 border-slate-600">
+                <Badge variant="default" className="text-slate-400 border-slate-600">
                   <Clock className="h-3 w-3 mr-1" />
                   {substitution.delay} jours de retard
                 </Badge>
@@ -355,7 +363,7 @@ export function SubstitutionDetailModal({
                   <label className="text-sm text-slate-400 block mb-2">Projets liés</label>
                   <div className="flex flex-wrap gap-2">
                     {substitution.linkedProjects.map((projectId) => (
-                      <Badge key={projectId} variant="outline" className="text-blue-400 border-blue-500/30">
+                      <Badge key={projectId} variant="default" className="text-blue-400 border-blue-500/30">
                         {projectId}
                       </Badge>
                     ))}
@@ -391,7 +399,7 @@ export function SubstitutionDetailModal({
                           <div className="flex items-start justify-between mb-1">
                             <h4 className="font-medium text-white">{event.title}</h4>
                             <span className="text-xs text-slate-500">
-                              {formatRelativeTime(event.timestamp)}
+                              {formatRelativeTime(event.createdAt)}
                             </span>
                           </div>
                           {event.description && (
@@ -500,15 +508,15 @@ export function SubstitutionDetailModal({
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center gap-3">
                           <div className="bg-purple-500/20 h-10 w-10 rounded-full flex items-center justify-center text-purple-400 font-medium">
-                            {comment.author.name.charAt(0)}
+                            {comment.user.name.charAt(0)}
                           </div>
                           <div>
-                            <div className="font-medium text-white">{comment.author.name}</div>
-                            <div className="text-xs text-slate-400">{comment.author.role}</div>
+                            <div className="font-medium text-white">{comment.user.name}</div>
+                            <div className="text-xs text-slate-400">{comment.user.role}</div>
                           </div>
                         </div>
                         <div className="text-xs text-slate-500">
-                          {formatRelativeTime(comment.timestamp)}
+                          {formatRelativeTime(comment.createdAt)}
                         </div>
                       </div>
                       <p className="text-slate-300">{comment.content}</p>

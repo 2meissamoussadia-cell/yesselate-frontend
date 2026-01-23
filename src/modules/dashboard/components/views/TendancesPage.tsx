@@ -6,7 +6,7 @@
 
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, memo } from 'react';
 import { TrendingUp, TrendingDown, Calendar, BarChart3, LineChart, Activity, DollarSign, Users, FileCheck, AlertTriangle, ArrowUp, ArrowDown, Minus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
@@ -47,7 +47,7 @@ interface TrendIndicator {
 type TimeRange = '7d' | '30d' | '90d' | '1y';
 type TrendType = 'mensuelles' | 'trimestrielles';
 
-export default function TendancesPage() {
+export const TendancesPage = memo(function TendancesPage() {
   const [timeRange, setTimeRange] = useState<TimeRange>('30d');
   const [trendType, setTrendType] = useState<TrendType>('mensuelles');
 
@@ -464,5 +464,5 @@ export default function TendancesPage() {
       </div>
     </div>
   );
-}
+});
 

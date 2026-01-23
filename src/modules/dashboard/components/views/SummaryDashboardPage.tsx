@@ -5,10 +5,10 @@
 
 'use client';
 
-import React from 'react';
+import React, { memo } from 'react';
 import { OverviewView } from '@/components/features/bmo/dashboard/command-center/views/OverviewView';
 
-export default function SummaryDashboardPage() {
+export const SummaryDashboardPage = memo(function SummaryDashboardPage() {
   return <OverviewView />;
-}
+});
 

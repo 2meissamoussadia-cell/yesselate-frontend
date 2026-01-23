@@ -37,7 +37,7 @@ interface SummaryStat {
   color: 'blue' | 'emerald' | 'purple';
 }
 
-export default function KpiOverviewPage() {
+export const KpiOverviewPage = memo(function KpiOverviewPage() {
   const summaryStats: SummaryStat[] = [
     {
       label: 'Total KPIs',
@@ -304,4 +304,4 @@ export default function KpiOverviewPage() {
       </section>
     </div>
   );
-}
+});

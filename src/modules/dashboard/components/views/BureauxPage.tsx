@@ -841,7 +841,7 @@ const ALL_BUREAUX: Bureau[] = [
 // COMPOSANT PRINCIPAL
 // ============================================
 
-export default function BureauxPage() {
+export const BureauxPage = memo(function BureauxPage() {
   const { leaf } = useDashboardNavigationStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<FilterOption>('all');
@@ -1809,4 +1809,4 @@ export default function BureauxPage() {
       </div>
     </TooltipProvider>
   );
-}
+});

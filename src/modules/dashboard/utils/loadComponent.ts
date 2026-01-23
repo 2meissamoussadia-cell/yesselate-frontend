@@ -19,7 +19,7 @@ const log = {
  * Mapping des noms de composants vers leurs chemins d'import
  * Permet de charger dynamiquement les composants sans hardcoder les chemins
  */
-const componentMap: Record<string, () => Promise<{ default: ComponentType }>> = {
+const componentMap: Record<string, () => Promise<{ default?: ComponentType; [key: string]: ComponentType | undefined }>> = {
   // Pages Overview
   OverviewPage: () => import('../components/views/OverviewPage'),
   SummaryPage: () => import('../components/views/SummaryPage'),

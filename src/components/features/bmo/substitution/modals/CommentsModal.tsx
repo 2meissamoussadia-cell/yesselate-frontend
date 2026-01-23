@@ -194,7 +194,7 @@ export function CommentsModal({
                       <div className="mt-2 text-xs text-green-400 flex items-center gap-1">
                         ✓ Résolu
                       </div>
-                    )}
+                    ) : null}
                   </div>
 
                   {/* Reply indicator */}

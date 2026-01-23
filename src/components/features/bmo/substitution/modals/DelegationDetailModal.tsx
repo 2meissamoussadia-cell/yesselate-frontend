@@ -113,11 +113,24 @@ export function DelegationDetailModal({
         id: `CMT-${Date.now()}`,
         entityType: 'delegation',
         entityId: delegation.id,
-        authorId: 'current-user',
-        author: { id: 'current-user', name: 'Vous', role: 'Utilisateur', avatar: undefined },
+        userId: 'current-user',
+        user: {
+          id: 'current-user',
+          name: 'Vous',
+          email: 'user@example.com',
+          phone: '',
+          bureau: '',
+          role: 'Utilisateur',
+          competences: [],
+          disponibilite: 'available',
+          chargeActuelle: 0,
+          score: 0,
+          avatar: undefined,
+        },
         content: newComment,
-        timestamp: new Date(),
-        resolved: false,
+        mentions: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
       setComments([...comments, comment]);
       setNewComment('');
@@ -191,7 +204,7 @@ export function DelegationDetailModal({
                   {delegation.type}
                 </Badge>
                 {duration && (
-                  <Badge variant="outline" className="text-slate-400 border-slate-600">
+                  <Badge variant="default" className="text-slate-400 border-slate-600">
                     <Clock className="h-3 w-3 mr-1" />
                     {duration} jour{duration > 1 ? 's' : ''}
                   </Badge>
@@ -377,8 +390,8 @@ export function DelegationDetailModal({
                         </div>
                         <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-3">
                           <div className="flex items-start justify-between mb-1">
-                            <h4 className="font-medium text-white">{event.title}</h4>
-                            <span className="text-xs text-slate-500">{formatRelativeTime(event.timestamp)}</span>
+                            <h4 className="font-medium text-white">{event.type}</h4>
+                            <span className="text-xs text-slate-500">{formatRelativeTime(event.createdAt)}</span>
                           </div>
                           {event.description && <p className="text-sm text-slate-400">{event.description}</p>}
                         </div>
@@ -419,14 +432,14 @@ export function DelegationDetailModal({
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center gap-3">
                           <div className="bg-purple-500/20 h-10 w-10 rounded-full flex items-center justify-center text-purple-400 font-medium">
-                            {comment.author.name.charAt(0)}
+                            {comment.user.name.charAt(0)}
                           </div>
                           <div>
-                            <div className="font-medium text-white">{comment.author.name}</div>
-                            <div className="text-xs text-slate-400">{comment.author.role}</div>
+                            <div className="font-medium text-white">{comment.user.name}</div>
+                            <div className="text-xs text-slate-400">{comment.user.role}</div>
                           </div>
                         </div>
-                        <span className="text-xs text-slate-500">{formatRelativeTime(comment.timestamp)}</span>
+                        <span className="text-xs text-slate-500">{formatRelativeTime(comment.createdAt)}</span>
                       </div>
                       <p className="text-slate-300">{comment.content}</p>
                     </div>

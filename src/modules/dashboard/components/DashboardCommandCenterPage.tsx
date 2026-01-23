@@ -38,4 +38,4 @@ const DashboardCommandCenterPage = memo(function DashboardCommandCenterPage({
 
 DashboardCommandCenterPage.displayName = 'DashboardCommandCenterPage';
 
-export default DashboardCommandCenterPage;
+export { DashboardCommandCenterPage };

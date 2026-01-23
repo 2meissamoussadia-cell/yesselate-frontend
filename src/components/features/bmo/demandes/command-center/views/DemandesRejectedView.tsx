@@ -96,8 +96,13 @@ export function DemandesRejectedView() {
               <ArrowRight className="h-4 w-4" />
             </Button>
           </div>
-        ))}
-      </div>
+        )}
+        />
+      ) : (
+        <div className="p-8 text-center text-slate-500 rounded-xl border border-slate-700/50 bg-slate-800/30">
+          <p className="text-sm">Aucune demande rejetée</p>
+        </div>
+      )}
     </div>
   );
 }

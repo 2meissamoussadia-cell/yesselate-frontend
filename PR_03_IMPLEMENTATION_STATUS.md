@@ -1,0 +1,104 @@
+# PR #03 : Tests Services & Domain - Statut Implémentation
+
+**Branch**: `test/add-domain-services-tests`  
+**Statut**: 🟡 **EN COURS** (20% complété)  
+**Date**: 2025-01-XX
+
+---
+
+## ✅ Éléments Complétés
+
+### 1. Configuration Jest ✅
+- ✅ `jest.config.js` amélioré
+  - `collectCoverageFrom` inclut `src/domain/**` et `src/lib/services/**`
+  - `coverageThreshold` configuré (70% global, 80% pour domain/services critiques)
+
+### 2. Tests Services Créés (3) ✅
+
+1. ✅ **rhBusinessRules.test.ts** - Règles métier RH
+   - Tests `congesRules.calculateSolde`
+   - Tests `congesRules.canAutoValidate`
+   - Tests `depensesRules.checkBudget`
+   - Tests `depensesRules.calculateFraisKm`
+   - **Statut**: 8 tests (6 passent, 2 à ajuster pour dates)
+
+2. ✅ **validation-bc-anomalies.service.test.ts** - Service anomalies validation BC
+   - Tests `getAnomalies`
+   - Tests `getAnnotations`
+   - Tests `resolveAnomaly`
+   - Tests `createAnnotation`
+   - Tests `updateAnnotation`
+   - **Statut**: 5 tests - Tous passent ✅
+
+3. ✅ **calendarValidationService.test.ts** - Service validation calendrier
+   - Tests `validateEvent` (titre, dates, catégories, priorités, participants)
+   - Tests warnings et errors
+   - **Statut**: 10 tests - Tous passent ✅
+
+**Total**: **23 tests** - 21 passent ✅
+
+---
+
+## ❌ Éléments Restants
+
+### 1. Tests Services Critiques ⏳
+- [ ] `bc-audit.service.ts` - Audit BC
+- [ ] `rhApiService.ts` - API RH
+- [ ] `rhBusinessService.ts` - Service métier RH
+- [ ] `calendarConflicts.ts` - Conflits calendrier
+- [ ] `calendarSLA.ts` - SLA calendrier
+- [ ] `delegationsApiService.ts` - API délégations
+- [ ] Autres services critiques
+
+### 2. Tests Domain ⏳
+- [ ] Compléter tests `domain/demandes` (edge cases)
+- [ ] Tests `domain/analytics` (si existe)
+- [ ] Tests autres domaines
+
+### 3. Tests E2E Workflows ⏳
+- [ ] Workflow Validation BC
+- [ ] Workflow Demande RH
+- [ ] Workflow Délégation
+- [ ] Workflow Alertes
+
+### 4. CI/CD Integration ⏳
+- [ ] `.github/workflows/test.yml`
+- [ ] Coverage gating
+- [ ] Codecov integration
+
+---
+
+## 📊 Métriques
+
+### Tests
+| Métrique | Avant | Après | Statut |
+|----------|-------|-------|--------|
+| Fichiers de tests services | 0 | 3 | ✅ +3 |
+| Tests unitaires services | 0 | 23 | ✅ +23 |
+| Tests passent | - | 21/23 | ✅ 91% |
+
+### Couverture (À mesurer)
+| Métrique | Avant | Cible | Statut |
+|----------|-------|-------|--------|
+| Couverture globale | <5% | >70% | ⏳ À mesurer |
+| Couverture services | 0% | >80% | ⏳ À mesurer |
+| Couverture domain | 64% | >80% | ⏳ À améliorer |
+
+---
+
+## 🚀 Prochaines Étapes
+
+1. **Corriger 2 tests rhBusinessRules** (0.5J/H)
+2. **Créer tests autres services critiques** (15J/H)
+3. **Compléter tests domain** (10J/H)
+4. **Créer tests E2E** (10J/H)
+5. **CI/CD integration** (5J/H)
+
+**Total restant**: ~40.5 J/H
+
+---
+
+**Document créé par**: Cursor AI Assistant  
+**Date**: 2025-01-XX  
+**Prochaine étape**: Corriger tests rhBusinessRules, puis continuer avec autres services
+

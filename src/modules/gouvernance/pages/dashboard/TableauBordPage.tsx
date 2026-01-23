@@ -11,13 +11,28 @@ import { KpiPanel } from '../../components/KpiPanel';
 import { TendancesChart } from '../../components/TendancesChart';
 import { PointsAttentionPanel } from '../../components/PointsAttentionPanel';
 import { QuickActionsPanel } from '../../components/QuickActionsPanel';
-import { useGouvernanceData } from '../../hooks/useGouvernanceData';
-import { useGouvernanceStats } from '../../hooks/useGouvernanceStats';
+import { useGouvernanceDataWithDomain } from '../../hooks/useGouvernanceDataWithDomain';
+import { useGouvernanceStatsWithDomain } from '../../hooks/useGouvernanceStatsWithDomain';
 
 export default function TableauBordPage() {
-  const { data: overviewData } = useGouvernanceData('executive-dashboard');
-  const { stats } = useGouvernanceStats();
+  // Utiliser les nouveaux hooks avec domain pour bénéficier des calculs automatiques
+  const { 
+    data: overviewData, 
+    overview: domainOverview,
+    isLoading: isLoadingData 
+  } = useGouvernanceDataWithDomain('executive-dashboard');
+  
+  const { 
+    stats, 
+    domainStats,
+    overview: statsOverview,
+    isLoading: isLoadingStats 
+  } = useGouvernanceStatsWithDomain();
 
+  // Utiliser les données domain si disponibles, sinon fallback sur API
+  const displayStats = domainStats || stats;
+  const displayOverview = domainOverview || statsOverview;
+  
   const pointsAttention = overviewData?.points_attention || [];
 
   return (
@@ -47,12 +62,14 @@ export default function TableauBordPage() {
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
               <div className="rounded-xl bg-white/5 p-3 ring-1 ring-white/10">
                 <div className="text-xs text-slate-400">Projets actifs</div>
-                <div className="mt-1 text-xl font-semibold">{stats?.projets_actifs ?? 0}</div>
+                <div className="mt-1 text-xl font-semibold">
+                  {displayStats?.projets_actifs ?? displayOverview?.projets_actifs ?? 0}
+                </div>
               </div>
               <div className="rounded-xl bg-white/5 p-3 ring-1 ring-white/10">
                 <div className="text-xs text-slate-400">Budget consommé</div>
                 <div className="mt-1 text-xl font-semibold">
-                  {stats?.budget_consomme_pourcent ?? 0}%
+                  {displayStats?.budget_consomme_pourcent ?? displayOverview?.budget_consomme_pourcent ?? 0}%
                 </div>
               </div>
             </div>

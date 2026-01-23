@@ -12,7 +12,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { VirtualizedList } from '@/presentation/components/VirtualizedList/VirtualizedList';
 import {
   Search,
   Filter,
@@ -266,7 +265,7 @@ export function RACIInboxView() {
             }}
           />
           
-          {/* Liste des activités - ✅ Virtualisée pour performance */}
+          {/* Liste des activités */}
           {filteredActivities.length === 0 ? (
             <Card className="border-white/10 bg-slate-900/50">
               <CardContent className="p-12 text-center">
@@ -275,101 +274,94 @@ export function RACIInboxView() {
               </CardContent>
             </Card>
           ) : (
-            <VirtualizedList
-              items={filteredActivities}
-              estimateSize={180} // Hauteur estimée d'une carte activité
-              overscan={5}
-              containerClassName="h-[600px]"
-              className="space-y-3"
-              getItemKey={(activity, index) => activity.activity || index}
-              renderItem={(activity, index) => (
-                <div className="px-1">
-                  <Card
-                    className="group border-white/10 bg-gradient-to-br from-slate-900/50 to-slate-800/50 backdrop-blur-xl hover:border-blue-500/30 transition-all cursor-pointer"
-                    onClick={() => handleOpenActivity(activity)}
-                  >
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between gap-4">
-                        {/* Info */}
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-2">
-                            <h3 className="text-white font-semibold text-lg">
-                              {activity.activity}
-                            </h3>
-                            {activity.locked && (
-                              <Lock className="h-4 w-4 text-amber-400" aria-label="Verrouillé" />
-                            )}
-                          </div>
-                          
-                          {activity.description && (
-                            <p className="text-white/60 text-sm mb-3">
-                              {activity.description}
-                            </p>
+            <div className="space-y-3">
+              {filteredActivities.map((activity, index) => (
+                <Card
+                  key={index}
+                  className="group border-white/10 bg-gradient-to-br from-slate-900/50 to-slate-800/50 backdrop-blur-xl hover:border-blue-500/30 transition-all cursor-pointer"
+                  onClick={() => handleOpenActivity(activity)}
+                >
+                  <CardContent className="p-4">
+                    <div className="flex items-start justify-between gap-4">
+                      {/* Info */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h3 className="text-white font-semibold text-lg">
+                            {activity.activity}
+                          </h3>
+                          {activity.locked && (
+                            <Lock className="h-4 w-4 text-amber-400" aria-label="Verrouillé" />
                           )}
-                          
-                          {/* Badges */}
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <Badge
-                              variant="default"
-                              className={CATEGORY_COLORS[activity.category]}
-                            >
-                              {CATEGORY_LABELS[activity.category]}
-                            </Badge>
-                            
-                            <Badge
-                              variant="default"
-                              className={CRITICALITY_COLORS[activity.criticality]}
-                            >
-                              {activity.criticality}
-                            </Badge>
-                            
-                            {activity.linkedProcedure && (
-                              <Badge variant="default" className="bg-slate-500/20 text-slate-300">
-                                <FileText className="h-3 w-3 mr-1" />
-                                {activity.linkedProcedure}
-                              </Badge>
-                            )}
-                          </div>
-                          
-                          {/* Rôles */}
-                          <div className="flex items-center gap-2 mt-3 flex-wrap">
-                            {Object.entries(activity.roles).map(([bureau, role]) => {
-                              if (role === '-') return null;
-                              return (
-                                <div
-                                  key={bureau}
-                                  className="flex items-center gap-1 px-2 py-1 rounded bg-white/5 text-xs"
-                                >
-                                  <span className="text-white/60">{bureau}:</span>
-                                  <span className={cn(
-                                    'font-semibold',
-                                    role === 'R' && 'text-emerald-400',
-                                    role === 'A' && 'text-blue-400',
-                                    role === 'C' && 'text-amber-400',
-                                    role === 'I' && 'text-slate-400'
-                                  )}>
-                                    {role}
-                                  </span>
-                                </div>
-                              );
-                            })}
-                          </div>
                         </div>
                         
-                        {/* Action */}
-                        <ChevronRight className="h-5 w-5 text-white/40 group-hover:text-white transition-colors flex-shrink-0" />
+                        {activity.description && (
+                          <p className="text-white/60 text-sm mb-3">
+                            {activity.description}
+                          </p>
+                        )}
+                        
+                        {/* Badges */}
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <Badge
+                            variant="default"
+                            className={CATEGORY_COLORS[activity.category]}
+                          >
+                            {CATEGORY_LABELS[activity.category]}
+                          </Badge>
+                          
+                          <Badge
+                            variant="default"
+                            className={CRITICALITY_COLORS[activity.criticality]}
+                          >
+                            {activity.criticality}
+                          </Badge>
+                          
+                          {activity.linkedProcedure && (
+                            <Badge variant="default" className="bg-slate-500/20 text-slate-300">
+                              <FileText className="h-3 w-3 mr-1" />
+                              {activity.linkedProcedure}
+                            </Badge>
+                          )}
+                        </div>
+                        
+                        {/* Rôles */}
+                        <div className="flex items-center gap-2 mt-3 flex-wrap">
+                          {Object.entries(activity.roles).map(([bureau, role]) => {
+                            if (role === '-') return null;
+                            return (
+                              <div
+                                key={bureau}
+                                className="flex items-center gap-1 px-2 py-1 rounded bg-white/5 text-xs"
+                              >
+                                <span className="text-white/60">{bureau}:</span>
+                                <span className={cn(
+                                  'font-semibold',
+                                  role === 'R' && 'text-emerald-400',
+                                  role === 'A' && 'text-blue-400',
+                                  role === 'C' && 'text-amber-400',
+                                  role === 'I' && 'text-slate-400'
+                                )}>
+                                  {role}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
                       
-                      {/* Footer */}
-                      <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5 text-xs text-white/40">
-                        <span>Modifié par {activity.modifiedBy}</span>
-                        <span>{activity.lastModified}</span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              )}
-            />
+                      {/* Action */}
+                      <ChevronRight className="h-5 w-5 text-white/40 group-hover:text-white transition-colors flex-shrink-0" />
+                    </div>
+                    
+                    {/* Footer */}
+                    <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5 text-xs text-white/40">
+                      <span>Modifié par {activity.modifiedBy}</span>
+                      <span>{activity.lastModified}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           )}
         </div>
       </div>

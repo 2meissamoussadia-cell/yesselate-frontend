@@ -9,7 +9,6 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { VirtualizedList } from '@/presentation/components/VirtualizedList/VirtualizedList';
 import {
   Clock,
   AlertCircle,
@@ -68,16 +67,12 @@ export function PendingDecisionsView() {
         </p>
       </div>
 
-      {/* ✅ Liste virtualisée pour performance */}
-      <VirtualizedList
-        items={decisions}
-        estimateSize={200}
-        overscan={3}
-        containerClassName="h-[600px]"
-        className="space-y-4"
-        getItemKey={(decision) => decision.id}
-        renderItem={(decision) => (
-          <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-4">
+      <div className="space-y-4">
+        {decisions.map((decision) => (
+          <div
+            key={decision.id}
+            className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-4"
+          >
             <div className="flex items-start justify-between mb-3">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
@@ -127,8 +122,8 @@ export function PendingDecisionsView() {
               </Button>
             </div>
           </div>
-        )}
-      />
+        ))}
+      </div>
     </div>
   );
 }

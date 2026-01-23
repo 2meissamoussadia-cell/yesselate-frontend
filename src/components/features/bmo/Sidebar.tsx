@@ -50,6 +50,7 @@ export function BMOSidebar() {
               src="/images/log_yessalate.png"
               alt="Yessalate Logo"
               fill
+              sizes="36px"
               className="object-cover"
               priority
             />

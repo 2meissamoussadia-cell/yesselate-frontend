@@ -1,174 +1,240 @@
-# 🔧 Corrections et Optimisations Finales
+# 🔧 Corrections Finales - Protection localStorage & Cleanup Timeouts
 
-## ✅ Problèmes Corrigés
+## 📋 Résumé
 
-### 1. **Conflit Système de Toast**
-**Problème**: L'ancien système de toast shadcn/ui entrait en conflit avec notre nouveau système personnalisé.
-
-**Fichiers supprimés**:
-- ❌ `src/components/ui/toaster.tsx` (ancien système)
-- ❌ `src/components/ui/use-toast.ts` (ancien hook)
-
-**Fichier modifié**:
-- ✅ `app/layout.tsx` - Suppression de l'import `Toaster` obsolète
-
-**Résultat**: 
-- ✅ Plus de conflit d'import
-- ✅ Un seul système de toast (le nôtre, plus moderne)
-- ✅ Build error résolu
+Ce document décrit les corrections finales appliquées pour améliorer la robustesse et prévenir les memory leaks.
 
 ---
 
-### 2. **Architecture Toast Améliorée**
+## ✅ Correction #3 : Protection localStorage avec try-catch
 
-**Notre système (meilleur)**:
+### Problème identifié
+- Accès à `localStorage` sans protection try-catch
+- Risque d'erreur si localStorage est désactivé ou plein
+- Application peut crasher en mode privé ou si quota dépassé
+
+### Correction appliquée
+**Fichier**: `app/(portals)/maitre-ouvrage/dashboard/page.tsx`
+
+- ✅ Ajout de try-catch pour tous les accès localStorage
+- ✅ Gestion gracieuse des erreurs avec valeurs par défaut
+- ✅ Logs uniquement en développement
+
+**Endroits corrigés**:
+1. Initialisation de `kpiFilter` (ligne 254)
+2. Persistance de `kpiFilter` (ligne 426)
+3. Initialisation de `autoRefreshEnabled` (ligne 906)
+4. Initialisation de `refreshInterval` (ligne 921)
+5. Persistance de `autoRefreshEnabled` et `refreshInterval` (ligne 1009)
+
 ```typescript
-// Context Provider pattern
-<ToastProvider>
-  <App />
-</ToastProvider>
+// Avant
+const [kpiFilter, setKpiFilter] = useState<string>(() => {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('dashboard-kpi-filter') || '';
+  }
+  return '';
+});
 
-// Usage simple
-const toast = useAlertToast();
-toast.success("Action réussie");
-toast.alertResolved(5); // "5 alertes résolues"
+// Après
+const [kpiFilter, setKpiFilter] = useState<string>(() => {
+  if (typeof window !== 'undefined') {
+    try {
+      return localStorage.getItem('dashboard-kpi-filter') || '';
+    } catch (error) {
+      // localStorage peut être désactivé ou plein
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('[Dashboard] Erreur lors de la lecture de localStorage:', error);
+      }
+      return '';
+    }
+  }
+  return '';
+});
 ```
 
-**Ancien système shadcn/ui (remplacé)**:
-```typescript
-// Pattern plus verbeux
-import { useToast } from "@/components/ui/use-toast";
-const { toast } = useToast();
-toast({ title: "...", description: "..." });
-```
-
-**Avantages de notre système**:
-- ✅ Helpers spécialisés pour alertes
-- ✅ Plus simple à utiliser
-- ✅ Meilleure intégration avec le domaine métier
-- ✅ Animations personnalisées
-- ✅ Moins de code boilerplate
+**Impact**:
+- ✅ Application stable même si localStorage est désactivé
+- ✅ Gestion gracieuse des erreurs
+- ✅ Pas de crash en mode privé
 
 ---
 
-### 3. **Optimisations Supplémentaires**
+## ✅ Correction #4 : Cleanup des Timeouts
 
-#### Performance
+### Problème identifié
+- Plusieurs `setTimeout` non nettoyés correctement
+- Risque de memory leaks si le composant se démonte
+- Timeouts qui continuent après navigation
+
+### Correction appliquée
+**Fichier**: `app/(portals)/maitre-ouvrage/dashboard/page.tsx`
+
+- ✅ Tous les timeouts ajoutés à `timeoutsRef.current`
+- ✅ Cleanup dans le useEffect de démontage
+- ✅ Protection avec `isMountedRef` pour éviter les updates après démontage
+
+**Endroits corrigés**:
+1. Auto-dismiss succès export (ligne 858)
+2. Auto-dismiss erreur export (ligne 879)
+3. Reset flag toggle (ligne 939)
+4. Refresh après reconnexion (ligne 1119)
+
 ```typescript
-// Cleanup intervals automatique
+// Avant
+setTimeout(() => {
+  setKpiChangeNotifications(prev => 
+    prev.filter(n => n.id !== successNotification.id)
+  );
+}, 3000);
+
+// Après
+const timeoutId = window.setTimeout(() => {
+  setKpiChangeNotifications(prev => 
+    prev.filter(n => n.id !== successNotification.id)
+  );
+}, 3000);
+timeoutsRef.current.push(timeoutId);
+```
+
+**Impact**:
+- ✅ Prévention des memory leaks
+- ✅ Pas de timeouts qui continuent après navigation
+- ✅ Application plus stable
+
+---
+
+## ✅ Correction #5 : Ref dédiée pour Toggle Timeout
+
+### Problème identifié
+- Timeout pour `isTogglingRef` dans le callback de `setState`
+- Difficile à nettoyer correctement
+- Risque de timeout non nettoyé
+
+### Correction appliquée
+**Fichier**: `app/(portals)/maitre-ouvrage/dashboard/page.tsx`
+
+- ✅ Création d'une ref dédiée `toggleTimeoutRef`
+- ✅ Cleanup explicite dans un useEffect
+- ✅ Nettoyage du timeout précédent avant d'en créer un nouveau
+
+```typescript
+// Avant
+setAutoRefreshEnabled(prev => {
+  const newValue = !prev;
+  setTimeout(() => {
+    isTogglingRef.current = false;
+  }, 1000);
+  return newValue;
+});
+
+// Après
+const toggleTimeoutRef = useRef<number | null>(null);
+
+// Dans le handler
+if (toggleTimeoutRef.current !== null) {
+  clearTimeout(toggleTimeoutRef.current);
+  toggleTimeoutRef.current = null;
+}
+
+toggleTimeoutRef.current = window.setTimeout(() => {
+  isTogglingRef.current = false;
+  toggleTimeoutRef.current = null;
+}, 1000);
+
+// Cleanup dans useEffect
 useEffect(() => {
-  if (!autoRefresh) return;
-  const interval = setInterval(loadStats, refreshInterval);
-  return () => clearInterval(interval); // ✅ Cleanup
-}, [autoRefresh, refreshInterval, loadStats]);
+  return () => {
+    if (toggleTimeoutRef.current !== null) {
+      clearTimeout(toggleTimeoutRef.current);
+      toggleTimeoutRef.current = null;
+    }
+  };
+}, []);
 ```
 
-#### Error Handling
-```typescript
-try {
-  await action();
-  toast.success("Action réussie");
-} catch (error) {
-  console.error('Erreur:', error);
-  toast.error("Erreur", "Impossible d'effectuer l'action");
-}
-```
-
-#### Type Safety
-```typescript
-// Tous les types sont explicites
-type ToastType = 'success' | 'error' | 'warning' | 'info';
-interface Toast {
-  id: string;
-  type: ToastType;
-  title: string;
-  message?: string;
-  duration?: number;
-}
-```
+**Impact**:
+- ✅ Timeout correctement nettoyé
+- ✅ Pas de memory leak
+- ✅ Comportement prévisible
 
 ---
 
-## 🎯 Résultat Final
+## 📊 Métriques d'Amélioration
 
-### Build Status
-- ✅ **0 erreur TypeScript**
-- ✅ **0 erreur ESLint**
-- ✅ **0 conflit d'import**
-- ✅ **Build successful**
+### Robustesse
+- **Before**: Crashes possibles si localStorage désactivé
+- **After**: Gestion gracieuse avec valeurs par défaut
 
-### Qualité Code
-- ✅ **Type safety** complète
-- ✅ **Error handling** robuste
-- ✅ **Performance** optimisée
-- ✅ **Memory leaks** prévenus
-- ✅ **Clean architecture**
+### Memory Leaks
+- **Before**: Timeouts non nettoyés
+- **After**: Tous les timeouts nettoyés correctement
 
-### Fichiers État
-```
-✅ src/components/ui/toast.tsx          (Nouveau - 200 lignes)
-✅ src/components/ui/alert-skeletons.tsx (Nouveau - 180 lignes)
-✅ app/layout.tsx                        (Corrigé - 60 lignes)
-✅ app/.../alerts/page.tsx              (Amélioré - 613 lignes)
-✅ .../AlertInboxView.tsx                (Amélioré - avec toast)
-
-❌ src/components/ui/toaster.tsx         (Supprimé - conflit)
-❌ src/components/ui/use-toast.ts        (Supprimé - obsolète)
-```
+### Stabilité
+- **Before**: Comportements imprévisibles après navigation
+- **After**: Cleanup complet au démontage
 
 ---
 
-## 🚀 Prêt pour Production
+## 🧪 Tests Recommandés
 
-### Checklist Finale
-- [x] Build sans erreur
-- [x] Tous les imports résolus
-- [x] Système de toast fonctionnel
-- [x] Skeleton loaders opérationnels
-- [x] Auto-refresh intelligent
-- [x] Actions bulk avec feedback
-- [x] Gestion d'erreurs complète
-- [x] Performance optimisée
-- [x] Documentation complète
+### Tests Unitaires
+- [ ] Test de la gestion d'erreur localStorage (désactivé, plein)
+- [ ] Test du cleanup des timeouts au démontage
+- [ ] Test du toggle avec cleanup correct
 
-### Démarrage
-```bash
-npm run dev  # Serveur de développement
-npm run build # Build production
-npm run start # Serveur production
-```
+### Tests E2E (Playwright)
+- [ ] Vérifier que l'application fonctionne en mode privé (localStorage désactivé)
+- [ ] Vérifier qu'il n'y a pas de timeouts qui continuent après navigation
+- [ ] Vérifier le comportement du toggle auto-refresh
 
 ---
 
-## 📊 Amélioration par Rapport à l'Ancien Système
+## 📝 Checklist QA
 
-| Aspect | Ancien (shadcn/ui) | Nouveau (Custom) |
-|--------|-------------------|------------------|
-| **Lignes de code** | ~250 | 200 |
-| **Complexité** | Élevée | Simple |
-| **Helpers métier** | ❌ | ✅ 6 helpers |
-| **Type safety** | Partiel | Complet |
-| **Animations** | Basiques | Avancées |
-| **Performance** | Correct | Optimisée |
-| **Maintenance** | Difficile | Facile |
+### Correction #3 : Protection localStorage
+- [x] Try-catch ajouté partout
+- [x] Gestion gracieuse des erreurs
+- [x] Logs uniquement en développement
+- [ ] Tests unitaires ajoutés
+- [ ] Tests E2E ajoutés
 
----
+### Correction #4 : Cleanup Timeouts
+- [x] Tous les timeouts ajoutés à timeoutsRef
+- [x] Cleanup dans useEffect
+- [x] Protection avec isMountedRef
+- [ ] Tests unitaires ajoutés
+- [ ] Tests E2E ajoutés
 
-## 🎉 Conclusion
-
-**Tous les problèmes sont corrigés** et la page Alertes & Risques est maintenant :
-
-✅ **Sans erreur**  
-✅ **Production-ready**  
-✅ **Optimisée**  
-✅ **Maintenable**  
-✅ **Documentée**  
-
-**Status**: ✅ **READY TO DEPLOY** 🚀
+### Correction #5 : Ref dédiée Toggle
+- [x] Ref dédiée créée
+- [x] Cleanup explicite
+- [x] Nettoyage du timeout précédent
+- [ ] Tests unitaires ajoutés
+- [ ] Tests E2E ajoutés
 
 ---
 
-**Date**: 9 janvier 2026  
-**Version**: 3.1 (Corrections & Optimisations)  
-**Qualité**: Enterprise-Grade ⭐⭐⭐⭐⭐
+## 🔄 Plan de Rollback
 
+En cas de problème après déploiement :
+
+1. **Correction #3** : Retirer les try-catch (revenir à accès direct)
+2. **Correction #4** : Retirer les timeouts de timeoutsRef (revenir à setTimeout simple)
+3. **Correction #5** : Retirer la ref dédiée (revenir à setTimeout dans callback)
+
+---
+
+## ✅ Statut Final
+
+- ✅ **Correction #3** : Complétée
+- ✅ **Correction #4** : Complétée
+- ✅ **Correction #5** : Complétée
+- ⏳ **Tests** : À ajouter
+- ⏳ **Documentation** : À finaliser
+
+---
+
+**Date de création** : 2026-01-23  
+**Auteur** : Assistant AI  
+**Version** : 1.0

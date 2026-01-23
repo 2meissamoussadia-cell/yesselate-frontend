@@ -9,7 +9,6 @@ import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, ArrowUpRight, Clock, DollarSign } from 'lucide-react';
-import { VirtualizedList } from '@/presentation/components/VirtualizedList/VirtualizedList';
 
 export function BlockingPointsView() {
   const blockages = [
@@ -44,16 +43,12 @@ export function BlockingPointsView() {
         </p>
       </div>
 
-      {/* ✅ Liste virtualisée pour performance */}
-      <VirtualizedList
-        items={blockages}
-        estimateSize={220}
-        overscan={3}
-        containerClassName="h-[600px]"
-        className="space-y-4"
-        getItemKey={(blockage) => blockage.id}
-        renderItem={(blockage) => (
-          <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-4">
+      <div className="space-y-4">
+        {blockages.map((blockage) => (
+          <div
+            key={blockage.id}
+            className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-4"
+          >
             <div className="flex items-start justify-between mb-3">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
@@ -100,8 +95,8 @@ export function BlockingPointsView() {
               </Button>
             </div>
           </div>
-        )}
-      />
+        ))}
+      </div>
     </div>
   );
 }

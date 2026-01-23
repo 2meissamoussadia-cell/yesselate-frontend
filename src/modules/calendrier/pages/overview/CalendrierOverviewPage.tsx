@@ -14,7 +14,7 @@ import { GanttChart } from '../../components/GanttChart';
 import { CalendarGrid } from '../../components/CalendarGrid';
 import { TimelineView } from '../../components/TimelineView';
 import { useCalendrierFilters } from '../../hooks/useCalendrierFilters';
-import { useCalendrierData } from '../../hooks/useCalendrierData';
+import { useCalendrierDataWithDomain } from '../../hooks/useCalendrierDataWithDomain';
 import { useCalendrierFiltersStore } from '../../stores/calendrierFiltersStore';
 
 export function CalendrierOverviewPage() {
@@ -28,15 +28,45 @@ export function CalendrierOverviewPage() {
     date_debut: dateDebut || undefined,
     date_fin: dateFin || undefined,
   }), [periode, vue, chantierId, equipeId, dateDebut, dateFin]);
-  const { data, loading, error } = useCalendrierData(filters);
+  
+  // Utiliser le hook avec domain pour bénéficier des calculs automatiques
+  const { 
+    data, 
+    domainData,
+    overview: domainOverview,
+    stats: domainStats,
+    conflits,
+    isLoading: loading, 
+    error 
+  } = useCalendrierDataWithDomain(filters);
+
+  // Utiliser les données domain si disponibles, sinon fallback sur API
+  const displayData = domainData ? {
+    jalons: domainData.jalons,
+    evenements: domainData.evenements,
+    absences: domainData.absences,
+    chantiers: data?.chantiers || [],
+  } : data;
 
   // Mettre à jour les stats dans le store
   React.useEffect(() => {
-    if (data?.stats) {
+    if (domainStats || data?.stats) {
       const { setStats } = useCalendrierFiltersStore.getState();
-      setStats(data.stats);
+      // Utiliser domainStats si disponible, sinon fallback sur API stats
+      if (domainStats) {
+        // Adapter domainStats vers format store si nécessaire
+        setStats({
+          jalons_at_risk_count: domainStats.jalons_sla_risque || 0,
+          jalons_retard_count: domainStats.jalons_retard || 0,
+          jalons_total_count: domainStats.jalons_total || 0,
+          retards_detectes_count: domainStats.jalons_retard || 0,
+          sur_allocation_ressources_count: domainStats.sur_allocations || 0,
+        });
+      } else if (data?.stats) {
+        setStats(data.stats);
+      }
     }
-  }, [data?.stats]);
+  }, [domainStats, data?.stats]);
 
   const renderMainView = () => {
     if (loading) {
@@ -59,26 +89,26 @@ export function CalendrierOverviewPage() {
       case 'gantt':
         return (
           <GanttChart
-            jalons={data?.jalons || []}
-            evenements={data?.evenements || []}
-            chantiers={data?.chantiers || []}
+            jalons={displayData?.jalons || []}
+            evenements={displayData?.evenements || []}
+            chantiers={displayData?.chantiers || []}
           />
         );
       case 'timeline':
         return (
           <TimelineView
-            jalons={data?.jalons || []}
-            evenements={data?.evenements || []}
-            absences={data?.absences || []}
+            jalons={displayData?.jalons || []}
+            evenements={displayData?.evenements || []}
+            absences={displayData?.absences || []}
           />
         );
       case 'calendrier':
       default:
         return (
           <CalendarGrid
-            jalons={data?.jalons || []}
-            evenements={data?.evenements || []}
-            absences={data?.absences || []}
+            jalons={displayData?.jalons || []}
+            evenements={displayData?.evenements || []}
+            absences={displayData?.absences || []}
             periode={periode}
           />
         );

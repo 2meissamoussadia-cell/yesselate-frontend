@@ -17,6 +17,7 @@ export * from './context/DashboardNavigationContext';
 
 // Hooks
 export * from './hooks/useDashboardNavigation';
+export * from './hooks/useDashboardNavigationSync';
 
 // Types
 export * from './types/dashboardNavigationTypes';

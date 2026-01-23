@@ -10,6 +10,5 @@ export { RecouvrementsKPIBar } from './RecouvrementsKPIBar';
 export { RecouvrementsContentRouter } from './RecouvrementsContentRouter';
 export { RecouvrementsModals } from './RecouvrementsModals';
 export type { RecouvrementsModalType } from './RecouvrementsModals';
-export { RecouvrementsNotificationsPanel } from './RecouvrementsNotificationsPanel';
 export { RecouvrementsFiltersPanel } from './RecouvrementsFiltersPanel';
 

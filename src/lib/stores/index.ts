@@ -5,6 +5,11 @@
 export { useAppStore } from './app-store';
 export { useBMOStore } from './bmo-store';
 export { useNavigationStore } from './navigation-store';
+export { 
+  useDashboardNavigationStore,
+  useDashboardNavigationState,
+  useDashboardNavigationActions,
+} from './dashboardNavigationStore';
 export { useWorkspaceStore } from './workspaceStore';
 export type { WorkspaceTab, WorkspaceTabType } from './workspaceStore';
 export { useValidationBCWorkspaceStore } from './validationBCWorkspaceStore';

@@ -128,12 +128,12 @@ function MissionDetailContent({ data }: { data: Record<string, unknown> }) {
         </div>
       </div>
 
-      {data.objet && (
+      {data.objet ? (
         <div>
           <h4 className="text-xs font-medium text-slate-500 uppercase mb-2">Objet</h4>
           <p className="text-sm text-slate-300">{data.objet as string}</p>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

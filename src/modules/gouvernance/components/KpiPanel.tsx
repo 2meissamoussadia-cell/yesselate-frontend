@@ -8,7 +8,7 @@
 import React from 'react';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useGouvernanceStats } from '../hooks/useGouvernanceStats';
+import { useGouvernanceStatsWithDomain } from '../hooks/useGouvernanceStatsWithDomain';
 import type { GouvernanceStats } from '../types/gouvernanceTypes';
 
 interface KpiPanelProps {
@@ -71,7 +71,16 @@ function KpiCard({ label, value, delta, tone = 'neutral', isLoading }: KpiCardPr
 }
 
 export function KpiPanel({ className }: KpiPanelProps) {
-  const { stats, isLoading } = useGouvernanceStats();
+  // Utiliser le hook avec domain pour bénéficier des calculs automatiques
+  const { 
+    stats, 
+    domainStats, 
+    overview,
+    isLoading 
+  } = useGouvernanceStatsWithDomain();
+  
+  // Utiliser les données domain si disponibles, sinon fallback sur API
+  const displayStats = domainStats || stats;
 
   if (!stats && !isLoading) {
     return (
@@ -95,8 +104,8 @@ export function KpiPanel({ className }: KpiPanelProps) {
       <div className="mb-4 flex items-center justify-between">
         <div className="text-sm font-semibold text-white">Indicateurs en temps réel</div>
         <div className="text-xs text-slate-400">
-          {stats?.last_updated
-            ? `Mise à jour : ${new Date(stats.last_updated).toLocaleTimeString('fr-FR')}`
+          {displayStats?.last_updated
+            ? `Mise à jour : ${new Date(displayStats.last_updated).toLocaleTimeString('fr-FR')}`
             : 'Mise à jour : il y a 2 min'}
         </div>
       </div>
@@ -104,37 +113,37 @@ export function KpiPanel({ className }: KpiPanelProps) {
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-5">
         <KpiCard
           label="Projets actifs"
-          value={stats?.projets_actifs ?? 0}
+          value={displayStats?.projets_actifs ?? 0}
           delta={deltas.projets}
           tone="neutral"
           isLoading={isLoading}
         />
         <KpiCard
           label="Budget consommé"
-          value={`${stats?.budget_consomme_pourcent ?? 0}%`}
+          value={`${displayStats?.budget_consomme_pourcent ?? 0}%`}
           delta={deltas.budget}
-          tone={stats && stats.budget_consomme_pourcent > 80 ? 'warning' : 'neutral'}
+          tone={displayStats && displayStats.budget_consomme_pourcent > 80 ? 'warning' : 'neutral'}
           isLoading={isLoading}
         />
         <KpiCard
           label="Jalons respectés"
-          value={`${stats?.jalons_respectes_pourcent ?? 0}%`}
+          value={`${displayStats?.jalons_respectes_pourcent ?? 0}%`}
           delta={deltas.jalons}
-          tone={stats && stats.jalons_respectes_pourcent < 90 ? 'warning' : 'success'}
+          tone={displayStats && displayStats.jalons_respectes_pourcent < 90 ? 'warning' : 'success'}
           isLoading={isLoading}
         />
         <KpiCard
           label="Risques critiques"
-          value={stats?.risques_critiques ?? 0}
+          value={displayStats?.risques_critiques ?? 0}
           delta={deltas.risques}
-          tone={stats && stats.risques_critiques > 5 ? 'danger' : 'warning'}
+          tone={displayStats && displayStats.risques_critiques > 5 ? 'danger' : 'warning'}
           isLoading={isLoading}
         />
         <KpiCard
           label="Validations en attente"
-          value={stats?.validations_en_attente ?? 0}
+          value={displayStats?.validations_en_attente ?? 0}
           delta={deltas.validations}
-          tone={stats && stats.validations_en_attente > 10 ? 'warning' : 'neutral'}
+          tone={displayStats && displayStats.validations_en_attente > 10 ? 'warning' : 'neutral'}
           isLoading={isLoading}
         />
       </div>

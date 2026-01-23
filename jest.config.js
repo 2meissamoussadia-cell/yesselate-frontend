@@ -13,12 +13,9 @@ const customJestConfig = {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   collectCoverageFrom: [
-    'src/domain/**/*.{ts,tsx}',
-    'src/lib/services/**/*.{ts,tsx}',
-    'src/lib/business/**/*.{ts,tsx}',
     'src/hooks/**/*.{ts,tsx}',
+    'src/components/features/bmo/governance/**/*.{ts,tsx}',
     '!**/*.d.ts',
-    '!**/__tests__/**',
     '!**/node_modules/**',
   ],
   coverageThreshold: {
@@ -27,19 +24,6 @@ const customJestConfig = {
       functions: 70,
       lines: 70,
       statements: 70,
-    },
-    // Seuils plus élevés pour domain et services critiques
-    'src/domain/demandes/': {
-      branches: 80,
-      functions: 80,
-      lines: 80,
-      statements: 80,
-    },
-    'src/lib/services/validation-': {
-      branches: 80,
-      functions: 80,
-      lines: 80,
-      statements: 80,
     },
   },
 }

@@ -5,7 +5,7 @@
  * Common layout components for the application
  */
 
-export { BMOLayout } from './BMOLayout';
+// BMOLayout a été supprimé - utiliser BMOAppShell de @/components/bmo/BMOAppShell à la place
 
 export { CommandCenterShell } from './CommandCenterShell';
 export type { CommandCenterShellProps } from './CommandCenterShell';

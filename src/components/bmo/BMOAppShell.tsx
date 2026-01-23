@@ -15,8 +15,9 @@ import { useAppStore } from '@/lib/stores';
 import { BMOSidebar } from '@/components/features/bmo/Sidebar';
 import { BMOHeader } from '@/components/features/bmo/Header';
 import { AIAssistant } from '@/components/features/bmo/AIAssistant';
-import { NotificationsPanel } from '@/components/features/bmo/NotificationsPanel';
+import { NotificationsPanel as SharedNotificationsPanel } from '@/components/shared/NotificationsPanel';
 import { ToastContainer } from '@/components/features/bmo/ToastContainer';
+import { useBMOStore } from '@/lib/stores';
 import { AutoSyncProvider } from '@/components/shared/AutoSyncProvider';
 
 interface BMOAppShellProps {
@@ -25,6 +26,7 @@ interface BMOAppShellProps {
 
 export function BMOAppShell({ children }: BMOAppShellProps) {
   const { sidebarOpen, darkMode } = useAppStore();
+  const { showNotifications, setShowNotifications } = useBMOStore();
 
   return (
     <AutoSyncProvider>
@@ -53,7 +55,11 @@ export function BMOAppShell({ children }: BMOAppShellProps) {
         </main>
 
         {/* Overlays & Modals */}
-        <NotificationsPanel />
+        <SharedNotificationsPanel 
+          isOpen={showNotifications} 
+          onClose={() => setShowNotifications(false)}
+          moduleName="BMO"
+        />
         <AIAssistant />
         <ToastContainer />
       </div>

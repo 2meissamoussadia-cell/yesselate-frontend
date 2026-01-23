@@ -37,11 +37,11 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
       },
       {
         id: 'kpis',
-        label: 'KPIs Vue d\'ensemble',
+        label: 'KPIs',
         badge: 0,
         badgeType: 'warning',
         children: [
-          { id: 'strategique', label: 'Synthèse stratégique' },
+          { id: 'highlights', label: 'Synthèse stratégique' },
           { id: 'projets', label: 'Projets' },
           { id: 'demandes', label: 'Demandes' },
           { id: 'budget', label: 'Budget' },
@@ -76,7 +76,7 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
   },
   performance: {
     id: 'performance',
-    label: 'Performance opérationnelle',
+    label: 'Performance & KPIs',
     icon: TrendingUp,
     children: [
       {
@@ -88,18 +88,16 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
           { id: 'en-attente', label: 'En attente' },
           { id: 'validees', label: 'Validées' },
           { id: 'rejetees', label: 'Rejetées' },
-          { id: 'workflow', label: 'Workflow' },
         ],
       },
       {
         id: 'budget',
-        label: 'Budget opérationnel',
+        label: 'Budget',
         badge: 0,
         badgeType: 'warning',
         children: [
           { id: 'consommation', label: 'Consommation' },
           { id: 'restant', label: 'Restant' },
-          { id: 'previsionnel', label: 'Prévisionnel' },
         ],
       },
       {
@@ -118,7 +116,6 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
         children: [
           { id: 'bureaux', label: 'Par bureaux' },
           { id: 'projets', label: 'Par projets' },
-          { id: 'periodes', label: 'Par périodes' },
         ],
       },
     ],
@@ -136,10 +133,18 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
         badge: 0,
         badgeType: 'warning',
         children: [
-          { id: 'critiques', label: 'Critiques' },
           { id: 'urgentes', label: 'Urgentes' },
-          { id: 'importantes', label: 'Importantes' },
           { id: 'normales', label: 'Normales' },
+        ],
+      },
+      {
+        id: 'urgent',
+        label: 'Urgentes',
+        badge: 0,
+        badgeType: 'critical',
+        children: [
+          { id: 'critiques', label: 'Critiques' },
+          { id: 'importantes', label: 'Importantes' },
         ],
       },
       {
@@ -148,9 +153,8 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
         badge: 0,
         badgeType: 'critical',
         children: [
-          { id: 'actifs', label: 'Actifs' },
+          { id: 'blocages', label: 'Blocages' },
           { id: 'escalades', label: 'Escalades' },
-          { id: 'resolus', label: 'Résolus' },
         ],
       },
       {
@@ -158,10 +162,6 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
         label: 'En attente',
         badge: 0,
         badgeType: 'warning',
-        children: [
-          { id: 'urgentes', label: 'Urgentes' },
-          { id: 'normales', label: 'Normales' },
-        ],
       },
       {
         id: 'completed',
@@ -201,24 +201,26 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
         ],
       },
       {
+        id: 'blocages',
+        label: 'Blocages',
+        badge: 0,
+        badgeType: 'critical',
+        children: [
+          { id: 'actifs', label: 'Actifs' },
+          { id: 'resolus', label: 'Résolus' },
+        ],
+      },
+      {
         id: 'payments',
         label: 'Paiements',
         badge: 0,
         badgeType: 'warning',
-        children: [
-          { id: 'en-retard', label: 'En retard' },
-          { id: 'a-venir', label: 'À venir' },
-        ],
       },
       {
         id: 'contracts',
         label: 'Contrats',
         badge: 0,
         badgeType: 'warning',
-        children: [
-          { id: 'a-renouveler', label: 'À renouveler' },
-          { id: 'en-cours', label: 'En cours' },
-        ],
       },
     ],
   },

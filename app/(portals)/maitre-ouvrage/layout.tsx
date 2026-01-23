@@ -1,11 +1,11 @@
 import type { ReactNode } from 'react';
-import { BMOLayout } from '@/components/shared/layouts/BMOLayout';
+import { BMOAppShell } from '@/components/bmo/BMOAppShell';
 import { FluentProviderClient } from '@/components/shared/FluentProviderClient';
 
 export default function MaitreOuvrageLayout({ children }: { children: ReactNode }) {
   return (
     <FluentProviderClient>
-      <BMOLayout>
+      <BMOAppShell>
       {/* Skip link (accessibilité clavier) */}
       <a
         href="#main-content"
@@ -35,7 +35,7 @@ export default function MaitreOuvrageLayout({ children }: { children: ReactNode 
           {children}
         </main>
       </div>
-      </BMOLayout>
+      </BMOAppShell>
     </FluentProviderClient>
   );
 }

@@ -15,14 +15,9 @@ export type { DashboardContentRouterProps } from './DashboardContentRouter';
 export { DashboardRegistryView } from './DashboardRegistryView';
 export { DashboardContentSwitch } from './DashboardContentSwitch';
 export { DashboardViewRouter } from './DashboardViewRouter';
-// ⚠️ DashboardUrlSync et StoreBridge sont dépréciés - utiliser useDashboardNavigationSync dans layout.tsx
-// export { DashboardUrlSync } from './DashboardUrlSync';
-// export { StoreBridge } from './StoreBridge';
-// ⚠️ DynamicSidebar et DynamicSubnav sont supprimés (doublons non utilisés)
-// export { DynamicSidebar } from './DynamicSidebar';
-// export { DynamicSubnav } from './DynamicSubnav';
-// ⚠️ DashboardCommandCenterPage utilise l'ancien système - non utilisé dans page.tsx
-export { default as DashboardCommandCenterPage } from './DashboardCommandCenterPage';
+export { DashboardKPIBar } from './DashboardKPIBar';
+export type { KPIData } from './DashboardKPIBar';
+export { DashboardFooter } from './DashboardFooter';
 
 // Export des vues
 export * from './views';

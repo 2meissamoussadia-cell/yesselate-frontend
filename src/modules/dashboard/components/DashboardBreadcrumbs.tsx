@@ -1,139 +1,107 @@
 /**
- * Composant Breadcrumbs pour la navigation du Dashboard
- * Affiche le chemin de navigation actuel avec possibilité de naviguer
+ * Composant Breadcrumbs (Fil d'Ariane) pour la navigation du dashboard
+ * Affiche le chemin de navigation actuel : Dashboard > [Main] > [Sub] > [Leaf]
  */
 
 'use client';
 
-import React from 'react';
+import React, { memo, useMemo } from 'react';
 import { ChevronRight, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useDashboardNavigationStore } from '@/lib/stores/dashboardNavigationStore';
-import { dashboardNavigationConfig, findNavNodeById } from '../navigation/dashboardNavigationConfig';
-import type { DashboardMainCategory } from '../types/dashboardNavigationTypes';
+import { useDashboardNavigation } from '../context/DashboardNavigationContext';
+import { getNavigationConfig } from '../utils/routeValidation';
 
 interface BreadcrumbItem {
-  id: string;
   label: string;
-  main?: string;
-  sub?: string;
-  leaf?: string;
+  path?: string;
 }
 
-export function DashboardBreadcrumbs() {
-  const { main, sub, leaf, setMain, setSub, setLeaf } = useDashboardNavigationStore();
+/**
+ * Composant Breadcrumbs pour le dashboard
+ * Lit l'état de navigation et affiche un fil d'Ariane cohérent
+ */
+export const DashboardBreadcrumbs = memo(function DashboardBreadcrumbs() {
+  // ✅ Utiliser directement le store pour éviter les problèmes de typage
+  const main = useDashboardNavigationStore((state) => state.main);
+  const sub = useDashboardNavigationStore((state) => state.sub);
+  const leaf = useDashboardNavigationStore((state) => state.leaf);
+  
+  // ✅ Mémoriser la config pour éviter les recalculs
+  // Type assertion nécessaire car NavigationConfig n'est pas exporté
+  const navConfig = useMemo(() => getNavigationConfig() as Record<string, {
+    label: string;
+    sub?: Record<string, {
+      label: string;
+      leaf?: Record<string, { label: string; component: string }>;
+    }>;
+  }>, []);
 
-  // Construire les breadcrumbs
-  const breadcrumbs = React.useMemo<BreadcrumbItem[]>(() => {
-    const items: BreadcrumbItem[] = [];
+  // ✅ Construire les items du breadcrumb
+  const breadcrumbItems = useMemo<BreadcrumbItem[]>(() => {
+    const items: BreadcrumbItem[] = [
+      {
+        label: 'Dashboard',
+        path: '/maitre-ouvrage/dashboard',
+      },
+    ];
 
-    // Accueil (Dashboard)
-    items.push({
-      id: 'home',
-      label: 'Dashboard',
-      main: 'overview',
-    });
-
-    // Niveau 1: Main category
-    const mainNode = dashboardNavigationConfig[main as DashboardMainCategory];
-    if (mainNode) {
+    // Ajouter main
+    if (main && navConfig[main]) {
       items.push({
-        id: main,
-        label: mainNode.label,
-        main: main,
+        label: navConfig[main].label || main,
       });
     }
 
-    // Niveau 2: Sub category
-    if (sub) {
-      const subNode = findNavNodeById(main as DashboardMainCategory, sub);
-      if (subNode) {
-        items.push({
-          id: sub,
-          label: subNode.label,
-          main: main,
-          sub: sub,
-        });
-      }
+    // Ajouter sub
+    if (main && sub && navConfig[main]?.sub?.[sub]) {
+      items.push({
+        label: navConfig[main].sub[sub].label || sub,
+      });
     }
 
-    // Niveau 3: Leaf category
-    if (leaf) {
-      const leafNode = findNavNodeById(main as DashboardMainCategory, sub || undefined, leaf);
-      if (leafNode) {
-        items.push({
-          id: leaf,
-          label: leafNode.label,
-          main: main,
-          sub: sub || undefined,
-          leaf: leaf,
-        });
-      }
+    // Ajouter leaf
+    if (main && sub && leaf && navConfig[main]?.sub?.[sub]?.leaf?.[leaf]) {
+      items.push({
+        label: navConfig[main].sub[sub].leaf[leaf].label || leaf,
+      });
     }
 
     return items;
-  }, [main, sub, leaf]);
+  }, [main, sub, leaf, navConfig]);
 
-  const handleBreadcrumbClick = (item: BreadcrumbItem) => {
-    if (item.id === 'home') {
-      setMain('overview');
-      setSub(null);
-      setLeaf(null);
-    } else if (item.main && !item.sub) {
-      setMain(item.main);
-      setSub(null);
-      setLeaf(null);
-    } else if (item.main && item.sub && !item.leaf) {
-      setMain(item.main);
-      setSub(item.sub);
-      setLeaf(null);
-    } else if (item.main && item.sub && item.leaf) {
-      setMain(item.main);
-      setSub(item.sub);
-      setLeaf(item.leaf);
-    }
-  };
-
-  if (breadcrumbs.length <= 1) {
-    return null; // Ne pas afficher si on est juste sur l'accueil
+  // Ne pas afficher si seulement Dashboard
+  if (breadcrumbItems.length <= 1) {
+    return null;
   }
 
   return (
     <nav
-      className="flex items-center gap-1.5 px-4 py-2 text-xs text-slate-400 bg-slate-900/30 border-b border-slate-800/50"
+      className="flex items-center gap-2 px-4 py-2 text-sm text-slate-400 border-b border-slate-800/60 bg-slate-900/40"
       aria-label="Fil d'Ariane"
     >
-      {breadcrumbs.map((item, index) => {
-        const isLast = index === breadcrumbs.length - 1;
-        const isClickable = !isLast && item.id !== 'home';
-
+      <Home className="h-4 w-4" aria-hidden="true" />
+      {breadcrumbItems.map((item, index) => {
+        const isLast = index === breadcrumbItems.length - 1;
         return (
-          <React.Fragment key={item.id}>
+          <React.Fragment key={`${item.label}-${index}`}>
             {index > 0 && (
-              <ChevronRight className="h-3 w-3 text-slate-600 flex-shrink-0" aria-hidden="true" />
+              <ChevronRight className="h-4 w-4 text-slate-600" aria-hidden="true" />
             )}
-            <button
-              type="button"
-              onClick={() => handleBreadcrumbClick(item)}
-              disabled={!isClickable}
+            <span
               className={cn(
-                'flex items-center gap-1 transition-colors',
+                'transition-colors',
                 isLast
-                  ? 'text-slate-200 font-medium cursor-default'
-                  : isClickable
-                  ? 'text-slate-400 hover:text-slate-200 hover:underline'
-                  : 'text-slate-500 cursor-default',
-                item.id === 'home' && 'text-slate-500 hover:text-slate-300'
+                  ? 'text-slate-200 font-medium'
+                  : 'text-slate-400 hover:text-slate-300'
               )}
-              aria-current={isLast ? 'page' : undefined}
             >
-              {item.id === 'home' && <Home className="h-3 w-3" aria-hidden="true" />}
-              <span>{item.label}</span>
-            </button>
+              {item.label}
+            </span>
           </React.Fragment>
         );
       })}
     </nav>
   );
-}
+});
 
+DashboardBreadcrumbs.displayName = 'DashboardBreadcrumbs';

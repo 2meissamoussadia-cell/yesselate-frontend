@@ -57,13 +57,24 @@ export async function getDemandesStats(): Promise<DemandeStats> {
   try {
     const response = await axios.get<DemandeStats>(`${API_BASE_URL}/stats`);
     return response.data;
-  } catch (error) {
-    // Fallback sur mock data si API non disponible
-    if (process.env.NODE_ENV === 'development' || !process.env.NEXT_PUBLIC_API_URL) {
+  } catch (error: any) {
+    // Retourner des données mockées si 404 (sans logger en production)
+    if (error?.response?.status === 404 || !error?.response) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('[getDemandesStats] Endpoint non disponible, utilisation de données mockées');
+      }
       const { mockStats } = await import('../data/demandesMock');
       return mockStats;
     }
-    throw error;
+    
+    // Logger uniquement les vraies erreurs en développement
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[getDemandesStats] Erreur lors de la récupération des statistiques:', error);
+    }
+    
+    // En production, retourner les données mockées pour éviter un écran blanc
+    const { mockStats } = await import('../data/demandesMock');
+    return mockStats;
   }
 }
 

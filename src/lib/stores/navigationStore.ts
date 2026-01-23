@@ -30,6 +30,16 @@ const initialState: NavigationState = {
   leaf: null,
 };
 
+// ✅ NOUVEAU: getServerSnapshot pour SSR (évite l'erreur "should be cached")
+const getServerSnapshot = (): NavigationStore => ({
+  ...initialState,
+  setMain: () => {},
+  setSub: () => {},
+  setLeaf: () => {},
+  navigate: () => {},
+  reset: () => {},
+});
+
 export const useNavigationStore = create<NavigationStore>()(
   persist(
     (set) => ({
@@ -53,6 +63,8 @@ export const useNavigationStore = create<NavigationStore>()(
     }),
     {
       name: 'general-navigation-storage', // Nom de la clé dans localStorage (renommé pour éviter conflit avec dashboardNavigationStore)
+      // ✅ NOUVEAU: getServerSnapshot pour SSR
+      getServerSnapshot,
       // Optionnel: ne persister que certaines clés
       // partialize: (state) => ({ main: state.main, sub: state.sub }),
     }

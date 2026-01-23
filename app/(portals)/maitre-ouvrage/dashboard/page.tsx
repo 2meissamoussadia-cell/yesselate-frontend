@@ -66,8 +66,10 @@ import {
   DashboardSidebar, 
   DashboardSubNavigation, 
   DashboardViewRouter,
+  DashboardKPIBar,
+  DashboardFooter,
 } from '@/modules/dashboard';
-import { DashboardBreadcrumbs } from '@/modules/dashboard/components/DashboardBreadcrumbs';
+// DashboardBreadcrumbs n'est plus disponible - utiliser un composant alternatif si nécessaire
 
 // ✅ Importer les modals
 import { DashboardModals } from '@/components/features/bmo/dashboard/command-center/DashboardModals';
@@ -75,6 +77,27 @@ import { getKPIMappingByLabel } from '@/lib/mappings/dashboardKPIMapping';
 import { useDashboardKPIs } from '@/lib/hooks/useDashboardKPIs';
 import { KPIAlertsSystem } from '@/components/features/bmo/dashboard/command-center/KPIAlertsSystem';
 import { useLogger } from '@/lib/utils/logger';
+
+/* =========================
+   Types & Interfaces Globaux
+========================= */
+
+// ✅ Type safety amélioré pour performance.memory (Chrome/Edge uniquement)
+interface PerformanceMemory {
+  usedJSHeapSize: number;
+  totalJSHeapSize: number;
+  jsHeapSizeLimit: number;
+}
+
+// ✅ Type safety amélioré pour window.__lastDashboardRefresh
+interface WindowWithRefresh extends Window {
+  __lastDashboardRefresh?: number;
+}
+
+// ✅ Extension du type Performance pour inclure memory
+interface PerformanceWithMemory extends Performance {
+  memory?: PerformanceMemory;
+}
 
 /* =========================
    Loading Fallback
@@ -224,34 +247,50 @@ const KPICountTooltipContent = memo(function KPICountTooltipContent({
    Dashboard Content
 ========================= */
 
-function DashboardContent() {
+// ✅ Mémoriser DashboardContent pour éviter les re-renders inutiles
+const DashboardContent = memo(function DashboardContent() {
   // ✅ Initialiser le logger
   const log = useLogger('DashboardContent');
   
   // ✅ LIRE LE STORE DE NAVIGATION (source unique de vérité pour la navigation)
-  // PATCH: Utiliser des sélecteurs spécifiques pour éviter les re-renders inutiles
+  // ✅ Utiliser des sélecteurs individuels pour éviter les re-renders si une seule valeur change
   const main = useDashboardNavigationStore((state) => state.main);
   const sub = useDashboardNavigationStore((state) => state.sub);
   const leaf = useDashboardNavigationStore((state) => state.leaf);
   
   // ✅ LIRE LE STORE COMMAND CENTER (uniquement pour UI: modals, sidebar collapse, etc.)
+  // ✅ OPTIMISÉ: Utiliser des sélecteurs individuels pour éviter les re-renders inutiles
+  // Les fonctions (toggleSidebar, toggleCommandPalette) sont stables et ne causent pas de re-renders
   const sidebarCollapsed = useDashboardCommandCenterStore((state) => state.sidebarCollapsed);
   const toggleSidebar = useDashboardCommandCenterStore((state) => state.toggleSidebar);
   const toggleCommandPalette = useDashboardCommandCenterStore((state) => state.toggleCommandPalette);
   
-  // ✅ Log de navigation avec timestamp
-  // PATCH: Retirer log des dépendances car useLogger retourne une référence stable
+  // ✅ Log de navigation avec timestamp (uniquement si changement réel)
+  // ✅ Mémoriser les valeurs de navigation pour éviter les logs répétés
+  const navigationKeyForLog = useMemo(() => `${main}|${sub || ''}|${leaf || ''}`, [main, sub, leaf]);
+  const prevNavigationKeyForLogRef = useRef<string>('');
+  
   useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
+    // ✅ Ne logger que si la navigation a vraiment changé
+    if (process.env.NODE_ENV === 'development' && navigationKeyForLog !== prevNavigationKeyForLogRef.current) {
       log.debug('NAVIGATION:', { main, sub, leaf, timestamp: Date.now() });
+      prevNavigationKeyForLogRef.current = navigationKeyForLog;
     }
-  }, [main, sub, leaf]); // log retiré des dépendances car stable
+  }, [navigationKeyForLog, main, sub, leaf, log]);
 
   // ✅ États locaux - déclarés en premier
   // Persister le filtre dans localStorage
   const [kpiFilter, setKpiFilter] = useState<string>(() => {
     if (typeof window !== 'undefined') {
-      return localStorage.getItem('dashboard-kpi-filter') || '';
+      try {
+        return localStorage.getItem('dashboard-kpi-filter') || '';
+      } catch (error) {
+        // localStorage peut être désactivé ou plein
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('[Dashboard] Erreur lors de la lecture de localStorage:', error);
+        }
+        return '';
+      }
     }
     return '';
   });
@@ -284,15 +323,22 @@ function DashboardContent() {
   const [showExportMenu, setShowExportMenu] = useState(false);
   const maxRetries = 3;
 
-  // ✅ Log du render avec navigation
+  // ✅ Log du render avec navigation (uniquement en développement)
+  // ✅ Mémoriser les valeurs de navigation pour éviter les logs répétés
+  const navigationKey = useMemo(() => `${main}|${sub || ''}|${leaf || ''}`, [main, sub, leaf]);
+  const prevNavigationKeyRef = useRef<string>('');
+  
   useEffect(() => {
-    log.debug('Render avec navigation', {
-      main,
-      sub,
-      leaf,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [main, sub, leaf]); // log est stable
+    // ✅ Ne logger que si la navigation a vraiment changé
+    if (process.env.NODE_ENV === 'development' && navigationKey !== prevNavigationKeyRef.current) {
+      log.debug('Render avec navigation', {
+        main,
+        sub,
+        leaf,
+      });
+      prevNavigationKeyRef.current = navigationKey;
+    }
+  }, [navigationKey, main, sub, leaf, log]);
 
   // ✅ Handler pour ouvrir le modal KPI
   const openModal = useDashboardCommandCenterStore((state) => state.openModal);
@@ -423,10 +469,17 @@ function DashboardContent() {
   // ✅ Persister le filtre dans localStorage
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      if (kpiFilter) {
-        localStorage.setItem('dashboard-kpi-filter', kpiFilter);
-      } else {
-        localStorage.removeItem('dashboard-kpi-filter');
+      try {
+        if (kpiFilter) {
+          localStorage.setItem('dashboard-kpi-filter', kpiFilter);
+        } else {
+          localStorage.removeItem('dashboard-kpi-filter');
+        }
+      } catch (error) {
+        // localStorage peut être désactivé ou plein
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('[Dashboard] Erreur lors de l\'écriture dans localStorage:', error);
+        }
       }
     }
   }, [kpiFilter]);
@@ -442,15 +495,10 @@ function DashboardContent() {
     return () => clearTimeout(timer);
   }, [kpiFilter]);
 
-  // ✅ KPIs filtrés avec optimisation de recherche et cache
-  const topKpis = useMemo(() => {
-    if (!debouncedKpiFilter.trim()) return allKpis;
-    const filterLower = debouncedKpiFilter.toLowerCase().trim();
-    return allKpis.filter(kpi => {
-      const labelLower = kpi.label.toLowerCase();
-      return labelLower.includes(filterLower);
-    });
-  }, [allKpis, debouncedKpiFilter]);
+  // ✅ topKpis est maintenant géré par DashboardKPIBar via useKPIFilter
+  // Conservé temporairement pour compatibilité avec ARIA Live Region
+  // TODO: Supprimer après migration complète vers DashboardKPIBar
+  const topKpis = allKpis; // Fallback temporaire - sera supprimé
 
   const stats = useMemo(
     () => ({
@@ -480,7 +528,8 @@ function DashboardContent() {
       // Ne mettre à jour que si le temps de rendu est significatif (> 10ms)
       if (renderTime > 10) {
         // Type guard pour performance.memory (Chrome/Edge uniquement)
-        const perfMemory = (performance as any).memory;
+        // ✅ Type safety amélioré avec interface dédiée
+        const perfMemory = (performance as PerformanceWithMemory).memory;
         const endMemory = perfMemory ? perfMemory.usedJSHeapSize : 0;
         const startMemory = perfMemory ? perfMemory.usedJSHeapSize : 0;
         
@@ -514,29 +563,31 @@ function DashboardContent() {
   // PATCH 5 — Utiliser une clé de comparaison stable pour éviter les mises à jour inutiles
   const allKpisKeyRef = useRef<string>('');
   
+  // ✅ Mémoriser la clé de comparaison pour éviter les recalculs
+  const currentKpisKey = useMemo(
+    () => allKpis.map((k) => `${k.label}:${k.value}`).join('|'),
+    [allKpis]
+  );
+  
   useEffect(() => {
     if (!hasInitializedRef.current) {
       hasInitializedRef.current = true;
       // Créer une clé stable pour la première initialisation
-      const initialKey = allKpis.map(k => `${k.label}:${k.value}`).join('|');
-      allKpisKeyRef.current = initialKey;
+      allKpisKeyRef.current = currentKpisKey;
       previousKpisRef.current = allKpis;
       return;
     }
 
     // Comparaison profonde pour éviter les déclenchements inutiles
-    // Créer une clé de comparaison basée sur les valeurs réelles
-    const currentKey = allKpis.map(k => `${k.label}:${k.value}`).join('|');
-    
     // Si les valeurs sont identiques, ne rien faire (même si la référence change)
-    if (currentKey === allKpisKeyRef.current) {
+    if (currentKpisKey === allKpisKeyRef.current) {
       // Ne PAS mettre à jour previousKpisRef.current si les valeurs sont identiques
       // Cela évite de créer une nouvelle référence qui déclencherait le useEffect à nouveau
       return;
     }
 
     // Les valeurs ont changé, mettre à jour la clé et la référence
-    allKpisKeyRef.current = currentKey;
+    allKpisKeyRef.current = currentKpisKey;
     const prev = previousKpisRef.current;
     previousKpisRef.current = allKpis; // ✅ IMPORTANT: on "commit" le snapshot TOUT DE SUITE
 
@@ -559,8 +610,11 @@ function DashboardContent() {
 
     if (changes.length === 0) return;
 
-    // Utiliser une fonction de mise à jour pour éviter les dépendances
-    setKpiChangeNotifications((p) => [...p, ...changes]);
+    // ✅ Limiter le nombre de notifications pour éviter l'accumulation (max 10)
+    setKpiChangeNotifications((p) => {
+      const updated = [...p, ...changes];
+      return updated.slice(-10); // Garder seulement les 10 dernières
+    });
 
     const timeouts = changes.map((change) =>
       window.setTimeout(() => {
@@ -569,7 +623,7 @@ function DashboardContent() {
     );
 
     return () => timeouts.forEach((t) => clearTimeout(t));
-  }, [allKpis]);
+  }, [currentKpisKey, allKpis]); // ✅ Utiliser currentKpisKey mémorisé au lieu de recalculer
 
   // ✅ Fonction interne de refresh avec retry - utilise maintenant l'API réelle
   const timeoutsRef = useRef<number[]>([]);
@@ -658,10 +712,12 @@ function DashboardContent() {
             webVitals.fcp = fcpEntry.startTime;
           }
         } catch (e) {
-          // Ignorer les erreurs de Web Vitals
+          // Ignorer les erreurs de Web Vitals (API non standardisée)
           if (process.env.NODE_ENV === 'development') {
-            log.debug('Web Vitals non disponibles', { error: e instanceof Error ? e.message : String(e) });
+            const errorMessage = e instanceof Error ? e.message : String(e);
+            log.debug('Web Vitals non disponibles', { error: errorMessage });
           }
+          // En production, ignorer silencieusement (Web Vitals optionnels)
         }
       }
       
@@ -724,7 +780,11 @@ function DashboardContent() {
         timestamp: new Date(),
       };
       
-      setKpiChangeNotifications(prev => [...prev, errorNotification]);
+      // ✅ Limiter le nombre de notifications (max 10)
+      setKpiChangeNotifications(prev => {
+        const updated = [...prev, errorNotification];
+        return updated.slice(-10);
+      });
       setRetryCount(0); // Reset après affichage de l'erreur
       
       // Auto-dismiss après 10 secondes pour les erreurs finales
@@ -761,7 +821,7 @@ function DashboardContent() {
 
   // ✅ Fonction d'export des données KPIs améliorée avec PDF/Excel
   const exportKPIs = useCallback(async (format: 'csv' | 'json' | 'pdf' | 'excel' = 'csv') => {
-    const data = topKpis.map(kpi => ({
+    const data = allKpis.map(kpi => ({
       Label: kpi.label,
       Valeur: kpi.value,
       Variation: kpi.delta,
@@ -846,11 +906,12 @@ function DashboardContent() {
       setKpiChangeNotifications(prev => [...prev, successNotification]);
       
       // Auto-dismiss après 3 secondes
-      setTimeout(() => {
+      const timeoutId = window.setTimeout(() => {
         setKpiChangeNotifications(prev => 
           prev.filter(n => n.id !== successNotification.id)
         );
       }, 3000);
+      timeoutsRef.current.push(timeoutId);
 
     } catch (error) {
       log.error('Erreur lors de l\'export', error instanceof Error ? error : new Error(String(error)));
@@ -861,23 +922,36 @@ function DashboardContent() {
         newValue: 'Échec',
         timestamp: new Date(),
       };
-      setKpiChangeNotifications(prev => [...prev, errorNotification]);
+      // ✅ Limiter le nombre de notifications (max 10)
+      setKpiChangeNotifications(prev => {
+        const updated = [...prev, errorNotification];
+        return updated.slice(-10);
+      });
       
-      setTimeout(() => {
+      const timeoutId = window.setTimeout(() => {
         setKpiChangeNotifications(prev => 
           prev.filter(n => n.id !== errorNotification.id)
         );
       }, 5000);
+      timeoutsRef.current.push(timeoutId);
     }
 
     setShowExportMenu(false);
-  }, [topKpis, log]);
+  }, [allKpis, log]); // Utiliser allKpis au lieu de topKpis
 
   // ✅ Gestion intelligente du refresh avec pause automatique
   const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('dashboard-auto-refresh');
-      return saved !== null ? saved === 'true' : true;
+      try {
+        const saved = localStorage.getItem('dashboard-auto-refresh');
+        return saved !== null ? saved === 'true' : true;
+      } catch (error) {
+        // localStorage peut être désactivé ou plein
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('[Dashboard] Erreur lors de la lecture de localStorage:', error);
+        }
+        return true; // Valeur par défaut
+      }
     }
     return true;
   });
@@ -885,11 +959,19 @@ function DashboardContent() {
   // PATCH: Mémoriser le handler pour éviter les re-renders inutiles
   // Ajouter une protection contre les clics multiples rapides et les boucles infinies
   const isTogglingRef = useRef(false);
+  const toggleTimeoutRef = useRef<number | null>(null);
+  
   // Handler mémorisé avec protection renforcée contre les boucles infinies
   const handleToggleAutoRefresh = useRef(() => {
     // Éviter les appels multiples - protection contre les boucles infinies
     if (isTogglingRef.current) {
       return;
+    }
+    
+    // Nettoyer le timeout précédent s'il existe
+    if (toggleTimeoutRef.current !== null) {
+      clearTimeout(toggleTimeoutRef.current);
+      toggleTimeoutRef.current = null;
     }
     
     isTogglingRef.current = true;
@@ -898,17 +980,36 @@ function DashboardContent() {
     setAutoRefreshEnabled(prev => {
       const newValue = !prev;
       // Réinitialiser le flag après un délai
-      setTimeout(() => {
+      toggleTimeoutRef.current = window.setTimeout(() => {
         isTogglingRef.current = false;
+        toggleTimeoutRef.current = null;
       }, 1000);
       return newValue;
     });
   }).current;
   
+  // ✅ Cleanup du timeout au démontage
+  useEffect(() => {
+    return () => {
+      if (toggleTimeoutRef.current !== null) {
+        clearTimeout(toggleTimeoutRef.current);
+        toggleTimeoutRef.current = null;
+      }
+    };
+  }, []);
+  
   const [refreshInterval, setRefreshInterval] = useState(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('dashboard-refresh-interval');
-      return saved ? parseInt(saved, 10) : 5 * 60 * 1000; // 5 minutes par défaut
+      try {
+        const saved = localStorage.getItem('dashboard-refresh-interval');
+        return saved ? parseInt(saved, 10) : 5 * 60 * 1000; // 5 minutes par défaut
+      } catch (error) {
+        // localStorage peut être désactivé ou plein
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('[Dashboard] Erreur lors de la lecture de localStorage:', error);
+        }
+        return 5 * 60 * 1000; // Valeur par défaut
+      }
     }
     return 5 * 60 * 1000;
   });
@@ -994,11 +1095,18 @@ function DashboardContent() {
     
     if (typeof window !== 'undefined') {
       persistTimeoutRef.current = setTimeout(() => {
-        localStorage.setItem('dashboard-auto-refresh', autoRefreshStr);
-        localStorage.setItem('dashboard-refresh-interval', intervalStr);
-        // Mettre à jour les refs après la persistance
-        lastPersistedAutoRefreshRef.current = autoRefreshStr;
-        lastPersistedIntervalRef.current = refreshInterval;
+        try {
+          localStorage.setItem('dashboard-auto-refresh', autoRefreshStr);
+          localStorage.setItem('dashboard-refresh-interval', intervalStr);
+          // Mettre à jour les refs après la persistance
+          lastPersistedAutoRefreshRef.current = autoRefreshStr;
+          lastPersistedIntervalRef.current = refreshInterval;
+        } catch (error) {
+          // localStorage peut être désactivé ou plein
+          if (process.env.NODE_ENV === 'development') {
+            console.warn('[Dashboard] Erreur lors de l\'écriture dans localStorage:', error);
+          }
+        }
         persistTimeoutRef.current = null;
       }, 500); // Debounce de 500ms
       
@@ -1058,8 +1166,8 @@ function DashboardContent() {
       refreshIntervalRef.current = null;
     }
     
-    // Ne créer l'intervalle que si auto-refresh est activé et en ligne
-    if (!autoRefreshEnabled || !isOnlineRef.current) {
+    // Ne créer l'intervalle que si auto-refresh est activé, en ligne, et onglet visible
+    if (!autoRefreshEnabled || !isOnlineRef.current || !isTabVisibleRef.current) {
       return;
     }
     
@@ -1072,12 +1180,13 @@ function DashboardContent() {
           isOnlineRef.current && 
           refreshStatusRef.current !== 'paused') {
         // Vérifier que le dernier refresh n'est pas trop récent (éviter les doubles)
+        // ✅ Type safety amélioré avec interface dédiée (définie en haut du fichier)
         const now = Date.now();
-        const lastRefreshTime = (window as any).__lastDashboardRefresh || 0;
+        const lastRefreshTime = (window as WindowWithRefresh).__lastDashboardRefresh || 0;
         const minInterval = 10000; // Minimum 10 secondes entre refreshes
         
         if (now - lastRefreshTime > minInterval) {
-          (window as any).__lastDashboardRefresh = now;
+          (window as WindowWithRefresh).__lastDashboardRefresh = now;
           refreshKPIsPublicRef.current();
         }
       }
@@ -1089,7 +1198,7 @@ function DashboardContent() {
         refreshIntervalRef.current = null;
       }
     };
-  }, [autoRefreshEnabled, refreshInterval]); // Dépendances nécessaires pour réagir aux changements
+  }, [autoRefreshEnabled, refreshInterval, isTabVisible, isOnline]); // Dépendances nécessaires pour réagir aux changements
 
   // ✅ Gestion des événements réseau (online/offline)
   // PATCH: Utiliser refreshKPIsPublicRef et autoRefreshEnabledRef pour éviter les dépendances instables
@@ -1103,7 +1212,12 @@ function DashboardContent() {
         }
         // Relancer le refresh si auto-refresh est activé (utiliser la ref)
         if (autoRefreshEnabledRef.current && refreshStatusRef.current === 'idle') {
-          setTimeout(() => refreshKPIsPublicRef.current(), 2000);
+          const timeoutId = window.setTimeout(() => {
+            if (isMountedRef.current) {
+              refreshKPIsPublicRef.current();
+            }
+          }, 2000);
+          timeoutsRef.current.push(timeoutId);
         }
       }
     };
@@ -1327,348 +1441,31 @@ function DashboardContent() {
         </div>
 
         {/* Breadcrumbs - Fil d'Ariane pour la navigation */}
-        <DashboardBreadcrumbs />
+        {/* DashboardBreadcrumbs supprimé - à réimplémenter si nécessaire */}
 
-        {/* KPI Strip - Amélioré avec animations */}
-        <div 
-            className="border-b border-slate-800/60 bg-gradient-to-b from-slate-900/60 via-slate-900/40 to-slate-900/60 backdrop-blur-xl px-4 py-4 shadow-lg shadow-black/20 relative overflow-hidden"
-            role="region"
-            aria-label="Indicateurs de performance en temps réel"
-          >
-            {/* Effet de brillance animé subtil */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-shimmer pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-              <div className="flex items-center gap-2">
-                <div 
-                  className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" 
-                  aria-hidden="true"
-                />
-                <h2 className="text-[11px] uppercase tracking-wide text-slate-400 font-medium">
-                  Indicateurs en temps réel
-                </h2>
-                {topKpis.length !== allKpis.length && (
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <span className="text-[10px] text-slate-500 cursor-help">
-                        ({topKpis.length}/{allKpis.length})
-                      </span>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <KPICountTooltipContent 
-                        count={topKpis.length}
-                        total={allKpis.length}
-                        filter={debouncedKpiFilter}
-                      />
-                    </TooltipContent>
-                  </Tooltip>
-                )}
-                {debouncedKpiFilter && debouncedKpiFilter !== kpiFilter && (
-                  <span className="text-[10px] text-blue-400 animate-pulse" aria-label="Recherche en cours">
-                    <Search className="h-3 w-3 inline" />
-                  </span>
-                )}
-              </div>
-              <div className="flex items-center gap-2 flex-1 justify-end min-w-[200px]">
-                {/* Filtre de recherche KPI */}
-                <div className="relative hidden sm:block">
-                  <input
-                    type="text"
-                    placeholder="Rechercher un indicateur..."
-                    value={kpiFilter}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setKpiFilter(value);
-                      // ✅ Le debounce est géré par debouncedKpiFilter
-                    }}
-                    className={cn(
-                      'w-48 px-3 py-1.5 text-xs rounded-md',
-                      'bg-slate-800/50 border border-slate-700/50',
-                      'text-slate-300 placeholder:text-slate-500',
-                      'focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50',
-                      'transition-all duration-200'
-                    )}
-                    aria-label="Rechercher un indicateur"
-                  />
-                  {kpiFilter && (
-                    <button
-                      onClick={handleClearKpiFilter}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-all duration-200 hover:scale-110 active:scale-95"
-                      aria-label="Effacer la recherche"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  )}
-                  {!kpiFilter && (
-                    <Search className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-slate-500 pointer-events-none" />
-                  )}
-                </div>
-                {/* Contrôle auto-refresh avec menu de configuration */}
-                <div className="relative group">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="inline-block">
-                        <button
-                          type="button"
-                          onClick={handleAutoRefreshClick}
-                          disabled={!isOnline}
-                          className={autoRefreshButtonClassName}
-                          aria-label={autoRefreshAriaLabel}
-                        >
-                          <Activity 
-                            className={autoRefreshIconClassName} 
-                          />
-                        </button>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <AutoRefreshTooltipContent 
-                        autoRefreshEnabled={autoRefreshEnabled}
-                        refreshInterval={refreshInterval}
-                        isTabVisible={isTabVisible}
-                        isOnline={isOnline}
-                      />
-                    </TooltipContent>
-                  </Tooltip>
-                  
-                  {/* Menu déroulant pour configurer l'intervalle */}
-                  <div className="absolute right-0 top-full mt-2 w-48 bg-slate-900/95 border border-slate-700/50 rounded-lg shadow-xl backdrop-blur-xl z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pointer-events-none group-hover:pointer-events-auto">
-                    <div className="p-2 space-y-2">
-                      <label className="text-xs text-slate-400 block">Intervalle de refresh</label>
-                      <select
-                        value={refreshInterval}
-                        onChange={(e) => setRefreshInterval(Number(e.target.value))}
-                        onClick={(e) => e.stopPropagation()}
-                        onMouseDown={(e) => e.stopPropagation()}
-                        className="w-full px-2 py-1.5 text-xs bg-slate-800/50 border border-slate-700/50 rounded text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-                      >
-                        <option value={60000}>1 minute</option>
-                        <option value={2 * 60000}>2 minutes</option>
-                        <option value={5 * 60000}>5 minutes</option>
-                        <option value={10 * 60000}>10 minutes</option>
-                        <option value={15 * 60000}>15 minutes</option>
-                        <option value={30 * 60000}>30 minutes</option>
-                      </select>
-                      <p className="text-[10px] text-slate-500 pt-1 border-t border-slate-700">
-                        Cliquez sur le bouton pour activer/désactiver
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="inline-block">
-                      <button
-                        type="button"
-                        onClick={refreshKPIs}
-                        disabled={refreshStatus === "loading" || refreshStatus === "retrying"}
-                        className={cn(
-                          'p-1.5 rounded-md transition-all duration-200',
-                          'hover:bg-slate-800/50 active:scale-95',
-                          'disabled:opacity-50 disabled:cursor-not-allowed',
-                          'focus:outline-none focus:ring-2 focus:ring-blue-500/50',
-                          (refreshStatus === "loading" || refreshStatus === "retrying") && 'bg-blue-500/10'
-                        )}
-                        aria-label="Actualiser les indicateurs"
-                      >
-                        <RefreshCw 
-                          className={cn(
-                            'h-3.5 w-3.5 text-slate-400 transition-colors',
-                            (refreshStatus === "loading" || refreshStatus === "retrying") && 'animate-spin text-blue-400'
-                          )} 
-                        />
-                      </button>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <RefreshTooltipContent 
-                      refreshCount={refreshCount}
-                      loadTime={performanceMetrics.loadTime}
-                      isTabVisible={isTabVisible}
-                    />
-                  </TooltipContent>
-                </Tooltip>
-                {/* Système d'alertes KPI */}
-                <div className="hidden md:block">
-                  <KPIAlertsSystemMemoized 
-                    kpis={allKpis}
-                    onAlert={(alert) => {
-                      // Ajouter l'alerte aux notifications
-                      setKpiChangeNotifications(prev => [...prev, {
-                        id: alert.id,
-                        label: alert.kpiLabel,
-                        oldValue: 'Alerte',
-                        newValue: alert.message,
-                        timestamp: alert.timestamp,
-                      }]);
-                    }}
-                  />
-                </div>
-                {/* Menu d'export */}
-                <div className="relative hidden md:block z-[55]">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="inline-block">
-                      <button
-                        type="button"
-                        onClick={handleToggleExportMenu}
-                        className={cn(
-                          'p-1.5 rounded-md transition-all duration-200',
-                          'hover:bg-slate-800/50 active:scale-95',
-                          'focus:outline-none focus:ring-2 focus:ring-blue-500/50',
-                          showExportMenu && 'bg-blue-500/10'
-                        )}
-                        aria-label="Exporter les données"
-                        aria-expanded={showExportMenu}
-                      >
-                        <Download className="h-3.5 w-3.5 text-slate-400" />
-                      </button>
-                    </div>
-                  </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Exporter les données (Ctrl+E)</p>
-                    </TooltipContent>
-                  </Tooltip>
-                  {showExportMenu && (
-                    <div className="absolute right-0 top-full mt-2 w-52 bg-slate-900/95 border border-slate-700/50 rounded-lg shadow-xl backdrop-blur-xl z-[60] animate-fadeIn pointer-events-auto">
-                      <div className="p-2 space-y-1">
-                        <div className="px-2 py-1.5 text-[10px] uppercase tracking-wide text-slate-500 font-medium">
-                          Format d'export
-                        </div>
-                        <button
-                          type="button"
-                          onClick={handleExportCSV}
-                          className="w-full flex items-center gap-2 px-3 py-2 text-xs text-slate-300 hover:bg-slate-800/50 rounded-md transition-colors"
-                        >
-                          <FileText className="h-3.5 w-3.5" />
-                          Exporter en CSV
-                        </button>
-                        <button
-                          type="button"
-                          onClick={handleExportJSON}
-                          className="w-full flex items-center gap-2 px-3 py-2 text-xs text-slate-300 hover:bg-slate-800/50 rounded-md transition-colors"
-                        >
-                          <BarChart3 className="h-3.5 w-3.5" />
-                          Exporter en JSON
-                        </button>
-                        <button
-                          type="button"
-                          onClick={handleExportPDF}
-                          className="w-full flex items-center gap-2 px-3 py-2 text-xs text-slate-300 hover:bg-slate-800/50 rounded-md transition-colors"
-                        >
-                          <FileText className="h-3.5 w-3.5" />
-                          Exporter en PDF
-                        </button>
-                        <button
-                          type="button"
-                          onClick={handleExportExcel}
-                          className="w-full flex items-center gap-2 px-3 py-2 text-xs text-slate-300 hover:bg-slate-800/50 rounded-md transition-colors"
-                        >
-                          <BarChart3 className="h-3.5 w-3.5" />
-                          Exporter en Excel
-                        </button>
-                        <div className="border-t border-slate-700/50 my-1" />
-                        <button
-                          onClick={() => {
-                            const openModal = useDashboardCommandCenterStore.getState().openModal;
-                            openModal('stats');
-                            setShowExportMenu(false);
-                          }}
-                          className="w-full flex items-center gap-2 px-3 py-2 text-xs text-slate-300 hover:bg-slate-800/50 rounded-md transition-colors"
-                        >
-                          <BarChart3 className="h-3.5 w-3.5" />
-                          Statistiques
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <div className="flex items-center gap-2">
-                  <LastUpdateDisplay lastUpdate={lastUpdate} />
-                  {(refreshStatus === "loading" || refreshStatus === "retrying") && (
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <span className="inline-flex items-center gap-1 text-[10px] text-blue-400 animate-pulse">
-                          <Zap className="h-2.5 w-2.5" />
-                          {retryCount > 0 ? `Tentative ${retryCount}/${maxRetries}...` : 'Actualisation...'}
-                        </span>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>
-                          {retryCount > 0 
-                            ? `Nouvelle tentative (${retryCount}/${maxRetries})` 
-                            : 'Mise à jour des indicateurs en cours'}
-                        </p>
-                      </TooltipContent>
-                    </Tooltip>
-                  )}
-                  {kpiChangeNotifications.length > 0 && refreshStatus === "idle" && (
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400">
-                          <Activity className="h-2.5 w-2.5 animate-pulse" />
-                          {kpiChangeNotifications.length} changement{kpiChangeNotifications.length > 1 ? 's' : ''}
-                        </span>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Des indicateurs ont été mis à jour</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  )}
-                </div>
-              </div>
-            </div>
-
-          {topKpis.length === 0 ? (
-            <div className="py-8 text-center" role="status" aria-live="polite" aria-atomic="true">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-slate-800/50 mb-3">
-                <Info className="h-6 w-6 text-slate-500" aria-hidden="true" />
-              </div>
-              <p className="text-sm text-slate-400 mb-2">Aucun indicateur trouvé</p>
-              <p className="text-xs text-slate-500 mb-3">
-                {kpiFilter 
-                  ? `Aucun résultat pour "${kpiFilter}"` 
-                  : "Essayez avec d'autres mots-clés"}
-              </p>
-              {kpiFilter && (
-                <button
-                  type="button"
-                  onClick={handleClearKpiFilter}
-                  className="text-xs text-blue-400 hover:text-blue-300 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/50 rounded px-2 py-1"
-                  aria-label="Effacer le filtre de recherche"
-                >
-                  Effacer le filtre
-                </button>
-              )}
-            </div>
-          ) : (
-            <div 
-              className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3"
-              role="list"
-              aria-label={`Liste des indicateurs de performance${topKpis.length !== allKpis.length ? ` (${topKpis.length} sur ${allKpis.length} affichés)` : ''}`}
-            >
-              {topKpis.map((kpi, index) => {
-                const Icon = kpi.icon;
-                // ✅ Calculs optimisés avec cache implicite via memo
-                const isPositive = kpi.trend === 'up' && kpi.tone === 'ok';
-                const isNegative = kpi.trend === 'down' && (kpi.tone === 'warn' || kpi.tone === 'crit');
-                
-                return (
-                  <div key={kpi.label} role="listitem">
-                    <KPICard
-                      kpi={kpi}
-                      icon={Icon}
-                      index={index}
-                      isPositive={isPositive}
-                      isNegative={isNegative}
-                      onClick={() => handleKPIClick(kpi)}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          )}
-          </div>
+        {/* KPI Strip - Utilise le composant DashboardKPIBar */}
+        <DashboardKPIBar
+          kpis={allKpis}
+          onKPIClick={handleKPIClick}
+          onExport={exportKPIs}
+          onRefresh={async () => {
+            await refreshKPIs();
+          }}
+          refreshInterval={refreshInterval}
+          autoRefreshEnabled={autoRefreshEnabled}
+          onAutoRefreshToggle={useCallback((enabled: boolean) => {
+            // Wrapper pour handleToggleAutoRefresh
+            // handleToggleAutoRefresh est déjà une fonction (useRef().current)
+            if (enabled !== autoRefreshEnabled) {
+              handleToggleAutoRefresh();
+            }
+          }, [autoRefreshEnabled])}
+          onRefreshIntervalChange={setRefreshInterval}
+          isOnline={isOnline}
+          isTabVisible={isTabVisible}
+          lastUpdate={lastUpdate}
+          performanceMetrics={performanceMetrics}
+        />
 
         {/* ARIA Live Region pour les annonces d'accessibilité */}
         <div 
@@ -1679,7 +1476,7 @@ function DashboardContent() {
         >
           {refreshStatus === 'loading' && 'Actualisation des données en cours'}
           {refreshStatus === 'error' && 'Erreur lors de l\'actualisation des données'}
-          {refreshStatus === 'idle' && refreshCount > 0 && `Données actualisées. ${topKpis.length} indicateur${topKpis.length > 1 ? 's' : ''} affiché${topKpis.length > 1 ? 's' : ''}`}
+          {refreshStatus === 'idle' && refreshCount > 0 && `Données actualisées. ${allKpis.length} indicateur${allKpis.length > 1 ? 's' : ''} affiché${allKpis.length > 1 ? 's' : ''}`}
           {kpiChangeNotifications.length > 0 && `${kpiChangeNotifications.length} notification${kpiChangeNotifications.length > 1 ? 's' : ''} nouvelle${kpiChangeNotifications.length > 1 ? 's' : ''}`}
         </div>
 
@@ -1700,198 +1497,18 @@ function DashboardContent() {
           </div>
         </div>
 
-        {/* Footer - Amélioré avec métriques et actions */}
-        <div className="border-t border-slate-800/60 bg-gradient-to-r from-slate-900/60 via-slate-900/40 to-slate-900/60 backdrop-blur-xl px-4 py-3 text-xs text-slate-500 flex items-center justify-between shadow-lg shadow-black/10">
-          <div className="flex items-center gap-3 flex-wrap">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <span className="font-medium text-slate-400 cursor-help">Dashboard v5.7</span>
-              </TooltipTrigger>
-              <TooltipContent>
-                <div className="space-y-1 text-xs">
-                  <div className="font-semibold">Version 5.7</div>
-                  <div className="text-slate-400">Dernière mise à jour: {new Date().toLocaleDateString('fr-FR')}</div>
-                </div>
-              </TooltipContent>
-            </Tooltip>
-            <span className="text-slate-600">•</span>
-            <span className="text-slate-500">Store Zustand</span>
-            <span className="text-slate-600">•</span>
-            <span className="text-slate-500">Navigation synchronisée</span>
-            {topKpis.length > 0 && (
-              <>
-                <span className="text-slate-600 hidden md:inline">•</span>
-                <span className="text-slate-500 hidden md:inline">
-                  {topKpis.length} indicateur{topKpis.length > 1 ? 's' : ''} actif{topKpis.length > 1 ? 's' : ''}
-                </span>
-              </>
-            )}
-            <span className="text-slate-600 hidden sm:inline">•</span>
-            {performanceMetrics.renderTime > 0 && (
-              <>
-                <span className="text-slate-600 hidden lg:inline">•</span>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <span className={cn(
-                      "hidden lg:inline-flex items-center gap-1 text-slate-500",
-                      performanceMetrics.renderTime < 50 && "text-emerald-400",
-                      performanceMetrics.renderTime >= 50 && performanceMetrics.renderTime < 100 && "text-amber-400",
-                      performanceMetrics.renderTime >= 100 && "text-red-400"
-                    )}>
-                      <Zap className={cn(
-                        "h-3 w-3",
-                        performanceMetrics.renderTime < 50 && "text-emerald-400",
-                        performanceMetrics.renderTime >= 50 && performanceMetrics.renderTime < 100 && "text-amber-400",
-                        performanceMetrics.renderTime >= 100 && "text-red-400"
-                      )} />
-                      <span>{performanceMetrics.renderTime.toFixed(0)}ms</span>
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <div className="space-y-1 text-xs">
-                      <p className="font-semibold">Performance</p>
-                      <p>Temps de rendu: {performanceMetrics.renderTime.toFixed(2)}ms</p>
-                      {performanceMetrics.loadTime > 0 && (
-                        <p>Temps de chargement: {performanceMetrics.loadTime.toFixed(2)}ms</p>
-                      )}
-                      <p className={cn(
-                        "pt-1 border-t border-slate-700 mt-1",
-                        performanceMetrics.renderTime < 50 && "text-emerald-400",
-                        performanceMetrics.renderTime >= 50 && performanceMetrics.renderTime < 100 && "text-amber-400",
-                        performanceMetrics.renderTime >= 100 && "text-red-400"
-                      )}>
-                        {performanceMetrics.renderTime < 50 ? "✅ Excellent" : 
-                         performanceMetrics.renderTime < 100 ? "⚠️ Bon" : "🔴 À optimiser"}
-                      </p>
-                    </div>
-                  </TooltipContent>
-                </Tooltip>
-              </>
-            )}
-            <span className="text-slate-600 hidden sm:inline">•</span>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="inline-block">
-                  <button
-                    type="button"
-                    className="hidden sm:inline-flex items-center gap-1 text-slate-500 hover:text-slate-300 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/50 rounded px-1"
-                    aria-label="Raccourcis clavier"
-                  >
-                    <Info className="h-3 w-3" />
-                    <span className="text-[10px]">Raccourcis</span>
-                  </button>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="top" className="max-w-xs">
-                <div className="space-y-1.5 text-xs">
-                  <div className="font-semibold mb-2">Raccourcis clavier</div>
-                  <div className="flex items-center justify-between gap-4">
-                    <span>Ouvrir la palette</span>
-                    <kbd className="px-1.5 py-0.5 bg-slate-700 rounded text-[10px]">Ctrl+K</kbd>
-                  </div>
-                  <div className="flex items-center justify-between gap-4">
-                    <span>Actualiser</span>
-                    <kbd className="px-1.5 py-0.5 bg-slate-700 rounded text-[10px]">Ctrl+R</kbd>
-                  </div>
-                  <div className="flex items-center justify-between gap-4">
-                    <span>Exporter CSV</span>
-                    <kbd className="px-1.5 py-0.5 bg-slate-700 rounded text-[10px]">Ctrl+E</kbd>
-                  </div>
-                  <div className="flex items-center justify-between gap-4">
-                    <span>Exporter JSON</span>
-                    <kbd className="px-1.5 py-0.5 bg-slate-700 rounded text-[10px]">Ctrl+Shift+E</kbd>
-                  </div>
-                  <div className="flex items-center justify-between gap-4">
-                    <span>Focus recherche</span>
-                    <kbd className="px-1.5 py-0.5 bg-slate-700 rounded text-[10px]">Ctrl+F</kbd>
-                  </div>
-                  <div className="flex items-center justify-between gap-4">
-                    <span>Toggle auto-refresh</span>
-                    <kbd className="px-1.5 py-0.5 bg-slate-700 rounded text-[10px]">Alt+A</kbd>
-                  </div>
-                  <div className="flex items-center justify-between gap-4">
-                    <span>Toggle sidebar</span>
-                    <kbd className="px-1.5 py-0.5 bg-slate-700 rounded text-[10px]">Ctrl+B</kbd>
-                  </div>
-                  <div className="flex items-center justify-between gap-4">
-                    <span>Raccourcis</span>
-                    <kbd className="px-1.5 py-0.5 bg-slate-700 rounded text-[10px]">Ctrl+/</kbd>
-                  </div>
-                  <div className="flex items-center justify-between gap-4">
-                    <span>Fermer notifications</span>
-                    <kbd className="px-1.5 py-0.5 bg-slate-700 rounded text-[10px]">Esc</kbd>
-                  </div>
-                  {performanceMetrics.loadTime > 0 && (
-                    <div className="pt-2 mt-2 border-t border-slate-700">
-                      <div className="flex items-center justify-between gap-4">
-                        <span>Dernier chargement</span>
-                        <span className="text-emerald-400">{performanceMetrics.loadTime.toFixed(0)}ms</span>
-                      </div>
-                      {performanceMetrics.renderTime > 0 && (
-                        <div className="flex items-center justify-between gap-4 mt-1">
-                          <span>Temps de rendu</span>
-                          <span className="text-emerald-400">{performanceMetrics.renderTime.toFixed(0)}ms</span>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </TooltipContent>
-            </Tooltip>
-          </div>
-          <div className="flex items-center gap-3">
-            {/* Indicateur de connexion réseau amélioré */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className={cn(
-                  "inline-flex items-center gap-2 px-2.5 py-1 rounded-md border transition-all cursor-help",
-                  isOnline 
-                    ? "bg-emerald-500/10 border-emerald-500/20 hover:border-emerald-500/40" 
-                    : "bg-amber-500/10 border-amber-500/20 hover:border-amber-500/40"
-                )}>
-                  <span className="relative flex h-2 w-2">
-                    {isOnline ? (
-                      <>
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
-                      </>
-                    ) : (
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400" />
-                    )}
-                  </span>
-                  <span className={cn(
-                    "font-medium text-xs",
-                    isOnline ? "text-emerald-400" : "text-amber-400"
-                  )}>
-                    {isOnline ? "Connecté" : "Hors ligne"}
-                  </span>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <div className="space-y-1 text-xs">
-                  <p className="font-semibold">
-                    {isOnline ? "✅ Connexion active" : "⚠️ Connexion perdue"}
-                  </p>
-                  {!isOnline && (
-                    <>
-                      <p className="text-amber-400">
-                        Le refresh automatique est suspendu
-                      </p>
-                      <p className="text-slate-400 text-[10px] pt-1 border-t border-slate-700 mt-1">
-                        Reconnexion automatique à la restauration du réseau
-                      </p>
-                    </>
-                  )}
-                  {isOnline && autoRefreshEnabled && (
-                    <p className="text-slate-400">
-                      Refresh automatique: {Math.round(refreshInterval / 1000 / 60)} min
-                    </p>
-                  )}
-                </div>
-              </TooltipContent>
-            </Tooltip>
-          </div>
-        </div>
+        {/* Footer - Utilise le composant DashboardFooter */}
+        <DashboardFooter
+          version="5.7"
+          performanceMetrics={performanceMetrics}
+          isOnline={isOnline}
+          autoRefreshEnabled={autoRefreshEnabled}
+          refreshInterval={refreshInterval}
+          onShowShortcuts={useCallback(() => {
+            const openModal = useDashboardCommandCenterStore.getState().openModal;
+            openModal('shortcuts');
+          }, [])}
+        />
       </section>
       </div>
 
@@ -1913,7 +1530,7 @@ function DashboardContent() {
       <DashboardModals />
     </>
   );
-}
+});
 
 /* =========================
    Types et Interfaces - Consolidés

@@ -46,6 +46,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { NotificationsPanel } from '@/components/shared/NotificationsPanel';
 
 // Pattern Modal Overlay
 import { GenericDetailModal, type ActionButton, type TabConfig } from '@/components/ui/GenericDetailModal';
@@ -611,7 +612,11 @@ export default function ClientsPage() {
 
       {/* Notifications Panel */}
       {notificationsPanelOpen && (
-        <NotificationsPanel onClose={() => setNotificationsPanelOpen(false)} />
+        <NotificationsPanel 
+          isOpen={notificationsPanelOpen}
+          onClose={() => setNotificationsPanelOpen(false)}
+          moduleName="Clients"
+        />
       )}
 
       {/* Filters Panel */}
@@ -641,115 +646,3 @@ export default function ClientsPage() {
   );
 }
 
-// ================================
-// Notifications Panel
-// ================================
-function NotificationsPanel({ onClose }: { onClose: () => void }) {
-  const notifications = [
-    {
-      id: '1',
-      type: 'critical',
-      title: 'Nouveau litige client Epsilon SA',
-      time: 'il y a 15 min',
-      read: false,
-    },
-    {
-      id: '2',
-      type: 'warning',
-      title: 'Contrat à renouveler - Omega Corp',
-      time: 'il y a 1h',
-      read: false,
-    },
-    {
-      id: '3',
-      type: 'info',
-      title: 'Nouveau prospect qualifié',
-      time: 'il y a 3h',
-      read: true,
-    },
-    {
-      id: '4',
-      type: 'warning',
-      title: 'Interaction en attente',
-      time: 'il y a 5h',
-      read: true,
-    },
-    {
-      id: '5',
-      type: 'info',
-      title: 'Rapport client généré',
-      time: 'hier',
-      read: true,
-    },
-  ];
-
-  return (
-    <>
-      {/* Overlay */}
-      <div className="fixed inset-0 bg-black/40 z-40" onClick={onClose} />
-
-      {/* Panel */}
-      <div className="fixed right-0 top-0 bottom-0 w-96 bg-slate-900 border-l border-slate-700/50 z-50 flex flex-col">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-800/50">
-          <div className="flex items-center gap-2">
-            <Bell className="h-4 w-4 text-cyan-400" />
-            <h3 className="text-sm font-medium text-slate-200">Notifications</h3>
-            <Badge className="bg-cyan-500/20 text-cyan-400 border-cyan-500/30 text-xs">
-              2 nouvelles
-            </Badge>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClose}
-            className="h-7 w-7 p-0 text-slate-500 hover:text-slate-300"
-          >
-            ×
-          </Button>
-        </div>
-
-        <div className="flex-1 overflow-y-auto divide-y divide-slate-800/50">
-          {notifications.map((notif) => (
-            <div
-              key={notif.id}
-              className={cn(
-                'px-4 py-3 hover:bg-slate-800/30 cursor-pointer transition-colors',
-                !notif.read && 'bg-slate-800/20'
-              )}
-            >
-              <div className="flex items-start gap-3">
-                <div
-                  className={cn(
-                    'w-2 h-2 rounded-full mt-1.5 flex-shrink-0',
-                    notif.type === 'critical'
-                      ? 'bg-red-500'
-                      : notif.type === 'warning'
-                      ? 'bg-amber-500'
-                      : 'bg-cyan-500'
-                  )}
-                />
-                <div className="min-w-0">
-                  <p
-                    className={cn(
-                      'text-sm',
-                      !notif.read ? 'text-slate-200 font-medium' : 'text-slate-400'
-                    )}
-                  >
-                    {notif.title}
-                  </p>
-                  <p className="text-xs text-slate-600 mt-0.5">{notif.time}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="p-4 border-t border-slate-800/50">
-          <Button variant="outline" size="sm" className="w-full border-slate-700 text-slate-400">
-            Voir toutes les notifications
-          </Button>
-        </div>
-      </div>
-    </>
-  );
-}

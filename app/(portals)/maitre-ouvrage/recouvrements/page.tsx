@@ -33,10 +33,10 @@ import { useBMOStore } from '@/lib/stores';
 import {
   RecouvrementsKPIBar,
   RecouvrementsModals,
-  RecouvrementsNotificationsPanel,
   recouvrementsCategories,
   type RecouvrementsModalType,
 } from '@/components/features/bmo/workspace/recouvrements/command-center';
+import { NotificationsPanel } from '@/components/shared/NotificationsPanel';
 // New 3-level navigation module
 import {
   RecouvrementsSidebar,
@@ -519,9 +519,10 @@ function RecouvrementsPageContent() {
       />
 
       {/* Notifications Panel */}
-      <RecouvrementsNotificationsPanel
+      <NotificationsPanel
         isOpen={notificationsPanelOpen}
         onClose={() => setNotificationsPanelOpen(false)}
+        moduleName="Recouvrements"
       />
     </div>
   );

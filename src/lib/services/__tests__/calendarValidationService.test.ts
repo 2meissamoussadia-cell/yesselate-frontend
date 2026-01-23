@@ -129,11 +129,12 @@ describe('CalendarValidationService', () => {
       expect(result.errors.some(e => e.code === 'TOO_MANY_ATTENDEES')).toBe(true);
     });
 
-    it('should warn for very long duration', () => {
+    it('should warn for very long duration (>24h)', () => {
       const event: EventData = {
-        title: 'Réunion longue',
+        title: 'Événement très long',
         start: new Date('2025-02-01T09:00:00'),
-        end: new Date('2025-02-01T18:00:00') // 9 heures
+        end: new Date('2025-02-02T10:00:00'), // > 24 heures
+        allDay: false
       };
 
       const result = service.validateEvent(event);
@@ -146,8 +147,8 @@ describe('CalendarValidationService', () => {
     it('should accept valid all-day event', () => {
       const event: EventData = {
         title: 'Jour férié',
-        start: new Date('2025-05-01'),
-        end: new Date('2025-05-01'),
+        start: new Date('2025-05-01T00:00:00'),
+        end: new Date('2025-05-01T23:59:59'),
         allDay: true
       };
 

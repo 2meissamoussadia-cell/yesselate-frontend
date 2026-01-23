@@ -18,6 +18,8 @@ import {
 } from '@/components/features/bmo/dashboard/command-center/views';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { useLogger } from '@/lib/utils/logger';
+import { cn } from '@/lib/utils';
+import { zIndexClass } from '../utils/zIndex';
 
 export interface DashboardContentRouterProps {
   mainCategory?: DashboardMainCategory;
@@ -161,7 +163,7 @@ export function NavigationDebugger() {
   }
 
   return (
-    <div className="fixed bottom-4 left-4 p-4 bg-slate-900 border border-orange-500 rounded text-xs text-orange-300 z-40 max-w-sm">
+    <div className={cn("fixed bottom-4 left-4 p-4 bg-slate-900 border border-orange-500 rounded text-xs text-orange-300 max-w-sm", zIndexClass('notification'))}>
       <h3 className="font-bold mb-2">🔍 Navigation Debug</h3>
       <pre className="font-mono text-[10px] space-y-1">
         <div>Main: <span className="text-blue-400">{navigation.mainCategory}</span></div>

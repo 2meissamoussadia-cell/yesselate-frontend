@@ -70,24 +70,25 @@ export const DashboardBreadcrumbs = memo(function DashboardBreadcrumbs() {
 
   return (
     <nav
-      className="flex items-center gap-2 px-4 py-2 text-sm text-slate-400 border-b border-slate-800/60 bg-slate-900/40"
+      className="flex items-center gap-2 px-4 py-2 text-sm text-slate-300 border-b border-slate-800/60 bg-slate-900/40 min-w-0 overflow-hidden"
       aria-label="Fil d'Ariane"
     >
-      <Home className="h-4 w-4" aria-hidden="true" />
+      <Home className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
       {breadcrumbItems.map((item, index) => {
         const isLast = index === breadcrumbItems.length - 1;
         return (
           <React.Fragment key={`${item.label}-${index}`}>
             {index > 0 && (
-              <ChevronRight className="h-4 w-4 text-slate-600" aria-hidden="true" />
+              <ChevronRight className="h-4 w-4 text-slate-500 flex-shrink-0" aria-hidden="true" />
             )}
             <span
               className={cn(
-                'transition-colors',
+                'transition-colors truncate min-w-0',
                 isLast
                   ? 'text-slate-200 font-medium'
-                  : 'text-slate-400 hover:text-slate-300'
+                  : 'text-slate-300 hover:text-slate-100'
               )}
+              aria-current={isLast ? 'page' : undefined}
             >
               {item.label}
             </span>

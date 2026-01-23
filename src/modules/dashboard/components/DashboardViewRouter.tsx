@@ -9,7 +9,8 @@
 
 'use client';
 
-import { Suspense, useEffect, useState, useMemo } from 'react';
+import { Suspense, useEffect, useState, useMemo, memo } from 'react';
+import React from 'react';
 import { loadComponent } from '../utils/loadComponent';
 import { useDashboardNavigation } from '../context/DashboardNavigationContext';
 import {
@@ -20,6 +21,7 @@ import {
 } from '../utils/routeValidation';
 import { useLogger } from '@/lib/utils/logger';
 import type { ComponentType } from 'react';
+import { useTouchGestures } from '../hooks/useTouchGestures';
 
 // ✅ Cache des composants chargés pour éviter les rechargements inutiles
 const componentCache = new Map<string, ComponentType>();
@@ -27,7 +29,7 @@ const componentCache = new Map<string, ComponentType>();
 // ✅ Set pour tracker les routes déjà loggées comme "non trouvées" (évite le spam de warnings)
 const warnedRoutes = new Set<string>();
 
-export function DashboardViewRouter() {
+export const DashboardViewRouter = memo(function DashboardViewRouter() {
   // ✅ Initialiser le logger
   const log = useLogger('DashboardViewRouter');
   
@@ -38,6 +40,21 @@ export function DashboardViewRouter() {
   const [Component, setComponent] = useState<ComponentType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  // ✅ Touch gestures pour navigation mobile (swipe left/right)
+  const containerRef = useTouchGestures(
+    {
+      onSwipeLeft: () => {
+        // Navigation vers la prochaine catégorie (à implémenter selon la logique métier)
+        log.debug('Swipe left détecté');
+      },
+      onSwipeRight: () => {
+        // Navigation vers la catégorie précédente
+        log.debug('Swipe right détecté');
+      },
+    },
+    { enabled: true, preventDefault: false } // Ne pas bloquer le scroll
+  );
 
   // ✅ Mémoriser currentRoute pour éviter les re-créations et optimiser les dépendances
   // Note: navigationConfig n'est plus nécessaire dans les dépendances car getNavigationConfig()
@@ -151,18 +168,14 @@ export function DashboardViewRouter() {
         }
 
         // Charger le composant dynamiquement
-        if (process.env.NODE_ENV === 'development') {
-          console.log('[DashboardViewRouter] Chargement composant:', componentName);
-        }
+        log.debug('Chargement composant', { componentName });
         const Loaded = await loadComponent(componentName);
         
         // ✅ Vérifier si le composant n'a pas été annulé avant de mettre à jour
         if (cancelled) return;
         
         componentCache.set(routeKey, Loaded); // Mettre en cache
-        if (process.env.NODE_ENV === 'development') {
-          console.log('[DashboardViewRouter] Composant chargé avec succès');
-        }
+        log.debug('Composant chargé avec succès', { componentName, routeKey });
         setComponent(() => Loaded);
         setIsLoading(false);
       } catch (e) {
@@ -218,4 +231,5 @@ export function DashboardViewRouter() {
       <Component />
     </Suspense>
   );
-}
+});
+

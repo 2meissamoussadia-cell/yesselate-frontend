@@ -19,6 +19,7 @@ import {
 import { useDashboardNavigation } from '../context/DashboardNavigationContext';
 import { useLogger } from '@/lib/utils/logger';
 import { getDefaultLeafForSub, isValidRoute } from '../utils/routeValidation';
+import { zIndexClass } from '../utils/zIndex';
 
 interface DashboardSubNavigationProps {
   stats?: {
@@ -156,23 +157,23 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
       
       {/* Breadcrumb */}
       <div 
-        className="px-2 sm:px-4 py-2 sm:py-2.5 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm border-b border-slate-800/50 relative z-10 min-w-0 overflow-x-auto"
+        className={cn("px-2 sm:px-4 py-2 sm:py-2.5 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm border-b border-slate-800/50 relative min-w-0 overflow-x-auto", zIndexClass('breadcrumbs'))}
         role="navigation"
         aria-label="Fil d'Ariane"
       >
-        <span className="text-slate-500">Dashboard</span>
-        <ChevronRight className="h-3 w-3 text-slate-600" />
-        <span className="text-slate-300 font-medium">{mainLabel}</span>
+        <span className="text-slate-400">Dashboard</span>
+        <ChevronRight className="h-3 w-3 text-slate-500" />
+        <span className="text-slate-200 font-medium">{mainLabel}</span>
         {sub && activeSubLabel && (
           <>
-            <ChevronRight className="h-3 w-3 text-slate-600" />
-            <span className="text-slate-400">{activeSubLabel}</span>
+            <ChevronRight className="h-3 w-3 text-slate-500" />
+            <span className="text-slate-300">{activeSubLabel}</span>
           </>
         )}
         {leaf && activeSubSubLabel && (
           <>
-            <ChevronRight className="h-3 w-3 text-slate-600" />
-            <span className="text-slate-500 text-xs flex items-center gap-1">
+            <ChevronRight className="h-3 w-3 text-slate-500" />
+            <span className="text-slate-400 text-xs flex items-center gap-1">
               <Sparkles className="h-3 w-3" />
               {activeSubSubLabel}
             </span>
@@ -182,8 +183,11 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
 
       {/* Level 2 Navigation - Sub Categories */}
       {subCategories.length > 0 && (
-        <div className="px-2 sm:px-4 py-2 sm:py-2.5 border-b border-slate-800/50 relative z-10 min-w-0">
-          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent pb-1 min-w-0">
+        <div className={cn("px-2 sm:px-4 py-2 sm:py-2.5 border-b border-slate-800/50 relative min-w-0", zIndexClass('subNavigation'))}>
+          <div 
+            className="flex items-center gap-1.5 overflow-x-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent pb-1 min-w-0"
+            style={{ WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
+          >
             {subCategories.map((subCat, idx) => {
               const isActive = sub === subCat.id;
               const badge = getBadgeForNode(subCat);
@@ -206,7 +210,7 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
                           'focus:outline-none focus:ring-2 focus:ring-blue-500/50',
                           isActive
                             ? 'bg-blue-500/20 text-blue-300 border-blue-500/30 shadow-lg shadow-blue-500/10 scale-105'
-                            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 border-transparent hover:border-slate-700/30 hover:scale-105'
+                            : 'text-slate-300 hover:text-slate-100 hover:bg-slate-800/50 border-transparent hover:border-slate-700/30 hover:scale-105'
                         )}
                         style={{ animationDelay: `${idx * 50}ms` }}
                         aria-label={`${subCat.label}${badge ? `, ${badge} éléments` : ''}`}
@@ -217,7 +221,7 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
                           '-translate-x-full group-hover:translate-x-full transition-transform duration-700',
                           'pointer-events-none'
                         )} />
-                        <span className="relative z-10">{subCat.label}</span>
+                        <span className={cn("relative", zIndexClass('navigation'))}>{subCat.label}</span>
                         {badge !== undefined && badge !== null && badge !== 0 && (
                           <Badge
                             variant={badgeType === 'critical' ? 'urgent' : badgeType === 'warning' ? 'warning' : 'default'}
@@ -243,8 +247,11 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
 
       {/* Level 3 Navigation - Sub Sub Categories */}
       {subSubCategories.length > 0 && sub && (
-        <div className="px-2 sm:px-4 py-2 sm:py-2.5 bg-slate-800/20 relative z-10 min-w-0">
-          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent pb-1 min-w-0">
+        <div className={cn("px-2 sm:px-4 py-2 sm:py-2.5 bg-slate-800/20 relative min-w-0", zIndexClass('subNavigation'))}>
+          <div 
+            className="flex items-center gap-1.5 overflow-x-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent pb-1 min-w-0"
+            style={{ WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
+          >
             {subSubCategories.map((subSubCat, idx) => {
               const isActive = leaf === subSubCat.id;
               const badge = getBadgeForNode(subSubCat);
@@ -267,7 +274,7 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
                           'focus:outline-none focus:ring-2 focus:ring-blue-500/50',
                           isActive
                             ? 'bg-blue-500/25 text-blue-300 border-blue-500/30 shadow-md shadow-blue-500/5 scale-105'
-                            : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800/40 border-transparent hover:border-slate-700/30 hover:scale-105'
+                            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 border-transparent hover:border-slate-700/30 hover:scale-105'
                         )}
                         style={{ animationDelay: `${idx * 30}ms` }}
                         aria-label={`${subSubCat.label}${badge ? `, ${badge} éléments` : ''}`}
@@ -278,11 +285,11 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
                           '-translate-x-full group-hover:translate-x-full transition-transform duration-700',
                           'pointer-events-none'
                         )} />
-                        <span className="relative z-10">{subSubCat.label}</span>
+                        <span className={cn("relative", zIndexClass('navigation'))}>{subSubCat.label}</span>
                         {badge !== undefined && badge !== null && badge !== 0 && (
                           <Badge
                             variant={badgeType === 'critical' ? 'urgent' : badgeType === 'warning' ? 'warning' : 'default'}
-                            className="ml-2 h-4 min-w-4 px-1 text-[10px] relative z-10"
+                            className={cn("ml-2 h-4 min-w-4 px-1 text-[10px] relative", zIndexClass('navigation'))}
                           >
                             {badge}
                           </Badge>

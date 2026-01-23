@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 
 interface Props {
   children: ReactNode;
-  fallback?: ReactNode;
+  fallback?: ReactNode | ((error: Error) => ReactNode);
   onError?: (error: Error, errorInfo: ErrorInfo) => void;
 }
 
@@ -44,6 +44,13 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       if (this.props.fallback) {
+        // Si fallback est une fonction, l'appeler avec l'erreur
+        if (typeof this.props.fallback === 'function') {
+          return this.state.error 
+            ? this.props.fallback(this.state.error)
+            : this.props.fallback(new Error('Unknown error'));
+        }
+        // Sinon, retourner directement le ReactNode
         return this.props.fallback;
       }
 

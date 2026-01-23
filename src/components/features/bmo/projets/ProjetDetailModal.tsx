@@ -24,7 +24,7 @@ import {
   Activity,
 } from 'lucide-react';
 
-interface Projet {
+export interface Projet {
   id: string;
   nom: string;
   reference: string;
@@ -40,7 +40,7 @@ interface Projet {
   avancement: number;
 }
 
-interface ProjetDetailModalProps {
+export interface ProjetDetailModalProps {
   projets: Projet[];
   selectedId: string | null;
   onClose: () => void;

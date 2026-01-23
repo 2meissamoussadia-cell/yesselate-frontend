@@ -210,9 +210,9 @@ export default function SummaryPointsPage() {
               <Icon className="w-6 h-6 text-white" />
             </div>
             <div>
-              <p className="text-sm text-slate-400 font-medium">{indicator.label}</p>
+              <p className="text-sm text-slate-300 font-medium">{indicator.label}</p>
               {indicator.period && (
-                <p className="text-xs text-slate-500 mt-0.5">{indicator.period}</p>
+                <p className="text-xs text-slate-400 mt-0.5">{indicator.period}</p>
               )}
             </div>
           </div>
@@ -232,7 +232,7 @@ export default function SummaryPointsPage() {
             'flex items-center gap-2 text-sm font-medium',
             isPositive && 'text-green-400',
             isNegative && 'text-red-400',
-            isNeutral && 'text-slate-400'
+            isNeutral && 'text-slate-300'
           )}
         >
           {!isNeutral && (
@@ -257,7 +257,7 @@ export default function SummaryPointsPage() {
       {/* En-tête */}
       <div className="min-w-0">
         <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2 break-words">Points Clés</h1>
-        <p className="text-slate-400 text-sm sm:text-lg break-words">Indicateurs stratégiques essentiels organisés par thème</p>
+        <p className="text-slate-300 text-sm sm:text-lg break-words">Indicateurs stratégiques essentiels organisés par thème</p>
       </div>
 
       {/* Groupes d'indicateurs */}
@@ -310,7 +310,7 @@ export default function SummaryPointsPage() {
             <p className="font-medium">{new Date().toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' })}</p>
           </div>
           <div>
-            <p className="text-slate-400 mb-2">Période d'analyse</p>
+            <p className="text-slate-300 mb-2">Période d'analyse</p>
             <p className="font-medium">Mois en cours</p>
           </div>
         </div>

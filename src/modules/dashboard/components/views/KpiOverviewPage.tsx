@@ -147,7 +147,7 @@ export default function KpiOverviewPage() {
             "flex items-center gap-2 text-sm font-medium",
             isPositive && "text-green-400",
             isNegative && "text-red-400",
-            isNeutral && "text-slate-400"
+            isNeutral && "text-slate-300"
           )}
         >
           {!isNeutral && (
@@ -203,14 +203,14 @@ export default function KpiOverviewPage() {
 
         {/* Title et description */}
         <h3 className="text-xl font-bold text-white mb-2">{category.title}</h3>
-        <p className="text-slate-400 text-sm mb-4">{category.description}</p>
+        <p className="text-slate-300 text-sm mb-4">{category.description}</p>
 
         {/* Indicateurs clés */}
         {category.indicators && category.indicators.length > 0 && (
           <div className="space-y-2 mb-4 pt-4 border-t border-slate-700/50">
             {category.indicators.map((indicator, idx) => (
               <div key={idx} className="flex items-center justify-between text-sm">
-                <span className="text-slate-400">{indicator.label}</span>
+                <span className="text-slate-300">{indicator.label}</span>
                 <div className="flex items-center gap-2">
                   <span className="text-white font-semibold">{indicator.value}</span>
                   <span
@@ -243,7 +243,7 @@ export default function KpiOverviewPage() {
       {/* En-tête */}
       <div className="min-w-0">
         <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2 break-words">Vue d'ensemble des KPIs</h1>
-        <p className="text-slate-400 text-sm sm:text-lg break-words">Tous les indicateurs de performance disponibles organisés par catégorie</p>
+        <p className="text-slate-300 text-sm sm:text-lg break-words">Tous les indicateurs de performance disponibles organisés par catégorie</p>
       </div>
 
       {/* Stats Summary */}
@@ -291,14 +291,14 @@ export default function KpiOverviewPage() {
               <BarChart3 className="w-5 h-5 text-purple-400" />
               <h3 className="font-semibold text-white">KPIs Projets</h3>
             </div>
-            <p className="text-sm text-slate-400">Vue agrégée de tous les projets</p>
+            <p className="text-sm text-slate-300">Vue agrégée de tous les projets</p>
           </div>
           <div className="bg-slate-800/50 rounded-lg p-4">
             <div className="flex items-center gap-2 mb-2">
               <DollarSign className="w-5 h-5 text-emerald-400" />
               <h3 className="font-semibold text-white">KPIs Budget</h3>
             </div>
-            <p className="text-sm text-slate-400">Suivi financier et consommation budgétaire</p>
+            <p className="text-sm text-slate-300">Suivi financier et consommation budgétaire</p>
           </div>
         </div>
       </section>

@@ -64,14 +64,38 @@ const nextConfig: NextConfig = {
   // Activation du mode React strict
   reactStrictMode: true,
 
+  // ✅ Optimisations Fast Refresh
+  experimental: {
+    // Optimiser la compilation des packages lourds
+    optimizePackageImports: [
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-tooltip',
+      '@radix-ui/react-popover',
+      '@radix-ui/react-select',
+      'lucide-react',
+      '@tanstack/react-query',
+      '@tanstack/react-virtual',
+    ],
+    // Réduire la taille des chunks
+    optimizeCss: true,
+  },
+
+  // ✅ Compiler optimisé
+  compiler: {
+    // Supprimer les console.log en production
+    removeConsole: process.env.NODE_ENV === 'production' ? {
+      exclude: ['error', 'warn'],
+    } : false,
+  },
+
   // Configuration Turbopack (Next.js 16+)
   turbopack: {
     // Root directory explicite pour éviter le warning
     root: process.cwd(),
   },
 
-  // Fallback webpack pour compatibilité (si besoin de revenir à webpack)
-  webpack: (config, { isServer }) => {
+  // ✅ Optimisations webpack pour Fast Refresh
+  webpack: (config, { isServer, dev }) => {
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
@@ -81,6 +105,35 @@ const nextConfig: NextConfig = {
         canvas: false,
       };
     }
+
+    // ✅ Optimisations Fast Refresh en développement
+    if (dev && !isServer) {
+      // Optimiser Fast Refresh avec des IDs nommés
+      config.optimization = {
+        ...config.optimization,
+        moduleIds: 'named',
+        chunkIds: 'named',
+      };
+
+      // Réduire la taille des chunks en développement
+      config.optimization.splitChunks = {
+        chunks: 'all',
+        cacheGroups: {
+          default: {
+            minChunks: 1,
+            priority: -20,
+            reuseExistingChunk: true,
+          },
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            priority: -10,
+            reuseExistingChunk: true,
+          },
+        },
+      };
+    }
+
     return config;
   },
 

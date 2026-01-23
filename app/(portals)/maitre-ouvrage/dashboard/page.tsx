@@ -27,7 +27,7 @@
 
 'use client';
 
-import React, { Suspense, useMemo, memo, useCallback, useEffect, useLayoutEffect, useState, useRef } from 'react';
+import React, { Suspense, useMemo, memo, useCallback, useEffect, useLayoutEffect, useState, useRef, lazy } from 'react';
 import { cn } from '@/lib/utils';
 import { 
   Loader2, 
@@ -39,9 +39,6 @@ import {
   Clock, 
   TrendingUp,
   Activity,
-  ArrowUpRight,
-  ArrowDownRight,
-  Minus,
   RefreshCw,
   Info,
   Zap,
@@ -61,22 +58,42 @@ import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCen
 import { useDashboardNavigationStore } from '@/lib/stores/dashboardNavigationStore';
 import type { DashboardMainCategory } from '@/modules/dashboard/types/dashboardNavigationTypes';
 
-// ✅ Importer les composants de navigation existants
+// ✅ Importer tous les composants depuis le module centralisé
 import { 
   DashboardSidebar, 
   DashboardSubNavigation, 
   DashboardViewRouter,
   DashboardKPIBar,
   DashboardFooter,
+  KPINotifications,
+  LastUpdateDisplay,
+  ContentLoadingSkeleton,
+  KPISparkline,
   useAutoRefresh,
 } from '@/modules/dashboard';
-// DashboardBreadcrumbs supprimé - à réimplémenter si nécessaire
+import { TrendIcon } from '@/modules/dashboard/components/shared/getTrendIcon';
+import { useKPIFilter } from '@/modules/dashboard/hooks/useKPIFilter';
+import { useKPINotifications, useKPIDiff } from '@/modules/dashboard/hooks/useKPINotifications';
+import { useDashboardRefresh } from '@/modules/dashboard/hooks/useDashboardRefresh';
+import { usePerformanceMetrics } from '@/modules/dashboard/hooks/usePerformanceMetrics';
 
-// ✅ Importer les modals
-import { DashboardModals } from '@/components/features/bmo/dashboard/command-center/DashboardModals';
+// ✅ Importer les types depuis le module centralisé
+import type { 
+  KPINotification,
+  KPITone,
+  KPITrend,
+} from '@/modules/dashboard';
+
+// ✅ Importer les modals (lazy loading pour améliorer Fast Refresh)
+const DashboardModals = lazy(() => 
+  import('@/components/features/bmo/dashboard/command-center/DashboardModals').then(m => ({ default: m.DashboardModals }))
+);
+const KPIAlertsSystem = lazy(() => 
+  import('@/components/features/bmo/dashboard/command-center/KPIAlertsSystem').then(m => ({ default: m.KPIAlertsSystem }))
+);
+
 import { getKPIMappingByLabel } from '@/lib/mappings/dashboardKPIMapping';
 import { useDashboardKPIs } from '@/lib/hooks/useDashboardKPIs';
-import { KPIAlertsSystem } from '@/components/features/bmo/dashboard/command-center/KPIAlertsSystem';
 import { useLogger } from '@/lib/utils/logger';
 
 /* =========================
@@ -156,7 +173,11 @@ const KPIAlertsSystemMemoized = memo(function KPIAlertsSystemMemoized({
     [kpis]
   );
 
-  return <KPIAlertsSystem kpis={kpisForAlerts} onAlert={onAlert} />;
+  return (
+    <Suspense fallback={null}>
+      <KPIAlertsSystem kpis={kpisForAlerts} onAlert={onAlert} />
+    </Suspense>
+  );
 });
 
 // Composant mémorisé pour le contenu du Tooltip auto-refresh
@@ -267,49 +288,72 @@ const DashboardContent = memo(function DashboardContent() {
   const toggleCommandPalette = useDashboardCommandCenterStore((state) => state.toggleCommandPalette);
   
   // ✅ États locaux - déclarés en premier
-  // Persister le filtre dans localStorage
-  const [kpiFilter, setKpiFilter] = useState<string>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        return localStorage.getItem('dashboard-kpi-filter') || '';
-      } catch (error) {
-        // localStorage peut être désactivé ou plein
-        if (process.env.NODE_ENV === 'development') {
-          console.warn('[Dashboard] Erreur lors de la lecture de localStorage:', error);
-        }
-        return '';
-      }
-    }
-    return '';
-  });
+  // Utiliser le hook useKPIFilter pour gérer le filtre
+  const { kpiFilter, setKpiFilter, debouncedKpiFilter } = useKPIFilter();
+  
+  // ✅ État pour lastUpdate (déclaré avant useDashboardRefresh)
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
-  const [refreshStatus, setRefreshStatus] = useState<"idle" | "loading" | "error" | "paused" | "retrying">("idle");
-  const [refreshCount, setRefreshCount] = useState(0);
-  const [kpiChangeNotifications, setKpiChangeNotifications] = useState<Array<{
-    id: string;
-    label: string;
-    oldValue: string | number;
-    newValue: string | number;
-    timestamp: Date;
-  }>>([]);
-  const [performanceMetrics, setPerformanceMetrics] = useState<{
-    loadTime: number;
-    renderTime: number;
-    memoryDelta?: number;
-    webVitals?: {
-      fcp?: number; // First Contentful Paint
-      lcp?: number; // Largest Contentful Paint
-      fid?: number; // First Input Delay
-      cls?: number; // Cumulative Layout Shift
-      ttfb?: number; // Time to First Byte
-    };
-  }>({
-    loadTime: 0,
-    renderTime: 0,
+  
+  // ✅ Utiliser le hook pour récupérer les données réelles
+  const { kpis: apiKpis, isLoading: kpisLoading, error: kpisError, lastUpdate: apiLastUpdate, refetch: refetchKPIsFromAPI } = useDashboardKPIs('year');
+  
+  // ✅ Utiliser le hook pour mesurer les performances (déclaré avant useDashboardRefresh)
+  const { performanceMetrics, updateLoadMetrics } = usePerformanceMetrics({
+    componentName: 'DashboardContent',
+    route: `${main}/${sub || ''}/${leaf || ''}`,
+    logThreshold: 500,
   });
-  const [retryCount, setRetryCount] = useState(0);
+  
+  // ✅ Utiliser le hook pour gérer les notifications (déclaré avant useDashboardRefresh)
+  const { notifications: kpiChangeNotifications, addNotification, dismissNotification, clearAll: clearAllNotifications } = useKPINotifications({
+    maxNotifications: 10,
+    autoDismissMs: 5000,
+  });
+  
+  // ✅ Utiliser le hook pour gérer le refresh
+  const refetchKPIsFromAPIRef = useRef(refetchKPIsFromAPI);
+  useEffect(() => {
+    refetchKPIsFromAPIRef.current = refetchKPIsFromAPI;
+  }, [refetchKPIsFromAPI]);
+  
+  const {
+    refresh: refreshKPIs,
+    status: refreshStatus,
+    refreshCount,
+    lastUpdate: refreshLastUpdate,
+    retryCount,
+  } = useDashboardRefresh({
+    maxRetries: 3,
+    onRefresh: async () => {
+      if (refetchKPIsFromAPIRef.current) {
+        await refetchKPIsFromAPIRef.current();
+      }
+    },
+    onSuccess: (loadTime) => {
+      setLastUpdate(new Date());
+      updateLoadMetrics(loadTime);
+    },
+    onError: (error, retryAttempt) => {
+      if (retryAttempt >= 3) {
+        const errorNotification = {
+          id: `error-${Date.now()}-${Math.random()}`,
+          label: error.message.includes('Timeout') ? 'Timeout de chargement' : 'Erreur de chargement',
+          oldValue: 'Échec' as string | number,
+          newValue: `Après 3 tentatives` as string | number,
+          timestamp: new Date(),
+        };
+        addNotification(errorNotification);
+      }
+    },
+  });
+  
+  // ✅ Synchroniser lastUpdate avec refreshLastUpdate
+  useEffect(() => {
+    if (refreshLastUpdate) {
+      setLastUpdate(refreshLastUpdate);
+    }
+  }, [refreshLastUpdate]);
   const [showExportMenu, setShowExportMenu] = useState(false);
-  const maxRetries = 3;
 
   // ✅ Handler pour ouvrir le modal KPI
   const openModal = useDashboardCommandCenterStore((state) => state.openModal);
@@ -326,16 +370,6 @@ const DashboardContent = memo(function DashboardContent() {
   /* =========================
      KPI Configuration avec données réelles de l'API
   ========================= */
-
-  // ✅ Utiliser le hook pour récupérer les données réelles
-  const { kpis: apiKpis, isLoading: kpisLoading, error: kpisError, lastUpdate: apiLastUpdate, refetch: refetchKPIsFromAPI } = useDashboardKPIs('year');
-  
-  // PATCH: Mémoriser refetchKPIsFromAPI avec useRef pour éviter les changements de référence
-  // Ne jamais mettre à jour la ref dans le corps du composant
-  const refetchKPIsFromAPIRef = useRef(refetchKPIsFromAPI);
-  useEffect(() => {
-    refetchKPIsFromAPIRef.current = refetchKPIsFromAPI;
-  }, [refetchKPIsFromAPI]);
 
   // ✅ Convertir les données de l'API au format KPIData
   // Utiliser une comparaison stable pour éviter les re-renders inutiles
@@ -437,39 +471,8 @@ const DashboardContent = memo(function DashboardContent() {
     }
   }, [apiLastUpdate]);
 
-  // ✅ Persister le filtre dans localStorage
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        if (kpiFilter) {
-          localStorage.setItem('dashboard-kpi-filter', kpiFilter);
-        } else {
-          localStorage.removeItem('dashboard-kpi-filter');
-        }
-      } catch (error) {
-        // localStorage peut être désactivé ou plein
-        if (process.env.NODE_ENV === 'development') {
-          console.warn('[Dashboard] Erreur lors de l\'écriture dans localStorage:', error);
-        }
-      }
-    }
-  }, [kpiFilter]);
-
-  // ✅ Debounce pour le filtre de recherche KPI (optimisation performance)
-  const [debouncedKpiFilter, setDebouncedKpiFilter] = useState(kpiFilter);
-  
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedKpiFilter(kpiFilter);
-    }, 200); // Debounce de 200ms
-    
-    return () => clearTimeout(timer);
-  }, [kpiFilter]);
-
-  // ✅ topKpis est maintenant géré par DashboardKPIBar via useKPIFilter
-  // Conservé temporairement pour compatibilité avec ARIA Live Region
-  // TODO: Supprimer après migration complète vers DashboardKPIBar
-  const topKpis = allKpis; // Fallback temporaire - sera supprimé
+  // ✅ Filtre géré par useKPIFilter hook (persistance localStorage + debounce inclus)
+  // Note: Le filtrage des KPIs est maintenant géré par DashboardKPIBar via useKPIFilter
 
   const stats = useMemo(
     () => ({
@@ -483,309 +486,19 @@ const DashboardContent = memo(function DashboardContent() {
     []
   );
 
-  // ✅ Mesure des performances avec tracking amélioré
-  // PATCH: Utiliser useRef pour éviter les re-renders inutiles
-  const renderStartTimeRef = useRef<number>(0);
-  const renderCountRef = useRef<number>(0);
-  
-  // ✅ Mesure de performance optimisée : utiliser useLayoutEffect pour mesurer le temps de rendu réel
-  // Ne pas mesurer dans le cleanup car cela inclut le temps de démontage
-  useLayoutEffect(() => {
-    const startTime = performance.now();
-    renderCountRef.current += 1;
-    
-    // Mesurer après que le DOM soit mis à jour
-    requestAnimationFrame(() => {
-      const endTime = performance.now();
-      const renderTime = endTime - startTime;
-      
-      // Ne mettre à jour que si le temps de rendu est significatif (> 10ms)
-      if (renderTime > 10) {
-        // Type guard pour performance.memory (Chrome/Edge uniquement)
-        const perfMemory = (performance as PerformanceWithMemory).memory;
-        const endMemory = perfMemory ? perfMemory.usedJSHeapSize : 0;
-        
-        setPerformanceMetrics(prev => ({
-          ...prev,
-          renderTime,
-          // Log uniquement si le temps de rendu est significatif (dev mode)
-          ...(process.env.NODE_ENV === 'development' && renderTime > 200 && perfMemory && {
-            memoryDelta: endMemory - (prev.memoryDelta || 0),
-          }),
-        }));
-        
-        // Log de performance en dev uniquement - seuil augmenté pour éviter les faux positifs
-        // Le seuil de 500ms est plus réaliste car il exclut les temps de chargement initial
-        if (process.env.NODE_ENV === 'development' && renderTime > 500) {
-          log.warn('Rendu lent détecté', {
-            renderTime: `${renderTime.toFixed(2)}ms`,
-            route: `${main}/${sub || ''}/${leaf || ''}`,
-            component: 'DashboardContent',
-          });
-        }
-      }
-    });
-  }, [main, sub, leaf, log]);
+  // ✅ Mesure des performances gérée par usePerformanceMetrics hook
 
-  // ✅ Stocker les KPIs précédents pour détecter les changements
-  const previousKpisRef = useRef<KPIData[] | null>(null);
-  const hasInitializedRef = useRef(false);
-  
-  // ✅ Détecter les changements de KPIs après mise à jour
-  // PATCH 2 — Correction du bug de duplication des notifications
-  // PATCH 4 — Amélioration de la comparaison pour éviter les boucles infinies
-  // PATCH 5 — Utiliser une clé de comparaison stable pour éviter les mises à jour inutiles
-  const allKpisKeyRef = useRef<string>('');
-  
-  // ✅ Mémoriser la clé de comparaison pour éviter les recalculs
-  const currentKpisKey = useMemo(
-    () => allKpis.map((k) => `${k.label}:${k.value}`).join('|'),
-    [allKpis]
-  );
-  
-  useEffect(() => {
-    if (!hasInitializedRef.current) {
-      hasInitializedRef.current = true;
-      // Créer une clé stable pour la première initialisation
-      allKpisKeyRef.current = currentKpisKey;
-      previousKpisRef.current = allKpis;
-      return;
-    }
+  // ✅ Utiliser le hook useKPIDiff pour détecter les changements de KPIs
+  useKPIDiff({
+    currentKpis: allKpis.map((k) => ({ label: k.label, value: k.value })),
+    onChangesDetected: (changes) => {
+      // Ajouter toutes les notifications détectées
+      changes.forEach((change) => addNotification(change));
+    },
+  });
 
-    // Comparaison profonde pour éviter les déclenchements inutiles
-    // Si les valeurs sont identiques, ne rien faire (même si la référence change)
-    if (currentKpisKey === allKpisKeyRef.current) {
-      // Ne PAS mettre à jour previousKpisRef.current si les valeurs sont identiques
-      // Cela évite de créer une nouvelle référence qui déclencherait le useEffect à nouveau
-      return;
-    }
-
-    // Les valeurs ont changé, mettre à jour la clé et la référence
-    allKpisKeyRef.current = currentKpisKey;
-    const prev = previousKpisRef.current;
-    previousKpisRef.current = allKpis; // ✅ IMPORTANT: on "commit" le snapshot TOUT DE SUITE
-
-    if (prev === null || prev.length !== allKpis.length) return;
-
-    const changes: typeof kpiChangeNotifications = [];
-
-    allKpis.forEach((kpi, index) => {
-      const previousKpi = prev[index];
-      if (previousKpi && previousKpi.value !== kpi.value) {
-        changes.push({
-          id: `${Date.now()}-${index}-${Math.random()}`,
-          label: kpi.label,
-          oldValue: previousKpi.value,
-          newValue: kpi.value,
-          timestamp: new Date(),
-        });
-      }
-    });
-
-    if (changes.length === 0) return;
-
-    // ✅ Limiter le nombre de notifications pour éviter l'accumulation (max 10)
-    setKpiChangeNotifications((p) => {
-      const updated = [...p, ...changes];
-      return updated.slice(-10); // Garder seulement les 10 dernières
-    });
-
-    const timeouts = changes.map((change) =>
-      window.setTimeout(() => {
-        setKpiChangeNotifications((p) => p.filter((n) => n.id !== change.id));
-      }, 5000)
-    );
-
-    return () => timeouts.forEach((t) => clearTimeout(t));
-  }, [currentKpisKey, allKpis]); // ✅ Utiliser currentKpisKey mémorisé au lieu de recalculer
-
-  // ✅ Fonction interne de refresh avec retry - utilise maintenant l'API réelle
+  // ✅ Refresh géré par useDashboardRefresh hook
   const timeoutsRef = useRef<number[]>([]);
-  const retryTimeoutsRef = useRef<number[]>([]); // PATCH 3 — Registre pour les timeouts de retry
-  const refreshStatusRef = useRef(refreshStatus);
-  const isMountedRef = useRef(true); // ✅ Ref pour savoir si le composant est monté
-  const initialRefreshDoneRef = useRef(false); // PATCH: Ref pour éviter les déclenchements multiples du refresh initial
-  // ✅ refreshIntervalRef supprimé - géré par useAutoRefresh
-  
-  // Synchroniser la ref avec l'état
-  useEffect(() => {
-    refreshStatusRef.current = refreshStatus;
-  }, [refreshStatus]);
-  
-  // ✅ Marquer le composant comme démonté au cleanup
-  useEffect(() => {
-    isMountedRef.current = true;
-    return () => {
-      isMountedRef.current = false;
-      // Annuler tous les retries en cours
-      retryTimeoutsRef.current.forEach(clearTimeout);
-      retryTimeoutsRef.current = [];
-    };
-  }, []);
-  
-  const refreshKPIsInternal = useCallback(async (retryAttempt = 0): Promise<void> => {
-    // ✅ Vérifier si le composant est encore monté
-    if (!isMountedRef.current) {
-      return;
-    }
-    // Si le refresh est en pause, on n'arrête pas tout silencieusement : on assume l'état
-    if (refreshStatusRef.current === "paused") {
-      return;
-    }
-
-    // Éviter les refreshes multiples simultanés
-    if (refreshStatusRef.current === "loading" || refreshStatusRef.current === "retrying") {
-      if (process.env.NODE_ENV === 'development') {
-        log.warn('Refresh déjà en cours, ignoré', { retryAttempt, status: refreshStatusRef.current });
-      }
-      return;
-    }
-
-    const startTime = performance.now();
-    
-    try {
-      // Définir le statut selon si c'est un retry ou non
-      if (retryAttempt > 0) {
-        setRefreshStatus("retrying");
-        setRetryCount(retryAttempt);
-      } else {
-        setRefreshStatus("loading");
-      }
-      
-      // Utiliser l'API réelle via le hook (via ref pour éviter les dépendances)
-      if (refetchKPIsFromAPIRef.current) {
-        await refetchKPIsFromAPIRef.current();
-      }
-      
-      // Réinitialiser le compteur de retry en cas de succès
-      if (retryAttempt > 0) {
-        setRetryCount(0);
-      }
-
-      setLastUpdate(new Date());
-      setRefreshCount(prev => prev + 1);
-      setRefreshStatus("idle");
-      
-      const loadTime = performance.now() - startTime;
-      
-      // ✅ Collecter les Web Vitals si disponibles
-      let webVitals: typeof performanceMetrics.webVitals = {};
-      if (typeof window !== 'undefined' && 'PerformanceObserver' in window) {
-        try {
-          // Récupérer les métriques depuis Performance API
-          const perfEntries = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[];
-          if (perfEntries.length > 0) {
-            const navTiming = perfEntries[0];
-            webVitals.ttfb = navTiming.responseStart - navTiming.requestStart;
-          }
-          
-          // Récupérer FCP si disponible
-          const paintEntries = performance.getEntriesByType('paint') as PerformancePaintTiming[];
-          const fcpEntry = paintEntries.find(entry => entry.name === 'first-contentful-paint');
-          if (fcpEntry) {
-            webVitals.fcp = fcpEntry.startTime;
-          }
-        } catch (e) {
-          // Ignorer les erreurs de Web Vitals (API non standardisée)
-          if (process.env.NODE_ENV === 'development') {
-            const errorMessage = e instanceof Error ? e.message : String(e);
-            log.debug('Web Vitals non disponibles', { error: errorMessage });
-          }
-          // En production, ignorer silencieusement (Web Vitals optionnels)
-        }
-      }
-      
-      setPerformanceMetrics(prev => ({ 
-        ...prev, 
-        loadTime,
-        webVitals: Object.keys(webVitals).length > 0 ? webVitals : prev.webVitals
-      }));
-      
-      // ✅ Marquer le timestamp du dernier refresh réussi (pour éviter les doubles)
-      if (typeof window !== 'undefined') {
-        (window as any).__lastDashboardRefresh = Date.now();
-      }
-      
-      if (process.env.NODE_ENV === 'development') {
-        log.performance('KPIs refresh', loadTime);
-        if (Object.keys(webVitals).length > 0) {
-          log.debug('Web Vitals', webVitals);
-        }
-      }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
-      const err = error instanceof Error ? error : new Error(errorMessage);
-      log.error('Erreur lors du refresh des KPIs', err, { retryAttempt, maxRetries });
-      
-      // Retry automatique avec exponential backoff
-      if (retryAttempt < maxRetries) {
-        const delay = Math.min(1000 * Math.pow(2, retryAttempt), 10000); // Max 10s
-        
-        if (process.env.NODE_ENV === 'development') {
-          log.info(`Retry ${retryAttempt + 1}/${maxRetries} dans ${delay}ms`, {
-            retryAttempt: retryAttempt + 1,
-            maxRetries,
-            delay,
-          });
-        }
-        
-        // Planifier le retry - PATCH 3 : utiliser retryTimeoutsRef
-        // ✅ Vérifier si le composant est encore monté avant de planifier le retry
-        if (!isMountedRef.current) {
-          return;
-        }
-        const t = window.setTimeout(() => {
-          // ✅ Vérifier à nouveau avant d'exécuter le retry
-          if (isMountedRef.current) {
-            refreshKPIsInternal(retryAttempt + 1);
-          }
-        }, delay);
-        retryTimeoutsRef.current.push(t);
-        return;
-      }
-      
-      // Après épuisement des retries, afficher l'erreur
-      setRefreshStatus("error");
-      const errorNotification = {
-        id: `error-${Date.now()}-${Math.random()}`,
-        label: errorMessage.includes('Timeout') ? 'Timeout de chargement' : 'Erreur de chargement',
-        oldValue: 'Échec' as string | number,
-        newValue: `Après ${maxRetries} tentatives` as string | number,
-        timestamp: new Date(),
-      };
-      
-      // ✅ Limiter le nombre de notifications (max 10)
-      setKpiChangeNotifications(prev => {
-        const updated = [...prev, errorNotification];
-        return updated.slice(-10);
-      });
-      setRetryCount(0); // Reset après affichage de l'erreur
-      
-      // Auto-dismiss après 10 secondes pour les erreurs finales
-      const timeoutId = window.setTimeout(() => {
-        setKpiChangeNotifications(prev => 
-          prev.filter(n => n.id !== errorNotification.id)
-        );
-      }, 10000);
-      timeoutsRef.current.push(timeoutId);
-    }
-  }, [maxRetries]); // refetchKPIsFromAPI retiré, utilisant refetchKPIsFromAPIRef à la place
-
-  // ✅ Fusionné: Cleanup de tous les timeouts au démontage
-  useEffect(() => {
-    return () => {
-      timeoutsRef.current.forEach(clearTimeout);
-      timeoutsRef.current = [];
-      retryTimeoutsRef.current.forEach(clearTimeout);
-      retryTimeoutsRef.current = [];
-    };
-  }, []);
-
-  // ✅ Fonction publique de refresh (pour les handlers d'événements)
-  // PATCH: Utiliser directement refreshKPIsInternalRef pour éviter les dépendances
-  const refreshKPIs = useCallback(() => {
-    refreshKPIsInternalRef.current(0);
-  }, []); // Dépendances vides - utiliser la ref directement
 
   // ✅ Fonction d'export des données KPIs améliorée avec PDF/Excel
   const exportKPIs = useCallback(async (format: 'csv' | 'json' | 'pdf' | 'excel' = 'csv') => {
@@ -871,13 +584,11 @@ const DashboardContent = memo(function DashboardContent() {
         newValue: `${data.length} indicateur${data.length > 1 ? 's' : ''} exporté${data.length > 1 ? 's' : ''}`,
         timestamp: new Date(),
       };
-      setKpiChangeNotifications(prev => [...prev, successNotification]);
+      addNotification(successNotification);
       
       // Auto-dismiss après 3 secondes
       const timeoutId = window.setTimeout(() => {
-        setKpiChangeNotifications(prev => 
-          prev.filter(n => n.id !== successNotification.id)
-        );
+        dismissNotification(successNotification.id);
       }, 3000);
       timeoutsRef.current.push(timeoutId);
 
@@ -890,22 +601,18 @@ const DashboardContent = memo(function DashboardContent() {
         newValue: 'Échec',
         timestamp: new Date(),
       };
-      // ✅ Limiter le nombre de notifications (max 10)
-      setKpiChangeNotifications(prev => {
-        const updated = [...prev, errorNotification];
-        return updated.slice(-10);
-      });
+      // ✅ Ajouter la notification d'erreur
+      addNotification(errorNotification);
       
+      // Auto-dismiss après 5 secondes (géré par le hook, mais on peut override)
       const timeoutId = window.setTimeout(() => {
-        setKpiChangeNotifications(prev => 
-          prev.filter(n => n.id !== errorNotification.id)
-        );
+        dismissNotification(errorNotification.id);
       }, 5000);
       timeoutsRef.current.push(timeoutId);
     }
 
     setShowExportMenu(false);
-  }, [allKpis, log]); // Utiliser allKpis au lieu de topKpis
+  }, [allKpis, log]);
 
   // ✅ Gestion intelligente du refresh avec pause automatique
   const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(() => {
@@ -984,31 +691,45 @@ const DashboardContent = memo(function DashboardContent() {
 
   // ✅ Utiliser le hook useAutoRefresh pour gérer l'auto-refresh
   // Ce hook gère : visibilité onglet, statut réseau, intervalles, et pause intelligente
+  const { pause, resume } = useDashboardRefresh({
+    maxRetries: 3,
+    onRefresh: async () => {
+      if (refetchKPIsFromAPIRef.current) {
+        await refetchKPIsFromAPIRef.current();
+      }
+    },
+    onSuccess: (loadTime) => {
+      setLastUpdate(new Date());
+      updateLoadMetrics(loadTime);
+    },
+    onError: (error, retryAttempt) => {
+      if (retryAttempt >= 3) {
+        const errorNotification = {
+          id: `error-${Date.now()}-${Math.random()}`,
+          label: error.message.includes('Timeout') ? 'Timeout de chargement' : 'Erreur de chargement',
+          oldValue: 'Échec' as string | number,
+          newValue: `Après 3 tentatives` as string | number,
+          timestamp: new Date(),
+        };
+        addNotification(errorNotification);
+      }
+    },
+  });
+  
   const { isOnline, isTabVisible } = useAutoRefresh({
     enabled: autoRefreshEnabled,
     interval: refreshInterval,
     onRefresh: refreshKPIs,
     onStatusChange: (status: 'idle' | 'paused') => {
       if (status === 'paused') {
-        setRefreshStatus('paused');
+        pause();
       } else {
-        setRefreshStatus('idle');
+        resume();
       }
     },
   });
 
-  // ✅ Utiliser useRef pour stocker les fonctions et éviter les re-renders
-  // PATCH: refreshKPIs est stable (dépendances vides), donc refreshKPIsPublicRef n'a pas besoin d'être mis à jour
-  const refreshKPIsPublicRef = useRef(refreshKPIs);
-  const refreshKPIsInternalRef = useRef(refreshKPIsInternal);
-  
-  // Mettre à jour seulement refreshKPIsInternalRef car refreshKPIsInternal peut changer
-  // refreshKPIs est stable (dépendances vides), donc refreshKPIsPublicRef n'a pas besoin d'être mis à jour
-  useEffect(() => {
-    refreshKPIsInternalRef.current = refreshKPIsInternal;
-    // refreshKPIs est stable, donc on peut le mettre à jour une seule fois
-    refreshKPIsPublicRef.current = refreshKPIs;
-  }, [refreshKPIsInternal]); // Seulement refreshKPIsInternal, car refreshKPIs est stable
+  // ✅ refreshKPIs est stable depuis useDashboardRefresh hook
 
   // ✅ Persister les préférences avec debounce pour éviter les écritures excessives
   // PATCH: Utiliser des refs pour éviter les déclenchements inutiles et les boucles infinies
@@ -1058,28 +779,18 @@ const DashboardContent = memo(function DashboardContent() {
   }, [autoRefreshEnabled, refreshInterval]);
 
   // ✅ Refresh initial après 5 secondes (seulement si auto-refresh activé, onglet visible et en ligne)
-  // PATCH: Utiliser les refs pour éviter les dépendances instables et les déclenchements multiples
-  const autoRefreshEnabledRef = useRef(autoRefreshEnabled);
-  
-  // Mettre à jour la ref de manière synchrone pour éviter les problèmes de timing
-  autoRefreshEnabledRef.current = autoRefreshEnabled;
+  const initialRefreshDoneRef = useRef(false);
   
   useEffect(() => {
     // Ne déclencher le refresh initial qu'une seule fois au montage si auto-refresh est activé
     if (initialRefreshDoneRef.current) return;
     
-    // Utiliser les refs pour éviter les dépendances instables
-    if (!autoRefreshEnabledRef.current || !isTabVisible || !isOnline) return;
+    if (!autoRefreshEnabled || !isTabVisible || !isOnline) return;
     
     initialRefreshDoneRef.current = true;
     const id = window.setTimeout(() => {
-      // Utiliser les refs pour vérifier les conditions
-      if (isMountedRef.current && 
-          autoRefreshEnabledRef.current && 
-          isTabVisible && 
-          isOnline && 
-          refreshStatusRef.current !== 'paused') {
-        refreshKPIsInternalRef.current(0);
+      if (autoRefreshEnabled && isTabVisible && isOnline && refreshStatus !== 'paused') {
+        refreshKPIs();
       }
     }, 5000);
     timeoutsRef.current.push(id);
@@ -1093,7 +804,7 @@ const DashboardContent = memo(function DashboardContent() {
         }
       }
     };
-  }, [isTabVisible, isOnline]); // Dépendances pour réagir aux changements de visibilité/réseau
+  }, [autoRefreshEnabled, isTabVisible, isOnline, refreshStatus, refreshKPIs]);
 
   // ✅ Raccourcis clavier avec gestion améliorée et étendue
   useEffect(() => {
@@ -1136,7 +847,7 @@ const DashboardContent = memo(function DashboardContent() {
       // Echap pour fermer les notifications ou menus
       if (e.key === 'Escape') {
         if (kpiChangeNotifications.length > 0) {
-          setKpiChangeNotifications([]);
+          clearAllNotifications();
           return;
         }
         if (showExportMenu) {
@@ -1370,9 +1081,7 @@ const DashboardContent = memo(function DashboardContent() {
       </div>
 
       {/* Notifications de changements de KPIs */}
-      <KPINotifications notifications={kpiChangeNotifications} onDismiss={(id) => {
-        setKpiChangeNotifications(prev => prev.filter(n => n.id !== id));
-      }} />
+      <KPINotifications notifications={kpiChangeNotifications} onDismiss={dismissNotification} />
 
       {/* Overlay pour fermer le menu d'export */}
       {showExportMenu && (
@@ -1394,8 +1103,7 @@ const DashboardContent = memo(function DashboardContent() {
 ========================= */
 
 // Types réutilisés pour les KPIs
-type KPITone = 'ok' | 'warn' | 'crit' | 'info';
-type KPITrend = 'up' | 'down' | 'neutral';
+// Types KPITone et KPITrend exportés depuis KPISparkline
 
 interface KPIData {
   label: string;
@@ -1432,15 +1140,10 @@ const KPICard = memo(function KPICard({
     return () => clearTimeout(timer);
   }, [kpi.value, kpi.delta]);
 
-  const getTrendIcon = () => {
-    if (kpi.trend === 'up') {
-      return <ArrowUpRight className="h-3 w-3" />;
-    }
-    if (kpi.trend === 'down') {
-      return <ArrowDownRight className="h-3 w-3" />;
-    }
-    return <Minus className="h-3 w-3" />;
-  };
+  // ✅ Utiliser le composant mémorisé TrendIcon
+  const trendIcon = useMemo(() => (
+    <TrendIcon trend={kpi.trend} />
+  ), [kpi.trend]);
 
   // Mémoriser le contenu du tooltip pour éviter les re-renders
   const tooltipContent = useMemo(() => {
@@ -1590,7 +1293,7 @@ const KPICard = memo(function KPICard({
               isAnimating && 'scale-125'
             )}
           >
-            {getTrendIcon()}
+            {trendIcon}
             <span>{kpi.delta}</span>
           </div>
         </div>
@@ -1608,54 +1311,6 @@ const KPICard = memo(function KPICard({
    Utility Functions
 ========================= */
 
-/* =========================
-   Content Loading Skeleton - Amélioré
-========================= */
-
-function ContentLoadingSkeleton() {
-  return (
-    <div className="space-y-6 animate-fadeIn">
-      {/* Header skeleton */}
-      <div className="space-y-3">
-        <div className="h-10 bg-gradient-to-r from-slate-800/40 via-slate-800/60 to-slate-800/40 rounded-xl w-1/3 animate-shimmer" />
-        <div className="h-4 bg-slate-800/30 rounded-lg w-2/3" />
-      </div>
-
-      {/* Cards grid skeleton */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {[1, 2, 3, 4, 5, 6].map((i) => (
-          <div 
-            key={i} 
-            className="h-40 bg-gradient-to-br from-slate-800/30 via-slate-800/20 to-slate-800/30 rounded-xl border border-slate-700/30 p-4 space-y-3 animate-shimmer"
-            style={{ animationDelay: `${i * 100}ms` }}
-          >
-            <div className="h-4 bg-slate-700/40 rounded w-1/2" />
-            <div className="h-8 bg-slate-700/40 rounded w-3/4" />
-            <div className="h-3 bg-slate-700/30 rounded w-full" />
-            <div className="h-3 bg-slate-700/30 rounded w-2/3" />
-          </div>
-        ))}
-      </div>
-
-      {/* Chart/Table skeleton */}
-      <div className="space-y-4">
-        <div className="h-6 bg-slate-800/40 rounded-lg w-1/4" />
-        <div className="h-80 bg-gradient-to-br from-slate-800/30 via-slate-800/20 to-slate-800/30 rounded-xl border border-slate-700/30 p-6">
-          <div className="grid grid-cols-4 gap-4 mb-6">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-16 bg-slate-700/30 rounded-lg" />
-            ))}
-          </div>
-          <div className="space-y-3">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="h-12 bg-slate-700/20 rounded-lg" />
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 /* =========================
    Dashboard Content Switch Wrapper avec transitions
@@ -1667,210 +1322,7 @@ function ContentLoadingSkeleton() {
    KPI Notifications Component
 ========================= */
 
-interface KPINotification {
-  id: string;
-  label: string;
-  oldValue: string | number;
-  newValue: string | number;
-  timestamp: Date;
-}
 
-interface KPINotificationsProps {
-  notifications: KPINotification[];
-  onDismiss: (id: string) => void;
-}
-
-function KPINotifications({ notifications, onDismiss }: KPINotificationsProps) {
-  if (notifications.length === 0) return null;
-
-  // Limiter le nombre de notifications affichées (max 5)
-  const displayedNotifications = notifications.slice(-5);
-
-  // Mémoriser le handler de dismiss pour éviter les re-renders
-  const handleDismiss = useCallback((id: string) => {
-    onDismiss(id);
-  }, [onDismiss]);
-
-  return (
-    <div 
-      className="fixed bottom-4 right-4 z-50 space-y-2 max-w-sm"
-      role="region"
-      aria-label="Notifications de changements de KPIs"
-      aria-live="polite"
-      aria-atomic="false"
-    >
-                  {displayedNotifications.map((notification, idx) => {
-        const isIncrease = typeof notification.oldValue === 'number' && typeof notification.newValue === 'number'
-          ? notification.newValue > notification.oldValue
-          : false;
-        
-        return (
-          <div
-            key={notification.id}
-            className={cn(
-              'rounded-lg border p-3 shadow-lg backdrop-blur-xl animate-fadeIn',
-              'bg-slate-900/95 border-slate-700/50',
-              'flex items-start gap-3',
-              'hover:shadow-xl hover:scale-[1.02] transition-all duration-200',
-              'cursor-pointer'
-            )}
-            style={{
-              animationDelay: `${idx * 100}ms`,
-            }}
-            onClick={() => handleDismiss(notification.id)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                onDismiss(notification.id);
-              }
-            }}
-            aria-label={`Notification: ${notification.label} - ${notification.oldValue} → ${notification.newValue}`}
-          >
-            <div className={cn(
-              'p-1.5 rounded-md',
-              isIncrease ? 'bg-emerald-500/20' : 'bg-amber-500/20'
-            )}>
-              {isIncrease ? (
-                <TrendingUp className="h-4 w-4 text-emerald-400" />
-              ) : (
-                <TrendingDown className="h-4 w-4 text-amber-400" />
-              )}
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-xs font-medium text-slate-200 mb-0.5">
-                {notification.label}
-              </div>
-              <div className="text-xs text-slate-400">
-                <span className="line-through text-slate-500 mr-1.5" aria-label={`Ancienne valeur: ${notification.oldValue}`}>
-                  {notification.oldValue}
-                </span>
-                <span 
-                  className={cn(
-                    'font-semibold',
-                    isIncrease ? 'text-emerald-400' : 'text-amber-400'
-                  )}
-                  aria-label={`Nouvelle valeur: ${notification.newValue}`}
-                >
-                  → {notification.newValue}
-                </span>
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleDismiss(notification.id);
-              }}
-              className="text-slate-500 hover:text-slate-300 transition-all duration-200 hover:scale-110 active:scale-95 flex-shrink-0"
-              aria-label="Fermer la notification"
-            >
-              <X className="h-3.5 w-3.5" />
-            </button>
-          </div>
-        );
-      })}
-      {notifications.length > 5 && (
-        <div className="text-xs text-slate-500 text-center pt-2">
-          {notifications.length - 5} autre{notifications.length - 5 > 1 ? 's' : ''} notification{notifications.length - 5 > 1 ? 's' : ''} masquée{notifications.length - 5 > 1 ? 's' : ''}
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* =========================
-   KPI Sparkline Component - Mini graphique
-========================= */
-
-interface KPISparklineProps {
-  tone: KPITone;
-  trend: KPITrend;
-  'aria-label'?: string;
-}
-
-const KPISparkline = memo(function KPISparkline({ tone, trend, 'aria-label': ariaLabel }: KPISparklineProps) {
-  // Générer des données mock stables pour le mini graphique
-  // Utiliser un seed basé sur tone+trend pour avoir des valeurs cohérentes
-  const sparklineData = useMemo(() => {
-    const points = 7;
-    const baseValue = 50;
-    const variation = trend === 'up' ? 15 : trend === 'down' ? -15 : 5;
-    
-    // Seed simple pour générer des valeurs pseudo-aléatoires mais stables
-    const seed = (tone.charCodeAt(0) + trend.charCodeAt(0)) % 100;
-    
-    // Fonction pseudo-aléatoire simple basée sur le seed
-    let currentSeed = seed;
-    const pseudoRandom = () => {
-      currentSeed = (currentSeed * 9301 + 49297) % 233280;
-      return currentSeed / 233280;
-    };
-    
-    return Array.from({ length: points }, (_, i) => {
-      const progress = i / (points - 1);
-      // Utiliser pseudoRandom au lieu de Math.random pour stabilité
-      const randomVariation = (pseudoRandom() - 0.5) * 10;
-      return Math.max(0, Math.min(100, baseValue + variation * progress + randomVariation));
-    });
-  }, [tone, trend]);
-
-  const getColor = () => {
-    if (tone === 'ok') return 'stroke-emerald-400';
-    if (tone === 'warn') return 'stroke-amber-400';
-    if (tone === 'crit') return 'stroke-red-400';
-    return 'stroke-slate-400';
-  };
-
-  const height = 20;
-  const width = 40;
-  const padding = 2;
-  const chartWidth = width - padding * 2;
-  const chartHeight = height - padding * 2;
-  const maxValue = Math.max(...sparklineData, 1);
-  const minValue = Math.min(...sparklineData, 0);
-
-  const points = sparklineData
-    .map((value, index) => {
-      const x = padding + (index / (sparklineData.length - 1 || 1)) * chartWidth;
-      const y = padding + chartHeight - ((value - minValue) / (maxValue - minValue || 1)) * chartHeight;
-      return `${x},${y}`;
-    })
-    .join(' ');
-
-  return (
-    <div 
-      className="mt-1.5 opacity-60 group-hover:opacity-100 transition-opacity duration-300" 
-      aria-label={ariaLabel}
-    >
-      <svg 
-        width={width} 
-        height={height} 
-        className="overflow-visible transition-transform duration-300 group-hover:scale-105"
-        aria-hidden="true"
-        role="img"
-      >
-        <polyline
-          points={points}
-          fill="none"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className={getColor()}
-          style={{ filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.3))' }}
-        />
-        {/* Point final pour accent */}
-        <circle
-          cx={padding + chartWidth}
-          cy={padding + chartHeight - ((sparklineData[sparklineData.length - 1] - minValue) / (maxValue - minValue || 1)) * chartHeight}
-          r="1.5"
-          className={cn('fill-current', getColor())}
-        />
-      </svg>
-    </div>
-  );
-});
 
 /* =========================
    Composants mémorisés pour éviter les re-renders

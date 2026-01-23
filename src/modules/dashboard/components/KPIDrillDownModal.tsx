@@ -7,6 +7,7 @@
 import React, { useMemo } from 'react';
 import { X, TrendingUp, TrendingDown, Calendar, BarChart3 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { zIndexClass } from '../utils/zIndex';
 import { Line, Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -95,7 +96,7 @@ export function KPIDrillDownModal({ kpi, isOpen, onClose, historicalData }: KPID
   }, [historicalData]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+    <div className={cn("fixed inset-0 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn", zIndexClass('modal'))}>
       <div className="bg-slate-900 rounded-xl border border-slate-700/50 shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col animate-fadeIn">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-slate-700/50">
@@ -112,7 +113,10 @@ export function KPIDrillDownModal({ kpi, isOpen, onClose, historicalData }: KPID
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        <div 
+          className="flex-1 overflow-y-auto p-6 space-y-6"
+          style={{ WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
+        >
           {/* Valeur principale avec statistiques */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700/50">

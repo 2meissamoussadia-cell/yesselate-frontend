@@ -166,7 +166,7 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
     <div className="relative min-h-[300px]">
       {/* Loading overlay amélioré */}
       {loading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-slate-950/50 backdrop-blur-md z-10 animate-fadeIn">
+        <div className={cn("absolute inset-0 flex items-center justify-center bg-slate-950/50 backdrop-blur-md animate-fadeIn", zIndexClass('loading'))}>
           <div className="flex flex-col items-center gap-4 p-6 rounded-xl border border-slate-700/50 bg-slate-900/80 shadow-xl">
             <div className="relative">
               <Loader2 className="h-8 w-8 animate-spin text-blue-400" />

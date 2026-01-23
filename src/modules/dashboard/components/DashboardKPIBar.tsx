@@ -16,10 +16,7 @@ import {
   FileText, 
   BarChart3,
   Info,
-  Zap,
-  ArrowUpRight,
-  ArrowDownRight,
-  Minus
+  Zap
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
@@ -30,6 +27,8 @@ import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCen
 import { getKPIMappingByLabel } from '@/lib/mappings/dashboardKPIMapping';
 import { useLogger } from '@/lib/utils/logger';
 import { useVirtualizer } from '@tanstack/react-virtual';
+import { zIndexClass } from '../utils/zIndex';
+import { TrendIcon } from './shared/getTrendIcon';
 
 // Types
 type KPITone = 'ok' | 'warn' | 'crit' | 'info';
@@ -45,7 +44,7 @@ export interface KPIData {
 }
 
 interface DashboardKPIBarProps {
-  kpis: KPIData[];
+  kpis?: KPIData[];
   onKPIClick?: (kpi: KPIData) => void;
   onExport?: (format: 'csv' | 'json' | 'pdf' | 'excel') => Promise<void>;
   onRefresh?: () => Promise<void> | void;
@@ -80,17 +79,13 @@ const KPICard = memo(function KPICard({
   isNegative,
   onClick
 }: KPICardProps) {
-  const getTrendIcon = () => {
-    if (kpi.trend === 'up') {
-      return <ArrowUpRight className="h-3 w-3 text-emerald-400" />;
-    }
-    if (kpi.trend === 'down') {
-      return <ArrowDownRight className="h-3 w-3 text-red-400" />;
-    }
-    return <Minus className="h-3 w-3 text-slate-400" />;
-  };
+  // ✅ Utiliser le composant mémorisé TrendIcon
+  const trendIcon = useMemo(() => (
+    <TrendIcon trend={kpi.trend} />
+  ), [kpi.trend]);
 
-  const getToneStyles = () => {
+  // ✅ Mémoriser les styles de tone pour éviter les recalculs
+  const toneStyles = useMemo(() => {
     switch (kpi.tone) {
       case 'ok':
         return 'bg-emerald-500/10 border-emerald-500/30';
@@ -101,27 +96,36 @@ const KPICard = memo(function KPICard({
       default:
         return 'bg-slate-800/50 border-slate-700/50';
     }
-  };
+  }, [kpi.tone]);
+
+  // ✅ Mémoriser le className complet pour éviter les recalculs
+  const cardClassName = useMemo(() => cn(
+    'relative min-h-[44px] p-3 rounded-lg border transition-all duration-200',
+    'hover:scale-105 hover:shadow-lg hover:shadow-black/20',
+    'active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
+    toneStyles
+  ), [toneStyles]);
+
+  // ✅ Mémoriser l'aria-label pour éviter les recalculs
+  const ariaLabel = useMemo(() => 
+    `KPI ${kpi.label}: ${kpi.value} ${kpi.delta}`,
+    [kpi.label, kpi.value, kpi.delta]
+  );
 
   return (
     <button
       onClick={onClick}
-      className={cn(
-        'relative p-3 rounded-lg border transition-all duration-200',
-        'hover:scale-105 hover:shadow-lg hover:shadow-black/20',
-        'active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500/50',
-        getToneStyles()
-      )}
-      aria-label={`KPI ${kpi.label}: ${kpi.value} ${kpi.delta}`}
+      className={cardClassName}
+      aria-label={ariaLabel}
     >
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-2">
           <Icon className="h-4 w-4 text-slate-400" />
-          <span className="text-[10px] text-slate-500 uppercase tracking-wide">
+          <span className="text-[10px] text-slate-300 uppercase tracking-wide">
             {kpi.label}
           </span>
         </div>
-        {getTrendIcon()}
+        {trendIcon}
       </div>
       <div className="flex items-baseline gap-2">
         <span className="text-lg font-semibold text-slate-200">
@@ -250,22 +254,28 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
     timestamp: Date;
   }>>([]);
 
+  // ✅ Valeur par défaut pour kpis pour éviter les erreurs
+  const safeKpis = kpis ?? [];
+
   // Utiliser le hook de filtre
   const {
     filter: kpiFilter,
     debouncedFilter: debouncedKpiFilter,
-    filteredItems: topKpis,
+    filteredItems: filteredKpis,
     updateFilter: setKpiFilter,
     clearFilter: handleClearKpiFilter,
     filteredCount,
     totalCount,
   } = useKPIFilter({
-    items: kpis,
+    items: safeKpis,
     filterFn: (kpi, filter) => {
       const filterLower = filter.toLowerCase().trim();
       return kpi.label.toLowerCase().includes(filterLower);
     },
   });
+
+  // ✅ Valeur par défaut pour topKpis pour éviter les erreurs
+  const topKpis = filteredKpis ?? safeKpis;
 
   // Utiliser le hook de refresh
   const {
@@ -344,11 +354,12 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
   }, [autoRefreshEnabled, onAutoRefreshToggle]);
 
   // Styles conditionnels - Mémorisés pour éviter les re-renders
+  // ✅ Touch target minimum 44x44px pour conformité WCAG
   const autoRefreshButtonClassName = useMemo(() => cn(
-    'p-1.5 rounded-md transition-all duration-200',
+    'min-h-[44px] min-w-[44px] p-2 sm:p-2.5 rounded-md transition-all duration-200',
     'hover:bg-slate-800/50 active:scale-95',
     'disabled:opacity-50 disabled:cursor-not-allowed',
-    'focus:outline-none focus:ring-2 focus:ring-blue-500/50',
+    'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
     autoRefreshEnabled && isOnline && isTabVisible && 'bg-emerald-500/10 text-emerald-400',
     !autoRefreshEnabled && 'text-slate-400',
     !isOnline && 'text-slate-600'
@@ -503,10 +514,10 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
               value={kpiFilter}
               onChange={(e) => setKpiFilter(e.target.value)}
               className={cn(
-                'w-48 px-3 py-1.5 text-xs rounded-md',
+                'w-48 px-3 py-2 text-xs rounded-md min-h-[44px]',
                 'bg-slate-800/50 border border-slate-700/50',
-                'text-slate-300 placeholder:text-slate-500',
-                'focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50',
+                'text-slate-300 placeholder:text-slate-400',
+                'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:border-blue-500/50',
                 'transition-all duration-200',
                 'min-w-0'
               )}
@@ -515,14 +526,14 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
             {kpiFilter && (
               <button
                 onClick={handleClearKpiFilter}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-all duration-200 hover:scale-110 active:scale-95"
+                className="absolute right-2 top-1/2 -translate-y-1/2 min-h-[44px] min-w-[44px] flex items-center justify-center text-slate-300 hover:text-slate-100 transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded"
                 aria-label="Effacer la recherche"
               >
-                <X className="h-3 w-3" />
+                <X className="h-4 w-4" />
               </button>
             )}
             {!kpiFilter && (
-              <Search className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-slate-500 pointer-events-none" />
+              <Search className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-slate-400 pointer-events-none" />
             )}
           </div>
 
@@ -551,7 +562,7 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
             </Tooltip>
             
             {/* Menu déroulant pour configurer l'intervalle */}
-            <div className="absolute right-0 top-full mt-2 w-48 bg-slate-900/95 border border-slate-700/50 rounded-lg shadow-xl backdrop-blur-xl z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pointer-events-none group-hover:pointer-events-auto">
+            <div className={cn("absolute right-0 top-full mt-2 w-48 bg-slate-900/95 border border-slate-700/50 rounded-lg shadow-xl backdrop-blur-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pointer-events-none group-hover:pointer-events-auto", zIndexClass('dropdownMenu'))}>
               <div className="p-2 space-y-2">
                 <label className="text-xs text-slate-400 block">Intervalle de refresh</label>
                 <select
@@ -559,7 +570,7 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
                   onChange={(e) => onRefreshIntervalChange?.(Number(e.target.value))}
                   onClick={(e) => e.stopPropagation()}
                   onMouseDown={(e) => e.stopPropagation()}
-                  className="w-full px-2 py-1.5 text-xs bg-slate-800/50 border border-slate-700/50 rounded text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  className="w-full min-h-[44px] px-2 py-2 text-xs bg-slate-800/50 border border-slate-700/50 rounded text-slate-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                 >
                   <option value={60000}>1 minute</option>
                   <option value={2 * 60000}>2 minutes</option>
@@ -568,7 +579,7 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
                   <option value={15 * 60000}>15 minutes</option>
                   <option value={30 * 60000}>30 minutes</option>
                 </select>
-                <p className="text-[10px] text-slate-500 pt-1 border-t border-slate-700">
+                <p className="text-[10px] text-slate-400 pt-1 border-t border-slate-700">
                   Cliquez sur le bouton pour activer/désactiver
                 </p>
               </div>
@@ -584,10 +595,10 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
                   onClick={refresh}
                   disabled={refreshStatus === "loading" || refreshStatus === "retrying"}
                   className={cn(
-                    'p-1.5 rounded-md transition-all duration-200',
+                    'min-h-[44px] min-w-[44px] p-2 sm:p-2.5 rounded-md transition-all duration-200',
                     'hover:bg-slate-800/50 active:scale-95',
                     'disabled:opacity-50 disabled:cursor-not-allowed',
-                    'focus:outline-none focus:ring-2 focus:ring-blue-500/50',
+                    'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
                     (refreshStatus === "loading" || refreshStatus === "retrying") && 'bg-blue-500/10'
                   )}
                   aria-label="Actualiser les indicateurs"
@@ -630,7 +641,7 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
           </div>
 
           {/* Menu d'export */}
-          <div className="relative hidden md:block z-[55]">
+          <div className={cn("relative hidden md:block", zIndexClass('dropdown'))}>
             <Tooltip>
               <TooltipTrigger asChild>
                 <div className="inline-block">
@@ -638,9 +649,9 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
                     type="button"
                     onClick={handleToggleExportMenu}
                     className={cn(
-                      'p-1.5 rounded-md transition-all duration-200',
+                      'min-h-[44px] min-w-[44px] p-2 sm:p-2.5 rounded-md transition-all duration-200',
                       'hover:bg-slate-800/50 active:scale-95',
-                      'focus:outline-none focus:ring-2 focus:ring-blue-500/50',
+                      'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
                       showExportMenu && 'bg-blue-500/10'
                     )}
                     aria-label="Exporter les données"
@@ -655,15 +666,15 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
               </TooltipContent>
             </Tooltip>
             {showExportMenu && (
-              <div className="absolute right-0 top-full mt-2 w-52 bg-slate-900/95 border border-slate-700/50 rounded-lg shadow-xl backdrop-blur-xl z-[60] animate-fadeIn pointer-events-auto">
+              <div className={cn("absolute right-0 top-full mt-2 w-52 bg-slate-900/95 border border-slate-700/50 rounded-lg shadow-xl backdrop-blur-xl animate-fadeIn pointer-events-auto", zIndexClass('dropdownMenu'))}>
                 <div className="p-2 space-y-1">
-                  <div className="px-2 py-1.5 text-[10px] uppercase tracking-wide text-slate-500 font-medium">
+                  <div className="px-2 py-1.5 text-[10px] uppercase tracking-wide text-slate-300 font-medium">
                     Format d'export
                   </div>
                   <button
                     type="button"
                     onClick={handleExportCSV}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-xs text-slate-300 hover:bg-slate-800/50 rounded-md transition-colors"
+                    className="w-full min-h-[44px] flex items-center gap-2 px-3 py-2 text-xs text-slate-300 hover:bg-slate-800/50 rounded-md transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                   >
                     <FileText className="h-3.5 w-3.5" />
                     Exporter en CSV
@@ -671,7 +682,7 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
                   <button
                     type="button"
                     onClick={handleExportJSON}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-xs text-slate-300 hover:bg-slate-800/50 rounded-md transition-colors"
+                    className="w-full min-h-[44px] flex items-center gap-2 px-3 py-2 text-xs text-slate-300 hover:bg-slate-800/50 rounded-md transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                   >
                     <BarChart3 className="h-3.5 w-3.5" />
                     Exporter en JSON
@@ -748,10 +759,10 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
       {topKpis.length === 0 ? (
         <div className="py-8 text-center" role="status" aria-live="polite" aria-atomic="true">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-slate-800/50 mb-3">
-            <Info className="h-6 w-6 text-slate-500" aria-hidden="true" />
+            <Info className="h-6 w-6 text-slate-300" aria-hidden="true" />
           </div>
-          <p className="text-sm text-slate-400 mb-2">Aucun indicateur trouvé</p>
-          <p className="text-xs text-slate-500 mb-3">
+          <p className="text-sm text-slate-300 mb-2">Aucun indicateur trouvé</p>
+          <p className="text-xs text-slate-400 mb-3">
             {kpiFilter 
               ? `Aucun résultat pour "${kpiFilter}"` 
               : "Essayez avec d'autres mots-clés"}
@@ -760,7 +771,7 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
             <button
               type="button"
               onClick={handleClearKpiFilter}
-              className="text-xs text-blue-400 hover:text-blue-300 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/50 rounded px-2 py-1"
+              className="text-xs min-h-[44px] px-3 py-2 text-blue-400 hover:text-blue-300 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded"
               aria-label="Effacer le filtre de recherche"
             >
               Effacer le filtre
@@ -774,6 +785,7 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
           className="h-[600px] overflow-auto"
           role="list"
           aria-label={`Liste des indicateurs de performance (${topKpis.length} items, virtualisé)`}
+          style={{ WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
         >
           <div
             style={{
@@ -819,8 +831,9 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
         </div>
       ) : (
         // Version normale optimisée pour ≤50 items
+        // ✅ Utilise container queries pour adaptation basée sur la taille du conteneur
         <div 
-          className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3"
+          className="@container grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 @container/sm:grid-cols-2 @container/md:grid-cols-3 @container/lg:grid-cols-4 gap-2 sm:gap-3"
           role="list"
           aria-label={`Liste des indicateurs de performance${topKpis.length !== kpis.length ? ` (${topKpis.length} sur ${kpis.length} affichés)` : ''}`}
         >

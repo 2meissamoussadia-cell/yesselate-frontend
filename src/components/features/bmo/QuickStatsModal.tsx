@@ -124,7 +124,7 @@ export function QuickStatsModal({ open, onOpenChange }: { open: boolean; onOpenC
               {STAT_CONFIG.map((stat) => {
                 const Icon = stat.icon;
                 const value = getValue(stat.key);
-                const isCritical = stat.critical && typeof value === 'number' && value > 0;
+                const isCritical = 'critical' in stat && stat.critical && typeof value === 'number' && value > 0;
                 
                 return (
                   <div
@@ -139,7 +139,7 @@ export function QuickStatsModal({ open, onOpenChange }: { open: boolean; onOpenC
                     </div>
                     <div className="text-2xl font-bold">
                       {value}
-                      {stat.suffix && <span className="text-sm font-normal ml-0.5">{stat.suffix}</span>}
+                      {'suffix' in stat && stat.suffix && <span className="text-sm font-normal ml-0.5">{stat.suffix}</span>}
                     </div>
                     {isCritical && (
                       <div className="text-xs mt-1 flex items-center gap-1">

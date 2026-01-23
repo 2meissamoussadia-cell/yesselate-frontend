@@ -296,7 +296,7 @@ function BudgetKpiPage() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 min-w-0">
           <div className="min-w-0 flex-1">
             <h1 className="text-xl sm:text-2xl font-bold text-white mb-2 break-words">KPIs Budget</h1>
-            <p className="text-slate-400 text-sm sm:text-base break-words">Indicateurs budgétaires et financiers</p>
+            <p className="text-slate-300 text-sm sm:text-base break-words">Indicateurs budgétaires et financiers</p>
           </div>
           <div className="flex-shrink-0">
             <ExportButton
@@ -308,7 +308,7 @@ function BudgetKpiPage() {
         </div>
 
         {/* Cartes KPIs */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 min-w-0">
+        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 xs:gap-3 sm:gap-4 min-w-0">
           {budgetKPIs.map((kpi) => {
             const Icon = kpi.icon;
             const isPositive = (kpi.trendDirection === 'up' && (kpi.id === 'total' || kpi.id === 'rentabilite' || kpi.id === 'conforme')) || 
@@ -363,8 +363,15 @@ function BudgetKpiPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <p className="text-sm text-slate-400 truncate">{kpi.label}</p>
-                          <Info className="h-3 w-3 text-slate-500 flex-shrink-0" />
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <p className="text-sm text-slate-300 truncate min-w-0">{kpi.label}</p>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{kpi.label}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                          <Info className="h-3 w-3 text-slate-400 flex-shrink-0" />
                         </div>
                         <p className="text-2xl font-bold text-white">{kpi.value}</p>
                       </div>
@@ -387,7 +394,7 @@ function BudgetKpiPage() {
                         'flex items-center justify-between text-xs',
                         isPositive && 'text-emerald-400',
                         isNegative && 'text-red-400',
-                        isNeutral && 'text-slate-400'
+                        isNeutral && 'text-slate-300'
                       )}
                     >
                       <div className="flex items-center gap-1 font-medium">
@@ -403,7 +410,7 @@ function BudgetKpiPage() {
                         )}
                         {isNeutral && <span>{kpi.trend}</span>}
                       </div>
-                      <span className="text-slate-500 text-[10px]">Cliquer pour détails</span>
+                      <span className="text-slate-400 text-[10px]">Cliquer pour détails</span>
                     </div>
                   </div>
                 </TooltipTrigger>
@@ -452,11 +459,11 @@ function BudgetKpiPage() {
               </div>
               <div className="space-y-2 min-w-0">
                 <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0 text-sm min-w-0">
-                  <span className="text-slate-400 break-words">Budget alloué</span>
+                  <span className="text-slate-300 break-words">Budget alloué</span>
                   <span className="text-white font-medium break-words sm:text-right">{detail.budget} FCFA</span>
                 </div>
                 <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0 text-sm min-w-0">
-                  <span className="text-slate-400 break-words">Budget consommé</span>
+                  <span className="text-slate-300 break-words">Budget consommé</span>
                   <span className="text-white font-medium break-words sm:text-right">{detail.consomme} FCFA</span>
                 </div>
                 <div className="h-2 bg-slate-700 rounded-full overflow-hidden mt-2">
@@ -508,7 +515,7 @@ function BudgetKpiPage() {
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2 text-slate-400">
+                  <div className="flex items-center gap-2 text-slate-300">
                     <Calendar className="h-4 w-4" />
                     <span>{paiement.joursRetard} jours de retard</span>
                   </div>
@@ -518,7 +525,7 @@ function BudgetKpiPage() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-8 text-slate-400">
+          <div className="text-center py-8 text-slate-300">
             <CheckCircle className="h-12 w-12 mx-auto mb-2 text-emerald-400" />
             <p>Aucun paiement en retard</p>
           </div>
@@ -546,11 +553,11 @@ function BudgetKpiPage() {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 text-sm min-w-0">
                 <div>
-                  <p className="text-slate-400 mb-1">Investissement</p>
+                  <p className="text-slate-300 mb-1">Investissement</p>
                   <p className="text-white font-medium">{formatCurrency(rent.investissement)}</p>
                 </div>
                 <div>
-                  <p className="text-slate-400 mb-1">Retour attendu</p>
+                  <p className="text-slate-300 mb-1">Retour attendu</p>
                   <p className="text-white font-medium">{formatCurrency(rent.retourAttendu)}</p>
                 </div>
                 <div>
@@ -584,7 +591,7 @@ function BudgetKpiPage() {
         <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 break-words">Contexte</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-sm text-slate-300 min-w-0">
           <div>
-            <p className="text-slate-400 mb-2">Dernière mise à jour</p>
+            <p className="text-slate-300 mb-2">Dernière mise à jour</p>
             <p>{new Date().toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' })}</p>
           </div>
           <div>

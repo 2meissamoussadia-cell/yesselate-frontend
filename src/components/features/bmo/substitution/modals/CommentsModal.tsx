@@ -70,16 +70,24 @@ export function CommentsModal({
         id: `CMT-${Date.now()}`,
         entityType,
         entityId,
-        authorId: 'current-user',
-        author: {
+        userId: 'current-user',
+        user: {
           id: 'current-user',
           name: 'Vous',
+          email: 'user@example.com',
+          phone: '',
+          bureau: '',
           role: 'Utilisateur',
+          competences: [],
+          disponibilite: 'available',
+          chargeActuelle: 0,
+          score: 0,
           avatar: undefined,
         },
         content: newComment,
-        timestamp: new Date(),
-        resolved: false,
+        mentions: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
 
       setComments([...comments, comment]);
@@ -151,7 +159,7 @@ export function CommentsModal({
               <div key={comment.id} className="flex gap-3">
                 {/* Avatar */}
                 <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-semibold">
-                  {comment.author.name.charAt(0)}
+                  {comment.user.name.charAt(0)}
                 </div>
 
                 {/* Content */}
@@ -159,12 +167,12 @@ export function CommentsModal({
                   <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
-                        <span className="font-medium text-white">{comment.author.name}</span>
-                        <span className="text-xs text-slate-500">{comment.author.role}</span>
+                        <span className="font-medium text-white">{comment.user.name}</span>
+                        <span className="text-xs text-slate-500">{comment.user.role}</span>
                       </div>
                       <div className="flex items-center gap-1 text-xs text-slate-500">
                         <Clock className="w-3 h-3" />
-                        {formatTimestamp(comment.timestamp)}
+                        {formatTimestamp(comment.createdAt)}
                       </div>
                     </div>
                     <p className="text-slate-300 text-sm whitespace-pre-wrap">{comment.content}</p>
@@ -182,7 +190,7 @@ export function CommentsModal({
                       </div>
                     )}
 
-                    {comment.resolved && (
+                    {comment.resolvedAt ? (
                       <div className="mt-2 text-xs text-green-400 flex items-center gap-1">
                         ✓ Résolu
                       </div>

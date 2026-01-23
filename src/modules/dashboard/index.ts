@@ -18,6 +18,7 @@ export * from './context/DashboardNavigationContext';
 // Hooks
 export * from './hooks/useDashboardNavigation';
 export * from './hooks/useDashboardNavigationSync';
+export * from './hooks/useDashboardNavigationSafe';
 export * from './hooks/useAutoRefresh';
 export * from './hooks/useDashboardRefresh';
 export * from './hooks/useKPIFilter';

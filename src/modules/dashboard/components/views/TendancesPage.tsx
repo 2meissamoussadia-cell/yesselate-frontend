@@ -188,8 +188,8 @@ export default function TendancesPage() {
               <Icon className="w-6 h-6 text-white" />
             </div>
             <div>
-              <p className="text-sm text-slate-400 font-medium">{indicator.label}</p>
-              <p className="text-xs text-slate-500">{indicator.trend.period}</p>
+              <p className="text-sm text-slate-300 font-medium">{indicator.label}</p>
+              <p className="text-xs text-slate-400">{indicator.trend.period}</p>
             </div>
           </div>
         </div>
@@ -201,7 +201,7 @@ export default function TendancesPage() {
               'flex items-center gap-2 text-sm font-medium',
               isPositive && 'text-green-400',
               isNegative && 'text-red-400',
-              isNeutral && 'text-slate-400'
+              isNeutral && 'text-slate-300'
             )}
           >
             {!isNeutral && (
@@ -222,7 +222,7 @@ export default function TendancesPage() {
                 <span>Stable</span>
               </>
             )}
-            <span className="text-slate-500">vs période précédente</span>
+            <span className="text-slate-400">vs période précédente</span>
           </div>
         </div>
 
@@ -241,7 +241,7 @@ export default function TendancesPage() {
           </div>
         ) : (
           <div className="h-16 bg-slate-800/30 rounded-lg flex items-center justify-center">
-            <LineChart className="w-8 h-8 text-slate-500" />
+            <LineChart className="w-8 h-8 text-slate-400" />
           </div>
         )}
       </div>
@@ -260,7 +260,7 @@ export default function TendancesPage() {
       {/* En-tête */}
       <div className="min-w-0">
         <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2 break-words">Tendances</h1>
-        <p className="text-slate-400 text-sm sm:text-lg break-words">Évolution temporelle des indicateurs clés</p>
+        <p className="text-slate-300 text-sm sm:text-lg break-words">Évolution temporelle des indicateurs clés</p>
       </div>
 
       {/* Contrôles */}
@@ -285,7 +285,7 @@ export default function TendancesPage() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-sm text-slate-400">Type :</span>
+          <span className="text-sm text-slate-300">Type :</span>
           <div className="flex gap-2">
             <Button
               variant={trendType === 'mensuelles' ? 'default' : 'outline'}
@@ -319,7 +319,7 @@ export default function TendancesPage() {
           <TrendingUp className="w-5 h-5 text-blue-400 flex-shrink-0" />
           <span className="min-w-0">Vue d'ensemble</span>
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 min-w-0">
+        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 xs:gap-3 sm:gap-4 lg:gap-6 min-w-0">
           {trendIndicators.map(renderTrendCard)}
         </div>
       </section>
@@ -458,7 +458,7 @@ export default function TendancesPage() {
               <TrendingDown className="w-5 h-5 text-red-400" />
               <h3 className="font-semibold text-white">Tendances négatives</h3>
             </div>
-            <p className="text-sm text-slate-400">Indicateurs nécessitant une attention particulière</p>
+            <p className="text-sm text-slate-300">Indicateurs nécessitant une attention particulière</p>
           </div>
         </div>
       </div>

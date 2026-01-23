@@ -361,7 +361,7 @@ function ProjectDetailModal() {
         {/* Status Badges */}
         <div className="flex items-center gap-3 flex-wrap">
           <Badge
-            variant={project.status === 'delayed' ? 'destructive' : project.status === 'active' ? 'default' : 'secondary'}
+            variant={project.status === 'delayed' ? 'destructive' : project.status === 'active' ? 'default' : 'gray'}
             className="text-sm"
           >
             {project.status === 'active' ? 'En cours' : project.status === 'delayed' ? 'En retard' : project.status === 'completed' ? 'Terminé' : project.status}
@@ -378,7 +378,7 @@ function ProjectDetailModal() {
               Risque élevé
             </Badge>
           )}
-          <Badge variant="outline" className="text-slate-400 border-slate-600">
+          <Badge variant="default" className="text-slate-400 border-slate-600">
             {project.id || project.code}
           </Badge>
         </div>
@@ -549,7 +549,7 @@ function ProjectDetailModal() {
                         {new Date(m.plannedDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })}
                       </p>
                       <Badge
-                        variant={m.status === 'completed' ? 'default' : m.status === 'delayed' ? 'destructive' : 'secondary'}
+                        variant={m.status === 'completed' ? 'default' : m.status === 'delayed' ? 'destructive' : 'gray'}
                         className="mt-1 text-xs"
                       >
                         {m.progress}%
@@ -1061,7 +1061,7 @@ function TeamAssignModal() {
                   <p className="text-xs text-slate-500">{m.roleLabel} • {m.department}</p>
                 </div>
                 <div className="text-right">
-                  <Badge variant="outline" className={cn(
+                  <Badge variant="default" className={cn(
                     'text-xs',
                     m.availability > 50 ? 'text-emerald-400 border-emerald-500/30' :
                     m.availability > 20 ? 'text-amber-400 border-amber-500/30' :
@@ -1422,8 +1422,8 @@ export function ProjetsModals() {
       <ResolutionWizardModal
         isOpen={modal.type === 'resolution-wizard' && modal.isOpen}
         onClose={closeModal}
-        projectId={modal.data?.projectId}
-        projectTitle={modal.data?.projectTitle}
+        projectId={modal.data?.projectId as string | undefined}
+        projectTitle={modal.data?.projectTitle as string | undefined}
       />
       <DecisionCenterModal
         isOpen={modal.type === 'decision-center' && modal.isOpen}

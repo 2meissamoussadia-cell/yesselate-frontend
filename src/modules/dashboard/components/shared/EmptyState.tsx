@@ -41,11 +41,11 @@ export function EmptyState({
       )}
     >
       <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-slate-800/50 flex items-center justify-center mb-3 sm:mb-4 flex-shrink-0">
-        <DisplayIcon className="w-6 h-6 sm:w-8 sm:h-8 text-slate-500" />
+        <DisplayIcon className="w-6 h-6 sm:w-8 sm:h-8 text-slate-400" />
       </div>
       <h3 className="text-base sm:text-lg font-semibold text-white mb-2 break-words px-2">{title}</h3>
       {description && (
-        <p className="text-xs sm:text-sm text-slate-400 max-w-md mb-3 sm:mb-4 break-words px-2">{description}</p>
+        <p className="text-xs sm:text-sm text-slate-300 max-w-md mb-3 sm:mb-4 break-words px-2">{description}</p>
       )}
       {action && <div className="mt-2 min-w-0">{action}</div>}
     </div>

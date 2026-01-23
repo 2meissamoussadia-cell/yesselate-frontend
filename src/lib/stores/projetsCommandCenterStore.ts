@@ -62,7 +62,9 @@ export type ProjetsModalType =
   | 'confirm'
   | 'kpi-drilldown'
   | 'gantt-view'
-  | 'resource-planning';
+  | 'resource-planning'
+  | 'resolution-wizard'
+  | 'decision-center';
 
 // État de navigation
 export interface ProjetsNavigationState {

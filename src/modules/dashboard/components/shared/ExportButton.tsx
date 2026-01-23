@@ -8,6 +8,7 @@ import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { Download, FileText, BarChart3, ChevronDown, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { zIndexClass } from '../../utils/zIndex';
 
 interface ExportButtonProps {
   onExportCSV?: () => void;
@@ -95,13 +96,14 @@ export function ExportButton({
       {isOpen && (
         <>
           <div
-            className="fixed inset-0 z-40"
+            className={cn("fixed inset-0", zIndexClass('overlay'))}
             onClick={() => setIsOpen(false)}
             aria-hidden="true"
           />
           <div
             className={cn(
-              'absolute right-0 top-full mt-2 w-44 sm:w-48 z-50 min-w-0',
+              'absolute right-0 top-full mt-2 w-44 sm:w-48 min-w-0',
+              zIndexClass('dropdownMenu'),
               'bg-slate-900/95 border border-slate-700/50 rounded-lg shadow-xl backdrop-blur-xl',
               'animate-fadeIn overflow-hidden'
             )}

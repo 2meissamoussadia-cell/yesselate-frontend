@@ -23,6 +23,12 @@ export { default as DashboardCommandCenterPage } from './DashboardCommandCenterP
 export { DashboardUrlSync } from './DashboardUrlSync';
 export { DynamicSidebar } from './DynamicSidebar';
 export { DynamicSubnav } from './DynamicSubnav';
+export { KPINotifications } from './KPINotifications';
+export type { KPINotification } from './KPINotifications';
+export { LastUpdateDisplay } from './LastUpdateDisplay';
+export { ContentLoadingSkeleton } from './ContentLoadingSkeleton';
+export { KPISparkline } from './shared/KPISparkline';
+export type { KPITone, KPITrend } from './shared/KPISparkline';
 
 // Export des vues
 export * from './views';

@@ -288,7 +288,7 @@ function ProjetKpiPage() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 min-w-0">
           <div className="min-w-0 flex-1">
             <h1 className="text-xl sm:text-2xl font-bold text-white mb-2 break-words">KPIs Chantiers & Projets</h1>
-            <p className="text-slate-400 text-sm sm:text-base break-words">Suivi de l'avancement, retards, litiges et performance par région</p>
+            <p className="text-slate-300 text-sm sm:text-base break-words">Suivi de l'avancement, retards, litiges et performance par région</p>
           </div>
           <div className="flex-shrink-0">
             <ExportButton
@@ -362,8 +362,15 @@ function ProjetKpiPage() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            <p className="text-sm text-slate-400 truncate">{kpi.label}</p>
-                            <Info className="h-3 w-3 text-slate-500 flex-shrink-0" />
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <p className="text-sm text-slate-300 truncate min-w-0">{kpi.label}</p>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>{kpi.label}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                            <Info className="h-3 w-3 text-slate-400 flex-shrink-0" />
                           </div>
                           <p className="text-2xl font-bold text-white">{kpi.value}</p>
                         </div>
@@ -386,7 +393,7 @@ function ProjetKpiPage() {
                           'flex items-center justify-between text-xs',
                           isPositive && 'text-emerald-400',
                           isNegative && 'text-red-400',
-                          !isPositive && !isNegative && 'text-slate-400'
+                          !isPositive && !isNegative && 'text-slate-300'
                         )}
                       >
                         <div className="flex items-center gap-1 font-medium">
@@ -430,7 +437,7 @@ function ProjetKpiPage() {
             Détails par projet
           </h2>
           {searchQuery && (
-            <span className="text-sm text-slate-400">
+            <span className="text-sm text-slate-300">
               {filteredProjets.length} projet{filteredProjets.length > 1 ? 's' : ''} trouvé{filteredProjets.length > 1 ? 's' : ''}
             </span>
           )}
@@ -465,18 +472,33 @@ function ProjetKpiPage() {
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <h3 className="text-lg font-bold text-white">{projet.nom}</h3>
+                  <div className="flex items-center gap-3 mb-2 min-w-0">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <h3 className="text-lg font-bold text-white truncate min-w-0">{projet.nom}</h3>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{projet.nom}</p>
+                      </TooltipContent>
+                    </Tooltip>
                     <AnimatedBadge
                       variant={projet.risque === 'high' ? 'critical' : projet.risque === 'medium' ? 'warning' : 'success'}
                       pulse={projet.risque === 'high'}
+                      className="flex-shrink-0"
                     >
                       Risque {projet.risque === 'low' ? 'Faible' : projet.risque === 'medium' ? 'Moyen' : 'Élevé'}
                     </AnimatedBadge>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-slate-400">
-                    <MapPin className="h-3 w-3" />
-                    <span>{projet.region}</span>
+                  <div className="flex items-center gap-2 text-sm text-slate-300 min-w-0">
+                    <MapPin className="h-3 w-3 flex-shrink-0" />
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="truncate min-w-0">{projet.region}</span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{projet.region}</p>
+                      </TooltipContent>
+                    </Tooltip>
                   </div>
                 </div>
                 {projet.retard > 0 && (
@@ -491,7 +513,7 @@ function ProjetKpiPage() {
                 {/* Avancement */}
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-slate-400">Avancement</span>
+                    <span className="text-xs text-slate-300">Avancement</span>
                     <span className="text-sm font-semibold text-white">{projet.avancement}%</span>
                   </div>
                   <div className="h-2 bg-slate-700/50 rounded-full overflow-hidden">
@@ -510,7 +532,7 @@ function ProjetKpiPage() {
                 {/* Budget */}
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-slate-400">Budget</span>
+                    <span className="text-xs text-slate-300">Budget</span>
                     <span className="text-sm font-semibold text-white">{projet.budget.pourcentage}%</span>
                   </div>
                   <div className="h-2 bg-slate-700/50 rounded-full overflow-hidden">
@@ -524,7 +546,7 @@ function ProjetKpiPage() {
                       style={{ width: `${Math.min(projet.budget.pourcentage, 100)}%` }}
                     />
                   </div>
-                  <div className="text-xs text-slate-500 mt-1">
+                  <div className="text-xs text-slate-400 mt-1">
                     {formatCurrency(projet.budget.consomme)} / {formatCurrency(projet.budget.alloue)}
                   </div>
                 </div>
@@ -532,7 +554,7 @@ function ProjetKpiPage() {
                 {/* Litiges */}
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-slate-400">Litiges</span>
+                    <span className="text-xs text-slate-300">Litiges</span>
                     <div className="flex items-center gap-1">
                       {projet.litiges > 0 && <Gavel className="h-3 w-3 text-amber-400" />}
                       <span className={cn(
@@ -576,7 +598,7 @@ function ProjetKpiPage() {
               <div className="space-y-3">
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-slate-400">Projets</span>
+                    <span className="text-xs text-slate-300">Projets</span>
                     <span className="text-sm font-semibold text-white">{perf.projets}</span>
                   </div>
                 </div>
@@ -594,7 +616,7 @@ function ProjetKpiPage() {
                 </div>
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-slate-400">Projets en retard</span>
+                    <span className="text-xs text-slate-300">Projets en retard</span>
                     <span className={cn(
                       'text-sm font-semibold',
                       perf.retard === 0 ? 'text-emerald-400' : 'text-amber-400'

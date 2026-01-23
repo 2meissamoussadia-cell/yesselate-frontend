@@ -9,6 +9,8 @@ import { logger } from '@/lib/utils/logger';
 
 // Logger pour ce module utilitaire (utilise l'instance singleton)
 const log = {
+  debug: (message: string, context?: Record<string, unknown>) => 
+    logger.debug(message, { component: 'routeValidation', ...context }),
   warn: (message: string, context?: Record<string, unknown>) => 
     logger.warn(message, { component: 'routeValidation', ...context }),
   error: (message: string, error?: Error, context?: Record<string, unknown>) => 
@@ -311,8 +313,14 @@ export function normalizeRoute(
       (!sub || sub === defaultRoute.sub) &&
       (!leaf || leaf === defaultRoute.leaf);
     
+    // ✅ Ne logger qu'en développement et seulement si ce n'est pas déjà la route par défaut
+    // pour éviter les warnings répétés lors de la normalisation
     if (!isDefaultRoute && process.env.NODE_ENV === 'development') {
-      log.warn('Route invalide, utilisation de la route par défaut', { main, sub, leaf });
+      // Utiliser debug au lieu de warn pour réduire le bruit dans la console
+      log.debug('Route invalide normalisée vers route par défaut', { 
+        requested: { main, sub, leaf },
+        normalized: defaultRoute 
+      });
     }
     return defaultRoute;
   }

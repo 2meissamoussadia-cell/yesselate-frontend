@@ -7,6 +7,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Bell, AlertCircle, CheckCircle2, Info, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { zIndexClass } from '../utils/zIndex';
 
 export type NotificationType = 'success' | 'warning' | 'error' | 'info';
 
@@ -88,7 +89,7 @@ export function DashboardNotifications({
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 w-full max-w-sm space-y-2">
+    <div className={cn("fixed bottom-4 right-4 w-full max-w-sm space-y-2", zIndexClass('notification'))}>
       {/* Header avec compteur */}
       {notifications.length > 0 && (
         <div className="flex items-center justify-between bg-slate-900/95 backdrop-blur-xl rounded-lg border border-slate-700/50 p-3 shadow-lg">
@@ -110,7 +111,10 @@ export function DashboardNotifications({
       )}
 
       {/* Liste des notifications */}
-      <div className="space-y-2 max-h-[600px] overflow-y-auto">
+      <div 
+        className="space-y-2 max-h-[600px] overflow-y-auto"
+        style={{ WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
+      >
         {visibleNotifications.map((notification, index) => (
           <div
             key={notification.id}

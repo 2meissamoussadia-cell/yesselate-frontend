@@ -280,7 +280,7 @@ function DemandesKpiPage() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 min-w-0">
           <div className="min-w-0 flex-1">
             <h1 className="text-xl sm:text-2xl font-bold text-white mb-2 break-words">KPIs Flux & Demandes</h1>
-            <p className="text-slate-400 text-sm sm:text-base break-words">Suivi du volume, validation, temps moyen, goulets et blocages</p>
+            <p className="text-slate-300 text-sm sm:text-base break-words">Suivi du volume, validation, temps moyen, goulets et blocages</p>
           </div>
           <div className="flex-shrink-0">
             <ExportButton
@@ -378,7 +378,7 @@ function DemandesKpiPage() {
                           'flex items-center justify-between text-xs',
                           isPositive && 'text-emerald-400',
                           isNegative && 'text-red-400',
-                          !isPositive && !isNegative && 'text-slate-400'
+                          !isPositive && !isNegative && 'text-slate-300'
                         )}
                       >
                         <div className="flex items-center gap-1 font-medium">
@@ -393,7 +393,7 @@ function DemandesKpiPage() {
                             </>
                           )}
                         </div>
-                        <span className="text-slate-500 text-[10px]">Cliquer pour détails</span>
+                        <span className="text-slate-400 text-[10px]">Cliquer pour détails</span>
                       </div>
                     </div>
                   </TooltipTrigger>
@@ -403,7 +403,7 @@ function DemandesKpiPage() {
                       {kpi.description && (
                         <p className="text-xs text-slate-300">{kpi.description}</p>
                       )}
-                      <p className="text-xs text-slate-400 pt-1 border-t border-slate-700">
+                      <p className="text-xs text-slate-300 pt-1 border-t border-slate-700">
                         Cliquez pour voir les détails et l'historique
                       </p>
                     </div>
@@ -426,10 +426,10 @@ function DemandesKpiPage() {
               key={item.type}
               className="bg-slate-800/40 border border-slate-700/40 rounded-xl p-4"
             >
-              <p className="text-xs text-slate-400 mb-2">{item.type}</p>
+              <p className="text-xs text-slate-300 mb-2">{item.type}</p>
               <p className="text-2xl font-bold text-white mb-1">{item.count}</p>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-slate-400">{item.percentage}%</span>
+                <span className="text-xs text-slate-300">{item.percentage}%</span>
               </div>
               <div className="h-2 bg-slate-700/50 rounded-full overflow-hidden">
                 <div
@@ -469,7 +469,7 @@ function DemandesKpiPage() {
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-3 min-w-0">
                 <div className="flex-1 min-w-0">
                   <h3 className="text-sm sm:text-base font-semibold text-white mb-1 break-words">{goulet.processus}</h3>
-                  <div className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm text-slate-400 min-w-0">
+                  <div className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm text-slate-300 min-w-0">
                     <span className="break-words">{goulet.volume} demandes</span>
                   </div>
                 </div>
@@ -507,7 +507,7 @@ function DemandesKpiPage() {
               </AnimatedBadge>
             )}
             {searchQuery && (
-              <span className="text-sm text-slate-400">
+              <span className="text-sm text-slate-300">
                 {filteredBlocages.length} résultat{filteredBlocages.length > 1 ? 's' : ''}
               </span>
             )}
@@ -547,7 +547,7 @@ function DemandesKpiPage() {
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1">
                   <h3 className="text-base font-semibold text-white mb-1">{blocage.type}</h3>
-                  <div className="flex items-center gap-2 text-sm text-slate-400">
+                  <div className="flex items-center gap-2 text-sm text-slate-300">
                     <Building2 className="h-3 w-3" />
                     <span>{blocage.bureau}</span>
                   </div>
@@ -587,13 +587,13 @@ function DemandesKpiPage() {
               <div className="space-y-3">
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-slate-400">Volume</span>
+                    <span className="text-xs text-slate-300">Volume</span>
                     <span className="text-sm font-semibold text-white">{perf.volume}</span>
                   </div>
                 </div>
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-slate-400">Taux de validation</span>
+                    <span className="text-xs text-slate-300">Taux de validation</span>
                     <span className="text-sm font-semibold text-emerald-400">{perf.validation}%</span>
                   </div>
                   <div className="h-2 bg-slate-700/50 rounded-full overflow-hidden">
@@ -605,7 +605,7 @@ function DemandesKpiPage() {
                 </div>
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-slate-400">Temps moyen</span>
+                    <span className="text-xs text-slate-300">Temps moyen</span>
                     <span className="text-sm font-semibold text-white">{perf.tempsMoyen}j</span>
                   </div>
                 </div>

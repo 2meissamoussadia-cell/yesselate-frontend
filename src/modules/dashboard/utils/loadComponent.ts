@@ -115,11 +115,37 @@ export async function loadComponent(name: string): Promise<ComponentType> {
     try {
       const module = await loader();
       
-      if (!module || !module.default) {
-        throw new Error(`Component "${name}" did not export a default component`);
+      if (!module) {
+        throw new Error(`Component "${name}" module is empty or undefined`);
       }
 
-      const component = module.default;
+      // ✅ Gérer à la fois default export et named export
+      // Certains composants utilisent named export (SummaryPage, OverviewPage, etc.)
+      let component: ComponentType;
+      
+      if (module.default) {
+        // Default export (cas le plus courant)
+        component = module.default;
+      } else {
+        // Named export - chercher le composant avec le même nom
+        const namedExport = module[name as keyof typeof module];
+        if (namedExport && typeof namedExport === 'function') {
+          component = namedExport as ComponentType;
+        } else {
+          // Fallback: prendre le premier export nommé disponible
+          const exports = Object.keys(module);
+          if (exports.length > 0) {
+            const firstExport = module[exports[0] as keyof typeof module];
+            if (typeof firstExport === 'function') {
+              component = firstExport as ComponentType;
+            } else {
+              throw new Error(`Component "${name}" did not export a valid component (no default, no named export matching "${name}")`);
+            }
+          } else {
+            throw new Error(`Component "${name}" did not export any component`);
+          }
+        }
+      }
       
       // ✅ Mettre en cache le composant chargé
       componentCache.set(name, component);

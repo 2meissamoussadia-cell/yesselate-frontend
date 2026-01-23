@@ -10,6 +10,7 @@ import { memo, useCallback, useMemo } from 'react';
 import { Info } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import { safeArea } from '../utils/safeArea';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 
 interface DashboardFooterProps {
@@ -58,25 +59,28 @@ export const DashboardFooter = memo(function DashboardFooter({
   ), [isOnline]);
 
   return (
-    <div className="border-t border-slate-800/60 bg-gradient-to-r from-slate-900/60 via-slate-900/40 to-slate-900/60 backdrop-blur-xl px-2 sm:px-4 py-2 sm:py-3 text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-0 shadow-lg shadow-black/10 min-w-0 overflow-hidden">
+    <div className={cn(
+      "border-t border-slate-800/60 bg-gradient-to-r from-slate-900/60 via-slate-900/40 to-slate-900/60 backdrop-blur-xl px-2 sm:px-4 py-2 sm:py-3 text-xs text-slate-300 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-0 shadow-lg shadow-black/10 min-w-0 overflow-hidden",
+      safeArea.pbFallback()
+    )}>
       <div className="flex items-center gap-2 sm:gap-3 flex-wrap min-w-0 flex-1">
         <Tooltip>
           <TooltipTrigger asChild>
-            <span className="font-medium text-slate-400 cursor-help whitespace-nowrap">Dashboard v{version}</span>
+            <span className="font-medium text-slate-300 cursor-help whitespace-nowrap">Dashboard v{version}</span>
           </TooltipTrigger>
           <TooltipContent>
             <div className="text-xs space-y-1">
               <p className="font-semibold">Version {version}</p>
-              <p className="text-slate-400">Dashboard BTP ERP</p>
+              <p className="text-slate-300">Dashboard BTP ERP</p>
             </div>
           </TooltipContent>
         </Tooltip>
-        <span className="text-slate-600 hidden sm:inline">•</span>
+        <span className="text-slate-500 hidden sm:inline">•</span>
         <Tooltip>
           <TooltipTrigger asChild>
             <button
               type="button"
-              className="hidden sm:inline-flex items-center gap-1 text-slate-500 hover:text-slate-300 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/50 rounded px-1 whitespace-nowrap"
+              className="hidden sm:inline-flex items-center gap-1 min-h-[44px] px-2 py-1 text-slate-300 hover:text-slate-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded whitespace-nowrap"
               aria-label="Raccourcis clavier"
               onClick={handleShortcutsClick}
             >
@@ -171,13 +175,13 @@ export const DashboardFooter = memo(function DashboardFooter({
                   <p className="text-amber-400">
                     Le refresh automatique est suspendu
                   </p>
-                  <p className="text-slate-400 text-[10px] pt-1 border-t border-slate-700 mt-1">
+                  <p className="text-slate-300 text-[10px] pt-1 border-t border-slate-700 mt-1">
                     Reconnexion automatique à la restauration du réseau
                   </p>
                 </>
               )}
               {isOnline && autoRefreshEnabled && (
-                <p className="text-slate-400">
+                <p className="text-slate-300">
                   Refresh automatique: {Math.round(refreshInterval / 1000 / 60)} min
                 </p>
               )}

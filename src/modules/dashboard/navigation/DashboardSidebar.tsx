@@ -122,7 +122,8 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
     try {
       // ✅ Valider la route avant de naviguer
       if (!isValidRoute(mainId, subId || null, leafId || null)) {
-        log.warn('Route invalide, normalisation', {
+        // Utiliser debug au lieu de warn pour réduire le bruit dans la console
+        log.debug('Route invalide détectée, normalisation', {
           main: mainId,
           sub: subId,
           leaf: leafId,
@@ -275,12 +276,18 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
         }
       } else {
         // Navigation directe (pas d'enfants)
+        // ✅ Utiliser les valeurs parentes correctes pour éviter les routes incorrectes
         if (level === 0) {
           handleNavigation(node.id, null, null);
         } else if (level === 1) {
-          handleNavigation(main || 'overview', node.id, null);
+          // Niveau 1 : utiliser parentMain (ou main si pas de parent)
+          const targetMain = parentMain || main || 'overview';
+          handleNavigation(targetMain, node.id, null);
         } else if (level === 2) {
-          handleNavigation(main || 'overview', sub || null, node.id);
+          // Niveau 2 : utiliser parentMain et parentSub (ou main/sub si pas de parents)
+          const targetMain = parentMain || main || 'overview';
+          const targetSub = parentSub || sub || null;
+          handleNavigation(targetMain, targetSub, node.id);
         }
       }
     };
@@ -437,7 +444,10 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
         </div>
       </div>
       
-      <div className="flex-1 overflow-y-auto p-1.5 sm:p-2 space-y-0.5 sm:space-y-1 min-w-0">
+      <div 
+        className="flex-1 overflow-y-auto p-1.5 sm:p-2 space-y-0.5 sm:space-y-1 min-w-0"
+        style={{ WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
+      >
         {Object.values(filteredNodes).map((node) => (
           <NavNodeComponent key={node.id} node={node} level={0} parentMain={undefined} parentSub={undefined} />
         ))}

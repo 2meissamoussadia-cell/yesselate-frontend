@@ -38,16 +38,16 @@ export function SearchFilter({
   return (
     <div className={cn('relative min-w-0', className)}>
       <div className="relative min-w-0">
-        <Search className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-500 pointer-events-none flex-shrink-0" />
-        <Input
+        <Search className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-400 pointer-events-none flex-shrink-0" />
+          <Input
           type="text"
           placeholder={placeholder}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           className={cn(
             'pl-7 sm:pl-9 pr-7 sm:pr-9 bg-slate-800/50 border-slate-700/50 text-slate-300 text-sm sm:text-base',
-            'focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50',
-            'placeholder:text-slate-500 min-w-0',
+            'focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:border-blue-500/50',
+            'placeholder:text-slate-400 min-w-0',
             'h-9 sm:h-10'
           )}
           aria-label="Rechercher"
@@ -55,7 +55,7 @@ export function SearchFilter({
         {value && (
           <button
             onClick={handleClear}
-            className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors flex-shrink-0"
+            className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 min-h-[44px] min-w-[44px] flex items-center justify-center text-slate-400 hover:text-slate-200 transition-colors flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded"
             aria-label="Effacer la recherche"
           >
             <X className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
@@ -63,7 +63,7 @@ export function SearchFilter({
         )}
       </div>
       {showResultsCount && value && (
-        <div className="mt-1.5 sm:mt-2 text-xs text-slate-500 break-words">
+        <div className="mt-1.5 sm:mt-2 text-xs text-slate-400 break-words">
           {resultsCount} résultat{resultsCount > 1 ? 's' : ''} sur {totalCount}
         </div>
       )}

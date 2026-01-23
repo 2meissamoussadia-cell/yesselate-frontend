@@ -83,7 +83,7 @@ export const SubstitutionSubNavigation = React.memo(function SubstitutionSubNavi
                 <span>{sub.label}</span>
                 {sub.badge && (
                   <Badge
-                    variant="outline"
+                    variant="default"
                     className={cn(
                       'h-4 min-w-4 px-1 text-xs transition-all duration-200',
                       sub.badgeType === 'critical'

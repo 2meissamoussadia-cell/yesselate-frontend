@@ -84,10 +84,11 @@ export const KPICard = memo(function KPICard({
   const hasNegativeTrend = isNegative ?? false;
 
   // Mémoriser className pour éviter les re-renders
+  // ✅ Utilise container queries pour adaptation basée sur la taille du conteneur
   const cardClassName = useMemo(() => cn(
-    'rounded-xl p-4 sm:p-5 border-2 transition-all duration-300 min-w-0 overflow-hidden',
+    '@container rounded-xl p-4 sm:p-5 @container/sm:p-5 @container/md:p-6 border-2 transition-all duration-300 min-w-0 overflow-hidden',
     onClick && 'cursor-pointer hover:scale-[1.02] hover:shadow-lg hover:shadow-black/20',
-    'focus:outline-none focus:ring-2 focus:ring-blue-500/50',
+    'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
     colors.card
   ), [onClick, colors.card]);
 
@@ -105,7 +106,7 @@ export const KPICard = memo(function KPICard({
         <p className="font-semibold">{label}</p>
         <p className="text-xs text-slate-300">{description}</p>
         {onClick && (
-          <p className="text-xs text-slate-400 pt-1 border-t border-slate-700">
+          <p className="text-xs text-slate-300 pt-1 border-t border-slate-700">
             Cliquez pour voir les détails et l'historique
           </p>
         )}
@@ -130,8 +131,8 @@ export const KPICard = memo(function KPICard({
             </div>
             <div className="flex-1 min-w-0 overflow-hidden">
               <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
-                <p className="text-xs sm:text-sm text-slate-400 truncate min-w-0">{label}</p>
-                {onClick && <Info className="h-3 w-3 text-slate-500 flex-shrink-0" aria-hidden="true" />}
+                <p className="text-xs sm:text-sm text-slate-300 truncate min-w-0">{label}</p>
+                {onClick && <Info className="h-3 w-3 text-slate-400 flex-shrink-0" aria-hidden="true" />}
               </div>
               <p className="text-xl sm:text-2xl font-bold text-white truncate min-w-0">{value}</p>
             </div>
@@ -153,7 +154,7 @@ export const KPICard = memo(function KPICard({
               'flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-0 text-xs min-w-0',
               hasPositiveTrend && 'text-emerald-400',
               hasNegativeTrend && 'text-red-400',
-              !hasPositiveTrend && !hasNegativeTrend && 'text-slate-400'
+              !hasPositiveTrend && !hasNegativeTrend && 'text-slate-300'
             )}
           >
             <div className="flex items-center gap-1 font-medium min-w-0">
@@ -170,7 +171,7 @@ export const KPICard = memo(function KPICard({
               {trendDirection === 'neutral' && <span className="truncate min-w-0">{trend}</span>}
             </div>
             {onClick && (
-              <span className="text-slate-500 text-[10px] sm:text-xs whitespace-nowrap flex-shrink-0" aria-hidden="true">
+              <span className="text-slate-400 text-[10px] sm:text-xs whitespace-nowrap flex-shrink-0" aria-hidden="true">
                 Cliquer pour détails
               </span>
             )}

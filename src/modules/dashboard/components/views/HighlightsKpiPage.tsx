@@ -350,7 +350,7 @@ function HighlightsKpiPage() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 min-w-0">
           <div className="min-w-0 flex-1">
             <h1 className="text-xl sm:text-2xl font-bold text-white mb-2 break-words">Synthèse stratégique</h1>
-            <p className="text-slate-400 text-sm sm:text-base break-words">Vue d'ensemble des indicateurs clés et tendances principales</p>
+            <p className="text-slate-300 text-sm sm:text-base break-words">Vue d'ensemble des indicateurs clés et tendances principales</p>
           </div>
           <div className="flex-shrink-0">
             <ExportButton
@@ -411,8 +411,15 @@ function HighlightsKpiPage() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
-                              <p className="text-sm text-slate-400 truncate">{kpi.label}</p>
-                              <Info className="h-3 w-3 text-slate-500 flex-shrink-0" />
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <p className="text-sm text-slate-300 truncate min-w-0">{kpi.label}</p>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>{kpi.label}</p>
+                                </TooltipContent>
+                              </Tooltip>
+                              <Info className="h-3 w-3 text-slate-400 flex-shrink-0" />
                             </div>
                             <p className="text-2xl font-bold text-white">{kpi.value}</p>
                           </div>
@@ -452,7 +459,7 @@ function HighlightsKpiPage() {
                           )}
                           {kpi.trendDirection === 'neutral' && <span>{kpi.trend}</span>}
                         </div>
-                        <span className="text-slate-500 text-[10px]">Cliquer pour détails</span>
+                        <span className="text-slate-400 text-[10px]">Cliquer pour détails</span>
                       </div>
                     </div>
                   </TooltipTrigger>
@@ -462,7 +469,7 @@ function HighlightsKpiPage() {
                       {kpi.description && (
                         <p className="text-xs text-slate-300">{kpi.description}</p>
                       )}
-                      <p className="text-xs text-slate-400 pt-1 border-t border-slate-700">
+                      <p className="text-xs text-slate-300 pt-1 border-t border-slate-700">
                         Cliquez pour voir les détails et l'historique
                       </p>
                     </div>
@@ -489,13 +496,13 @@ function HighlightsKpiPage() {
               )}
             >
               <div className="flex items-center justify-between mb-2 min-w-0">
-                <p className="text-sm text-slate-400 break-words min-w-0">{trend.label}</p>
+                <p className="text-sm text-slate-300 break-words min-w-0">{trend.label}</p>
                 {trend.trend === 'up' && (
                   <TrendingUp className="h-4 w-4 text-emerald-400" />
                 )}
               </div>
               <p className="text-2xl font-bold text-white mb-1">{trend.value}</p>
-              <p className="text-xs text-slate-500">{trend.description}</p>
+              <p className="text-xs text-slate-400">{trend.description}</p>
             </div>
           ))}
         </div>
@@ -576,7 +583,7 @@ function HighlightsKpiPage() {
                     className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0 p-2 rounded-lg bg-slate-700/30 hover:bg-slate-700/50 transition-colors min-w-0 overflow-hidden"
                   >
                     <div className="flex items-center gap-2 min-w-0">
-                      <span className="text-xs font-bold text-slate-400 w-4 flex-shrink-0">
+                      <span className="text-xs font-bold text-slate-300 w-4 flex-shrink-0">
                         #{index + 1}
                       </span>
                       <span className="text-sm text-white break-words min-w-0">{item.name}</span>

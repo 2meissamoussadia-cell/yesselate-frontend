@@ -1164,13 +1164,27 @@ export default function BureauxPage() {
                 </TooltipTrigger>
                 <TooltipContent>
                   <p className="font-semibold">{bureau.name}</p>
-                  <p className="text-xs text-slate-400">Score: {bureau.performanceScore}/100</p>
+                  <p className="text-xs text-slate-300">Score: {bureau.performanceScore}/100</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            <div>
-              <h3 className="text-xl font-bold text-white">{bureau.code}</h3>
-              <p className="text-sm text-slate-400">{bureau.name}</p>
+            <div className="min-w-0 flex-1">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <h3 className="text-xl font-bold text-white truncate min-w-0">{bureau.code}</h3>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{bureau.code}</p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <p className="text-sm text-slate-300 truncate min-w-0">{bureau.name}</p>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{bureau.name}</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
           </div>
           <div className="flex flex-col items-end gap-2">
@@ -1204,7 +1218,7 @@ export default function BureauxPage() {
             <TooltipTrigger asChild>
               <div className="mb-4 pb-4 border-b border-slate-700/50 cursor-help">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs text-slate-400">Score de performance</span>
+                  <span className="text-xs text-slate-300">Score de performance</span>
                   <span className={cn(
                     'text-lg font-bold',
                     bureau.performanceScore >= 85 && 'text-emerald-400',
@@ -1271,7 +1285,7 @@ export default function BureauxPage() {
         {shouldShowDetails && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4 sm:mb-6 pb-4 sm:pb-6 border-b border-slate-700/50 min-w-0">
           <div className="bg-slate-800/50 rounded-lg p-3">
-            <p className="text-xs text-slate-400 mb-1">Projets</p>
+            <p className="text-xs text-slate-300 mb-1">Projets</p>
             <p className="text-lg font-bold text-white">{bureau.summary.totalProjects}</p>
           </div>
           <div className="bg-slate-800/50 rounded-lg p-3">
@@ -1279,7 +1293,7 @@ export default function BureauxPage() {
             <p className="text-lg font-bold text-white">{bureau.summary.budgetConsumed}%</p>
           </div>
           <div className="bg-slate-800/50 rounded-lg p-3">
-            <p className="text-xs text-slate-400 mb-1">Risques</p>
+            <p className="text-xs text-slate-300 mb-1">Risques</p>
             <p className="text-lg font-bold text-white">
               {bureau.summary.risks}
               {bureau.summary.risksCritiques > 0 && (
@@ -1291,7 +1305,7 @@ export default function BureauxPage() {
             <p className="text-xs text-slate-400 mb-1">Validations</p>
             <p className="text-lg font-bold text-white">
               {bureau.summary.validationsCeMois}
-              <span className="text-xs text-slate-500 ml-1">/{bureau.summary.validations}</span>
+              <span className="text-xs text-slate-400 ml-1">/{bureau.summary.validations}</span>
             </p>
           </div>
         </div>
@@ -1340,7 +1354,7 @@ export default function BureauxPage() {
                   </div>
                   <div>
                     <p className="text-sm text-slate-300 font-medium">{indicator.label}</p>
-                    <p className="text-xs text-slate-500">{indicator.description}</p>
+                    <p className="text-xs text-slate-400">{indicator.description}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -1351,7 +1365,7 @@ export default function BureauxPage() {
                         'flex items-center gap-1 text-xs',
                         isPositive && 'text-emerald-400',
                         isNegative && 'text-red-400',
-                        isNeutral && 'text-slate-400'
+                        isNeutral && 'text-slate-300'
                       )}
                     >
                       {!isNeutral && (
@@ -1390,7 +1404,7 @@ export default function BureauxPage() {
                   'text-sm px-3 py-1.5 rounded-md transition-all',
                   isSelected 
                     ? 'bg-blue-500/20 text-blue-400 border border-blue-500/50' 
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/50'
                 )}
               >
                 {isSelected ? '✓ Sélectionné' : 'Sélectionner'}
@@ -1413,7 +1427,7 @@ export default function BureauxPage() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 min-w-0">
           <div className="min-w-0 flex-1">
             <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2 break-words">Bureaux Métiers</h1>
-            <p className="text-slate-400 text-sm sm:text-lg break-words">
+            <p className="text-slate-300 text-sm sm:text-lg break-words">
               Indicateurs de performance par bureau ({sortedBureaux.length} bureau{sortedBureaux.length > 1 ? 'x' : ''} affiché{sortedBureaux.length > 1 ? 's' : ''})
             </p>
           </div>
@@ -1447,7 +1461,7 @@ export default function BureauxPage() {
                     onClick={() => setViewMode('grid')}
                     className={cn(
                       'p-2 rounded transition-all',
-                      viewMode === 'grid' ? 'bg-blue-500/20 text-blue-400' : 'text-slate-400 hover:text-white'
+                      viewMode === 'grid' ? 'bg-blue-500/20 text-blue-400' : 'text-slate-300 hover:text-white'
                     )}
                   >
                     <Grid3x3 className="w-4 h-4" />
@@ -1461,7 +1475,7 @@ export default function BureauxPage() {
                     onClick={() => setViewMode('table')}
                     className={cn(
                       'p-2 rounded transition-all',
-                      viewMode === 'table' ? 'bg-blue-500/20 text-blue-400' : 'text-slate-400 hover:text-white'
+                      viewMode === 'table' ? 'bg-blue-500/20 text-blue-400' : 'text-slate-300 hover:text-white'
                     )}
                   >
                     <Table className="w-4 h-4" />
@@ -1475,7 +1489,7 @@ export default function BureauxPage() {
                     onClick={() => setViewMode('compact')}
                     className={cn(
                       'p-2 rounded transition-all',
-                      viewMode === 'compact' ? 'bg-blue-500/20 text-blue-400' : 'text-slate-400 hover:text-white'
+                      viewMode === 'compact' ? 'bg-blue-500/20 text-blue-400' : 'text-slate-300 hover:text-white'
                     )}
                   >
                     <Layers className="w-4 h-4" />
@@ -1550,12 +1564,12 @@ export default function BureauxPage() {
         </div>
 
       {/* Statistiques globales */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 min-w-0" role="region" aria-label="Statistiques globales">
+      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 xs:gap-3 sm:gap-4 min-w-0" role="region" aria-label="Statistiques globales">
         <TooltipProvider delayDuration={200}>
           <Tooltip>
             <TooltipTrigger asChild>
               <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700/50 hover:border-slate-600 transition-colors cursor-help">
-                <p className="text-xs text-slate-400 mb-1">Total</p>
+                <p className="text-xs text-slate-300 mb-1">Total</p>
                 <p className="text-2xl font-bold text-white">{stats.total}</p>
               </div>
             </TooltipTrigger>
@@ -1627,18 +1641,19 @@ export default function BureauxPage() {
           <div className="flex flex-col md:flex-row gap-4">
             {/* Recherche */}
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
                 type="text"
                 placeholder="Rechercher un bureau..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-10 py-2 bg-slate-800/50 border border-slate-700/50 rounded-lg text-slate-300 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                className="w-full pl-10 pr-10 py-2 min-h-[44px] bg-slate-800/50 border border-slate-700/50 rounded-lg text-slate-300 placeholder:text-slate-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 min-h-[44px] min-w-[44px] flex items-center justify-center text-slate-400 hover:text-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded"
+                  aria-label="Effacer la recherche"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -1647,11 +1662,11 @@ export default function BureauxPage() {
 
             {/* Filtre par statut */}
             <div className="flex items-center gap-2">
-              <label className="text-sm text-slate-400 whitespace-nowrap">Statut:</label>
+              <label className="text-sm text-slate-300 whitespace-nowrap">Statut:</label>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value as FilterOption)}
-                className="px-3 py-2 bg-slate-800/50 border border-slate-700/50 rounded-lg text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                className="px-3 py-2 min-h-[44px] bg-slate-800/50 border border-slate-700/50 rounded-lg text-slate-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
               >
                 <option value="all">Tous</option>
                 <option value="performant">Performant</option>
@@ -1678,7 +1693,8 @@ export default function BureauxPage() {
               </select>
               <button
                 onClick={() => setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')}
-                className="p-2 bg-slate-800/50 border border-slate-700/50 rounded-lg text-slate-300 hover:bg-slate-800 transition-colors"
+                className="min-h-[44px] min-w-[44px] p-2 rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-300 hover:bg-slate-800/70 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                aria-label={`Trier ${sortDirection === 'asc' ? 'décroissant' : 'croissant'}`}
                 title={sortDirection === 'asc' ? 'Croissant' : 'Décroissant'}
               >
                 {sortDirection === 'asc' ? <SortAsc className="w-4 h-4" /> : <SortDesc className="w-4 h-4" />}
@@ -1689,7 +1705,7 @@ export default function BureauxPage() {
           {/* Filtres avancés */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-4 border-t border-slate-700/50 min-w-0">
             <div className="space-y-2">
-              <label className="text-sm text-slate-400 flex items-center gap-2">
+              <label className="text-sm text-slate-300 flex items-center gap-2">
                 <DollarSign className="w-4 h-4" />
                 Budget consommé minimum (%)
               </label>

@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { ArbitragesHelpModal } from '@/components/features/bmo/workspace/arbitrages/modals/ArbitragesHelpModal';
 import { useArbitragesWorkspaceStore } from '@/lib/stores/arbitragesWorkspaceStore';
+import { useArbitragesNavigationStore } from '@/lib/stores/arbitragesNavigationStore';
 import { useBMOStore } from '@/lib/stores';
 import {
   ArbitragesKPIBar,
@@ -35,6 +36,10 @@ import {
   ArbitragesSubNavigation,
   ArbitragesContentRouter,
   type ArbitragesMainCategory,
+  useArbitragesNavigationSync,
+  useArbitragesRefresh,
+  useArbitragesKeyboardShortcuts,
+  useFormatTimeAgo,
 } from '@/modules/arbitrages-vivants';
 import { ArbitragesCommandPalette } from '@/components/features/bmo/workspace/arbitrages/ArbitragesCommandPalette';
 import { ArbitragesStatsModal } from '@/components/features/bmo/workspace/arbitrages/ArbitragesStatsModal';
@@ -114,15 +119,29 @@ export default function ArbitragesVivantsPage() {
     setDirectionPanelOpen,
   } = useArbitragesWorkspaceStore();
 
-  // Navigation state - 3-level navigation
-  const [activeCategory, setActiveCategory] = useState('overview');
-  const [activeSubCategory, setActiveSubCategory] = useState('all');
-  const [activeSubSubCategory, setActiveSubSubCategory] = useState<string | undefined>(undefined);
+  // ✅ Navigation state - Utiliser le store centralisé
+  const main = useArbitragesNavigationStore((state) => state.main);
+  const sub = useArbitragesNavigationStore((state) => state.sub);
+  const subSub = useArbitragesNavigationStore((state) => state.subSub);
+  const setMain = useArbitragesNavigationStore((state) => state.setMain);
+  const setSub = useArbitragesNavigationStore((state) => state.setSub);
+  const setSubSub = useArbitragesNavigationStore((state) => state.setSubSub);
+
+  // ✅ Synchroniser URL avec le store
+  useArbitragesNavigationSync();
+
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
+  // ✅ Utiliser le hook de refresh
+  const { refresh: handleRefresh, isRefreshing, lastUpdate } = useArbitragesRefresh({
+    onRefresh: async () => {
+      // TODO: Implémenter le refresh réel des données
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      addToast('Données rafraîchies', 'success');
+    },
+  });
+
   // UI state
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [lastUpdate, setLastUpdate] = useState(new Date());
   const [kpiBarCollapsed, setKpiBarCollapsed] = useState(false);
   const [notificationsPanelOpen, setNotificationsPanelOpen] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
@@ -135,125 +154,60 @@ export default function ArbitragesVivantsPage() {
   // Computed values
   // ================================
   const currentCategoryLabel = useMemo(() => {
-    return arbitragesCategories.find((c) => c.id === activeCategory)?.label || 'Arbitrages';
-  }, [activeCategory]);
+    return arbitragesCategories.find((c) => c.id === main)?.label || 'Arbitrages';
+  }, [main]);
 
   const currentSubCategories = useMemo(() => {
-    return subCategoriesMap[activeCategory] || [];
-  }, [activeCategory]);
+    return subCategoriesMap[main] || [];
+  }, [main]);
 
-  const formatLastUpdate = useCallback(() => {
-    const now = new Date();
-    const diff = Math.floor((now.getTime() - lastUpdate.getTime()) / 1000);
-    if (diff < 60) return "à l'instant";
-    if (diff < 3600) return `il y a ${Math.floor(diff / 60)} min`;
-    return `il y a ${Math.floor(diff / 3600)}h`;
-  }, [lastUpdate]);
+  // ✅ Utiliser le hook pour formater le temps écoulé
+  const formattedLastUpdate = useFormatTimeAgo(lastUpdate);
 
   // ================================
   // Callbacks
   // ================================
-  const handleRefresh = useCallback(() => {
-    setIsRefreshing(true);
-    setTimeout(() => {
-      setIsRefreshing(false);
-      setLastUpdate(new Date());
-      addToast('Données rafraîchies', 'success');
-    }, 1500);
-  }, [addToast]);
+  // handleRefresh est déjà défini par useArbitragesRefresh à la ligne 140
 
   const handleCategoryChange = useCallback((category: string, subCategory?: string) => {
-    setNavigationHistory((prev) => [...prev, activeCategory]);
-    setActiveCategory(category);
-    setActiveSubCategory(subCategory || 'all');
-    setActiveSubSubCategory(undefined); // Reset level 3
-  }, [activeCategory]);
+    setNavigationHistory((prev) => [...prev, main]);
+    setMain(category as ArbitragesMainCategory);
+    setSub(subCategory || 'all');
+    setSubSub(null); // Reset level 3
+  }, [main, setMain, setSub, setSubSub]);
 
   const handleSubCategoryChange = useCallback((subCategory: string) => {
-    setActiveSubCategory(subCategory);
-    setActiveSubSubCategory(undefined); // Reset level 3 when changing level 2
-  }, []);
+    setSub(subCategory);
+    setSubSub(null); // Reset level 3 when changing level 2
+  }, [setSub, setSubSub]);
 
   const handleSubSubCategoryChange = useCallback((subSubCategory: string) => {
-    setActiveSubSubCategory(subSubCategory);
-  }, []);
+    setSubSub(subSubCategory);
+  }, [setSubSub]);
 
   const handleGoBack = useCallback(() => {
     if (navigationHistory.length > 0) {
       const previousCategory = navigationHistory[navigationHistory.length - 1];
       setNavigationHistory((prev) => prev.slice(0, -1));
-      setActiveCategory(previousCategory);
-      setActiveSubCategory('all');
+      setMain(previousCategory as ArbitragesMainCategory);
+      setSub('all');
+      setSubSub(null);
     }
-  }, [navigationHistory]);
+  }, [navigationHistory, setMain, setSub, setSubSub]);
 
   const handleToggleFullscreen = useCallback(() => {
     setFullscreen((prev) => !prev);
   }, []);
 
-  // ================================
-  // Keyboard shortcuts
-  // ================================
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') return;
-
-      const isMod = e.metaKey || e.ctrlKey;
-
-      // Ctrl+K : Command Palette
-      if (isMod && e.key === 'k') {
-        e.preventDefault();
-        setCommandPaletteOpen(true);
-        return;
-      }
-
-      // Ctrl+E : Export
-      if (isMod && e.key === 'e') {
-        e.preventDefault();
-        // Open export modal
-        return;
-      }
-
-      // F1 : Help Modal
-      if (e.key === 'F1') {
-        e.preventDefault();
-        setHelpModalOpen(true);
-        return;
-      }
-
-      // F11 : Fullscreen
-      if (e.key === 'F11') {
-        e.preventDefault();
-        handleToggleFullscreen();
-        return;
-      }
-
-      // Alt+Left : Back
-      if (e.altKey && e.key === 'ArrowLeft') {
-        e.preventDefault();
-        handleGoBack();
-        return;
-      }
-
-      // Ctrl+B : Toggle sidebar
-      if (isMod && e.key === 'b') {
-        e.preventDefault();
-        setSidebarCollapsed((prev) => !prev);
-        return;
-      }
-
-      // Ctrl+R : Refresh
-      if (isMod && e.key === 'r') {
-        e.preventDefault();
-        handleRefresh();
-        return;
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [setCommandPaletteOpen, handleToggleFullscreen, handleGoBack, handleRefresh, helpModalOpen]);
+  // ✅ Utiliser le hook de raccourcis clavier
+  useArbitragesKeyboardShortcuts({
+    onCommandPalette: () => setCommandPaletteOpen(true),
+    onRefresh: handleRefresh,
+    onFullscreen: handleToggleFullscreen,
+    onGoBack: handleGoBack,
+    onToggleSidebar: () => setSidebarCollapsed((prev) => !prev),
+    onHelp: () => setHelpModalOpen(true),
+  });
 
   // ================================
   // Render
@@ -267,8 +221,8 @@ export default function ArbitragesVivantsPage() {
     >
       {/* Sidebar Navigation - 3-level */}
       <ArbitragesSidebar
-        activeCategory={activeCategory}
-        activeSubCategory={activeSubCategory || undefined}
+        activeCategory={main}
+        activeSubCategory={sub || undefined}
         collapsed={sidebarCollapsed}
         stats={{
           critical: 7,
@@ -401,9 +355,9 @@ export default function ArbitragesVivantsPage() {
 
         {/* Sub Navigation - 3-level */}
         <ArbitragesSubNavigation
-          mainCategory={activeCategory as ArbitragesMainCategory}
-          subCategory={activeSubCategory || undefined}
-          subSubCategory={activeSubSubCategory}
+          mainCategory={main}
+          subCategory={sub || undefined}
+          subSubCategory={subSub || undefined}
           onSubCategoryChange={handleSubCategoryChange}
           onSubSubCategoryChange={handleSubSubCategoryChange}
           stats={{
@@ -424,18 +378,18 @@ export default function ArbitragesVivantsPage() {
         {/* Main Content */}
         <main className="flex-1 overflow-hidden">
           <div className="h-full overflow-y-auto">
-            <ArbitragesContentRouter
-              mainCategory={activeCategory as ArbitragesMainCategory}
-              subCategory={activeSubCategory || undefined}
-              subSubCategory={activeSubSubCategory}
-            />
+        <ArbitragesContentRouter
+          mainCategory={main}
+          subCategory={sub || undefined}
+          subSubCategory={subSub || undefined}
+        />
           </div>
         </main>
 
         {/* Status Bar */}
         <footer className="flex items-center justify-between px-4 py-1.5 border-t border-slate-800/50 bg-slate-900/60 text-xs">
           <div className="flex items-center gap-4">
-            <span className="text-slate-600">Màj: {formatLastUpdate()}</span>
+            <span className="text-slate-600">Màj: {formattedLastUpdate}</span>
             <span className="text-slate-700">•</span>
             <span className="text-slate-600">
               89 arbitrages • 7 critiques • 23 en attente

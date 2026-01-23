@@ -348,50 +348,52 @@ export function ConformiteEngagementView() {
             overscan={5}
             containerClassName="h-[500px] divide-y divide-slate-800/50"
             getItemKey={(item) => item.id}
-            renderItem={(item) => (
-              <div
-                className="flex items-center justify-between px-4 py-3 hover:bg-slate-800/30 transition-colors cursor-pointer"
-                onClick={() => openModal('commitment-detail' as any, item)}
-              >
-                <div className="flex items-center gap-3 min-w-0 flex-1">
-                  {item.type === 'office' ? (
-                    <Building2 className="h-4 w-4 text-amber-400" />
-                  ) : (
-                    <ClipboardCheck className="h-4 w-4 text-red-400" />
-                  )}
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <p className="text-sm text-slate-300">{item.name}</p>
-                      <Badge className="bg-red-500/20 text-red-400 border-red-500/30 text-xs">
-                        {item.type === 'office' ? 'Bureau' : 'Processus'}
-                      </Badge>
-                    </div>
-                    <div className="flex items-center gap-3 mt-1">
-                      <span className="text-xs text-slate-500">Raison: {item.reason}</span>
-                      {item.office && (
-                        <>
-                          <span className="text-xs text-slate-600">•</span>
-                          <span className="text-xs text-slate-400">Bureau: {item.office}</span>
-                        </>
-                      )}
+            renderItem={(item, index) => {
+              return (
+                <div
+                  className="flex items-center justify-between px-4 py-3 hover:bg-slate-800/30 transition-colors cursor-pointer"
+                  onClick={() => openModal('commitment-detail' as any, item)}
+                >
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
+                    {item.type === 'office' ? (
+                      <Building2 className="h-4 w-4 text-amber-400" />
+                    ) : (
+                      <ClipboardCheck className="h-4 w-4 text-red-400" />
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <p className="text-sm text-slate-300">{item.name}</p>
+                        <Badge className="bg-red-500/20 text-red-400 border-red-500/30 text-xs">
+                          {item.type === 'office' ? 'Bureau' : 'Processus'}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center gap-3 mt-1">
+                        <span className="text-xs text-slate-500">Raison: {item.reason}</span>
+                        {item.office && (
+                          <>
+                            <span className="text-xs text-slate-600">•</span>
+                            <span className="text-xs text-slate-400">Bureau: {item.office}</span>
+                          </>
+                        )}
+                      </div>
                     </div>
                   </div>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <Button
+                      size="sm"
+                      className="h-7 px-2 bg-blue-600/80 hover:bg-blue-600 text-xs"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openModal('commitment-detail' as any, { ...item, action: 'plan' });
+                      }}
+                    >
+                      <Play className="h-3 w-3 mr-1" />
+                      Plan d'action
+                    </Button>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  <Button
-                    size="sm"
-                    className="h-7 px-2 bg-blue-600/80 hover:bg-blue-600 text-xs"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openModal('commitment-detail' as any, { ...item, action: 'plan' });
-                    }}
-                  >
-                    <Play className="h-3 w-3 mr-1" />
-                    Plan d'action
-                  </Button>
-                </div>
-              </div>
-            )}
+              );
+            }}
           </VirtualizedList>
         </div>
       )}

@@ -11,6 +11,8 @@ import { useDemandesCommandCenterStore } from '@/lib/stores/demandesCommandCente
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { VirtualizedList } from '@/components/shared/VirtualizedList';
+import { useDebounce } from '@/application/hooks/useDebounce';
 import {
   Search,
   Filter,
@@ -41,6 +43,9 @@ const typeIcons: Record<string, typeof FileText> = {
 export function DemandesPendingView() {
   const { navigation, openModal, selectedItems, toggleItemSelection, clearSelection } = useDemandesCommandCenterStore();
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // Debounce search query for better performance
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
   const filteredDemandes = useMemo(() => {
     let filtered = mockDemandes;
@@ -60,16 +65,16 @@ export function DemandesPendingView() {
       });
     }
 
-    // Filter by search
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
+    // Filter by search (using debounced query)
+    if (debouncedSearchQuery) {
+      const q = debouncedSearchQuery.toLowerCase();
       filtered = filtered.filter(
         (d) => d.id.toLowerCase().includes(q) || d.title.toLowerCase().includes(q)
       );
     }
 
     return filtered;
-  }, [navigation.subCategory, searchQuery]);
+  }, [navigation.subCategory, debouncedSearchQuery]);
 
   const formatAmount = (amount: number) => {
     if (amount >= 1000000) return `${(amount / 1000000).toFixed(1)}M`;
@@ -129,22 +134,29 @@ export function DemandesPendingView() {
         </div>
       )}
 
-      {/* List */}
-      <div className="space-y-2">
-        {filteredDemandes.map((demande) => {
-          const Icon = typeIcons[demande.type] || FileText;
-          const isSelected = selectedItems.includes(demande.id);
+      {/* List - Virtualized for performance */}
+      {filteredDemandes.length > 0 ? (
+        <VirtualizedList
+          items={filteredDemandes}
+          estimateSize={80}
+          overscan={5}
+          containerHeight="calc(100vh - 400px)"
+          containerClassName="rounded-xl border border-slate-700/50 bg-slate-800/30"
+          className="p-2"
+          renderItem={(demande) => {
+            const Icon = typeIcons[demande.type] || FileText;
+            const isSelected = selectedItems.includes(demande.id);
 
-          return (
-            <div
-              key={demande.id}
-              className={cn(
-                'flex items-center gap-4 p-4 rounded-xl border transition-all',
-                isSelected
-                  ? 'bg-blue-500/10 border-blue-500/30'
-                  : 'bg-slate-800/30 border-slate-700/50 hover:bg-slate-800/50'
-              )}
-            >
+            return (
+              <div
+                key={demande.id}
+                className={cn(
+                  'flex items-center gap-4 p-4 rounded-xl border transition-all mb-2',
+                  isSelected
+                    ? 'bg-blue-500/10 border-blue-500/30'
+                    : 'bg-slate-800/30 border-slate-700/50 hover:bg-slate-800/50'
+                )}
+              >
               {/* Checkbox */}
               <button
                 onClick={() => toggleItemSelection(demande.id)}

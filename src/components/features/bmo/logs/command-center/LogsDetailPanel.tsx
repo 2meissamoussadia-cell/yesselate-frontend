@@ -6,7 +6,7 @@
 
 'use client';
 
-import React from 'react';
+import React, { type ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -131,7 +131,28 @@ function LogDetailContent({ data }: { data: Record<string, unknown> }) {
 
   const SourceIcon = sourceIcons[source as keyof typeof sourceIcons] || Terminal;
 
-  const hasValue = data.value !== undefined && data.value !== null;
+  const hasValue: boolean = data.value !== undefined && data.value !== null;
+
+  let valueSection: ReactNode | null = null;
+  if (hasValue) {
+    valueSection = (
+      <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
+        <div className="flex items-baseline gap-2">
+          <span className="text-2xl font-bold text-slate-100">{String(data.value)}</span>
+          {data.label ? (
+            <span className="text-sm text-slate-500">{String(data.label)}</span>
+          ) : null}
+        </div>
+        {data.trendValue ? (
+          <div className="flex items-center gap-2 mt-2">
+            <span className="text-xs text-slate-400">
+              {String(data.trendValue)}
+            </span>
+          </div>
+        ) : null}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
@@ -157,23 +178,7 @@ function LogDetailContent({ data }: { data: Record<string, unknown> }) {
         </div>
       </div>
 
-      {hasValue ? (
-        <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-          <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-slate-100">{String(data.value)}</span>
-            {data.label ? (
-              <span className="text-sm text-slate-500">{String(data.label)}</span>
-            ) : null}
-          </div>
-          {data.trendValue ? (
-            <div className="flex items-center gap-2 mt-2">
-              <span className="text-xs text-slate-400">
-                {String(data.trendValue)}
-              </span>
-            </div>
-          ) : null}
-        </div>
-      ) : null}
+      {valueSection as any}
 
       {/* Module */}
       {data.module && (

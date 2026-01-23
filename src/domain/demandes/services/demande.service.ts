@@ -89,9 +89,10 @@ export class DemandeService {
       : PriorityService.calculateAutoPriority(demande);
 
     // Calculer les métriques budgétaires si budget présent
-    let budget = demande.budget;
+    const budget = demande.budget;
     if (budget) {
-      const metrics = BudgetService.calculateBudgetMetrics(demande, budget);
+      // Calculer les métriques pour validation (utilisé par validate())
+      BudgetService.calculateBudgetMetrics(demande, budget);
       // On pourrait enrichir l'objet budget avec les métriques
       // mais pour l'instant on garde la structure originale
     }

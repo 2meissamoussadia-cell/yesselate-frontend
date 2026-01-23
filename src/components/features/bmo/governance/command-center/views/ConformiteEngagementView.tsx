@@ -394,7 +394,7 @@ export function ConformiteEngagementView() {
                 </div>
               );
             }}
-          </VirtualizedList>
+          />
         </div>
       )}
     </div>

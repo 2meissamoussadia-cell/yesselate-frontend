@@ -176,5 +176,67 @@ describe('BudgetService', () => {
       expect(metrics.warning).toBe(false);
     });
   });
+
+  describe('shouldTriggerBudgetAlert', () => {
+    it('should return critical alert at >90%', () => {
+      const demande: Demande = {
+        id: '1',
+        subject: 'Test',
+        bureau: 'BMO',
+        type: 'test',
+        status: 'pending',
+        priority: 'normal',
+        amount: 95000,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      const budget: BudgetInfo = { available: 100000, consumed: 0, allocated: 0 };
+      
+      const alert = BudgetService.shouldTriggerBudgetAlert(demande, budget);
+      
+      expect(alert.alert).toBe(true);
+      expect(alert.level).toBe('critical');
+    });
+
+    it('should return warning alert at >80%', () => {
+      const demande: Demande = {
+        id: '1',
+        subject: 'Test',
+        bureau: 'BMO',
+        type: 'test',
+        status: 'pending',
+        priority: 'normal',
+        amount: 85000,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      const budget: BudgetInfo = { available: 100000, consumed: 0, allocated: 0 };
+      
+      const alert = BudgetService.shouldTriggerBudgetAlert(demande, budget);
+      
+      expect(alert.alert).toBe(true);
+      expect(alert.level).toBe('warning');
+    });
+
+    it('should return no alert at <80%', () => {
+      const demande: Demande = {
+        id: '1',
+        subject: 'Test',
+        bureau: 'BMO',
+        type: 'test',
+        status: 'pending',
+        priority: 'normal',
+        amount: 50000,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      const budget: BudgetInfo = { available: 100000, consumed: 0, allocated: 0 };
+      
+      const alert = BudgetService.shouldTriggerBudgetAlert(demande, budget);
+      
+      expect(alert.alert).toBe(false);
+      expect(alert.level).toBeNull();
+    });
+  });
 });
 

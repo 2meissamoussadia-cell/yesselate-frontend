@@ -128,6 +128,179 @@ describe('DemandeService', () => {
       
       expect(approver.level).toBe('manager');
     });
+
+    it('should return direction for large amount', () => {
+      const demande: Demande = {
+        id: '1',
+        subject: 'Test',
+        bureau: 'BMO',
+        type: 'test',
+        status: 'pending',
+        priority: 'normal',
+        amount: 10000000, // Entre 5M et 50M
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      
+      const approver = DemandeService.getApprover(demande);
+      
+      expect(approver.level).toBe('direction');
+    });
+
+    it('should return comex for very large amount', () => {
+      const demande: Demande = {
+        id: '1',
+        subject: 'Test',
+        bureau: 'BMO',
+        type: 'test',
+        status: 'pending',
+        priority: 'normal',
+        amount: 60000000, // > 50M
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      
+      const approver = DemandeService.getApprover(demande);
+      
+      expect(approver.level).toBe('comex');
+    });
+  });
+
+  describe('canAutoApprove', () => {
+    it('should return true for small amount', () => {
+      const demande: Demande = {
+        id: '1',
+        subject: 'Test',
+        bureau: 'BMO',
+        type: 'test',
+        status: 'pending',
+        priority: 'normal',
+        amount: 100000,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      
+      expect(DemandeService.canAutoApprove(demande)).toBe(true);
+    });
+
+    it('should return false for large amount', () => {
+      const demande: Demande = {
+        id: '1',
+        subject: 'Test',
+        bureau: 'BMO',
+        type: 'test',
+        status: 'pending',
+        priority: 'normal',
+        amount: 1000000,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      
+      expect(DemandeService.canAutoApprove(demande)).toBe(false);
+    });
+  });
+
+  describe('shouldEscalate', () => {
+    it('should return true for high risk demande', () => {
+      const demande: Demande = {
+        id: '1',
+        subject: 'Test',
+        bureau: 'BMO',
+        type: 'test',
+        status: 'pending',
+        priority: 'critical',
+        amount: 15000000, // > 10M
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        deadline: new Date(Date.now() - 24 * 60 * 60 * 1000) // 1 jour en retard
+      };
+      
+      expect(DemandeService.shouldEscalate(demande)).toBe(true);
+    });
+
+    it('should return false for normal demande', () => {
+      const demande: Demande = {
+        id: '1',
+        subject: 'Test',
+        bureau: 'BMO',
+        type: 'test',
+        status: 'pending',
+        priority: 'normal',
+        amount: 100000,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      
+      expect(DemandeService.shouldEscalate(demande)).toBe(false);
+    });
+  });
+
+  describe('getSummary', () => {
+    it('should return complete summary', () => {
+      const demande: Demande = {
+        id: '1',
+        subject: 'Test demande avec titre suffisamment long',
+        bureau: 'BMO',
+        type: 'test',
+        status: 'pending',
+        priority: 'normal',
+        amount: 50000,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        budget: { available: 100000, consumed: 0, allocated: 0 }
+      };
+      
+      const summary = DemandeService.getSummary(demande);
+      
+      expect(summary.demande).toBeDefined();
+      expect(summary.validation).toBeDefined();
+      expect(summary.approver).toBeDefined();
+      expect(summary.riskEvaluation).toBeDefined();
+      expect(summary.budgetMetrics).toBeDefined();
+      expect(summary.canAutoApprove).toBeDefined();
+      expect(summary.shouldEscalate).toBeDefined();
+    });
+  });
+
+  describe('prepareForAction', () => {
+    it('should calculate delayDays and isOverdue', () => {
+      const pastDate = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000); // 5 jours passés
+      const demande: Demande = {
+        id: '1',
+        subject: 'Test',
+        bureau: 'BMO',
+        type: 'test',
+        status: 'pending',
+        priority: 'normal',
+        amount: 1000,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        deadline: pastDate
+      };
+      
+      const prepared = DemandeService.prepareForAction(demande);
+      
+      expect(prepared.delayDays).toBeDefined();
+      expect(prepared.isOverdue).toBe(true);
+    });
+
+    it('should preserve existing priority if not normal', () => {
+      const demande: Demande = {
+        id: '1',
+        subject: 'Test',
+        bureau: 'BMO',
+        type: 'test',
+        status: 'pending',
+        priority: 'urgent',
+        amount: 1000,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      
+      const prepared = DemandeService.prepareForAction(demande);
+      
+      expect(prepared.priority).toBe('urgent');
+    });
   });
 });
 

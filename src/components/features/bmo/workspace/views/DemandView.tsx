@@ -154,23 +154,9 @@ const DOC_ICONS: Record<string, string> = {
 };
 
 // ============================================
-// Helpers
+// Helpers - Utilisés depuis domain/service.ts
 // ============================================
-const formatCurrency = (amount: number | null | undefined): string => {
-  if (amount == null) return '—';
-  return new Intl.NumberFormat('fr-SN', { style: 'decimal' }).format(amount) + ' FCFA';
-};
-
-const formatDate = (dateStr: string | null): string => {
-  if (!dateStr) return '—';
-  return new Date(dateStr).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
-};
-
-const getRiskColor = (score: number): string => {
-  if (score >= 15) return 'bg-rose-500/20 text-rose-400 border-rose-500/30';
-  if (score >= 9) return 'bg-amber-500/20 text-amber-400 border-amber-500/30';
-  return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
-};
+// formatCurrency, formatDate, getRiskColor sont importés depuis @/domain/demandes/service
 
 // ============================================
 // Component

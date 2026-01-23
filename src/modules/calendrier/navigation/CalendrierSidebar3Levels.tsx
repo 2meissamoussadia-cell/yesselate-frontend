@@ -38,7 +38,13 @@ export function CalendrierSidebar3Levels({
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set(['overview']));
 
   const getBadgeForNode = useCallback(
-    (node: NavNode): number | string | undefined => stats[node.id] || node.badge,
+    (node: NavNode): number | string | undefined => {
+      // Protection contre stats null ou undefined
+      if (!stats || typeof stats !== 'object') {
+        return node.badge;
+      }
+      return stats[node.id] || node.badge;
+    },
     [stats]
   );
 

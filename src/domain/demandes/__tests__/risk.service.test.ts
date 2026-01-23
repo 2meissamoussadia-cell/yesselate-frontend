@@ -2,9 +2,9 @@
  * Tests unitaires pour RiskService
  */
 
-import { describe, it, expect, beforeEach } from '@jest/globals';
+import { describe, it, expect } from '@jest/globals';
 import { RiskService } from '../services/risk.service';
-import type { Demande, BudgetInfo } from '../types/demande.types';
+import type { Demande } from '../types/demande.types';
 
 describe('RiskService', () => {
   describe('calculateGlobalRiskScore', () => {

@@ -50,8 +50,8 @@ describe('ValidationRules', () => {
   describe('isBureauValid', () => {
     it('should return false for empty bureau', () => {
       expect(ValidationRules.isBureauValid('')).toBe(false);
-      expect(ValidationRules.isBureauValid(null as any)).toBe(false);
-      expect(ValidationRules.isBureauValid(undefined as any)).toBe(false);
+      expect(ValidationRules.isBureauValid(null as null)).toBe(false);
+      expect(ValidationRules.isBureauValid(undefined as undefined)).toBe(false);
     });
 
     it('should return true for valid bureau codes', () => {

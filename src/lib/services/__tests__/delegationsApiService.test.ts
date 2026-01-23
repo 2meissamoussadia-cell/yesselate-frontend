@@ -106,7 +106,7 @@ describe('DelegationsApiService', () => {
     });
 
     it('should paginate results', async () => {
-      const result = await service.getAll(undefined, 'createdAt', 1, 1);
+      const result = await delegationsApiService.getAll(undefined, 'createdAt', 1, 1);
 
       expect(result.data.length).toBe(1);
       expect(result.page).toBe(1);
@@ -157,7 +157,7 @@ describe('DelegationsApiService', () => {
         validUntil: '2025-02-20'
       };
 
-      const result = await service.update('1', updateData);
+      const result = await delegationsApiService.update('1', updateData);
 
       expect(result.reason).toBe('Updated reason');
       expect(result.validUntil).toBe('2025-02-20');
@@ -166,19 +166,20 @@ describe('DelegationsApiService', () => {
 
   describe('delete', () => {
     it('should delete a delegation', async () => {
-      await expect(service.delete('1')).resolves.not.toThrow();
+      await expect(delegationsApiService.delete('1')).resolves.not.toThrow();
     });
   });
 
   describe('getStats', () => {
     it('should return delegation statistics', async () => {
-      const result = await service.getStats();
+      const result = await delegationsApiService.getStats();
 
       expect(result.total).toBeGreaterThanOrEqual(0);
       expect(result.active).toBeGreaterThanOrEqual(0);
-      expect(result.expired).toBeGreaterThanOrEqual(0);
-      expect(result.byType).toBeDefined();
+      expect(result.temporary).toBeGreaterThanOrEqual(0);
+      expect(result.permanent).toBeGreaterThanOrEqual(0);
       expect(result.byBureau).toBeDefined();
+      expect(result.mostDelegated).toBeDefined();
     });
   });
 });

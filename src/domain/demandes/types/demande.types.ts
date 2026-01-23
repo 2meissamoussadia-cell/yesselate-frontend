@@ -145,7 +145,7 @@ export interface Demande {
   // Métadonnées
   recommendation?: string | null;
   internalNotes?: string | null;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   
   // Relations
   stakeholders?: Stakeholder[];

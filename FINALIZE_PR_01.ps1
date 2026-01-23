@@ -5,15 +5,17 @@ Write-Host "🚀 Finalisation PR #01 - Extraction Domaine Demandes" -ForegroundC
 Write-Host "==================================================" -ForegroundColor Cyan
 Write-Host ""
 
-# Vérifier qu'on est sur la bonne branche
+# Vérifier qu'on est sur une branche de travail
 $branch = git branch --show-current
-if ($branch -ne "refactor/demandes-extract-domain-logic-final") {
-    Write-Host "⚠️  Attention: Vous n'êtes pas sur la branche 'refactor/demandes-extract-domain-logic-final'" -ForegroundColor Yellow
-    Write-Host "   Branche actuelle: $branch" -ForegroundColor Yellow
-    $continue = Read-Host "Continuer quand même? (y/n)"
-    if ($continue -ne "y" -and $continue -ne "Y") {
-        exit 1
-    }
+Write-Host "📍 Branche actuelle: $branch" -ForegroundColor Cyan
+
+# Vérifier si on doit créer/checkout la branche de PR
+if ($branch -eq "main" -or $branch -eq "master" -or $branch -eq "develop") {
+    Write-Host "⚠️  Attention: Vous êtes sur la branche principale '$branch'" -ForegroundColor Yellow
+    Write-Host "   Création de la branche 'refactor/demandes-extract-domain-logic-final'..." -ForegroundColor Yellow
+    git checkout -b refactor/demandes-extract-domain-logic-final
+    $branch = git branch --show-current
+    Write-Host "✅ Branche créée: $branch" -ForegroundColor Green
 }
 
 Write-Host "📋 Étape 1: Vérification de l'état..." -ForegroundColor Green

@@ -36,6 +36,18 @@ export default function CalendrierLayout({
   const { stats } = useCalendrierFiltersStore();
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
 
+  // Mapper CalendrierStats vers Record<string, number> pour la sidebar
+  const statsForSidebar = React.useMemo<Record<string, number> | undefined>(() => {
+    if (!stats) return undefined;
+    return {
+      overview: stats.jalons_total_count || 0,
+      retards: stats.jalons_retard_count || 0,
+      'sla-risque': stats.jalons_at_risk_count || 0,
+      'retards-detectes': stats.retards_detectes_count || 0,
+      'sur-allocation': stats.sur_allocation_ressources_count || 0,
+    };
+  }, [stats]);
+
   // Synchroniser URL ↔ Navigation Store au chargement
   useEffect(() => {
     if (pathname) {
@@ -132,7 +144,7 @@ export default function CalendrierLayout({
         activeCategory={navigation.mainCategory}
         activeSubCategory={navigation.subCategory}
         collapsed={sidebarCollapsed}
-        stats={(stats as unknown) as Record<string, number> | undefined}
+        stats={statsForSidebar}
         onCategoryChange={handleCategoryChange}
         onToggleCollapse={toggleSidebar}
         onOpenCommandPalette={handleOpenCommandPalette}

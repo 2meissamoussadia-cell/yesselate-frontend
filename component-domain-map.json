@@ -1,7 +1,18 @@
 {
+  "metadata": {
+    "version": "2.0.0",
+    "lastScan": "2025-01-XX",
+    "scanner": "cursor-ai-scan",
+    "totalDomains": 13,
+    "totalPages": 110,
+    "totalComponents": 1200,
+    "totalServices": 61,
+    "totalStores": 66
+  },
   "domains": {
     "chantiers": {
       "label": "Gestion de Chantiers",
+      "priority": "high",
       "pages": [
         "app/(portals)/maitre-ouvrage/projets-en-cours/page.tsx"
       ],
@@ -22,10 +33,21 @@
       ],
       "businessLogic": [
         "src/lib/config/analyticsBTPArchitecture.ts (chantiers domain)"
-      ]
+      ],
+      "domainExtraction": {
+        "status": "none",
+        "needsExtraction": true,
+        "targetPath": "src/domain/chantiers"
+      },
+      "tests": {
+        "unit": 0,
+        "e2e": 0,
+        "coverage": "0%"
+      }
     },
     "validation-bc": {
       "label": "Validation Bons de Commande",
+      "priority": "high",
       "pages": [
         "app/(portals)/maitre-ouvrage/validation-bc/**/*.tsx"
       ],
@@ -48,10 +70,24 @@
       "businessLogic": [
         "src/lib/utils/validation-logic.ts",
         "src/components/features/validation-bc/workspace/ValidationBCBusinessRules.tsx"
-      ]
+      ],
+      "domainExtraction": {
+        "status": "partial",
+        "needsExtraction": true,
+        "targetPath": "src/domain/validation-bc",
+        "businessLogicInComponents": [
+          "src/components/features/validation-bc/workspace/ValidationBCBusinessRules.tsx"
+        ]
+      },
+      "tests": {
+        "unit": 0,
+        "e2e": 0,
+        "coverage": "0%"
+      }
     },
     "validation-contrats": {
       "label": "Validation Contrats",
+      "priority": "medium",
       "pages": [
         "app/(portals)/maitre-ouvrage/validation-contrats/page.tsx"
       ],
@@ -67,10 +103,21 @@
       ],
       "apiRoutes": [
         "app/api/contrats"
-      ]
+      ],
+      "domainExtraction": {
+        "status": "none",
+        "needsExtraction": true,
+        "targetPath": "src/domain/validation-contrats"
+      },
+      "tests": {
+        "unit": 0,
+        "e2e": 0,
+        "coverage": "0%"
+      }
     },
     "validation-paiements": {
       "label": "Validation Paiements",
+      "priority": "high",
       "pages": [
         "app/(portals)/maitre-ouvrage/validation-paiements/page.tsx"
       ],
@@ -86,16 +133,28 @@
       ],
       "apiRoutes": [
         "app/api/paiements/**/*.ts"
-      ]
+      ],
+      "domainExtraction": {
+        "status": "none",
+        "needsExtraction": true,
+        "targetPath": "src/domain/validation-paiements"
+      },
+      "tests": {
+        "unit": 0,
+        "e2e": 0,
+        "coverage": "0%"
+      }
     },
     "demandes": {
       "label": "Gestion des Demandes",
+      "priority": "critical",
       "pages": [
         "app/(portals)/maitre-ouvrage/demandes/page.tsx"
       ],
       "components": [
         "src/components/features/bmo/demandes",
-        "src/modules/demandes"
+        "src/modules/demandes",
+        "src/components/features/bmo/workspace/views/DemandView.tsx"
       ],
       "services": [
         "src/lib/services/demandesApiService.ts"
@@ -108,16 +167,54 @@
       ],
       "businessLogic": [
         "src/components/features/bmo/workspace/views/DemandView.tsx"
-      ]
+      ],
+      "domainExtraction": {
+        "status": "partial",
+        "progress": "90%",
+        "needsExtraction": true,
+        "targetPath": "src/domain/demandes",
+        "extracted": [
+          "src/domain/demandes/services/budget.service.ts",
+          "src/domain/demandes/services/risk.service.ts",
+          "src/domain/demandes/services/priority.service.ts",
+          "src/domain/demandes/services/demande.service.ts",
+          "src/domain/demandes/rules/validation.rules.ts",
+          "src/domain/demandes/rules/approval.rules.ts",
+          "src/domain/demandes/types/demande.types.ts",
+          "src/hooks/useDemandeService.ts"
+        ],
+        "remaining": [
+          "src/components/features/bmo/workspace/views/DemandView.tsx (partial - uses useDemandeService but may have remaining logic)"
+        ],
+        "tests": {
+          "unit": 5,
+          "coverage": "~70%",
+          "files": [
+            "src/domain/demandes/__tests__/budget.service.test.ts",
+            "src/domain/demandes/__tests__/risk.service.test.ts",
+            "src/domain/demandes/__tests__/priority.service.test.ts",
+            "src/domain/demandes/__tests__/demande.service.test.ts",
+            "src/domain/demandes/__tests__/validation.rules.test.ts",
+            "src/domain/demandes/__tests__/approval.rules.test.ts"
+          ]
+        }
+      },
+      "tests": {
+        "unit": 5,
+        "e2e": 0,
+        "coverage": "~70%"
+      }
     },
     "demandes-rh": {
       "label": "Demandes RH",
+      "priority": "medium",
       "pages": [
         "app/(portals)/maitre-ouvrage/demandes-rh/page.tsx"
       ],
       "components": [
         "src/components/features/bmo/workspace/rh",
-        "src/modules/demandes-rh"
+        "src/modules/demandes-rh",
+        "src/components/features/bmo/workspace/rh/views/DemandeRHView.tsx"
       ],
       "services": [
         "src/lib/services/rhApiService.ts",
@@ -133,10 +230,24 @@
       ],
       "businessLogic": [
         "src/components/features/bmo/workspace/rh/views/DemandeRHView.tsx"
-      ]
+      ],
+      "domainExtraction": {
+        "status": "partial",
+        "needsExtraction": true,
+        "targetPath": "src/domain/demandes-rh",
+        "businessLogicInComponents": [
+          "src/components/features/bmo/workspace/rh/views/DemandeRHView.tsx"
+        ]
+      },
+      "tests": {
+        "unit": 0,
+        "e2e": 0,
+        "coverage": "0%"
+      }
     },
     "governance": {
       "label": "Gouvernance",
+      "priority": "high",
       "pages": [
         "app/(portals)/maitre-ouvrage/governance/**/*.tsx"
       ],
@@ -155,11 +266,25 @@
         "app/api/governance"
       ],
       "businessLogic": [
-        "app/(portals)/maitre-ouvrage/governance/page.tsx"
-      ]
+        "app/(portals)/maitre-ouvrage/governance/page.tsx (562 lines - large component)"
+      ],
+      "domainExtraction": {
+        "status": "none",
+        "needsExtraction": true,
+        "targetPath": "src/domain/governance",
+        "businessLogicInComponents": [
+          "app/(portals)/maitre-ouvrage/governance/page.tsx"
+        ]
+      },
+      "tests": {
+        "unit": 1,
+        "e2e": 0,
+        "coverage": "<10%"
+      }
     },
     "alerts": {
       "label": "Alertes et Notifications",
+      "priority": "high",
       "pages": [
         "app/(portals)/maitre-ouvrage/alerts/**/*.tsx"
       ],
@@ -178,16 +303,28 @@
       ],
       "apiRoutes": [
         "app/api/alerts/**/*.ts"
-      ]
+      ],
+      "domainExtraction": {
+        "status": "none",
+        "needsExtraction": false,
+        "targetPath": "src/domain/alerts"
+      },
+      "tests": {
+        "unit": 0,
+        "e2e": 0,
+        "coverage": "0%"
+      }
     },
     "blocked": {
       "label": "Dossiers Bloqués",
+      "priority": "medium",
       "pages": [
         "app/(portals)/maitre-ouvrage/blocked/page.tsx"
       ],
       "components": [
         "src/components/features/bmo/blocked",
-        "src/modules/blocked"
+        "src/modules/blocked",
+        "src/components/features/bmo/workspace/blocked/modals/BlockedDossierDetailsModal.tsx (1396 lines)"
       ],
       "services": [
         "src/lib/services/blockedApiService.ts",
@@ -199,16 +336,29 @@
       ],
       "apiRoutes": [
         "app/api/bmo/blocked/**/*.ts"
-      ]
+      ],
+      "domainExtraction": {
+        "status": "none",
+        "needsExtraction": false,
+        "targetPath": "src/domain/blocked"
+      },
+      "tests": {
+        "unit": 1,
+        "e2e": 0,
+        "coverage": "<5%"
+      }
     },
     "delegations": {
       "label": "Délégations",
+      "priority": "high",
       "pages": [
         "app/(portals)/maitre-ouvrage/delegations/page.tsx"
       ],
       "components": [
         "src/components/features/bmo/delegations",
-        "src/modules/delegations"
+        "src/modules/delegations",
+        "src/components/features/delegations/workspace/views/DelegationDetailView.tsx",
+        "src/components/features/delegations/workspace/DelegationDirectionPanel.tsx"
       ],
       "services": [
         "src/lib/services/delegationsApiService.ts"
@@ -222,10 +372,25 @@
       ],
       "businessLogic": [
         "src/lib/delegation/policy-engine.ts"
-      ]
+      ],
+      "domainExtraction": {
+        "status": "partial",
+        "needsExtraction": true,
+        "targetPath": "src/domain/delegations",
+        "directApiCalls": [
+          "src/components/features/delegations/workspace/views/DelegationDetailView.tsx (fetch in executeAction)",
+          "src/components/features/delegations/workspace/DelegationDirectionPanel.tsx (fetch in loadInsights)"
+        ]
+      },
+      "tests": {
+        "unit": 0,
+        "e2e": 0,
+        "coverage": "0%"
+      }
     },
     "calendrier": {
       "label": "Calendrier et Planning",
+      "priority": "high",
       "pages": [
         "app/(portals)/maitre-ouvrage/calendrier/page.tsx"
       ],
@@ -245,15 +410,27 @@
       ],
       "apiRoutes": [
         "app/api/calendar/**/*.ts"
-      ]
+      ],
+      "domainExtraction": {
+        "status": "none",
+        "needsExtraction": true,
+        "targetPath": "src/domain/calendrier"
+      },
+      "tests": {
+        "unit": 1,
+        "e2e": 0,
+        "coverage": "<5%"
+      }
     },
     "analytics": {
       "label": "Analytics BTP",
+      "priority": "medium",
       "pages": [
         "app/(portals)/maitre-ouvrage/analytics/page.tsx"
       ],
       "components": [
-        "src/components/features/bmo/analytics"
+        "src/components/features/bmo/analytics",
+        "src/components/features/bmo/analytics/btp-navigation/components/BTPSimulationModal.tsx"
       ],
       "services": [
         "src/lib/services/analyticsDataService.ts",
@@ -269,10 +446,33 @@
       ],
       "businessLogic": [
         "src/lib/config/analyticsBTPArchitecture.ts"
-      ]
+      ],
+      "domainExtraction": {
+        "status": "partial",
+        "needsExtraction": true,
+        "targetPath": "src/domain/analytics",
+        "extracted": [
+          "src/domain/analytics/services/TrendAnalysisService.ts",
+          "src/domain/analytics/entities/Period.ts",
+          "src/domain/analytics/entities/TrendAnalysis.ts"
+        ],
+        "directApiCalls": [
+          "src/components/features/bmo/analytics/btp-navigation/components/BTPSimulationModal.tsx (fetch in runSimulation)"
+        ],
+        "tests": {
+          "unit": 1,
+          "coverage": "~20%"
+        }
+      },
+      "tests": {
+        "unit": 1,
+        "e2e": 0,
+        "coverage": "~20%"
+      }
     },
     "dashboard": {
       "label": "Dashboard",
+      "priority": "medium",
       "pages": [
         "app/(portals)/maitre-ouvrage/dashboard/page.tsx"
       ],
@@ -287,30 +487,148 @@
       ],
       "apiRoutes": [
         "app/api/dashboard/**/*.ts"
-      ]
+      ],
+      "domainExtraction": {
+        "status": "none",
+        "needsExtraction": false,
+        "targetPath": "src/domain/dashboard",
+        "largeComponent": "app/(portals)/maitre-ouvrage/dashboard/page.tsx (2436 lines)"
+      },
+      "tests": {
+        "unit": 0,
+        "e2e": 0,
+        "coverage": "0%"
+      }
     }
   },
   "antiPatterns": {
     "businessLogicInComponents": [
-      "src/components/features/bmo/workspace/views/DemandView.tsx",
-      "src/components/features/bmo/workspace/rh/views/DemandeRHView.tsx",
-      "src/components/features/validation-bc/workspace/ValidationBCBusinessRules.tsx",
-      "app/(portals)/maitre-ouvrage/governance/page.tsx"
+      {
+        "file": "src/components/features/bmo/workspace/views/DemandView.tsx",
+        "status": "partial",
+        "uses": "useDemandeService",
+        "remaining": "May have remaining logic to extract"
+      },
+      {
+        "file": "src/components/features/bmo/workspace/rh/views/DemandeRHView.tsx",
+        "status": "needs-extraction",
+        "services": ["rhBusinessService", "rhBusinessRules"]
+      },
+      {
+        "file": "src/components/features/validation-bc/workspace/ValidationBCBusinessRules.tsx",
+        "status": "needs-extraction"
+      },
+      {
+        "file": "app/(portals)/maitre-ouvrage/governance/page.tsx",
+        "status": "needs-extraction",
+        "lines": 562
+      },
+      {
+        "file": "app/(portals)/maitre-ouvrage/dashboard/page.tsx",
+        "status": "large-component",
+        "lines": 2436
+      }
     ],
     "directApiCalls": [
-      "Multiple components with axios calls in useEffect"
+      {
+        "file": "src/components/features/delegations/workspace/views/DelegationDetailView.tsx",
+        "pattern": "fetch in executeAction",
+        "line": "~185"
+      },
+      {
+        "file": "src/components/features/delegations/workspace/DelegationDirectionPanel.tsx",
+        "pattern": "fetch in loadInsights",
+        "line": "~125"
+      },
+      {
+        "file": "src/components/features/bmo/analytics/btp-navigation/components/BTPSimulationModal.tsx",
+        "pattern": "fetch in runSimulation",
+        "line": "~79"
+      },
+      {
+        "file": "app/(portals)/maitre-ouvrage/alerts/page.tsx",
+        "pattern": "direct alertsAPI calls instead of mutations",
+        "line": "~832-881"
+      }
     ],
     "largeComponents": [
-      "app/(portals)/maitre-ouvrage/dashboard/page.tsx (2436 lines)",
-      "app/(portals)/maitre-ouvrage/governance/page.tsx (562 lines)"
+      {
+        "file": "app/(portals)/maitre-ouvrage/dashboard/page.tsx",
+        "lines": 2436,
+        "recommendation": "Split into smaller components"
+      },
+      {
+        "file": "app/(portals)/maitre-ouvrage/governance/page.tsx",
+        "lines": 562,
+        "recommendation": "Extract domain logic"
+      },
+      {
+        "file": "src/components/features/bmo/workspace/blocked/modals/BlockedDossierDetailsModal.tsx",
+        "lines": 1396,
+        "recommendation": "Split into sub-components"
+      }
     ],
     "missingTests": [
-      "Most business logic components",
-      "Most services"
+      {
+        "category": "services",
+        "total": 61,
+        "tested": 6,
+        "coverage": "<10%"
+      },
+      {
+        "category": "stores",
+        "total": 66,
+        "tested": 0,
+        "coverage": "0%"
+      },
+      {
+        "category": "domain-services",
+        "total": 6,
+        "tested": 6,
+        "coverage": "~70%"
+      }
     ],
     "noVirtualization": [
-      "List components without react-virtual"
+      {
+        "component": "DemandesOverviewView",
+        "recommendation": "Use @tanstack/react-virtual"
+      },
+      {
+        "component": "ChantiersListView",
+        "recommendation": "Use @tanstack/react-virtual + server pagination"
+      },
+      {
+        "component": "AlertsListView",
+        "recommendation": "Use @tanstack/react-virtual"
+      },
+      {
+        "component": "BlockedListView",
+        "recommendation": "Use @tanstack/react-virtual"
+      }
+    ],
+    "noOfflineSupport": [
+      {
+        "issue": "No IndexedDB sync queue",
+        "priority": "medium"
+      },
+      {
+        "issue": "No offline detection",
+        "priority": "medium"
+      },
+      {
+        "issue": "No sync conflict resolution",
+        "priority": "low"
+      }
+    ],
+    "noRBAC": [
+      {
+        "issue": "No dynamic permission checks in UI",
+        "priority": "high"
+      },
+      {
+        "issue": "No feature flags",
+        "priority": "medium"
+      }
     ]
   }
 }
-

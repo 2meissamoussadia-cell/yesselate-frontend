@@ -5,7 +5,9 @@
     "type": "Next.js Application",
     "framework": "Next.js 16.1.1",
     "react": "19.2.3",
-    "typescript": "^5"
+    "typescript": "^5",
+    "buildTool": "Turbopack",
+    "lastScan": "2025-01-XX"
   },
   "packageManager": {
     "type": "npm",
@@ -27,6 +29,7 @@
       "@radix-ui/react-popover": "^1.1.15",
       "@radix-ui/react-select": "^2.2.6",
       "@radix-ui/react-tooltip": "^1.2.8",
+      "@fluentui/react-components": "^9.66.2",
       "lucide-react": "^0.562.0",
       "framer-motion": "^12.25.0",
       "tailwindcss": "^4"
@@ -59,6 +62,9 @@
       "react-pdf": "^10.2.0",
       "jspdf": "^3.0.4",
       "html2canvas": "^1.4.1"
+    },
+    "websocket": {
+      "socket.io-client": "^4.8.3"
     }
   },
   "structure": {
@@ -66,7 +72,7 @@
       "routes": {
         "portals": {
           "maitre-ouvrage": {
-            "pages": 113,
+            "pages": 110,
             "subRoutes": [
               "dashboard",
               "demandes",
@@ -97,7 +103,8 @@
               "tickets-clients",
               "echanges-structures",
               "messages-externes",
-              "conferences"
+              "conferences",
+              "arbitrages-vivants"
             ]
           }
         },
@@ -112,7 +119,13 @@
             "calendar",
             "dashboard",
             "delegations",
-            "paiements"
+            "paiements",
+            "governance",
+            "blocked",
+            "clients",
+            "projets",
+            "rh",
+            "contrats"
           ]
         }
       }
@@ -125,10 +138,12 @@
           "arbitrages": 14,
           "delegations": 41,
           "validation-bc": 62,
-          "calendar": 20
+          "calendar": 20,
+          "workspace": "present"
         },
         "ui": 53,
-        "shared": 13
+        "shared": 13,
+        "common": 5
       },
       "lib": {
         "stores": 66,
@@ -149,7 +164,8 @@
       },
       "hooks": 50,
       "domain": {
-        "analytics": 9
+        "analytics": 9,
+        "demandes": 15
       }
     }
   },
@@ -162,20 +178,32 @@
       "lines": 70,
       "statements": 70
     },
-    "testFiles": 11,
-    "coverage": "low"
+    "testFiles": 18,
+    "coverage": "low",
+    "e2e": {
+      "framework": "not-configured",
+      "config": "playwright.config.ts (not found)"
+    },
+    "storybook": {
+      "configured": false,
+      "stories": 0
+    }
   },
   "build": {
     "config": "next.config.js (not found, using defaults)",
     "tsconfig": "strict: true",
     "paths": {
       "@/*": "./src/*",
-      "@/domain/*": "./src/domain/*"
+      "@/domain/*": "./src/domain/*",
+      "@/components/*": "./src/components/*",
+      "@/lib/*": "./src/lib/*",
+      "@/hooks/*": "./src/hooks/*"
     }
   },
   "ci": {
-    "status": "not configured",
-    "files": []
+    "status": "not-configured",
+    "files": [],
+    "workflows": []
   },
   "entryPoints": {
     "main": "app/layout.tsx",
@@ -201,7 +229,18 @@
       "alerts",
       "blocked",
       "delegations",
-      "analytics"
+      "analytics",
+      "demandes",
+      "demandes-rh",
+      "calendrier",
+      "clients",
+      "projets-en-cours",
+      "finances",
+      "recouvrements",
+      "litiges",
+      "employes",
+      "missions",
+      "evaluations"
     ]
   },
   "architecture": {
@@ -210,16 +249,61 @@
     "dataFetching": "Axios + React Query",
     "forms": "React Hook Form + Zod",
     "styling": "Tailwind CSS",
-    "uiComponents": "Radix UI + Custom"
+    "uiComponents": "Radix UI + Fluent UI + Custom"
   },
   "metrics": {
-    "totalPages": 113,
+    "totalPages": 110,
     "totalApiRoutes": 244,
     "totalStores": 66,
     "totalServices": 61,
     "totalComponents": 1200,
+    "totalDomainServices": 6,
     "testCoverage": "low",
-    "typescriptStrict": true
+    "typescriptStrict": true,
+    "domainCoverage": {
+      "demandes": "partial",
+      "analytics": "partial",
+      "others": "none"
+    }
+  },
+  "antiPatterns": {
+    "businessLogicInComponents": [
+      "src/components/features/bmo/workspace/views/DemandView.tsx (partial - uses useDemandeService but has remaining logic)",
+      "src/components/features/bmo/workspace/rh/views/DemandeRHView.tsx",
+      "src/components/features/validation-bc/workspace/ValidationBCBusinessRules.tsx",
+      "app/(portals)/maitre-ouvrage/governance/page.tsx",
+      "app/(portals)/maitre-ouvrage/dashboard/page.tsx (2436 lines - large component)",
+      "src/components/features/delegations/workspace/views/DelegationDetailView.tsx (direct fetch calls)",
+      "src/components/features/delegations/workspace/DelegationDirectionPanel.tsx (direct fetch calls)"
+    ],
+    "directApiCalls": [
+      "src/components/features/delegations/workspace/views/DelegationDetailView.tsx (fetch in executeAction)",
+      "src/components/features/delegations/workspace/DelegationDirectionPanel.tsx (fetch in loadInsights)",
+      "src/components/features/bmo/analytics/btp-navigation/components/BTPSimulationModal.tsx (fetch in runSimulation)",
+      "Multiple components with axios calls in useEffect"
+    ],
+    "largeComponents": [
+      "app/(portals)/maitre-ouvrage/dashboard/page.tsx (2436 lines)",
+      "app/(portals)/maitre-ouvrage/governance/page.tsx (562 lines)",
+      "src/components/features/bmo/workspace/blocked/modals/BlockedDossierDetailsModal.tsx (1396 lines)"
+    ],
+    "missingTests": [
+      "Most business logic components",
+      "Most services (61 services, ~6 tested)",
+      "Most stores (66 stores, 0 tested)"
+    ],
+    "noVirtualization": [
+      "List components without react-virtual",
+      "Table components without server-side pagination"
+    ],
+    "noOfflineSupport": [
+      "No IndexedDB sync queue",
+      "No offline detection",
+      "No sync conflict resolution"
+    ],
+    "noRBAC": [
+      "No dynamic permission checks in UI",
+      "No feature flags"
+    ]
   }
 }
-

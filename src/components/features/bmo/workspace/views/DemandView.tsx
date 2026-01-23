@@ -784,33 +784,31 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
             )}
 
             {/* ============================================ */}
-            {/* Risques */}
+            {/* Risques - ✅ Utilise les risques évalués par le service */}
             {/* ============================================ */}
-            {data.risks.length > 0 && (
+            {evaluatedRisks && evaluatedRisks.length > 0 && (
               <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-4 dark:border-slate-800 dark:bg-[#1f1f1f]/70">
                 <h3 className="font-semibold mb-3 flex items-center gap-2">
                   <Shield className="w-4 h-4 text-orange-500" />
                   Risques identifiés
                   <span className="text-xs px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700">
-                    {data.risks.length}
+                    {evaluatedRisks.length}
                   </span>
                 </h3>
                 <div className="space-y-2">
-                  {data.risks.map((risk) => (
+                  {evaluatedRisks.map((risk) => (
                     <div key={risk.id} className={cn("p-3 rounded-xl border", getRiskColor(risk.score))}>
                       <div className="flex items-center justify-between mb-1">
-                        <span className="font-medium">{risk.category}</span>
+                        <span className="font-medium capitalize">{risk.type}</span>
                         <span className="text-xs font-mono">
-                          P{risk.probability} × I{risk.impact} = {risk.score}
+                          Score: {risk.score}/100
                         </span>
                       </div>
+                      <p className="text-sm opacity-80">{risk.description}</p>
                       {risk.mitigation && (
-                        <p className="text-sm opacity-80">
+                        <p className="text-sm opacity-80 mt-1">
                           <strong>Mitigation:</strong> {risk.mitigation}
                         </p>
-                      )}
-                      {risk.ownerName && (
-                        <p className="text-xs opacity-60 mt-1">Responsable: {risk.ownerName}</p>
                       )}
                     </div>
                   ))}

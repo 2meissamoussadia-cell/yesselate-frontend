@@ -5,7 +5,7 @@
 
 'use client';
 
-import React, { memo, useCallback } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { TrendingUp, TrendingDown, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SparklineChart } from './SparklineChart';
@@ -83,32 +83,57 @@ export const KPICard = memo(function KPICard({
   const hasPositiveTrend = isPositive ?? false;
   const hasNegativeTrend = isNegative ?? false;
 
+  // Mémoriser className pour éviter les re-renders
+  const cardClassName = useMemo(() => cn(
+    'rounded-xl p-4 sm:p-5 border-2 transition-all duration-300 min-w-0 overflow-hidden',
+    onClick && 'cursor-pointer hover:scale-[1.02] hover:shadow-lg hover:shadow-black/20',
+    'focus:outline-none focus:ring-2 focus:ring-blue-500/50',
+    colors.card
+  ), [onClick, colors.card]);
+
+  // Mémoriser aria-label pour éviter les re-renders
+  const ariaLabel = useMemo(() => 
+    onClick ? `${label}: ${value}. Cliquez pour voir les détails` : `${label}: ${value}`,
+    [label, value, onClick]
+  );
+
+  // Mémoriser le contenu du tooltip
+  const tooltipContent = useMemo(() => {
+    if (!description) return null;
+    return (
+      <div className="space-y-1">
+        <p className="font-semibold">{label}</p>
+        <p className="text-xs text-slate-300">{description}</p>
+        {onClick && (
+          <p className="text-xs text-slate-400 pt-1 border-t border-slate-700">
+            Cliquez pour voir les détails et l'historique
+          </p>
+        )}
+      </div>
+    );
+  }, [description, label, onClick]);
+
   return (
     <Tooltip>
       <TooltipTrigger asChild>
         <div
           onClick={onClick}
-          className={cn(
-            'rounded-xl p-5 border-2 transition-all duration-300',
-            onClick && 'cursor-pointer hover:scale-[1.02] hover:shadow-lg hover:shadow-black/20',
-            'focus:outline-none focus:ring-2 focus:ring-blue-500/50',
-            colors.card
-          )}
+          className={cardClassName}
           role={onClick ? 'button' : undefined}
           tabIndex={onClick ? 0 : undefined}
           onKeyDown={handleKeyDown}
-          aria-label={onClick ? `${label}: ${value}. Cliquez pour voir les détails` : `${label}: ${value}`}
+          aria-label={ariaLabel}
         >
-          <div className="flex items-center gap-3 mb-3">
-            <div className={cn('w-10 h-10 rounded-lg flex items-center justify-center transition-all', colors.icon)}>
-              <Icon className="h-5 w-5" aria-hidden="true" />
+          <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3 min-w-0">
+            <div className={cn('w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center transition-all flex-shrink-0', colors.icon)}>
+              <Icon className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
             </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <p className="text-sm text-slate-400 truncate">{label}</p>
+            <div className="flex-1 min-w-0 overflow-hidden">
+              <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                <p className="text-xs sm:text-sm text-slate-400 truncate min-w-0">{label}</p>
                 {onClick && <Info className="h-3 w-3 text-slate-500 flex-shrink-0" aria-hidden="true" />}
               </div>
-              <p className="text-2xl font-bold text-white">{value}</p>
+              <p className="text-xl sm:text-2xl font-bold text-white truncate min-w-0">{value}</p>
             </div>
           </div>
 
@@ -125,44 +150,36 @@ export const KPICard = memo(function KPICard({
 
           <div
             className={cn(
-              'flex items-center justify-between text-xs',
+              'flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-0 text-xs min-w-0',
               hasPositiveTrend && 'text-emerald-400',
               hasNegativeTrend && 'text-red-400',
               !hasPositiveTrend && !hasNegativeTrend && 'text-slate-400'
             )}
           >
-            <div className="flex items-center gap-1 font-medium">
+            <div className="flex items-center gap-1 font-medium min-w-0">
               {trendDirection !== 'neutral' && (
                 <>
                   {hasPositiveTrend ? (
-                    <TrendingUp className="h-3 w-3" aria-hidden="true" />
+                    <TrendingUp className="h-3 w-3 flex-shrink-0" aria-hidden="true" />
                   ) : (
-                    <TrendingDown className="h-3 w-3" aria-hidden="true" />
+                    <TrendingDown className="h-3 w-3 flex-shrink-0" aria-hidden="true" />
                   )}
-                  <span>{trend}</span>
+                  <span className="truncate min-w-0">{trend}</span>
                 </>
               )}
-              {trendDirection === 'neutral' && <span>{trend}</span>}
+              {trendDirection === 'neutral' && <span className="truncate min-w-0">{trend}</span>}
             </div>
             {onClick && (
-              <span className="text-slate-500 text-[10px]" aria-hidden="true">
+              <span className="text-slate-500 text-[10px] sm:text-xs whitespace-nowrap flex-shrink-0" aria-hidden="true">
                 Cliquer pour détails
               </span>
             )}
           </div>
         </div>
       </TooltipTrigger>
-      {description && (
+      {tooltipContent && (
         <TooltipContent side="top" className="max-w-xs">
-          <div className="space-y-1">
-            <p className="font-semibold">{label}</p>
-            <p className="text-xs text-slate-300">{description}</p>
-            {onClick && (
-              <p className="text-xs text-slate-400 pt-1 border-t border-slate-700">
-                Cliquez pour voir les détails et l'historique
-              </p>
-            )}
-          </div>
+          {tooltipContent}
         </TooltipContent>
       )}
     </Tooltip>

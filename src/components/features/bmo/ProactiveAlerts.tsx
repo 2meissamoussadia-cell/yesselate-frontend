@@ -151,7 +151,7 @@ export function ProactiveAlerts({
       icon="🔮"
       borderColor="#8B5CF6"
       badge={alerts.length}
-      badgeVariant={criticalAlerts.length > 0 ? 'destructive' : 'warning'}
+      badgeVariant={criticalAlerts.length > 0 ? 'urgent' : 'warning'}
       className={className}
     >
       <div className="space-y-3">

@@ -41,9 +41,11 @@ describe('BudgetService', () => {
       const metrics = BudgetService.calculateMetrics(mockBudget);
 
       expect(metrics).toBeDefined();
-      expect(metrics.pourcent_consomme).toBe(50);
-      expect(metrics.pourcent_restant).toBe(50);
-      expect(metrics.projection_fin).toBeGreaterThanOrEqual(0);
+      expect(metrics.consommation_pourcent).toBe(50);
+      expect(metrics.projection_fin_annee).toBeGreaterThanOrEqual(0);
+      expect(metrics.is_warning).toBeDefined();
+      expect(metrics.is_critical).toBeDefined();
+      expect(metrics.is_exceeded).toBeDefined();
     });
   });
 

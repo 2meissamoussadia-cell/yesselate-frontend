@@ -6,7 +6,7 @@
 
 'use client';
 
-import { useState, useCallback, useMemo, memo } from 'react';
+import { useState, useCallback, useMemo, memo, useRef, useEffect } from 'react';
 import { 
   Search, 
   X, 
@@ -16,7 +16,10 @@ import {
   FileText, 
   BarChart3,
   Info,
-  Zap
+  Zap,
+  ArrowUpRight,
+  ArrowDownRight,
+  Minus
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
@@ -26,6 +29,7 @@ import { KPIAlertsSystem } from '@/components/features/bmo/dashboard/command-cen
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { getKPIMappingByLabel } from '@/lib/mappings/dashboardKPIMapping';
 import { useLogger } from '@/lib/utils/logger';
+import { useVirtualizer } from '@tanstack/react-virtual';
 
 // Types
 type KPITone = 'ok' | 'warn' | 'crit' | 'info';
@@ -225,6 +229,7 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
   kpis,
   onKPIClick,
   onExport,
+  onRefresh,
   refreshInterval = 60000,
   autoRefreshEnabled = true,
   onAutoRefreshToggle,
@@ -338,8 +343,8 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
     }
   }, [autoRefreshEnabled, onAutoRefreshToggle]);
 
-  // Styles conditionnels
-  const autoRefreshButtonClassName = cn(
+  // Styles conditionnels - Mémorisés pour éviter les re-renders
+  const autoRefreshButtonClassName = useMemo(() => cn(
     'p-1.5 rounded-md transition-all duration-200',
     'hover:bg-slate-800/50 active:scale-95',
     'disabled:opacity-50 disabled:cursor-not-allowed',
@@ -347,18 +352,20 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
     autoRefreshEnabled && isOnline && isTabVisible && 'bg-emerald-500/10 text-emerald-400',
     !autoRefreshEnabled && 'text-slate-400',
     !isOnline && 'text-slate-600'
-  );
+  ), [autoRefreshEnabled, isOnline, isTabVisible]);
 
-  const autoRefreshIconClassName = cn(
+  const autoRefreshIconClassName = useMemo(() => cn(
     'h-3.5 w-3.5 transition-colors',
     autoRefreshEnabled && isOnline && isTabVisible && 'text-emerald-400 animate-pulse',
     !autoRefreshEnabled && 'text-slate-400',
     !isOnline && 'text-slate-600'
-  );
+  ), [autoRefreshEnabled, isOnline, isTabVisible]);
 
-  const autoRefreshAriaLabel = autoRefreshEnabled
+  const autoRefreshAriaLabel = useMemo(() => autoRefreshEnabled
     ? 'Désactiver l\'actualisation automatique'
-    : 'Activer l\'actualisation automatique';
+    : 'Activer l\'actualisation automatique',
+    [autoRefreshEnabled]
+  );
 
   // Calculer les KPIs pour les alertes
   const kpisForAlerts = useMemo(() => {
@@ -371,9 +378,84 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
     }));
   }, [topKpis]);
 
+  // Mémoriser les KPIs avec leurs propriétés calculées pour éviter les recalculs
+  const kpisWithProps = useMemo(() => {
+    return topKpis.map((kpi, index) => {
+      const Icon = kpi.icon;
+      const isPositive = kpi.trend === 'up' && kpi.tone === 'ok';
+      const isNegative = kpi.trend === 'down' && (kpi.tone === 'warn' || kpi.tone === 'crit');
+      return {
+        kpi,
+        Icon,
+        index,
+        isPositive,
+        isNegative,
+      };
+    });
+  }, [topKpis]);
+
+  // Mémoriser les handlers onClick pour chaque KPI
+  const kpiClickHandlers = useMemo(() => {
+    return new Map(
+      topKpis.map(kpi => [kpi.label, () => handleKPIClick(kpi)])
+    );
+  }, [topKpis, handleKPIClick]);
+
+  // Virtualisation conditionnelle si >50 items
+  const shouldVirtualize = topKpis.length > 50;
+  const parentRef = useRef<HTMLDivElement>(null);
+
+  // Calculer le nombre de colonnes selon la taille de l'écran
+  // Pour la virtualisation, on utilise une approche par rangées
+  const [colsPerRow, setColsPerRow] = useState(() => {
+    // Estimation initiale basée sur les breakpoints Tailwind
+    if (typeof window === 'undefined') return 8; // SSR fallback
+    const width = window.innerWidth;
+    if (width >= 1280) return 8; // xl
+    if (width >= 1024) return 6; // lg
+    if (width >= 768) return 4;  // md
+    if (width >= 640) return 3;  // sm
+    if (width >= 475) return 2;  // xs
+    return 1;
+  });
+
+  // Mettre à jour le nombre de colonnes lors du resize
+  useEffect(() => {
+    if (!shouldVirtualize) return; // Pas besoin si pas de virtualisation
+    
+    const updateCols = () => {
+      if (typeof window === 'undefined') return;
+      const width = window.innerWidth;
+      let newCols = 8; // default xl
+      if (width >= 1280) newCols = 8; // xl
+      else if (width >= 1024) newCols = 6; // lg
+      else if (width >= 768) newCols = 4;  // md
+      else if (width >= 640) newCols = 3;  // sm
+      else if (width >= 475) newCols = 2;  // xs
+      else newCols = 1;
+      
+      setColsPerRow(newCols);
+    };
+    
+    updateCols(); // Initial call
+    window.addEventListener('resize', updateCols);
+    return () => window.removeEventListener('resize', updateCols);
+  }, [shouldVirtualize]);
+
+  const rowsCount = useMemo(() => Math.ceil(topKpis.length / colsPerRow), [topKpis.length, colsPerRow]);
+  const rowHeight = 120; // Hauteur estimée d'une rangée
+
+  const virtualizer = useVirtualizer({
+    count: rowsCount,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => rowHeight,
+    overscan: 2, // Nombre de rangées à rendre en dehors de la vue
+    enabled: shouldVirtualize,
+  });
+
   return (
     <div 
-      className="border-b border-slate-800/60 bg-gradient-to-b from-slate-900/60 via-slate-900/40 to-slate-900/60 backdrop-blur-xl px-4 py-4 shadow-lg shadow-black/20 relative overflow-hidden"
+      className="border-b border-slate-800/60 bg-gradient-to-b from-slate-900/60 via-slate-900/40 to-slate-900/60 backdrop-blur-xl px-2 sm:px-4 py-3 sm:py-4 shadow-lg shadow-black/20 relative overflow-hidden"
       role="region"
       aria-label="Indicateurs de performance en temps réel"
     >
@@ -412,9 +494,9 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
           )}
         </div>
         
-        <div className="flex items-center gap-2 flex-1 justify-end min-w-[200px]">
+        <div className="flex items-center gap-2 flex-1 justify-end min-w-0 sm:min-w-[200px]">
           {/* Filtre de recherche KPI */}
-          <div className="relative hidden sm:block">
+          <div className="relative hidden sm:block flex-shrink-0">
             <input
               type="text"
               placeholder="Rechercher un indicateur..."
@@ -425,7 +507,8 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
                 'bg-slate-800/50 border border-slate-700/50',
                 'text-slate-300 placeholder:text-slate-500',
                 'focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50',
-                'transition-all duration-200'
+                'transition-all duration-200',
+                'min-w-0'
               )}
               aria-label="Rechercher un indicateur"
             />
@@ -447,17 +530,15 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
           <div className="relative group">
             <Tooltip>
               <TooltipTrigger asChild>
-                <div className="inline-block">
-                  <button
-                    type="button"
-                    onClick={handleAutoRefreshClick}
-                    disabled={!isOnline}
-                    className={autoRefreshButtonClassName}
-                    aria-label={autoRefreshAriaLabel}
-                  >
-                    <Activity className={autoRefreshIconClassName} />
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={handleAutoRefreshClick}
+                  disabled={!isOnline}
+                  className={autoRefreshButtonClassName}
+                  aria-label={autoRefreshAriaLabel}
+                >
+                  <Activity className={autoRefreshIconClassName} />
+                </button>
               </TooltipTrigger>
               <TooltipContent>
                 <AutoRefreshTooltipContent 
@@ -686,30 +767,75 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
             </button>
           )}
         </div>
+      ) : shouldVirtualize ? (
+        // Version virtualisée pour >50 items (par rangées)
+        <div
+          ref={parentRef}
+          className="h-[600px] overflow-auto"
+          role="list"
+          aria-label={`Liste des indicateurs de performance (${topKpis.length} items, virtualisé)`}
+        >
+          <div
+            style={{
+              height: `${virtualizer.getTotalSize()}px`,
+              width: '100%',
+              position: 'relative',
+            }}
+          >
+            {virtualizer.getVirtualItems().map((virtualRow) => {
+              const rowStart = virtualRow.index * colsPerRow;
+              const rowItems = kpisWithProps.slice(rowStart, rowStart + colsPerRow);
+              
+              return (
+                <div
+                  key={virtualRow.index}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: `${virtualRow.size}px`,
+                    transform: `translateY(${virtualRow.start}px)`,
+                  }}
+                >
+                  <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3">
+                    {rowItems.map((item) => (
+                      <div key={item.kpi.label} role="listitem">
+                        <KPICard
+                          kpi={item.kpi}
+                          icon={item.Icon}
+                          index={item.index}
+                          isPositive={item.isPositive}
+                          isNegative={item.isNegative}
+                          onClick={kpiClickHandlers.get(item.kpi.label)}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       ) : (
+        // Version normale optimisée pour ≤50 items
         <div 
           className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3"
           role="list"
           aria-label={`Liste des indicateurs de performance${topKpis.length !== kpis.length ? ` (${topKpis.length} sur ${kpis.length} affichés)` : ''}`}
         >
-          {topKpis.map((kpi, index) => {
-            const Icon = kpi.icon;
-            const isPositive = kpi.trend === 'up' && kpi.tone === 'ok';
-            const isNegative = kpi.trend === 'down' && (kpi.tone === 'warn' || kpi.tone === 'crit');
-            
-            return (
-              <div key={kpi.label} role="listitem">
-                <KPICard
-                  kpi={kpi}
-                  icon={Icon}
-                  index={index}
-                  isPositive={isPositive}
-                  isNegative={isNegative}
-                  onClick={() => handleKPIClick(kpi)}
-                />
-              </div>
-            );
-          })}
+          {kpisWithProps.map((item) => (
+            <div key={item.kpi.label} role="listitem">
+              <KPICard
+                kpi={item.kpi}
+                icon={item.Icon}
+                index={item.index}
+                isPositive={item.isPositive}
+                isNegative={item.isNegative}
+                onClick={kpiClickHandlers.get(item.kpi.label)}
+              />
+            </div>
+          ))}
         </div>
       )}
     </div>

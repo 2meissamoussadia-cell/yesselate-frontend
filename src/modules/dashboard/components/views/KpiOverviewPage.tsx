@@ -239,46 +239,46 @@ export default function KpiOverviewPage() {
   };
 
   return (
-    <div className="p-6 space-y-8 animate-fadeIn">
+    <div className="p-4 sm:p-6 space-y-6 sm:space-y-8 animate-fadeIn min-w-0 overflow-hidden">
       {/* En-tête */}
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Vue d'ensemble des KPIs</h1>
-        <p className="text-slate-400 text-lg">Tous les indicateurs de performance disponibles organisés par catégorie</p>
+      <div className="min-w-0">
+        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2 break-words">Vue d'ensemble des KPIs</h1>
+        <p className="text-slate-400 text-sm sm:text-lg break-words">Tous les indicateurs de performance disponibles organisés par catégorie</p>
       </div>
 
       {/* Stats Summary */}
-      <section className="space-y-4">
-        <h2 className="text-xl font-bold text-white flex items-center gap-2">
-          <Activity className="w-5 h-5 text-blue-400" />
-          Vue d'ensemble
+      <section className="space-y-4 min-w-0">
+        <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2 break-words">
+          <Activity className="w-5 h-5 text-blue-400 flex-shrink-0" />
+          <span className="min-w-0">Vue d'ensemble</span>
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 min-w-0">
           {summaryStats.map(renderSummaryStat)}
         </div>
       </section>
 
       {/* KPI Categories */}
-      <section className="space-y-4">
-        <h2 className="text-xl font-bold text-white flex items-center gap-2">
-          <BarChart3 className="w-5 h-5 text-purple-400" />
-          Catégories de KPIs
+      <section className="space-y-4 min-w-0">
+        <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2 break-words">
+          <BarChart3 className="w-5 h-5 text-purple-400 flex-shrink-0" />
+          <span className="min-w-0">Catégories de KPIs</span>
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 min-w-0">
           {kpiCategories.map(renderKpiCategory)}
         </div>
       </section>
 
       {/* Context Section */}
-      <section className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 space-y-4">
-        <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-          <CheckCircle className="w-6 h-6 text-emerald-400" />
-          À propos des KPIs
+      <section className="bg-slate-900/50 border border-slate-800 rounded-xl p-4 sm:p-6 space-y-4 min-w-0 overflow-hidden">
+        <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 break-words">
+          <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-400 flex-shrink-0" />
+          <span className="min-w-0">À propos des KPIs</span>
         </h2>
-        <p className="text-slate-300">
+        <p className="text-slate-300 text-sm sm:text-base break-words">
           Cette section présente tous les indicateurs de performance disponibles dans le système.
           Les KPIs sont organisés par catégorie pour faciliter la navigation et l'analyse.
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 min-w-0">
           <div className="bg-slate-800/50 rounded-lg p-4">
             <div className="flex items-center gap-2 mb-2">
               <Target className="w-5 h-5 text-blue-400" />

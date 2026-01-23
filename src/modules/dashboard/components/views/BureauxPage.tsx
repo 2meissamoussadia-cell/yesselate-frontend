@@ -1269,7 +1269,7 @@ export default function BureauxPage() {
 
         {/* Summary Stats */}
         {shouldShowDetails && (
-          <div className="grid grid-cols-2 gap-3 mb-6 pb-6 border-b border-slate-700/50">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4 sm:mb-6 pb-4 sm:pb-6 border-b border-slate-700/50 min-w-0">
           <div className="bg-slate-800/50 rounded-lg p-3">
             <p className="text-xs text-slate-400 mb-1">Projets</p>
             <p className="text-lg font-bold text-white">{bureau.summary.totalProjects}</p>
@@ -1408,19 +1408,19 @@ export default function BureauxPage() {
 
   return (
     <TooltipProvider delayDuration={200}>
-      <div className="p-6 space-y-6 animate-fadeIn" role="main" aria-label="Vue des bureaux métiers">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 animate-fadeIn min-w-0 overflow-hidden" role="main" aria-label="Vue des bureaux métiers">
         {/* En-tête */}
-        <div className="flex items-start justify-between flex-wrap gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-white mb-2">Bureaux Métiers</h1>
-            <p className="text-slate-400 text-lg">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 min-w-0">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2 break-words">Bureaux Métiers</h1>
+            <p className="text-slate-400 text-sm sm:text-lg break-words">
               Indicateurs de performance par bureau ({sortedBureaux.length} bureau{sortedBureaux.length > 1 ? 'x' : ''} affiché{sortedBureaux.length > 1 ? 's' : ''})
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-shrink-0 flex-wrap">
             {/* Sélection multiple */}
             {selectedBureaux.size > 0 && (
-              <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-blue-500/10 border border-blue-500/50">
+              <div className="flex items-center gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg bg-blue-500/10 border border-blue-500/50 min-w-0">
                 <span className="text-sm text-blue-400">{selectedBureaux.size} sélectionné{selectedBureaux.size > 1 ? 's' : ''}</span>
                 <button
                   onClick={handleCompareSelected}
@@ -1550,7 +1550,7 @@ export default function BureauxPage() {
         </div>
 
       {/* Statistiques globales */}
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4" role="region" aria-label="Statistiques globales">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 min-w-0" role="region" aria-label="Statistiques globales">
         <TooltipProvider delayDuration={200}>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -1687,7 +1687,7 @@ export default function BureauxPage() {
           </div>
           
           {/* Filtres avancés */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-slate-700/50">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-4 border-t border-slate-700/50 min-w-0">
             <div className="space-y-2">
               <label className="text-sm text-slate-400 flex items-center gap-2">
                 <DollarSign className="w-4 h-4" />
@@ -1766,7 +1766,7 @@ export default function BureauxPage() {
           Cette section présente les indicateurs de performance pour tous les bureaux métiers de l'organisation.
           Les métriques sont mises à jour en temps réel et permettent un suivi détaillé de l'activité de chaque bureau.
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mt-4 min-w-0">
           <div className="bg-slate-800/50 rounded-lg p-4">
             <div className="flex items-center gap-2 mb-2">
               <Activity className="w-5 h-5 text-blue-400" />

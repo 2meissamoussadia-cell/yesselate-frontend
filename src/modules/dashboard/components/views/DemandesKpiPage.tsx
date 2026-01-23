@@ -275,18 +275,20 @@ function DemandesKpiPage() {
 
   return (
     <TooltipProvider delayDuration={200}>
-      <div className="p-6 space-y-6 animate-fadeIn">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 animate-fadeIn min-w-0 overflow-hidden">
         {/* En-tête */}
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-white mb-2">KPIs Flux & Demandes</h1>
-            <p className="text-slate-400">Suivi du volume, validation, temps moyen, goulets et blocages</p>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 min-w-0">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-xl sm:text-2xl font-bold text-white mb-2 break-words">KPIs Flux & Demandes</h1>
+            <p className="text-slate-400 text-sm sm:text-base break-words">Suivi du volume, validation, temps moyen, goulets et blocages</p>
           </div>
-          <ExportButton
-            onExportCSV={handleExportCSV}
-            onExportJSON={handleExportJSON}
-            label="Exporter"
-          />
+          <div className="flex-shrink-0">
+            <ExportButton
+              onExportCSV={handleExportCSV}
+              onExportJSON={handleExportJSON}
+              label="Exporter"
+            />
+          </div>
         </div>
 
         {/* Recherche */}
@@ -301,12 +303,12 @@ function DemandesKpiPage() {
         </div>
 
         {/* KPIs principaux */}
-        <section>
-          <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-            <Activity className="h-5 w-5 text-blue-400" />
-            Indicateurs clés
+        <section className="min-w-0">
+          <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center gap-2 break-words">
+            <Activity className="h-5 w-5 text-blue-400 flex-shrink-0" />
+            <span className="min-w-0">Indicateurs clés</span>
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 min-w-0">
             {demandeKPIs.map((kpi) => {
               const Icon = kpi.icon;
               const isPositive = (kpi.trendDirection === 'up' && (kpi.id === '1' || kpi.id === '2')) || 
@@ -413,12 +415,12 @@ function DemandesKpiPage() {
         </section>
 
       {/* Distribution par type */}
-      <section>
-        <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <BarChart3 className="h-5 w-5 text-purple-400" />
-          Distribution par type
+      <section className="min-w-0">
+        <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center gap-2 break-words">
+          <BarChart3 className="h-5 w-5 text-purple-400 flex-shrink-0" />
+          <span className="min-w-0">Distribution par type</span>
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 min-w-0">
           {distributionParType.map((item) => (
             <div
               key={item.type}
@@ -448,27 +450,27 @@ function DemandesKpiPage() {
       </section>
 
       {/* Goulets d'étranglement */}
-      <section>
-        <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <Zap className="h-5 w-5 text-amber-400" />
-          Goulets d'étranglement
+      <section className="min-w-0">
+        <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center gap-2 break-words">
+          <Zap className="h-5 w-5 text-amber-400 flex-shrink-0" />
+          <span className="min-w-0">Goulets d'étranglement</span>
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 min-w-0">
           {goulets.map((goulet) => (
             <div
               key={goulet.id}
               className={cn(
-                'rounded-xl p-5 border-2',
+                'rounded-xl p-4 sm:p-5 border-2 min-w-0 overflow-hidden',
                 goulet.impact === 'high' && 'bg-gradient-to-br from-red-500/10 to-red-600/5 border-red-500/30',
                 goulet.impact === 'medium' && 'bg-gradient-to-br from-amber-500/10 to-amber-600/5 border-amber-500/30',
                 goulet.impact === 'low' && 'bg-gradient-to-br from-blue-500/10 to-blue-600/5 border-blue-500/30'
               )}
             >
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex-1">
-                  <h3 className="text-base font-semibold text-white mb-1">{goulet.processus}</h3>
-                  <div className="flex items-center gap-4 text-sm text-slate-400">
-                    <span>{goulet.volume} demandes</span>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-3 min-w-0">
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-sm sm:text-base font-semibold text-white mb-1 break-words">{goulet.processus}</h3>
+                  <div className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm text-slate-400 min-w-0">
+                    <span className="break-words">{goulet.volume} demandes</span>
                   </div>
                 </div>
                 <span
@@ -492,13 +494,13 @@ function DemandesKpiPage() {
       </section>
 
       {/* Blocages critiques */}
-      <section>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-            <AlertTriangle className="h-5 w-5 text-red-400" />
-            Blocages actifs
+      <section className="min-w-0">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3 mb-3 sm:mb-4 min-w-0">
+          <h2 className="text-base sm:text-lg font-semibold text-white flex items-center gap-2 break-words">
+            <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0" />
+            <span className="min-w-0">Blocages actifs</span>
           </h2>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0 flex-wrap">
             {filteredBlocages.filter(b => b.priorite === 'critique').length > 0 && (
               <AnimatedBadge variant="critical" pulse>
                 {filteredBlocages.filter(b => b.priorite === 'critique').length} critique{filteredBlocages.filter(b => b.priorite === 'critique').length > 1 ? 's' : ''}
@@ -528,7 +530,7 @@ function DemandesKpiPage() {
             }
           />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 min-w-0">
             {filteredBlocages.map((blocage) => (
             <div
               key={blocage.id}
@@ -567,20 +569,20 @@ function DemandesKpiPage() {
       </section>
 
       {/* Performance par bureau */}
-      <section>
-        <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <Users className="h-5 w-5 text-purple-400" />
-          Performance par bureau
+      <section className="min-w-0">
+        <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center gap-2 break-words">
+          <Users className="h-5 w-5 text-purple-400 flex-shrink-0" />
+          <span className="min-w-0">Performance par bureau</span>
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 min-w-0">
           {performanceBureau.map((perf) => (
             <div
               key={perf.bureau}
-              className="bg-slate-800/40 border border-slate-700/40 rounded-xl p-5"
+              className="bg-slate-800/40 border border-slate-700/40 rounded-xl p-4 sm:p-5 min-w-0 overflow-hidden"
             >
-              <div className="flex items-center gap-2 mb-4">
-                <Building2 className="h-4 w-4 text-purple-400" />
-                <h3 className="text-base font-semibold text-white">{perf.bureau}</h3>
+              <div className="flex items-center gap-2 mb-3 sm:mb-4 min-w-0">
+                <Building2 className="h-4 w-4 text-purple-400 flex-shrink-0" />
+                <h3 className="text-sm sm:text-base font-semibold text-white break-words min-w-0">{perf.bureau}</h3>
               </div>
               <div className="space-y-3">
                 <div>

@@ -8,9 +8,9 @@
 import React, { memo } from 'react';
 import { cn } from '@/lib/utils';
 import { 
-  CommandCenterView,
+  OverviewView,
   RealtimeView,
-  StatsView,
+  PerformanceView,
 } from '@/components/features/bmo/dashboard/command-center';
 
 interface DashboardCommandCenterPageProps {
@@ -20,16 +20,17 @@ interface DashboardCommandCenterPageProps {
 /**
  * Page principale du Command Center
  * Affiche différentes vues selon le paramètre view
+ * ✅ Amélioré avec layout responsive et meilleure gestion des débordements
  */
 const DashboardCommandCenterPage = memo(function DashboardCommandCenterPage({
   view = 'default',
 }: DashboardCommandCenterPageProps) {
   return (
-    <div className="h-full w-full flex flex-col bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-      <div className="flex-1 min-h-0 overflow-hidden">
+    <div className="h-full w-full flex flex-col bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 min-w-0 overflow-hidden">
+      <div className="flex-1 min-h-0 overflow-hidden min-w-0">
         {view === 'realtime' && <RealtimeView />}
-        {view === 'stats' && <StatsView />}
-        {view === 'default' && <CommandCenterView />}
+        {view === 'stats' && <PerformanceView />}
+        {view === 'default' && <OverviewView />}
       </div>
     </div>
   );

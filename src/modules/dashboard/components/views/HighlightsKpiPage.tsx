@@ -345,27 +345,29 @@ function HighlightsKpiPage() {
 
   return (
     <TooltipProvider delayDuration={200}>
-      <div className="p-6 space-y-6 animate-fadeIn">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 animate-fadeIn min-w-0 overflow-hidden">
         {/* En-tête */}
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-white mb-2">Synthèse stratégique</h1>
-            <p className="text-slate-400">Vue d'ensemble des indicateurs clés et tendances principales</p>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 min-w-0">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-xl sm:text-2xl font-bold text-white mb-2 break-words">Synthèse stratégique</h1>
+            <p className="text-slate-400 text-sm sm:text-base break-words">Vue d'ensemble des indicateurs clés et tendances principales</p>
           </div>
-          <ExportButton
-            onExportCSV={handleExportCSV}
-            onExportJSON={handleExportJSON}
-            label="Exporter"
-          />
+          <div className="flex-shrink-0">
+            <ExportButton
+              onExportCSV={handleExportCSV}
+              onExportJSON={handleExportJSON}
+              label="Exporter"
+            />
+          </div>
         </div>
 
         {/* Top KPIs */}
-        <section>
-          <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-            <Zap className="h-5 w-5 text-yellow-400" />
-            Indicateurs clés
+        <section className="min-w-0">
+          <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center gap-2 break-words">
+            <Zap className="h-5 w-5 text-yellow-400 flex-shrink-0" />
+            <span className="min-w-0">Indicateurs clés</span>
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 min-w-0">
             {topKPIs.map((kpi) => {
               const Icon = kpi.icon;
               const isPositive = kpi.trendDirection === 'down' && kpi.tone !== 'critical';
@@ -472,22 +474,22 @@ function HighlightsKpiPage() {
         </section>
 
       {/* Tendances clés */}
-      <section>
-        <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <Activity className="h-5 w-5 text-blue-400" />
-          Tendances principales
+      <section className="min-w-0">
+        <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center gap-2 break-words">
+          <Activity className="h-5 w-5 text-blue-400 flex-shrink-0" />
+          <span className="min-w-0">Tendances principales</span>
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 min-w-0">
           {trends.map((trend) => (
             <div
               key={trend.id}
               className={cn(
-                'rounded-xl p-5 border bg-slate-800/40 border-slate-700/40',
+                'rounded-xl p-4 sm:p-5 border bg-slate-800/40 border-slate-700/40 min-w-0 overflow-hidden',
                 'hover:border-slate-600/60 transition-all duration-200'
               )}
             >
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-sm text-slate-400">{trend.label}</p>
+              <div className="flex items-center justify-between mb-2 min-w-0">
+                <p className="text-sm text-slate-400 break-words min-w-0">{trend.label}</p>
                 {trend.trend === 'up' && (
                   <TrendingUp className="h-4 w-4 text-emerald-400" />
                 )}
@@ -500,24 +502,24 @@ function HighlightsKpiPage() {
       </section>
 
       {/* Risques et alertes */}
-      <section>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-            <AlertTriangle className="h-5 w-5 text-amber-400" />
-            Risques et alertes critiques
+      <section className="min-w-0">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0 mb-3 sm:mb-4 min-w-0">
+          <h2 className="text-base sm:text-lg font-semibold text-white flex items-center gap-2 break-words">
+            <AlertTriangle className="h-5 w-5 text-amber-400 flex-shrink-0" />
+            <span className="min-w-0">Risques et alertes critiques</span>
           </h2>
           {risks.filter(r => r.severity === 'high').length > 0 && (
-            <AnimatedBadge variant="critical" pulse>
+            <AnimatedBadge variant="critical" pulse className="flex-shrink-0">
               {risks.filter(r => r.severity === 'high').length} critique{risks.filter(r => r.severity === 'high').length > 1 ? 's' : ''}
             </AnimatedBadge>
           )}
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 min-w-0">
           {risks.map((risk) => (
             <div
               key={risk.id}
               className={cn(
-                'rounded-xl p-4 border-2 transition-all duration-300 hover:scale-[1.02]',
+                'rounded-xl p-3 sm:p-4 border-2 transition-all duration-300 hover:scale-[1.02] min-w-0 overflow-hidden',
                 'cursor-pointer hover:shadow-lg hover:shadow-black/20',
                 risk.severity === 'high' && 'bg-gradient-to-br from-red-500/10 to-red-600/5 border-red-500/30 hover:border-red-400',
                 risk.severity === 'medium' && 'bg-gradient-to-br from-amber-500/10 to-amber-600/5 border-amber-500/30 hover:border-amber-400',
@@ -526,21 +528,22 @@ function HighlightsKpiPage() {
               role="button"
               tabIndex={0}
             >
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  {risk.severity === 'high' && <AlertCircle className="h-4 w-4 text-red-400 animate-pulse" />}
-                  {risk.severity === 'medium' && <AlertTriangle className="h-4 w-4 text-amber-400" />}
-                  {risk.severity === 'low' && <Activity className="h-4 w-4 text-blue-400" />}
-                  <p className="text-sm font-medium text-white">{risk.label}</p>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-2 min-w-0">
+                <div className="flex items-center gap-2 min-w-0">
+                  {risk.severity === 'high' && <AlertCircle className="h-4 w-4 text-red-400 animate-pulse flex-shrink-0" />}
+                  {risk.severity === 'medium' && <AlertTriangle className="h-4 w-4 text-amber-400 flex-shrink-0" />}
+                  {risk.severity === 'low' && <Activity className="h-4 w-4 text-blue-400 flex-shrink-0" />}
+                  <p className="text-sm font-medium text-white break-words min-w-0">{risk.label}</p>
                 </div>
                 <AnimatedBadge 
                   variant={risk.severity === 'high' ? 'critical' : risk.severity === 'medium' ? 'warning' : 'info'}
                   pulse={risk.severity === 'high'}
+                  className="flex-shrink-0"
                 >
                   {risk.count}
                 </AnimatedBadge>
               </div>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-400 break-words">
                 Évolution: {risk.trend === 'stable' ? 'Stable' : risk.trend}
               </p>
             </div>
@@ -549,36 +552,36 @@ function HighlightsKpiPage() {
       </section>
 
       {/* Classements */}
-      <section>
-        <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <Award className="h-5 w-5 text-yellow-400" />
-          Classements performance
+      <section className="min-w-0">
+        <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center gap-2 break-words">
+          <Award className="h-5 w-5 text-yellow-400 flex-shrink-0" />
+          <span className="min-w-0">Classements performance</span>
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 min-w-0">
           {rankings.map((ranking) => (
             <div
               key={ranking.id}
-              className="bg-slate-800/40 border border-slate-700/40 rounded-xl p-5"
+              className="bg-slate-800/40 border border-slate-700/40 rounded-xl p-4 sm:p-5 min-w-0 overflow-hidden"
             >
-              <div className="flex items-center gap-2 mb-4">
-                {ranking.type === 'bureau' && <Building2 className="h-4 w-4 text-blue-400" />}
-                {ranking.type === 'region' && <Globe className="h-4 w-4 text-purple-400" />}
-                {ranking.type === 'projet' && <Target className="h-4 w-4 text-emerald-400" />}
-                <h3 className="text-sm font-semibold text-white">{ranking.label}</h3>
+              <div className="flex items-center gap-2 mb-3 sm:mb-4 min-w-0">
+                {ranking.type === 'bureau' && <Building2 className="h-4 w-4 text-blue-400 flex-shrink-0" />}
+                {ranking.type === 'region' && <Globe className="h-4 w-4 text-purple-400 flex-shrink-0" />}
+                {ranking.type === 'projet' && <Target className="h-4 w-4 text-emerald-400 flex-shrink-0" />}
+                <h3 className="text-sm font-semibold text-white break-words min-w-0">{ranking.label}</h3>
               </div>
-              <div className="space-y-3">
+              <div className="space-y-2 sm:space-y-3 min-w-0">
                 {ranking.items.map((item, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between p-2 rounded-lg bg-slate-700/30 hover:bg-slate-700/50 transition-colors"
+                    className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0 p-2 rounded-lg bg-slate-700/30 hover:bg-slate-700/50 transition-colors min-w-0 overflow-hidden"
                   >
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-slate-400 w-4">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="text-xs font-bold text-slate-400 w-4 flex-shrink-0">
                         #{index + 1}
                       </span>
-                      <span className="text-sm text-white">{item.name}</span>
+                      <span className="text-sm text-white break-words min-w-0">{item.name}</span>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-shrink-0">
                       <span className="text-sm font-bold text-white">{item.score}%</span>
                       {item.trend === 'up' && (
                         <TrendingUp className="h-3 w-3 text-emerald-400" />

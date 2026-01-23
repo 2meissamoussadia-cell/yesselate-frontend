@@ -8,7 +8,7 @@
 import React, { memo, useMemo } from 'react';
 import { ChevronRight, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useDashboardNavigation } from '../context/DashboardNavigationContext';
+import { useDashboardNavigationStore } from '@/lib/stores/dashboardNavigationStore';
 import { getNavigationConfig } from '../utils/routeValidation';
 
 interface BreadcrumbItem {
@@ -27,14 +27,8 @@ export const DashboardBreadcrumbs = memo(function DashboardBreadcrumbs() {
   const leaf = useDashboardNavigationStore((state) => state.leaf);
   
   // ✅ Mémoriser la config pour éviter les recalculs
-  // Type assertion nécessaire car NavigationConfig n'est pas exporté
-  const navConfig = useMemo(() => getNavigationConfig() as Record<string, {
-    label: string;
-    sub?: Record<string, {
-      label: string;
-      leaf?: Record<string, { label: string; component: string }>;
-    }>;
-  }>, []);
+  // NavigationConfig est maintenant exporté, plus besoin de type assertion
+  const navConfig = useMemo(() => getNavigationConfig(), []);
 
   // ✅ Construire les items du breadcrumb
   const breadcrumbItems = useMemo<BreadcrumbItem[]>(() => {

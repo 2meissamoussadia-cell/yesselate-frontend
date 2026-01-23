@@ -283,18 +283,20 @@ function ProjetKpiPage() {
 
   return (
     <TooltipProvider delayDuration={200}>
-      <div className="p-6 space-y-6 animate-fadeIn">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 animate-fadeIn min-w-0 overflow-hidden">
         {/* En-tête */}
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-white mb-2">KPIs Chantiers & Projets</h1>
-            <p className="text-slate-400">Suivi de l'avancement, retards, litiges et performance par région</p>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 min-w-0">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-xl sm:text-2xl font-bold text-white mb-2 break-words">KPIs Chantiers & Projets</h1>
+            <p className="text-slate-400 text-sm sm:text-base break-words">Suivi de l'avancement, retards, litiges et performance par région</p>
           </div>
-          <ExportButton
-            onExportCSV={handleExportCSV}
-            onExportJSON={handleExportJSON}
-            label="Exporter"
-          />
+          <div className="flex-shrink-0">
+            <ExportButton
+              onExportCSV={handleExportCSV}
+              onExportJSON={handleExportJSON}
+              label="Exporter"
+            />
+          </div>
         </div>
 
         {/* Recherche */}
@@ -309,12 +311,12 @@ function ProjetKpiPage() {
         </div>
 
         {/* KPIs principaux */}
-        <section>
-          <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-            <Activity className="h-5 w-5 text-blue-400" />
-            Indicateurs clés
+        <section className="min-w-0">
+          <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center gap-2 break-words">
+            <Activity className="h-5 w-5 text-blue-400 flex-shrink-0" />
+            <span className="min-w-0">Indicateurs clés</span>
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 min-w-0">
             {projetKPIs.map((kpi) => {
               const Icon = kpi.icon;
               const isPositive = (kpi.trendDirection === 'up' && kpi.id !== '3' && kpi.id !== '5') || 
@@ -485,7 +487,7 @@ function ProjetKpiPage() {
                 )}
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-3 sm:mb-4 min-w-0">
                 {/* Avancement */}
                 <div>
                   <div className="flex items-center justify-between mb-2">
@@ -561,7 +563,7 @@ function ProjetKpiPage() {
           <MapPin className="h-5 w-5 text-purple-400" />
           Performance par région
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 min-w-0">
           {performanceRegion.map((perf) => (
             <div
               key={perf.region}

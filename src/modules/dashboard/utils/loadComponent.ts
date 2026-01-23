@@ -1,9 +1,19 @@
 /**
  * Utilitaire pour charger dynamiquement les composants de pages
  * Utilise l'import dynamique pour le code splitting
+ * ✅ Amélioré avec cache et retry logic
  */
 
 import type { ComponentType } from 'react';
+import { logger } from '@/lib/utils/logger';
+
+// Logger pour ce module utilitaire
+const log = {
+  error: (message: string, error?: Error, context?: Record<string, unknown>) => 
+    logger.error(message, error, { component: 'loadComponent', ...context }),
+  warn: (message: string, context?: Record<string, unknown>) => 
+    logger.warn(message, { component: 'loadComponent', ...context }),
+};
 
 /**
  * Mapping des noms de composants vers leurs chemins d'import
@@ -31,21 +41,105 @@ const componentMap: Record<string, () => Promise<{ default: ComponentType }>> = 
   EmptyState: () => import('../components/views/EmptyState'),
 };
 
+// ✅ Cache pour les composants chargés (améliore les performances)
+const componentCache = new Map<string, ComponentType>();
+
+// ✅ Cache pour les promesses en cours (évite les chargements multiples simultanés)
+const loadingPromises = new Map<string, Promise<ComponentType>>();
+
+// ✅ Configuration du retry
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 1000; // 1 seconde
+
+/**
+ * Retry avec exponential backoff
+ */
+async function retryWithBackoff<T>(
+  fn: () => Promise<T>,
+  retries = MAX_RETRIES,
+  delay = RETRY_DELAY
+): Promise<T> {
+  try {
+    return await fn();
+  } catch (error) {
+    if (retries <= 0) {
+      throw error;
+    }
+    
+    // Attendre avant de réessayer
+    await new Promise((resolve) => setTimeout(resolve, delay));
+    
+    // Exponential backoff
+    return retryWithBackoff(fn, retries - 1, delay * 2);
+  }
+}
+
 /**
  * Charge un composant de manière asynchrone
+ * ✅ Utilise un cache et une logique de retry
  * @param name - Nom du composant à charger
  * @returns Promise qui résout vers le composant par défaut
- * @throws Error si le composant n'existe pas dans le mapping
+ * @throws Error si le composant n'existe pas dans le mapping ou si le chargement échoue après retries
  */
 export async function loadComponent(name: string): Promise<ComponentType> {
+  // ✅ Validation du nom du composant
+  if (!name || typeof name !== 'string') {
+    const error = new Error(`Invalid component name: ${name}`);
+    log.error('Nom de composant invalide', error, { name });
+    throw error;
+  }
+
+  // ✅ Vérifier le cache
+  if (componentCache.has(name)) {
+    return componentCache.get(name)!;
+  }
+
+  // ✅ Vérifier si un chargement est déjà en cours
+  if (loadingPromises.has(name)) {
+    return loadingPromises.get(name)!;
+  }
+
+  // ✅ Obtenir le loader
   const loader = componentMap[name];
   
   if (!loader) {
-    throw new Error(`Component "${name}" not found in component map. Available components: ${Object.keys(componentMap).join(', ')}`);
+    const error = new Error(
+      `Component "${name}" not found in component map. Available components: ${Object.keys(componentMap).join(', ')}`
+    );
+    log.error('Composant non trouvé', error, { name, available: Object.keys(componentMap) });
+    throw error;
   }
-  
-  const module = await loader();
-  return module.default;
+
+  // ✅ Créer la promesse de chargement avec retry
+  const loadPromise = retryWithBackoff(async () => {
+    try {
+      const module = await loader();
+      
+      if (!module || !module.default) {
+        throw new Error(`Component "${name}" did not export a default component`);
+      }
+
+      const component = module.default;
+      
+      // ✅ Mettre en cache le composant chargé
+      componentCache.set(name, component);
+      
+      return component;
+    } catch (error) {
+      log.error(`Erreur lors du chargement du composant "${name}"`, error instanceof Error ? error : new Error(String(error)), {
+        name,
+      });
+      throw error;
+    } finally {
+      // ✅ Nettoyer la promesse en cours
+      loadingPromises.delete(name);
+    }
+  });
+
+  // ✅ Stocker la promesse en cours
+  loadingPromises.set(name, loadPromise);
+
+  return loadPromise;
 }
 
 /**
@@ -63,5 +157,25 @@ export function hasComponent(name: string): boolean {
  */
 export function getAvailableComponents(): string[] {
   return Object.keys(componentMap);
+}
+
+/**
+ * Vide le cache des composants chargés
+ * Utile pour forcer le rechargement des composants (ex: hot reload en développement)
+ */
+export function clearComponentCache(): void {
+  componentCache.clear();
+  loadingPromises.clear();
+  if (process.env.NODE_ENV === 'development') {
+    log.warn('Cache des composants vidé');
+  }
+}
+
+/**
+ * Obtient le nombre de composants en cache
+ * @returns Nombre de composants actuellement en cache
+ */
+export function getCachedComponentCount(): number {
+  return componentCache.size;
 }
 

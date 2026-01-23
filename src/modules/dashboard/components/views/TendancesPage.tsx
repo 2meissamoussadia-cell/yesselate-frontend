@@ -256,15 +256,15 @@ export default function TendancesPage() {
   };
 
   return (
-    <div className="p-6 space-y-8 animate-fadeIn">
+    <div className="p-4 sm:p-6 space-y-6 sm:space-y-8 animate-fadeIn min-w-0 overflow-hidden">
       {/* En-tête */}
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Tendances</h1>
-        <p className="text-slate-400 text-lg">Évolution temporelle des indicateurs clés</p>
+      <div className="min-w-0">
+        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2 break-words">Tendances</h1>
+        <p className="text-slate-400 text-sm sm:text-lg break-words">Évolution temporelle des indicateurs clés</p>
       </div>
 
       {/* Contrôles */}
-      <div className="flex flex-wrap items-center gap-4">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-4 min-w-0">
         <div className="flex items-center gap-2">
           <span className="text-sm text-slate-400">Période :</span>
           <div className="flex gap-2">
@@ -314,25 +314,25 @@ export default function TendancesPage() {
       </div>
 
       {/* Vue d'ensemble des tendances */}
-      <section className="space-y-4">
-        <h2 className="text-xl font-bold text-white flex items-center gap-2">
-          <TrendingUp className="w-5 h-5 text-blue-400" />
-          Vue d'ensemble
+      <section className="space-y-4 min-w-0">
+        <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2 break-words">
+          <TrendingUp className="w-5 h-5 text-blue-400 flex-shrink-0" />
+          <span className="min-w-0">Vue d'ensemble</span>
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 min-w-0">
           {trendIndicators.map(renderTrendCard)}
         </div>
       </section>
 
       {/* Graphique principal */}
-      <section className="space-y-4">
-        <h2 className="text-xl font-bold text-white flex items-center gap-2">
-          <BarChart3 className="w-5 h-5 text-purple-400" />
-          Évolution temporelle
+      <section className="space-y-4 min-w-0">
+        <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2 break-words">
+          <BarChart3 className="w-5 h-5 text-purple-400 flex-shrink-0" />
+          <span className="min-w-0">Évolution temporelle</span>
         </h2>
-        <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
-          <div className="h-96">
-            <ResponsiveContainer width="100%" height="100%">
+        <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-4 sm:p-6 min-w-0 overflow-hidden">
+          <div className="h-64 sm:h-96 min-h-[256px] sm:min-h-[384px] w-full min-w-0 overflow-hidden">
+            <ResponsiveContainer width="100%" height="100%" minHeight={384}>
               <AreaChart data={generateTrendData}>
                 <defs>
                   <linearGradient id="colorValidations" x1="0" y1="0" x2="0" y2="1">
@@ -428,7 +428,7 @@ export default function TendancesPage() {
         return (
           <section key={category} className="space-y-4">
             <h2 className="text-xl font-bold text-white">{categoryLabels[category as keyof typeof categoryLabels]}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 min-w-0">
               {indicators.map(renderTrendCard)}
             </div>
           </section>
@@ -436,12 +436,12 @@ export default function TendancesPage() {
       })}
 
       {/* Section contexte */}
-      <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 space-y-4">
-        <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-          <Calendar className="w-6 h-6 text-emerald-400" />
-          À propos des tendances
+      <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-4 sm:p-6 space-y-4 min-w-0 overflow-hidden">
+        <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 break-words">
+          <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-400 flex-shrink-0" />
+          <span className="min-w-0">À propos des tendances</span>
         </h2>
-        <p className="text-slate-300">
+        <p className="text-slate-300 text-sm sm:text-base break-words">
           Cette section présente l'évolution temporelle des indicateurs clés du système.
           Les tendances sont calculées sur différentes périodes pour permettre une analyse approfondie.
         </p>

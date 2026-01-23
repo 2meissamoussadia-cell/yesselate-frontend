@@ -18,6 +18,10 @@ export * from './context/DashboardNavigationContext';
 // Hooks
 export * from './hooks/useDashboardNavigation';
 export * from './hooks/useDashboardNavigationSync';
+export * from './hooks/useAutoRefresh';
+export * from './hooks/useDashboardRefresh';
+export * from './hooks/useKPIFilter';
+export * from './hooks/useKPINotifications';
 
 // Types
 export * from './types/dashboardNavigationTypes';
@@ -28,4 +32,5 @@ export * from './config/navigationMap';
 
 // Utils
 export * from './utils/loadComponent';
+export * from './utils/routeValidation';
 

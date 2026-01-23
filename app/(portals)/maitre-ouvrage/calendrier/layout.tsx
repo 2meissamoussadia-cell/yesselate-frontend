@@ -16,6 +16,7 @@ import {
 import { CalendrierContentRouter } from '@/modules/calendrier/components';
 import { useCalendrierFiltersStore } from '@/modules/calendrier/stores/calendrierFiltersStore';
 import { CalendrierCommandPalette } from '@/components/features/bmo/calendrier/command-center';
+import { NotificationsPanel } from '@/components/shared/NotificationsPanel';
 import { cn } from '@/lib/utils';
 
 export default function CalendrierLayout({
@@ -35,6 +36,7 @@ export default function CalendrierLayout({
 
   const { stats } = useCalendrierFiltersStore();
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+  const [notificationsPanelOpen, setNotificationsPanelOpen] = useState(false);
 
   // Mapper CalendrierStats vers Record<string, number> pour la sidebar
   const statsForSidebar = React.useMemo<Record<string, number> | undefined>(() => {
@@ -181,6 +183,13 @@ export default function CalendrierLayout({
           onClose={() => setCommandPaletteOpen(false)}
         />
       )}
+
+      {/* Notifications Panel */}
+      <NotificationsPanel
+        isOpen={notificationsPanelOpen}
+        onClose={() => setNotificationsPanelOpen(false)}
+        moduleName="Calendrier"
+      />
     </div>
   );
 }

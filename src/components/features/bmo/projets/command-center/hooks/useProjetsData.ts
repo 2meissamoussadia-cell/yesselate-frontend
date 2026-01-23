@@ -6,7 +6,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { projetsApiService } from '@/lib/api/projets';
 import { useProjetsCommandCenterStore } from '@/lib/stores/projetsCommandCenterStore';
-import type { Project } from '@/lib/mocks/projets/mockProjects';
+import type { Project, Bureau } from '@/lib/mocks/projets/mockProjects';
 
 interface UseProjetsDataReturn {
   data: Project[];
@@ -29,7 +29,7 @@ export function useProjetsData(): UseProjetsDataReturn {
       // Convert store filters to API filters
       const apiFilters = {
         status: filters.status.length > 0 ? filters.status : undefined,
-        bureau: filters.bureaux.length > 0 ? filters.bureaux : undefined,
+        bureau: filters.bureaux.length > 0 ? (filters.bureaux as Bureau[]) : undefined,
         priority: filters.priority.length > 0 ? filters.priority : undefined,
         search: filters.search || undefined,
         dateRange: filters.dateRange,

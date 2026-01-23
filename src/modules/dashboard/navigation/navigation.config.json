@@ -131,6 +131,405 @@
             "component": "ValidationsGlobalPage"
           }
         }
+      },
+      "validation": {
+        "label": "Validations",
+        "leaf": {
+          "global": {
+            "label": "Vue globale",
+            "component": "ValidationsGlobalPage"
+          },
+          "en-attente": {
+            "label": "En attente",
+            "component": "ValidationsGlobalPage"
+          },
+          "validees": {
+            "label": "Validées",
+            "component": "ValidationsGlobalPage"
+          },
+          "rejetees": {
+            "label": "Rejetées",
+            "component": "ValidationsGlobalPage"
+          }
+        }
+      },
+      "budget": {
+        "label": "Budget",
+        "leaf": {
+          "consommation": {
+            "label": "Consommation",
+            "component": "BudgetKpiPage"
+          },
+          "restant": {
+            "label": "Restant",
+            "component": "BudgetKpiPage"
+          },
+          "dashboard": {
+            "label": "Dashboard Budget",
+            "component": "BudgetKpiPage"
+          }
+        }
+      },
+      "delays": {
+        "label": "Retards",
+        "leaf": {
+          "dashboard": {
+            "label": "Dashboard Retards",
+            "component": "SummaryDashboardPage"
+          },
+          "critiques": {
+            "label": "Critiques",
+            "component": "SummaryDashboardPage"
+          },
+          "moyens": {
+            "label": "Moyens",
+            "component": "SummaryDashboardPage"
+          }
+        }
+      },
+      "comparison": {
+        "label": "Comparaisons",
+        "leaf": {
+          "dashboard": {
+            "label": "Dashboard Comparaisons",
+            "component": "SummaryDashboardPage"
+          },
+          "bureaux": {
+            "label": "Par bureaux",
+            "component": "BureauxPage"
+          },
+          "projets": {
+            "label": "Par projets",
+            "component": "ProjetKpiPage"
+          }
+        }
+      }
+    }
+  },
+  "actions": {
+    "label": "Actions prioritaires",
+    "sub": {
+      "all": {
+        "label": "Toutes",
+        "leaf": {
+          "dashboard": {
+            "label": "Dashboard Actions",
+            "component": "SummaryDashboardPage"
+          },
+          "urgentes": {
+            "label": "Urgentes",
+            "component": "SummaryDashboardPage"
+          },
+          "normales": {
+            "label": "Normales",
+            "component": "SummaryDashboardPage"
+          }
+        }
+      },
+      "urgent": {
+        "label": "Urgentes",
+        "leaf": {
+          "dashboard": {
+            "label": "Dashboard Urgentes",
+            "component": "SummaryDashboardPage"
+          },
+          "critiques": {
+            "label": "Critiques",
+            "component": "SummaryDashboardPage"
+          },
+          "importantes": {
+            "label": "Importantes",
+            "component": "SummaryDashboardPage"
+          }
+        }
+      },
+      "blocked": {
+        "label": "Bloquées",
+        "leaf": {
+          "dashboard": {
+            "label": "Dashboard Bloquées",
+            "component": "SummaryDashboardPage"
+          },
+          "blocages": {
+            "label": "Blocages",
+            "component": "SummaryDashboardPage"
+          },
+          "escalades": {
+            "label": "Escalades",
+            "component": "SummaryDashboardPage"
+          }
+        }
+      },
+      "pending": {
+        "label": "En attente",
+        "leaf": {
+          "all": {
+            "label": "Toutes",
+            "component": "SummaryDashboardPage"
+          },
+          "urgentes": {
+            "label": "Urgentes",
+            "component": "SummaryDashboardPage"
+          },
+          "normales": {
+            "label": "Normales",
+            "component": "SummaryDashboardPage"
+          }
+        }
+      },
+      "completed": {
+        "label": "Terminées",
+        "leaf": {
+          "dashboard": {
+            "label": "Dashboard Terminées",
+            "component": "SummaryDashboardPage"
+          },
+          "recentes": {
+            "label": "Récentes",
+            "component": "SummaryDashboardPage"
+          },
+          "anciennes": {
+            "label": "Anciennes",
+            "component": "SummaryDashboardPage"
+          }
+        }
+      }
+    }
+  },
+  "risks": {
+    "label": "Risques & Santé",
+    "sub": {
+      "critical": {
+        "label": "Critiques",
+        "leaf": {
+          "dashboard": {
+            "label": "Dashboard Critiques",
+            "component": "SummaryDashboardPage"
+          },
+          "risques": {
+            "label": "Risques",
+            "component": "SummaryDashboardPage"
+          },
+          "alertes": {
+            "label": "Alertes",
+            "component": "SummaryDashboardPage"
+          }
+        }
+      },
+      "warnings": {
+        "label": "Avertissements",
+        "leaf": {
+          "dashboard": {
+            "label": "Dashboard Avertissements",
+            "component": "SummaryDashboardPage"
+          },
+          "moyens": {
+            "label": "Moyens",
+            "component": "SummaryDashboardPage"
+          },
+          "faibles": {
+            "label": "Faibles",
+            "component": "SummaryDashboardPage"
+          }
+        }
+      },
+      "blocages": {
+        "label": "Blocages",
+        "leaf": {
+          "dashboard": {
+            "label": "Dashboard Blocages",
+            "component": "SummaryDashboardPage"
+          },
+          "actifs": {
+            "label": "Actifs",
+            "component": "SummaryDashboardPage"
+          },
+          "resolus": {
+            "label": "Résolus",
+            "component": "SummaryDashboardPage"
+          }
+        }
+      },
+      "blocked": {
+        "label": "Bloqués",
+        "leaf": {
+          "dashboard": {
+            "label": "Dashboard Bloqués",
+            "component": "SummaryDashboardPage"
+          },
+          "blocages": {
+            "label": "Blocages",
+            "component": "SummaryDashboardPage"
+          },
+          "escalades": {
+            "label": "Escalades",
+            "component": "SummaryDashboardPage"
+          }
+        }
+      },
+      "payments": {
+        "label": "Paiements",
+        "leaf": {
+          "dashboard": {
+            "label": "Dashboard Paiements",
+            "component": "SummaryDashboardPage"
+          }
+        }
+      },
+      "contracts": {
+        "label": "Contrats",
+        "leaf": {
+          "dashboard": {
+            "label": "Dashboard Contrats",
+            "component": "SummaryDashboardPage"
+          }
+        }
+      }
+    }
+  },
+  "decisions": {
+    "label": "Décisions & Timeline",
+    "sub": {
+      "pending": {
+        "label": "En attente",
+        "leaf": {
+          "dashboard": {
+            "label": "Dashboard En attente",
+            "component": "SummaryDashboardPage"
+          },
+          "urgentes": {
+            "label": "Urgentes",
+            "component": "SummaryDashboardPage"
+          },
+          "normales": {
+            "label": "Normales",
+            "component": "SummaryDashboardPage"
+          }
+        }
+      },
+      "executed": {
+        "label": "Exécutées",
+        "leaf": {
+          "dashboard": {
+            "label": "Dashboard Exécutées",
+            "component": "SummaryDashboardPage"
+          },
+          "recentes": {
+            "label": "Récentes",
+            "component": "SummaryDashboardPage"
+          },
+          "anciennes": {
+            "label": "Anciennes",
+            "component": "SummaryDashboardPage"
+          }
+        }
+      },
+      "timeline": {
+        "label": "Timeline",
+        "leaf": {
+          "dashboard": {
+            "label": "Dashboard Timeline",
+            "component": "SummaryDashboardPage"
+          },
+          "chronologique": {
+            "label": "Chronologique",
+            "component": "SummaryDashboardPage"
+          },
+          "par-type": {
+            "label": "Par type",
+            "component": "SummaryDashboardPage"
+          }
+        }
+      },
+      "audit": {
+        "label": "Audit",
+        "leaf": {
+          "dashboard": {
+            "label": "Dashboard Audit",
+            "component": "SummaryDashboardPage"
+          },
+          "traces": {
+            "label": "Traces",
+            "component": "SummaryDashboardPage"
+          },
+          "rapports": {
+            "label": "Rapports",
+            "component": "SummaryDashboardPage"
+          }
+        }
+      }
+    }
+  },
+  "realtime": {
+    "label": "Temps réel",
+    "sub": {
+      "live": {
+        "label": "Live",
+        "leaf": {
+          "dashboard": {
+            "label": "Dashboard Live",
+            "component": "SummaryDashboardPage"
+          },
+          "monitoring": {
+            "label": "Monitoring",
+            "component": "SummaryDashboardPage"
+          },
+          "metriques": {
+            "label": "Métriques",
+            "component": "SummaryDashboardPage"
+          }
+        }
+      },
+      "alerts": {
+        "label": "Alertes",
+        "leaf": {
+          "dashboard": {
+            "label": "Dashboard Alertes",
+            "component": "SummaryDashboardPage"
+          },
+          "actives": {
+            "label": "Actives",
+            "component": "SummaryDashboardPage"
+          },
+          "resolues": {
+            "label": "Résolues",
+            "component": "SummaryDashboardPage"
+          }
+        }
+      },
+      "notifications": {
+        "label": "Notifications",
+        "leaf": {
+          "dashboard": {
+            "label": "Dashboard Notifications",
+            "component": "SummaryDashboardPage"
+          },
+          "non-lues": {
+            "label": "Non lues",
+            "component": "SummaryDashboardPage"
+          },
+          "toutes": {
+            "label": "Toutes",
+            "component": "SummaryDashboardPage"
+          }
+        }
+      },
+      "sync": {
+        "label": "Synchronisation",
+        "leaf": {
+          "dashboard": {
+            "label": "Dashboard Synchronisation",
+            "component": "SummaryDashboardPage"
+          },
+          "etat": {
+            "label": "État",
+            "component": "SummaryDashboardPage"
+          },
+          "historique": {
+            "label": "Historique",
+            "component": "SummaryDashboardPage"
+          }
+        }
       }
     }
   }

@@ -14,6 +14,7 @@ import { ChevronDown, ChevronRight, ChevronLeft, Search } from 'lucide-react';
 import { dashboardNavigationConfig, type NavNode } from './dashboardNavigationConfig';
 import { useDashboardNavigation } from '../context/DashboardNavigationContext';
 import { useLogger } from '@/lib/utils/logger';
+import { getDefaultLeafForSub, isValidRoute, normalizeRoute } from '../utils/routeValidation';
 
 interface DashboardSidebarProps {
   collapsed?: boolean;
@@ -116,17 +117,40 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
     });
   }, []);
 
-  // ✅ Handler de navigation simplifié
+  // ✅ Handler de navigation simplifié avec validation
   const handleNavigation = useCallback((mainId: string, subId?: string | null, leafId?: string | null) => {
-    log.navigation(
-      `${main}/${sub || ''}/${leaf || ''}`,
-      `${mainId}/${subId || ''}/${leafId || ''}`,
-      { main: mainId, sub: subId, leaf: leafId }
-    );
-    
-    setMain(mainId);
-    setSub(subId || null);
-    setLeaf(leafId || null);
+    try {
+      // ✅ Valider la route avant de naviguer
+      if (!isValidRoute(mainId, subId || null, leafId || null)) {
+        log.warn('Route invalide, normalisation', {
+          main: mainId,
+          sub: subId,
+          leaf: leafId,
+        });
+        
+        // Normaliser la route
+        const normalized = normalizeRoute(mainId, subId, leafId);
+        mainId = normalized.main;
+        subId = normalized.sub;
+        leafId = normalized.leaf;
+      }
+      
+      log.navigation(
+        `${main}/${sub || ''}/${leaf || ''}`,
+        `${mainId}/${subId || ''}/${leafId || ''}`,
+        { main: mainId, sub: subId, leaf: leafId }
+      );
+      
+      setMain(mainId);
+      setSub(subId || null);
+      setLeaf(leafId || null);
+    } catch (error) {
+      log.error('Erreur lors de la navigation', error instanceof Error ? error : new Error(String(error)), {
+        main: mainId,
+        sub: subId,
+        leaf: leafId,
+      });
+    }
   }, [main, sub, leaf, setMain, setSub, setLeaf, log]);
 
   // Composant interne pour les nœuds
@@ -166,33 +190,30 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
           
           if (level === 0) {
             // Niveau 0 (main) → niveau 1 (sub) → niveau 2 (leaf)
-            // ✅ Utiliser la config JSON pour trouver le premier leaf
+            // ✅ Utiliser getDefaultLeafForSub depuis routeValidation (plus optimisé et cache)
             let firstLeaf: string | null = null;
             try {
-              const config = require('../navigation/navigation.config.json');
-              const configLeafs = config?.[node.id]?.sub?.[firstChild.id]?.leaf;
+              firstLeaf = getDefaultLeafForSub(node.id, firstChild.id);
               
-              if (configLeafs && typeof configLeafs === 'object') {
-                const leafKeys = Object.keys(configLeafs);
-                if (leafKeys.length > 0) {
-                  firstLeaf = leafKeys[0];
-                  log.debug('Leaf trouvé dans config JSON', {
-                    main: node.id,
-                    sub: firstChild.id,
-                    leaf: firstLeaf,
-                  });
-                }
-              }
-            } catch (e) {
-              // Fallback: utiliser la structure des enfants depuis dashboardNavigationConfig
-              if (firstChild.children && firstChild.children.length > 0) {
-                firstLeaf = firstChild.children[0].id;
-                log.debug('Leaf trouvé dans dashboardNavigationConfig', {
+              if (firstLeaf) {
+                log.debug('Leaf trouvé via routeValidation', {
                   main: node.id,
                   sub: firstChild.id,
                   leaf: firstLeaf,
                 });
               }
+            } catch (e) {
+              log.warn('Erreur lors de la résolution du leaf', { error: e, main: node.id, sub: firstChild.id });
+            }
+            
+            // Fallback: utiliser la structure des enfants depuis dashboardNavigationConfig
+            if (!firstLeaf && firstChild.children && firstChild.children.length > 0) {
+              firstLeaf = firstChild.children[0].id;
+              log.debug('Leaf trouvé dans dashboardNavigationConfig (fallback)', {
+                main: node.id,
+                sub: firstChild.id,
+                leaf: firstLeaf,
+              });
             }
             
             // Naviguer vers le premier enfant avec son premier leaf
@@ -208,33 +229,32 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
             }
           } else if (level === 1) {
             // Niveau 1 (sub) → niveau 2 (leaf)
-            // ✅ Utiliser la config JSON pour trouver le premier leaf
+            // ✅ Utiliser getDefaultLeafForSub depuis routeValidation (plus optimisé et cache)
             let firstLeaf: string | null = null;
+            const currentMain = parentMain || main || 'overview';
+            
             try {
-              const config = require('../navigation/navigation.config.json');
-              const configLeafs = config?.[parentMain || main || 'overview']?.sub?.[node.id]?.leaf;
+              firstLeaf = getDefaultLeafForSub(currentMain, node.id);
               
-              if (configLeafs && typeof configLeafs === 'object') {
-                const leafKeys = Object.keys(configLeafs);
-                if (leafKeys.length > 0) {
-                  firstLeaf = leafKeys[0];
-                  log.debug('Leaf trouvé dans config JSON', {
-                    main: parentMain || main || 'overview',
-                    sub: node.id,
-                    leaf: firstLeaf,
-                  });
-                }
-              }
-            } catch (e) {
-              // Fallback: utiliser la structure des enfants depuis dashboardNavigationConfig
-              if (firstChild.children && firstChild.children.length > 0) {
-                firstLeaf = firstChild.children[0].id;
-                log.debug('Leaf trouvé dans dashboardNavigationConfig', {
-                  main: parentMain || main || 'overview',
+              if (firstLeaf) {
+                log.debug('Leaf trouvé via routeValidation', {
+                  main: currentMain,
                   sub: node.id,
                   leaf: firstLeaf,
                 });
               }
+            } catch (e) {
+              log.warn('Erreur lors de la résolution du leaf', { error: e, main: currentMain, sub: node.id });
+            }
+            
+            // Fallback: utiliser la structure des enfants depuis dashboardNavigationConfig
+            if (!firstLeaf && firstChild.children && firstChild.children.length > 0) {
+              firstLeaf = firstChild.children[0].id;
+              log.debug('Leaf trouvé dans dashboardNavigationConfig (fallback)', {
+                main: currentMain,
+                sub: node.id,
+                leaf: firstLeaf,
+              });
             }
             
             // Naviguer vers le premier leaf
@@ -274,7 +294,7 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
                 type="button"
                 onClick={handleClick}
                 className={cn(
-                  'w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 text-left',
+                  'w-full flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg transition-all duration-300 text-left min-w-0',
                   'group relative cursor-pointer border',
                   'hover:scale-[1.02] hover:shadow-lg hover:shadow-blue-500/10',
                   isActive
@@ -291,19 +311,19 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
                 {hasChildren && (
                   <div className="flex-shrink-0">
                     {isExpanded ? (
-                      <ChevronDown className="h-4 w-4 text-slate-400" />
+                      <ChevronDown className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-400" />
                     ) : (
-                      <ChevronRight className="h-4 w-4 text-slate-400" />
+                      <ChevronRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-400" />
                     )}
                   </div>
                 )}
                 {node.icon && (
                   <node.icon className={cn(
-                    'h-4 w-4 flex-shrink-0',
+                    'h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0',
                     isActive ? 'text-blue-400' : 'text-slate-400'
                   )} />
                 )}
-                <span className="flex-1 truncate">{node.label}</span>
+                <span className="flex-1 truncate min-w-0 text-xs sm:text-sm">{node.label}</span>
                 {badge !== undefined && badge !== null && badge !== 0 && (
                   <Badge variant="secondary" className="ml-auto">
                     {badge}
@@ -334,24 +354,56 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
     );
   });
 
-  // Filtrer les nœuds selon la recherche
+  // ✅ Filtrer les nœuds selon la recherche avec debounce
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
+  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 300); // Debounce de 300ms
+    
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
   const filteredNodes = useMemo(() => {
-    if (!searchQuery.trim()) {
+    if (!debouncedSearchQuery.trim()) {
       return dashboardNavigationConfig;
     }
-    const query = searchQuery.toLowerCase();
-    // Logique de filtrage simplifiée
-    return dashboardNavigationConfig;
-  }, [searchQuery]);
+    
+    const query = debouncedSearchQuery.toLowerCase();
+    const filtered: typeof dashboardNavigationConfig = {};
+    
+    // ✅ Recherche récursive dans les nœuds
+    const searchInNode = (node: NavNode): boolean => {
+      const matchesLabel = node.label.toLowerCase().includes(query);
+      
+      if (node.children) {
+        const matchingChildren = node.children.filter(child => searchInNode(child));
+        if (matchingChildren.length > 0 || matchesLabel) {
+          return true;
+        }
+      }
+      
+      return matchesLabel;
+    };
+    
+    Object.entries(dashboardNavigationConfig).forEach(([key, node]) => {
+      if (searchInNode(node)) {
+        filtered[key as keyof typeof dashboardNavigationConfig] = node;
+      }
+    });
+    
+    return filtered;
+  }, [debouncedSearchQuery]);
 
   if (collapsed) {
     return (
-      <div className="w-16 bg-slate-900 border-r border-slate-800 flex flex-col items-center py-4">
+      <div className="w-16 bg-slate-900 border-r border-slate-800 flex flex-col items-center py-3 sm:py-4 min-w-0 overflow-hidden">
         <Button
           variant="ghost"
           size="icon"
           onClick={onToggleCollapse}
-          className="mb-4"
+          className="mb-3 sm:mb-4 flex-shrink-0"
         >
           <ChevronRight className="h-4 w-4" />
         </Button>
@@ -360,31 +412,32 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
   }
 
   return (
-    <aside className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col h-full">
-      <div className="p-4 border-b border-slate-800">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-white">Navigation</h2>
+    <aside className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col h-full min-w-0 overflow-hidden">
+      <div className="p-3 sm:p-4 border-b border-slate-800 min-w-0">
+        <div className="flex items-center justify-between mb-3 sm:mb-4 min-w-0">
+          <h2 className="text-base sm:text-lg font-semibold text-white break-words min-w-0">Navigation</h2>
           <Button
             variant="ghost"
             size="icon"
             onClick={onToggleCollapse}
+            className="flex-shrink-0"
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
         </div>
-        <div className="relative">
-          <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+        <div className="relative min-w-0">
+          <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-400 flex-shrink-0" />
           <input
             type="text"
             placeholder="Rechercher..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-8 pr-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+            className="w-full pl-7 sm:pl-8 pr-2 sm:pr-3 py-1.5 sm:py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 min-w-0"
           />
         </div>
       </div>
       
-      <div className="flex-1 overflow-y-auto p-2 space-y-1">
+      <div className="flex-1 overflow-y-auto p-1.5 sm:p-2 space-y-0.5 sm:space-y-1 min-w-0">
         {Object.values(filteredNodes).map((node) => (
           <NavNodeComponent key={node.id} node={node} level={0} parentMain={undefined} parentSub={undefined} />
         ))}

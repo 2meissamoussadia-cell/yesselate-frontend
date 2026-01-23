@@ -198,6 +198,18 @@ describe('Calendrier Adapters', () => {
         jalons_total_count: 10,
         retards_detectes_count: 1,
         sur_allocation_ressources_count: 0,
+        jalons_total: 10,
+        jalons_retard: 1,
+        evenements_total: 5,
+        evenements_aujourdhui: 2,
+        evenements_semaine: 3,
+        evenements_mois: 5,
+        jalons_sla_risque: 2,
+        absences_total: 1,
+        sur_allocations: 0,
+        conflits_detectes: 0,
+        taux_conformite_sla: 80,
+        temps_moyen_completion: 5,
       };
 
       const domainStats = adaptCalendrierStats(apiStats);

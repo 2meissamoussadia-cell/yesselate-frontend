@@ -24,7 +24,7 @@ import {
   AlertTriangle,
 } from 'lucide-react';
 
-interface Paiement {
+export interface Paiement {
   id: string;
   reference: string;
   montant: number;
@@ -39,7 +39,7 @@ interface Paiement {
   urgence?: 'haute' | 'moyenne' | 'basse';
 }
 
-interface PaiementDetailModalProps {
+export interface PaiementDetailModalProps {
   paiements: Paiement[];
   selectedId: string | null;
   onClose: () => void;

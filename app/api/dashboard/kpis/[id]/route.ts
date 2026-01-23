@@ -118,6 +118,38 @@ export async function GET(
           { id: 'sla', label: 'Conformité SLA', value: '94%' },
         ],
       },
+      blocages: {
+        id: 'blocages',
+        label: 'Blocages',
+        description: 'Nombre de dossiers actuellement bloqués',
+        currentValue: 5,
+        previousValue: 7,
+        target: 0,
+        unit: '',
+        trend: -2,
+        history: generateHistory(),
+        breakdown: {
+          byBureau: [
+            { bureau: 'BF', value: 1, percentage: 20 },
+            { bureau: 'BCG', value: 2, percentage: 40 },
+            { bureau: 'BJA', value: 1, percentage: 20 },
+            { bureau: 'BOP', value: 1, percentage: 20 },
+          ],
+          byType: [
+            { type: 'Validation manquante', value: 2, percentage: 40 },
+            { type: 'Documentation incomplète', value: 2, percentage: 40 },
+            { type: 'Conflit de ressources', value: 1, percentage: 20 },
+          ],
+          byStatus: [
+            { status: 'En attente', value: 3, percentage: 60 },
+            { status: 'En cours de résolution', value: 2, percentage: 40 },
+          ],
+        },
+        relatedMetrics: [
+          { id: 'demandes', label: 'Demandes totales', value: 247 },
+          { id: 'validations', label: 'Taux validation', value: '89%' },
+        ],
+      },
     };
 
     const kpi = kpiData[id];

@@ -194,11 +194,11 @@ export default function SummaryPointsPage() {
         )}
       >
         {/* Header avec icône et badge critique si nécessaire */}
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-3 sm:mb-4 min-w-0">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <div
               className={cn(
-                'w-12 h-12 rounded-lg flex items-center justify-center',
+                'w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center flex-shrink-0',
                 indicator.color === 'blue' && 'bg-blue-500',
                 indicator.color === 'orange' && 'bg-orange-500',
                 indicator.color === 'red' && 'bg-red-500',
@@ -253,23 +253,23 @@ export default function SummaryPointsPage() {
   };
 
   return (
-    <div className="p-6 space-y-8 animate-fadeIn">
+    <div className="p-4 sm:p-6 space-y-6 sm:space-y-8 animate-fadeIn min-w-0 overflow-hidden">
       {/* En-tête */}
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Points Clés</h1>
-        <p className="text-slate-400 text-lg">Indicateurs stratégiques essentiels organisés par thème</p>
+      <div className="min-w-0">
+        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2 break-words">Points Clés</h1>
+        <p className="text-slate-400 text-sm sm:text-lg break-words">Indicateurs stratégiques essentiels organisés par thème</p>
       </div>
 
       {/* Groupes d'indicateurs */}
       {indicatorGroups.map((group) => {
         const GroupIcon = group.icon;
         return (
-          <section key={group.id} className="space-y-4">
+          <section key={group.id} className="space-y-3 sm:space-y-4 min-w-0">
             {/* Titre de section */}
-            <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4 min-w-0">
               <div
                 className={cn(
-                  'w-10 h-10 rounded-lg flex items-center justify-center',
+                  'w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center flex-shrink-0',
                   group.color === 'blue' && 'bg-blue-500/20 border border-blue-500/50',
                   group.color === 'orange' && 'bg-orange-500/20 border border-orange-500/50',
                   group.color === 'red' && 'bg-red-500/20 border border-red-500/50',
@@ -290,11 +290,11 @@ export default function SummaryPointsPage() {
                   )}
                 />
               </div>
-              <h2 className="text-xl font-bold text-white">{group.title}</h2>
+              <h2 className="text-lg sm:text-xl font-bold text-white break-words min-w-0">{group.title}</h2>
             </div>
 
             {/* Grille d'indicateurs */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 min-w-0">
               {group.indicators.map(renderIndicatorCard)}
             </div>
           </section>
@@ -302,9 +302,9 @@ export default function SummaryPointsPage() {
       })}
 
       {/* Section informations supplémentaires */}
-      <div className="mt-8 bg-slate-900/50 border border-slate-800 rounded-xl p-6">
-        <h2 className="text-lg font-semibold text-white mb-4">Contexte et Métadonnées</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-300">
+      <div className="mt-6 sm:mt-8 bg-slate-900/50 border border-slate-800 rounded-xl p-4 sm:p-6 min-w-0 overflow-hidden">
+        <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 break-words">Contexte et Métadonnées</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-sm text-slate-300 min-w-0">
           <div>
             <p className="text-slate-400 mb-2">Dernière mise à jour</p>
             <p className="font-medium">{new Date().toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' })}</p>

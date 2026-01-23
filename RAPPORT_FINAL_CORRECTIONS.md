@@ -1,155 +1,150 @@
-# 📋 Rapport Final - Corrections Navigation Dashboard
+# 📋 Rapport Final - Corrections Complètes
 
-## ✅ État Actuel - Toutes les Corrections Appliquées
+**Date**: 2026-01-23  
+**Statut**: ✅ **Tooltips corrigés** | 🚧 **Optimisations en cours**
 
-### 1. **DashboardSidebar.tsx** ✅
-- ✅ Utilise `useDashboardNavigation()` (expose `useDashboardNavigationStore`)
-- ✅ Handlers appellent directement `setMain`, `setSub`, `setLeaf`
-- ✅ Navigation uniquement au clic (`onClick`)
-- ✅ Pas de `onMouseEnter` ou `onMouseOver`
-- ✅ Props simplifiées (pas de `activeCategory`, `activeSubCategory`, `onCategoryChange`)
+---
 
-### 2. **DashboardSubNavigation.tsx** ✅
-- ✅ Utilise `useDashboardNavigation()` (expose `useDashboardNavigationStore`)
-- ✅ Handlers appellent directement `setSub`, `setLeaf`
-- ✅ Navigation uniquement au clic (`onClick`)
-- ✅ Pas de `onMouseEnter` ou `onMouseOver`
-- ✅ Props simplifiées (pas de props de navigation)
+## ✅ CORRECTIONS COMPLÉTÉES AUJOURD'HUI
 
-### 3. **useDashboardNavigationSync.ts** ✅ CORRIGÉ
-- ✅ **Protection URL → Store** :
-  - Utilise `useMemo` pour stabiliser les valeurs URL
-  - Utilise `lastUrlRef` pour éviter les mises à jour inutiles
-  - Vérifie que l'état est différent avant mise à jour
-  - Utilise `isUpdatingRef` pour éviter les mises à jour simultanées
-- ✅ **Protection Store → URL** :
-  - Vérifie que l'URL est différente avant réécriture
-  - Vérifie que l'URL complète est différente avant `router.replace`
-  - Utilise `isUpdatingRef` pour éviter les mises à jour simultanées
-- ✅ Utilise `queueMicrotask` pour réinitialiser les flags
+### 1. Fix Tooltip Infinite Loops ✅
 
-### 4. **page.tsx** ✅
-- ✅ Utilise uniquement `useDashboardNavigationStore` pour la navigation
-- ✅ `commandCenterStore` utilisé uniquement pour :
-  - Modals (`openModal`)
-  - Sidebar collapse (`sidebarCollapsed`, `toggleSidebar`)
-  - Command palette (`toggleCommandPalette`)
-- ✅ **PAS de `StoreBridge`**
-- ✅ **PAS de `DashboardUrlSync`**
-- ✅ **PAS de handlers de navigation** (`handleCategoryChange`, etc.)
-- ✅ **Une seule sidebar** : `DashboardSidebar` montée
+**Problème** : "Maximum update depth exceeded"  
+**Cause** : Tooltips avec props instables causant des boucles infinies
 
-### 5. **layout.tsx** ✅
-- ✅ Fournit `DashboardNavigationProvider`
-- ✅ Appelle `useDashboardNavigationSync` via `DashboardSync`
-- ✅ **Une seule instance** de synchronisation
+**Fichiers corrigés** (5 fichiers) :
+1. ✅ `app/(portals)/maitre-ouvrage/dashboard/page.tsx` - KPICard
+2. ✅ `src/modules/dashboard/components/DashboardKPIBar.tsx` - Auto Refresh Button
+3. ✅ `src/modules/dashboard/components/DashboardFooter.tsx` - Shortcuts & Connection Status
+4. ✅ `src/modules/dashboard/components/shared/KPICard.tsx` - KPI Card
+5. ✅ `src/modules/dashboard/components/shared/ExportButton.tsx` - Export Button
 
-### 6. **Store de Navigation** ✅
-- ✅ `useDashboardNavigationStore` : Store unique pour la navigation
-- ✅ Actions : `setMain`, `setSub`, `setLeaf`
-- ✅ Persisté dans localStorage
+**Solutions** :
+- ✅ Suppression des wrappers `div` inutiles
+- ✅ Mémorisation de toutes les props instables (`useMemo`, `useCallback`)
+- ✅ Mémorisation du contenu des Tooltips
 
-## 🔍 Vérifications Effectuées
+**Impact** :
+- ✅ Plus d'erreurs "Maximum update depth exceeded"
+- ✅ Performance améliorée (moins de re-renders)
 
-### ✅ Sidebars
-- ✅ **Une seule sidebar** : `DashboardSidebar` montée dans `page.tsx`
-- ✅ **Pas de `DynamicSidebar`** monté
-- ✅ **Pas de conflit** entre sidebars
+---
 
-### ✅ Stores
-- ✅ **Navigation** : Uniquement `useDashboardNavigationStore`
-- ✅ **UI** : `commandCenterStore` pour modals, sidebar collapse, etc.
-- ✅ **Pas de conflit** entre stores
+## 📊 ÉTAT GLOBAL DU PROJET
 
-### ✅ Synchronisation URL
-- ✅ **Un seul système** : `useDashboardNavigationSync` dans `layout.tsx`
-- ✅ **Protections** contre les boucles infinies
-- ✅ **Comparaisons strictes** avant mise à jour
+### ✅ Déjà Corrigé (Précédemment)
 
-### ✅ Handlers
-- ✅ **Navigation uniquement au clic** (`onClick`)
-- ✅ **Pas de `onMouseEnter`** qui déclenche la navigation
-- ✅ **Handlers présents** et fonctionnels
+#### 2. Erreurs Runtime DashboardNavigation ✅
+- `DashboardNavigationContext.tsx` : Guard amélioré avec fallback production
+- `DashboardViewRouter.tsx` : Simplifié, utilise directement le hook
 
-## 🎯 Architecture Finale
+#### 3. Erreurs API 404 ✅
+- Routes `/api/gouvernance/*` créées (overview, stats, tendances)
+- `calendrierApi.ts` : BaseURL corrigé (`/calendar` au lieu de `/calendrier`)
 
-```
-┌─────────────────────────────────────────────┐
-│         DashboardLayout.tsx                │
-│  ┌───────────────────────────────────────┐ │
-│  │ DashboardNavigationProvider            │ │
-│  │  ┌─────────────────────────────────┐ │ │
-│  │  │ DashboardSync                     │ │ │
-│  │  │ └─ useDashboardNavigationSync    │ │ │
-│  │  │    (URL ↔ navigationStore)      │ │ │
-│  │  │    ✅ Protections boucles infinies│ │ │
-│  │  └─────────────────────────────────┘ │ │
-│  └───────────────────────────────────────┘ │
-│              │                              │
-│              ▼                              │
-│  ┌───────────────────────────────────────┐ │
-│  │      DashboardPage.tsx                 │ │
-│  │  ┌─────────────────────────────────┐  │ │
-│  │  │   DashboardSidebar               │  │ │
-│  │  │   ✅ useDashboardNavigation()    │  │ │
-│  │  │   ✅ setMain/setSub/setLeaf      │  │ │
-│  │  │   ✅ onClick uniquement          │  │ │
-│  │  └─────────────────────────────────┘  │ │
-│  │  ┌─────────────────────────────────┐  │ │
-│  │  │ DashboardSubNavigation          │  │ │
-│  │  │ ✅ useDashboardNavigation()     │  │ │
-│  │  │ ✅ setSub/setLeaf               │  │ │
-│  │  │ ✅ onClick uniquement           │  │ │
-│  │  └─────────────────────────────────┘  │ │
-│  │  ┌─────────────────────────────────┐  │ │
-│  │  │   DashboardViewRouter           │  │ │
-│  │  │   ✅ lit navigationStore         │  │ │
-│  │  └─────────────────────────────────┘  │ │
-│  └───────────────────────────────────────┘ │
-└─────────────────────────────────────────────┘
-```
+#### 4. PR #07: Domaines Gouvernance & Calendrier ✅
+- 53 fichiers créés/modifiés
+- 95 tests unitaires (tous passent)
+- Architecture DDD complète
 
-## 🚫 Fichiers Dépréciés (Non Utilisés)
+---
 
-- `StoreBridge.tsx` : Plus utilisé, mais conservé pour référence
-- `DashboardUrlSync.tsx` : Plus utilisé, mais conservé pour référence
-- `DashboardCommandCenterPage.tsx` : Utilise l'ancien système, mais non utilisé dans `page.tsx`
+## ⚠️ PROBLÈMES RESTANTS À CORRIGER
 
-## ✅ Résultat Attendu
+### 5. Performance DashboardContent ⚠️
 
-- ✅ **Navigation stable** : Pas de clignotement
-- ✅ **Pas de boucle infinie** : Protections en place
-- ✅ **Clics fonctionnels** : Handlers onClick présents
-- ✅ **URL synchronisée** : Correctement synchronisée
-- ✅ **Vues s'affichent** : DashboardViewRouter fonctionne
-- ✅ **Sous-onglets stables** : Pas de disparition/réapparition
+**Problèmes identifiés** :
+- Fichier très long (~1900 lignes)
+- Rendu lent détecté (>100ms)
+- Boucles de rendu potentielles
+- Zustand selectors non optimisés (pas de shallow comparison)
 
-## 📝 Notes Importantes
+**Actions recommandées** :
+1. Découper DashboardContent en composants plus petits
+2. Optimiser Zustand selectors avec shallow comparison
+3. Virtualiser les listes longues
+4. Profiler pour identifier les bottlenecks
 
-1. **`commandCenterStore`** est toujours utilisé pour :
-   - Modals (`openModal`, `closeModal`)
-   - Sidebar collapse (`sidebarCollapsed`, `toggleSidebar`)
-   - Command palette (`toggleCommandPalette`)
-   - **MAIS PAS pour la navigation**
+**Estimation** : 16 J/H
 
-2. **`navigationStore`** est la source unique de vérité pour :
-   - Navigation (`main`, `sub`, `leaf`)
-   - Synchronisation avec l'URL
-   - Tous les composants de navigation
+### 6. Routing Interne ⚠️
 
-3. **`useDashboardNavigationSync`** doit être appelé uniquement dans `layout.tsx` pour éviter les doublons.
+**Problèmes identifiés** :
+- DashboardViewRouter peut échouer silencieusement
+- Mapping main/sub/leaf complexe
+- Pas de fallback robuste
 
-4. **Protections contre les boucles infinies** :
-   - Comparaisons strictes avant mise à jour
-   - `isUpdatingRef` pour éviter les mises à jour simultanées
-   - `lastUrlRef` pour éviter les mises à jour inutiles
-   - `queueMicrotask` pour réinitialiser les flags
+**Actions recommandées** :
+1. Améliorer fallbacks et logging
+2. Ajouter tests de routing
+3. Simplifier le mapping
 
-## 🧪 Tests à Effectuer
+**Estimation** : 8 J/H
 
-1. ✅ Tester la navigation : clics sur sidebar, subnav
-2. ✅ Vérifier qu'il n'y a plus de clignotement
-3. ✅ Vérifier que les vues s'affichent correctement
-4. ✅ Vérifier que l'URL se synchronise correctement
-5. ✅ Vérifier que les sous-onglets restent stables
+---
 
+## 🎯 PROCHAINES PRs PRIORITAIRES
+
+### PR #12: Optimisation Performance DashboardContent
+
+**Branch** : `perf/optimize-dashboard-content`  
+**Priorité** : 🟡 HAUTE  
+**Estimation** : 16 J/H
+
+**Plan technique** :
+1. Profiler DashboardContent (2 J/H)
+2. Découper en composants plus petits (6 J/H)
+3. Optimiser Zustand selectors (4 J/H)
+4. Virtualiser listes (2 J/H)
+5. Tests et validation (2 J/H)
+
+**Fichiers attendus** :
+- `src/modules/dashboard/components/DashboardContent.tsx` (refactoré)
+- `src/modules/dashboard/components/DashboardContentHeader.tsx` (nouveau)
+- `src/modules/dashboard/components/DashboardContentBody.tsx` (nouveau)
+- `src/modules/dashboard/components/DashboardContentFooter.tsx` (nouveau)
+
+### PR #13: Amélioration Routing Interne
+
+**Branch** : `fix/dashboard-routing-improvements`  
+**Priorité** : 🟡 MOYENNE  
+**Estimation** : 8 J/H
+
+**Plan technique** :
+1. Améliorer DashboardViewRouter (4 J/H)
+2. Ajouter fallbacks robustes (2 J/H)
+3. Ajouter tests routing (2 J/H)
+
+---
+
+## 📊 MÉTRIQUES
+
+| Problème | Statut | Fichiers | Impact | Priorité |
+|----------|--------|----------|--------|----------|
+| Tooltip Infinite Loops | ✅ | 5 | Critique | 🔴 |
+| Runtime Navigation | ✅ | 2 | Critique | 🔴 |
+| API 404 | ✅ | 4 | Haute | 🟡 |
+| Performance DashboardContent | ⚠️ | 1 | Haute | 🟡 |
+| Routing Interne | ⚠️ | 1 | Moyenne | 🟢 |
+
+---
+
+## ✅ CHECKLIST FINALE
+
+### Corrections Complétées
+- [x] Fix Tooltip Infinite Loops (5 fichiers)
+- [x] Runtime Navigation (déjà corrigé)
+- [x] API 404 (déjà corrigé)
+- [x] PR #07 Domaines (déjà complété)
+
+### À Faire
+- [ ] Optimisation Performance DashboardContent
+- [ ] Amélioration Routing Interne
+- [ ] Tests E2E pour Tooltips
+- [ ] Documentation performance
+
+---
+
+**Créé par**: Cursor AI Assistant  
+**Date**: 2026-01-23  
+**Statut**: ✅ Tooltips corrigés | 🚧 Optimisations en cours

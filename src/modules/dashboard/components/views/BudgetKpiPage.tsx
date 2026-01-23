@@ -292,21 +292,23 @@ function BudgetKpiPage() {
 
   return (
     <TooltipProvider delayDuration={200}>
-      <div className="p-6 space-y-6 animate-fadeIn">
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-white mb-2">KPIs Budget</h1>
-            <p className="text-slate-400">Indicateurs budgétaires et financiers</p>
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 animate-fadeIn min-w-0 overflow-hidden">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 min-w-0">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-xl sm:text-2xl font-bold text-white mb-2 break-words">KPIs Budget</h1>
+            <p className="text-slate-400 text-sm sm:text-base break-words">Indicateurs budgétaires et financiers</p>
           </div>
-          <ExportButton
-            onExportCSV={handleExportCSV}
-            onExportJSON={handleExportJSON}
-            label="Exporter"
-          />
+          <div className="flex-shrink-0">
+            <ExportButton
+              onExportCSV={handleExportCSV}
+              onExportJSON={handleExportJSON}
+              label="Exporter"
+            />
+          </div>
         </div>
 
         {/* Cartes KPIs */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 min-w-0">
           {budgetKPIs.map((kpi) => {
             const Icon = kpi.icon;
             const isPositive = (kpi.trendDirection === 'up' && (kpi.id === 'total' || kpi.id === 'rentabilite' || kpi.id === 'conforme')) || 
@@ -422,21 +424,21 @@ function BudgetKpiPage() {
         </div>
 
       {/* Détails par projet */}
-      <div className="mt-8 bg-slate-800/40 border border-slate-700/40 rounded-xl p-6">
-        <h2 className="text-lg font-semibold text-white mb-4">Budget par Projet</h2>
-        <div className="space-y-4">
+      <div className="mt-6 sm:mt-8 bg-slate-800/40 border border-slate-700/40 rounded-xl p-4 sm:p-6 min-w-0 overflow-hidden">
+        <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 break-words">Budget par Projet</h2>
+        <div className="space-y-3 sm:space-y-4 min-w-0">
           {budgetDetails.map((detail, index) => (
             <div
               key={index}
               className={cn(
-                'p-4 rounded-lg border',
+                'p-3 sm:p-4 rounded-lg border min-w-0 overflow-hidden',
                 detail.statut === 'normal' && 'bg-slate-700/30 border-slate-600/50',
                 detail.statut === 'attention' && 'bg-orange-500/10 border-orange-500/30',
                 detail.statut === 'alerte' && 'bg-red-500/10 border-red-500/30'
               )}
             >
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold text-white">{detail.projet}</h3>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-3 min-w-0">
+                <h3 className="font-semibold text-white break-words min-w-0">{detail.projet}</h3>
                 <span
                   className={cn(
                     'px-2 py-1 rounded text-xs font-medium',
@@ -448,14 +450,14 @@ function BudgetKpiPage() {
                   {detail.pourcentage}%
                 </span>
               </div>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-400">Budget alloué</span>
-                  <span className="text-white font-medium">{detail.budget} FCFA</span>
+              <div className="space-y-2 min-w-0">
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0 text-sm min-w-0">
+                  <span className="text-slate-400 break-words">Budget alloué</span>
+                  <span className="text-white font-medium break-words sm:text-right">{detail.budget} FCFA</span>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-400">Budget consommé</span>
-                  <span className="text-white font-medium">{detail.consomme} FCFA</span>
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0 text-sm min-w-0">
+                  <span className="text-slate-400 break-words">Budget consommé</span>
+                  <span className="text-white font-medium break-words sm:text-right">{detail.consomme} FCFA</span>
                 </div>
                 <div className="h-2 bg-slate-700 rounded-full overflow-hidden mt-2">
                   <div
@@ -475,25 +477,25 @@ function BudgetKpiPage() {
       </div>
 
       {/* Paiements en retard */}
-      <div className="mt-8 bg-slate-800/40 border border-slate-700/40 rounded-xl p-6">
-        <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+      <div className="mt-6 sm:mt-8 bg-slate-800/40 border border-slate-700/40 rounded-xl p-4 sm:p-6 min-w-0 overflow-hidden">
+        <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center gap-2 break-words">
           <Clock className="h-5 w-5 text-red-400" />
           Paiements en retard
         </h2>
         {paiementsRetard.length > 0 ? (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4 min-w-0">
             {paiementsRetard.map((paiement) => (
               <div
                 key={paiement.id}
                 className={cn(
-                  'p-4 rounded-lg border-2',
+                  'p-3 sm:p-4 rounded-lg border-2 min-w-0 overflow-hidden',
                   paiement.priorite === 'critique' && 'bg-red-500/10 border-red-500/30',
                   paiement.priorite === 'haute' && 'bg-amber-500/10 border-amber-500/30',
                   paiement.priorite === 'moyenne' && 'bg-blue-500/10 border-blue-500/30'
                 )}
               >
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-semibold text-white">{paiement.projet}</h3>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-2 min-w-0">
+                  <h3 className="font-semibold text-white break-words min-w-0">{paiement.projet}</h3>
                   <span
                     className={cn(
                       'px-2 py-1 rounded text-xs font-medium',
@@ -524,25 +526,25 @@ function BudgetKpiPage() {
       </div>
 
       {/* Rentabilité par projet */}
-      <div className="mt-6 bg-slate-800/40 border border-slate-700/40 rounded-xl p-6">
-        <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <Percent className="h-5 w-5 text-emerald-400" />
-          Rentabilité par projet
+      <div className="mt-6 bg-slate-800/40 border border-slate-700/40 rounded-xl p-4 sm:p-6 min-w-0 overflow-hidden">
+        <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center gap-2 break-words">
+          <Percent className="h-5 w-5 text-emerald-400 flex-shrink-0" />
+          <span className="min-w-0">Rentabilité par projet</span>
         </h2>
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4 min-w-0">
           {rentabilite.map((rent) => (
             <div
               key={rent.id}
-              className="p-4 rounded-lg border border-slate-700/40 bg-slate-700/20"
+              className="p-3 sm:p-4 rounded-lg border border-slate-700/40 bg-slate-700/20 min-w-0 overflow-hidden"
             >
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-white">{rent.projet}</h3>
-                <div className="flex items-center gap-2">
-                  <span className="text-lg font-bold text-emerald-400">{rent.marge}%</span>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0 mb-3 sm:mb-4 min-w-0">
+                <h3 className="font-semibold text-white break-words min-w-0">{rent.projet}</h3>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <span className="text-base sm:text-lg font-bold text-emerald-400">{rent.marge}%</span>
                   <span className="text-xs text-slate-400">marge</span>
                 </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 text-sm min-w-0">
                 <div>
                   <p className="text-slate-400 mb-1">Investissement</p>
                   <p className="text-white font-medium">{formatCurrency(rent.investissement)}</p>
@@ -578,9 +580,9 @@ function BudgetKpiPage() {
       </div>
 
       {/* Informations supplémentaires */}
-      <div className="mt-6 bg-slate-800/40 border border-slate-700/40 rounded-xl p-6">
-        <h2 className="text-lg font-semibold text-white mb-4">Contexte</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-300">
+      <div className="mt-6 bg-slate-800/40 border border-slate-700/40 rounded-xl p-4 sm:p-6 min-w-0 overflow-hidden">
+        <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 break-words">Contexte</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-sm text-slate-300 min-w-0">
           <div>
             <p className="text-slate-400 mb-2">Dernière mise à jour</p>
             <p>{new Date().toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' })}</p>

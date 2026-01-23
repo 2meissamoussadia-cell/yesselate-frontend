@@ -64,7 +64,7 @@ import {
 import { getUpcomingMilestones } from '@/lib/mocks/projets/mockMilestones';
 import { mockBudgetSummary } from '@/lib/mocks/projets/mockBudgets';
 import { mockBureauComparison } from '@/lib/mocks/projets/mockAnalytics';
-import { mockTeamAssignments } from '@/lib/mocks/projets/mockTeams';
+import { mockTeams, mockAssignments } from '@/lib/mocks/projets/mockTeams';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // MAIN ROUTER
@@ -215,7 +215,7 @@ function OverviewView() {
               title="Timeline"
               description="Jalons et échéances"
               color="orange"
-              onClick={() => navigate('timeline', 'upcoming')}
+              onClick={() => navigate('timeline', 'milestones')}
             />
           </div>
         </section>
@@ -426,7 +426,8 @@ function AnalyticsView() {
   const upcomingMilestones = getUpcomingMilestones(10);
   const budgetSummary = mockBudgetSummary;
   const bureauComparison = mockBureauComparison;
-  const teamAssignments = mockTeamAssignments;
+  const teamAssignments = mockAssignments;
+  const teams = mockTeams;
 
   return (
     <div className="p-6 space-y-6 max-w-[1800px] mx-auto">
@@ -469,8 +470,8 @@ function AnalyticsView() {
           <ProjetsBureauPerformanceChart
             data={bureauComparison.map((b) => ({
               bureau: b.bureau,
-              count: b.projectsCount,
-              onTime: b.onTimeDelivery,
+              count: b.projects,
+              onTime: b.onTimeRate,
             }))}
           />
         </section>
@@ -478,10 +479,10 @@ function AnalyticsView() {
         {/* Budget Health */}
         <section className="rounded-xl border border-slate-700/50 bg-slate-800/30 p-6">
           <ProjetsBudgetHealthChart
-            allocated={budgetSummary.totalAllocated}
+            allocated={budgetSummary.totalBudget}
             consumed={budgetSummary.totalConsumed}
             committed={budgetSummary.totalCommitted}
-            forecast={budgetSummary.totalForecast}
+            forecast={budgetSummary.forecastEndYear}
           />
         </section>
 
@@ -504,7 +505,7 @@ function AnalyticsView() {
             milestones={upcomingMilestones.map((m) => ({
               id: m.id,
               title: m.title,
-              date: m.dueDate,
+              date: m.plannedDate,
               status: m.status as 'pending' | 'at-risk' | 'completed',
               projectTitle: m.projectId,
             }))}
@@ -515,11 +516,11 @@ function AnalyticsView() {
       {/* Team Utilization */}
       <section className="rounded-xl border border-slate-700/50 bg-slate-800/30 p-6">
         <ProjetsTeamUtilizationChart
-          teams={teamAssignments.map((t) => ({
-            name: t.teamName,
+          teams={teams.map((t) => ({
+            name: t.name,
             utilization: t.utilizationRate,
             available: 100 - t.utilizationRate,
-            projects: t.projectsCount,
+            projects: t.projectCount,
           }))}
         />
       </section>
@@ -546,7 +547,7 @@ function TimelineView() {
           milestones={milestones.map((m) => ({
             id: m.id,
             title: m.title,
-            date: m.dueDate,
+            date: m.plannedDate,
             status: m.status as 'pending' | 'at-risk' | 'completed',
             projectTitle: m.projectId,
           }))}
@@ -568,10 +569,10 @@ function BudgetView() {
       />
       <section className="rounded-xl border border-slate-700/50 bg-slate-800/30 p-6">
         <ProjetsBudgetHealthChart
-          allocated={budgetSummary.totalAllocated}
+          allocated={budgetSummary.totalBudget}
           consumed={budgetSummary.totalConsumed}
           committed={budgetSummary.totalCommitted}
-          forecast={budgetSummary.totalForecast}
+          forecast={budgetSummary.forecastEndYear}
         />
       </section>
     </div>
@@ -592,8 +593,8 @@ function BureauxView() {
         <ProjetsBureauPerformanceChart
           data={bureauComparison.map((b) => ({
             bureau: b.bureau,
-            count: b.projectsCount,
-            onTime: b.onTimeDelivery,
+            count: b.projects,
+            onTime: b.onTimeRate,
           }))}
         />
       </section>

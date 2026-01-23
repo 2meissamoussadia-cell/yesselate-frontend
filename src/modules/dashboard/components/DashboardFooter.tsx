@@ -6,10 +6,11 @@
 
 'use client';
 
-import { memo } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import { Info } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 
 interface DashboardFooterProps {
   version?: string;
@@ -31,23 +32,37 @@ export const DashboardFooter = memo(function DashboardFooter({
   refreshInterval = 60000,
   onShowShortcuts,
 }: DashboardFooterProps) {
-  const handleShortcutsClick = () => {
+  const openModal = useDashboardCommandCenterStore((state) => state.openModal);
+
+  // Mémoriser handleShortcutsClick pour éviter les re-renders
+  const handleShortcutsClick = useCallback(() => {
     if (onShowShortcuts) {
       onShowShortcuts();
     } else {
       // Fallback: ouvrir le modal via le store
-      const { useDashboardCommandCenterStore } = require('@/lib/stores/dashboardCommandCenterStore');
-      const openModal = useDashboardCommandCenterStore.getState().openModal;
       openModal('shortcuts');
     }
-  };
+  }, [onShowShortcuts, openModal]);
+
+  // Mémoriser les className pour éviter les re-renders
+  const connectionStatusClassName = useMemo(() => cn(
+    "inline-flex items-center gap-2 px-2.5 py-1 rounded-md border transition-all cursor-help",
+    isOnline 
+      ? "bg-emerald-500/10 border-emerald-500/20 hover:border-emerald-500/40" 
+      : "bg-amber-500/10 border-amber-500/20 hover:border-amber-500/40"
+  ), [isOnline]);
+
+  const connectionTextClassName = useMemo(() => cn(
+    "font-medium text-xs",
+    isOnline ? "text-emerald-400" : "text-amber-400"
+  ), [isOnline]);
 
   return (
-    <div className="border-t border-slate-800/60 bg-gradient-to-r from-slate-900/60 via-slate-900/40 to-slate-900/60 backdrop-blur-xl px-4 py-3 text-xs text-slate-500 flex items-center justify-between shadow-lg shadow-black/10">
-      <div className="flex items-center gap-3 flex-wrap">
+    <div className="border-t border-slate-800/60 bg-gradient-to-r from-slate-900/60 via-slate-900/40 to-slate-900/60 backdrop-blur-xl px-2 sm:px-4 py-2 sm:py-3 text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-0 shadow-lg shadow-black/10 min-w-0 overflow-hidden">
+      <div className="flex items-center gap-2 sm:gap-3 flex-wrap min-w-0 flex-1">
         <Tooltip>
           <TooltipTrigger asChild>
-            <span className="font-medium text-slate-400 cursor-help">Dashboard v{version}</span>
+            <span className="font-medium text-slate-400 cursor-help whitespace-nowrap">Dashboard v{version}</span>
           </TooltipTrigger>
           <TooltipContent>
             <div className="text-xs space-y-1">
@@ -59,17 +74,15 @@ export const DashboardFooter = memo(function DashboardFooter({
         <span className="text-slate-600 hidden sm:inline">•</span>
         <Tooltip>
           <TooltipTrigger asChild>
-            <div className="inline-block">
-              <button
-                type="button"
-                className="hidden sm:inline-flex items-center gap-1 text-slate-500 hover:text-slate-300 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/50 rounded px-1"
-                aria-label="Raccourcis clavier"
-                onClick={handleShortcutsClick}
-              >
-                <Info className="h-3 w-3" />
-                <span className="text-[10px]">Raccourcis</span>
-              </button>
-            </div>
+            <button
+              type="button"
+              className="hidden sm:inline-flex items-center gap-1 text-slate-500 hover:text-slate-300 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/50 rounded px-1 whitespace-nowrap"
+              aria-label="Raccourcis clavier"
+              onClick={handleShortcutsClick}
+            >
+              <Info className="h-3 w-3 flex-shrink-0" />
+              <span className="text-[10px]">Raccourcis</span>
+            </button>
           </TooltipTrigger>
           <TooltipContent side="top" className="max-w-xs">
             <div className="space-y-1.5 text-xs">
@@ -128,17 +141,12 @@ export const DashboardFooter = memo(function DashboardFooter({
           </TooltipContent>
         </Tooltip>
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
         {/* Indicateur de connexion réseau amélioré */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <div className={cn(
-              "inline-flex items-center gap-2 px-2.5 py-1 rounded-md border transition-all cursor-help",
-              isOnline 
-                ? "bg-emerald-500/10 border-emerald-500/20 hover:border-emerald-500/40" 
-                : "bg-amber-500/10 border-amber-500/20 hover:border-amber-500/40"
-            )}>
-              <span className="relative flex h-2 w-2">
+            <div className={cn(connectionStatusClassName, "whitespace-nowrap")}>
+              <span className="relative flex h-2 w-2 flex-shrink-0">
                 {isOnline ? (
                   <>
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
@@ -148,10 +156,7 @@ export const DashboardFooter = memo(function DashboardFooter({
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400" />
                 )}
               </span>
-              <span className={cn(
-                "font-medium text-xs",
-                isOnline ? "text-emerald-400" : "text-amber-400"
-              )}>
+              <span className={cn(connectionTextClassName, "whitespace-nowrap")}>
                 {isOnline ? "Connecté" : "Hors ligne"}
               </span>
             </div>

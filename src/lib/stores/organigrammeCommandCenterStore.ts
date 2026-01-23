@@ -40,6 +40,7 @@ export interface OrganigrammeNavigationState {
 export type OrganigrammeModalType =
   | 'stats'
   | 'export'
+  | 'report'
   | 'position-edit'
   | 'bureau-edit'
   | 'member-edit'

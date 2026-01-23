@@ -15,8 +15,11 @@ const customJestConfig = {
   collectCoverageFrom: [
     'src/hooks/**/*.{ts,tsx}',
     'src/components/features/bmo/governance/**/*.{ts,tsx}',
+    'src/domain/**/*.{ts,tsx}',
     '!**/*.d.ts',
     '!**/node_modules/**',
+    '!**/__tests__/**',
+    '!**/__mocks__/**',
   ],
   coverageThreshold: {
     global: {

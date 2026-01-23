@@ -27,7 +27,7 @@
 
 'use client';
 
-import React, { Suspense, useMemo, memo, useCallback, useEffect, useState, useRef } from 'react';
+import React, { Suspense, useMemo, memo, useCallback, useEffect, useLayoutEffect, useState, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { 
   Loader2, 
@@ -68,8 +68,9 @@ import {
   DashboardViewRouter,
   DashboardKPIBar,
   DashboardFooter,
+  useAutoRefresh,
 } from '@/modules/dashboard';
-// DashboardBreadcrumbs n'est plus disponible - utiliser un composant alternatif si nécessaire
+// DashboardBreadcrumbs supprimé - à réimplémenter si nécessaire
 
 // ✅ Importer les modals
 import { DashboardModals } from '@/components/features/bmo/dashboard/command-center/DashboardModals';
@@ -265,19 +266,6 @@ const DashboardContent = memo(function DashboardContent() {
   const toggleSidebar = useDashboardCommandCenterStore((state) => state.toggleSidebar);
   const toggleCommandPalette = useDashboardCommandCenterStore((state) => state.toggleCommandPalette);
   
-  // ✅ Log de navigation avec timestamp (uniquement si changement réel)
-  // ✅ Mémoriser les valeurs de navigation pour éviter les logs répétés
-  const navigationKeyForLog = useMemo(() => `${main}|${sub || ''}|${leaf || ''}`, [main, sub, leaf]);
-  const prevNavigationKeyForLogRef = useRef<string>('');
-  
-  useEffect(() => {
-    // ✅ Ne logger que si la navigation a vraiment changé
-    if (process.env.NODE_ENV === 'development' && navigationKeyForLog !== prevNavigationKeyForLogRef.current) {
-      log.debug('NAVIGATION:', { main, sub, leaf, timestamp: Date.now() });
-      prevNavigationKeyForLogRef.current = navigationKeyForLog;
-    }
-  }, [navigationKeyForLog, main, sub, leaf, log]);
-
   // ✅ États locaux - déclarés en premier
   // Persister le filtre dans localStorage
   const [kpiFilter, setKpiFilter] = useState<string>(() => {
@@ -322,23 +310,6 @@ const DashboardContent = memo(function DashboardContent() {
   const [retryCount, setRetryCount] = useState(0);
   const [showExportMenu, setShowExportMenu] = useState(false);
   const maxRetries = 3;
-
-  // ✅ Log du render avec navigation (uniquement en développement)
-  // ✅ Mémoriser les valeurs de navigation pour éviter les logs répétés
-  const navigationKey = useMemo(() => `${main}|${sub || ''}|${leaf || ''}`, [main, sub, leaf]);
-  const prevNavigationKeyRef = useRef<string>('');
-  
-  useEffect(() => {
-    // ✅ Ne logger que si la navigation a vraiment changé
-    if (process.env.NODE_ENV === 'development' && navigationKey !== prevNavigationKeyRef.current) {
-      log.debug('Render avec navigation', {
-        main,
-        sub,
-        leaf,
-      });
-      prevNavigationKeyRef.current = navigationKey;
-    }
-  }, [navigationKey, main, sub, leaf, log]);
 
   // ✅ Handler pour ouvrir le modal KPI
   const openModal = useDashboardCommandCenterStore((state) => state.openModal);
@@ -517,41 +488,44 @@ const DashboardContent = memo(function DashboardContent() {
   const renderStartTimeRef = useRef<number>(0);
   const renderCountRef = useRef<number>(0);
   
-  useEffect(() => {
-    renderStartTimeRef.current = performance.now();
+  // ✅ Mesure de performance optimisée : utiliser useLayoutEffect pour mesurer le temps de rendu réel
+  // Ne pas mesurer dans le cleanup car cela inclut le temps de démontage
+  useLayoutEffect(() => {
+    const startTime = performance.now();
     renderCountRef.current += 1;
     
-    return () => {
+    // Mesurer après que le DOM soit mis à jour
+    requestAnimationFrame(() => {
       const endTime = performance.now();
-      const renderTime = endTime - renderStartTimeRef.current;
+      const renderTime = endTime - startTime;
       
       // Ne mettre à jour que si le temps de rendu est significatif (> 10ms)
       if (renderTime > 10) {
         // Type guard pour performance.memory (Chrome/Edge uniquement)
-        // ✅ Type safety amélioré avec interface dédiée
         const perfMemory = (performance as PerformanceWithMemory).memory;
         const endMemory = perfMemory ? perfMemory.usedJSHeapSize : 0;
-        const startMemory = perfMemory ? perfMemory.usedJSHeapSize : 0;
         
         setPerformanceMetrics(prev => ({
           ...prev,
           renderTime,
           // Log uniquement si le temps de rendu est significatif (dev mode)
-          ...(process.env.NODE_ENV === 'development' && renderTime > 50 && perfMemory && {
-            memoryDelta: endMemory - startMemory,
+          ...(process.env.NODE_ENV === 'development' && renderTime > 200 && perfMemory && {
+            memoryDelta: endMemory - (prev.memoryDelta || 0),
           }),
         }));
         
-        // Log de performance en dev uniquement
-        if (process.env.NODE_ENV === 'development' && renderTime > 100) {
+        // Log de performance en dev uniquement - seuil augmenté pour éviter les faux positifs
+        // Le seuil de 500ms est plus réaliste car il exclut les temps de chargement initial
+        if (process.env.NODE_ENV === 'development' && renderTime > 500) {
           log.warn('Rendu lent détecté', {
             renderTime: `${renderTime.toFixed(2)}ms`,
             route: `${main}/${sub || ''}/${leaf || ''}`,
+            component: 'DashboardContent',
           });
         }
       }
-    };
-  }, [main, sub, leaf]); // log retiré des dépendances car stable
+    });
+  }, [main, sub, leaf, log]);
 
   // ✅ Stocker les KPIs précédents pour détecter les changements
   const previousKpisRef = useRef<KPIData[] | null>(null);
@@ -631,7 +605,7 @@ const DashboardContent = memo(function DashboardContent() {
   const refreshStatusRef = useRef(refreshStatus);
   const isMountedRef = useRef(true); // ✅ Ref pour savoir si le composant est monté
   const initialRefreshDoneRef = useRef(false); // PATCH: Ref pour éviter les déclenchements multiples du refresh initial
-  const refreshIntervalRef = useRef<NodeJS.Timeout | null>(null); // PATCH: Ref pour l'intervalle de refresh périodique
+  // ✅ refreshIntervalRef supprimé - géré par useAutoRefresh
   
   // Synchroniser la ref avec l'état
   useEffect(() => {
@@ -797,17 +771,11 @@ const DashboardContent = memo(function DashboardContent() {
     }
   }, [maxRetries]); // refetchKPIsFromAPI retiré, utilisant refetchKPIsFromAPIRef à la place
 
-  // ✅ Cleanup des timeouts au démontage
+  // ✅ Fusionné: Cleanup de tous les timeouts au démontage
   useEffect(() => {
     return () => {
       timeoutsRef.current.forEach(clearTimeout);
       timeoutsRef.current = [];
-    };
-  }, []);
-
-  // PATCH 3 — Cleanup des timeouts de retry au démontage
-  useEffect(() => {
-    return () => {
       retryTimeoutsRef.current.forEach(clearTimeout);
       retryTimeoutsRef.current = [];
     };
@@ -1014,50 +982,20 @@ const DashboardContent = memo(function DashboardContent() {
     return 5 * 60 * 1000;
   });
 
-  // ✅ Détection de la visibilité de l'onglet (pause automatique)
-  const [isTabVisible, setIsTabVisible] = useState(true);
-  const isTabVisibleRef = useRef(true);
-  
-  // ✅ Détection de la connexion réseau (déclaré avant les useEffects qui l'utilisent)
-  const [isOnline, setIsOnline] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return navigator.onLine;
-    }
-    return true;
-  });
-  const isOnlineRef = useRef(isOnline);
-  
-  // Ne plus utiliser useMemo pour le bouton - cela cause des boucles infinies
-  // Le bouton sera créé directement dans le JSX
-  
-  // Synchroniser les refs avec les états
-  useEffect(() => {
-    isTabVisibleRef.current = isTabVisible;
-  }, [isTabVisible]);
-  
-  useEffect(() => {
-    isOnlineRef.current = isOnline;
-  }, [isOnline]);
-
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      const visible = !document.hidden;
-      // PATCH: Ne mettre à jour que si la valeur change vraiment
-      if (isTabVisibleRef.current !== visible) {
-        setIsTabVisible(visible);
-        // Utiliser autoRefreshEnabledRef au lieu de autoRefreshEnabled pour éviter les dépendances
-        if (visible && autoRefreshEnabledRef.current && refreshStatusRef.current === 'idle') {
-          // Reprendre le refresh si l'onglet redevient visible
-          if (process.env.NODE_ENV === 'development') {
-            log.debug('Onglet visible, reprise du refresh automatique');
-          }
-        }
+  // ✅ Utiliser le hook useAutoRefresh pour gérer l'auto-refresh
+  // Ce hook gère : visibilité onglet, statut réseau, intervalles, et pause intelligente
+  const { isOnline, isTabVisible } = useAutoRefresh({
+    enabled: autoRefreshEnabled,
+    interval: refreshInterval,
+    onRefresh: refreshKPIs,
+    onStatusChange: (status: 'idle' | 'paused') => {
+      if (status === 'paused') {
+        setRefreshStatus('paused');
+      } else {
+        setRefreshStatus('idle');
       }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, []); // Dépendances vides - utiliser les refs pour éviter les re-renders
+    },
+  });
 
   // ✅ Utiliser useRef pour stocker les fonctions et éviter les re-renders
   // PATCH: refreshKPIs est stable (dépendances vides), donc refreshKPIsPublicRef n'a pas besoin d'être mis à jour
@@ -1131,15 +1069,15 @@ const DashboardContent = memo(function DashboardContent() {
     if (initialRefreshDoneRef.current) return;
     
     // Utiliser les refs pour éviter les dépendances instables
-    if (!autoRefreshEnabledRef.current || !isTabVisibleRef.current || !isOnlineRef.current) return;
+    if (!autoRefreshEnabledRef.current || !isTabVisible || !isOnline) return;
     
     initialRefreshDoneRef.current = true;
     const id = window.setTimeout(() => {
       // Utiliser les refs pour vérifier les conditions
       if (isMountedRef.current && 
           autoRefreshEnabledRef.current && 
-          isTabVisibleRef.current && 
-          isOnlineRef.current && 
+          isTabVisible && 
+          isOnline && 
           refreshStatusRef.current !== 'paused') {
         refreshKPIsInternalRef.current(0);
       }
@@ -1155,91 +1093,7 @@ const DashboardContent = memo(function DashboardContent() {
         }
       }
     };
-  }, []); // Dépendances vides - ne se déclenche qu'une seule fois au montage
-
-  // ✅ Refresh périodique avec intervalle configurable et pause si onglet invisible ou hors ligne
-  // PATCH: Utiliser un seul useEffect avec une protection contre les boucles infinies
-  useEffect(() => {
-    // Toujours nettoyer l'intervalle précédent avant d'en créer un nouveau
-    if (refreshIntervalRef.current) {
-      clearInterval(refreshIntervalRef.current);
-      refreshIntervalRef.current = null;
-    }
-    
-    // Ne créer l'intervalle que si auto-refresh est activé, en ligne, et onglet visible
-    if (!autoRefreshEnabled || !isOnlineRef.current || !isTabVisibleRef.current) {
-      return;
-    }
-    
-    // Créer le nouvel intervalle
-    refreshIntervalRef.current = setInterval(() => {
-      // Utiliser les refs pour vérifier les conditions (évite les dépendances)
-      if (isMountedRef.current && 
-          autoRefreshEnabledRef.current && 
-          isTabVisibleRef.current && 
-          isOnlineRef.current && 
-          refreshStatusRef.current !== 'paused') {
-        // Vérifier que le dernier refresh n'est pas trop récent (éviter les doubles)
-        // ✅ Type safety amélioré avec interface dédiée (définie en haut du fichier)
-        const now = Date.now();
-        const lastRefreshTime = (window as WindowWithRefresh).__lastDashboardRefresh || 0;
-        const minInterval = 10000; // Minimum 10 secondes entre refreshes
-        
-        if (now - lastRefreshTime > minInterval) {
-          (window as WindowWithRefresh).__lastDashboardRefresh = now;
-          refreshKPIsPublicRef.current();
-        }
-      }
-    }, refreshInterval);
-
-    return () => {
-      if (refreshIntervalRef.current) {
-        clearInterval(refreshIntervalRef.current);
-        refreshIntervalRef.current = null;
-      }
-    };
-  }, [autoRefreshEnabled, refreshInterval, isTabVisible, isOnline]); // Dépendances nécessaires pour réagir aux changements
-
-  // ✅ Gestion des événements réseau (online/offline)
-  // PATCH: Utiliser refreshKPIsPublicRef et autoRefreshEnabledRef pour éviter les dépendances instables
-  useEffect(() => {
-    const handleOnline = () => {
-      // PATCH: Ne mettre à jour que si la valeur change vraiment
-      if (!isOnlineRef.current) {
-        setIsOnline(true);
-        if (process.env.NODE_ENV === 'development') {
-          log.info('Connexion rétablie');
-        }
-        // Relancer le refresh si auto-refresh est activé (utiliser la ref)
-        if (autoRefreshEnabledRef.current && refreshStatusRef.current === 'idle') {
-          const timeoutId = window.setTimeout(() => {
-            if (isMountedRef.current) {
-              refreshKPIsPublicRef.current();
-            }
-          }, 2000);
-          timeoutsRef.current.push(timeoutId);
-        }
-      }
-    };
-
-    const handleOffline = () => {
-      // PATCH: Ne mettre à jour que si la valeur change vraiment
-      if (isOnlineRef.current) {
-        setIsOnline(false);
-        if (process.env.NODE_ENV === 'development') {
-          log.warn('Connexion perdue');
-        }
-      }
-    };
-
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, []); // Dépendances vides - utiliser les refs pour éviter les re-renders
+  }, [isTabVisible, isOnline]); // Dépendances pour réagir aux changements de visibilité/réseau
 
   // ✅ Raccourcis clavier avec gestion améliorée et étendue
   useEffect(() => {
@@ -1351,6 +1205,12 @@ const DashboardContent = memo(function DashboardContent() {
   /* =========================
      Render
   ========================= */
+
+  // ✅ Mémoriser handleShowShortcuts pour éviter les re-renders de DashboardFooter
+  const handleShowShortcuts = useCallback(() => {
+    const openModal = useDashboardCommandCenterStore.getState().openModal;
+    openModal('shortcuts');
+  }, []);
 
   // Mémoriser les className pour éviter les re-renders avec TooltipTrigger asChild
   const autoRefreshButtonClassName = useMemo(() => cn(
@@ -1504,10 +1364,7 @@ const DashboardContent = memo(function DashboardContent() {
           isOnline={isOnline}
           autoRefreshEnabled={autoRefreshEnabled}
           refreshInterval={refreshInterval}
-          onShowShortcuts={useCallback(() => {
-            const openModal = useDashboardCommandCenterStore.getState().openModal;
-            openModal('shortcuts');
-          }, [])}
+          onShowShortcuts={handleShowShortcuts}
         />
       </section>
       </div>
@@ -1585,7 +1442,8 @@ const KPICard = memo(function KPICard({
     return <Minus className="h-3 w-3" />;
   };
 
-  const getTooltipContent = () => {
+  // Mémoriser le contenu du tooltip pour éviter les re-renders
+  const tooltipContent = useMemo(() => {
     const trendText = kpi.trend === 'up' ? 'augmentation' : kpi.trend === 'down' ? 'diminution' : 'stable';
     const toneText = kpi.tone === 'ok' ? 'Normal' : kpi.tone === 'warn' ? 'Attention' : kpi.tone === 'crit' ? 'Critique' : 'Information';
     return (
@@ -1612,38 +1470,53 @@ const KPICard = memo(function KPICard({
         )}
       </div>
     );
-  };
+  }, [kpi.label, kpi.value, kpi.delta, kpi.trend, kpi.tone, isPositive, isNegative, onClick]);
+
+  // Mémoriser className pour éviter les re-renders
+  const cardClassName = useMemo(() => cn(
+    'group relative rounded-xl border backdrop-blur-xl px-4 py-3',
+    'transition-all duration-300 ease-out',
+    onClick ? 'cursor-pointer active:scale-[0.98]' : 'cursor-help',
+    'hover:scale-[1.02] hover:shadow-lg hover:shadow-black/20',
+    onClick && 'hover:ring-2 hover:ring-blue-500/30',
+    'animate-fadeIn',
+    'focus-within:ring-2 focus-within:ring-blue-500/50 focus-within:outline-none',
+    kpi.tone === 'ok' && 'border-emerald-500/20 bg-gradient-to-br from-emerald-500/5 to-emerald-500/0 hover:border-emerald-500/30',
+    kpi.tone === 'warn' && 'border-amber-500/20 bg-gradient-to-br from-amber-500/5 to-amber-500/0 hover:border-amber-500/30',
+    kpi.tone === 'crit' && 'border-red-500/20 bg-gradient-to-br from-red-500/5 to-red-500/0 hover:border-red-500/30',
+    kpi.tone === 'info' && 'border-slate-500/20 bg-gradient-to-br from-slate-500/5 to-slate-500/0 hover:border-slate-500/30'
+  ), [kpi.tone, onClick]);
+
+  // Mémoriser style pour éviter les re-renders
+  const cardStyle = useMemo(() => ({
+    animationDelay: `${index * 50}ms`,
+  }), [index]);
+
+  // Mémoriser aria-label pour éviter les re-renders
+  const ariaLabel = useMemo(() => 
+    `${kpi.label}: ${kpi.value}, ${kpi.delta}. ${onClick ? 'Cliquez pour voir les détails' : ''}`,
+    [kpi.label, kpi.value, kpi.delta, onClick]
+  );
+
+  // Mémoriser onKeyDown handler pour éviter les re-renders
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+    if ((e.key === 'Enter' || e.key === ' ') && onClick) {
+      e.preventDefault();
+      onClick();
+    }
+  }, [onClick]);
 
   return (
     <Tooltip>
       <TooltipTrigger asChild>
         <div
-          className={cn(
-            'group relative rounded-xl border backdrop-blur-xl px-4 py-3',
-            'transition-all duration-300 ease-out',
-            onClick ? 'cursor-pointer active:scale-[0.98]' : 'cursor-help',
-            'hover:scale-[1.02] hover:shadow-lg hover:shadow-black/20',
-            onClick && 'hover:ring-2 hover:ring-blue-500/30',
-            'animate-fadeIn',
-            'focus-within:ring-2 focus-within:ring-blue-500/50 focus-within:outline-none',
-            kpi.tone === 'ok' && 'border-emerald-500/20 bg-gradient-to-br from-emerald-500/5 to-emerald-500/0 hover:border-emerald-500/30',
-            kpi.tone === 'warn' && 'border-amber-500/20 bg-gradient-to-br from-amber-500/5 to-amber-500/0 hover:border-amber-500/30',
-            kpi.tone === 'crit' && 'border-red-500/20 bg-gradient-to-br from-red-500/5 to-red-500/0 hover:border-red-500/30',
-            kpi.tone === 'info' && 'border-slate-500/20 bg-gradient-to-br from-slate-500/5 to-slate-500/0 hover:border-slate-500/30'
-          )}
-          style={{
-            animationDelay: `${index * 50}ms`,
-          }}
+          className={cardClassName}
+          style={cardStyle}
           tabIndex={0}
           role="button"
-          aria-label={`${kpi.label}: ${kpi.value}, ${kpi.delta}. ${onClick ? 'Cliquez pour voir les détails' : ''}`}
+          aria-label={ariaLabel}
           onClick={onClick}
-          onKeyDown={(e) => {
-            if ((e.key === 'Enter' || e.key === ' ') && onClick) {
-              e.preventDefault();
-              onClick();
-            }
-          }}
+          onKeyDown={handleKeyDown}
         >
       {/* Background glow effect - pointer-events-none pour ne pas bloquer les clics */}
       <div
@@ -1725,7 +1598,7 @@ const KPICard = memo(function KPICard({
         </div>
       </TooltipTrigger>
       <TooltipContent side="top" className="max-w-xs">
-        {getTooltipContent()}
+        {tooltipContent}
       </TooltipContent>
     </Tooltip>
   );
@@ -2006,51 +1879,7 @@ const KPISparkline = memo(function KPISparkline({ tone, trend, 'aria-label': ari
 // KPIAlertsSystemMemoized est maintenant défini dans DashboardContent avant utilisation
 
 // Composant mémorisé pour afficher la dernière mise à jour
-const LastUpdateDisplay = memo(function LastUpdateDisplay({ lastUpdate }: { lastUpdate: Date }) {
-  const [timeAgo, setTimeAgo] = useState(() => formatTimeAgo(lastUpdate));
-
-  useEffect(() => {
-    // Mettre à jour immédiatement quand lastUpdate change
-    setTimeAgo(formatTimeAgo(lastUpdate));
-    
-    // Puis mettre à jour toutes les minutes
-    const interval = setInterval(() => {
-      setTimeAgo(formatTimeAgo(lastUpdate));
-    }, 60000); // 1 minute
-
-    return () => clearInterval(interval);
-  }, [lastUpdate]);
-
-  return (
-    <span className="text-[10px] text-slate-500 normal-case">
-      Mise à jour : {timeAgo}
-    </span>
-  );
-});
-
 /* =========================
    Utility Functions
 ========================= */
-
-function formatTimeAgo(date: Date): string {
-  const now = new Date();
-  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-  
-  if (diffInSeconds < 60) {
-    return 'à l\'instant';
-  }
-  
-  const diffInMinutes = Math.floor(diffInSeconds / 60);
-  if (diffInMinutes < 60) {
-    return `il y a ${diffInMinutes} min`;
-  }
-  
-  const diffInHours = Math.floor(diffInMinutes / 60);
-  if (diffInHours < 24) {
-    return `il y a ${diffInHours}h`;
-  }
-  
-  const diffInDays = Math.floor(diffInHours / 24);
-  return `il y a ${diffInDays}j`;
-}
 

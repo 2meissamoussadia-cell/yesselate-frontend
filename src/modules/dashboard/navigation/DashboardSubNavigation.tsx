@@ -18,6 +18,7 @@ import {
 } from './dashboardNavigationConfig';
 import { useDashboardNavigation } from '../context/DashboardNavigationContext';
 import { useLogger } from '@/lib/utils/logger';
+import { getDefaultLeafForSub, isValidRoute } from '../utils/routeValidation';
 
 interface DashboardSubNavigationProps {
   stats?: {
@@ -66,34 +67,39 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
     return 'default';
   }, []);
 
-  // ✅ Handler pour niveau 2 (sub-category)
+  // ✅ Handler pour niveau 2 (sub-category) avec validation
   const handleSubCategoryClick = useCallback((subCatId: string) => {
     log.debug('Clic niveau 2', { subCatId, main });
     
-    // ✅ Utiliser directement la config JSON comme source de vérité
+    // ✅ Utiliser getDefaultLeafForSub depuis routeValidation (plus optimisé et cache)
     let defaultLeaf: string | null = null;
+    const currentMain = main || 'overview';
     
     try {
-      const config = require('../navigation/navigation.config.json');
-      const configLeafs = config?.[main || 'overview']?.sub?.[subCatId]?.leaf;
+      defaultLeaf = getDefaultLeafForSub(currentMain, subCatId);
       
-      if (configLeafs && typeof configLeafs === 'object') {
-        // Prendre le premier leaf disponible dans la config JSON
-        const leafKeys = Object.keys(configLeafs);
-        if (leafKeys.length > 0) {
-          defaultLeaf = leafKeys[0];
-          console.log('[DashboardSubNavigation] Leaf trouvé dans config JSON:', {
-            subCatId,
-            defaultLeaf,
-            allLeafs: leafKeys,
-          });
-        }
+      if (defaultLeaf) {
+        log.debug('Leaf trouvé via routeValidation', {
+          main: currentMain,
+          sub: subCatId,
+          leaf: defaultLeaf,
+        });
+      }
+      
+      // ✅ Valider la route avant de naviguer
+      if (!isValidRoute(currentMain, subCatId, defaultLeaf)) {
+        log.warn('Route invalide après résolution du leaf', {
+          main: currentMain,
+          sub: subCatId,
+          leaf: defaultLeaf,
+        });
+        defaultLeaf = null;
       }
     } catch (e) {
-      console.warn('[DashboardSubNavigation] Erreur lors de la lecture de la config JSON:', e);
+      log.warn('Erreur lors de la résolution du leaf', { error: e, main: currentMain, sub: subCatId });
       
-      // Fallback: utiliser getSubSubCategories si la config JSON échoue
-      const subSubCategoriesForThisSub = getSubSubCategories(main || 'overview', subCatId);
+      // Fallback: utiliser getSubSubCategories si routeValidation échoue
+      const subSubCategoriesForThisSub = getSubSubCategories(currentMain, subCatId);
       defaultLeaf = subSubCategoriesForThisSub && subSubCategoriesForThisSub.length > 0 
         ? subSubCategoriesForThisSub[0].id 
         : null;
@@ -101,15 +107,15 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
     
     log.navigation(
       `${main}/${sub || ''}/${leaf || ''}`,
-      `${main}/${subCatId}/${defaultLeaf || ''}`,
-      { main, sub: subCatId, leaf: defaultLeaf }
+      `${currentMain}/${subCatId}/${defaultLeaf || ''}`,
+      { main: currentMain, sub: subCatId, leaf: defaultLeaf }
     );
     
     setSub(subCatId);
     setLeaf(defaultLeaf);
   }, [main, sub, leaf, setSub, setLeaf, log]);
 
-  // ✅ Handler pour niveau 3 (sub-sub-category / leaf)
+  // ✅ Handler pour niveau 3 (sub-sub-category / leaf) avec validation
   const handleSubSubCategoryClick = useCallback((leafId: string) => {
     log.debug('Clic niveau 3', { leafId, main, sub });
     
@@ -118,10 +124,26 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
       return;
     }
     
+    const currentMain = main || 'overview';
+    
+    // ✅ Valider la route avant de naviguer
+    try {
+      if (!isValidRoute(currentMain, sub, leafId)) {
+        log.warn('Route invalide pour leaf', {
+          main: currentMain,
+          sub,
+          leaf: leafId,
+        });
+        return; // Ne pas naviguer vers une route invalide
+      }
+    } catch (e) {
+      log.warn('Erreur lors de la validation de la route', { error: e, main: currentMain, sub, leaf: leafId });
+    }
+    
     log.navigation(
-      `${main}/${sub}/${leaf || ''}`,
-      `${main}/${sub}/${leafId}`,
-      { main, sub, leaf: leafId }
+      `${currentMain}/${sub}/${leaf || ''}`,
+      `${currentMain}/${sub}/${leafId}`,
+      { main: currentMain, sub, leaf: leafId }
     );
     
     setLeaf(leafId);
@@ -134,7 +156,7 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
       
       {/* Breadcrumb */}
       <div 
-        className="px-4 py-2.5 flex items-center gap-2 text-sm border-b border-slate-800/50 relative z-10"
+        className="px-2 sm:px-4 py-2 sm:py-2.5 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm border-b border-slate-800/50 relative z-10 min-w-0 overflow-x-auto"
         role="navigation"
         aria-label="Fil d'Ariane"
       >
@@ -160,8 +182,8 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
 
       {/* Level 2 Navigation - Sub Categories */}
       {subCategories.length > 0 && (
-        <div className="px-4 py-2.5 border-b border-slate-800/50 relative z-10">
-          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent pb-1">
+        <div className="px-2 sm:px-4 py-2 sm:py-2.5 border-b border-slate-800/50 relative z-10 min-w-0">
+          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent pb-1 min-w-0">
             {subCategories.map((subCat, idx) => {
               const isActive = sub === subCat.id;
               const badge = getBadgeForNode(subCat);
@@ -221,8 +243,8 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
 
       {/* Level 3 Navigation - Sub Sub Categories */}
       {subSubCategories.length > 0 && sub && (
-        <div className="px-4 py-2.5 bg-slate-800/20 relative z-10">
-          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent pb-1">
+        <div className="px-2 sm:px-4 py-2 sm:py-2.5 bg-slate-800/20 relative z-10 min-w-0">
+          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent pb-1 min-w-0">
             {subSubCategories.map((subSubCat, idx) => {
               const isActive = leaf === subSubCat.id;
               const badge = getBadgeForNode(subSubCat);

@@ -1,12 +1,22 @@
 /**
  * Utilitaires de validation des routes du dashboard
  * Centralise la logique de validation et de résolution des routes
+ * ✅ Amélioré avec cache pour les validations fréquentes
  */
 
 import config from '../navigation/navigation.config.json';
+import { logger } from '@/lib/utils/logger';
 
-// ✅ Type pour la configuration de navigation (local pour éviter les dépendances circulaires)
-interface NavigationConfig {
+// Logger pour ce module utilitaire (utilise l'instance singleton)
+const log = {
+  warn: (message: string, context?: Record<string, unknown>) => 
+    logger.warn(message, { component: 'routeValidation', ...context }),
+  error: (message: string, error?: Error, context?: Record<string, unknown>) => 
+    logger.error(message, error, { component: 'routeValidation', ...context }),
+};
+
+// ✅ Type pour la configuration de navigation (exporté pour réutilisabilité)
+export interface NavigationConfig {
   [key: string]: {
     label: string;
     sub?: {
@@ -32,6 +42,16 @@ interface RouteConfig {
 
 // ✅ Config mémorisée au niveau module
 const NAVIGATION_CONFIG = (config as NavigationConfig) || {};
+
+// ✅ Cache pour les validations de routes (améliore les performances)
+const routeValidationCache = new Map<string, boolean>();
+const routeComponentCache = new Map<string, string | null>();
+const defaultLeafCache = new Map<string, string | null>();
+
+// ✅ Fonction helper pour créer une clé de cache
+function createRouteKey(main: string, sub: string | null, leaf: string | null): string {
+  return `${main}|${sub || ''}|${leaf || ''}`;
+}
 
 /**
  * Obtient la configuration de navigation avec fallback
@@ -67,99 +87,192 @@ export function getNavigationConfig(): NavigationConfig {
 
 /**
  * Vérifie si une route est valide dans la configuration
+ * ✅ Utilise un cache pour améliorer les performances
  */
 export function isValidRoute(
   main: string,
   sub: string | null,
   leaf: string | null
 ): boolean {
-  const navConfig = getNavigationConfig();
-
-  // Vérifier main
-  if (!navConfig[main]) {
+  // ✅ Validation des paramètres d'entrée
+  if (!main || typeof main !== 'string') {
     return false;
   }
 
-  // Si pas de sub, la route est valide (main seul)
-  if (!sub) {
-    return true;
+  // ✅ Vérifier le cache
+  const cacheKey = createRouteKey(main, sub, leaf);
+  if (routeValidationCache.has(cacheKey)) {
+    return routeValidationCache.get(cacheKey)!;
   }
 
-  // Vérifier sub
-  if (!navConfig[main]?.sub?.[sub]) {
+  try {
+    const navConfig = getNavigationConfig();
+
+    // Vérifier main
+    if (!navConfig[main]) {
+      routeValidationCache.set(cacheKey, false);
+      return false;
+    }
+
+    // Si pas de sub, la route est valide (main seul)
+    if (!sub) {
+      routeValidationCache.set(cacheKey, true);
+      return true;
+    }
+
+    // Vérifier sub
+    if (!navConfig[main]?.sub?.[sub]) {
+      routeValidationCache.set(cacheKey, false);
+      return false;
+    }
+
+    // Si pas de leaf, la route est valide (main + sub)
+    if (!leaf) {
+      routeValidationCache.set(cacheKey, true);
+      return true;
+    }
+
+    // Vérifier leaf
+    const isValid = !!navConfig[main]?.sub?.[sub]?.leaf?.[leaf];
+    routeValidationCache.set(cacheKey, isValid);
+    return isValid;
+  } catch (error) {
+    log.error('Erreur lors de la validation de route', error instanceof Error ? error : new Error(String(error)), {
+      main,
+      sub,
+      leaf,
+    });
+    routeValidationCache.set(cacheKey, false);
     return false;
   }
-
-  // Si pas de leaf, la route est valide (main + sub)
-  if (!leaf) {
-    return true;
-  }
-
-  // Vérifier leaf
-  return !!navConfig[main]?.sub?.[sub]?.leaf?.[leaf];
 }
 
 /**
  * Obtient le composant associé à une route
+ * ✅ Utilise un cache pour améliorer les performances
  */
 export function getRouteComponent(
   main: string,
   sub: string | null,
   leaf: string | null
 ): string | null {
-  const navConfig = getNavigationConfig();
-
-  // Cas 1: main + sub + leaf
-  if (main && sub && leaf) {
-    return navConfig[main]?.sub?.[sub]?.leaf?.[leaf]?.component || null;
+  // ✅ Validation des paramètres d'entrée
+  if (!main || typeof main !== 'string') {
+    return null;
   }
 
-  // Cas 2: main + sub (sans leaf) - utiliser leaf par défaut
-  if (main && sub && !leaf) {
-    const defaultLeaf = getDefaultLeafForSub(main, sub);
-    if (defaultLeaf) {
-      return navConfig[main]?.sub?.[sub]?.leaf?.[defaultLeaf]?.component || null;
+  // ✅ Vérifier le cache
+  const cacheKey = createRouteKey(main, sub, leaf);
+  if (routeComponentCache.has(cacheKey)) {
+    return routeComponentCache.get(cacheKey)!;
+  }
+
+  try {
+    const navConfig = getNavigationConfig();
+
+    let component: string | null = null;
+
+    // Cas 1: main + sub + leaf
+    if (main && sub && leaf) {
+      component = navConfig[main]?.sub?.[sub]?.leaf?.[leaf]?.component || null;
     }
-  }
+    // Cas 2: main + sub (sans leaf) - utiliser leaf par défaut
+    else if (main && sub && !leaf) {
+      const defaultLeaf = getDefaultLeafForSub(main, sub);
+      if (defaultLeaf) {
+        component = navConfig[main]?.sub?.[sub]?.leaf?.[defaultLeaf]?.component || null;
+      }
+      // ✅ Si aucun leaf par défaut trouvé, chercher dans le premier leaf disponible
+      if (!component) {
+        const subConfig = navConfig[main]?.sub?.[sub];
+        if (subConfig?.leaf) {
+          const firstLeaf = Object.keys(subConfig.leaf)[0];
+          if (firstLeaf) {
+            component = subConfig.leaf[firstLeaf]?.component || null;
+          }
+        }
+      }
+    }
+    // Cas 3: main seul - utiliser route par défaut
+    else if (main && !sub && !leaf) {
+      component =
+        navConfig[main]?.sub?.summary?.leaf?.dashboard?.component ||
+        navConfig[main]?.sub?.summary?.leaf?.[
+          Object.keys(navConfig[main]?.sub?.summary?.leaf || {})[0]
+        ]?.component ||
+        null;
+    }
+    // Cas 4: main + leaf (sans sub) - chercher dans summary ou kpis
+    else if (main && !sub && leaf) {
+      component =
+        navConfig[main]?.sub?.summary?.leaf?.[leaf]?.component ||
+        navConfig[main]?.sub?.kpis?.leaf?.[leaf]?.component ||
+        null;
+    }
 
-  // Cas 3: main seul - utiliser route par défaut
-  if (main && !sub && !leaf) {
-    return (
-      navConfig[main]?.sub?.summary?.leaf?.dashboard?.component ||
-      navConfig[main]?.sub?.summary?.leaf?.[
-        Object.keys(navConfig[main]?.sub?.summary?.leaf || {})[0]
-      ]?.component ||
-      null
-    );
+    // ✅ Mettre en cache le résultat
+    routeComponentCache.set(cacheKey, component);
+    return component;
+  } catch (error) {
+    log.error('Erreur lors de la résolution du composant', error instanceof Error ? error : new Error(String(error)), {
+      main,
+      sub,
+      leaf,
+    });
+    routeComponentCache.set(cacheKey, null);
+    return null;
   }
-
-  // Cas 4: main + leaf (sans sub) - chercher dans summary ou kpis
-  if (main && !sub && leaf) {
-    return (
-      navConfig[main]?.sub?.summary?.leaf?.[leaf]?.component ||
-      navConfig[main]?.sub?.kpis?.leaf?.[leaf]?.component ||
-      null
-    );
-  }
-
-  return null;
 }
 
 /**
  * Obtient le leaf par défaut pour une sub donnée
+ * ✅ Utilise un cache pour améliorer les performances
  */
 export function getDefaultLeafForSub(main: string, sub: string): string | null {
-  const navConfig = getNavigationConfig();
-  const subConfig = navConfig[main]?.sub?.[sub];
-  if (!subConfig?.leaf) return null;
+  // ✅ Validation des paramètres d'entrée
+  if (!main || !sub || typeof main !== 'string' || typeof sub !== 'string') {
+    return null;
+  }
 
-  const leaves = Object.keys(subConfig.leaf);
-  if (leaves.length === 0) return null;
+  // ✅ Vérifier le cache
+  const cacheKey = `${main}|${sub}`;
+  if (defaultLeafCache.has(cacheKey)) {
+    return defaultLeafCache.get(cacheKey)!;
+  }
 
-  // Prioriser 'dashboard' ou 'highlights', sinon premier disponible
-  if (leaves.includes('dashboard')) return 'dashboard';
-  if (leaves.includes('highlights')) return 'highlights';
-  return leaves[0];
+  try {
+    const navConfig = getNavigationConfig();
+    const subConfig = navConfig[main]?.sub?.[sub];
+    if (!subConfig?.leaf) {
+      defaultLeafCache.set(cacheKey, null);
+      return null;
+    }
+
+    const leaves = Object.keys(subConfig.leaf);
+    if (leaves.length === 0) {
+      defaultLeafCache.set(cacheKey, null);
+      return null;
+    }
+
+    // ✅ Prioriser certains leafs selon le contexte
+    // Prioriser 'dashboard', 'global', 'all', 'highlights', sinon premier disponible
+    let defaultLeaf: string | null = null;
+    if (leaves.includes('dashboard')) defaultLeaf = 'dashboard';
+    else if (leaves.includes('global')) defaultLeaf = 'global';
+    else if (leaves.includes('all')) defaultLeaf = 'all';
+    else if (leaves.includes('highlights')) defaultLeaf = 'highlights';
+    else defaultLeaf = leaves[0];
+
+    defaultLeafCache.set(cacheKey, defaultLeaf);
+    return defaultLeaf;
+  } catch (error) {
+    log.error('Erreur lors de la résolution du leaf par défaut', error instanceof Error ? error : new Error(String(error)), {
+      main,
+      sub,
+    });
+    defaultLeafCache.set(cacheKey, null);
+    return null;
+  }
 }
 
 /**
@@ -191,11 +304,15 @@ export function normalizeRoute(
 
   // Si la route normalisée n'est pas valide, utiliser la route par défaut
   if (!isValidRoute(normalized.main, normalized.sub, normalized.leaf)) {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn(
-        '[routeValidation] Route invalide, utilisation de la route par défaut:',
-        { main, sub, leaf }
-      );
+    // ✅ Ne logger un warning que si la route demandée est différente de la route par défaut
+    // pour éviter les warnings répétés lors de la normalisation vers la route par défaut
+    const isDefaultRoute = 
+      (!main || main === defaultRoute.main) &&
+      (!sub || sub === defaultRoute.sub) &&
+      (!leaf || leaf === defaultRoute.leaf);
+    
+    if (!isDefaultRoute && process.env.NODE_ENV === 'development') {
+      log.warn('Route invalide, utilisation de la route par défaut', { main, sub, leaf });
     }
     return defaultRoute;
   }

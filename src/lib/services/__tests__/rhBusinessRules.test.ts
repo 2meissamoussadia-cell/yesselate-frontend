@@ -2,9 +2,24 @@
  * Tests unitaires pour rhBusinessRules
  */
 
-import { describe, it, expect } from '@jest/globals';
-import { congesRules, depensesRules, deplacementsRules } from '../rhBusinessRules';
+import { describe, it, expect, jest } from '@jest/globals';
+import { congesRules, depensesRules } from '../rhBusinessRules';
 import type { Agent } from '../rhBusinessRules';
+
+// Mock rhBusinessService
+jest.mock('../rhBusinessService', () => ({
+  rhBusinessService: {
+    calculateWorkingDays: jest.fn((start: Date, end: Date) => {
+      // Mock simple: compte tous les jours sauf weekends
+      const startTime = start.getTime();
+      const endTime = end.getTime();
+      const diffTime = Math.abs(endTime - startTime);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      // Approximation simple: 5 jours ouvrables par semaine
+      return Math.floor(diffDays * 5 / 7);
+    })
+  }
+}));
 
 describe('rhBusinessRules', () => {
   describe('congesRules', () => {

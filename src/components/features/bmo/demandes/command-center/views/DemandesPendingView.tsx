@@ -98,7 +98,7 @@ export function DemandesPendingView() {
               className="pl-9 bg-slate-800/50 border-slate-700 text-slate-200 w-64"
             />
           </div>
-          <Button variant="outline" size="sm" className="border-slate-700 text-slate-400">
+          <Button variant="default" size="sm" className="border-slate-700 text-slate-400">
             <Filter className="w-4 h-4 mr-2" />
             Filtres
           </Button>
@@ -197,7 +197,7 @@ export function DemandesPendingView() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-xs font-mono text-slate-500">{demande.id}</span>
-                  <Badge variant="outline" className="text-xs border-slate-700 text-slate-400">
+                  <Badge variant="default" className="text-xs border-slate-700 text-slate-400">
                     {demande.type.toUpperCase()}
                   </Badge>
                 </div>
@@ -206,7 +206,7 @@ export function DemandesPendingView() {
 
               {/* Info */}
               <div className="flex flex-col items-end gap-1">
-                <Badge variant="outline" className="text-xs border-slate-700 text-slate-400">
+                <Badge variant="default" className="text-xs border-slate-700 text-slate-400">
                   {demande.bureau}
                 </Badge>
                 <span className="text-sm font-medium text-slate-300">

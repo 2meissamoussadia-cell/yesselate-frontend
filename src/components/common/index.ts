@@ -14,17 +14,22 @@ export type { Toast, ToastType } from './Toast';
 
 // Loading States
 export {
-  Spinner,
-  LoadingOverlay,
+  LoadingSpinner,
+  PageLoader,
   Skeleton,
   SkeletonCard,
   SkeletonTable,
   SkeletonList,
-  SkeletonGrid,
-  LoadingButton,
-  LoadingCard,
-  LoadingPage,
+  ButtonLoading,
+  InlineLoader,
+  FullScreenLoader,
 } from './LoadingStates';
+
+// Aliases for backward compatibility
+export { LoadingSpinner as Spinner } from './LoadingStates';
+export { FullScreenLoader as LoadingOverlay } from './LoadingStates';
+export { ButtonLoading as LoadingButton } from './LoadingStates';
+export { PageLoader as LoadingPage } from './LoadingStates';
 
 // Empty States
 export {
@@ -36,9 +41,6 @@ export {
   ErrorState,
   NotFound,
   EmptyFolder,
-  NoPermissions,
-  NoUsers,
-  AllDone,
   EmptyCard,
 } from './EmptyStates';
 

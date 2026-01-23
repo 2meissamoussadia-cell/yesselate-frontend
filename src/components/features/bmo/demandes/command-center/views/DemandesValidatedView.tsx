@@ -93,7 +93,7 @@ export function DemandesValidatedView() {
 
             {/* Info */}
             <div className="flex flex-col items-end gap-1">
-              <Badge variant="outline" className="text-xs border-slate-700 text-slate-400">
+              <Badge variant="default" className="text-xs border-slate-700 text-slate-400">
                 {demande.bureau}
               </Badge>
               <span className="text-sm font-medium text-slate-300">

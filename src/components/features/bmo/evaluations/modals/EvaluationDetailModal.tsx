@@ -146,7 +146,7 @@ export function EvaluationDetailModal({
                   <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1 block">
                     Période
                   </label>
-                  <Badge variant="outline">{evaluation.period}</Badge>
+                  <Badge variant="default">{evaluation.period}</Badge>
                 </div>
                 <div>
                   <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1 block">
@@ -389,7 +389,7 @@ export function EvaluationDetailModal({
                     </p>
                   </div>
                 </div>
-                <Button size="sm" variant="outline">
+                <Button size="sm" variant="default">
                   <Download className="w-4 h-4 mr-1.5" />
                   Télécharger
                 </Button>

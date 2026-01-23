@@ -63,7 +63,7 @@ export function usePeriodActions(
   subCategory?: string
 ) {
   const { openModal } = useAnalyticsCommandCenterStore();
-  const { toast } = useAnalyticsToast();
+  const toast = useAnalyticsToast();
   const periodLabel = period?.label || 'période actuelle';
 
   const createAlert = useCallback((context?: ActionContext) => {

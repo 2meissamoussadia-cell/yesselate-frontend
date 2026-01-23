@@ -15,7 +15,6 @@ import {
   Package,
   CheckCircle,
   AlertTriangle,
-  Tool,
   Calendar,
   MapPin,
   BarChart3,
@@ -68,7 +67,7 @@ export const equipementsCategories: EquipementsCategory[] = [
   {
     id: 'in-use',
     label: 'En utilisation',
-    icon: Tool,
+    icon: Wrench,
     badge: 0,
     badgeType: 'default',
     description: 'Équipements utilisés',
@@ -274,7 +273,7 @@ export function EquipementsCommandSidebar({
 
                     {hasBadge && category.badge !== 0 && (
                       <Badge
-                        variant="outline"
+                        variant="default"
                         className={cn(
                           'h-5 min-w-5 px-1.5 text-xs font-medium',
                           category.badgeType === 'critical'

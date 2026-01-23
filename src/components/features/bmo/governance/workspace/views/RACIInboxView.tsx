@@ -290,7 +290,7 @@ export function RACIInboxView() {
                             {activity.activity}
                           </h3>
                           {activity.locked && (
-                            <Lock className="h-4 w-4 text-amber-400" title="Verrouillé" />
+                            <Lock className="h-4 w-4 text-amber-400" aria-label="Verrouillé" />
                           )}
                         </div>
                         
@@ -303,21 +303,21 @@ export function RACIInboxView() {
                         {/* Badges */}
                         <div className="flex items-center gap-2 flex-wrap">
                           <Badge
-                            variant="outline"
+                            variant="default"
                             className={CATEGORY_COLORS[activity.category]}
                           >
                             {CATEGORY_LABELS[activity.category]}
                           </Badge>
                           
                           <Badge
-                            variant="outline"
+                            variant="default"
                             className={CRITICALITY_COLORS[activity.criticality]}
                           >
                             {activity.criticality}
                           </Badge>
                           
                           {activity.linkedProcedure && (
-                            <Badge variant="outline" className="bg-slate-500/20 text-slate-300">
+                            <Badge variant="default" className="bg-slate-500/20 text-slate-300">
                               <FileText className="h-3 w-3 mr-1" />
                               {activity.linkedProcedure}
                             </Badge>

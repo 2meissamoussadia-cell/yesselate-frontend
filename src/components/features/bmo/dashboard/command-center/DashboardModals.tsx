@@ -9,6 +9,7 @@ import React, { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import {
   X,
   Download,
@@ -57,24 +58,32 @@ export function DashboardModals() {
     if (kpiData?.label) {
       const mapping = getKPIMappingByLabel(kpiData.label);
       if (mapping) {
-        return <KPIAdvancedModal kpiId={mapping.metadata.id} onClose={closeModal} />;
+        return (
+          <TooltipProvider>
+            <KPIAdvancedModal kpiId={mapping.metadata.id} onClose={closeModal} />
+          </TooltipProvider>
+        );
       }
     }
     // Si on a directement un kpiId
     if (modal.data?.kpiId) {
-      return <KPIAdvancedModal kpiId={modal.data.kpiId} onClose={closeModal} />;
+      return (
+        <TooltipProvider>
+          <KPIAdvancedModal kpiId={modal.data.kpiId} onClose={closeModal} />
+        </TooltipProvider>
+      );
     }
     // Sinon utiliser l'ancien modal
     return (
-      <>
+      <TooltipProvider>
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50" onClick={closeModal} />
         <KPIDrillDownModal />
-      </>
+      </TooltipProvider>
     );
   }
 
   return (
-    <>
+    <TooltipProvider>
       {/* Overlay */}
       <div
         className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
@@ -96,7 +105,7 @@ export function DashboardModals() {
       {modal.type === 'export' && <ExportModal />}
       {modal.type === 'settings' && <SettingsModal />}
       {modal.type === 'shortcuts' && <ShortcutsModal />}
-    </>
+    </TooltipProvider>
   );
 }
 
@@ -263,7 +272,7 @@ function KPIDrillDownModal() {
               {kpiData?.trend === 'neutral' && <Minus className="w-4 h-4" />}
               {kpiData?.delta || '—'}
             </div>
-            <Badge variant={kpiData?.tone === 'ok' ? 'default' : kpiData?.tone === 'warn' ? 'secondary' : 'destructive'} className="mt-1">
+            <Badge variant={kpiData?.tone === 'ok' ? 'default' : kpiData?.tone === 'warn' ? 'warning' : 'destructive'} className="mt-1">
               {kpiData?.tone === 'ok' ? 'Normal' : kpiData?.tone === 'warn' ? 'Attention' : kpiData?.tone === 'crit' ? 'Critique' : 'Info'}
             </Badge>
           </div>
@@ -384,7 +393,7 @@ function KPIDrillDownModal() {
             <div className="grid grid-cols-2 gap-4">
               <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
                 <p className="text-xs text-slate-500 mb-1">Statut</p>
-                <Badge variant={kpiData?.tone === 'ok' ? 'default' : kpiData?.tone === 'warn' ? 'secondary' : 'destructive'}>
+                <Badge variant={kpiData?.tone === 'ok' ? 'default' : kpiData?.tone === 'warn' ? 'warning' : 'destructive'}>
                   {kpiData?.tone === 'ok' ? 'Normal' : kpiData?.tone === 'warn' ? 'Attention' : kpiData?.tone === 'crit' ? 'Critique' : 'Info'}
                 </Badge>
               </div>
@@ -686,7 +695,7 @@ function ActionDetailModal() {
     <ModalWrapper title="Détail de l'action" maxWidth="max-w-2xl" onClose={closeModal}>
       <div className="space-y-4">
         <div className="flex items-center gap-3">
-          <Badge variant="secondary">En attente</Badge>
+          <Badge variant="default">En attente</Badge>
           <span className="text-xs text-slate-500">{action?.id || 'ACTION-001'}</span>
           <span className="text-xs text-slate-500 ml-auto">
             {action?.date || new Date().toLocaleDateString('fr-FR')}
@@ -712,7 +721,7 @@ function ActionDetailModal() {
         <div className="grid grid-cols-2 gap-4">
           <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
             <p className="text-xs text-slate-500 mb-1">Priorité</p>
-            <Badge variant="secondary">Haute</Badge>
+            <Badge variant="warning">Haute</Badge>
           </div>
           <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
             <p className="text-xs text-slate-500 mb-1">Échéance</p>
@@ -753,7 +762,7 @@ function DecisionDetailModal() {
     <ModalWrapper title="Détail de la décision" maxWidth="max-w-2xl" onClose={closeModal}>
       <div className="space-y-4">
         <div className="flex items-center gap-3">
-          <Badge variant={decision?.status === 'executed' ? 'default' : 'secondary'}>
+          <Badge variant={decision?.status === 'executed' ? 'default' : 'warning'}>
             {decision?.status === 'executed' ? 'Exécutée' : 'En attente'}
           </Badge>
           <span className="text-xs text-slate-500">{decision?.id || 'DEC-001'}</span>
@@ -815,9 +824,16 @@ function ExportModal() {
 
   const handleExport = async () => {
     try {
+      // JSON export is handled client-side, not via API
+      if (format === 'json') {
+        // TODO: Implement client-side JSON export if needed
+        closeModal();
+        return;
+      }
+      
       const { dashboardAPI } = await import('@/lib/api/pilotage/dashboardClient');
       await dashboardAPI.export({
-        format,
+        format: format as 'csv' | 'pdf' | 'excel',
         sections: selectedKPIs.length > 0 ? selectedKPIs : undefined,
         period,
         includeGraphs,

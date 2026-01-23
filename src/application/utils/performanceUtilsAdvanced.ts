@@ -71,7 +71,9 @@ export function createCachedDebounce<T extends (...args: any[]) => any>(
         // Limiter la taille du cache
         if (cache.size > maxCacheSize) {
           const firstKey = cache.keys().next().value;
-          cache.delete(firstKey);
+          if (firstKey !== undefined) {
+            cache.delete(firstKey);
+          }
         }
 
         resolve(result);
@@ -83,7 +85,7 @@ export function createCachedDebounce<T extends (...args: any[]) => any>(
 /**
  * Profiler pour mesurer les performances
  */
-export class PerformanceProfiler {
+export class PerformanceProfilerAdvanced {
   private measurements: Map<string, number[]> = new Map();
 
   start(label: string): () => void {
@@ -149,12 +151,12 @@ export class PerformanceProfiler {
 /**
  * Instance globale du profiler
  */
-export const performanceProfiler = new PerformanceProfiler();
+export const performanceProfiler = new PerformanceProfilerAdvanced();
 
 /**
  * Décorateur pour mesurer les performances d'une fonction
  */
-export function measurePerformance<T extends (...args: any[]) => any>(
+export function measurePerformanceAdvanced<T extends (...args: any[]) => any>(
   fn: T,
   label?: string
 ): T {

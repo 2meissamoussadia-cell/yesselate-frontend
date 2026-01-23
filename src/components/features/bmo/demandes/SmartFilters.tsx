@@ -64,7 +64,7 @@ export function SmartFilters({ filters, onFiltersChange }: SmartFiltersProps) {
   return (
     <div className="relative">
       <Button
-        variant="outline"
+        variant="secondary"
         size="sm"
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
@@ -109,7 +109,7 @@ export function SmartFilters({ filters, onFiltersChange }: SmartFiltersProps) {
                 {bureaux.map(bureau => (
                   <Badge
                     key={bureau.code}
-                    variant={filters.bureau?.includes(bureau.code) ? 'default' : 'outline'}
+                    variant={filters.bureau?.includes(bureau.code) ? 'default' : 'gray'}
                     className="cursor-pointer"
                     onClick={() => toggleArrayFilter('bureau', bureau.code)}
                   >
@@ -126,7 +126,7 @@ export function SmartFilters({ filters, onFiltersChange }: SmartFiltersProps) {
                 {demandTypes.map(type => (
                   <Badge
                     key={type}
-                    variant={filters.type?.includes(type) ? 'default' : 'outline'}
+                    variant={filters.type?.includes(type) ? 'default' : 'gray'}
                     className="cursor-pointer"
                     onClick={() => toggleArrayFilter('type', type)}
                   >
@@ -143,7 +143,7 @@ export function SmartFilters({ filters, onFiltersChange }: SmartFiltersProps) {
                 {priorities.map(priority => (
                   <Badge
                     key={priority}
-                    variant={filters.priority?.includes(priority) ? 'default' : 'outline'}
+                    variant={filters.priority?.includes(priority) ? 'default' : 'gray'}
                     className="cursor-pointer"
                     onClick={() => toggleArrayFilter('priority', priority)}
                   >
@@ -160,7 +160,7 @@ export function SmartFilters({ filters, onFiltersChange }: SmartFiltersProps) {
                 {statuses.map(status => (
                   <Badge
                     key={status}
-                    variant={filters.status?.includes(status) ? 'default' : 'outline'}
+                    variant={filters.status?.includes(status) ? 'default' : 'gray'}
                     className="cursor-pointer"
                     onClick={() => toggleArrayFilter('status', status)}
                   >

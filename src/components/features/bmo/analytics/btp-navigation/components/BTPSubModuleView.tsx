@@ -73,13 +73,13 @@ export function BTPSubModuleView({
   const mockData = React.useMemo(() => getMockDataForDomain(domainId), [domainId]);
   
   // Utiliser les données API ou fallback
-  const kpisWithValues = kpisData?.kpis || kpis.map((kpi) => ({
+  const kpisWithValues = (kpisData as any)?.kpis || kpis.map((kpi) => ({
     ...kpi,
     value: 0,
     status: 'info' as const,
   }));
 
-  const deviations = deviationsData?.deviations || [];
+  const deviations = (deviationsData as any)?.deviations || [];
 
   return (
     <div className="h-full p-6 space-y-6">
@@ -146,7 +146,7 @@ export function BTPSubModuleView({
       {/* KPIs Spécialisés */}
       {kpisWithValues.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {kpisWithValues.map((kpi) => (
+          {kpisWithValues.map((kpi: any) => (
             <BTPKPIWidget
               key={kpi.id}
               label={kpi.label}
@@ -166,7 +166,7 @@ export function BTPSubModuleView({
           <div className="flex items-center gap-2 mb-4">
             <AlertTriangle className="h-5 w-5 text-amber-400" />
             <h4 className="text-sm font-semibold text-slate-300">Dérives Détectées</h4>
-            <Badge variant="outline" className="ml-auto">
+            <Badge variant="default" className="ml-auto">
               {deviations.length}
             </Badge>
           </div>
@@ -253,7 +253,7 @@ export function BTPSubModuleView({
           onClose={() => setSelectedModal(null)}
           title="Modal"
           description="Description"
-          actions={actions.filter((a) => a.modal === selectedModal)}
+          actions={actions.filter((a) => a.modal === selectedModal).map((a) => ({ label: a.label, onClick: () => {} }))}
         >
           <p className="text-slate-400">Contenu de la modale {selectedModal}</p>
         </BTPIntelligentModal>

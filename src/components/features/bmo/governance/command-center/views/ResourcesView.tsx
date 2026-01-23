@@ -95,7 +95,7 @@ const subcontractors = [
 export function ResourcesView() {
   const { navigation, openModal } = useGovernanceCommandCenterStore();
 
-  switch (navigation.subCategory) {
+  switch (navigation.subCategory as any) {
     case 'capacity':
       return <CapacityView data={capacityData} />;
     case 'skills':
@@ -240,7 +240,7 @@ function SkillsView({ data }: { data: typeof skillsMatrix }) {
                 </td>
                 <td className="px-4 py-3">
                   <Badge
-                    variant="outline"
+                    variant="default"
                     className={cn(
                       'text-xs',
                       skill.gap >= 0
@@ -291,7 +291,7 @@ function SubcontractorsView({ data }: { data: typeof subcontractors }) {
                 </div>
               </div>
               <Badge
-                variant="outline"
+                variant="default"
                 className={cn(
                   'text-xs',
                   sub.status === 'active'

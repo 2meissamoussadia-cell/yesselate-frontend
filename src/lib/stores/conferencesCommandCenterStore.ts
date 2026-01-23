@@ -67,7 +67,7 @@ export interface ConferencesDetailPanelState {
 // Filtres actifs
 export interface ConferencesActiveFilters {
   dateRange: { start: Date | null; end: Date | null };
-  statuses: ('planifiee' | 'terminee')[];
+  statuses: ('planifiee' | 'en_cours' | 'terminee' | 'annulee')[];
   types: string[];
   priorities: ('normale' | 'haute' | 'urgente' | 'critique')[];
   bureaux: string[];

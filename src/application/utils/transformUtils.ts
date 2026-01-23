@@ -27,7 +27,7 @@ export function objectToArray<T>(
     if (keyAsProperty) {
       return { ...value, key } as T & { key: string };
     }
-    return value;
+    return value as T & { key?: string };
   });
 }
 
@@ -77,7 +77,7 @@ export function transformForChart<T>(
   return data.map(item => ({
     name: typeof config.xKey === 'function' 
       ? config.xKey(item) 
-      : item[config.xKey],
+      : (item[config.xKey] as string | number),
     value: typeof config.yKey === 'function'
       ? config.yKey(item)
       : item[config.yKey] as number,
@@ -133,7 +133,7 @@ export function aggregateByPeriod<T>(
   
   data.forEach(item => {
     const date = typeof dateKey === 'function' ? dateKey(item) : item[dateKey];
-    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    const dateObj = typeof date === 'string' ? new Date(date) : (date as Date);
     const periodKey = getPeriodKey(dateObj, period);
     
     if (!grouped[periodKey]) {

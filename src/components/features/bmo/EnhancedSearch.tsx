@@ -39,7 +39,7 @@ export const EnhancedSearch = React.forwardRef<
   // Exposer la ref pour le focus depuis l'extérieur
   useEffect(() => {
     if (ref && typeof ref === 'object' && 'current' in ref) {
-      ref.current = { inputRef };
+      (ref as any).current = { inputRef };
     }
   }, [ref]);
 
@@ -214,7 +214,7 @@ export const EnhancedSearch = React.forwardRef<
                     <div className="text-xs font-medium truncate">{result.title}</div>
                     <div className="text-[10px] text-slate-400 truncate">{result.description}</div>
                   </div>
-                  <Badge variant="secondary" className="text-[9px]">
+                  <Badge variant="default" className="text-[9px]">
                     {result.type}
                   </Badge>
                 </button>

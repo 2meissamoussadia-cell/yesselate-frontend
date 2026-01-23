@@ -76,8 +76,6 @@ export function IAActionsMenu({ onRefresh, isRefreshing, onFilters }: IAActionsM
           onClick={() => {
             if (onFilters) {
               onFilters();
-            } else {
-              openModal('filters');
             }
           }}
         >

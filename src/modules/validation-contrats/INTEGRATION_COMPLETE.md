@@ -149,3 +149,4 @@ Niveau 1 (Sidebar)
 **Date**: 2025-01-XX  
 **Version**: 1.1.0
 
+

@@ -61,7 +61,7 @@ export function ActiveEscalationsView() {
                   >
                     Niveau {escalation.level}
                   </Badge>
-                  <Badge variant="outline" className="text-xs border-slate-700 text-slate-400">
+                  <Badge variant="default" className="text-xs border-slate-700 text-slate-400">
                     {escalation.origin}
                   </Badge>
                 </div>
@@ -84,7 +84,7 @@ export function ActiveEscalationsView() {
                   </div>
                   <div>
                     <Badge
-                      variant={escalation.status === 'in-progress' ? 'default' : 'outline'}
+                      variant={escalation.status === 'in-progress' ? 'default' : 'gray'}
                       className="text-xs"
                     >
                       {escalation.status === 'in-progress' ? 'En cours' : 'Reconnu'}

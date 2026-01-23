@@ -187,13 +187,13 @@ export function AlertDetailModal({
                 <h4 className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">
                   Priorité
                 </h4>
-                <Badge variant="outline">P{alert.priority}</Badge>
+                <Badge variant="default">P{alert.priority}</Badge>
               </div>
               <div>
                 <h4 className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">
                   Source
                 </h4>
-                <Badge variant="secondary">{alert.source}</Badge>
+                <Badge variant="default">{alert.source}</Badge>
               </div>
             </div>
 
@@ -205,7 +205,7 @@ export function AlertDetailModal({
                     <Building2 className="w-3 h-3" />
                     Bureau
                   </h4>
-                  <Badge variant="outline">{alert.bureau}</Badge>
+                  <Badge variant="default">{alert.bureau}</Badge>
                 </div>
               )}
               {alert.assignedTo && (

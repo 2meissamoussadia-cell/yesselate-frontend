@@ -388,7 +388,7 @@ export function DemandesRHDetailModal({
                     {demande.tags.map((tag, index) => (
                       <Badge
                         key={index}
-                        variant="outline"
+                        variant="default"
                         className="text-xs bg-slate-700/50 text-slate-300 border-slate-600/50"
                       >
                         {tag}
@@ -433,7 +433,7 @@ export function DemandesRHDetailModal({
                 </div>
                 <div className="flex items-center gap-2">
                   <Button
-                    variant="outline"
+                    variant="default"
                     size="sm"
                     className="border-slate-700 text-slate-400 hover:text-slate-200"
                   >
@@ -441,7 +441,7 @@ export function DemandesRHDetailModal({
                     Commenter
                   </Button>
                   <Button
-                    variant="outline"
+                    variant="default"
                     size="sm"
                     onClick={onClose}
                     className="border-slate-700 text-slate-400 hover:text-slate-200"

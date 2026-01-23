@@ -159,7 +159,7 @@ export function DemandesOverviewView() {
                   <p className="text-xs text-slate-500 truncate">{action.id}</p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge variant="outline" className="text-xs border-slate-700 text-slate-400">
+                  <Badge variant="default" className="text-xs border-slate-700 text-slate-400">
                     {action.bureau}
                   </Badge>
                   <span

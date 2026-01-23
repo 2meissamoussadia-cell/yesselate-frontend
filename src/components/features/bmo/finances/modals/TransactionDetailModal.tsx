@@ -190,7 +190,7 @@ export function TransactionDetailModal({
                     </p>
                   </div>
                   <Badge
-                    variant="outline"
+                    variant="default"
                     className={cn('text-sm', getStatusConfig(transaction.status).className)}
                   >
                     {React.createElement(getStatusConfig(transaction.status).icon, {
@@ -321,7 +321,7 @@ export function TransactionDetailModal({
             <div className="flex items-center justify-between px-6 py-4 border-t border-slate-800/50 bg-slate-900/60">
               <div className="flex items-center gap-2">
                 <Button
-                  variant="outline"
+                  variant="default"
                   size="sm"
                   className="border-slate-700 text-slate-400 hover:text-slate-200"
                 >
@@ -332,7 +332,7 @@ export function TransactionDetailModal({
               <div className="flex items-center gap-2">
                 {onDelete && (
                   <Button
-                    variant="outline"
+                    variant="default"
                     size="sm"
                     onClick={() => {
                       onDelete(transaction.id);

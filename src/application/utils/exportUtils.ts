@@ -22,7 +22,7 @@ export function exportToCSV<T extends Record<string, any>>(
     return;
   }
 
-  const { headers, excludeKeys = [], formatters = {} } = options || {};
+  const { headers, excludeKeys = [], formatters = {} as Partial<Record<keyof T, (value: any) => string>> } = options || {};
   
   // Déterminer les colonnes
   const keys = Object.keys(data[0]) as (keyof T)[];
@@ -37,7 +37,7 @@ export function exportToCSV<T extends Record<string, any>>(
       const value = row[key];
       const formatter = formatters[key];
       
-      if (formatter) {
+      if (formatter && typeof formatter === 'function') {
         return formatter(value);
       }
       

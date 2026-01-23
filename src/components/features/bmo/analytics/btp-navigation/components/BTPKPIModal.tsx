@@ -40,8 +40,9 @@ export function BTPKPIModal({ isOpen, onClose, kpi, currentValue = 0, target }: 
 
   // Transformer les données d'historique
   const historyData = React.useMemo(() => {
-    if (historyResponse?.data && Array.isArray(historyResponse.data)) {
-      return historyResponse.data.map((item: any) => ({
+    const response = historyResponse as any;
+    if (response?.data && Array.isArray(response.data)) {
+      return response.data.map((item: any) => ({
         date: new Date(item.date).toLocaleDateString('fr-FR', { month: 'short' }),
         value: item.value || 0,
       }));
@@ -70,8 +71,9 @@ export function BTPKPIModal({ isOpen, onClose, kpi, currentValue = 0, target }: 
   });
 
   const comparisonData = React.useMemo(() => {
-    if (comparisonResponse?.data && Array.isArray(comparisonResponse.data)) {
-      return comparisonResponse.data;
+    const response = comparisonResponse as any;
+    if (response?.data && Array.isArray(response.data)) {
+      return response.data;
     }
     // Fallback avec données mockées
     return [
@@ -95,8 +97,9 @@ export function BTPKPIModal({ isOpen, onClose, kpi, currentValue = 0, target }: 
   });
 
   const causesData = React.useMemo(() => {
-    if (causesResponse?.data && Array.isArray(causesResponse.data)) {
-      return causesResponse.data;
+    const response = causesResponse as any;
+    if (response?.data && Array.isArray(response.data)) {
+      return response.data;
     }
     // Fallback avec données mockées
     return [
@@ -119,8 +122,9 @@ export function BTPKPIModal({ isOpen, onClose, kpi, currentValue = 0, target }: 
   });
 
   const recommendations = React.useMemo(() => {
-    if (recommendationsResponse?.data && Array.isArray(recommendationsResponse.data)) {
-      return recommendationsResponse.data;
+    const response = recommendationsResponse as any;
+    if (response?.data && Array.isArray(response.data)) {
+      return response.data;
     }
     // Fallback avec données mockées
     return [
@@ -206,10 +210,10 @@ export function BTPKPIModal({ isOpen, onClose, kpi, currentValue = 0, target }: 
           </div>
 
           <div className="flex items-center gap-2">
-            <Badge variant="outline" className="text-xs">
+            <Badge variant="default" className="text-xs">
               Statut: {currentValue >= (target || 0) ? 'Atteint' : 'En cours'}
             </Badge>
-            <Badge variant="outline" className="text-xs">
+            <Badge variant="default" className="text-xs">
               Tendance: <TrendingUp className="h-3 w-3 inline ml-1" />
             </Badge>
           </div>
@@ -285,7 +289,7 @@ export function BTPKPIModal({ isOpen, onClose, kpi, currentValue = 0, target }: 
           <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
             <p className="text-sm font-semibold text-slate-300 mb-4">Facteurs influençant le KPI</p>
             <div className="space-y-3">
-              {causesData.map((cause, idx) => (
+              {causesData.map((cause: any, idx: number) => (
                 <div key={idx} className="flex items-center justify-between p-3 bg-slate-900/50 rounded">
                   <div className="flex items-center gap-2">
                     {cause.type === 'positive' ? (
@@ -317,7 +321,7 @@ export function BTPKPIModal({ isOpen, onClose, kpi, currentValue = 0, target }: 
                 config: { xAxis: 'factor', yAxis: 'impact' },
                 interactions: { hover: 'tooltip' },
               }}
-              data={causesData.map((c) => ({ factor: c.factor, impact: Math.abs(c.impact) }))}
+              data={causesData.map((c: any) => ({ factor: c.factor, impact: Math.abs(c.impact) }))}
               height={200}
             />
           </div>
@@ -343,7 +347,7 @@ export function BTPKPIModal({ isOpen, onClose, kpi, currentValue = 0, target }: 
               <div>
                 <label className="text-xs text-slate-400 mb-1 block">Seuils d'alerte</label>
                 <div className="flex items-center gap-2 mt-2">
-                  <Badge variant="outline" className="text-xs">Warning: 80%</Badge>
+                  <Badge variant="default" className="text-xs">Warning: 80%</Badge>
                   <Badge variant="destructive" className="text-xs">Critical: 60%</Badge>
                 </div>
               </div>
@@ -359,7 +363,7 @@ export function BTPKPIModal({ isOpen, onClose, kpi, currentValue = 0, target }: 
               <p className="text-sm font-semibold text-slate-300">Recommandations IA</p>
             </div>
             <div className="space-y-3">
-              {recommendations.map((rec) => (
+              {recommendations.map((rec: any) => (
                 <div
                   key={rec.id}
                   className="bg-slate-900/50 rounded-lg p-3 border border-slate-700"

@@ -49,7 +49,7 @@ export function MinutesFollowupView() {
             <div className="flex items-center gap-2 mb-4">
               <FileText className="h-4 w-4 text-blue-400" />
               <h3 className="text-base font-semibold text-slate-200">{minute.instance}</h3>
-              <Badge variant="outline" className="text-xs border-slate-700 text-slate-400">
+              <Badge variant="default" className="text-xs border-slate-700 text-slate-400">
                 <Calendar className="h-3 w-3 mr-1" />
                 {minute.date}
               </Badge>

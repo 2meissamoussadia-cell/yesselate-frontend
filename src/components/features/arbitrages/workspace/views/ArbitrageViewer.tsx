@@ -784,7 +784,7 @@ function ComplementModal({ open, onClose, arbitrageId, onSuccess }: any) {
           </FluentButton>
           <FluentButton
             size="sm"
-            variant="info"
+            variant="primary"
             onClick={handleSubmit}
             disabled={loading || !requestedFrom.trim() || !questions.trim()}
           >

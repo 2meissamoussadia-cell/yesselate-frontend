@@ -257,7 +257,7 @@ function ConferencesListView({
         <div className="flex items-center gap-3">
           <Icon className="h-5 w-5 text-purple-400" />
           <h2 className="text-xl font-bold text-slate-200">{label}</h2>
-          <Badge variant="outline" className="text-sm">
+          <Badge className="text-sm">
             {conferences.length}
           </Badge>
         </div>
@@ -381,7 +381,7 @@ function ConferenceCard({
             <Users className="h-4 w-4 text-slate-400" />
             <span className="text-xs text-slate-400">{conference.participants.length} participant(s)</span>
           </div>
-          <Badge variant="outline" className="text-xs">{conference.location}</Badge>
+          <Badge variant="default" className="text-xs">{conference.location}</Badge>
         </div>
 
         {/* Décisions extraites */}

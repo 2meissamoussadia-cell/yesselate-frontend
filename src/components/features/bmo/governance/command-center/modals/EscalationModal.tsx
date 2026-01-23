@@ -131,7 +131,7 @@ export function EscalationModal() {
               </div>
               <p className="text-sm text-slate-300">{source.designation}</p>
               <div className="flex items-center gap-2 mt-1">
-                <Badge variant="outline" className="text-xs bg-slate-700/50 text-slate-400 border-slate-600">
+                <Badge variant="default" className="text-xs bg-slate-700/50 text-slate-400 border-slate-600">
                   {source.reference}
                 </Badge>
                 {source.project && (
@@ -279,7 +279,7 @@ export function EscalationModal() {
             L'escalade notifiera automatiquement le destinataire
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" className="border-slate-700" onClick={closeModal}>
+            <Button variant="default" size="sm" className="border-slate-700" onClick={closeModal}>
               Annuler
             </Button>
             <Button

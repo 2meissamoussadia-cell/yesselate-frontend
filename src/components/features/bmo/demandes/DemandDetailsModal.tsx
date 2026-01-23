@@ -165,8 +165,8 @@ export function DemandDetailsModal({
                     Participants
                   </label>
                   <div className="flex flex-wrap gap-2">
-                    <Badge variant="outline">Bureau: {demand.bureau}</Badge>
-                    <Badge variant="outline">Demandeur: À définir</Badge>
+                    <Badge variant="default">Bureau: {demand.bureau}</Badge>
+                    <Badge variant="default">Demandeur: À définir</Badge>
                   </div>
                 </div>
               </div>
@@ -307,7 +307,7 @@ export function DemandDetailsModal({
                 🔺 Escalader
               </Button>
               <Button
-                variant="outline"
+                variant="default"
                 size="sm"
                 onClick={(e) => {
                   e.stopPropagation();

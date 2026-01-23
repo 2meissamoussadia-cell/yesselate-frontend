@@ -183,7 +183,7 @@ export const transitions = {
   slowest: '1000ms',
 } as const;
 
-export const easing = {
+export const easingTokens = {
   linear: 'linear',
   easeIn: 'cubic-bezier(0.4, 0, 1, 1)',
   easeOut: 'cubic-bezier(0, 0, 0.2, 1)',

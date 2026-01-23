@@ -154,7 +154,7 @@ export function GovernanceStats({ className }: GovernanceStatsProps) {
               <div className="text-3xl font-bold text-white">{stats.performance.tasksCompleted}</div>
               <div className="text-xs text-white/60">Tâches complétées</div>
             </div>
-            <Badge variant="outline" className="bg-emerald-500/20 text-emerald-300 border-emerald-500/30">
+            <Badge variant="default" className="bg-emerald-500/20 text-emerald-300 border-emerald-500/30">
               +{stats.performance.tasksThisWeek} cette semaine
             </Badge>
           </div>

@@ -137,7 +137,7 @@ export function TransactionsDataTable({
     const { label, className } = config[status] || config.pending;
 
     return (
-      <Badge variant="outline" className={cn('text-xs', className)}>
+      <Badge variant="default" className={cn('text-xs', className)}>
         {label}
       </Badge>
     );
@@ -173,14 +173,14 @@ export function TransactionsDataTable({
           </p>
           <div className="flex items-center gap-2">
             <Button
-              variant="outline"
+              variant="default"
               size="sm"
               className="h-8 text-xs border-slate-700 text-slate-400"
             >
               Exporter la sélection
             </Button>
             <Button
-              variant="outline"
+              variant="default"
               size="sm"
               className="h-8 text-xs border-rose-500/30 text-rose-400 hover:bg-rose-500/10"
             >
@@ -340,7 +340,7 @@ export function TransactionsDataTable({
                     </td>
                     <td className="px-4 py-3">
                       <Badge
-                        variant="outline"
+                        variant="default"
                         className="text-xs bg-slate-800/50 text-slate-400 border-slate-700/50"
                       >
                         {transaction.bureau}
@@ -401,7 +401,7 @@ export function TransactionsDataTable({
           </p>
           <div className="flex items-center gap-2">
             <Button
-              variant="outline"
+              variant="default"
               size="sm"
               onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
               disabled={currentPage === 1}
@@ -429,7 +429,7 @@ export function TransactionsDataTable({
               );
             })}
             <Button
-              variant="outline"
+              variant="default"
               size="sm"
               onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
               disabled={currentPage === totalPages}

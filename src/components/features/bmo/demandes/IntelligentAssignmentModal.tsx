@@ -64,7 +64,7 @@ export function IntelligentAssignmentModal({
       }
 
       // Bonus si charge faible (simulé)
-      const taskCount = emp.tasks || 0;
+      const taskCount = (emp as any).tasks || 0;
       if (taskCount < 5) {
         score += 20;
         reasons.push('Charge de travail faible');
@@ -74,7 +74,7 @@ export function IntelligentAssignmentModal({
       }
 
       // Bonus si compétence match (simulé basé sur le type)
-      if (demand.type === 'BC' && emp.position?.includes('Achat')) {
+      if (demand.type === 'BC' && (emp as any).position?.includes('Achat')) {
         score += 15;
         reasons.push('Compétence alignée avec le type de demande');
       }
@@ -220,9 +220,9 @@ export function IntelligentAssignmentModal({
                           <div className="flex items-center gap-2 text-xs text-slate-400 mb-2">
                             <BureauTag bureau={rec.employee.bureau} />
                             <span>•</span>
-                            <span>{rec.employee.position || 'Agent'}</span>
+                            <span>{(rec.employee as any).position || 'Agent'}</span>
                             <span>•</span>
-                            <span>{rec.employee.tasks || 0} tâches</span>
+                            <span>{(rec.employee as any).tasks || 0} tâches</span>
                           </div>
                           <div className="space-y-1">
                             {rec.reasons.map((reason, rIdx) => (

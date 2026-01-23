@@ -11,10 +11,10 @@ export interface ResizeObserverSize {
 }
 
 export function useResizeObserver<T extends HTMLElement = HTMLDivElement>(): [
-  RefObject<T>,
+  RefObject<T | null>,
   ResizeObserverSize | null
 ] {
-  const elementRef = useRef<T>(null);
+  const elementRef = useRef<T | null>(null);
   const [size, setSize] = useState<ResizeObserverSize | null>(null);
 
   const handleResize = useCallback((entries: ResizeObserverEntry[]) => {

@@ -19,7 +19,7 @@ export async function POST(
     const resolvedAnomaly: DocumentAnomaly = {
       id: anomalyId,
       field: 'montant_ttc',
-      type: 'amount_mismatch',
+      type: 'montant_incoherent',
       severity: 'critical',
       message: 'Le montant TTC (15 450 €) ne correspond pas à HT + TVA (15 230 €). Différence: 220 €',
       detectedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),

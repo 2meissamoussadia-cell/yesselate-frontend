@@ -51,7 +51,7 @@ export function ScheduledInstancesView() {
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
                   <Calendar className="h-4 w-4 text-blue-400" />
-                  <Badge variant="outline" className="text-xs border-slate-700 text-slate-400">
+                  <Badge variant="default" className="text-xs border-slate-700 text-slate-400">
                     {instance.type}
                   </Badge>
                 </div>
@@ -72,7 +72,7 @@ export function ScheduledInstancesView() {
                   <p className="text-slate-400 font-medium mb-2">Participants attendus:</p>
                   <div className="flex flex-wrap gap-2">
                     {instance.participants.map((participant, idx) => (
-                      <Badge key={idx} variant="outline" className="text-xs border-slate-700 text-slate-400">
+                      <Badge key={idx} variant="default" className="text-xs border-slate-700 text-slate-400">
                         <Users className="h-3 w-3 mr-1" />
                         {participant}
                       </Badge>
@@ -90,7 +90,7 @@ export function ScheduledInstancesView() {
               </div>
             </div>
             <div className="flex items-center justify-end pt-3 border-t border-slate-700/30">
-              <Button variant="outline" size="sm" className="border-slate-700 text-slate-400">
+              <Button variant="default" size="sm" className="border-slate-700 text-slate-400">
                 Voir calendrier
                 <ArrowUpRight className="h-3 w-3 ml-1" />
               </Button>

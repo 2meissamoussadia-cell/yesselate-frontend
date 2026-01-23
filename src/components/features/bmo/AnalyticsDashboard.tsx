@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { analyticsService, type ProjetsAnalytics, type KPIData } from '@/lib/services/analyticsService';
+import { analyticsService, type ProjetsAnalytics, type KPIData } from '../../../../lib/services/analyticsService';
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { TrendingUp, TrendingDown, Minus, Download, Calendar } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -215,11 +215,11 @@ function ProjetsCharts({ data }: { data: ProjetsAnalytics }) {
         <ResponsiveContainer width="100%" height={300}>
           <PieChart>
             <Pie
-              data={data.repartitionStatuts}
+              data={data.repartitionStatuts as any}
               cx="50%"
               cy="50%"
               labelLine={false}
-              label={({ category, percentage }) => `${category} (${percentage}%)`}
+              label={({ category, percentage }: any) => `${category} (${percentage}%)`}
               outerRadius={100}
               fill="#8884d8"
               dataKey="value"
@@ -278,7 +278,7 @@ function FinancesCharts({ data }: { data: any }) {
         <h3 className="font-semibold text-slate-200 mb-4">Répartition Dépenses</h3>
         <ResponsiveContainer width="100%" height={300}>
           <PieChart>
-            <Pie data={data.repartitionDepenses} cx="50%" cy="50%" outerRadius={100} fill="#8884d8" dataKey="value" label={({ category, percentage }) => `${category} (${percentage}%)`}>
+            <Pie data={data.repartitionDepenses as any} cx="50%" cy="50%" outerRadius={100} fill="#8884d8" dataKey="value" label={({ category, percentage }: any) => `${category} (${percentage}%)`}>
               {data.repartitionDepenses.map((entry: any, index: number) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
@@ -312,7 +312,7 @@ function RHCharts({ data }: { data: any }) {
         <h3 className="font-semibold text-slate-200 mb-4">Répartition Compétences</h3>
         <ResponsiveContainer width="100%" height={300}>
           <PieChart>
-            <Pie data={data.repartitionCompetences} cx="50%" cy="50%" outerRadius={100} fill="#8884d8" dataKey="value" label={({ category, percentage }) => `${category} (${percentage}%)`}>
+            <Pie data={data.repartitionCompetences as any} cx="50%" cy="50%" outerRadius={100} fill="#8884d8" dataKey="value" label={({ category, percentage }: any) => `${category} (${percentage}%)`}>
               {data.repartitionCompetences.map((entry: any, index: number) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}

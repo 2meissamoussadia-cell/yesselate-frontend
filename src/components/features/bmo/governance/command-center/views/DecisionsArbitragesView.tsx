@@ -251,7 +251,7 @@ export function DecisionsArbitragesView() {
                     </td>
                     <td className="px-4 py-3">
                       <Badge
-                        variant="outline"
+                        variant="default"
                         className="bg-slate-800/50 text-slate-400 border-slate-700 text-xs"
                       >
                         {decision.type}
@@ -259,7 +259,7 @@ export function DecisionsArbitragesView() {
                     </td>
                     <td className="px-4 py-3">
                       <Badge
-                        variant="outline"
+                        variant="default"
                         className={cn(
                           'text-xs',
                           decision.impact === 'high'

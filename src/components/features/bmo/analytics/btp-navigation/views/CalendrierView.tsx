@@ -222,7 +222,7 @@ function CalendarDomainContent({
         <h2 className="text-lg font-semibold text-slate-200 mb-4">Fenêtres Avancées</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           <Button
-            variant="outline"
+            variant="default"
             onClick={onOpenTimeline}
             className="justify-start h-auto py-3"
           >
@@ -234,7 +234,7 @@ function CalendarDomainContent({
           </Button>
           
           <Button
-            variant="outline"
+            variant="default"
             onClick={onOpenHeatmap}
             className="justify-start h-auto py-3"
           >
@@ -246,7 +246,7 @@ function CalendarDomainContent({
           </Button>
           
           <Button
-            variant="outline"
+            variant="default"
             onClick={onOpenMultiResources}
             className="justify-start h-auto py-3"
           >
@@ -258,7 +258,7 @@ function CalendarDomainContent({
           </Button>
           
           <Button
-            variant="outline"
+            variant="default"
             onClick={onOpenCrossView}
             className="justify-start h-auto py-3"
           >
@@ -270,7 +270,7 @@ function CalendarDomainContent({
           </Button>
           
           <Button
-            variant="outline"
+            variant="default"
             onClick={onOpenPlanningProjet}
             className="justify-start h-auto py-3"
           >
@@ -354,7 +354,7 @@ function CalendarDomainContent({
                 <div className="text-xs text-slate-400">
                   {mod.subModules.length} sous-module{mod.subModules.length > 1 ? 's' : ''}
                 </div>
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="default" className="text-xs">
                   Synchronisé
                 </Badge>
               </div>

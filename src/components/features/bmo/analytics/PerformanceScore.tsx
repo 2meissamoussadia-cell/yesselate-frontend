@@ -143,7 +143,7 @@ export function PerformanceScore({ yearlyTotals, enrichedData }: PerformanceScor
                   )}>
                     {item.score.toFixed(0)}/{item.maxScore}
                   </span>
-                  <Badge variant="outline" className="text-[9px]">
+                  <Badge variant="default" className="text-[9px]">
                     {item.comment}
                   </Badge>
                 </div>

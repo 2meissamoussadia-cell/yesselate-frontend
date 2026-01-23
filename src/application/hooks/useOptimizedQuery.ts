@@ -12,7 +12,7 @@ interface OptimizedQueryOptions<TData, TError> extends Omit<UseQueryOptions<TDat
   prefetchOnMount?: boolean;
   prefetchOnHover?: boolean;
   staleTime?: number;
-  cacheTime?: number;
+  gcTime?: number;
 }
 
 /**
@@ -24,7 +24,7 @@ export function useOptimizedQuery<TData = unknown, TError = Error>({
   prefetchOnMount = true,
   prefetchOnHover = false,
   staleTime = 5 * 60 * 1000, // 5 minutes par défaut
-  cacheTime = 10 * 60 * 1000, // 10 minutes par défaut
+  gcTime = 10 * 60 * 1000, // 10 minutes par défaut
   ...queryOptions
 }: OptimizedQueryOptions<TData, TError>) {
   const queryClient = useQueryClient();
@@ -45,7 +45,7 @@ export function useOptimizedQuery<TData = unknown, TError = Error>({
     queryKey,
     queryFn,
     staleTime,
-    cacheTime,
+    gcTime,
     ...queryOptions,
   });
 

@@ -44,7 +44,7 @@ export function AnalyticsInboxView({ tab }: AnalyticsInboxViewProps) {
     if (queue === 'performance' || queue === 'financial' || queue === 'operations' || queue === 'quality') {
       return {
         type: 'kpis' as const,
-        items: calculateKPIs().filter(kpi => queue === 'all' || kpi.category === queue),
+        items: calculateKPIs().filter(kpi => (queue as string) === 'all' || kpi.category === (queue as any)),
       };
     } else if (queue === 'alerts') {
       return {

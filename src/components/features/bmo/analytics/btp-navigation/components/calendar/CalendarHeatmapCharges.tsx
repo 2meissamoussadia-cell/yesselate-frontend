@@ -49,7 +49,7 @@ export function CalendarHeatmapCharges({ isOpen, onClose }: CalendarHeatmapCharg
             <span className="text-sm text-slate-400">Analyse IA - Charge & Disponibilité</span>
           </div>
           <div className="flex items-center gap-2">
-            <Badge variant="outline" className="text-xs">
+            <Badge variant="default" className="text-xs">
               <Brain className="h-3 w-3 mr-1" />
               IA
             </Badge>
@@ -127,7 +127,7 @@ export function CalendarHeatmapCharges({ isOpen, onClose }: CalendarHeatmapCharg
         </div>
 
         <div className="flex justify-end gap-2 pt-4 border-t border-slate-700">
-          <Button variant="outline" size="sm" onClick={onClose}>
+          <Button variant="default" size="sm" onClick={onClose}>
             Fermer
           </Button>
           <Button variant="default" size="sm">

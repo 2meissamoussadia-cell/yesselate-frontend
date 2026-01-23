@@ -176,7 +176,6 @@ export function ChantiersSubNavigation({
                 <span>{sub.label}</span>
                 {sub.badge !== undefined && sub.badge !== 0 && (
                   <Badge
-                    variant="outline"
                     className={cn(
                       'h-4 min-w-4 px-1 text-xs',
                       sub.badgeType === 'critical'

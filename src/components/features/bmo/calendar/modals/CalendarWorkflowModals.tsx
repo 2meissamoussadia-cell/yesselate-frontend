@@ -320,7 +320,7 @@ export function CreateEventModal({
               {participants.map((p) => (
                 <Badge
                   key={p}
-                  variant="outline"
+                  variant="gray"
                   className="bg-slate-800/50 text-slate-300 border-slate-700 pr-1"
                 >
                   {p}

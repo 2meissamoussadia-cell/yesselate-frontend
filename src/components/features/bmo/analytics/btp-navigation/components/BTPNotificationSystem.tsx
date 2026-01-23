@@ -164,7 +164,7 @@ export function BTPNotificationSystem({
                       ? 'destructive'
                       : notification.alert.type === 'warning'
                       ? 'default'
-                      : 'outline'
+                      : 'default'
                   }
                   className="text-xs"
                 >

@@ -277,9 +277,7 @@ export function ProjetsSensiblesView() {
                           <div
                             className={cn(
                               'h-full rounded-full',
-                              project.status === 'on-track'
-                                ? 'bg-emerald-500'
-                                : project.status === 'at-risk'
+                              project.status === 'at-risk'
                                 ? 'bg-amber-500'
                                 : 'bg-red-500'
                             )}
@@ -294,19 +292,15 @@ export function ProjetsSensiblesView() {
                     </td>
                     <td className="px-4 py-3">
                       <Badge
-                        variant="outline"
+                        variant="default"
                         className={cn(
                           'text-xs',
-                          project.status === 'on-track'
-                            ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                            : project.status === 'at-risk'
+                          project.status === 'at-risk'
                             ? 'bg-amber-500/10 text-amber-400 border-amber-500/30'
                             : 'bg-red-500/10 text-red-400 border-red-500/30'
                         )}
                       >
-                        {project.status === 'on-track'
-                          ? 'En bonne voie'
-                          : project.status === 'at-risk'
+                        {project.status === 'at-risk'
                           ? 'À risque'
                           : 'En retard'}
                       </Badge>

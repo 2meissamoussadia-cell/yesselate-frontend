@@ -74,7 +74,7 @@ export function AdvancedFilters({ filters, onFiltersChange }: AdvancedFiltersPro
   return (
     <div ref={rootRef} className="relative">
       <Button
-        variant="outline"
+        variant="default"
         size="sm"
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
@@ -174,7 +174,7 @@ export function AdvancedFilters({ filters, onFiltersChange }: AdvancedFiltersPro
                 {bureaux.map(bureau => (
                   <Badge
                     key={bureau.code}
-                    variant={filters.bureaux?.includes(bureau.code) ? 'default' : 'outline'}
+                    variant={filters.bureaux?.includes(bureau.code) ? 'default' : 'gray'}
                     className="cursor-pointer"
                     onClick={() => {
                       const current = filters.bureaux || [];

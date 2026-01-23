@@ -93,7 +93,7 @@ export function CalendarPlanningProjet({ isOpen, onClose }: CalendarPlanningProj
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
+            <Button variant="default" size="sm">
               Synchroniser
             </Button>
           </div>
@@ -112,7 +112,7 @@ export function CalendarPlanningProjet({ isOpen, onClose }: CalendarPlanningProj
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <TypeIcon className="h-4 w-4 text-indigo-400" />
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="default" className="text-xs">
                         {milestone.type === 'milestone' ? 'Jalon' : milestone.type === 'checkpoint' ? 'Point contrôle' : 'Réunion'}
                       </Badge>
                       <span className="text-sm font-medium text-slate-200">{milestone.title}</span>
@@ -131,7 +131,7 @@ export function CalendarPlanningProjet({ isOpen, onClose }: CalendarPlanningProj
                   <div className="text-xs text-slate-500 mb-2">Livrables :</div>
                   <div className="flex flex-wrap gap-2 mb-3">
                     {milestone.deliverables.map((deliverable, idx) => (
-                      <Badge key={idx} variant="outline" className="text-xs">
+                      <Badge key={idx} variant="default" className="text-xs">
                         <Package className="h-3 w-3 mr-1" />
                         {deliverable}
                       </Badge>
@@ -140,7 +140,7 @@ export function CalendarPlanningProjet({ isOpen, onClose }: CalendarPlanningProj
                   <div className="text-xs text-slate-500 mb-1">Équipes :</div>
                   <div className="flex flex-wrap gap-2">
                     {milestone.team.map((team, idx) => (
-                      <Badge key={idx} variant="outline" className="text-xs">
+                      <Badge key={idx} variant="default" className="text-xs">
                         {team}
                       </Badge>
                     ))}
@@ -148,13 +148,13 @@ export function CalendarPlanningProjet({ isOpen, onClose }: CalendarPlanningProj
                 </div>
 
                 <div className="flex items-center gap-2 mt-4">
-                  <Button variant="outline" size="sm" className="flex-1">
+                  <Button variant="default" size="sm" className="flex-1">
                     Ouvrir Projet
                   </Button>
-                  <Button variant="outline" size="sm" className="flex-1">
+                  <Button variant="default" size="sm" className="flex-1">
                     Notifier Équipe
                   </Button>
-                  <Button variant="outline" size="sm" className="flex-1">
+                  <Button variant="default" size="sm" className="flex-1">
                     Replanifier
                   </Button>
                 </div>
@@ -164,7 +164,7 @@ export function CalendarPlanningProjet({ isOpen, onClose }: CalendarPlanningProj
         </div>
 
         <div className="flex justify-end gap-2 pt-4 border-t border-slate-700">
-          <Button variant="outline" size="sm" onClick={onClose}>
+          <Button variant="default" size="sm" onClick={onClose}>
             Fermer
           </Button>
           <Button variant="default" size="sm">

@@ -20,7 +20,6 @@ export { logsApiService } from './logsApiService';
 // Services fonctionnels
 export { exportService } from './exportService';
 export { documentService } from './documentService';
-export { auditService } from './auditService';
 export { notificationService } from './notificationService';
 export { searchService } from './searchService';
 export { analyticsService } from './analyticsService';
@@ -38,16 +37,8 @@ export type {
 export type { 
   // Document types
   Document, 
-  DocumentCategory, 
   DocumentFilters 
 } from './documentService';
-
-export type { 
-  // Audit types
-  AuditEvent, 
-  AuditEventType, 
-  AuditFilters 
-} from './auditService';
 
 export type { 
   // Notification types

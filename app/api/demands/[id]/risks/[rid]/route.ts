@@ -11,7 +11,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
 
   const data: {
     category?: string;
-    opportunity?: boolean;
+    opportunity?: number;
     probability?: number;
     impact?: number;
     mitigation?: string | null;
@@ -19,7 +19,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   } = {};
 
   if (body?.category) data.category = String(body.category).trim();
-  if ('opportunity' in body) data.opportunity = Boolean(body.opportunity);
+  if ('opportunity' in body) data.opportunity = Boolean(body.opportunity) ? 1 : 0;
   if ('probability' in body) data.probability = clamp15(body.probability);
   if ('impact' in body) data.impact = clamp15(body.impact);
   if ('mitigation' in body) data.mitigation = body.mitigation ? String(body.mitigation) : null;

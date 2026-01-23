@@ -213,7 +213,7 @@ export function InstancesCoordinationView() {
               variant="ghost"
               size="sm"
               className="text-xs text-slate-500 hover:text-slate-300"
-              onClick={() => openModal('conference-create', {})}
+              onClick={() => openModal('action-plan' as any, {})}
             >
               <UserPlus className="h-3 w-3 mr-1" />
               Convoquer
@@ -224,7 +224,7 @@ export function InstancesCoordinationView() {
               <div
                 key={conference.id}
                 className="flex items-center justify-between px-4 py-3 hover:bg-slate-800/30 transition-colors cursor-pointer"
-                onClick={() => openModal('conference-detail', conference)}
+                onClick={() => openModal('action-plan' as any, conference)}
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20">
@@ -234,7 +234,7 @@ export function InstancesCoordinationView() {
                     <div className="flex items-center gap-2 mb-1">
                       <p className="text-sm text-slate-300">{conference.title}</p>
                       <Badge
-                        variant="outline"
+                        variant="default"
                         className={cn(
                           'text-xs',
                           conference.status === 'completed'
@@ -267,7 +267,7 @@ export function InstancesCoordinationView() {
                     className="h-7 px-2 text-slate-400 hover:text-slate-300"
                     onClick={(e) => {
                       e.stopPropagation();
-                      openModal('conference-detail', conference);
+                      openModal('action-plan' as any, conference);
                     }}
                   >
                     <ChevronRight className="h-4 w-4" />
@@ -292,7 +292,7 @@ export function InstancesCoordinationView() {
               <div
                 key={exchange.id}
                 className="flex items-center justify-between px-4 py-3 hover:bg-slate-800/30 transition-colors cursor-pointer"
-                onClick={() => openModal('exchange-detail', exchange)}
+                onClick={() => openModal('action-plan' as any, exchange)}
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   <div className="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20">
@@ -320,7 +320,7 @@ export function InstancesCoordinationView() {
                     className="h-7 px-2 bg-blue-600/80 hover:bg-blue-600 text-xs"
                     onClick={(e) => {
                       e.stopPropagation();
-                      openModal('exchange-detail', { ...exchange, action: 'treat' });
+                      openModal('action-plan', { ...exchange, action: 'treat' });
                     }}
                   >
                     <Play className="h-3 w-3 mr-1" />
@@ -348,7 +348,7 @@ export function InstancesCoordinationView() {
               <div
                 key={message.id}
                 className="flex items-center justify-between px-4 py-3 hover:bg-slate-800/30 transition-colors cursor-pointer"
-                onClick={() => openModal('message-detail', message)}
+                onClick={() => openModal('action-plan' as any, message)}
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   <div className="flex items-center justify-center w-8 h-8 rounded-full bg-amber-500/20">
@@ -358,7 +358,7 @@ export function InstancesCoordinationView() {
                     <div className="flex items-center gap-2 mb-1">
                       <p className="text-sm text-slate-300">{message.subject}</p>
                       <Badge
-                        variant="outline"
+                        variant="default"
                         className={cn(
                           'text-xs',
                           message.impact === 'financial'
@@ -388,7 +388,7 @@ export function InstancesCoordinationView() {
                     className="h-7 px-2 bg-blue-600/80 hover:bg-blue-600 text-xs"
                     onClick={(e) => {
                       e.stopPropagation();
-                      openModal('message-detail', { ...message, action: 'treat' });
+                      openModal('action-plan', { ...message, action: 'treat' });
                     }}
                   >
                     <Play className="h-3 w-3 mr-1" />

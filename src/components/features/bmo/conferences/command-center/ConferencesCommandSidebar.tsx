@@ -204,9 +204,8 @@ export const ConferencesCommandSidebar = React.memo(function ConferencesCommandS
                       {category.label}
                     </span>
 
-                    {category.badge !== undefined && category.badge > 0 && (
+                    {category.badge !== undefined && (typeof category.badge === 'number' ? category.badge > 0 : category.badge !== '0' && category.badge !== '') && (
                       <Badge
-                        variant="outline"
                         className={cn(
                           'h-5 min-w-5 px-1.5 text-xs font-medium transition-all duration-200',
                           category.badgeType === 'critical'
@@ -223,7 +222,7 @@ export const ConferencesCommandSidebar = React.memo(function ConferencesCommandS
                 )}
 
                 {/* Collapsed Badge */}
-                {collapsed && category.badge !== undefined && category.badge > 0 && (
+                {collapsed && category.badge !== undefined && (typeof category.badge === 'number' ? category.badge > 0 : category.badge !== '0' && category.badge !== '') && (
                   <div
                     className={cn(
                       'absolute -top-1 -right-1 h-4 min-w-4 px-1 rounded-full text-xs flex items-center justify-center font-medium transition-transform duration-200',

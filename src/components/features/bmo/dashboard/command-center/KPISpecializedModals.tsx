@@ -121,7 +121,7 @@ export function OperationalKPIModal({ kpiId, onClose }: KPISpecializedModalProps
                 </div>
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
                   <p className="text-xs text-slate-500 mb-1">Statut</p>
-                  <Badge variant={displayData?.tone === 'ok' ? 'default' : displayData?.tone === 'warn' ? 'secondary' : 'destructive'}>
+                  <Badge variant={displayData?.tone === 'ok' ? 'default' : displayData?.tone === 'warn' ? 'warning' : 'destructive'}>
                     {displayData?.tone === 'ok' ? 'Normal' : displayData?.tone === 'warn' ? 'Attention' : 'Critique'}
                   </Badge>
                 </div>
@@ -384,7 +384,7 @@ export function FinancialKPIModal({ kpiId, onClose }: KPISpecializedModalProps) 
                         <span className="text-sm text-slate-300">
                           {date.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}
                         </span>
-                        <Badge variant="secondary" className="text-xs">
+                        <Badge variant="default" className="text-xs">
                           Confiance: {Math.max(50, 100 - (month * 15))}%
                         </Badge>
                       </div>
@@ -621,4 +621,5 @@ export function PerformanceKPIModal({ kpiId, onClose }: KPISpecializedModalProps
     </div>
   );
 }
+
 

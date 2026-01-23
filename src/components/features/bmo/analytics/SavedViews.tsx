@@ -146,7 +146,7 @@ export function SavedViews({
   return (
     <div ref={rootRef} className="relative">
       <Button
-        variant="outline"
+        variant="default"
         size="sm"
         onClick={() => setIsOpen((s) => !s)}
         aria-expanded={isOpen}
@@ -156,7 +156,7 @@ export function SavedViews({
         <Bookmark className="w-4 h-4" />
         Vues
         {views.length > 0 && (
-          <Badge variant="secondary" className="ml-1">
+          <Badge variant="gray" className="ml-1">
             {views.length}
           </Badge>
         )}
@@ -215,7 +215,7 @@ export function SavedViews({
                       <div className="mt-2 flex flex-wrap gap-1">
                         {v.state.advancedFilters?.period && <Badge variant="info">{String(v.state.advancedFilters.period)}</Badge>}
                         {Array.isArray(v.state.selectedBureaux) && v.state.selectedBureaux.length > 0 && (
-                          <Badge variant="secondary">{v.state.selectedBureaux.length} bureau{v.state.selectedBureaux.length > 1 ? 'x' : ''}</Badge>
+                          <Badge variant="gray">{v.state.selectedBureaux.length} bureau{v.state.selectedBureaux.length > 1 ? 'x' : ''}</Badge>
                         )}
                       </div>
                     </div>

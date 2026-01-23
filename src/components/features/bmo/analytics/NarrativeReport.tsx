@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { useAppStore } from '@/lib/stores';
+import { useBMOStore } from '@/lib/stores/bmo-store';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -29,7 +30,8 @@ export function NarrativeReport({
   enrichedData,
   monthlyAverages,
 }: NarrativeReportProps) {
-  const { darkMode, addToast } = useAppStore();
+  const { darkMode } = useAppStore();
+  const { addToast } = useBMOStore();
 
   const report = useMemo(() => {
     const validationRate = (yearlyTotals.validations / yearlyTotals.demandes) * 100;
@@ -144,7 +146,7 @@ export function NarrativeReport({
             <FileText className="w-4 h-4" />
             Rapport narratif automatique
           </div>
-          <Button size="sm" variant="outline" onClick={handleExport}>
+          <Button size="sm" variant="default" onClick={handleExport}>
             <Download className="w-3 h-3 mr-1" />
             Exporter
           </Button>

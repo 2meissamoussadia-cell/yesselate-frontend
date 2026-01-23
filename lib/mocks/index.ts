@@ -15,7 +15,7 @@ export * from './timeline.mock';
 export * from './substitution.mock';
 
 // Réexport pour faciliter l'import
-export { mockProjets, mockProjetsStats, mockProjetsFilters } from './projets.mock';
+export { mockProjets, mockProjetsStats } from './projets.mock';
 export { mockClients, mockClientsStats } from './clients.mock';
 export { mockEmployes, mockEmployesStats } from './employes.mock';
 export { mockBlockedDossiers, mockBlockedStats } from './blocked.mock';

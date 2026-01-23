@@ -444,7 +444,7 @@ export function StrategicViewView() {
                   </td>
                   <td className="px-4 py-3">
                     <Badge
-                      variant="outline"
+                      variant="default"
                       className={cn(
                         'text-xs',
                         project.status === 'on-track'
@@ -497,7 +497,7 @@ export function StrategicViewView() {
       {/* Actions rapides */}
       <div className="flex items-center gap-2">
         <Button
-          variant="outline"
+          variant="default"
           size="sm"
           className="text-xs border-slate-700 text-slate-400 hover:text-slate-300"
           onClick={() => navigate('decisions-arbitrages' as any)}

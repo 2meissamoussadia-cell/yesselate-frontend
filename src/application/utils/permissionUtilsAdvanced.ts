@@ -3,8 +3,8 @@
  * Helpers pour les permissions avancées
  */
 
-export type Permission = string;
-export type Role = string;
+import type { Permission, Role, UserPermissions as BaseUserPermissions } from './permissionUtils';
+
 export type Resource = string;
 export type Action = 'create' | 'read' | 'update' | 'delete' | 'execute';
 
@@ -14,9 +14,7 @@ export interface PermissionConfig {
   resources?: Record<Resource, Action[]>;
 }
 
-export interface UserPermissions {
-  roles: Role[];
-  permissions: Permission[];
+export interface UserPermissionsAdvanced extends BaseUserPermissions {
   resources?: Record<Resource, Action[]>;
 }
 
@@ -116,7 +114,7 @@ export const permissionManager = new PermissionManager();
  * Vérifie si un utilisateur a une permission
  */
 export function hasUserPermission(
-  userPermissions: UserPermissions,
+  userPermissions: UserPermissionsAdvanced | BaseUserPermissions,
   permission: Permission
 ): boolean {
   // Vérification directe
@@ -138,7 +136,7 @@ export function hasUserPermission(
  * Vérifie si un utilisateur peut accéder à une ressource
  */
 export function canUserAccessResource(
-  userPermissions: UserPermissions,
+  userPermissions: UserPermissionsAdvanced,
   resource: Resource,
   action: Action
 ): boolean {
@@ -162,7 +160,7 @@ export function canUserAccessResource(
  */
 export function filterByPermission<T>(
   items: T[],
-  userPermissions: UserPermissions,
+  userPermissions: UserPermissionsAdvanced | BaseUserPermissions,
   getPermission: (item: T) => Permission
 ): T[] {
   return items.filter((item) =>
@@ -175,7 +173,7 @@ export function filterByPermission<T>(
  */
 export function filterByResourceAccess<T>(
   items: T[],
-  userPermissions: UserPermissions,
+  userPermissions: UserPermissionsAdvanced,
   resource: Resource,
   action: Action,
   getResourceId: (item: T) => Resource
@@ -195,7 +193,7 @@ export function filterByResourceAccess<T>(
  */
 export function combinePermissions(
   ...configs: PermissionConfig[]
-): UserPermissions {
+): UserPermissionsAdvanced {
   const roles = new Set<Role>();
   const permissions = new Set<Permission>();
   const resources: Record<Resource, Action[]> = {};
@@ -228,7 +226,7 @@ export function combinePermissions(
 /**
  * Crée une fonction de vérification de permission réutilisable
  */
-export function createPermissionChecker(userPermissions: UserPermissions) {
+export function createPermissionChecker(userPermissions: UserPermissionsAdvanced | BaseUserPermissions) {
   return {
     has: (permission: Permission) =>
       hasUserPermission(userPermissions, permission),

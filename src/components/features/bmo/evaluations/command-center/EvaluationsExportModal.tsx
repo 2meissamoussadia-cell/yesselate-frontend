@@ -141,7 +141,6 @@ export function EvaluationsExportModal({ open, onClose, filteredCount = 0, selec
       open={open}
       onClose={onClose}
       title="📥 Export des évaluations"
-      size="xl"
     >
       <div className="space-y-6">
         {/* Format de sortie */}

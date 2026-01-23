@@ -15,6 +15,33 @@ export type DashboardMainCategory =
   | 'decisions' 
   | 'realtime';
 
+export type DashboardSubCategory =
+  | 'summary'
+  | 'kpis'
+  | 'bureaux'
+  | 'trends'
+  | 'validation'
+  | 'budget'
+  | 'delays'
+  | 'comparison'
+  | 'all'
+  | 'urgent'
+  | 'blocked'
+  | 'pending'
+  | 'completed'
+  | 'critical'
+  | 'warnings'
+  | 'blocages'
+  | 'payments'
+  | 'contracts'
+  | 'executed'
+  | 'timeline'
+  | 'audit'
+  | 'live'
+  | 'alerts'
+  | 'notifications'
+  | 'sync';
+
 export interface DashboardNavigation {
   mainCategory: DashboardMainCategory;
   subCategory: string | null;

@@ -129,10 +129,10 @@ function EventDetailContent({ data }: { data: Record<string, unknown> }) {
     <div className="space-y-4">
       <div>
         <div className="flex items-center justify-between mb-2">
-          <h4 className="text-sm font-semibold text-slate-200">{data.name || 'Événement'}</h4>
-          {data.status && (
+          <h4 className="text-sm font-semibold text-slate-200">{String(data.name || 'Événement')}</h4>
+          {Boolean(data.status) ? (
             <Badge
-              variant="outline"
+              variant="gray"
               className={cn(
                 'text-xs',
                 data.status === 'critical' && 'bg-red-500/20 text-red-400 border-red-500/30',
@@ -142,14 +142,14 @@ function EventDetailContent({ data }: { data: Record<string, unknown> }) {
             >
               {String(data.status)}
             </Badge>
-          )}
+          ) : null}
         </div>
-        {data.value && (
+        {Boolean(data.value) ? (
           <p className="text-2xl font-bold text-slate-100">{String(data.value)}</p>
-        )}
+        ) : null}
       </div>
 
-      {data.trend && (
+      {Boolean(data.trend) ? (
         <div className="flex items-center gap-2 text-sm">
           <span className="text-slate-500">Tendance:</span>
           <span
@@ -160,10 +160,10 @@ function EventDetailContent({ data }: { data: Record<string, unknown> }) {
               data.trend === 'stable' && 'text-slate-400'
             )}
           >
-            {data.trendValue || data.trend}
+            {String(data.trendValue || data.trend || '')}
           </span>
-        </div>
-      )}
+         </div>
+       ) : null}
 
       <div className="pt-4 border-t border-slate-800/50 space-y-3 text-sm">
         <div className="flex items-center gap-3">
@@ -188,11 +188,11 @@ function SecurityDetailContent({ data }: { data: Record<string, unknown> }) {
       <div>
         <div className="flex items-center justify-between mb-2">
           <h4 className="text-sm font-semibold text-slate-200">Alerte Sécurité</h4>
-          <Badge variant="outline" className="bg-red-500/20 text-red-400 border-red-500/30 text-xs">
+          <Badge variant="gray" className="bg-red-500/20 text-red-400 border-red-500/30 text-xs">
             Critique
           </Badge>
         </div>
-        <p className="text-slate-400 text-sm">{data.name || 'Détails de l\'alerte sécurité'}</p>
+        <p className="text-slate-400 text-sm">{String(data.name || 'Détails de l\'alerte sécurité')}</p>
       </div>
 
       <div className="pt-4 border-t border-slate-800/50 space-y-3 text-sm">
@@ -218,13 +218,13 @@ function ComplianceDetailContent({ data }: { data: Record<string, unknown> }) {
       <div>
         <div className="flex items-center justify-between mb-2">
           <h4 className="text-sm font-semibold text-slate-200">Vérification Conformité</h4>
-          <Badge variant="outline" className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-xs">
+          <Badge variant="gray" className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-xs">
             Conforme
           </Badge>
         </div>
-        {data.value && (
+        {Boolean(data.value) ? (
           <p className="text-2xl font-bold text-emerald-400">{String(data.value)}</p>
-        )}
+        ) : null}
       </div>
 
       <div className="pt-4 border-t border-slate-800/50 space-y-3 text-sm">
@@ -250,13 +250,13 @@ function TraceDetailContent({ data }: { data: Record<string, unknown> }) {
       <div>
         <div className="flex items-center justify-between mb-2">
           <h4 className="text-sm font-semibold text-slate-200">Traçabilité</h4>
-          <Badge variant="outline" className="bg-blue-500/20 text-blue-400 border-blue-500/30 text-xs">
+          <Badge variant="gray" className="bg-blue-500/20 text-blue-400 border-blue-500/30 text-xs">
             OK
           </Badge>
         </div>
-        {data.value && (
+        {Boolean(data.value) ? (
           <p className="text-2xl font-bold text-blue-400">{String(data.value)}</p>
-        )}
+        ) : null}
       </div>
 
       <div className="pt-4 border-t border-slate-800/50 space-y-3 text-sm">

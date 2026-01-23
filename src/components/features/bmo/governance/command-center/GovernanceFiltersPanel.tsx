@@ -272,7 +272,7 @@ export function GovernanceFiltersPanel({
                   <Icon className="h-4 w-4 text-slate-400" />
                   <h4 className="text-sm font-medium text-slate-300">{section.label}</h4>
                   {hasSelection && (
-                    <Badge variant="outline" className="bg-blue-500/20 text-blue-400 border-blue-500/30 text-xs">
+                    <Badge variant="default" className="bg-blue-500/20 text-blue-400 border-blue-500/30 text-xs">
                       {selected.length}
                     </Badge>
                   )}
@@ -313,7 +313,7 @@ export function GovernanceFiltersPanel({
         <div className="border-t border-slate-800/50 p-4 space-y-2">
           <div className="flex items-center gap-2">
             <Button
-              variant="outline"
+              variant="default"
               size="sm"
               onClick={handleReset}
               className="flex-1 border-slate-700 text-slate-400 hover:text-slate-200"

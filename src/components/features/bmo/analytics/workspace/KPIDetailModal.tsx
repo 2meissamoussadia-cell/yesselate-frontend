@@ -167,7 +167,6 @@ export function KPIDetailModal({ open, onClose, kpiId, fallbackData }: KPIDetail
       }
       maxWidth="6xl"
       noPadding
-      dark
     >
       <ErpModalLayout
         className="h-[85vh] min-h-[600px]"
@@ -892,7 +891,7 @@ function ActionsTab({
                           {action.priority}
                         </Badge>
                         <Badge
-                          variant={action.status === 'completed' ? 'default' : action.status === 'in-progress' ? 'warning' : 'secondary'}
+                          variant={action.status === 'completed' ? 'default' : action.status === 'in-progress' ? 'warning' : 'gray'}
                           className="text-xs"
                         >
                           {action.status === 'completed' ? 'Terminé' : action.status === 'in-progress' ? 'En cours' : 'En attente'}

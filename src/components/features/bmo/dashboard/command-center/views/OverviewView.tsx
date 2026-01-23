@@ -6,7 +6,7 @@
 
 'use client';
 
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -38,6 +38,7 @@ import {
   Sparkles,
   MoreVertical,
   ChevronRight,
+  Activity,
 } from 'lucide-react';
 import { useDashboardCommandCenterStore, type DashboardMainCategory } from '@/lib/stores/dashboardCommandCenterStore';
 import { useApiQuery } from '@/lib/api/hooks/useApiQuery';
@@ -493,7 +494,7 @@ const decisions: Decision[] = [
 function BureauBadge({ code, size = 'default' }: { code: BureauCode; size?: 'sm' | 'default' }) {
   return (
     <Badge
-      variant="outline"
+      variant="default"
       className={cn(
         'border-slate-700 text-slate-400',
         size === 'sm' ? 'text-[10px]' : 'text-xs'
@@ -518,17 +519,17 @@ export function OverviewView() {
     log.debug('Navigation depuis store', {
       mainCategory: navigation.mainCategory,
       subCategory: navigation.subCategory,
-      filter: navigation.filter,
+      filter: navigation.subSubCategory,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigation.mainCategory, navigation.subCategory, navigation.filter]); // log est stable
+  }, [navigation.mainCategory, navigation.subCategory, navigation.subSubCategory]); // log est stable
 
   // CORRECTION : Normaliser les valeurs du store avec useMemo pour garantir le recalcul
   const { activeMainMenu, activeSubMenu, activeFilter } = useMemo(() => {
     // Récupérer les valeurs du store
     let mainMenu = navigation.mainCategory || 'overview';
     let subMenu = navigation.subCategory || null;
-    let filter = navigation.filter || null;
+    let filter = navigation.subSubCategory || null;
 
     // Correction pour gérer les valeurs invalides dans le store
     const validMainCategories = ['overview', 'performance', 'actions', 'risks', 'decisions', 'realtime'];
@@ -578,28 +579,28 @@ export function OverviewView() {
     };
 
     // Log de normalisation si nécessaire
-    if (navigation.mainCategory !== mainMenu || navigation.subCategory !== subMenu || navigation.filter !== filter) {
+    if (navigation.mainCategory !== mainMenu || navigation.subCategory !== subMenu || navigation.subSubCategory !== filter) {
       log.debug('Normalisation appliquée', {
-        avant: { mainCategory: navigation.mainCategory, subCategory: navigation.subCategory, filter: navigation.filter },
+        avant: { mainCategory: navigation.mainCategory, subCategory: navigation.subCategory, filter: navigation.subSubCategory },
         après: result,
       });
     }
 
     return result;
-  }, [navigation.mainCategory, navigation.subCategory, navigation.filter]);
+  }, [navigation.mainCategory, navigation.subCategory, navigation.subSubCategory]);
 
   // Log du re-render avec navigation
   useEffect(() => {
     log.debug('Composant re-render avec navigation', {
       mainCategory: navigation.mainCategory,
       subCategory: navigation.subCategory,
-      filter: navigation.filter,
+      filter: navigation.subSubCategory,
       activeMainMenu,
       activeSubMenu,
       activeFilter,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigation.mainCategory, navigation.subCategory, navigation.filter, activeMainMenu, activeSubMenu, activeFilter]); // log est stable
+  }, [navigation.mainCategory, navigation.subCategory, navigation.subSubCategory, activeMainMenu, activeSubMenu, activeFilter]); // log est stable
 
   // DEBUG : Log après normalisation
   // Évaluer les conditions AVANT le return pour garantir le re-render
@@ -694,8 +695,8 @@ export function OverviewView() {
     ? (decisionsData as any).decisions 
     : decisions;
 
-  // Helper pour formater les montants
-  const formatAmount = (amount: number) => {
+  // Helper pour formater les montants - mémorisé
+  const formatAmount = useCallback((amount: number) => {
     if (amount >= 1000000) {
       return `${(amount / 1000000).toFixed(1)}M FCFA`;
     }
@@ -703,7 +704,28 @@ export function OverviewView() {
       return `${(amount / 1000).toFixed(0)}K FCFA`;
     }
     return `${amount} FCFA`;
-  };
+  }, []);
+
+  // Optimisation : KPIs groupés par thème
+  const kpisByTheme = useMemo(() => {
+    if (!Array.isArray(kpis)) return { activite: [], finances: [] };
+    return {
+      activite: kpis.filter((kpi) => kpi.id === 'demandes' || kpi.id === 'validations'),
+      finances: kpis.filter((kpi) => kpi.id === 'budget'),
+    };
+  }, [kpis]);
+
+  // Optimisation : Risques critiques mémorisés
+  const criticalRisks = useMemo(() => {
+    if (!Array.isArray(risks)) return [];
+    return risks.filter((r) => r.impact === 'critique' || r.impact === 'majeur').slice(0, 2);
+  }, [risks]);
+
+  // Optimisation : Décisions juridiques mémorisées
+  const legalDecisions = useMemo(() => {
+    if (!Array.isArray(decisionsList)) return [];
+    return decisionsList.filter((d) => d.type === 'delegation' || d.type === 'substitution').slice(0, 2);
+  }, [decisionsList]);
 
   // Calculer les pertes entre étapes du workflow
   const calculateWorkflowLosses = (stages: WorkflowStage[]) => {
@@ -744,18 +766,20 @@ export function OverviewView() {
     : [];
 
   return (
-    <div className="p-6 space-y-6 max-w-[1800px] mx-auto">
-      {/* DEBUG : Afficher navigation actuelle */}
-      <div className="mb-4 bg-yellow-500/20 border border-yellow-500 rounded-lg p-3">
-        <p className="text-yellow-300 text-sm font-mono">
-          🔍 DEBUG Navigation : {activeMainMenu} → {activeSubMenu || 'null'} → {activeFilter || 'null'}
-        </p>
-        {navigation.mainCategory !== activeMainMenu && (
-          <p className="text-orange-300 text-xs mt-2">
-            ⚠️ Valeurs corrigées depuis le store : {navigation.mainCategory} → {activeMainMenu}
+    <div className="p-6 space-y-6 max-w-[1800px] mx-auto animate-fadeIn">
+      {/* DEBUG : Afficher navigation actuelle - Masqué en production */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="mb-4 bg-yellow-500/20 border border-yellow-500 rounded-lg p-3">
+          <p className="text-yellow-300 text-sm font-mono">
+            🔍 DEBUG Navigation : {activeMainMenu} → {activeSubMenu || 'null'} → {activeFilter || 'null'}
           </p>
-        )}
-      </div>
+          {navigation.mainCategory !== activeMainMenu && (
+            <p className="text-orange-300 text-xs mt-2">
+              ⚠️ Valeurs corrigées depuis le store : {navigation.mainCategory} → {activeMainMenu}
+            </p>
+          )}
+        </div>
+      )}
 
       {/* Breadcrumb dynamique */}
       <div className="flex items-center gap-2 text-sm text-slate-400 mb-4">
@@ -782,11 +806,206 @@ export function OverviewView() {
       {/* ════════════════════════════════════════════════ */}
       {showDashboard && (
         <>
-      {/* Section KPIs */}
-      <section>
+      {/* ════════════════════════════════════════════════ */}
+      {/* INDICATEURS EN TEMPS RÉEL - Regroupés par thème */}
+      {/* ════════════════════════════════════════════════ */}
+      <section className="mb-6" aria-label="Indicateurs en temps réel">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-slate-200 flex items-center gap-2">
-            <BarChart3 className="w-5 h-5 text-blue-400" />
+          <h2 className="text-xl font-bold text-white flex items-center gap-2">
+            <Activity className="w-6 h-6 text-blue-400" />
+            Indicateurs en temps réel
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Thème : Activité */}
+          <div className="bg-slate-800/50 rounded-xl border border-slate-700 p-5 hover:border-blue-500/50 transition-colors">
+            <div className="flex items-center gap-2 mb-4">
+              <Activity className="w-5 h-5 text-blue-400" />
+              <h3 className="text-lg font-semibold text-white">Activité</h3>
+            </div>
+            <div className="space-y-3">
+              {kpisByTheme.activite.map((kpi) => {
+                const Icon = kpi.icon;
+                const iconColorClasses = {
+                  blue: 'text-blue-400',
+                  emerald: 'text-emerald-400',
+                  amber: 'text-amber-400',
+                  purple: 'text-purple-400',
+                }[kpi.color];
+
+                return (
+                  <button
+                    key={kpi.id}
+                    onClick={() => openModal('kpi-drilldown', { kpiId: kpi.id })}
+                    className="w-full p-4 rounded-lg border border-slate-700/50 bg-slate-800/30 hover:bg-slate-800/50 hover:border-blue-500/50 hover:scale-[1.02] transition-all duration-200 text-left group focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                    aria-label={`Voir les détails de ${kpi.label}: ${kpi.value}`}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50 group-hover:scale-110 transition-transform duration-200">
+                          <Icon className={cn('w-5 h-5', iconColorClasses)} />
+                        </div>
+                        <div>
+                          <p className="text-sm text-slate-400 font-medium">{kpi.label}</p>
+                          <p className="text-2xl font-bold text-white mt-1">{kpi.value}</p>
+                        </div>
+                      </div>
+                      {kpi.trend !== 0 && (
+                        <div className={cn(
+                          "flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded",
+                          kpi.trend > 0 ? "bg-emerald-500/20 text-emerald-400" : "bg-rose-500/20 text-rose-400"
+                        )}>
+                          {kpi.trend > 0 ? (
+                            <TrendingUp className="w-3 h-3" />
+                          ) : (
+                            <TrendingDown className="w-3 h-3" />
+                          )}
+                          {kpi.trend > 0 ? '+' : ''}{kpi.trend}%
+                        </div>
+                      )}
+                    </div>
+                    {kpi.trend !== 0 && (
+                      <p className="text-xs text-slate-500 ml-11">
+                        {kpi.trend > 0 ? '↑' : '↓'} vs période précédente
+                      </p>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Thème : Finances */}
+          <div className="bg-slate-800/50 rounded-xl border border-slate-700 p-5 hover:border-emerald-500/50 hover:shadow-lg hover:shadow-emerald-500/10 transition-all duration-200">
+            <div className="flex items-center gap-2 mb-4">
+              <DollarSign className="w-5 h-5 text-emerald-400" />
+              <h3 className="text-lg font-semibold text-white">Finances</h3>
+            </div>
+            <div className="space-y-3">
+              {kpisByTheme.finances.map((kpi) => {
+                const Icon = kpi.icon;
+                const iconColorClasses = {
+                  blue: 'text-blue-400',
+                  emerald: 'text-emerald-400',
+                  amber: 'text-amber-400',
+                  purple: 'text-purple-400',
+                }[kpi.color];
+
+                return (
+                  <button
+                    key={kpi.id}
+                    onClick={() => openModal('kpi-drilldown', { kpiId: kpi.id })}
+                    className="w-full p-4 rounded-lg border border-slate-700/50 bg-slate-800/30 hover:bg-slate-800/50 hover:border-emerald-500/50 hover:scale-[1.02] transition-all duration-200 text-left group focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                    aria-label={`Voir les détails de ${kpi.label}: ${kpi.value}`}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
+                          <Icon className={cn('w-5 h-5', iconColorClasses)} />
+                        </div>
+                        <div>
+                          <p className="text-sm text-slate-400 font-medium">{kpi.label}</p>
+                          <p className="text-2xl font-bold text-white mt-1">{kpi.value}</p>
+                        </div>
+                      </div>
+                      {kpi.trend !== 0 && (
+                        <div className={cn(
+                          "flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded",
+                          kpi.trend > 0 ? "bg-emerald-500/20 text-emerald-400" : "bg-rose-500/20 text-rose-400"
+                        )}>
+                          {kpi.trend > 0 ? (
+                            <TrendingUp className="w-3 h-3" />
+                          ) : (
+                            <TrendingDown className="w-3 h-3" />
+                          )}
+                          {kpi.trend > 0 ? '+' : ''}{Math.abs(kpi.trend)}%
+                        </div>
+                      )}
+                    </div>
+                    {kpi.trend !== 0 && (
+                      <p className="text-xs text-slate-500 ml-11">
+                        {kpi.trend > 0 ? '↑' : '↓'} vs période précédente
+                      </p>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+          {/* Thème : Risques */}
+          <div className="bg-slate-800/50 rounded-xl border border-slate-700 p-5 hover:border-red-500/50 hover:shadow-lg hover:shadow-red-500/10 transition-all duration-200">
+            <div className="flex items-center gap-2 mb-4">
+              <AlertTriangle className="w-5 h-5 text-red-400" />
+              <h3 className="text-lg font-semibold text-white">Risques</h3>
+            </div>
+            <div className="space-y-3">
+              {criticalRisks.map((risk) => (
+                <div
+                  key={risk.id}
+                  className="bg-red-500/10 border-2 border-red-500/50 rounded-lg p-3 flex items-start gap-2"
+                >
+                  <AlertTriangle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Badge variant="destructive" className="text-[10px]">CRITIQUE</Badge>
+                      <span className="text-[10px] text-slate-400">{risk.age}j</span>
+                    </div>
+                    <p className="text-sm font-semibold text-white mb-1 truncate">{risk.titre}</p>
+                    <p className="text-xs text-slate-300 line-clamp-2">{risk.description}</p>
+                  </div>
+                </div>
+              ))}
+              {criticalRisks.length === 0 && (
+                <div className="text-center py-4">
+                  <CheckCircle className="w-8 h-8 text-green-400 mx-auto mb-2 animate-pulse" />
+                  <p className="text-xs text-slate-400">Aucun risque critique</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Thème : Juridique */}
+          <div className="bg-slate-800/50 rounded-xl border border-slate-700 p-5 hover:border-purple-500/50 hover:shadow-lg hover:shadow-purple-500/10 transition-all duration-200">
+            <div className="flex items-center gap-2 mb-4">
+              <Scale className="w-5 h-5 text-purple-400" />
+              <h3 className="text-lg font-semibold text-white">Juridique</h3>
+            </div>
+            <div className="space-y-3">
+              {legalDecisions.map((decision) => (
+                <div
+                  key={decision.id}
+                  className="bg-purple-500/10 border border-purple-500/50 rounded-lg p-3"
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <Badge variant="default" className="text-[10px] border-purple-500/50 text-purple-400">
+                      {decision.type === 'delegation' ? 'DÉLÉGATION' : 'SUBSTITUTION'}
+                    </Badge>
+                    <span className="text-[10px] text-slate-400">{decision.code}</span>
+                  </div>
+                  <p className="text-sm font-semibold text-white mb-1 truncate">{decision.titre}</p>
+                  <p className="text-xs text-slate-300 line-clamp-2">{decision.description}</p>
+                </div>
+              ))}
+              {legalDecisions.length === 0 && (
+                <div className="text-center py-4">
+                  <CheckCircle className="w-8 h-8 text-green-400 mx-auto mb-2 animate-pulse" />
+                  <p className="text-xs text-slate-400">Aucune décision juridique</p>
+                </div>
+              )}
+            </div>
+          </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════ */}
+      {/* PERFORMANCE GLOBALE - Hiérarchie visuelle claire */}
+      {/* ════════════════════════════════════════════════ */}
+      <section className="mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold text-white flex items-center gap-2">
+            <BarChart3 className="w-6 h-6 text-blue-400" />
             Performance Globale
           </h2>
           <Button
@@ -816,22 +1035,25 @@ export function OverviewView() {
                 onClick={() => openModal('kpi-drilldown', { kpiId: kpi.id })}
                 className="p-4 rounded-xl border border-slate-700/50 bg-slate-800/30 hover:bg-slate-800/50 transition-all text-left group"
               >
-                <div className="flex items-start justify-between">
+                <div className="flex items-start justify-between mb-3">
                   <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
                     <Icon className={cn('w-5 h-5', iconColorClasses)} />
                   </div>
                   {kpi.trend !== 0 && (
-                    <div className="flex items-center gap-1 text-xs font-medium text-slate-400">
+                    <div className={cn(
+                      "flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded",
+                      kpi.trend > 0 ? "bg-emerald-500/20 text-emerald-400" : "bg-rose-500/20 text-rose-400"
+                    )}>
                       {kpi.trend > 0 ? (
-                        <TrendingUp className="w-3 h-3 text-emerald-400" />
+                        <TrendingUp className="w-3 h-3" />
                       ) : (
-                        <TrendingDown className="w-3 h-3 text-rose-400" />
+                        <TrendingDown className="w-3 h-3" />
                       )}
-                      {Math.abs(kpi.trend)}%
+                      {kpi.trend > 0 ? '+' : ''}{Math.abs(kpi.trend)}%
                     </div>
                   )}
                 </div>
-                <div className="mt-3">
+                <div>
                   <p className="text-2xl font-bold text-slate-200">{kpi.value}</p>
                   <p className="text-sm text-slate-500 mt-0.5">{kpi.label}</p>
                 </div>
@@ -841,21 +1063,28 @@ export function OverviewView() {
         </div>
       </section>
 
-      {/* NOUVEAU : Section Workflow Pipeline */}
-      <section className="mb-6">
+      {/* ════════════════════════════════════════════════ */}
+      {/* CIRCUIT DE VALIDATION - Flow structuré */}
+      {/* ════════════════════════════════════════════════ */}
+      <section className="mb-6" aria-label="Circuit de validation">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-bold text-white flex items-center gap-2">
-            <GitBranch className="w-5 h-5 text-orange-400" />
+          <h2 className="text-xl font-bold text-white flex items-center gap-2">
+            <GitBranch className="w-6 h-6 text-orange-400" />
             Circuit de Validation
-          </h3>
-          <Button variant="ghost" size="sm" className="text-orange-400 hover:text-orange-300">
+          </h2>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="text-orange-400 hover:text-orange-300"
+            aria-label="Voir les détails du circuit de validation"
+          >
             Voir détails <ChevronRight className="w-4 h-4 ml-1" />
           </Button>
         </div>
 
         <div className="bg-slate-800 rounded-xl border border-slate-700 p-6">
-          {/* Pipeline horizontal */}
-          <div className="flex items-center gap-3 mb-6">
+          {/* Flow horizontal avec étapes détaillées */}
+          <div className="flex items-stretch gap-4 mb-6 overflow-x-auto pb-2">
             {(Array.isArray(workflowStages) ? workflowStages : []).map((stage, idx) => {
               const bgClass = {
                 blue: 'bg-blue-500/20',
@@ -875,26 +1104,73 @@ export function OverviewView() {
                 green: 'text-green-400',
               }[stage.color] || 'text-slate-400';
 
+              const timeDiff = stage.avgTime - stage.targetTime;
+              const isDelayed = timeDiff > 0;
+
               return (
                 <React.Fragment key={stage.id}>
-                  <div className="flex-1">
-                    <div className={cn('rounded-lg p-4 text-center relative border-2', bgClass, borderClass)}>
+                  <div className="flex-1 min-w-[140px]">
+                    <div className={cn(
+                      'rounded-lg p-4 text-center relative border-2 h-full flex flex-col',
+                      bgClass,
+                      borderClass,
+                      stage.isBottleneck && 'ring-2 ring-orange-500/50 ring-offset-2 ring-offset-slate-800'
+                    )}>
+                      {/* Badge goulot */}
+                      {stage.isBottleneck && (
+                        <div className="absolute -top-2 -right-2 px-2 py-0.5 bg-orange-500 text-white text-[10px] font-bold rounded-full z-10">
+                          ⚠️ Goulot
+                        </div>
+                      )}
+                      
+                      {/* Bureau si applicable */}
+                      {stage.bureau && (
+                        <div className="mb-2">
+                          <BureauBadge code={stage.bureau} size="sm" />
+                        </div>
+                      )}
+
+                      {/* Nombre */}
                       <div className={cn('text-3xl font-bold mb-1', textClass)}>
                         {stage.count}
                       </div>
-                      <div className="text-xs text-slate-400">{stage.label}</div>
-                      {stage.isBottleneck && (
-                        <div className="absolute -top-2 -right-2 px-2 py-0.5 bg-orange-500 text-white text-[10px] font-bold rounded-full">
-                          ⚠️ Goulot
+                      <div className="text-xs text-slate-400 mb-3">{stage.label}</div>
+
+                      {/* Temps moyen et écart */}
+                      {stage.avgTime > 0 && (
+                        <div className="mt-auto space-y-1 pt-3 border-t border-slate-700/50">
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="text-slate-400">Temps moyen:</span>
+                            <span className={cn(
+                              "font-semibold",
+                              isDelayed ? "text-orange-400" : "text-green-400"
+                            )}>
+                              {stage.avgTime.toFixed(1)}j
+                            </span>
+                          </div>
+                          {stage.targetTime > 0 && (
+                            <div className="flex items-center justify-between text-xs">
+                              <span className="text-slate-400">Objectif:</span>
+                              <span className="text-slate-300">{stage.targetTime.toFixed(1)}j</span>
+                            </div>
+                          )}
+                          {isDelayed && (
+                            <div className="flex items-center justify-center gap-1 text-xs text-orange-400 font-semibold">
+                              <AlertTriangle className="w-3 h-3" />
+                              <span>+{timeDiff.toFixed(1)}j écart</span>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
                   </div>
                   {idx < (Array.isArray(workflowStages) ? workflowStages : []).length - 1 && (
-                    <div className="flex flex-col items-center">
+                    <div className="flex flex-col items-center justify-center min-w-[40px]">
                       <ArrowRight className="w-6 h-6 text-slate-600" />
                       {Array.isArray(workflowLosses) && workflowLosses[idx] > 0 && (
-                        <div className="text-[10px] text-red-400 mt-1">-{workflowLosses[idx]}</div>
+                        <div className="text-[10px] text-red-400 mt-1 font-semibold">
+                          -{workflowLosses[idx]}
+                        </div>
                       )}
                     </div>
                   )}
@@ -903,7 +1179,7 @@ export function OverviewView() {
             })}
           </div>
 
-          {/* Stats détaillées */}
+          {/* Métriques globales */}
           <div className="grid grid-cols-3 gap-4 pt-4 border-t border-slate-700">
             <div className="text-center">
               <div className="text-2xl font-bold text-white mb-1">2.1j</div>
@@ -912,6 +1188,7 @@ export function OverviewView() {
             <div className="text-center">
               <div className="text-2xl font-bold text-orange-400 mb-1">0.8j</div>
               <div className="text-xs text-slate-400">Goulot BF (target: 0.5j)</div>
+              <div className="text-xs text-orange-400 font-semibold mt-1">+0.3j écart</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-400 mb-1">61%</div>
@@ -919,35 +1196,44 @@ export function OverviewView() {
             </div>
           </div>
 
-          {/* Alerte goulot */}
-          <div className="mt-4 bg-orange-500/10 border border-orange-500/30 rounded-lg p-3 flex items-start gap-3">
-            <AlertTriangle className="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5" />
-            <div className="flex-1">
-              <p className="text-sm text-orange-300 font-medium mb-1">
-                Goulot détecté : BF traite en 0.8j (objectif: 0.5j)
-              </p>
-              <p className="text-xs text-slate-400 mb-2">
-                12 BC en attente dépassent le délai standard
-              </p>
-              <div className="flex items-center gap-2">
-                <Lightbulb className="w-4 h-4 text-blue-400" />
-                <span className="text-xs text-blue-400 font-medium">IA Suggère:</span>
-                <span className="text-xs text-slate-300">
-                  Déléguer BC &lt; 2M à M. Sarr pour fluidifier le circuit
-                </span>
+          {/* Alerte goulot avec IA */}
+          {Array.isArray(workflowStages) && workflowStages.some((s) => s.isBottleneck) && (
+            <div className="mt-4 bg-orange-500/10 border-2 border-orange-500/50 rounded-lg p-4 flex items-start gap-3">
+              <AlertTriangle className="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <Badge variant="warning" className="text-xs">Goulot détecté</Badge>
+                  <span className="text-sm text-orange-300 font-semibold">
+                    BF traite en 0.8j (objectif: 0.5j)
+                  </span>
+                </div>
+                <p className="text-xs text-slate-400 mb-3">
+                  12 BC en attente dépassent le délai standard
+                </p>
+                <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Lightbulb className="w-4 h-4 text-blue-400" />
+                    <span className="text-xs text-blue-400 font-semibold">IA Suggère:</span>
+                  </div>
+                  <p className="text-sm text-slate-300">
+                    Déléguer BC &lt; 2M à M. Sarr pour fluidifier le circuit
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
 
-      {/* NOUVEAU : Section Calendrier J+7 */}
+      {/* ════════════════════════════════════════════════ */}
+      {/* AGENDA EXÉCUTIF - Regroupé par jour avec alertes conflits */}
+      {/* ════════════════════════════════════════════════ */}
       <section className="mb-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-bold text-white flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-orange-400" />
+          <h2 className="text-xl font-bold text-white flex items-center gap-2">
+            <Calendar className="w-6 h-6 text-orange-400" />
             Agenda Exécutif J+7
-          </h3>
+          </h2>
           <Button variant="ghost" size="sm" className="text-orange-400 hover:text-orange-300">
             Calendrier complet <ChevronRight className="w-4 h-4 ml-1" />
           </Button>
@@ -1131,26 +1417,35 @@ export function OverviewView() {
           </div>
         </div>
 
-        {/* Conflits détectés */}
-        <div className="mt-4 bg-orange-500/10 border border-orange-500/30 rounded-lg p-4">
+        {/* Conflits détectés - Mise en avant */}
+        <div className="mt-4 bg-orange-500/10 border-2 border-orange-500/50 rounded-lg p-4">
           <div className="flex items-start gap-3">
             <AlertTriangle className="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5" />
             <div className="flex-1">
-              <p className="text-sm text-orange-300 font-medium mb-2">
-                2 conflits détectés dans le planning
-              </p>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-xs text-slate-300">
-                  <div className="w-1.5 h-1.5 rounded-full bg-orange-400"></div>
-                  <span>
-                    Jeudi 27 déc. : Livraison matériaux + Visite DG (même équipe BCT)
-                  </span>
+              <div className="flex items-center gap-2 mb-3">
+                <Badge variant="warning" className="text-xs">CONFLITS DÉTECTÉS</Badge>
+                <span className="text-sm text-orange-300 font-semibold">
+                  2 conflits dans le planning
+                </span>
+              </div>
+              <div className="space-y-3">
+                <div className="bg-slate-800/50 rounded-lg p-3 border border-orange-500/30">
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className="w-2 h-2 rounded-full bg-orange-400"></div>
+                    <span className="text-xs font-semibold text-orange-400">Jeudi 27 déc.</span>
+                  </div>
+                  <p className="text-sm text-slate-300">
+                    Livraison matériaux + Visite DG (même équipe BCT)
+                  </p>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-slate-300">
-                  <div className="w-1.5 h-1.5 rounded-full bg-orange-400"></div>
-                  <span>
-                    Vendredi 28 déc. : 3 réunions simultanées nécessitant N. FAYE (BJ)
-                  </span>
+                <div className="bg-slate-800/50 rounded-lg p-3 border border-orange-500/30">
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className="w-2 h-2 rounded-full bg-orange-400"></div>
+                    <span className="text-xs font-semibold text-orange-400">Vendredi 28 déc.</span>
+                  </div>
+                  <p className="text-sm text-slate-300">
+                    3 réunions simultanées nécessitant N. FAYE (BJ)
+                  </p>
                 </div>
               </div>
             </div>
@@ -1158,172 +1453,251 @@ export function OverviewView() {
         </div>
       </section>
 
-      {/* Section Actions Prioritaires ENRICHIE */}
+      {/* ════════════════════════════════════════════════ */}
+      {/* ACTIONS PRIORITAIRES - Regroupées par type */}
+      {/* ════════════════════════════════════════════════ */}
       <section className="mb-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-bold text-white flex items-center gap-2">
-            <Zap className="w-5 h-5 text-orange-400" />
-              Actions Prioritaires
-          </h3>
-            <div className="flex items-center gap-2">
+          <h2 className="text-xl font-bold text-white flex items-center gap-2">
+            <Zap className="w-6 h-6 text-orange-400" />
+            Actions Prioritaires
+          </h2>
+          <div className="flex items-center gap-2">
             <Badge variant="warning">{actions.length}</Badge>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate('actions')}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate('actions')}
               className="text-orange-400 hover:text-orange-300"
-              >
+            >
               Voir tout <ChevronRight className="w-4 h-4 ml-1" />
-              </Button>
-            </div>
+            </Button>
           </div>
+        </div>
 
-        <div className="space-y-4">
-          {Array.isArray(actions) && actions.slice(0, 3).map((action) => {
+        {/* Regroupement par type - Optimisé avec useMemo */}
+        {useMemo(() => {
+          const actionsByType = Array.isArray(actions) ? actions.reduce((acc, action) => {
+            const type = action.type || 'autre';
+            if (!acc[type]) acc[type] = [];
+            acc[type].push(action);
+            return acc;
+          }, {} as Record<string, typeof actions>) : {};
+
+          const typeLabels: Record<string, string> = {
+            contrat: 'Contrats',
+            bc: 'Bons de Commande',
+            paiement: 'Paiements',
+            arbitrage: 'Arbitrages',
+            autre: 'Autres',
+          };
+
+          return Object.entries(actionsByType).map(([type, typeActions]) => (
+            <div key={type} className="mb-6">
+              <div className="flex items-center gap-2 mb-3">
+                <h3 className="text-lg font-semibold text-white">{typeLabels[type] || type}</h3>
+                <Badge variant="default" className="text-xs">{typeActions.length}</Badge>
+              </div>
+              <div className="space-y-4">
+                {typeActions.slice(0, 3).map((action) => {
             // Sécurité : valeurs par défaut si propriétés manquantes
             const priorite = action.priorite || 'moyenne';
             const prioriteBadgeVariant = priorite === 'critique' ? 'destructive' : 'warning';
             const iconBgColor = priorite === 'critique' ? 'bg-red-500/20' : 'bg-orange-500/20';
             const icon = action.icon || '📋';
-            const titre = action.titre || action.title || 'Action';
+            const titre = action.titre || 'Action';
             const bureau = action.bureau || 'BMO';
-            const code = action.code || action.delay || 'N/A';
+            const code = action.code || 'N/A';
             const type = action.type || 'action';
+            const actionTypeLabel = typeLabels[type] || type;
 
-            return (
-              <div
-                key={action.id}
-                className="p-4 bg-slate-800 rounded-xl border border-slate-700 hover:border-orange-500/50 transition-colors"
-              >
-                {/* Header avec priorité visuelle */}
-                <div className="flex items-start gap-3 mb-3">
-                  <div
-                    className={cn('w-12 h-12 rounded-lg flex items-center justify-center text-2xl', iconBgColor)}
-                  >
-                    {icon}
-                </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h4 className="font-bold text-white">{titre}</h4>
-                      <Badge variant={prioriteBadgeVariant} className="text-xs">
-                        {priorite.toUpperCase()}
-                  </Badge>
-                    </div>
-                    <div className="flex items-center gap-2 flex-wrap text-xs">
-                      <BureauBadge code={bureau as BureauCode} />
-                      <span className="px-2 py-0.5 bg-orange-500/20 text-orange-400 rounded-full font-bold">
-                        {code}
-                      </span>
-                      <span className="text-slate-500">• {type}</span>
-                    </div>
-                  </div>
-                </div>
+                  return (
+                    <div
+                      key={action.id}
+                      className="p-4 bg-slate-800 rounded-xl border border-slate-700 hover:border-orange-500/50 hover:shadow-lg hover:shadow-orange-500/10 transition-all duration-200"
+                    >
+                      {/* Header avec priorité visuelle */}
+                      <div className="flex items-start gap-3 mb-3">
+                        <div
+                          className={cn('w-12 h-12 rounded-lg flex items-center justify-center text-2xl group-hover:scale-110 transition-transform duration-200', iconBgColor)}
+                        >
+                          {icon}
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <h4 className="font-bold text-white">{titre}</h4>
+                            <Badge variant={prioriteBadgeVariant} className="text-xs">
+                              {priorite.toUpperCase()}
+                            </Badge>
+                          </div>
+                          <div className="flex items-center gap-2 flex-wrap text-xs">
+                            <BureauBadge code={bureau as BureauCode} />
+                            <span className="px-2 py-0.5 bg-orange-500/20 text-orange-400 rounded-full font-bold">
+                              {code}
+                            </span>
+                            <span className="text-slate-500">• {actionTypeLabel}</span>
+                          </div>
+                        </div>
+                      </div>
 
-                {/* Contexte métier */}
-                {action.projet && (
-                  <div className="bg-slate-900/50 rounded-lg p-3 mb-3 space-y-2">
-                    <div className="flex items-center gap-2 text-sm">
-                      <Building2 className="w-4 h-4 text-slate-400" />
-                      <span className="text-slate-400">Projet:</span>
-                      <span className="text-white font-medium">
-                        {action.projet.nom} ({action.projet.id})
-                      </span>
-                    </div>
-                    {action.montant && action.montant > 0 && (
-                      <div className="flex items-center gap-2 text-sm">
-                        <DollarSign className="w-4 h-4 text-slate-400" />
-                        <span className="text-slate-400">Montant:</span>
-                        <span className="text-white font-medium">{formatAmount(action.montant)}</span>
+                      {/* Contexte métier */}
+                      {action.projet && (
+                        <div className="bg-slate-900/50 rounded-lg p-3 mb-3 space-y-2">
+                          <div className="flex items-center gap-2 text-sm">
+                            <Building2 className="w-4 h-4 text-slate-400" />
+                            <span className="text-slate-400">Projet:</span>
+                            <span className="text-white font-medium">
+                              {action.projet.nom} ({action.projet.id})
+                            </span>
+                          </div>
+                          {action.montant && action.montant > 0 && (
+                            <div className="flex items-center gap-2 text-sm">
+                              <DollarSign className="w-4 h-4 text-slate-400" />
+                              <span className="text-slate-400">Montant:</span>
+                              <span className="text-white font-medium">{formatAmount(action.montant)}</span>
+                            </div>
+                          )}
+                          {action.deadline && (
+                            <div className="flex items-center gap-2 text-sm">
+                              <Clock className="w-4 h-4 text-orange-400" />
+                              <span className="text-slate-400">Deadline:</span>
+                              <span className="text-orange-400 font-medium">{action.deadline}</span>
+                            </div>
+                          )}
+                          {action.responsable && (
+                            <div className="flex items-center gap-2 text-sm">
+                              <User className="w-4 h-4 text-slate-400" />
+                              <span className="text-slate-400">Responsable:</span>
+                              <span className="text-white">{action.responsable.nom}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Description détaillée */}
+                      {(action.contexte || action.impact) && (
+                        <div className="bg-slate-900/30 rounded-lg p-3 mb-3">
+                          {action.contexte && (
+                            <>
+                              <p className="text-xs text-slate-400 mb-1">📋 Contexte</p>
+                              <p className="text-sm text-slate-300 mb-2">{action.contexte}</p>
+                            </>
+                          )}
+                          {action.impact && (
+                            <>
+                              <p className="text-xs text-slate-400 mb-1">⚠️ Impact si non traité</p>
+                              <p className="text-sm text-orange-300">{action.impact}</p>
+                            </>
+                          )}
+                        </div>
+                      )}
+
+                    {/* IA Suggestion - Section améliorée avec boutons d'action */}
+                      {/* IA Suggestion - Section améliorée avec boutons d'action */}
+                      {action.aiSuggestion && (
+                        <div className="bg-blue-500/10 border-2 border-blue-500/50 rounded-lg p-4 mb-3">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Sparkles className="w-5 h-5 text-blue-400" />
+                            <span className="text-sm font-semibold text-blue-400">
+                              IA Suggère ({Math.round(action.aiSuggestion.confidence * 100)}% confiance)
+                            </span>
+                          </div>
+                          <p className="text-sm text-slate-300 mb-2 font-medium">{action.aiSuggestion.action}</p>
+                          {action.aiSuggestion.reasoning && (
+                            <p className="text-xs text-slate-400 italic mb-3">{action.aiSuggestion.reasoning}</p>
+                          )}
+                          <div className="flex gap-2">
+                            <Button size="sm" className="flex-1 bg-green-600 hover:bg-green-700">
+                              <CheckCircle className="w-4 h-4 mr-1" />
+                              Valider
+                            </Button>
+                            <Button size="sm" variant="outline" className="flex-1">
+                              <Users className="w-4 h-4 mr-1" />
+                              Déléguer
+                            </Button>
+                            <Button size="sm" variant="ghost" className="text-slate-400 hover:text-slate-300">
+                              <XCircle className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+
+                    {/* Actions - Boutons clairs */}
+                    {!action.aiSuggestion && (
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="default" className="flex-1">
+                          <Eye className="w-4 h-4 mr-1" />
+                          Voir détails
+                        </Button>
+                        <Button size="sm" variant="default" className="flex-1 bg-green-600 hover:bg-green-700">
+                          <CheckCircle className="w-4 h-4 mr-1" />
+                          Valider
+                        </Button>
+                        <Button size="sm" variant="outline" className="flex-1">
+                          <Users className="w-4 h-4 mr-1" />
+                          Déléguer
+                        </Button>
                       </div>
                     )}
-                    {action.deadline && (
-                      <div className="flex items-center gap-2 text-sm">
-                        <Clock className="w-4 h-4 text-orange-400" />
-                        <span className="text-slate-400">Deadline:</span>
-                        <span className="text-orange-400 font-medium">{action.deadline}</span>
-                      </div>
+                    {action.aiSuggestion && (
+                      <Button size="sm" variant="outline" className="w-full">
+                        <Eye className="w-4 h-4 mr-1" />
+                        Voir détails complets
+                      </Button>
                     )}
-                    {action.responsable && (
-                      <div className="flex items-center gap-2 text-sm">
-                        <User className="w-4 h-4 text-slate-400" />
-                        <span className="text-slate-400">Responsable:</span>
-                        <span className="text-white">{action.responsable.nom}</span>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* Description détaillée */}
-                {(action.contexte || action.impact) && (
-                  <div className="bg-slate-900/30 rounded-lg p-3 mb-3">
-                    {action.contexte && (
-                      <>
-                        <p className="text-xs text-slate-400 mb-1">📋 Contexte</p>
-                        <p className="text-sm text-slate-300 mb-2">{action.contexte}</p>
-                      </>
-                    )}
-                    {action.impact && (
-                      <>
-                        <p className="text-xs text-slate-400 mb-1">⚠️ Impact si non traité</p>
-                        <p className="text-sm text-orange-300">{action.impact}</p>
-                      </>
-                    )}
-                  </div>
-                )}
-
-                {/* IA Suggestion */}
-                {action.aiSuggestion && (
-                  <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3 mb-3">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Sparkles className="w-4 h-4 text-blue-400" />
-                      <span className="text-xs font-semibold text-blue-400">
-                        IA Suggère ({Math.round(action.aiSuggestion.confidence * 100)}% confiance)
-                  </span>
-                </div>
-                    <p className="text-sm text-slate-300">{action.aiSuggestion.action}</p>
-                  </div>
-                )}
-
-                {/* Actions */}
-                <div className="flex gap-2">
-                  <Button size="sm" variant="default" className="flex-1">
-                    <Eye className="w-4 h-4 mr-1" />
-                    Voir détails
-                  </Button>
-                  <Button size="sm" variant="default" className="flex-1 bg-green-600 hover:bg-green-700">
-                    <CheckCircle className="w-4 h-4 mr-1" />
-                    Valider
-                  </Button>
-                  <Button size="sm" variant="outline" className="flex-1">
-                    <Users className="w-4 h-4 mr-1" />
-                    Déléguer
-                  </Button>
-                </div>
-              </div>
-            );
-          })}
-          </div>
-        </section>
-
-      {/* Section Risk Radar ENRICHIE */}
-      <section className="mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="font-bold text-white flex items-center gap-2">
-            <AlertTriangle className="w-5 h-5 text-rose-400" />
-              Risk Radar
-          </h3>
-            <div className="flex items-center gap-2">
-            <Badge variant="destructive">{risks.length}</Badge>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate('risks')}
-              className="text-orange-400 hover:text-orange-300"
-              >
-              Voir tout <ChevronRight className="w-4 h-4 ml-1" />
-              </Button>
+                    </div>
+                  );
+                })}
             </div>
           </div>
+          ));
+        }, [actions, formatAmount, openModal])}
+      </section>
+
+      {/* ════════════════════════════════════════════════ */}
+      {/* RISK RADAR - Structuré avec scores, légende et filtres */}
+      {/* ════════════════════════════════════════════════ */}
+      <section className="mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold text-white flex items-center gap-2">
+            <AlertTriangle className="w-6 h-6 text-rose-400" />
+            Risk Radar
+          </h2>
+          <div className="flex items-center gap-2">
+            <Badge variant="destructive">{risks.length}</Badge>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate('risks')}
+              className="text-orange-400 hover:text-orange-300"
+            >
+              Voir tout <ChevronRight className="w-4 h-4 ml-1" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Légende des scores */}
+        <div className="mb-4 bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+          <div className="flex items-center gap-4 text-xs">
+            <span className="text-slate-400">Légende des scores:</span>
+            <div className="flex items-center gap-1">
+              <div className="w-3 h-3 rounded bg-red-500"></div>
+              <span className="text-slate-300">80-100 (Critique)</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <div className="w-3 h-3 rounded bg-orange-500"></div>
+              <span className="text-slate-300">60-79 (Majeur)</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <div className="w-3 h-3 rounded bg-yellow-500"></div>
+              <span className="text-slate-300">40-59 (Moyen)</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <div className="w-3 h-3 rounded bg-green-500"></div>
+              <span className="text-slate-300">0-39 (Mineur)</span>
+            </div>
+          </div>
+        </div>
 
         <div className="space-y-4">
           {Array.isArray(risks) && risks.slice(0, 2).map((risk) => {
@@ -1340,19 +1714,40 @@ export function OverviewView() {
               certaine: 'Certaine',
             };
 
+            // Déterminer la couleur du score
+            const scoreColor = risk.score >= 80 ? 'red' : risk.score >= 60 ? 'orange' : risk.score >= 40 ? 'yellow' : 'green';
+            const scoreBgClass = {
+              red: 'bg-red-500',
+              orange: 'bg-orange-500',
+              yellow: 'bg-yellow-500',
+              green: 'bg-green-500',
+            }[scoreColor];
+
             return (
               <div
                 key={risk.id}
-                className="p-4 bg-slate-800 rounded-xl border-l-4 border-l-red-500"
+                className={cn(
+                  "p-4 bg-slate-800 rounded-xl border-l-4",
+                  scoreColor === 'red' && "border-l-red-500",
+                  scoreColor === 'orange' && "border-l-orange-500",
+                  scoreColor === 'yellow' && "border-l-yellow-500",
+                  scoreColor === 'green' && "border-l-green-500",
+                  risk.score >= 80 && "ring-2 ring-red-500/50 ring-offset-2 ring-offset-slate-800"
+                )}
               >
-                {/* Header avec score */}
+                {/* Header avec score mis en avant */}
                 <div className="flex items-start gap-3 mb-3">
-                  <div className="w-14 h-14 rounded-lg bg-red-500 flex flex-col items-center justify-center">
+                  <div className={cn("w-16 h-16 rounded-lg flex flex-col items-center justify-center", scoreBgClass)}>
                     <span className="text-2xl font-bold text-white">{risk.score}</span>
-                    <span className="text-[10px] text-red-100">score</span>
+                    <span className="text-[10px] text-white/80">score</span>
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-bold text-white mb-1">{risk.titre}</h4>
+                    <div className="flex items-center gap-2 mb-1">
+                      <h4 className="font-bold text-white">{risk.titre}</h4>
+                      {risk.score >= 80 && (
+                        <Badge variant="destructive" className="text-xs">URGENT</Badge>
+                      )}
+                    </div>
                     <div className="flex items-center gap-2 flex-wrap text-xs">
                       <Badge variant="destructive" className="text-xs">
                         Impact: {impactLabel[risk.impact]}
@@ -1460,20 +1855,44 @@ export function OverviewView() {
         </div>
       </section>
 
-      {/* Section Décisions Récentes ENRICHIE */}
+      {/* ════════════════════════════════════════════════ */}
+      {/* DÉCISIONS RÉCENTES - Regroupées par type avec impacts */}
+      {/* ════════════════════════════════════════════════ */}
       <section className="mb-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-bold text-white flex items-center gap-2">
-            <Scale className="w-5 h-5 text-orange-400" />
+          <h2 className="text-xl font-bold text-white flex items-center gap-2">
+            <Scale className="w-6 h-6 text-orange-400" />
             Décisions Récentes
-          </h3>
+          </h2>
           <Button variant="ghost" size="sm" className="text-orange-400 hover:text-orange-300">
             Voir historique <ChevronRight className="w-4 h-4 ml-1" />
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {Array.isArray(decisionsList) && decisionsList.slice(0, 3).map((decision) => {
+        {/* Regroupement par type - Optimisé avec useMemo */}
+        {useMemo(() => {
+          const decisionsByType = Array.isArray(decisionsList) ? decisionsList.reduce((acc, decision) => {
+            const decisionType = decision.type || 'validation';
+            if (!acc[decisionType]) acc[decisionType] = [];
+            acc[decisionType].push(decision);
+            return acc;
+          }, {} as Record<string, typeof decisionsList>) : {};
+
+          const typeLabels: Record<string, string> = {
+            substitution: 'Substitutions',
+            delegation: 'Délégations',
+            arbitrage: 'Arbitrages',
+            validation: 'Validations',
+          };
+
+          return Object.entries(decisionsByType).map(([decisionTypeKey, typeDecisions]) => (
+            <div key={decisionTypeKey} className="mb-6">
+              <div className="flex items-center gap-2 mb-3">
+                <h3 className="text-lg font-semibold text-white">{typeLabels[decisionTypeKey] || decisionTypeKey}</h3>
+                <Badge variant="default" className="text-xs">{typeDecisions.length}</Badge>
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                {typeDecisions.slice(0, 3).map((decision) => {
             // Sécurité : valeurs par défaut
             const decisionType = decision.type || 'validation';
             const decisionStatus = decision.status || 'en_attente';
@@ -1651,34 +2070,73 @@ export function OverviewView() {
                   )}
                 </div>
 
-                {/* Impact ou Options */}
-                {decisionStatus === 'en_attente' && (
-                  <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-2 mb-3">
-                    {decisionType === 'arbitrage' ? (
-                      <>
-                        <p className="text-xs text-blue-300 mb-2">
-                          <span className="font-semibold">Options:</span>
-                        </p>
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2 text-xs text-slate-300">
-                            <div className="w-1 h-1 rounded-full bg-blue-400"></div>
-                            <span>[A] Prioriser Diamniadio</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-xs text-slate-300">
-                            <div className="w-1 h-1 rounded-full bg-blue-400"></div>
-                            <span>[B] Recruter intérimaires</span>
+                  {/* Impact attendu - Mise en avant */}
+                  {decision.impact && (
+                    <div className={cn(
+                      "rounded-lg p-3 mb-3",
+                      decisionStatus === 'en_attente' 
+                        ? "bg-blue-500/10 border-2 border-blue-500/50" 
+                        : decisionStatus === 'executee'
+                        ? "bg-green-500/10 border-2 border-green-500/50"
+                        : "bg-red-500/10 border-2 border-red-500/50"
+                    )}>
+                      <div className="flex items-center gap-2 mb-2">
+                        {decisionStatus === 'en_attente' ? (
+                          <AlertCircle className="w-4 h-4 text-blue-400" />
+                        ) : decisionStatus === 'executee' ? (
+                          <CheckCircle className="w-4 h-4 text-green-400" />
+                        ) : (
+                          <XCircle className="w-4 h-4 text-red-400" />
+                        )}
+                        <span className={cn(
+                          "text-xs font-semibold",
+                          decisionStatus === 'en_attente' && "text-blue-400",
+                          decisionStatus === 'executee' && "text-green-400",
+                          decisionStatus === 'rejetee' && "text-red-400"
+                        )}>
+                          {decisionStatus === 'en_attente' ? 'Impact attendu:' : decisionStatus === 'executee' ? 'Impact réalisé:' : 'Impact (rejeté):'}
+                        </span>
+                      </div>
+                      <p className={cn(
+                        "text-sm",
+                        decisionStatus === 'en_attente' && "text-blue-300",
+                        decisionStatus === 'executee' && "text-green-300",
+                        decisionStatus === 'rejetee' && "text-red-300"
+                      )}>
+                        {decision.impact}
+                      </p>
+                      {decisionType === 'arbitrage' && decisionStatus === 'en_attente' && (
+                        <div className="mt-3 pt-3 border-t border-slate-700/50">
+                          <p className="text-xs text-blue-300 mb-2 font-semibold">Options disponibles:</p>
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2 text-xs text-slate-300 bg-slate-800/50 rounded p-2">
+                              <div className="w-2 h-2 rounded-full bg-blue-400"></div>
+                              <span className="font-medium">[A] Prioriser Diamniadio</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-xs text-slate-300 bg-slate-800/50 rounded p-2">
+                              <div className="w-2 h-2 rounded-full bg-blue-400"></div>
+                              <span className="font-medium">[B] Recruter intérimaires</span>
+                            </div>
                           </div>
                         </div>
-                      </>
-                    ) : (
-                      decision.impact && (
-                        <p className="text-xs text-blue-300">
-                          <span className="font-semibold">Impact:</span> {decision.impact}
-                        </p>
-                      )
-                    )}
-                  </div>
-                )}
+                      )}
+                    </div>
+                  )}
+
+                  {/* Liens vers les dossiers concernés */}
+                  {decision.details?.projet && (
+                    <div className="mb-3">
+                      <Button 
+                        size="sm" 
+                        variant="default" 
+                        className="w-full text-xs"
+                        onClick={() => openModal('project-details', { projectId: decision.details?.projet?.id })}
+                      >
+                        <Building2 className="w-3 h-3 mr-1" />
+                        Voir le dossier {decision.details?.projet?.id || 'N/A'}
+                      </Button>
+                    </div>
+                  )}
 
                 {/* Actions */}
                 {decisionStatus === 'en_attente' ? (
@@ -1701,7 +2159,10 @@ export function OverviewView() {
               </div>
             );
           })}
-        </div>
+              </div>
+            </div>
+          ));
+        }, [decisionsList, openModal, formatAmount])}
       </section>
         </>
       )}

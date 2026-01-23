@@ -31,7 +31,7 @@ export function ScoresView({ subCategory }: ScoresViewProps) {
     try {
       const filters: EvaluationsFilters = { status: 'completed' };
       const [result, statsResult] = await Promise.all([
-        evaluationsApiService.getAll(filters, { field: 'scoreGlobal', direction: 'desc' }, 1, 100),
+        evaluationsApiService.getAll(filters, { field: 'score', direction: 'desc' }, 1, 100),
         evaluationsApiService.getStats(filters),
       ]);
       setData(result.data);

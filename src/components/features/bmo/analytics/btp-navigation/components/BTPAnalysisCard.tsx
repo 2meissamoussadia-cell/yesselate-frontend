@@ -41,10 +41,9 @@ export function BTPAnalysisCard({
       : TrendingDown
     : null;
 
-  return (
+  const cardContent = (
     <FluentCard
       className={cn('hover:border-blue-500/50 transition-colors', onClick && 'cursor-pointer', className)}
-      onClick={onClick}
     >
       <FluentCardHeader className="pb-3">
         <div className="flex items-center justify-between">
@@ -72,5 +71,15 @@ export function BTPAnalysisCard({
       </FluentCardContent>
     </FluentCard>
   );
+
+  if (onClick) {
+    return (
+      <div onClick={onClick} role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && onClick()}>
+        {cardContent}
+      </div>
+    );
+  }
+
+  return cardContent;
 }
 

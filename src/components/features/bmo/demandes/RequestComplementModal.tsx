@@ -127,7 +127,7 @@ export function RequestComplementModal({
               {attachments.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-2">
                   {attachments.map((file, idx) => (
-                    <Badge key={idx} variant="outline" className="text-xs">
+                    <Badge key={idx} variant="default" className="text-xs">
                       {file.name}
                     </Badge>
                   ))}
@@ -149,7 +149,7 @@ export function RequestComplementModal({
             {/* Actions */}
             <div className="flex gap-2 pt-4 border-t border-slate-700/50">
               <Button
-                variant="outline"
+                variant="default"
                 onClick={onClose}
                 className="flex-1"
               >

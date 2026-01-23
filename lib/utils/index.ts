@@ -5,16 +5,6 @@
  * Export centralisé de tous les utilitaires BMO
  */
 
-// Configuration
-export {
-  configManager,
-  buildApiUrl,
-  fetchWithConfig,
-  fetchWithRetry,
-  type ServiceConfig,
-  type FeatureFlags,
-} from './serviceConfig';
-
 // Helpers
 export {
   // Formatage

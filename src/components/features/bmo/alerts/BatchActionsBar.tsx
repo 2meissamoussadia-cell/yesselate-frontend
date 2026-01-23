@@ -55,7 +55,7 @@ export function BatchActionsBar({
           {/* Left: Selection count */}
           <div className="flex items-center gap-3">
             <Badge
-              variant="outline"
+              variant="default"
               className="bg-blue-500/20 text-blue-400 border-blue-500/30 text-sm px-3 py-1"
             >
               {selectedCount} alerte{selectedCount > 1 ? 's' : ''} sélectionnée{selectedCount > 1 ? 's' : ''}
@@ -74,7 +74,7 @@ export function BatchActionsBar({
           <div className="flex items-center gap-2">
             {onAcknowledge && (
               <Button
-                variant="outline"
+                variant="default"
                 size="sm"
                 onClick={onAcknowledge}
                 className="border-blue-500/30 text-blue-400 hover:bg-blue-500/10"
@@ -86,7 +86,7 @@ export function BatchActionsBar({
 
             {onResolve && (
               <Button
-                variant="outline"
+                variant="default"
                 size="sm"
                 onClick={onResolve}
                 className="border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10"
@@ -98,7 +98,7 @@ export function BatchActionsBar({
 
             {onEscalate && (
               <Button
-                variant="outline"
+                variant="default"
                 size="sm"
                 onClick={onEscalate}
                 className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
@@ -110,7 +110,7 @@ export function BatchActionsBar({
 
             {onAssign && (
               <Button
-                variant="outline"
+                variant="default"
                 size="sm"
                 onClick={onAssign}
                 className="border-slate-500/30 text-slate-400 hover:bg-slate-500/10"
@@ -122,7 +122,7 @@ export function BatchActionsBar({
 
             {onDelete && (
               <Button
-                variant="outline"
+                variant="default"
                 size="sm"
                 onClick={onDelete}
                 className="border-red-500/30 text-red-400 hover:bg-red-500/10"

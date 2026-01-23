@@ -146,7 +146,7 @@ export function useContractsData(filters?: ContractsFilters) {
         userId: 'current-user',
         userName: 'Utilisateur',
         userRole: 'Direction',
-        action: 'fetch',
+        action: 'view',
         module: 'validation-contrats',
         targetId: 'contracts-list',
         targetType: 'API',

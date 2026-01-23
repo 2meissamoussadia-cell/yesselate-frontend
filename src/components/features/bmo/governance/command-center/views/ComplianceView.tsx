@@ -65,14 +65,12 @@ export function ComplianceView() {
   const { navigation } = useGovernanceCommandCenterStore();
 
   switch (navigation.subCategory) {
-    case 'contracts':
+    case 'contract-sla':
       return <ContractsView data={contracts} />;
-    case 'audits':
+    case 'commitments':
       return <AuditsView data={audits} />;
-    case 'certifications':
+    case 'resource-utilization':
       return <CertificationsView data={certifications} />;
-    case 'hse':
-      return <HSEView data={hseIndicators} />;
     default:
       return <RegulationsView data={regulations} />;
   }
@@ -123,7 +121,7 @@ function RegulationsView({ data }: { data: typeof regulations }) {
                   <p>Dernier contrôle: {reg.lastCheck}</p>
                   <p>Prochain: {reg.nextCheck}</p>
                 </div>
-                <Badge variant="outline" className={cn('text-xs', status.bg)}>
+                <Badge variant="default" className={cn('text-xs', status.bg)}>
                   {status.label}
                 </Badge>
                 <ChevronRight className="h-4 w-4 text-slate-600" />
@@ -177,7 +175,7 @@ function ContractsView({ data }: { data: typeof contracts }) {
                     </div>
                   </div>
                 </div>
-                <Badge variant="outline" className={cn('text-xs', status.color)}>
+                <Badge variant="default" className={cn('text-xs', status.color)}>
                   {status.label}
                 </Badge>
               </div>
@@ -244,7 +242,7 @@ function AuditsView({ data }: { data: typeof audits }) {
                     <p className="text-xs text-amber-400">{audit.findings} constats</p>
                   )}
                 </div>
-                <Badge variant="outline" className={cn('text-xs', status.bg)}>
+                <Badge variant="default" className={cn('text-xs', status.bg)}>
                   {status.label}
                 </Badge>
                 <ChevronRight className="h-4 w-4 text-slate-600" />
@@ -286,7 +284,7 @@ function CertificationsView({ data }: { data: typeof certifications }) {
                     <p className="text-xs text-slate-500">Expire: {cert.expiryDate}</p>
                   </div>
                 </div>
-                <Badge variant="outline" className={cn('text-xs', status.color)}>
+                <Badge variant="default" className={cn('text-xs', status.color)}>
                   {status.label}
                 </Badge>
               </div>
@@ -320,7 +318,7 @@ function HSEView({ data }: { data: typeof hseIndicators }) {
           <HardHat className="h-5 w-5 text-amber-400" />
           <h3 className="text-sm font-medium text-slate-300">Indicateurs HSE</h3>
         </div>
-        <Button size="sm" variant="outline" className="h-8 border-slate-700 text-slate-400">
+        <Button size="sm" variant="default" className="h-8 border-slate-700 text-slate-400">
           Signaler un incident
         </Button>
       </div>

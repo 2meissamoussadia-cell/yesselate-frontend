@@ -35,16 +35,16 @@ export async function GET(request: NextRequest) {
     // Filtrer par queue
     switch (queue) {
       case 'pending':
-        filtered = filtered.filter(d => d.status === 'en_attente');
+        filtered = filtered.filter(d => d.status === 'pending');
         break;
       case 'urgent':
-        filtered = filtered.filter(d => d.status === 'en_attente');
+        filtered = filtered.filter(d => d.status === 'pending' && d.priority === 'urgent');
         break;
       case 'validated':
-        filtered = filtered.filter(d => d.status === 'validée');
+        filtered = filtered.filter(d => d.status === 'validated');
         break;
       case 'rejected':
-        filtered = filtered.filter(d => d.status === 'rejetée');
+        filtered = filtered.filter(d => d.status === 'rejected');
         break;
       default:
         if (['Congé', 'Dépense', 'Maladie', 'Déplacement', 'Paie'].includes(queue)) {
@@ -64,13 +64,13 @@ export async function GET(request: NextRequest) {
       Agent: d.agent,
       Bureau: d.bureau,
       Statut: d.status,
-      DateCreation: d.dateCreation,
-      DateDebut: d.dateDebut || '',
-      DateFin: d.dateFin || '',
-      Motif: d.motif || '',
-      Montant: d.montant || 0,
+      DateCreation: d.date,
+      DateDebut: d.startDate || '',
+      DateFin: d.endDate || '',
+      Motif: d.reason || '',
+      Montant: d.amount || 0,
       Destination: d.destination || '',
-      NbPieces: d.pieces?.length || 0,
+      NbPieces: d.documents?.length || 0,
     }));
     
     // Générer le fichier selon le format

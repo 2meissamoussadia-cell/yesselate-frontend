@@ -376,7 +376,6 @@ export function AlertCommandPalette() {
       onClose={() => setOpen(false)}
       title=""
       maxWidth="2xl"
-      showCloseButton={false}
     >
       <div className="flex flex-col max-h-[70vh]">
         {/* Search bar */}

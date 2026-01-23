@@ -63,7 +63,7 @@ export function AnalyticsLiveCounters() {
       <Metric 
         label="Validation" 
         value={`${stats.validationRate}%`}
-        trend={stats.trend}
+        trend={stats.trend as 'up' | 'stable' | 'down' | undefined}
         status={stats.validationRate >= 75 ? 'good' : stats.validationRate >= 60 ? 'warning' : 'attention'}
       />
       <Separator />

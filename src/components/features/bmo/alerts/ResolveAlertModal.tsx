@@ -212,10 +212,10 @@ export function ResolveAlertModal({
           </div>
 
           {/* Note de résolution */}
-          {selectedAction === 'resolve' || selectedAction === 'note' && (
+          {(selectedAction === 'resolve' || selectedAction === 'note') && (
             <div className="mb-4">
               <label className="block text-xs font-semibold mb-2">
-                Note de résolution {selectedAction === 'resolve' && <span className="text-red-400">*</span>}
+                Note de résolution {(selectedAction as string) === 'resolve' && <span className="text-red-400">*</span>}
               </label>
               <textarea
                 value={note}

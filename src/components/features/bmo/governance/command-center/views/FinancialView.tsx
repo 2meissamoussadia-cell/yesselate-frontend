@@ -95,14 +95,12 @@ export function FinancialView() {
   const { navigation } = useGovernanceCommandCenterStore();
 
   switch (navigation.subCategory) {
-    case 'invoicing':
+    case 'contract-sla':
       return <InvoicingView data={invoices} />;
-    case 'forecasts':
+    case 'commitments':
       return <ForecastsView />;
-    case 'variances':
+    case 'resource-utilization':
       return <VariancesView />;
-    case 'cashflow':
-      return <CashflowView data={cashflowData} />;
     default:
       return <CommitmentsView data={commitmentsData} summary={budgetSummary} />;
   }
@@ -301,7 +299,7 @@ function InvoicingView({ data }: { data: typeof invoices }) {
                   </p>
                   <p className="text-xs text-slate-500">Éch. {invoice.dueDate}</p>
                 </div>
-                <Badge variant="outline" className={cn('text-xs', status.color)}>
+                <Badge variant="default" className={cn('text-xs', status.color)}>
                   {status.label}
                   {invoice.daysOverdue > 0 && ` +${invoice.daysOverdue}j`}
                 </Badge>

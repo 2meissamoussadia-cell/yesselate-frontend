@@ -83,9 +83,9 @@ export const IASubNavigation = React.memo(function IASubNavigation({
                 <span>{sub.label}</span>
                 {sub.badge && (
                   <Badge
-                    variant="outline"
+                    variant="default"
                     className={cn(
-                      'h-4 min-w-4 px-1 text-xs transition-all duration-200',
+                      'h-4 min-w-4 px-1 text-xs transition-all duration-200 border',
                       sub.badgeType === 'critical'
                         ? 'bg-red-500/20 text-red-400 border-red-500/30'
                         : sub.badgeType === 'warning'

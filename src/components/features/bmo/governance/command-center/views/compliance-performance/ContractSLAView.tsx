@@ -63,7 +63,7 @@ export function ContractSLAView() {
                 <div className="flex items-center gap-2 mb-2">
                   <ShieldCheck className="h-4 w-4 text-blue-400" />
                   <h3 className="text-base font-semibold text-slate-200">{sla.provider}</h3>
-                  <Badge variant="outline" className="text-xs border-slate-700 text-slate-400">
+                  <Badge variant="default" className="text-xs border-slate-700 text-slate-400">
                     {sla.contract}
                   </Badge>
                   <Badge

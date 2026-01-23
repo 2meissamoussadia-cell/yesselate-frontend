@@ -204,7 +204,7 @@ export function FinancesFiltersPanel({
                     <Icon className="h-4 w-4 text-slate-400" />
                     <h4 className="text-sm font-medium text-slate-300">{section.label}</h4>
                     {sectionFilters.length > 0 && (
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="default" className="text-xs">
                         {sectionFilters.length}
                       </Badge>
                     )}
@@ -251,7 +251,7 @@ export function FinancesFiltersPanel({
         <div className="p-4 border-t border-slate-800/50 space-y-2">
           <div className="flex items-center gap-2">
             <Button
-              variant="outline"
+              variant="default"
               size="sm"
               onClick={clearAll}
               disabled={activeFilterCount === 0}

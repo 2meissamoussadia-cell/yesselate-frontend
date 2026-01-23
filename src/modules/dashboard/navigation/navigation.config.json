@@ -1,0 +1,138 @@
+{
+  "overview": {
+    "label": "Vue d'ensemble",
+    "sub": {
+      "summary": {
+        "label": "Synthèse",
+        "leaf": {
+          "dashboard": {
+            "label": "Dashboard principal",
+            "component": "SummaryDashboardPage"
+          },
+          "points": {
+            "label": "Points clés",
+            "component": "SummaryPointsPage"
+          },
+          "highlights": {
+            "label": "Points clés",
+            "component": "SummaryPointsPage"
+          },
+          "projets": {
+            "label": "Projets",
+            "component": "ProjetKpiPage"
+          },
+          "budget": {
+            "label": "Budget",
+            "component": "BudgetKpiPage"
+          }
+        }
+      },
+      "kpis": {
+        "label": "KPIs",
+        "leaf": {
+          "dashboard": {
+            "label": "Dashboard KPIs",
+            "component": "KpiOverviewPage"
+          },
+          "highlights": {
+            "label": "Synthèse stratégique",
+            "component": "HighlightsKpiPage"
+          },
+          "projet": {
+            "label": "KPIs Projet",
+            "component": "ProjetKpiPage"
+          },
+          "projets": {
+            "label": "KPIs Projets",
+            "component": "ProjetKpiPage"
+          },
+          "demandes": {
+            "label": "KPIs Demandes",
+            "component": "DemandesKpiPage"
+          },
+          "budget": {
+            "label": "KPIs Budget",
+            "component": "BudgetKpiPage"
+          }
+        }
+      },
+      "bureaux": {
+        "label": "Bureaux",
+        "leaf": {
+          "all": {
+            "label": "Tous les bureaux",
+            "component": "BureauxPage"
+          },
+          "bmo": {
+            "label": "BMO",
+            "component": "BureauxPage"
+          },
+          "bf": {
+            "label": "BF",
+            "component": "BureauxPage"
+          },
+          "bj": {
+            "label": "BJ",
+            "component": "BureauxPage"
+          },
+          "bct": {
+            "label": "BCT",
+            "component": "BureauxPage"
+          },
+          "bop": {
+            "label": "BOP",
+            "component": "BureauxPage"
+          },
+          "bcg": {
+            "label": "BCG",
+            "component": "BureauxPage"
+          },
+          "bja": {
+            "label": "BJA",
+            "component": "BureauxPage"
+          },
+          "brc": {
+            "label": "BRC",
+            "component": "BureauxPage"
+          },
+          "bpl": {
+            "label": "BPL",
+            "component": "BureauxPage"
+          },
+          "bex": {
+            "label": "BEX",
+            "component": "BureauxPage"
+          }
+        }
+      },
+      "trends": {
+        "label": "Tendances",
+        "leaf": {
+          "mensuelles": {
+            "label": "Tendances mensuelles",
+            "component": "TendancesPage"
+          },
+          "trimestrielles": {
+            "label": "Tendances trimestrielles",
+            "component": "TendancesPage"
+          }
+        }
+      }
+    }
+  },
+  "performance": {
+    "label": "Performance & KPIs",
+    "sub": {
+      "validations": {
+        "label": "Validations",
+        "leaf": {
+          "global": {
+            "label": "Vue globale",
+            "component": "ValidationsGlobalPage"
+          }
+        }
+      }
+    }
+  }
+}
+

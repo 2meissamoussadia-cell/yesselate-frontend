@@ -78,7 +78,7 @@ export function CalendarMultiResources({ isOpen, onClose }: CalendarMultiResourc
             <span className="text-sm text-slate-400">{conflicts.length} conflit{conflicts.length > 1 ? 's' : ''} détecté{conflicts.length > 1 ? 's' : ''}</span>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
+            <Button variant="default" size="sm">
               <AlertTriangle className="h-4 w-4 mr-2" />
               Résoudre tous
             </Button>
@@ -95,7 +95,7 @@ export function CalendarMultiResources({ isOpen, onClose }: CalendarMultiResourc
               <div className="flex items-start justify-between mb-2">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <Badge variant="outline" className="text-xs">
+                    <Badge variant="default" className="text-xs">
                       {conflict.type === 'resource' ? 'Ressource' : conflict.type === 'meeting' ? 'Réunion' : 'Validation'}
                     </Badge>
                     <span className="text-sm font-medium text-slate-200">{conflict.title}</span>
@@ -118,7 +118,7 @@ export function CalendarMultiResources({ isOpen, onClose }: CalendarMultiResourc
                 <div className="text-xs text-slate-500 mb-2">Événements en conflit :</div>
                 <div className="flex flex-wrap gap-2">
                   {conflict.events.map((event, idx) => (
-                    <Badge key={idx} variant="outline" className="text-xs">
+                    <Badge key={idx} variant="default" className="text-xs">
                       {event}
                     </Badge>
                   ))}
@@ -126,13 +126,13 @@ export function CalendarMultiResources({ isOpen, onClose }: CalendarMultiResourc
               </div>
 
               <div className="flex items-center gap-2 mt-4">
-                <Button variant="outline" size="sm" className="flex-1">
+                <Button variant="default" size="sm" className="flex-1">
                   Déplacer
                 </Button>
-                <Button variant="outline" size="sm" className="flex-1">
+                <Button variant="default" size="sm" className="flex-1">
                   Fusionner
                 </Button>
-                <Button variant="outline" size="sm" className="flex-1">
+                <Button variant="default" size="sm" className="flex-1">
                   Arbitrer
                 </Button>
               </div>
@@ -141,7 +141,7 @@ export function CalendarMultiResources({ isOpen, onClose }: CalendarMultiResourc
         </div>
 
         <div className="flex justify-end gap-2 pt-4 border-t border-slate-700">
-          <Button variant="outline" size="sm" onClick={onClose}>
+          <Button variant="default" size="sm" onClick={onClose}>
             Fermer
           </Button>
           <Button variant="default" size="sm">

@@ -44,7 +44,6 @@ import {
   parseISO,
   isValid,
   isWeekend,
-  isWeekday,
   getDay,
   getWeek,
   getMonth,
@@ -168,7 +167,7 @@ export function getAge(birthDate: Date): number {
 /**
  * Formate une date relative (il y a X jours, dans X jours)
  */
-export function formatRelativeDate(date: Date): string {
+export function formatRelativeDateAdvanced(date: Date): string {
   const now = new Date();
   const diffInDays = differenceInDays(now, date);
 
@@ -184,7 +183,7 @@ export function formatRelativeDate(date: Date): string {
 /**
  * Formate une durée entre deux dates
  */
-export function formatDuration(startDate: Date, endDate: Date): string {
+export function formatDateDuration(startDate: Date, endDate: Date): string {
   const days = differenceInDays(endDate, startDate);
   const hours = differenceInHours(endDate, startDate);
   const minutes = differenceInMinutes(endDate, startDate);
@@ -237,6 +236,13 @@ export function getWeekNumber(date: Date = new Date()): number {
  */
 export function getQuarterNumber(date: Date = new Date()): number {
   return getQuarter(date);
+}
+
+/**
+ * Vérifie si une date est un jour de semaine (lundi-vendredi)
+ */
+function isWeekday(date: Date): boolean {
+  return !isWeekend(date);
 }
 
 /**

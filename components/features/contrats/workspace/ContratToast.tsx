@@ -122,7 +122,7 @@ export function ContratToastProvider({ children }: { children: React.ReactNode }
     
     setToasts((prev) => [...prev, newToast].slice(-5)); // Max 5 toasts
     
-    if (newToast.duration > 0) {
+    if (newToast.duration && newToast.duration > 0) {
       setTimeout(() => {
         setToasts((prev) => prev.filter((t) => t.id !== id));
       }, newToast.duration);

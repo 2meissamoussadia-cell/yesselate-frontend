@@ -207,7 +207,7 @@ export function CommandCenterSidebar() {
                       </span>
                       {category.badge && (
                         <Badge
-                          variant="outline"
+                          variant="default"
                           className={cn(
                             'h-5 min-w-5 px-1.5 text-xs font-medium flex-shrink-0',
                             category.badgeType === 'critical'
@@ -267,7 +267,7 @@ export function CommandCenterSidebar() {
                             <span className="flex-1 text-left truncate">{sub.label}</span>
                             {sub.badge && (
                               <Badge
-                                variant="outline"
+                                variant="default"
                                 className={cn(
                                   'h-4 min-w-4 px-1 text-xs flex-shrink-0',
                                   sub.badgeType === 'critical'

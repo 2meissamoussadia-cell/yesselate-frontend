@@ -4,8 +4,8 @@ import React, { useMemo, useState, useCallback } from 'react';
 import { useValidationContratsWorkspaceStore } from '@/lib/stores/validationContratsWorkspaceStore';
 import { useContratToast } from '../ContratToast';
 import { contractsToSign, employees, raciMatrix } from '@/lib/data';
-import { FluentButton } from '@/src/components/ui/fluent-button';
-import { FluentTabs, FluentTabsTrigger, FluentTabsContent } from '@/src/components/ui/fluent-tabs';
+import { FluentButton } from '@/components/ui/fluent-button';
+import { FluentTabs, FluentTabsTrigger, FluentTabsContent } from '@/components/ui/fluent-tabs';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 

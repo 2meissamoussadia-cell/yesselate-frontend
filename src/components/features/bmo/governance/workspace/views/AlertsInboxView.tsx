@@ -387,33 +387,33 @@ export function AlertsInboxView() {
                           {/* Badges */}
                           <div className="flex items-center gap-2 flex-wrap">
                             <Badge
-                              variant="outline"
-                              className={SEVERITY_COLORS[alert.severity]}
+                              variant="default"
+                              className={SEVERITY_COLORS[alert.severity as keyof typeof SEVERITY_COLORS] || SEVERITY_COLORS.info}
                             >
                               {alert.severity}
                             </Badge>
                             
                             <Badge
-                              variant="outline"
+                              variant="default"
                               className="bg-slate-500/20 text-slate-300"
                             >
                               {TYPE_LABELS[alert.type]}
                             </Badge>
                             
                             {alert.bureau && (
-                              <Badge variant="outline" className="bg-blue-500/20 text-blue-300">
+                              <Badge variant="default" className="bg-blue-500/20 text-blue-300">
                                 {alert.bureau}
                               </Badge>
                             )}
                             
                             {alert.amount && alert.amount !== '—' && (
-                              <Badge variant="outline" className="bg-emerald-500/20 text-emerald-300">
+                              <Badge variant="default" className="bg-emerald-500/20 text-emerald-300">
                                 {alert.amount} FCFA
                               </Badge>
                             )}
                             
                             {alert.delay !== undefined && (
-                              <Badge variant="outline" className="bg-red-500/20 text-red-300">
+                              <Badge variant="default" className="bg-red-500/20 text-red-300">
                                 <Clock className="h-3 w-3 mr-1" />
                                 {alert.delay} jours de retard
                               </Badge>

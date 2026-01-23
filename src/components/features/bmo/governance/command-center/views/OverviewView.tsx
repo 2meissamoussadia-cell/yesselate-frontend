@@ -74,7 +74,7 @@ export function OverviewView() {
               variant="ghost"
               size="sm"
               className="text-xs text-slate-500 hover:text-slate-300"
-              onClick={() => navigate('overview', 'decisions' as any)}
+              onClick={() => navigate('decisions-arbitrages', 'pending-decisions')}
             >
               Voir tout
               <ChevronRight className="h-3 w-3 ml-1" />
@@ -139,7 +139,7 @@ export function OverviewView() {
               variant="ghost"
               size="sm"
               className="text-xs text-slate-500 hover:text-slate-300"
-              onClick={() => navigate('overview', 'escalations' as any)}
+              onClick={() => navigate('escalations-risks', 'active-escalations')}
             >
               Voir tout
               <ChevronRight className="h-3 w-3 ml-1" />
@@ -193,7 +193,7 @@ export function OverviewView() {
             variant="ghost"
             size="sm"
             className="text-xs text-slate-500 hover:text-slate-300"
-            onClick={() => navigate('projects', 'portfolio' as any)}
+            onClick={() => navigate('instances-coordination', 'sensitive-projects')}
           >
             Portefeuille complet
             <ChevronRight className="h-3 w-3 ml-1" />
@@ -238,7 +238,7 @@ export function OverviewView() {
                   </td>
                   <td className="px-4 py-3">
                     <Badge
-                      variant="outline"
+                      variant="default"
                       className={cn(
                         'text-xs',
                         project.status === 'on-track'
@@ -290,7 +290,7 @@ export function OverviewView() {
             variant="ghost"
             size="sm"
             className="text-xs text-slate-500 hover:text-slate-300"
-            onClick={() => navigate('risks', 'alerts' as any)}
+            onClick={() => navigate('escalations-risks', 'major-risks')}
           >
             Toutes les alertes
             <ChevronRight className="h-3 w-3 ml-1" />
@@ -312,7 +312,7 @@ export function OverviewView() {
                 <p className="text-sm text-slate-400 truncate">{alert.message}</p>
               </div>
               <div className="flex items-center gap-2 flex-shrink-0">
-                <Badge variant="outline" className="text-xs bg-slate-800 text-slate-500 border-slate-700">
+                <Badge variant="default" className="text-xs bg-slate-800 text-slate-500 border-slate-700">
                   {alert.project}
                 </Badge>
                 <span className="text-xs text-slate-600">{alert.time}</span>

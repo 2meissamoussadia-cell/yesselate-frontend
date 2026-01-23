@@ -74,19 +74,16 @@ export const subCategories: Record<string, SubCategoryConfig[]> = {
       id: 'executive-dashboard',
       label: 'Tableau de bord exécutif',
       icon: LayoutDashboard,
-      description: 'KPI synthétiques, alertes critiques, tendances trimestre',
     },
     {
       id: 'director-kpis',
       label: 'KPI directeurs',
       icon: BarChart3,
-      description: 'Projets actifs, budget, jalons, risques',
     },
     {
       id: 'monthly-summary',
       label: 'Synthèse mensuelle',
       icon: FileText,
-      description: 'Rapport mensuel synthétique, comparaison période précédente',
     },
   ],
   'decisions-arbitrages': [
@@ -96,13 +93,11 @@ export const subCategories: Record<string, SubCategoryConfig[]> = {
       icon: Clock,
       badge: 5,
       badgeType: 'warning',
-      description: 'Liste décisions à prendre, contexte/enjeux, urgence',
     },
     {
       id: 'decision-history',
       label: 'Historique décisions',
       icon: FileText,
-      description: 'Toutes décisions prises (derniers 3 mois), implémentation',
     },
     {
       id: 'blocking-points',
@@ -110,7 +105,6 @@ export const subCategories: Record<string, SubCategoryConfig[]> = {
       icon: AlertCircle,
       badge: 3,
       badgeType: 'critical',
-      description: 'Blocages sur projets critiques, propositions d\'arbitrage',
     },
   ],
   'escalations-risks': [
@@ -120,13 +114,11 @@ export const subCategories: Record<string, SubCategoryConfig[]> = {
       icon: AlertTriangle,
       badge: 8,
       badgeType: 'critical',
-      description: 'Escalades actives par niveau, délai depuis escalade',
     },
     {
       id: 'major-risks',
       label: 'Risques majeurs & exposition',
       icon: TrendingUp,
-      description: 'Matrice risques, exposition financière, plan d\'atténuation',
     },
     {
       id: 'critical-blockages',
@@ -134,7 +126,6 @@ export const subCategories: Record<string, SubCategoryConfig[]> = {
       icon: AlertCircle,
       badge: 4,
       badgeType: 'critical',
-      description: 'Blocages impactant jalons contrats, actions correctives',
     },
   ],
   'instances-coordination': [
@@ -142,19 +133,16 @@ export const subCategories: Record<string, SubCategoryConfig[]> = {
       id: 'scheduled-instances',
       label: 'Instances programmées',
       icon: Calendar,
-      description: 'Calendrier instances (CSPS, comités), participants attendus',
     },
     {
       id: 'minutes-followup',
       label: 'Comptes-rendus & suivi décisions',
       icon: FileCheck,
-      description: 'CR dernières instances, suivi décisions antérieures',
     },
     {
       id: 'sensitive-projects',
       label: 'Projets sensibles & priorités',
       icon: Target,
-      description: 'Liste projets sensibles, critères, priorités stratégiques',
     },
   ],
   'compliance-performance': [
@@ -162,19 +150,16 @@ export const subCategories: Record<string, SubCategoryConfig[]> = {
       id: 'contract-sla',
       label: 'Conformité contrats & SLA',
       icon: ShieldCheck,
-      description: 'Respect SLA fournisseurs, conformité clauses, pénalités',
     },
     {
       id: 'commitments',
       label: 'Engagements (budgets, délais)',
       icon: CheckCircle2,
-      description: 'Respect budgets/jalons, écarts vs engagement initial',
     },
     {
       id: 'resource-utilization',
       label: 'Taux utilisation ressources',
       icon: Activity,
-      description: '% allocation équipes, taux productivité, recommandations',
     },
   ],
 };

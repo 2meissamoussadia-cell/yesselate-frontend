@@ -78,14 +78,14 @@ export function BTPCustomizableDashboard({
         <div className="flex items-center gap-2">
           <LayoutGrid className="h-5 w-5 text-blue-400" />
           <h2 className="text-lg font-semibold text-slate-200">Dashboard Personnalisé</h2>
-          <Badge variant="outline" className="text-xs">
+          <Badge variant="default" className="text-xs">
             {widgets.length} widget{widgets.length > 1 ? 's' : ''}
           </Badge>
         </div>
         <div className="flex items-center gap-2">
           {isEditMode ? (
             <>
-              <Button variant="outline" size="sm" onClick={() => setIsEditMode(false)} className="text-xs">
+              <Button variant="default" size="sm" onClick={() => setIsEditMode(false)} className="text-xs">
                 Annuler
               </Button>
               <Button variant="default" size="sm" onClick={handleSave} className="text-xs">
@@ -95,7 +95,7 @@ export function BTPCustomizableDashboard({
           ) : (
             <>
               <Button
-                variant="outline"
+                variant="default"
                 size="sm"
                 onClick={() => setIsAddModalOpen(true)}
                 className="text-xs"
@@ -103,7 +103,7 @@ export function BTPCustomizableDashboard({
                 <Plus className="h-4 w-4 mr-2" />
                 Ajouter
               </Button>
-              <Button variant="outline" size="sm" onClick={() => setIsEditMode(true)} className="text-xs">
+              <Button variant="default" size="sm" onClick={() => setIsEditMode(true)} className="text-xs">
                 <Settings className="h-4 w-4 mr-2" />
                 Personnaliser
               </Button>

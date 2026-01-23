@@ -5,8 +5,8 @@ import { useValidationContratsWorkspaceStore, type ContractQueue } from '@/lib/s
 import { useContratToast } from '../ContratToast';
 import { contractsToSign, raciMatrix, employees } from '@/lib/data';
 import type { Contract } from '@/lib/types/bmo.types';
-import { FluentButton } from '@/src/components/ui/fluent-button';
-import { FluentTabs, FluentTabsTrigger, FluentTabsContent } from '@/src/components/ui/fluent-tabs';
+import { FluentButton } from '@/components/ui/fluent-button';
+import { FluentTabs, FluentTabsTrigger, FluentTabsContent } from '@/components/ui/fluent-tabs';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 

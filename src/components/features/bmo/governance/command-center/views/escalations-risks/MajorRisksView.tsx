@@ -64,7 +64,7 @@ export function MajorRisksView() {
                   <div className="flex items-center gap-2 mb-2">
                     <AlertTriangle className="h-4 w-4 text-amber-400" />
                     <h4 className="text-base font-semibold text-slate-200">{risk.title}</h4>
-                    <Badge variant="outline" className="text-xs border-slate-700 text-slate-400">
+                    <Badge variant="default" className="text-xs border-slate-700 text-slate-400">
                       {risk.type}
                     </Badge>
                   </div>

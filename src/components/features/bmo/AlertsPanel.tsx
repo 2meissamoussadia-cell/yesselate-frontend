@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { alertingService, type Alert, type AlertStats } from '@/lib/services/alertingService';
+import { alertingService, type Alert, type AlertStats } from '../../../../lib/services/alertingService';
 import { AlertTriangle, Bell, CheckCircle, XCircle, Eye, EyeOff, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -260,7 +260,7 @@ function AlertCard({
               📦 {alert.module}
             </span>
             <span className="flex items-center gap-1">
-              🕐 {alertingService['formatRelativeTime'] ? alertingService['formatRelativeTime'](alert.createdAt) : new Date(alert.createdAt).toLocaleString('fr-FR')}
+              🕐 {new Date(alert.createdAt).toLocaleString('fr-FR')}
             </span>
             {alert.tags && alert.tags.length > 0 && (
               <div className="flex gap-1">

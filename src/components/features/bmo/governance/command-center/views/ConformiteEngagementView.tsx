@@ -295,7 +295,7 @@ export function ConformiteEngagementView() {
                     <div className="flex items-center gap-2 mb-1">
                       <p className="text-sm text-slate-300">{alert.title}</p>
                       <Badge
-                        variant="outline"
+                        variant="default"
                         className={cn(
                           'text-xs',
                           alert.severity === 'critical'
@@ -345,7 +345,7 @@ export function ConformiteEngagementView() {
               <div
                 key={item.id}
                 className="flex items-center justify-between px-4 py-3 hover:bg-slate-800/30 transition-colors cursor-pointer"
-                onClick={() => openModal('nonconformity-detail', item)}
+                onClick={() => openModal('commitment-detail' as any, item)}
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   {item.type === 'office' ? (
@@ -377,7 +377,7 @@ export function ConformiteEngagementView() {
                     className="h-7 px-2 bg-blue-600/80 hover:bg-blue-600 text-xs"
                     onClick={(e) => {
                       e.stopPropagation();
-                      openModal('nonconformity-detail', { ...item, action: 'plan' });
+                      openModal('commitment-detail' as any, { ...item, action: 'plan' });
                     }}
                   >
                     <Play className="h-3 w-3 mr-1" />

@@ -11,7 +11,7 @@ type CleanupFn = () => void;
  * Hook pour enregistrer des fonctions de nettoyage
  */
 export function useCleanup(cleanupFn: CleanupFn, deps: React.DependencyList = []) {
-  const cleanupRef = useRef<CleanupFn>();
+  const cleanupRef = useRef<CleanupFn | undefined>(undefined);
 
   useEffect(() => {
     cleanupRef.current = cleanupFn;

@@ -265,20 +265,21 @@ export function ResolveModal({ open, onClose, alert, onConfirm }: ResolveModalPr
             </div>
             <TemplatePicker
               alert={{
-                ...alert,
-                category: alert.type,
+                type: alert.type,
                 severity: alert.type === 'critical' ? 'critical' : 'warning',
+                title: alert.title,
+                description: alert.description,
               }}
               onSelect={(template, values) => {
                 // Appliquer le template
-                let content = template.content;
+                let content = template.template;
                 Object.entries(values).forEach(([key, value]) => {
-                  content = content.replace(new RegExp(`{{${key}}}`, 'g'), value);
+                  content = content.replace(new RegExp(`{${key}}`, 'g'), value);
                 });
                 setNote(content);
                 setShowTemplatePicker(false);
               }}
-              onClose={() => setShowTemplatePicker(false)}
+              onCancel={() => setShowTemplatePicker(false)}
             />
           </div>
         )}
@@ -592,7 +593,7 @@ export function AlertDetailModal({
                 {alert.type.toUpperCase()}
               </Badge>
               {alert.acknowledgedAt && (
-                <Badge variant="secondary">Acquittée</Badge>
+                <Badge variant="default">Acquittée</Badge>
               )}
               {alert.resolvedAt && (
                 <Badge variant="success">Résolue</Badge>
@@ -685,7 +686,7 @@ export function AlertDetailModal({
           <div className="flex gap-2 pt-2 border-t border-slate-700/50">
             {!alert.acknowledgedAt && (
               <FluentButton
-                variant="outline"
+                variant="secondary"
                 onClick={() => {
                   onClose();
                   onAcknowledge();
@@ -708,7 +709,7 @@ export function AlertDetailModal({
               Résoudre
             </FluentButton>
             <FluentButton
-              variant="outline"
+              variant="secondary"
               onClick={() => {
                 onClose();
                 onEscalate();

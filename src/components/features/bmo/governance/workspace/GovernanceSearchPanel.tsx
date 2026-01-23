@@ -171,7 +171,7 @@ export function GovernanceSearchPanel({
               {bureaux.map((bureau) => (
                 <Badge
                   key={bureau}
-                  variant="outline"
+                  variant="default"
                   className={cn(
                     'cursor-pointer transition-all',
                     filters.bureaux.includes(bureau)
@@ -196,7 +196,7 @@ export function GovernanceSearchPanel({
               {criticalityLevels.map((level) => (
                 <Badge
                   key={level}
-                  variant="outline"
+                  variant="default"
                   className={cn(
                     'cursor-pointer transition-all capitalize',
                     filters.criticality.includes(level)
@@ -220,7 +220,7 @@ export function GovernanceSearchPanel({
               {statuses.map((status) => (
                 <Badge
                   key={status}
-                  variant="outline"
+                  variant="default"
                   className={cn(
                     'cursor-pointer transition-all capitalize',
                     filters.status.includes(status)
@@ -244,7 +244,7 @@ export function GovernanceSearchPanel({
               {types.map((type) => (
                 <Badge
                   key={type}
-                  variant="outline"
+                  variant="default"
                   className={cn(
                     'cursor-pointer transition-all capitalize',
                     filters.type.includes(type)

@@ -35,7 +35,7 @@ import { validationsMock, type Validation } from '../data/validationsMock';
 function BureauBadge({ code, size = 'default' }: { code: string; size?: 'sm' | 'default' }) {
   return (
     <Badge
-      variant="outline"
+      variant="default"
       className={cn(
         'border-slate-700 text-slate-400',
         size === 'sm' ? 'text-[10px]' : 'text-xs'
@@ -119,7 +119,7 @@ export function PerformanceView() {
 
     // Filtre selon subCategory et filter (niveau 3)
     if (navigation.subCategory === 'validation') {
-      const filter = navigation.filter;
+      const filter = navigation.subSubCategory;
       
       if (filter === 'en-attente') {
         filtered = filtered.filter((v) => v.statut === 'en_attente');
@@ -132,7 +132,7 @@ export function PerformanceView() {
     }
 
     // Filtre pour les retards (peut être utilisé dans plusieurs sections)
-    if (navigation.subCategory === 'delays' || navigation.filter === 'retards') {
+    if (navigation.subCategory === 'delays' || navigation.subSubCategory === 'retards') {
       filtered = filtered.filter((v) => v.delai < 0);
     }
 
@@ -147,7 +147,7 @@ export function PerformanceView() {
     });
 
     return filtered;
-  }, [navigation.subCategory, navigation.filter]);
+  }, [navigation.subCategory, navigation.subSubCategory]);
 
   // Validations filtrées
   const filteredValidations = useMemo(() => getFilteredValidations(), [getFilteredValidations]);
@@ -186,10 +186,10 @@ export function PerformanceView() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-slate-200">
-            {navigation.subCategory === 'validation' && navigation.filter === 'en-attente' && 'Validations en attente'}
-            {navigation.subCategory === 'validation' && navigation.filter === 'validees' && 'Validations approuvées'}
-            {navigation.subCategory === 'validation' && navigation.filter === 'rejetees' && 'Validations rejetées'}
-            {navigation.subCategory === 'validation' && !navigation.filter && 'Toutes les validations'}
+            {navigation.subCategory === 'validation' && navigation.subSubCategory === 'en-attente' && 'Validations en attente'}
+            {navigation.subCategory === 'validation' && navigation.subSubCategory === 'validees' && 'Validations approuvées'}
+            {navigation.subCategory === 'validation' && navigation.subSubCategory === 'rejetees' && 'Validations rejetées'}
+            {navigation.subCategory === 'validation' && !navigation.subSubCategory && 'Toutes les validations'}
             {navigation.subCategory !== 'validation' && 'Performance & KPIs'}
           </h1>
           <p className="text-sm text-slate-500 mt-0.5">
@@ -236,7 +236,7 @@ export function PerformanceView() {
                       <span className="text-sm font-medium text-white">{validation.reference}</span>
                     </td>
                     <td className="px-4 py-3">
-                      <Badge variant="outline" className="text-xs border-slate-700 text-slate-400">
+                      <Badge variant="default" className="text-xs border-slate-700 text-slate-400">
                         {validation.type.toUpperCase()}
                       </Badge>
                     </td>

@@ -716,7 +716,7 @@ const PerformanceView = React.memo(function PerformanceView({ subCategory }: { s
               chartProps: {
                 data: filteredKPIs.slice(0, 7).map((kpi, idx) => ({
                   name: `J-${6 - idx}`,
-                  value: kpi.current - Math.random() * 10,
+                  value: ((kpi as any).current ?? kpi.value ?? 0) - Math.random() * 10,
                   target: kpi.target,
                 })),
                 type: 'area',
@@ -796,7 +796,7 @@ const AlertsView = React.memo(function AlertsView({ subCategory }: { subCategory
     }
     
     if (subCategory === 'resolved') {
-      return alerts.filter((a) => a.status === 'resolved');
+      return alerts.filter((a: any) => a.status === 'resolved');
     }
     
     // Par défaut, retourner toutes les alertes
@@ -825,11 +825,11 @@ const AlertsView = React.memo(function AlertsView({ subCategory }: { subCategory
   const handleAlertClick = (alert: any) => {
     openDetailPanel('alert', alert.id, {
       title: alert.title,
-      message: alert.message,
+      message: (alert as any).message,
       severity: alert.severity,
-      category: alert.category,
-      status: alert.status,
-      createdAt: alert.createdAt,
+      category: (alert as any).category,
+      status: (alert as any).status,
+      createdAt: (alert as any).createdAt,
     });
   };
 
@@ -864,8 +864,8 @@ const AlertsView = React.memo(function AlertsView({ subCategory }: { subCategory
                   </div>
                   <div className="flex-1 min-w-0">
                     <h4 className="text-base font-semibold text-slate-200 mb-1">{alert.title}</h4>
-                    {alert.message && (
-                      <p className="text-sm text-slate-400 line-clamp-2">{alert.message}</p>
+                    {(alert as any).message && (
+                      <p className="text-sm text-slate-400 line-clamp-2">{(alert as any).message}</p>
                     )}
                   </div>
                 </div>
@@ -882,8 +882,8 @@ const AlertsView = React.memo(function AlertsView({ subCategory }: { subCategory
                 </Badge>
               </div>
               <div className="flex items-center gap-4 text-xs text-slate-500">
-                {alert.category && <span>Catégorie: {alert.category}</span>}
-                {alert.createdAt && <span>{alert.createdAt}</span>}
+                {(alert as any).category && <span>Catégorie: {(alert as any).category}</span>}
+                {(alert as any).createdAt && <span>{(alert as any).createdAt}</span>}
               </div>
             </div>
           ))
@@ -1052,7 +1052,7 @@ const ReportsView = React.memo(function ReportsView({ subCategory }: { subCatego
                 <h4 className="text-base font-semibold text-slate-200 mb-1">{report.title}</h4>
                 <p className="text-sm text-slate-500">{report.date}</p>
                 {report.category && (
-                  <Badge variant="outline" className="mt-2 text-xs">
+                  <Badge variant="default" className="mt-2 text-xs">
                     {report.category}
                   </Badge>
                 )}
@@ -1112,7 +1112,7 @@ const KPIsView = React.memo(function KPIsView({ subCategory }: { subCategory: st
               className="p-5 rounded-xl border border-slate-700/50 bg-slate-900/50 hover:bg-slate-800/50 transition-all cursor-pointer"
             >
               <div className="flex items-start justify-between mb-3">
-                <p className="text-sm font-medium text-slate-300">{kpi.name || kpi.label}</p>
+                <p className="text-sm font-medium text-slate-300">{kpi.name || (kpi as any).label}</p>
                 <Badge
                   variant={kpi.status === 'success' ? 'default' : 'warning'}
                   className="text-xs"

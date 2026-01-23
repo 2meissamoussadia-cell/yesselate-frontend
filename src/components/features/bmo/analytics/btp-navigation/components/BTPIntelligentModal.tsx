@@ -125,7 +125,7 @@ export function BTPIntelligentModal({
                       <Button
                         key={index}
                         onClick={action.onClick}
-                        variant={action.variant === 'primary' ? 'default' : 'outline'}
+                        variant={action.variant === 'primary' ? 'default' : 'secondary'}
                         size="sm"
                         className={cn(
                           action.variant === 'danger' && 'text-red-400 border-red-500/50 hover:bg-red-500/10'

@@ -123,7 +123,7 @@ export function ExchangeDetailModal({ open, onClose, exchangeId }: ExchangeDetai
                       {exchange.status === 'pending' ? 'En attente' : exchange.status === 'resolved' ? 'Résolu' : 'Escaladé'}
                     </Badge>
                     {exchange.metadata.type && (
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="default" className="text-xs">
                         {exchange.metadata.type === 'demande' ? 'Demande' : exchange.metadata.type === 'information' ? 'Information' : exchange.metadata.type === 'validation' ? 'Validation' : 'Escalade'}
                       </Badge>
                     )}
@@ -226,7 +226,7 @@ export function ExchangeDetailModal({ open, onClose, exchangeId }: ExchangeDetai
                       <h3 className="text-sm font-semibold text-slate-300 mb-3">Tags</h3>
                       <div className="flex flex-wrap gap-2">
                         {exchange.metadata.tags.map(tag => (
-                          <Badge key={tag} variant="outline" className="text-xs">
+                          <Badge key={tag} variant="default" className="text-xs">
                             {tag}
                           </Badge>
                         ))}
@@ -383,19 +383,19 @@ export function ExchangeDetailModal({ open, onClose, exchangeId }: ExchangeDetai
                     <div className="p-4 rounded-xl border border-slate-700/50 bg-slate-800/30">
                       <h3 className="text-sm font-semibold text-slate-300 mb-4">Actions rapides</h3>
                       <div className="grid grid-cols-2 gap-3">
-                        <Button variant="outline" className="justify-start">
+                        <Button variant="default" className="justify-start">
                           <MessageSquare className="w-4 h-4 mr-2" />
                           Répondre
                         </Button>
-                        <Button variant="outline" className="justify-start">
+                        <Button variant="default" className="justify-start">
                           <ArrowUp className="w-4 h-4 mr-2" />
                           Escalader
                         </Button>
-                        <Button variant="outline" className="justify-start">
+                        <Button variant="default" className="justify-start">
                           <Archive className="w-4 h-4 mr-2" />
                           Archiver
                         </Button>
-                        <Button variant="outline" className="justify-start">
+                        <Button variant="default" className="justify-start">
                           <Download className="w-4 h-4 mr-2" />
                           Exporter
                         </Button>

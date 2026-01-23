@@ -172,7 +172,7 @@ export const DemandesRHCommandSidebar = React.memo(function DemandesRHCommandSid
 
                     {category.badge && (
                       <Badge
-                        variant="outline"
+                        variant="default"
                         className={cn(
                           'h-5 min-w-5 px-1.5 text-xs font-medium transition-all duration-200',
                           category.badgeType === 'critical'

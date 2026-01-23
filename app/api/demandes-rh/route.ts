@@ -8,8 +8,8 @@ type DemandeQueue = 'all' | 'pending' | 'urgent' | 'validated' | 'rejected' | st
 
 // Helper: Check if demand is urgent
 function isUrgent(demande: any): boolean {
-  if (demande.statut === 'en_attente') {
-    const dateDebut = new Date(demande.dateDebut);
+  if (demande.status === 'pending') {
+    const dateDebut = new Date(demande.startDate || demande.date);
     const today = new Date();
     const diffDays = Math.ceil((dateDebut.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
     
@@ -17,7 +17,12 @@ function isUrgent(demande: any): boolean {
     if (diffDays <= 3 && diffDays >= 0) return true;
     
     // Urgent si montant > 500000 pour les dépenses
-    if (demande.type === 'Dépense' && demande.montant && demande.montant > 500000) return true;
+    if (demande.type === 'Dépense' && demande.amount) {
+      const amountNum = typeof demande.amount === 'string' 
+        ? parseFloat(demande.amount.replace(/[^\d.]/g, '')) 
+        : demande.amount;
+      if (amountNum > 500000) return true;
+    }
   }
   
   return false;
@@ -39,16 +44,16 @@ export async function GET(request: NextRequest) {
     // Filtrer par queue
     switch (queue) {
       case 'pending':
-        filtered = filtered.filter(d => d.statut === 'en_attente');
+        filtered = filtered.filter(d => d.status === 'pending');
         break;
       case 'urgent':
-        filtered = filtered.filter(d => d.statut === 'en_attente' && isUrgent(d));
+        filtered = filtered.filter(d => d.status === 'pending' && isUrgent(d));
         break;
       case 'validated':
-        filtered = filtered.filter(d => d.statut === 'validée');
+        filtered = filtered.filter(d => d.status === 'validated');
         break;
       case 'rejected':
-        filtered = filtered.filter(d => d.statut === 'rejetée');
+        filtered = filtered.filter(d => d.status === 'rejected');
         break;
       default:
         // Si c'est un type (Congé, Dépense, etc.)
@@ -72,7 +77,7 @@ export async function GET(request: NextRequest) {
     
     // Trier par date (plus récent en premier)
     filtered.sort((a, b) => 
-      new Date(b.dateCreation).getTime() - new Date(a.dateCreation).getTime()
+      new Date(b.date).getTime() - new Date(a.date).getTime()
     );
     
     // Paginer
@@ -113,14 +118,17 @@ export async function POST(request: NextRequest) {
       type: body.type,
       agent: body.agent,
       bureau: body.bureau,
-      statut: 'en_attente',
-      dateCreation: new Date().toISOString(),
-      dateDebut: body.dateDebut,
-      dateFin: body.dateFin,
-      motif: body.motif,
-      montant: body.montant,
+      status: 'pending' as const,
+      date: new Date().toISOString(),
+      startDate: body.startDate || body.dateDebut,
+      endDate: body.endDate || body.dateFin,
+      reason: body.reason || body.motif || '',
+      amount: body.amount || body.montant,
       destination: body.destination,
-      pieces: body.pieces || [],
+      documents: body.documents || body.pieces || [],
+      priority: body.priority || 'normal' as const,
+      initials: body.initials || '',
+      subtype: body.subtype || '',
     };
     
     return NextResponse.json(newDemande, { status: 201 });

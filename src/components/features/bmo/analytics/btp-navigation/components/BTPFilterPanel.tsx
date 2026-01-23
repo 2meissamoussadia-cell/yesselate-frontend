@@ -89,7 +89,7 @@ export function BTPFilterPanel({
             <Popover>
               <PopoverTrigger asChild>
                 <Button
-                  variant="outline"
+                  variant="default"
                   size="sm"
                   className={cn(
                     'w-full justify-start text-left font-normal text-xs',
@@ -211,7 +211,7 @@ export function BTPFilterPanel({
           <Filter className="h-4 w-4 text-slate-400" />
           <h3 className="text-sm font-semibold text-slate-300">Filtres</h3>
           {localFilters.length > 0 && (
-            <Badge variant="outline" className="text-xs">
+            <Badge variant="default" className="text-xs">
               {localFilters.length} actif{localFilters.length > 1 ? 's' : ''}
             </Badge>
           )}
@@ -230,7 +230,7 @@ export function BTPFilterPanel({
           {localFilters.map((filter) => (
             <Badge
               key={filter.id}
-              variant="secondary"
+              variant="default"
               className="text-xs flex items-center gap-1"
             >
               {filter.label || filter.id}: {String(filter.value).substring(0, 20)}
@@ -254,10 +254,10 @@ export function BTPFilterPanel({
 
       {/* Actions rapides */}
       <div className="flex items-center gap-2 mt-4 pt-4 border-t border-slate-700">
-        <Button variant="outline" size="sm" className="text-xs">
+        <Button variant="default" size="sm" className="text-xs">
           Sauvegarder la sélection
         </Button>
-        <Button variant="outline" size="sm" className="text-xs">
+        <Button variant="default" size="sm" className="text-xs">
           Charger une sélection
         </Button>
       </div>

@@ -78,8 +78,8 @@ export function EcheancesOperationnellesView() {
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-sm font-medium text-slate-200">{echeance.elementLabel}</span>
-                          <Badge variant="outline">{echeance.type}</Badge>
-                          <Badge variant="outline">{echeance.statut}</Badge>
+                          <Badge variant="gray">{echeance.type}</Badge>
+                          <Badge variant="gray">{echeance.statut}</Badge>
                         </div>
                         <div className="text-xs text-slate-400">
                           {echeance.moduleSource} • {new Date(echeance.date).toLocaleString('fr-FR')}

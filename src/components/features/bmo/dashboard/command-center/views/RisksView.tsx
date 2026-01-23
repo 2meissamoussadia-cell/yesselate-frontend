@@ -255,7 +255,7 @@ export function RisksView() {
                     >
                       {kindLabels[risk.kind]}
                     </Badge>
-                    <Badge variant="outline" className="text-xs border-slate-700 text-slate-400">
+                    <Badge variant="default" className="text-xs border-slate-700 text-slate-400">
                       {risk.source}
                     </Badge>
                     {risk.trend === 'up' && (

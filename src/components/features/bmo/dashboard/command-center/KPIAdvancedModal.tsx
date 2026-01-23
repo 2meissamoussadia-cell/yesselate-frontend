@@ -121,8 +121,8 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
     });
   }, [historicalData]);
 
-  const maxValue = Math.max(...historicalData.map(d => d.value), detail?.currentValue || 0, 1);
-  const minValue = Math.min(...historicalData.map(d => d.value), detail?.currentValue || 0, 0);
+  const maxValue = Math.max(...historicalData.map((d: { value: number }) => d.value), detail?.currentValue || 0, 1);
+  const minValue = Math.min(...historicalData.map((d: { value: number }) => d.value), detail?.currentValue || 0, 0);
 
   if (isLoading) {
     return (
@@ -284,7 +284,7 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
                 </div>
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
                   <p className="text-xs text-slate-500 mb-1">Statut</p>
-                  <Badge variant={displayData?.tone === 'ok' ? 'default' : displayData?.tone === 'warn' ? 'secondary' : 'destructive'}>
+                  <Badge variant={displayData?.tone === 'ok' ? 'default' : displayData?.tone === 'warn' ? 'warning' : 'destructive'}>
                     {displayData?.tone === 'ok' ? 'Normal' : displayData?.tone === 'warn' ? 'Attention' : displayData?.tone === 'crit' ? 'Critique' : 'Info'}
                   </Badge>
                 </div>
@@ -294,7 +294,7 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
               <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
                 <p className="text-xs text-slate-500 mb-3">Évolution sur {period === 'month' ? '1 mois' : period === 'quarter' ? '3 mois' : '12 mois'}</p>
                 <div className="h-32 flex items-end gap-1">
-                  {historicalData.map((point, i) => {
+                  {historicalData.map((point: { value: number; date: string; target?: number }, i: number) => {
                     const height = ((point.value - minValue) / (maxValue - minValue || 1)) * 100;
                     const isLatest = i === historicalData.length - 1;
                     return (
@@ -341,7 +341,7 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
               <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
                 <p className="text-xs text-slate-500 mb-4">Historique détaillé</p>
                 <div className="h-64 flex items-end gap-1 mb-4">
-                  {historicalData.map((point, i) => {
+                  {historicalData.map((point: { value: number; date: string; target?: number }, i: number) => {
                     const height = ((point.value - minValue) / (maxValue - minValue || 1)) * 100;
                     const isLatest = i === historicalData.length - 1;
                     return (
@@ -365,7 +365,7 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
                   })}
                 </div>
                 <div className="max-h-48 overflow-y-auto space-y-2">
-                  {historicalData.slice().reverse().map((point, i) => (
+                  {historicalData.slice().reverse().map((point: { value: number; date: string; target?: number }, i: number) => (
                     <div key={i} className="flex items-center justify-between p-2 rounded bg-slate-900/50">
                       <span className="text-xs text-slate-400">{point.date}</span>
                       <div className="flex items-center gap-4">
@@ -471,7 +471,7 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
                         <div className="flex items-center gap-4">
                           <span className="text-sm font-medium text-slate-200">{item.value}</span>
                           {item.percentage !== undefined && (
-                            <Badge variant="secondary" className="text-xs">
+                            <Badge variant="default" className="text-xs">
                               {item.percentage}%
                             </Badge>
                           )}
@@ -493,7 +493,7 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
                     <div key={i} className="p-3 rounded bg-slate-900/50">
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-sm text-slate-300">{pred.period}</span>
-                        <Badge variant="secondary" className="text-xs">
+                        <Badge variant="default" className="text-xs">
                           Confiance: {pred.confidence}%
                         </Badge>
                       </div>

@@ -199,7 +199,18 @@ export function IAModuleDetailModal({
               </div>
               <div>
                 <label className="text-xs text-slate-500 mb-1 block">Statut</label>
-                <Badge variant={getStatusBadgeVariant(module.status)} className="capitalize">
+                <Badge 
+                  variant={
+                    getStatusBadgeVariant(module.status) === 'critical' 
+                      ? 'destructive' 
+                      : getStatusBadgeVariant(module.status) === 'warning'
+                      ? 'warning'
+                      : getStatusBadgeVariant(module.status) === 'success'
+                      ? 'success'
+                      : 'default'
+                  } 
+                  className="capitalize"
+                >
                   {module.status}
                 </Badge>
               </div>

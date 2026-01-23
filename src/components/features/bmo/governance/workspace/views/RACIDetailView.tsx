@@ -89,7 +89,7 @@ export function RACIDetailView({ activityId }: RACIDetailViewProps) {
           <div className="flex items-center gap-3 mb-2">
             <h1 className="text-3xl font-bold text-white">{activity.activity}</h1>
             {activity.locked && (
-              <Lock className="h-6 w-6 text-amber-400" title="Activité verrouillée" />
+              <Lock className="h-6 w-6 text-amber-400" aria-label="Activité verrouillée" />
             )}
           </div>
           
@@ -99,7 +99,7 @@ export function RACIDetailView({ activityId }: RACIDetailViewProps) {
           
           <div className="flex items-center gap-2 flex-wrap">
             <Badge
-              variant="outline"
+              variant="default"
               className={cn(
                 'text-sm',
                 activity.criticality === 'critical' && 'bg-red-500/20 text-red-300 border-red-500/30',
@@ -111,12 +111,12 @@ export function RACIDetailView({ activityId }: RACIDetailViewProps) {
               {activity.criticality.toUpperCase()}
             </Badge>
             
-            <Badge variant="outline" className="bg-blue-500/20 text-blue-300 text-sm">
+            <Badge variant="default" className="bg-blue-500/20 text-blue-300 text-sm">
               {activity.category}
             </Badge>
             
             {activity.linkedProcedure && (
-              <Badge variant="outline" className="bg-slate-500/20 text-slate-300 text-sm">
+              <Badge variant="default" className="bg-slate-500/20 text-slate-300 text-sm">
                 <FileText className="h-3 w-3 mr-1" />
                 {activity.linkedProcedure}
               </Badge>
@@ -126,7 +126,7 @@ export function RACIDetailView({ activityId }: RACIDetailViewProps) {
         
         <div className="flex items-center gap-2">
           {!activity.locked && (
-            <Button variant="outline" className="border-white/10 text-white hover:bg-white/10">
+            <Button variant="default" className="border-white/10 text-white hover:bg-white/10">
               <Edit className="h-4 w-4 mr-2" />
               Modifier
             </Button>
@@ -184,7 +184,7 @@ export function RACIDetailView({ activityId }: RACIDetailViewProps) {
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-white font-semibold">{bureau}</h3>
                   <Badge
-                    variant="outline"
+                    variant="default"
                     className={RACI_COLORS[role]}
                   >
                     {role}
@@ -294,7 +294,7 @@ export function RACIDetailView({ activityId }: RACIDetailViewProps) {
                 <p className="text-white font-semibold mb-1">{activity.linkedProcedure}</p>
                 <p className="text-white/60 text-sm">Document de référence pour cette activité</p>
               </div>
-              <Button variant="outline" className="border-white/10 text-white hover:bg-white/10">
+              <Button variant="default" className="border-white/10 text-white hover:bg-white/10">
                 Consulter
               </Button>
             </div>
@@ -341,7 +341,7 @@ function LegendRow({ role, label, description, color }: LegendRowProps) {
   
   return (
     <div className="flex items-start gap-3">
-      <Badge variant="outline" className={cn('text-sm mt-0.5', colorClasses[color])}>
+      <Badge variant="default" className={cn('text-sm mt-0.5', colorClasses[color])}>
         {role}
       </Badge>
       <div className="flex-1">

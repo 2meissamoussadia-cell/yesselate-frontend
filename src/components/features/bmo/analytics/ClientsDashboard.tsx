@@ -155,7 +155,7 @@ export function ClientsDashboard({ clientsGlobalStats, evolution }: ClientsDashb
         <CardHeader>
           <CardTitle className="text-sm flex items-center justify-between">
             🏆 Top clients
-            <Badge variant="outline">{summary.topClients.length}</Badge>
+            <Badge variant="default">{summary.topClients.length}</Badge>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 text-sm">

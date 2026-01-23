@@ -56,7 +56,7 @@ export function ConferencesDetailPanel() {
   };
 
   const getStatusBadge = (status: string) => {
-    const variants: Record<string, 'default' | 'warning' | 'success'> = {
+    const variants: Record<string, 'default' | 'warning' | 'success' | 'info'> = {
       planifiee: 'warning',
       en_cours: 'info',
       terminee: 'success',
@@ -136,7 +136,7 @@ export function ConferencesDetailPanel() {
             <div className="flex items-center gap-2 mb-2">
               <Users className="h-4 w-4 text-slate-400" />
               <span className="text-sm font-medium text-slate-300">Participants</span>
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="default" className="text-xs">
                 {conference.participants.length}
               </Badge>
             </div>

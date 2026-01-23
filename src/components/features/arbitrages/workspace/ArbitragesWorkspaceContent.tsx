@@ -124,7 +124,7 @@ export function ArbitragesWorkspaceContent() {
             onClick={() => {
               openTab({
                 id: `wizard:create:${Date.now()}`,
-                type: 'wizard',
+                type: 'detail',
                 title: 'Nouvel arbitrage',
                 icon: '➕',
                 data: { action: 'create' },
@@ -154,19 +154,9 @@ export function ArbitragesWorkspaceContent() {
   }
 
   // Arbitrage (viewer avec arborescence)
-  if (activeTab.type === 'arbitrage') {
-    const arbitrageId = activeTab.data?.arbitrageId || activeTab.id.replace('arbitrage:', '');
-    return <ArbitrageViewer arbitrageId={arbitrageId} />;
-  }
-
-  // Bureau (vue détaillée)
-  if (activeTab.type === 'bureau') {
-    const bureauCode = activeTab.data?.bureauCode || activeTab.id.replace('bureau:', '');
-    return <BureauViewer bureauCode={bureauCode} />;
-  }
-
-  // Wizard (création/modification)
-  if (activeTab.type === 'wizard') {
+  if (activeTab.type === 'detail') {
+    // Wizard (création/modification)
+    if (activeTab.data?.action === 'create') {
     return (
       <div className="p-6 text-center text-slate-500">
         <Plus className="w-12 h-12 text-purple-400 mx-auto mb-4" />
@@ -181,17 +171,28 @@ export function ArbitragesWorkspaceContent() {
         </p>
       </div>
     );
+    }
+    // Vérifier si c'est un bureau
+    if (activeTab.data?.bureauCode) {
+      const bureauCode = (activeTab.data.bureauCode as string) || activeTab.id.replace('bureau:', '');
+      if (!bureauCode || typeof bureauCode !== 'string') return null;
+      return <BureauViewer bureauCode={bureauCode} />;
+    }
+    // Sinon, c'est un arbitrage
+    const arbitrageId = (activeTab.data?.arbitrageId as string) || activeTab.id.replace('arbitrage:', '') || activeTab.id.replace('wizard:create:', '');
+    if (!arbitrageId || typeof arbitrageId !== 'string') return null;
+    return <ArbitrageViewer arbitrageId={arbitrageId} />;
   }
 
-  // Report
-  if (activeTab.type === 'report') {
+  // Report - Utiliser 'analytics' pour les rapports
+  if (activeTab.type === 'analytics' && activeTab.data?.reportId) {
     return (
       <div className="p-6 text-center text-slate-500">
         <FileText className="w-12 h-12 text-indigo-400 mx-auto mb-4" />
         <h3 className="font-semibold text-lg mb-2">{activeTab.title}</h3>
         <p className="text-sm">
           Rapport : <code className="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 text-xs">
-            {activeTab.data?.reportId ?? 'inconnu'}
+            {(activeTab.data?.reportId as string) ?? 'inconnu'}
           </code>
         </p>
         <p className="text-xs text-slate-400 mt-4">

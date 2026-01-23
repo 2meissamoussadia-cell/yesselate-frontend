@@ -25,7 +25,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     data: {
       demandId: id,
       category,
-      opportunity: Boolean(body?.opportunity ?? false),
+      opportunity: Boolean(body?.opportunity ?? false) ? 1 : 0,
       probability: clamp15(body?.probability ?? 3),
       impact: clamp15(body?.impact ?? 3),
       mitigation: body?.mitigation ? String(body.mitigation) : null,

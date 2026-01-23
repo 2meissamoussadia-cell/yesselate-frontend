@@ -53,8 +53,8 @@ export {
   RecouvrementsLiveCounters,
   RecouvrementsCommandPalette,
   RecouvrementsStatsModal,
-  RecouvrementsDashboardView,
-  RecouvrementsQueueView
+  RecouvrementsInboxView,
+  RecouvrementsDetailView
 } from './workspace/recouvrements';
 
 // Composants workspace - Litiges
@@ -64,8 +64,8 @@ export {
   LitigesLiveCounters,
   LitigesCommandPalette,
   LitigesStatsModal,
-  LitigesDashboardView,
-  LitigesQueueView
+  LitigesInboxView,
+  LitigesDetailView
 } from './workspace/litiges';
 
 // Composants workspace - Missions
@@ -74,7 +74,5 @@ export {
   MissionsWorkspaceContent,
   MissionsLiveCounters,
   MissionsCommandPalette,
-  MissionsStatsModal,
-  MissionsDashboardView,
-  MissionsQueueView
+  MissionsStatsModal
 } from './workspace/missions';

@@ -59,7 +59,7 @@ export function DetailPanel() {
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-slate-800/50 bg-slate-900/95">
           <div className="flex items-center gap-2 min-w-0">
-            <Badge variant="outline" className="text-xs bg-slate-800 text-slate-400 border-slate-700">
+            <Badge variant="default" className="text-xs bg-slate-800 text-slate-400 border-slate-700">
               {data.reference || 'Détails'}
             </Badge>
             <span className="text-xs text-slate-500 truncate">{type}</span>
@@ -221,7 +221,7 @@ function StatusBadge({ status }: { status: string }) {
   const cfg = config[status] || { label: status, className: 'bg-slate-500/10 text-slate-400 border-slate-500/30' };
 
   return (
-    <Badge variant="outline" className={cn('text-xs', cfg.className)}>
+    <Badge variant="default" className={cn('text-xs', cfg.className)}>
       {cfg.label}
     </Badge>
   );
@@ -256,7 +256,7 @@ function QuickActionButton({
 }) {
   return (
     <Button
-      variant="outline"
+      variant="default"
       size="sm"
       className={cn(
         'justify-start border-slate-700/50',

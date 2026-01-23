@@ -137,7 +137,7 @@ export function ExportCalendrierModal({
                 <div className="text-sm text-slate-200">Période</div>
                 <div className="text-xs text-slate-500">{periodLabel} en cours</div>
               </div>
-              <Badge variant="outline">{periodLabel}</Badge>
+              <Badge variant="gray">{periodLabel}</Badge>
             </div>
 
             <label className="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700 cursor-pointer hover:bg-slate-800/70 transition-colors">

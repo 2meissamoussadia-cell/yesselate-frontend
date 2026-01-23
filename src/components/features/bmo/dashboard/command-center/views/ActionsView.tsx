@@ -122,11 +122,24 @@ const typeLabels = {
 };
 
 export function ActionsView() {
-  const { navigation, openModal, selectedItems, toggleItemSelection, clearSelection } =
+  const { navigation, openModal } =
     useDashboardCommandCenterStore();
 
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'urgency' | 'date' | 'amount'>('urgency');
+
+  const toggleItemSelection = (id: string) => {
+    setSelectedItems(prev => 
+      prev.includes(id) 
+        ? prev.filter(item => item !== id)
+        : [...prev, id]
+    );
+  };
+
+  const clearSelection = () => {
+    setSelectedItems([]);
+  };
 
   const { data: actionsData } = useApiQuery(async (_signal: AbortSignal) => dashboardAPI.getActions({ limit: 50 }), []);
   const baseActions: ActionItem[] = useMemo(() => {
@@ -214,7 +227,7 @@ export function ActionsView() {
               className="pl-9 bg-slate-800/50 border-slate-700 text-slate-200 w-64"
             />
           </div>
-          <Button variant="outline" size="sm" className="border-slate-700 text-slate-400">
+          <Button variant="default" size="sm" className="border-slate-700 text-slate-400">
             <Filter className="w-4 h-4 mr-2" />
             Filtres
           </Button>
@@ -309,13 +322,13 @@ export function ActionsView() {
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-xs font-mono text-slate-500">{action.id}</span>
                   <Badge
-                    variant="outline"
+                    variant="default"
                     className="text-xs border-slate-700 text-slate-400"
                   >
                     {typeLabels[action.type]}
                   </Badge>
                   <Badge
-                    variant="outline"
+                    variant="default"
                     className="text-xs border-slate-700 text-slate-400"
                   >
                     {action.bureau}

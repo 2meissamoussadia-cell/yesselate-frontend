@@ -38,7 +38,7 @@ export function GovernanceActiveFilters({
       {filters.map((filter) => (
         <Badge
           key={filter.id}
-          variant="outline"
+          variant="default"
           className="bg-blue-500/20 text-blue-300 border-blue-500/30 pl-2 pr-1 py-1 gap-1"
         >
           <span className="text-xs">

@@ -55,13 +55,13 @@ export function BTPAlertModal({ isOpen, onClose, alert }: BTPAlertModalProps) {
       case 'critical':
         return 'destructive';
       case 'warning':
-        return 'default';
+        return 'warning';
       case 'info':
-        return 'outline';
+        return 'info';
       case 'opportunity':
-        return 'default';
+        return 'success';
       default:
-        return 'outline';
+        return 'default';
     }
   };
 
@@ -140,7 +140,7 @@ export function BTPAlertModal({ isOpen, onClose, alert }: BTPAlertModalProps) {
             </div>
             <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
               <p className="text-xs text-slate-400 mb-1">Statut</p>
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="default" className="text-xs">
                 Active
               </Badge>
             </div>
@@ -249,7 +249,7 @@ export function BTPAlertModal({ isOpen, onClose, alert }: BTPAlertModalProps) {
                       <h5 className="text-sm font-semibold text-slate-300 mb-1">{rec.title}</h5>
                       <p className="text-xs text-slate-400 mb-2">{rec.description}</p>
                     </div>
-                    <Badge variant="outline" className="text-xs">
+                    <Badge variant="default" className="text-xs">
                       {rec.impact}
                     </Badge>
                   </div>
@@ -263,7 +263,7 @@ export function BTPAlertModal({ isOpen, onClose, alert }: BTPAlertModalProps) {
                       </span>
                     )}
                   </div>
-                  <Button variant="outline" size="sm" className="mt-3 text-xs">
+                  <Button variant="default" size="sm" className="mt-3 text-xs">
                     Planifier cette action
                   </Button>
                 </div>
@@ -301,7 +301,7 @@ export function BTPAlertModal({ isOpen, onClose, alert }: BTPAlertModalProps) {
               </div>
               <div>
                 <label className="text-xs text-slate-400 mb-1 block">Documents justificatifs</label>
-                <Button variant="outline" size="sm" className="text-xs">
+                <Button variant="default" size="sm" className="text-xs">
                   <FileText className="h-4 w-4 mr-2" />
                   Ajouter un document
                 </Button>
@@ -319,7 +319,7 @@ export function BTPAlertModal({ isOpen, onClose, alert }: BTPAlertModalProps) {
                   <CheckCircle className="h-4 w-4 mr-2" />
                   Résoudre l'alerte
                 </Button>
-                <Button variant="outline" size="sm" onClick={onClose} className="text-xs">
+                <Button variant="default" size="sm" onClick={onClose} className="text-xs">
                   Annuler
                 </Button>
               </div>

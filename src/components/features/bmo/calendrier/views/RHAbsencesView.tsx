@@ -79,7 +79,7 @@ export function RHAbsencesView({ view, showImpact }: RHAbsencesViewProps = {}) {
                       </div>
                     </div>
                   </div>
-                  {absence.bureau && <Badge variant="outline">{absence.bureau}</Badge>}
+                  {absence.bureau && <Badge variant="gray">{absence.bureau}</Badge>}
                 </div>
               ))}
             </div>
@@ -112,7 +112,7 @@ export function RHAbsencesView({ view, showImpact }: RHAbsencesViewProps = {}) {
                       </div>
                     </div>
                   </div>
-                  {mission.bureau && <Badge variant="outline">{mission.bureau}</Badge>}
+                  {mission.bureau && <Badge variant="gray">{mission.bureau}</Badge>}
                 </div>
               ))}
             </div>

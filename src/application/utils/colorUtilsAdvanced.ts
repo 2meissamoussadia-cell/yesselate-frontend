@@ -146,8 +146,8 @@ export function alpha(hex: string, opacity: number): string {
  * Mélange deux couleurs
  */
 export function blend(color1: string, color2: string, ratio: number = 0.5): string {
-  const rgb1 = hexToRgb(color1);
-  const rgb2 = hexToRgb(color2);
+  const rgb1 = hexToRgbAdvanced(color1);
+  const rgb2 = hexToRgbAdvanced(color2);
 
   if (!rgb1 || !rgb2) return color1;
 
@@ -173,7 +173,7 @@ export function generatePalette(baseColor: string): {
   800: string;
   900: string;
 } {
-  const rgb = hexToRgb(baseColor);
+  const rgb = hexToRgbAdvanced(baseColor);
   if (!rgb) {
     return {
       50: baseColor,

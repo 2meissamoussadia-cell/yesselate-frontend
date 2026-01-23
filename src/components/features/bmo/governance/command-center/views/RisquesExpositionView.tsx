@@ -356,7 +356,7 @@ export function RisquesExpositionView() {
                       <span className="text-xs text-slate-500">Projet: {risk.project}</span>
                       <span className="text-xs text-slate-600">•</span>
                       <Badge
-                        variant="outline"
+                        variant="default"
                         className={cn(
                           'text-xs',
                           risk.probability === 'high'
@@ -403,7 +403,7 @@ export function RisquesExpositionView() {
               <div
                 key={litigation.id}
                 className="flex items-center justify-between px-4 py-3 hover:bg-slate-800/30 transition-colors cursor-pointer"
-                onClick={() => openModal('litigation-detail', litigation)}
+                onClick={() => openModal('project-detail', litigation)}
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   <div className="flex items-center justify-center w-8 h-8 rounded-full bg-amber-500/20">
@@ -422,7 +422,7 @@ export function RisquesExpositionView() {
                       </span>
                       <span className="text-xs text-slate-600">•</span>
                       <Badge
-                        variant="outline"
+                        variant="default"
                         className={cn(
                           'text-xs',
                           litigation.reputationImpact === 'high'
@@ -442,7 +442,7 @@ export function RisquesExpositionView() {
                     className="h-7 px-2 text-slate-400 hover:text-slate-300"
                     onClick={(e) => {
                       e.stopPropagation();
-                      openModal('litigation-detail', litigation);
+                      openModal('project-detail', litigation);
                     }}
                   >
                     <ChevronRight className="h-4 w-4" />
@@ -467,7 +467,7 @@ export function RisquesExpositionView() {
               <div
                 key={incident.id}
                 className="flex items-center justify-between px-4 py-3 hover:bg-slate-800/30 transition-colors cursor-pointer"
-                onClick={() => openModal('qse-incident-detail', incident)}
+                onClick={() => openModal('alert-detail', incident)}
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   <div
@@ -489,7 +489,7 @@ export function RisquesExpositionView() {
                     <div className="flex items-center gap-2 mb-1">
                       <p className="text-sm text-slate-300">{incident.title}</p>
                       <Badge
-                        variant="outline"
+                        variant="default"
                         className={cn(
                           'text-xs',
                           incident.severity === 'critical'
@@ -521,7 +521,7 @@ export function RisquesExpositionView() {
                     className="h-7 px-2 bg-blue-600/80 hover:bg-blue-600 text-xs"
                     onClick={(e) => {
                       e.stopPropagation();
-                      openModal('qse-incident-detail', { ...incident, action: 'audit' });
+                      openModal('alert-detail', { ...incident, action: 'audit' });
                     }}
                   >
                     <FileText className="h-3 w-3 mr-1" />
@@ -547,7 +547,7 @@ export function RisquesExpositionView() {
               <div
                 key={incident.id}
                 className="flex items-center justify-between px-4 py-3 hover:bg-slate-800/30 transition-colors cursor-pointer"
-                onClick={() => openModal('system-incident-detail', incident)}
+                onClick={() => openModal('alert-detail', incident)}
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   <div
@@ -569,7 +569,7 @@ export function RisquesExpositionView() {
                     <div className="flex items-center gap-2 mb-1">
                       <p className="text-sm text-slate-300">{incident.title}</p>
                       <Badge
-                        variant="outline"
+                        variant="default"
                         className={cn(
                           'text-xs',
                           incident.status === 'resolved'
@@ -596,7 +596,7 @@ export function RisquesExpositionView() {
                     className="h-7 px-2 text-slate-400 hover:text-slate-300"
                     onClick={(e) => {
                       e.stopPropagation();
-                      openModal('system-incident-detail', incident);
+                      openModal('alert-detail', incident);
                     }}
                   >
                     <ChevronRight className="h-4 w-4" />

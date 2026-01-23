@@ -3,13 +3,18 @@ import { demandesRH } from '@/lib/data/bmo-mock-2';
 
 // Helper: Check if demand is urgent
 function isUrgent(demande: any): boolean {
-  if (demande.statut === 'en_attente') {
-    const dateDebut = new Date(demande.dateDebut);
+  if (demande.status === 'pending') {
+    const dateDebut = new Date(demande.startDate || demande.date);
     const today = new Date();
     const diffDays = Math.ceil((dateDebut.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
     
     if (diffDays <= 3 && diffDays >= 0) return true;
-    if (demande.type === 'Dépense' && demande.montant && demande.montant > 500000) return true;
+    if (demande.type === 'Dépense' && demande.amount) {
+      const amountNum = typeof demande.amount === 'string' 
+        ? parseFloat(demande.amount.replace(/[^\d.]/g, '')) 
+        : demande.amount;
+      if (amountNum > 500000) return true;
+    }
   }
   
   return false;
@@ -20,11 +25,11 @@ export async function GET(request: NextRequest) {
   try {
     // Calculer les stats
     const total = demandesRH.length;
-    const pending = demandesRH.filter(d => d.statut === 'en_attente').length;
-    const urgent = demandesRH.filter(d => d.statut === 'en_attente' && isUrgent(d)).length;
-    const validated = demandesRH.filter(d => d.statut === 'validée').length;
-    const rejected = demandesRH.filter(d => d.statut === 'rejetée').length;
-    const inProgress = demandesRH.filter(d => d.statut === 'en_cours').length;
+    const pending = demandesRH.filter(d => d.status === 'pending').length;
+    const urgent = demandesRH.filter(d => d.status === 'pending' && isUrgent(d)).length;
+    const validated = demandesRH.filter(d => d.status === 'validated').length;
+    const rejected = demandesRH.filter(d => d.status === 'rejected').length;
+    const inProgress = 0; // HRRequest doesn't have 'in_cours' status
     
     // Par type
     const byType = Object.entries(
@@ -42,8 +47,11 @@ export async function GET(request: NextRequest) {
         acc[bureau] = { count: 0, totalAmount: 0 };
       }
       acc[bureau].count++;
-      if (d.montant) {
-        acc[bureau].totalAmount += d.montant;
+      if (d.amount) {
+        const amountNum = typeof d.amount === 'string' 
+          ? parseFloat(d.amount.replace(/[^\d.]/g, '')) 
+          : d.amount;
+        acc[bureau].totalAmount += amountNum || 0;
       }
       return acc;
     }, {});
@@ -55,7 +63,7 @@ export async function GET(request: NextRequest) {
     // Par statut
     const byStatus = Object.entries(
       demandesRH.reduce((acc: Record<string, number>, d) => {
-        acc[d.statut] = (acc[d.statut] || 0) + 1;
+        acc[d.status] = (acc[d.status] || 0) + 1;
         return acc;
       }, {})
     ).map(([status, count]) => ({ status, count }));
@@ -63,16 +71,22 @@ export async function GET(request: NextRequest) {
     // Montants pour les dépenses
     const depenses = demandesRH.filter(d => 
       (d.type === 'Dépense' || d.type === 'Déplacement' || d.type === 'Paie') && 
-      d.montant
+      d.amount
     );
     
-    const totalAmount = depenses.reduce((sum, d) => sum + (d.montant || 0), 0);
+    const parseAmount = (amount: string | number | undefined): number => {
+      if (!amount) return 0;
+      if (typeof amount === 'number') return amount;
+      return parseFloat(amount.replace(/[^\d.]/g, '')) || 0;
+    };
+    
+    const totalAmount = depenses.reduce((sum, d) => sum + parseAmount(d.amount), 0);
     const validatedAmount = depenses
-      .filter(d => d.statut === 'validée')
-      .reduce((sum, d) => sum + (d.montant || 0), 0);
+      .filter(d => d.status === 'validated')
+      .reduce((sum, d) => sum + parseAmount(d.amount), 0);
     const pendingAmount = depenses
-      .filter(d => d.statut === 'en_attente')
-      .reduce((sum, d) => sum + (d.montant || 0), 0);
+      .filter(d => d.status === 'pending')
+      .reduce((sum, d) => sum + parseAmount(d.amount), 0);
     
     // Délai moyen de traitement (simulé)
     const avgProcessingDays = 3.5;

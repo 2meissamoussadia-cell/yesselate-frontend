@@ -74,7 +74,7 @@ export function AlertDetailView({ alertId }: AlertDetailViewProps) {
     setLoading(false);
     
     // Toast notification (à implémenter)
-    alert(`Action "${actionId}" exécutée avec succès`);
+    window.alert(`Action "${actionId}" exécutée avec succès`);
   };
 
   return (
@@ -228,7 +228,7 @@ export function AlertDetailView({ alertId }: AlertDetailViewProps) {
               {alert.actions.map((action) => (
                 <FluentButton
                   key={action.id}
-                  variant={action.type === 'danger' ? 'danger' : action.type === 'primary' ? 'primary' : 'secondary'}
+                  variant={action.type === 'danger' ? 'destructive' : action.type === 'primary' ? 'primary' : 'secondary'}
                   onClick={() => handleAction(action.id)}
                   disabled={loading}
                 >

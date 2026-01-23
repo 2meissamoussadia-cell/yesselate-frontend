@@ -205,7 +205,7 @@ export function AuditFiltersPanel({
                   <Icon className="h-4 w-4 text-slate-400" />
                   <h4 className="text-sm font-semibold text-slate-300">{section.label}</h4>
                   {selected.length > 0 && (
-                    <Badge variant="outline" className="h-4 px-1.5 text-xs bg-cyan-500/20 text-cyan-400 border-cyan-500/30">
+                    <Badge variant="gray" className="h-4 px-1.5 text-xs bg-cyan-500/20 text-cyan-400 border-cyan-500/30">
                       {selected.length}
                     </Badge>
                   )}
@@ -256,6 +256,7 @@ export function AuditFiltersPanel({
     </>
   );
 }
+
 
 
 

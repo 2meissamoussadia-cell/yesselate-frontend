@@ -72,7 +72,7 @@ export function InstancesReunionsView({ filterType, view }: InstancesReunionsVie
                       <div className="flex items-center gap-2 mb-1">
                         <span className="text-sm font-medium text-slate-200">{instance.titre}</span>
                         <Badge className="bg-red-500/20 text-red-400 border-red-500/30">Critique</Badge>
-                        <Badge variant="outline">{instance.type}</Badge>
+                        <Badge variant="gray">{instance.type}</Badge>
                       </div>
                       <div className="text-xs text-slate-400">
                         {new Date(instance.date).toLocaleString('fr-FR')} • {instance.moduleSource}

@@ -53,7 +53,7 @@ export function DemandesRejectedView() {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-xs font-mono text-slate-500">{demande.id}</span>
-                <Badge variant="secondary" className="text-xs">
+                <Badge variant="default" className="text-xs">
                   Rejeté
                 </Badge>
               </div>
@@ -62,7 +62,7 @@ export function DemandesRejectedView() {
             </div>
 
             {/* Info */}
-            <Badge variant="outline" className="text-xs border-slate-700 text-slate-400">
+            <Badge variant="default" className="text-xs border-slate-700 text-slate-400">
               {demande.bureau}
             </Badge>
 

@@ -90,16 +90,16 @@ export function BTPComparisonView({
         <div className="flex items-center gap-2">
           <GitCompare className="h-5 w-5 text-blue-400" />
           <h2 className="text-lg font-semibold text-slate-200">Comparaison</h2>
-          <Badge variant="outline" className="text-xs">
+          <Badge variant="default" className="text-xs">
             {items.length} élément{items.length > 1 ? 's' : ''}
           </Badge>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={addItem} className="text-xs">
+          <Button variant="default" size="sm" onClick={addItem} className="text-xs">
             <Plus className="h-4 w-4 mr-2" />
             Ajouter
           </Button>
-          <Button variant="outline" size="sm" className="text-xs">
+          <Button variant="default" size="sm" className="text-xs">
             <Download className="h-4 w-4 mr-2" />
             Exporter
           </Button>
@@ -134,7 +134,7 @@ export function BTPComparisonView({
             ))}
             {items.length < 5 && (
               <Button
-                variant="outline"
+                variant="default"
                 size="sm"
                 onClick={addItem}
                 className="text-xs h-7"
@@ -153,7 +153,7 @@ export function BTPComparisonView({
             {['Budget', 'Avancement', 'Marge', 'Délai', 'Qualité'].map((crit) => (
               <Badge
                 key={crit}
-                variant={selectedCriteria.includes(crit) ? 'default' : 'outline'}
+                variant={selectedCriteria.includes(crit) ? 'default' : 'gray'}
                 className="cursor-pointer text-xs"
                 onClick={() => {
                   setSelectedCriteria((prev) =>

@@ -132,7 +132,7 @@ export function DetailsSidePanel({ isOpen, onClose, data }: DetailsSidePanelProp
 
           {/* Actions */}
           <div className="mt-6 pt-6 border-t border-slate-700">
-            <Button variant="outline" className="w-full" onClick={onClose}>
+            <Button variant="default" className="w-full" onClick={onClose}>
               Fermer
             </Button>
           </div>

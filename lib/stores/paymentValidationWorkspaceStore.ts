@@ -347,13 +347,14 @@ export const usePaymentValidationWorkspaceStore = create<PaymentValidationWorksp
         },
         setItem: (name, value) => {
           // Convert Set to array for serialization
+          const state = value.state as PaymentValidationWorkspaceState;
           const toStore = {
             ...value,
             state: {
-              ...value.state,
-              selection: value.state?.selection ? {
-                ...value.state.selection,
-                ids: Array.from(value.state.selection.ids || []),
+              ...state,
+              selection: state?.selection ? {
+                ...state.selection,
+                ids: Array.from(state.selection.ids || []),
               } : { ids: [], mode: 'multi' },
             },
           };

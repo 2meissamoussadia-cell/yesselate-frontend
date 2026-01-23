@@ -68,7 +68,7 @@ export function filterObject<T extends Record<string, any>>(
 ): Partial<T> {
   return Object.keys(obj).reduce((acc, key) => {
     if (predicate(obj[key], key)) {
-      acc[key] = obj[key];
+      (acc as Record<string, any>)[key] = obj[key];
     }
     return acc;
   }, {} as Partial<T>);
@@ -88,7 +88,7 @@ export function deepMerge<T extends Record<string, any>>(
     for (const key in source) {
       if (isObject(source[key])) {
         if (!target[key]) Object.assign(target, { [key]: {} });
-        deepMerge(target[key], source[key]);
+        deepMerge(target[key] as Record<string, any>, source[key] as Record<string, any>);
       } else {
         Object.assign(target, { [key]: source[key] });
       }

@@ -240,6 +240,26 @@ const loadOverviewKpisBudget: LoaderFn = async (nav) => {
   };
 };
 
+// Loader pour les KPIs Highlights
+const loadOverviewKpisHighlights: LoaderFn = async (nav) => {
+  await new Promise((r) => setTimeout(r, 150));
+  return {
+    key: navToKey(nav),
+    fetchedAt: Date.now(),
+    data: {
+      topKPIs: [
+        { id: '1', label: 'Taux de conformité global', value: '94%', trend: '+2%' },
+        { id: '2', label: 'Projets en retard', value: 3, trend: '-2' },
+        { id: '3', label: 'Risques critiques', value: 3, trend: '+1' },
+      ],
+      risques: [
+        { id: 'r1', label: 'Retards projets', severity: 'high', count: 3 },
+        { id: 'r2', label: 'Dépassements budget', severity: 'high', count: 2 },
+      ],
+    },
+  };
+};
+
 // --------------------------
 // Registry
 // --------------------------
@@ -275,6 +295,23 @@ export const dashboardRegistry: Record<string, ViewEntry> = {
         </ul>
       </div>
     ),
+  },
+
+  // overview/kpis/highlights
+  'overview::kpis::highlights': {
+    id: 'overview-kpis-highlights',
+    title: 'Synthèse stratégique',
+    ttl: 60_000,
+    loader: loadOverviewKpisHighlights,
+    render: ({ data }) => {
+      // Utiliser directement le composant HighlightsKpiPage
+      const HighlightsKpiPage = React.lazy(() => import('../components/views/HighlightsKpiPage'));
+      return (
+        <React.Suspense fallback={<div className="p-6 text-slate-400">Chargement...</div>}>
+          <HighlightsKpiPage />
+        </React.Suspense>
+      );
+    },
   },
 
   // overview/kpis/projets

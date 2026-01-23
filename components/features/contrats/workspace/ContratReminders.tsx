@@ -58,9 +58,9 @@ export function ContratReminders({ reminders, onDismiss, onViewContract }: Contr
       {/* Modal */}
       <FluentModal
         open={open}
-        onOpenChange={setOpen}
+        onClose={() => setOpen(false)}
         title="Rappels et notifications"
-        size="lg"
+        maxWidth="lg"
       >
         <div className="space-y-4">
           {reminders.length === 0 ? (
@@ -123,7 +123,7 @@ export function ContratReminders({ reminders, onDismiss, onViewContract }: Contr
                       <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                         {config.label}
                       </h3>
-                      <Badge variant="secondary" className={cn('text-white', config.badge)}>
+                      <Badge variant="default" className={cn('text-white', config.badge)}>
                         {items.length}
                       </Badge>
                     </div>

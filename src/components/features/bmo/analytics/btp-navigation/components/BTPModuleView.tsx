@@ -122,7 +122,7 @@ export function BTPModuleView({ domainId, moduleId }: BTPModuleViewProps) {
             <BTPDataTable
               key={table.id}
               data={finalData}
-              columns={table.columns}
+              columns={table.columns as any}
               searchable={true}
               onRowClick={(row) => {
                 // Déterminer le type d'élément selon le module
@@ -146,7 +146,7 @@ export function BTPModuleView({ domainId, moduleId }: BTPModuleViewProps) {
             >
               <div className="flex items-start justify-between mb-2">
                 <h3 className="text-sm font-medium text-slate-300">{item.nom}</h3>
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="default" className="text-xs">
                   {item.statut}
                 </Badge>
               </div>
@@ -242,7 +242,7 @@ export function BTPModuleView({ domainId, moduleId }: BTPModuleViewProps) {
           onClose={() => setSelectedModal(null)}
           title="Modal"
           description="Description"
-          actions={actions.filter((a) => a.modal === selectedModal)}
+          actions={actions.filter((a) => a.modal === selectedModal).map((a) => ({ label: a.label, onClick: () => {} }))}
         >
           <p className="text-slate-400">Contenu de la modale {selectedModal}</p>
         </BTPIntelligentModal>
@@ -255,7 +255,7 @@ export function BTPModuleView({ domainId, moduleId }: BTPModuleViewProps) {
           onClose={() => setSelectedElement(null)}
           title={`Détail ${selectedElement.type}`}
           description="Vue détaillée de l'élément"
-          size="full"
+          size="xl"
         >
           <BTPElementDetailView
             elementId={selectedElement.id}

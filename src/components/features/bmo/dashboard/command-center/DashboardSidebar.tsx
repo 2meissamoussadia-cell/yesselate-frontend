@@ -168,7 +168,7 @@ export function DashboardSidebar() {
                             ? 'warning'
                             : category.badgeVariant === 'success'
                             ? 'success'
-                            : 'secondary'
+                            : 'default'
                         }
                         className="text-xs"
                       >

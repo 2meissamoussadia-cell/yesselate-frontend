@@ -162,3 +162,4 @@ const handleSubSubCategoryClick = useCallback((subSubCatId: string, currentSubCa
 - [ ] Le store se met à jour correctement
 - [ ] L'URL se synchronise avec la navigation
 
+

@@ -9,7 +9,7 @@
 export function createMockFunction<T extends (...args: any[]) => any>(
   returnValue?: ReturnType<T>
 ): jest.Mock<ReturnType<T>, Parameters<T>> {
-  return jest.fn(() => returnValue) as jest.Mock<ReturnType<T>, Parameters<T>>;
+  return jest.fn(() => returnValue) as unknown as jest.Mock<ReturnType<T>, Parameters<T>>;
 }
 
 /**

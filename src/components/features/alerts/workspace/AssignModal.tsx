@@ -324,7 +324,7 @@ export function AssignModal({ open, onClose, alert, onConfirm }: AssignModalProp
                       <div className="flex items-center gap-2 mt-1">
                         <p className="text-xs text-slate-500 truncate">{user.email}</p>
                         {user.bureau && (
-                          <Badge variant="outline" className="text-xs bg-slate-700/30">
+                          <Badge variant="default" className="text-xs bg-slate-700/30">
                             {user.bureau}
                           </Badge>
                         )}

@@ -183,7 +183,8 @@ export async function PATCH(
       changes: Object.keys(updates),
     });
   } catch (error) {
-    console.error(`[validation-bc/documents/${params.id}/update] Error:`, error);
+    const { id } = await params;
+    console.error(`[validation-bc/documents/${id}/update] Error:`, error);
     return NextResponse.json(
       { error: 'Failed to update document', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }

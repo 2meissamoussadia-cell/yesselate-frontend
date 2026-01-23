@@ -58,7 +58,7 @@ export function BatchActionsBar({
         {/* Compteur */}
         <div className="flex items-center gap-2 pr-3 border-r border-slate-700">
           <div className="h-2 w-2 rounded-full bg-blue-400 animate-pulse" />
-          <Badge variant="outline" className="bg-blue-500/20 text-blue-400 border-blue-500/30">
+          <Badge variant="gray" className="bg-blue-500/20 text-blue-400 border-blue-500/30">
             {selectedCount} sélectionné{selectedCount > 1 ? 's' : ''}
           </Badge>
         </div>

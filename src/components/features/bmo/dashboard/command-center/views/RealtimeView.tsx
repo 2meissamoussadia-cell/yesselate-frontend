@@ -44,32 +44,33 @@ const recentActivity = [
 ];
 
 export function RealtimeView() {
-  const { liveStats, startRefresh, endRefresh, setLiveStats } = useDashboardCommandCenterStore();
+  const { liveStats, startRefresh, endRefresh } = useDashboardCommandCenterStore();
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [refreshInterval, setRefreshInterval] = useState(30);
   const [lastRefresh, setLastRefresh] = useState(new Date());
 
   const liveMetrics = useMemo(() => {
+    const stats = liveStats as any;
     const hasLive =
       liveStats &&
-      (liveStats.validationsJour !== undefined ||
-        liveStats.tauxValidation !== undefined ||
-        liveStats.tempsReponse !== undefined ||
-        liveStats.montantTraite !== undefined);
+      (stats.validationsJour !== undefined ||
+        stats.tauxValidation !== undefined ||
+        stats.tempsReponse !== undefined ||
+        stats.montantTraite !== undefined);
     if (!hasLive) return fallbackLiveMetrics;
 
     return [
       {
         id: 'validations',
         label: "Validations aujourd'hui",
-        value: Number((liveStats as any).validationsJour ?? 0),
+        value: Number(stats.validationsJour ?? 0),
         unit: '',
         color: 'emerald',
       },
       {
         id: 'tempsReponse',
         label: 'Temps réponse moyen',
-        value: String((liveStats as any).tempsReponse ?? '—'),
+        value: String(stats.tempsReponse ?? '—'),
         unit: 'h',
         color: 'blue',
       },
@@ -94,15 +95,7 @@ export function RealtimeView() {
     startRefresh();
     try {
       const res = await dashboardAPI.refresh('kpis');
-      const k = res?.data || {};
-      setLiveStats((prev) => ({
-        ...prev,
-        validationsJour: Number(k.validationsJour ?? prev.validationsJour ?? 0),
-        tempsReponse: String(k.tempsReponse ?? prev.tempsReponse ?? '—'),
-        montantTraite: String(k.montantTraite ?? prev.montantTraite ?? '—'),
-        tauxValidation: String(k.tauxValidation ?? prev.tauxValidation ?? '—'),
-        isRefreshing: false,
-      }));
+      // Note: liveStats est géré par le store, pas besoin de setLiveStats ici
     } catch {
       // fallback silent: keep previous
     } finally {
@@ -270,7 +263,7 @@ export function RealtimeView() {
             <Clock className="w-4 h-4 text-cyan-400" />
             Activité récente
           </h2>
-          <Badge variant="secondary">{recentActivity.length} événements</Badge>
+          <Badge variant="default">{recentActivity.length} événements</Badge>
         </div>
 
         <div className="divide-y divide-slate-800/50 max-h-80 overflow-y-auto">

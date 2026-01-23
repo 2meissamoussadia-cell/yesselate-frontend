@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { X, AlertTriangle, Send, FileText } from 'lucide-react';
 import { BureauTag } from '@/components/features/bmo/BureauTag';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 
 interface EscalateToBMOModalProps {
   isOpen: boolean;
@@ -88,7 +89,7 @@ Justification:
         onClick={onClose}
       />
       <div
-        ref={modalRef}
+        ref={modalRef as React.RefObject<HTMLDivElement>}
         className={cn(
           'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[101]',
           'w-full max-w-xl',

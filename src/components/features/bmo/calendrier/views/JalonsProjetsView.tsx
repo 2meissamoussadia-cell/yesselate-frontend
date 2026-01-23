@@ -196,7 +196,7 @@ export function JalonsProjetsView({ view = 'gantt' }: JalonsProjetsViewProps = {
                           )}>
                             {jalon.statut === 'en-retard' ? 'En retard' : daysDiff > 0 ? `J-${daysDiff}` : 'Aujourd\'hui'}
                           </Badge>
-                          {jalon.bloquant && <Badge variant="outline">Bloquant</Badge>}
+                          {jalon.bloquant && <Badge variant="gray">Bloquant</Badge>}
                         </div>
                         <div className="text-xs text-slate-400 space-y-1">
                           <div>Projet: {jalon.projetLabel}</div>
@@ -276,7 +276,7 @@ export function JalonsProjetsView({ view = 'gantt' }: JalonsProjetsViewProps = {
                       <div className="flex items-center gap-2 mb-1">
                         <span className="text-sm font-medium text-slate-200">{jalon.jalonLabel}</span>
                         <Badge className="bg-red-500/20 text-red-400 border-red-500/30">Critique</Badge>
-                        {jalon.bloquant && <Badge variant="outline">Bloquant</Badge>}
+                        {jalon.bloquant && <Badge variant="gray">Bloquant</Badge>}
                       </div>
                       <div className="text-xs text-slate-400">
                         Projet: {jalon.projetLabel} • Date: {new Date(jalon.datePrevue).toLocaleDateString('fr-FR')}

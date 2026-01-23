@@ -62,7 +62,7 @@ export function SensitiveProjectsView() {
                   >
                     {project.priority === 'critical' ? 'Critique' : 'Élevé'}
                   </Badge>
-                  <Badge variant="outline" className="text-xs border-slate-700 text-slate-400">
+                  <Badge variant="default" className="text-xs border-slate-700 text-slate-400">
                     {project.sensitivity}
                   </Badge>
                   <Badge
@@ -80,7 +80,7 @@ export function SensitiveProjectsView() {
                     <p className="text-slate-400 font-medium mb-1">Critères de sensibilité:</p>
                     <div className="flex flex-wrap gap-2">
                       {project.criteria.map((criterion, idx) => (
-                        <Badge key={idx} variant="outline" className="text-xs border-slate-700 text-slate-400">
+                        <Badge key={idx} variant="default" className="text-xs border-slate-700 text-slate-400">
                           {criterion}
                         </Badge>
                       ))}

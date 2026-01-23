@@ -52,7 +52,7 @@ export function BatchActionsBar({
       <div className="bg-slate-800 border border-slate-700 rounded-xl shadow-2xl px-4 py-3 flex items-center gap-3">
         <div className="flex items-center gap-2 pr-3 border-r border-slate-700">
           <div className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse" />
-          <Badge variant="outline" className="bg-cyan-500/20 text-cyan-400 border-cyan-500/30">
+          <Badge variant="default" className="bg-cyan-500/20 text-cyan-400 border-cyan-500/30">
             {selectedCount} transaction{selectedCount > 1 ? 's' : ''}
           </Badge>
         </div>

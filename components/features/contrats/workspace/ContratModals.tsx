@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { contractsToSign } from '@/lib/data';
 import { useValidationContratsWorkspaceStore } from '@/lib/stores/validationContratsWorkspaceStore';
 import { useContratToast } from './ContratToast';
-import { FluentButton } from '@/src/components/ui/fluent-button';
+import { FluentButton } from '@/components/ui/fluent-button';
 import { cn } from '@/lib/utils';
 
 import {

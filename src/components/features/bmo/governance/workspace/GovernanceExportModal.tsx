@@ -181,11 +181,19 @@ export function GovernanceExportModal({ open, onClose }: Props) {
           </FluentButton>
           <FluentButton
             onClick={handleExport}
-            loading={exporting}
-            disabled={success}
+            disabled={success || exporting}
           >
-            <Download className="w-4 h-4 mr-2" />
-            Exporter
+            {exporting ? (
+              <>
+                <span className="animate-spin">⏳</span>
+                Export en cours...
+              </>
+            ) : (
+              <>
+                <Download className="w-4 h-4 mr-2" />
+                Exporter
+              </>
+            )}
           </FluentButton>
         </div>
       </div>

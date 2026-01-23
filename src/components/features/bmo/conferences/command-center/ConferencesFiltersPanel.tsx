@@ -246,7 +246,7 @@ export function ConferencesFiltersPanel({
                     <Icon className="h-4 w-4 text-slate-400" />
                     <h4 className="text-sm font-medium text-slate-300">{section.label}</h4>
                     {sectionFilters.length > 0 && (
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="default" className="text-xs">
                         {sectionFilters.length}
                       </Badge>
                     )}
@@ -294,7 +294,7 @@ export function ConferencesFiltersPanel({
               <Calendar className="h-4 w-4 text-slate-400" />
               <h4 className="text-sm font-medium text-slate-300">Date</h4>
               {(localFilters.dateRange.start || localFilters.dateRange.end) && (
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="default" className="text-xs">
                   1
                 </Badge>
               )}
@@ -332,6 +332,7 @@ export function ConferencesFiltersPanel({
     </>
   );
 }
+
 
 
 

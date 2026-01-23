@@ -41,6 +41,7 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
         badge: 0,
         badgeType: 'warning',
         children: [
+          { id: 'highlights', label: 'Synthèse stratégique' },
           { id: 'projets', label: 'Projets' },
           { id: 'demandes', label: 'Demandes' },
           { id: 'budget', label: 'Budget' },
@@ -54,6 +55,13 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
           { id: 'bmo', label: 'BMO' },
           { id: 'bf', label: 'BF' },
           { id: 'bj', label: 'BJ' },
+          { id: 'bct', label: 'BCT' },
+          { id: 'bop', label: 'BOP' },
+          { id: 'bcg', label: 'BCG' },
+          { id: 'bja', label: 'BJA' },
+          { id: 'brc', label: 'BRC' },
+          { id: 'bpl', label: 'BPL' },
+          { id: 'bex', label: 'BEX' },
         ],
       },
       {

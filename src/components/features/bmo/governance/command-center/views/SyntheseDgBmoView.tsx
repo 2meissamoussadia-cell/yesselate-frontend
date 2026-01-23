@@ -25,6 +25,7 @@ import {
   Play,
   Share2,
   Archive,
+  ChevronRight,
 } from 'lucide-react';
 import { useGovernanceCommandCenterStore } from '@/lib/stores/governanceCommandCenterStore';
 
@@ -182,7 +183,7 @@ export function SyntheseDgBmoView() {
               variant="ghost"
               size="sm"
               className="text-xs text-slate-500 hover:text-slate-300"
-              onClick={() => openModal('synthesis-generate', {})}
+              onClick={() => openModal('export-config', {})}
             >
               <Play className="h-3 w-3 mr-1" />
               Générer synthèse
@@ -193,7 +194,7 @@ export function SyntheseDgBmoView() {
               <div
                 key={synthesis.id}
                 className="flex items-center justify-between px-4 py-3 hover:bg-slate-800/30 transition-colors cursor-pointer"
-                onClick={() => openModal('synthesis-detail', synthesis)}
+                onClick={() => openModal('document-viewer', synthesis)}
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   <div
@@ -232,7 +233,7 @@ export function SyntheseDgBmoView() {
                     className="h-7 px-2 text-slate-400 hover:text-slate-300"
                     onClick={(e) => {
                       e.stopPropagation();
-                      openModal('synthesis-detail', { ...synthesis, action: 'export' });
+                      openModal('document-viewer', { ...synthesis, action: 'export' });
                     }}
                   >
                     <Download className="h-3 w-3 mr-1" />
@@ -256,7 +257,7 @@ export function SyntheseDgBmoView() {
               variant="ghost"
               size="sm"
               className="text-xs text-slate-500 hover:text-slate-300"
-              onClick={() => openModal('report-generate', {})}
+              onClick={() => openModal('export-config', {})}
             >
               <Play className="h-3 w-3 mr-1" />
               Générer rapport
@@ -269,7 +270,7 @@ export function SyntheseDgBmoView() {
                 <div
                   key={report.id}
                   className="flex items-center justify-between px-4 py-3 hover:bg-slate-800/30 transition-colors cursor-pointer"
-                  onClick={() => openModal('report-detail', report)}
+                  onClick={() => openModal('document-viewer', report)}
                 >
                   <div className="flex items-center gap-3 min-w-0 flex-1">
                     <div className="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20">
@@ -296,7 +297,7 @@ export function SyntheseDgBmoView() {
                       className="h-7 px-2 text-slate-400 hover:text-slate-300"
                       onClick={(e) => {
                         e.stopPropagation();
-                        openModal('report-detail', { ...report, action: 'export' });
+                        openModal('document-viewer', { ...report, action: 'export' });
                       }}
                     >
                       <Download className="h-3 w-3" />
@@ -307,7 +308,7 @@ export function SyntheseDgBmoView() {
                       className="h-7 px-2 text-slate-400 hover:text-slate-300"
                       onClick={(e) => {
                         e.stopPropagation();
-                        openModal('report-detail', report);
+                        openModal('document-viewer', report);
                       }}
                     >
                       <ChevronRight className="h-4 w-4" />
@@ -333,7 +334,7 @@ export function SyntheseDgBmoView() {
               <div
                 key={recommendation.id}
                 className="flex items-center justify-between px-4 py-3 hover:bg-slate-800/30 transition-colors cursor-pointer"
-                onClick={() => openModal('recommendation-detail', recommendation)}
+                onClick={() => openModal('action-plan', recommendation)}
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   <div className="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20">
@@ -343,7 +344,7 @@ export function SyntheseDgBmoView() {
                     <div className="flex items-center gap-2 mb-1">
                       <p className="text-sm text-slate-300">{recommendation.title}</p>
                       <Badge
-                        variant="outline"
+                        variant="default"
                         className={cn(
                           'text-xs',
                           recommendation.priority === 'high'
@@ -366,7 +367,7 @@ export function SyntheseDgBmoView() {
                     className="h-7 px-2 text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10"
                     onClick={(e) => {
                       e.stopPropagation();
-                      openModal('recommendation-detail', { ...recommendation, action: 'apply' });
+                      openModal('action-plan', { ...recommendation, action: 'apply' });
                     }}
                   >
                     <CheckCircle2 className="h-3 w-3" />
@@ -377,7 +378,7 @@ export function SyntheseDgBmoView() {
                     className="h-7 px-2 text-slate-400 hover:text-slate-300"
                     onClick={(e) => {
                       e.stopPropagation();
-                      openModal('recommendation-detail', recommendation);
+                      openModal('action-plan', recommendation);
                     }}
                   >
                     <ChevronRight className="h-4 w-4" />

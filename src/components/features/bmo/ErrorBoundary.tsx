@@ -25,6 +25,11 @@ interface State {
  * </ErrorBoundary>
  */
 export class ErrorBoundary extends Component<Props, State> {
+  private errorCount = 0;
+  private lastErrorTime = 0;
+  private readonly MAX_ERRORS = 5;
+  private readonly ERROR_WINDOW_MS = 1000; // 1 seconde
+
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -41,28 +46,101 @@ export class ErrorBoundary extends Component<Props, State> {
     };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // Log l'erreur
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
+  shouldComponentUpdate(nextProps: Props, nextState: State): boolean {
+    // Si on est en état d'erreur, ne re-render QUE si l'erreur change vraiment
+    // Cela empêche les re-renders inutiles qui pourraient déclencher de nouvelles erreurs
+    if (this.state.hasError && nextState.hasError) {
+      // Comparer les messages d'erreur plutôt que les références
+      const currentErrorMsg = this.state.error?.message;
+      const nextErrorMsg = nextState.error?.message;
+      
+      // Ne re-render que si le message d'erreur change vraiment
+      if (currentErrorMsg === nextErrorMsg && 
+          this.state.errorInfo === nextState.errorInfo) {
+        return false; // Même erreur, pas besoin de re-render - ÉVITE LES BOUCLES INFINIES
+      }
+    }
+    
+    // Si on passe d'un état sans erreur à un état avec erreur, re-render pour afficher le fallback
+    if (!this.state.hasError && nextState.hasError) {
+      return true;
+    }
+    
+    // Si on passe d'un état avec erreur à un état sans erreur (reset), re-render
+    if (this.state.hasError && !nextState.hasError) {
+      return true;
+    }
+    
+    // Si on est en état d'erreur et qu'on reste en état d'erreur, ne pas re-render
+    // (déjà géré plus haut, mais on le réitère pour être sûr)
+    if (this.state.hasError) {
+      return false;
+    }
+    
+    // Si pas d'erreur, re-render normalement (mais seulement si les props changent vraiment)
+    // Note: On ne compare PAS children car React crée toujours de nouvelles références
+    // et cela causerait des re-renders infinis
+    return this.props.fallback !== nextProps.fallback ||
+           this.props.onError !== nextProps.onError ||
+           this.props.showDetails !== nextProps.showDetails;
+  }
 
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    // Si on est déjà en état d'erreur et que c'est la même erreur, ne rien faire
+    if (this.state.hasError && 
+        this.state.error === error && 
+        this.state.errorInfo === errorInfo) {
+      return; // Déjà capturée, éviter les mises à jour inutiles
+    }
+
+    const now = Date.now();
+    
+    // Protection contre les boucles infinies : limiter le nombre d'erreurs capturées
+    if (now - this.lastErrorTime < this.ERROR_WINDOW_MS) {
+      this.errorCount++;
+    } else {
+      this.errorCount = 1;
+    }
+    this.lastErrorTime = now;
+
+    // Si trop d'erreurs en peu de temps, empêcher les mises à jour pour éviter la boucle infinie
+    if (this.errorCount > this.MAX_ERRORS) {
+      console.error('ErrorBoundary: Trop d\'erreurs capturées en peu de temps, arrêt de la capture pour éviter une boucle infinie');
+      return;
+    }
+
+    // Log l'erreur seulement si c'est une nouvelle erreur
+    if (!this.state.hasError || this.state.error !== error) {
+      console.error('ErrorBoundary caught an error:', error, errorInfo);
+    }
+
+    // Utiliser setState de manière sécurisée pour éviter les boucles
+    // Note: getDerivedStateFromError a déjà mis hasError à true, donc on met juste à jour error et errorInfo
     this.setState({
       error,
       errorInfo,
     });
 
-    // Appeler callback personnalisé si fourni
-    if (this.props.onError) {
-      this.props.onError(error, errorInfo);
+    // Appeler callback personnalisé si fourni (seulement pour les nouvelles erreurs)
+    if (this.props.onError && (!this.state.hasError || this.state.error !== error)) {
+      try {
+        this.props.onError(error, errorInfo);
+      } catch (callbackError) {
+        console.error('ErrorBoundary: Erreur dans le callback onError:', callbackError);
+      }
     }
 
     // En production: envoyer à un service de monitoring (Sentry, etc.)
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === 'production' && (!this.state.hasError || this.state.error !== error)) {
       // Exemple avec Sentry:
       // Sentry.captureException(error, { contexts: { react: { componentStack: errorInfo.componentStack } } });
     }
   }
 
   handleReset = () => {
+    // Réinitialiser le compteur d'erreurs lors du reset
+    this.errorCount = 0;
+    this.lastErrorTime = 0;
     this.setState({
       hasError: false,
       error: null,
@@ -79,6 +157,8 @@ export class ErrorBoundary extends Component<Props, State> {
   };
 
   render() {
+    // Si on est en état d'erreur, NE JAMAIS rendre les enfants
+    // Cela empêche les composants enfants de continuer à se re-render et déclencher des erreurs
     if (this.state.hasError) {
       // Fallback personnalisé si fourni
       if (this.props.fallback) {
@@ -195,11 +275,14 @@ export function useErrorHandler() {
 
 /**
  * Composant wrapper avec Error Boundary intégré
+ * Note: Cette fonction crée un nouveau composant à chaque appel.
+ * Pour éviter les re-renders, utilisez directement <ErrorBoundary> autour de vos composants.
  */
 export function withErrorBoundary<P extends object>(
   Component: React.ComponentType<P>,
   errorBoundaryProps?: Omit<Props, 'children'>
 ) {
+  // Créer le composant enveloppé une seule fois
   const WrappedComponent = (props: P) => (
     <ErrorBoundary {...errorBoundaryProps}>
       <Component {...props} />

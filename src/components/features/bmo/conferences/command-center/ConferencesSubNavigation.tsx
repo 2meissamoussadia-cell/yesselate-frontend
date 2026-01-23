@@ -81,9 +81,9 @@ export const ConferencesSubNavigation = React.memo(function ConferencesSubNaviga
                 )}
               >
                 <span>{sub.label}</span>
-                {sub.badge !== undefined && sub.badge > 0 && (
+                {sub.badge !== undefined && (typeof sub.badge === 'number' ? sub.badge > 0 : sub.badge !== '0' && sub.badge !== '') && (
                   <Badge
-                    variant="outline"
+                    variant="default"
                     className={cn(
                       'h-4 min-w-4 px-1 text-xs transition-all duration-200',
                       sub.badgeType === 'critical'

@@ -301,7 +301,7 @@ export function AnalyticsDashboardView() {
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={(entry) => `${entry.name} (${entry.percentage}%)`}
+                    label={(entry) => `${entry.name} (${((entry.percent ?? 0) * 100).toFixed(0)}%)`}
                     outerRadius={80}
                     fill="#8884d8"
                     dataKey="value"
@@ -319,7 +319,7 @@ export function AnalyticsDashboardView() {
                       color: '#e2e8f0',
                     }}
                     labelStyle={{ color: '#e2e8f0' }}
-                    formatter={(value: number) => `${value.toFixed(0)}M FCFA`}
+                    formatter={(value: number | undefined) => `${(value ?? 0).toFixed(0)}M FCFA`}
                   />
                 </PieChart>
               </ResponsiveContainer>

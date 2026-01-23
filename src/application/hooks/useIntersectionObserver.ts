@@ -11,9 +11,9 @@ export interface UseIntersectionObserverOptions extends IntersectionObserverInit
 
 export function useIntersectionObserver<T extends HTMLElement = HTMLDivElement>(
   options: UseIntersectionObserverOptions = {}
-): [RefObject<T>, boolean] {
+): [RefObject<T | null>, boolean] {
   const { triggerOnce = false, ...observerOptions } = options;
-  const elementRef = useRef<T>(null);
+  const elementRef = useRef<T | null>(null);
   const [isIntersecting, setIsIntersecting] = useState(false);
   const hasTriggered = useRef(false);
 

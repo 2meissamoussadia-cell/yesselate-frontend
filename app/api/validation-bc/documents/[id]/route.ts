@@ -167,7 +167,8 @@ export async function DELETE(
       note: 'Document is archived and can be restored by administrator',
     });
   } catch (error) {
-    console.error(`[validation-bc/documents/${params.id}] Delete error:`, error);
+    const { id } = await params;
+    console.error(`[validation-bc/documents/${id}] Delete error:`, error);
     return NextResponse.json(
       { error: 'Failed to delete document', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }

@@ -7,7 +7,7 @@ import type { User } from '@/lib/types/index';
 // TYPES
 // ============================================
 
-interface AuthContextType {
+export interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -45,20 +45,21 @@ export function AuthProvider({ children, initialUser = null }: AuthProviderProps
           setUser(JSON.parse(storedUser));
         } else {
           // Pour dev: utiliser un utilisateur mock par défaut
-          const defaultUser = mockEmployes.find((e) => e.id === 'USR-001');
+          const defaultUser = mockEmployes.find((e: any) => e.id === 'USR-001' || e.id === 'EMP001') as any;
           if (defaultUser) {
+            const nameParts = (defaultUser.name || defaultUser.nom || '').split(' ');
             const user: User = {
               id: defaultUser.id,
-              nom: defaultUser.nom,
-              prenom: defaultUser.prenom,
-              email: defaultUser.email,
-              telephone: defaultUser.telephone,
+              nom: nameParts.length > 1 ? nameParts.slice(1).join(' ') : (defaultUser.name || defaultUser.nom || ''),
+              prenom: nameParts[0] || (defaultUser.prenom || ''),
+              email: defaultUser.email || '',
+              telephone: defaultUser.phone || defaultUser.telephone || '',
               role: 'manager',
-              avatar: defaultUser.avatar,
-              bureauId: defaultUser.bureauId,
-              isActive: defaultUser.statut === 'actif',
-              createdAt: defaultUser.createdAt,
-              updatedAt: defaultUser.updatedAt,
+              avatar: undefined,
+              bureauId: defaultUser.bureau || defaultUser.bureauId || undefined,
+              isActive: (defaultUser.status || defaultUser.statut) === 'actif',
+              createdAt: defaultUser.dateEmbauche || defaultUser.createdAt || new Date().toISOString(),
+              updatedAt: defaultUser.updatedAt || new Date().toISOString(),
             };
             setUser(user);
             localStorage.setItem('yesselate_user', JSON.stringify(user));
@@ -96,18 +97,19 @@ export function AuthProvider({ children, initialUser = null }: AuthProviderProps
 
       if (employe && password === 'password') {
         // Mock: mot de passe accepté si "password"
+        const emp = employe as any;
         const user: User = {
           id: employe.id,
-          nom: employe.nom,
-          prenom: employe.prenom,
-          email: employe.email,
-          telephone: employe.telephone,
-          role: employe.fonction.includes('Directeur') ? 'admin' : employe.fonction.includes('Chef') ? 'manager' : 'employee',
-          avatar: employe.avatar,
-          bureauId: employe.bureauId,
-          isActive: employe.statut === 'actif',
-          createdAt: employe.createdAt,
-          updatedAt: employe.updatedAt,
+          nom: emp.nom || (emp.name?.split(' ')[1] || emp.name || ''),
+          prenom: emp.prenom || (emp.name?.split(' ')[0] || ''),
+          email: employe.email || '',
+          telephone: emp.telephone || emp.phone || '',
+          role: emp.fonction?.includes('Directeur') ? 'admin' : emp.fonction?.includes('Chef') ? 'manager' : (emp.poste?.includes('Directeur') ? 'admin' : emp.poste?.includes('Chef') ? 'manager' : 'employee'),
+          avatar: emp.avatar,
+          bureauId: emp.bureauId || emp.bureau,
+          isActive: (emp.status || emp.statut) === 'actif',
+          createdAt: emp.createdAt || emp.dateEmbauche || new Date().toISOString(),
+          updatedAt: emp.updatedAt || new Date().toISOString(),
         };
 
         setUser(user);

@@ -81,7 +81,7 @@ export function CalendarCrossViewSLA({ isOpen, onClose }: CalendarCrossViewSLAPr
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
+            <Button variant="default" size="sm">
               <TrendingDown className="h-4 w-4 mr-2" />
               Prioriser
             </Button>
@@ -120,12 +120,12 @@ export function CalendarCrossViewSLA({ isOpen, onClose }: CalendarCrossViewSLAPr
               <div className="flex items-start justify-between mb-2">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <Badge variant="outline" className="text-xs">
+                    <Badge variant="default" className="text-xs">
                       {item.type === 'validation' ? 'Validation' : 'Jalon'}
                     </Badge>
                     <span className="text-sm font-medium text-slate-200">{item.title}</span>
                     {item.relatedConflicts > 0 && (
-                      <Badge variant="outline" className="text-xs bg-rose-500/20 text-rose-400">
+                      <Badge variant="default" className="text-xs bg-rose-500/20 text-rose-400">
                         <AlertTriangle className="h-3 w-3 mr-1" />
                         {item.relatedConflicts} conflit{item.relatedConflicts > 1 ? 's' : ''}
                       </Badge>
@@ -144,13 +144,13 @@ export function CalendarCrossViewSLA({ isOpen, onClose }: CalendarCrossViewSLAPr
               </div>
 
               <div className="flex items-center gap-2 mt-4">
-                <Button variant="outline" size="sm" className="flex-1">
+                <Button variant="default" size="sm" className="flex-1">
                   Traiter
                 </Button>
-                <Button variant="outline" size="sm" className="flex-1">
+                <Button variant="default" size="sm" className="flex-1">
                   Réassigner
                 </Button>
-                <Button variant="outline" size="sm" className="flex-1">
+                <Button variant="default" size="sm" className="flex-1">
                   Escalader
                 </Button>
               </div>
@@ -159,7 +159,7 @@ export function CalendarCrossViewSLA({ isOpen, onClose }: CalendarCrossViewSLAPr
         </div>
 
         <div className="flex justify-end gap-2 pt-4 border-t border-slate-700">
-          <Button variant="outline" size="sm" onClick={onClose}>
+          <Button variant="default" size="sm" onClick={onClose}>
             Fermer
           </Button>
           <Button variant="default" size="sm">

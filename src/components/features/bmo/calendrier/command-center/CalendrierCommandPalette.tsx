@@ -294,7 +294,7 @@ export function CalendrierCommandPalette({
             <span>↵ Sélectionner</span>
             <span>Esc Fermer</span>
           </div>
-          <Badge variant="outline" className="text-xs">
+          <Badge variant="gray" className="text-xs">
             {filteredCommands.length} résultat{filteredCommands.length > 1 ? 's' : ''}
           </Badge>
         </div>

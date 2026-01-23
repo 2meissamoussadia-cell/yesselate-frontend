@@ -121,15 +121,15 @@ export function ProjectsView() {
   };
 
   // Vue selon la sous-catégorie
-  if (navigation.subCategory === 'milestones') {
+  if ((navigation.subCategory as any) === 'milestones') {
     return <MilestonesView milestones={milestones} />;
   }
 
-  if (navigation.subCategory === 'blockers') {
+  if ((navigation.subCategory as any) === 'blockers') {
     return <BlockersView />;
   }
 
-  if (navigation.subCategory === 'dependencies') {
+  if ((navigation.subCategory as any) === 'dependencies') {
     return <DependenciesView />;
   }
 
@@ -273,7 +273,7 @@ function ProjectCardsView({
                 <p className="text-sm font-medium text-slate-300">{project.designation}</p>
                 <p className="text-xs text-slate-500">{project.reference}</p>
               </div>
-              <Badge variant="outline" className={cn('text-xs', status.color)}>
+              <Badge variant="default" className={cn('text-xs', status.color)}>
                 {status.label}
               </Badge>
             </div>
@@ -282,17 +282,17 @@ function ProjectCardsView({
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-xs text-slate-500">Avancement</span>
-                  <span className="text-xs text-slate-400">{project.progress}%</span>
+                  <span className="text-xs text-slate-400">{project.progress ?? 0}%</span>
                 </div>
                 <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
                   <div
                     className={cn(
                       'h-full rounded-full',
-                      project.progress >= 80 ? 'bg-emerald-500' :
-                      project.progress >= 50 ? 'bg-blue-500' :
-                      project.progress >= 25 ? 'bg-amber-500' : 'bg-red-500'
+                      (project.progress ?? 0) >= 80 ? 'bg-emerald-500' :
+                      (project.progress ?? 0) >= 50 ? 'bg-blue-500' :
+                      (project.progress ?? 0) >= 25 ? 'bg-amber-500' : 'bg-red-500'
                     )}
-                    style={{ width: `${project.progress}%` }}
+                    style={{ width: `${project.progress ?? 0}%` }}
                   />
                 </div>
               </div>

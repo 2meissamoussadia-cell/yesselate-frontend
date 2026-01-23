@@ -84,7 +84,7 @@ export function PendingDecisionsView() {
                   >
                     {decision.urgency === 'critical' ? 'Urgent' : decision.urgency === 'high' ? 'Élevé' : 'Moyen'}
                   </Badge>
-                  <Badge variant="outline" className="text-xs border-slate-700 text-slate-400">
+                  <Badge variant="default" className="text-xs border-slate-700 text-slate-400">
                     {decision.type}
                   </Badge>
                 </div>
@@ -116,7 +116,7 @@ export function PendingDecisionsView() {
                   <span>Impact: {decision.impact === 'high' ? 'Élevé' : 'Moyen'}</span>
                 </div>
               </div>
-              <Button variant="outline" size="sm" className="border-slate-700 text-slate-400">
+              <Button variant="default" size="sm" className="border-slate-700 text-slate-400">
                 Voir dossier
                 <ArrowUpRight className="h-3 w-3 ml-1" />
               </Button>

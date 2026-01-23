@@ -185,7 +185,7 @@ export function AnomalyDetection({ performanceData, enrichedData }: AnomalyDetec
                         >
                           {anomaly.severity}
                         </Badge>
-                        <Badge variant="outline" className="text-[9px]">
+                        <Badge variant="default" className="text-[9px]">
                           {anomaly.category}
                         </Badge>
                       </div>

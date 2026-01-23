@@ -296,7 +296,7 @@ export function BTPAdvancedSearch({
                           __html: highlightMatch(result.label, debouncedQuery),
                         }}
                       />
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="default" className="text-xs">
                         {result.type}
                       </Badge>
                     </div>
@@ -317,7 +317,7 @@ export function BTPAdvancedSearch({
                     </div>
                   </div>
                   <div className="flex-shrink-0">
-                    <Badge variant="outline" className="text-xs">
+                    <Badge variant="default" className="text-xs">
                       {Math.round(result.score)}%
                     </Badge>
                   </div>

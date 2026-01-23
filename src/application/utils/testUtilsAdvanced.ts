@@ -6,7 +6,7 @@
 /**
  * Crée un mock de fonction avec historique
  */
-export function createMockFunction<T extends (...args: any[]) => any>(
+export function createAdvancedMockFunction<T extends (...args: any[]) => any>(
   returnValue?: ReturnType<T>
 ) {
   const calls: Parameters<T>[] = [];
@@ -81,9 +81,9 @@ export function createMockPromise<T = any>(
 }
 
 /**
- * Attend qu'une condition soit vraie
+ * Attend qu'une condition soit vraie (version avancée)
  */
-export async function waitFor(
+export async function waitForCondition(
   condition: () => boolean,
   timeout: number = 5000,
   interval: number = 100
@@ -256,13 +256,27 @@ export function createMockFetch(
   options: Partial<Response> = {}
 ): typeof fetch {
   return async (input: RequestInfo | URL, init?: RequestInit) => {
+    const headers = new Headers();
+    headers.set('Content-Type', 'application/json');
+    if (options.headers) {
+      if (options.headers instanceof Headers) {
+        options.headers.forEach((value, key) => {
+          headers.set(key, value);
+        });
+      } else if (Array.isArray(options.headers)) {
+        (options.headers as [string, string][]).forEach(([key, value]) => {
+          headers.set(key, value);
+        });
+      } else {
+        Object.entries(options.headers as Record<string, string>).forEach(([key, value]) => {
+          headers.set(key, value);
+        });
+      }
+    }
     return new Response(JSON.stringify(response), {
       status: options.status ?? 200,
       statusText: options.statusText ?? 'OK',
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
+      headers,
     }) as Response;
   };
 }

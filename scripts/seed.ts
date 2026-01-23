@@ -105,6 +105,9 @@ async function main() {
     const demand = await prisma.demand.create({
       data: {
         ...demandData,
+        amount: typeof demandData.amount === 'string' 
+          ? parseFloat(demandData.amount.replace(/\s/g, '')) 
+          : demandData.amount,
         events: {
           create: [
             {

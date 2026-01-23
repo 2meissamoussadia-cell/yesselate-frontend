@@ -77,7 +77,7 @@ export function AlertDetailView({ alertId }: AlertDetailViewProps) {
     );
   }
   
-  const TypeIcon = TYPE_ICONS[alert.type];
+  const TypeIcon = TYPE_ICONS[alert.type as keyof typeof TYPE_ICONS] || Activity;
   const original = alert.metadata?.original;
   
   const handleResolve = async () => {
@@ -126,18 +126,18 @@ export function AlertDetailView({ alertId }: AlertDetailViewProps) {
           
           <div className="flex items-center gap-2 flex-wrap">
             <Badge
-              variant="outline"
-              className={cn('text-sm', SEVERITY_COLORS[alert.severity])}
+              variant="default"
+              className={cn('text-sm', SEVERITY_COLORS[alert.severity as keyof typeof SEVERITY_COLORS] || SEVERITY_COLORS.info)}
             >
               {alert.severity.toUpperCase()}
             </Badge>
             
-            <Badge variant="outline" className="bg-slate-500/20 text-slate-300 text-sm">
-              {TYPE_LABELS[alert.type]}
+            <Badge variant="default" className="bg-slate-500/20 text-slate-300 text-sm">
+              {TYPE_LABELS[alert.type as keyof typeof TYPE_LABELS] || 'Alerte'}
             </Badge>
             
             {alert.bureau && (
-              <Badge variant="outline" className="bg-blue-500/20 text-blue-300 text-sm">
+              <Badge variant="default" className="bg-blue-500/20 text-blue-300 text-sm">
                 <Building className="h-3 w-3 mr-1" />
                 {alert.bureau}
               </Badge>
@@ -148,7 +148,7 @@ export function AlertDetailView({ alertId }: AlertDetailViewProps) {
         {showActions && (
           <div className="flex items-center gap-2">
             <Button
-              variant="outline"
+              variant="default"
               onClick={handleEscalate}
               className="border-amber-500/30 text-amber-300 hover:bg-amber-500/10"
             >
@@ -157,7 +157,7 @@ export function AlertDetailView({ alertId }: AlertDetailViewProps) {
             </Button>
             
             <Button
-              variant="outline"
+              variant="default"
               onClick={() => setShowActions(false)}
               className="border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/10"
             >
@@ -235,7 +235,7 @@ export function AlertDetailView({ alertId }: AlertDetailViewProps) {
           </CardHeader>
           <CardContent className="space-y-3">
             <InfoRow label="ID" value={alert.id} icon={FileText} />
-            <InfoRow label="Type" value={TYPE_LABELS[alert.type]} icon={TypeIcon} />
+            <InfoRow label="Type" value={TYPE_LABELS[alert.type as keyof typeof TYPE_LABELS] || 'Alerte'} icon={TypeIcon} />
             <InfoRow 
               label="Sévérité" 
               value={alert.severity} 

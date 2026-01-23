@@ -77,7 +77,7 @@ export function SLARetardsView({ filterType, view }: SLARetardsViewProps = {}) {
       case 'a-jour':
         return <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">À jour</Badge>;
       default:
-        return <Badge variant="outline">{statut}</Badge>;
+        return <Badge variant="gray">{statut}</Badge>;
     }
   };
 
@@ -90,7 +90,7 @@ export function SLARetardsView({ filterType, view }: SLARetardsViewProps = {}) {
       case 'mineur':
         return <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">Mineur</Badge>;
       default:
-        return <Badge variant="outline">{impact}</Badge>;
+        return <Badge variant="gray">{impact}</Badge>;
     }
   };
 

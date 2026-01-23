@@ -76,7 +76,7 @@ export function AlertInboxView({ tab }: { tab: AlertTab }) {
     refetch,
   } = useAlertQueue(queue as any, { page: 1, limit: 100 });
 
-  const items = alertsData?.alerts || [];
+  const items = (alertsData as any)?.alerts || [];
   
   const [search, setSearch] = useState('');
   const [sortKey, setSortKey] = useState<SortKey>('createdAt');
@@ -113,30 +113,30 @@ export function AlertInboxView({ tab }: { tab: AlertTab }) {
     
     // Filtres avancés
     if (bureauFilter) {
-      result = result.filter(a => a.bureau === bureauFilter);
+      result = result.filter((a: any) => a.bureau === bureauFilter);
     }
     if (typeFilter) {
-      result = result.filter(a => a.type === typeFilter);
+      result = result.filter((a: any) => a.type === typeFilter);
     }
     if (severityFilter) {
-      result = result.filter(a => a.severity === severityFilter);
+      result = result.filter((a: any) => a.severity === severityFilter);
     }
     if (statusFilter) {
-      result = result.filter(a => a.status === statusFilter);
+      result = result.filter((a: any) => a.status === statusFilter);
     }
     
     // Tri
-    result = [...result].sort((a, b) => {
+    result = [...result].sort((a: any, b: any) => {
       let cmp = 0;
       
       if (sortKey === 'createdAt') {
         cmp = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
       } else if (sortKey === 'severity') {
-        const severityOrder = { critical: 4, warning: 3, info: 2, success: 1 };
-        cmp = severityOrder[a.severity] - severityOrder[b.severity];
+        const severityOrder: Record<string, number> = { critical: 4, warning: 3, info: 2, success: 1 };
+        cmp = (severityOrder[a.severity] || 0) - (severityOrder[b.severity] || 0);
       } else if (sortKey === 'impact') {
-        const impactOrder = { critical: 4, high: 3, medium: 2, low: 1 };
-        cmp = impactOrder[a.impact] - impactOrder[b.impact];
+        const impactOrder: Record<string, number> = { critical: 4, high: 3, medium: 2, low: 1 };
+        cmp = (impactOrder[a.impact] || 0) - (impactOrder[b.impact] || 0);
       } else {
         cmp = String(a[sortKey] ?? '').localeCompare(String(b[sortKey] ?? ''));
       }
@@ -159,22 +159,22 @@ export function AlertInboxView({ tab }: { tab: AlertTab }) {
   // Stats
   const stats = useMemo(() => ({
     total: items.length,
-    critical: items.filter(a => a.severity === 'critical').length,
-    avgResponseTime: items.filter(a => a.acknowledgedAt && a.createdAt).length,
+    critical: items.filter((a: any) => a.severity === 'critical').length,
+    avgResponseTime: items.filter((a: any) => a.acknowledgedAt && a.createdAt).length,
     byBureau: Object.entries(
-      items.reduce((acc, a) => {
+      items.reduce((acc: any, a: any) => {
         if (a.bureau) {
           acc[a.bureau] = (acc[a.bureau] ?? 0) + 1;
         }
         return acc;
       }, {} as Record<string, number>)
-    ).sort((a, b) => b[1] - a[1]).slice(0, 5),
+    ).sort((a, b) => (b[1] as number) - (a[1] as number)).slice(0, 5),
     byType: Object.entries(
-      items.reduce((acc, a) => {
+      items.reduce((acc: any, a: any) => {
         acc[a.type] = (acc[a.type] ?? 0) + 1;
         return acc;
       }, {} as Record<string, number>)
-    ).sort((a, b) => b[1] - a[1]),
+    ).sort((a, b) => (b[1] as number) - (a[1] as number)),
   }), [items]);
 
   const formatDate = (dateStr: string) => {
@@ -220,7 +220,7 @@ export function AlertInboxView({ tab }: { tab: AlertTab }) {
     if (selectedIds.size === filteredItems.length) {
       setSelectedIds(new Set());
     } else {
-      setSelectedIds(new Set(filteredItems.map(item => item.id)));
+      setSelectedIds(new Set(filteredItems.map((item: any) => item.id)));
     }
   };
 
@@ -231,7 +231,7 @@ export function AlertInboxView({ tab }: { tab: AlertTab }) {
 
   // Actions bulk
   const handleBulkAction = async (action: 'acknowledge' | 'resolve' | 'escalate' | 'export') => {
-    const selectedAlerts = filteredItems.filter(item => selectedIds.has(item.id));
+    const selectedAlerts = filteredItems.filter((item: any) => selectedIds.has(item.id));
     const count = selectedAlerts.length;
     
     if (count === 0) return;
@@ -530,7 +530,7 @@ export function AlertInboxView({ tab }: { tab: AlertTab }) {
               <p className="text-sm">Aucune alerte trouvée</p>
             </div>
           ) : (
-            filteredItems.map((alert) => {
+            filteredItems.map((alert: any) => {
               const SeverityIcon = SEVERITY_COLORS[alert.severity] ? AlertCircle : Info;
               const isSelected = selectedIds.has(alert.id);
               

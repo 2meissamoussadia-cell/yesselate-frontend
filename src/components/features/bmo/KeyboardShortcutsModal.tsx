@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, Fragment } from 'react';
 import { cn } from '@/lib/utils';
 import { useAppStore } from '@/lib/stores';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -151,7 +151,7 @@ export function KeyboardShortcutsModal({ isOpen, onClose }: KeyboardShortcutsMod
                       <span className="text-xs text-slate-300">{shortcut.description}</span>
                       <div className="flex items-center gap-1">
                         {shortcut.keys.map((key, keyIdx) => (
-                          <React.Fragment key={keyIdx}>
+                          <Fragment key={keyIdx}>
                             <Badge
                               variant="secondary"
                               className={cn(
@@ -164,7 +164,7 @@ export function KeyboardShortcutsModal({ isOpen, onClose }: KeyboardShortcutsMod
                             {keyIdx < shortcut.keys.length - 1 && (
                               <span className="text-[9px] text-slate-400 mx-1">+</span>
                             )}
-                          </React.Fragment>
+                          </Fragment>
                         ))}
                       </div>
                     </div>

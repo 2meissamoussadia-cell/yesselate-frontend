@@ -196,7 +196,7 @@ export function IACommandPalette() {
         },
         keywords: [module.id, module.name, module.type, module.description],
         badge: module.status === 'active' ? 'actif' : module.status === 'training' ? 'formation' : undefined,
-        badgeVariant: module.status === 'active' ? 'success' : module.status === 'training' ? 'warning' : 'default',
+        badgeVariant: (module.status === 'active' ? 'success' : module.status === 'training' ? 'warning' : 'default') as 'default' | 'success' | 'warning' | 'urgent',
       })),
 
       // === ACTIONS ===

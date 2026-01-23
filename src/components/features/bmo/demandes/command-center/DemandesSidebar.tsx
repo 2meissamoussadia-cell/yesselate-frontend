@@ -149,7 +149,7 @@ export function DemandesSidebar() {
                             ? 'warning'
                             : category.badgeVariant === 'success'
                             ? 'success'
-                            : 'secondary'
+                            : 'default'
                         }
                         className="text-xs"
                       >

@@ -382,7 +382,7 @@ export function ComparisonPanel({ type }: ComparisonPanelProps) {
                     <td className="px-4 py-3">
                       <p className="font-semibold">{item.name}</p>
                       {type === 'bureaux' && (
-                        <p className="text-xs text-slate-500">{item.fullName}</p>
+                        <p className="text-xs text-slate-500">{(item as any).fullName}</p>
                       )}
                     </td>
                     {selectedMetrics.map(metricId => {

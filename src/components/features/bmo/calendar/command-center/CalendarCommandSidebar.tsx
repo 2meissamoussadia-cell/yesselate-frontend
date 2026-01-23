@@ -283,7 +283,7 @@ export function CalendarCommandSidebar({
 
                     {hasBadge && category.badge !== 0 && (
                       <Badge
-                        variant="outline"
+                        variant="gray"
                         className={cn(
                           'h-5 min-w-5 px-1.5 text-xs font-medium',
                           category.badgeType === 'critical'

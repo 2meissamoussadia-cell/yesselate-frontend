@@ -277,7 +277,7 @@ export function TemplatePicker({ alert, onSelect, onCancel }: TemplatePickerProp
                       {template.title}
                     </h4>
                     <Badge
-                      variant="outline"
+                      variant="default"
                       className="text-xs bg-slate-500/10 text-slate-400 border-slate-500/20"
                     >
                       {template.type}

@@ -72,11 +72,11 @@ export function DetailModal() {
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <Badge variant="outline" className="text-xs bg-slate-800 text-slate-400 border-slate-700">
+                <Badge variant="default" className="text-xs bg-slate-800 text-slate-400 border-slate-700">
                   {modal.data?.reference || 'REF-000'}
                 </Badge>
                 <Badge
-                  variant="outline"
+                  variant="default"
                   className={cn(
                     'text-xs',
                     modal.data?.status === 'critical'
@@ -159,7 +159,7 @@ export function DetailModal() {
         <div className="flex items-center justify-between gap-4 p-4 border-t border-slate-700/50 bg-slate-900/80">
           <div className="flex items-center gap-2">
             <Button
-              variant="outline"
+              variant="default"
               size="sm"
               className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
               onClick={() => pushModal('escalation', modal.data)}
@@ -169,7 +169,7 @@ export function DetailModal() {
             </Button>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" className="border-slate-700" onClick={closeModal}>
+            <Button variant="default" size="sm" className="border-slate-700" onClick={closeModal}>
               Fermer
             </Button>
             <Button size="sm" className="bg-blue-600 hover:bg-blue-700">

@@ -178,7 +178,6 @@ export function BTPExportModal({
           onClick: handleExport,
           icon: Download,
           variant: 'primary',
-          disabled: isExporting,
         },
       ]}
     >

@@ -135,7 +135,7 @@ export function AdvancedExport({ data, type, fileName, targetRef }: AdvancedExpo
       <CardContent>
         <div className="grid grid-cols-4 gap-3">
           <Button
-            variant="outline"
+            variant="default"
             onClick={exportToPDF}
             disabled={exporting || !canCapture}
             className="flex flex-col items-center gap-2 h-auto py-4"
@@ -144,7 +144,7 @@ export function AdvancedExport({ data, type, fileName, targetRef }: AdvancedExpo
             <span className="text-xs">PDF</span>
           </Button>
           <Button
-            variant="outline"
+            variant="default"
             onClick={exportToCsv}
             disabled={exporting}
             className="flex flex-col items-center gap-2 h-auto py-4"
@@ -153,7 +153,7 @@ export function AdvancedExport({ data, type, fileName, targetRef }: AdvancedExpo
             <span className="text-xs">CSV</span>
           </Button>
           <Button
-            variant="outline"
+            variant="default"
             onClick={exportToJson}
             disabled={exporting}
             className="flex flex-col items-center gap-2 h-auto py-4"
@@ -162,7 +162,7 @@ export function AdvancedExport({ data, type, fileName, targetRef }: AdvancedExpo
             <span className="text-xs">JSON</span>
           </Button>
           <Button
-            variant="outline"
+            variant="default"
             onClick={exportToPng}
             disabled={exporting || !canCapture}
             className="flex flex-col items-center gap-2 h-auto py-4"

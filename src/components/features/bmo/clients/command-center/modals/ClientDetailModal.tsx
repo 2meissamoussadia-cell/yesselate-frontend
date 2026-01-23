@@ -38,7 +38,7 @@ import {
   Award,
 } from 'lucide-react';
 import { Client, Contact, Interaction, Contract, Litige } from '@/lib/data/clientsMockData';
-import { ClientsSatisfactionChart, ClientsMonthlyRevenueChart } from '../command-center/ClientsAnalyticsCharts';
+import { ClientsSatisfactionChart, ClientsMonthlyRevenueChart } from '../ClientsAnalyticsCharts';
 
 interface ClientDetailModalProps {
   open: boolean;
@@ -248,7 +248,7 @@ export function ClientDetailModal({
                 <Icon className="w-4 h-4" />
                 {tab.label}
                 {tab.badge !== null && tab.badge > 0 && (
-                  <Badge variant="outline" className="text-xs ml-1">
+                  <Badge className="text-xs ml-1">
                     {tab.badge}
                   </Badge>
                 )}
@@ -417,7 +417,7 @@ function OverviewTab({ client }: { client: Client }) {
           <h3 className="text-sm font-semibold text-slate-200 mb-3">Tags</h3>
           <div className="flex flex-wrap gap-2">
             {client.tags.map((tag, idx) => (
-              <Badge key={idx} variant="outline" className="text-xs">
+              <Badge key={idx} className="text-xs">
                 {tag}
               </Badge>
             ))}

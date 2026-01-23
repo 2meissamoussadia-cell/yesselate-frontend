@@ -122,13 +122,13 @@ export const InteractiveChart = React.memo<InteractiveChartProps>(
     }, [data]);
 
     // Tooltip personnalisé
-    const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
+    const CustomTooltip = ({ active, payload, label }: any) => {
       if (!active || !payload || payload.length === 0) return null;
 
       return (
         <div className="bg-gray-900 text-white p-3 rounded-lg shadow-lg border border-gray-700">
           <p className="font-semibold mb-2">{label}</p>
-          {payload.map((entry, index) => (
+          {payload.map((entry: any, index: number) => (
             <div key={index} className="flex items-center gap-2 text-sm">
               <div
                 className="w-3 h-3 rounded-full"

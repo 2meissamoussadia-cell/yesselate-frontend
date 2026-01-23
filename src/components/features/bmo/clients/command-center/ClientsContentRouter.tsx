@@ -1067,7 +1067,7 @@ function HistoriqueView({ subCategory }: { subCategory: string }) {
                 <div className="flex-1 p-3 rounded-lg bg-slate-800/30 hover:bg-slate-800/50 transition-colors">
                   <div className="flex items-center gap-2 mb-1">
                     <p className="text-sm font-medium text-slate-200">{item.action}</p>
-                    <Badge variant="outline" className="text-xs text-slate-400">
+                    <Badge className="text-xs text-slate-400">
                       {item.client}
                     </Badge>
                   </div>

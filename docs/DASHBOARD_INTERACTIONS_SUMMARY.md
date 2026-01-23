@@ -248,3 +248,4 @@ import { DashboardSidebar, DashboardSubNavigation, DashboardUrlSync, DashboardCo
 2. Ajouter des tests d'intégration
 3. Optimiser les performances si nécessaire
 
+

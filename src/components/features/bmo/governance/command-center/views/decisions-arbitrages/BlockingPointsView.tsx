@@ -53,7 +53,7 @@ export function BlockingPointsView() {
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
                   <AlertCircle className="h-4 w-4 text-red-400" />
-                  <Badge variant="outline" className="text-xs border-slate-700 text-slate-400">
+                  <Badge variant="default" className="text-xs border-slate-700 text-slate-400">
                     {blockage.project}
                   </Badge>
                   <Badge
@@ -89,7 +89,7 @@ export function BlockingPointsView() {
               </div>
             </div>
             <div className="flex items-center justify-end pt-3 border-t border-slate-700/30">
-              <Button variant="outline" size="sm" className="border-slate-700 text-slate-400">
+              <Button variant="default" size="sm" className="border-slate-700 text-slate-400">
                 Voir projet
                 <ArrowUpRight className="h-3 w-3 ml-1" />
               </Button>

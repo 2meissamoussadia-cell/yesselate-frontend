@@ -1,0 +1,468 @@
+/**
+ * Page Tendances
+ * VERSION OPTIMISÉE - Graphiques et analyses de tendances organisés par période
+ * Affiche les évolutions temporelles des indicateurs clés
+ */
+
+'use client';
+
+import React, { useState, useMemo } from 'react';
+import { TrendingUp, TrendingDown, Calendar, BarChart3, LineChart, Activity, DollarSign, Users, FileCheck, AlertTriangle, ArrowUp, ArrowDown, Minus } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { SparklineChart } from '../shared/SparklineChart';
+import {
+  LineChart as RechartsLineChart,
+  Line,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
+
+interface TrendData {
+  period: string;
+  value: number;
+  previousValue: number;
+  change: number;
+  changePercent: number;
+}
+
+interface TrendIndicator {
+  id: string;
+  label: string;
+  currentValue: string;
+  trend: TrendData;
+  icon: React.ComponentType<{ className?: string }>;
+  color: 'blue' | 'orange' | 'red' | 'emerald' | 'purple' | 'cyan';
+  category: 'activite' | 'risques' | 'budget' | 'decisions';
+  sparklineData?: number[];
+}
+
+type TimeRange = '7d' | '30d' | '90d' | '1y';
+type TrendType = 'mensuelles' | 'trimestrielles';
+
+export default function TendancesPage() {
+  const [timeRange, setTimeRange] = useState<TimeRange>('30d');
+  const [trendType, setTrendType] = useState<TrendType>('mensuelles');
+
+  // Générer des données de tendances basées sur la période
+  const generateTrendData = useMemo(() => {
+    const days = timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : timeRange === '90d' ? 90 : 365;
+    const data = [];
+    const now = new Date();
+    
+    for (let i = days - 1; i >= 0; i--) {
+      const date = new Date(now);
+      date.setDate(date.getDate() - i);
+      
+      // Générer des données réalistes avec variations
+      const baseValidations = 5 + Math.sin(i / 10) * 2 + Math.random() * 2;
+      const baseRisques = 9 - Math.sin(i / 8) * 1.5 + Math.random() * 1;
+      const baseBudget = 64 + (i / days) * 2 + Math.sin(i / 15) * 1;
+      const baseDecisions = 10 + Math.sin(i / 12) * 2 + Math.random() * 1.5;
+      
+      data.push({
+        date: date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }),
+        validations: Math.round(baseValidations),
+        risques: Math.round(baseRisques),
+        budget: Math.round(baseBudget * 10) / 10,
+        decisions: Math.round(baseDecisions),
+      });
+    }
+    
+    return data;
+  }, [timeRange]);
+
+  const trendIndicators: TrendIndicator[] = useMemo(() => [
+    {
+      id: 'validations',
+      label: 'Validations',
+      currentValue: '8',
+      trend: {
+        period: 'Mois en cours',
+        value: 8,
+        previousValue: 5,
+        change: 3,
+        changePercent: 60,
+      },
+      icon: FileCheck,
+      color: 'blue',
+      category: 'activite',
+      sparklineData: generateTrendData.map(d => d.validations),
+    },
+    {
+      id: 'risques',
+      label: 'Risques identifiés',
+      currentValue: '8',
+      trend: {
+        period: 'Mois en cours',
+        value: 8,
+        previousValue: 9,
+        change: -1,
+        changePercent: -11,
+      },
+      icon: AlertTriangle,
+      color: 'red',
+      category: 'risques',
+      sparklineData: generateTrendData.map(d => d.risques),
+    },
+    {
+      id: 'budget',
+      label: 'Budget consommé',
+      currentValue: '66%',
+      trend: {
+        period: 'Mois en cours',
+        value: 66,
+        previousValue: 64,
+        change: 2,
+        changePercent: 3,
+      },
+      icon: DollarSign,
+      color: 'emerald',
+      category: 'budget',
+      sparklineData: generateTrendData.map(d => d.budget),
+    },
+    {
+      id: 'decisions',
+      label: 'Décisions prises',
+      currentValue: '12',
+      trend: {
+        period: 'Mois en cours',
+        value: 12,
+        previousValue: 10,
+        change: 2,
+        changePercent: 20,
+      },
+      icon: Activity,
+      color: 'purple',
+      category: 'decisions',
+      sparklineData: generateTrendData.map(d => d.decisions),
+    },
+  ], [generateTrendData]);
+
+  const timeRangeOptions: { value: TimeRange; label: string }[] = [
+    { value: '7d', label: '7 jours' },
+    { value: '30d', label: '30 jours' },
+    { value: '90d', label: '90 jours' },
+    { value: '1y', label: '1 an' },
+  ];
+
+  const renderTrendCard = (indicator: TrendIndicator) => {
+    const Icon = indicator.icon;
+    const isPositive = indicator.trend.change > 0;
+    const isNegative = indicator.trend.change < 0;
+    const isNeutral = indicator.trend.change === 0;
+
+    return (
+      <div
+        key={indicator.id}
+        className={cn(
+          'bg-gradient-to-br rounded-xl p-6 border-2 shadow-lg',
+          indicator.color === 'blue' && 'from-blue-500/20 to-blue-600/10 border-blue-500/50',
+          indicator.color === 'orange' && 'from-orange-500/20 to-orange-600/10 border-orange-500/50',
+          indicator.color === 'red' && 'from-red-500/20 to-red-600/10 border-red-500/50',
+          indicator.color === 'emerald' && 'from-emerald-500/20 to-emerald-600/10 border-emerald-500/50',
+          indicator.color === 'purple' && 'from-purple-500/20 to-purple-600/10 border-purple-500/50',
+          indicator.color === 'cyan' && 'from-cyan-500/20 to-cyan-600/10 border-cyan-500/50'
+        )}
+      >
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div
+              className={cn(
+                'w-12 h-12 rounded-lg flex items-center justify-center',
+                indicator.color === 'blue' && 'bg-blue-500',
+                indicator.color === 'orange' && 'bg-orange-500',
+                indicator.color === 'red' && 'bg-red-500',
+                indicator.color === 'emerald' && 'bg-emerald-500',
+                indicator.color === 'purple' && 'bg-purple-500',
+                indicator.color === 'cyan' && 'bg-cyan-500'
+              )}
+            >
+              <Icon className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <p className="text-sm text-slate-400 font-medium">{indicator.label}</p>
+              <p className="text-xs text-slate-500">{indicator.trend.period}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="mb-4">
+          <p className="text-3xl font-bold text-white mb-1">{indicator.currentValue}</p>
+          <div
+            className={cn(
+              'flex items-center gap-2 text-sm font-medium',
+              isPositive && 'text-green-400',
+              isNegative && 'text-red-400',
+              isNeutral && 'text-slate-400'
+            )}
+          >
+            {!isNeutral && (
+              <>
+                {isPositive ? (
+                  <ArrowUp className="w-4 h-4" />
+                ) : (
+                  <ArrowDown className="w-4 h-4" />
+                )}
+                <span>
+                  {Math.abs(indicator.trend.change)} ({Math.abs(indicator.trend.changePercent)}%)
+                </span>
+              </>
+            )}
+            {isNeutral && (
+              <>
+                <Minus className="w-4 h-4" />
+                <span>Stable</span>
+              </>
+            )}
+            <span className="text-slate-500">vs période précédente</span>
+          </div>
+        </div>
+
+        {/* Mini graphique sparkline */}
+        {indicator.sparklineData && indicator.sparklineData.length > 0 ? (
+          <div className="h-16 bg-slate-800/30 rounded-lg p-2 flex items-center justify-center">
+            <SparklineChart 
+              data={indicator.sparklineData} 
+              color={indicator.color === 'blue' ? 'blue' : 
+                     indicator.color === 'red' ? 'red' : 
+                     indicator.color === 'emerald' ? 'emerald' : 
+                     indicator.color === 'purple' ? 'purple' : 'blue'}
+              height={40}
+              width={200}
+            />
+          </div>
+        ) : (
+          <div className="h-16 bg-slate-800/30 rounded-lg flex items-center justify-center">
+            <LineChart className="w-8 h-8 text-slate-500" />
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const groupedIndicators = {
+    activite: trendIndicators.filter((i) => i.category === 'activite'),
+    risques: trendIndicators.filter((i) => i.category === 'risques'),
+    budget: trendIndicators.filter((i) => i.category === 'budget'),
+    decisions: trendIndicators.filter((i) => i.category === 'decisions'),
+  };
+
+  return (
+    <div className="p-6 space-y-8 animate-fadeIn">
+      {/* En-tête */}
+      <div>
+        <h1 className="text-3xl font-bold text-white mb-2">Tendances</h1>
+        <p className="text-slate-400 text-lg">Évolution temporelle des indicateurs clés</p>
+      </div>
+
+      {/* Contrôles */}
+      <div className="flex flex-wrap items-center gap-4">
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-slate-400">Période :</span>
+          <div className="flex gap-2">
+            {timeRangeOptions.map((option) => (
+              <Button
+                key={option.value}
+                variant={timeRange === option.value ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setTimeRange(option.value)}
+                className={cn(
+                  timeRange === option.value && 'bg-blue-600 hover:bg-blue-700',
+                  timeRange !== option.value && 'border-slate-700 text-slate-300 hover:bg-slate-800'
+                )}
+              >
+                {option.label}
+              </Button>
+            ))}
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-slate-400">Type :</span>
+          <div className="flex gap-2">
+            <Button
+              variant={trendType === 'mensuelles' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setTrendType('mensuelles')}
+              className={cn(
+                trendType === 'mensuelles' && 'bg-purple-600 hover:bg-purple-700',
+                trendType !== 'mensuelles' && 'border-slate-700 text-slate-300 hover:bg-slate-800'
+              )}
+            >
+              Mensuelles
+            </Button>
+            <Button
+              variant={trendType === 'trimestrielles' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setTrendType('trimestrielles')}
+              className={cn(
+                trendType === 'trimestrielles' && 'bg-purple-600 hover:bg-purple-700',
+                trendType !== 'trimestrielles' && 'border-slate-700 text-slate-300 hover:bg-slate-800'
+              )}
+            >
+              Trimestrielles
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Vue d'ensemble des tendances */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-bold text-white flex items-center gap-2">
+          <TrendingUp className="w-5 h-5 text-blue-400" />
+          Vue d'ensemble
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {trendIndicators.map(renderTrendCard)}
+        </div>
+      </section>
+
+      {/* Graphique principal */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-bold text-white flex items-center gap-2">
+          <BarChart3 className="w-5 h-5 text-purple-400" />
+          Évolution temporelle
+        </h2>
+        <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+          <div className="h-96">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={generateTrendData}>
+                <defs>
+                  <linearGradient id="colorValidations" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                  </linearGradient>
+                  <linearGradient id="colorRisques" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
+                  </linearGradient>
+                  <linearGradient id="colorBudget" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#22c55e" stopOpacity={0}/>
+                  </linearGradient>
+                  <linearGradient id="colorDecisions" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#a855f7" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#a855f7" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.3} />
+                <XAxis 
+                  dataKey="date" 
+                  stroke="#94a3b8"
+                  style={{ fontSize: '12px' }}
+                  tick={{ fill: '#94a3b8' }}
+                />
+                <YAxis 
+                  stroke="#94a3b8"
+                  style={{ fontSize: '12px' }}
+                  tick={{ fill: '#94a3b8' }}
+                />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: '#1e293b', 
+                    border: '1px solid #475569',
+                    borderRadius: '8px',
+                    color: '#e2e8f0'
+                  }}
+                  labelStyle={{ color: '#cbd5e1' }}
+                />
+                <Legend 
+                  wrapperStyle={{ color: '#cbd5e1', paddingTop: '20px' }}
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="validations" 
+                  stroke="#3b82f6" 
+                  fillOpacity={1} 
+                  fill="url(#colorValidations)"
+                  name="Validations"
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="risques" 
+                  stroke="#ef4444" 
+                  fillOpacity={1} 
+                  fill="url(#colorRisques)"
+                  name="Risques"
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="budget" 
+                  stroke="#22c55e" 
+                  fillOpacity={1} 
+                  fill="url(#colorBudget)"
+                  name="Budget (%)"
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="decisions" 
+                  stroke="#a855f7" 
+                  fillOpacity={1} 
+                  fill="url(#colorDecisions)"
+                  name="Décisions"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </section>
+
+      {/* Groupes par catégorie */}
+      {Object.entries(groupedIndicators).map(([category, indicators]) => {
+        if (indicators.length === 0) return null;
+
+        const categoryLabels = {
+          activite: 'Activité',
+          risques: 'Risques & Blocages',
+          budget: 'Budget & Conformité',
+          decisions: 'Décisions',
+        };
+
+        return (
+          <section key={category} className="space-y-4">
+            <h2 className="text-xl font-bold text-white">{categoryLabels[category as keyof typeof categoryLabels]}</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {indicators.map(renderTrendCard)}
+            </div>
+          </section>
+        );
+      })}
+
+      {/* Section contexte */}
+      <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 space-y-4">
+        <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+          <Calendar className="w-6 h-6 text-emerald-400" />
+          À propos des tendances
+        </h2>
+        <p className="text-slate-300">
+          Cette section présente l'évolution temporelle des indicateurs clés du système.
+          Les tendances sont calculées sur différentes périodes pour permettre une analyse approfondie.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <div className="bg-slate-800/50 rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <TrendingUp className="w-5 h-5 text-green-400" />
+              <h3 className="font-semibold text-white">Tendances positives</h3>
+            </div>
+            <p className="text-sm text-slate-400">Indicateurs en amélioration sur la période sélectionnée</p>
+          </div>
+          <div className="bg-slate-800/50 rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <TrendingDown className="w-5 h-5 text-red-400" />
+              <h3 className="font-semibold text-white">Tendances négatives</h3>
+            </div>
+            <p className="text-sm text-slate-400">Indicateurs nécessitant une attention particulière</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+

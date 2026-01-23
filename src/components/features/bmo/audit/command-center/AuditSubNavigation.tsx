@@ -82,7 +82,7 @@ export const AuditSubNavigation = React.memo(function AuditSubNavigation({
               <span>{sub.label}</span>
               {sub.badge && (
                 <Badge
-                  variant="outline"
+                  variant="gray"
                   className={cn(
                     'h-4 min-w-4 px-1 text-xs transition-all duration-200',
                     sub.badgeType === 'critical'

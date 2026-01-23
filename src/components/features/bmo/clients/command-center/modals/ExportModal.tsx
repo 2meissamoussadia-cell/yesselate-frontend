@@ -563,7 +563,7 @@ export function ExportModal({ open, onClose, onExport }: ExportModalProps) {
                 variant="outline"
                 size="sm"
                 onClick={() => {
-                  const steps: typeof step[] = ['format', 'fields', 'filters', 'options'];
+                  const steps: ('format' | 'fields' | 'filters' | 'options')[] = ['format', 'fields', 'filters', 'options'];
                   const currentIndex = steps.indexOf(step);
                   if (currentIndex > 0) setStep(steps[currentIndex - 1]);
                 }}
@@ -582,7 +582,7 @@ export function ExportModal({ open, onClose, onExport }: ExportModalProps) {
             {step !== 'options' ? (
               <Button
                 onClick={() => {
-                  const steps: typeof step[] = ['format', 'fields', 'filters', 'options'];
+                  const steps: ('format' | 'fields' | 'filters' | 'options')[] = ['format', 'fields', 'filters', 'options'];
                   const currentIndex = steps.indexOf(step);
                   if (currentIndex < steps.length - 1) setStep(steps[currentIndex + 1]);
                 }}

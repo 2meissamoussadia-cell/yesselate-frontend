@@ -73,7 +73,7 @@ export function PredictiveTimeline({ enrichedData, monthsAhead = 3 }: Predictive
   }, [enrichedData, monthsAhead]);
 
   const risks = useMemo(() => {
-    const risksList = [];
+    const risksList: any[] = [];
     const predictions = timelineData.filter(d => d.type === 'prediction');
     
     predictions.forEach((pred, idx) => {

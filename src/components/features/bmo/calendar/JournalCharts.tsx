@@ -278,7 +278,7 @@ export function JournalCharts({ actionLogs, journalFilters }: JournalChartsProps
                 />
                 <PolarRadiusAxis 
                   angle={90} 
-                  domain={[0, Math.max(...radarKeys.map(k => radarData[0]?.[k] || 0))]} 
+                  domain={[0, Math.max(...radarKeys.map(k => (radarData[0] as any)?.[k] || 0))]} 
                   tick={{ fill: '#9ca3af', fontSize: 9 }}
                 />
                 {radarKeys.map((key, index) => (

@@ -90,7 +90,7 @@ const raciMatrix = [
 export function ProcessesView() {
   const { navigation } = useGovernanceCommandCenterStore();
 
-  switch (navigation.subCategory) {
+  switch (navigation.subCategory as any) {
     case 'workflows':
       return <WorkflowsView data={workflows} />;
     case 'delegations':
@@ -175,7 +175,7 @@ function WorkflowsView({ data }: { data: typeof workflows }) {
                   <p className="text-lg font-bold text-slate-200">{workflow.avgTime}</p>
                   <p className="text-xs text-slate-500">temps moy.</p>
                 </div>
-                <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/30 text-xs">
+                <Badge variant="default" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/30 text-xs">
                   Actif
                 </Badge>
                 <ChevronRight className="h-4 w-4 text-slate-600" />
@@ -259,7 +259,7 @@ function DelegationsView({ data }: { data: typeof delegations }) {
                     <p>{delegation.startDate} - {delegation.endDate}</p>
                     <p className="text-slate-400">{delegation.type}</p>
                   </div>
-                  <Badge variant="outline" className={cn('text-xs', status.color)}>
+                  <Badge variant="default" className={cn('text-xs', status.color)}>
                     {status.label}
                   </Badge>
                   <ChevronRight className="h-4 w-4 text-slate-600" />
@@ -381,7 +381,7 @@ function ProceduresView() {
                 </div>
               </div>
               <Badge
-                variant="outline"
+                variant="default"
                 className={cn(
                   'text-xs',
                   proc.status === 'active'

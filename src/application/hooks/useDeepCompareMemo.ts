@@ -33,7 +33,7 @@ export function useDeepCompareMemo<T>(
   factory: () => T,
   deps: React.DependencyList
 ): T {
-  const ref = useRef<{ deps: React.DependencyList; value: T }>();
+  const ref = useRef<{ deps: React.DependencyList; value: T } | undefined>(undefined);
 
   if (!ref.current || !deepEqual(deps, ref.current.deps)) {
     ref.current = { deps, value: factory() };

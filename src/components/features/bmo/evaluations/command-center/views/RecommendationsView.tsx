@@ -112,7 +112,7 @@ export function RecommendationsView({ subCategory, onOpenEvaluation }: Recommend
                       <div className="mt-2 space-y-1">
                         {recommendations.slice(0, 2).map((rec: any) => (
                           <div key={rec.id} className="text-xs text-slate-400">
-                            • {rec.title} <Badge variant="outline" className="ml-1 text-xs">{rec.status}</Badge>
+                            • {rec.title} <Badge variant="default" className="ml-1 text-xs">{rec.status}</Badge>
                           </div>
                         ))}
                         {recommendations.length > 2 && (

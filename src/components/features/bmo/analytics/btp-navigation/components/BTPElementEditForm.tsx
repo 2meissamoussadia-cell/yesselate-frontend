@@ -205,7 +205,7 @@ export function BTPElementEditForm({
             {formData.tags?.map((tag) => (
               <Badge
                 key={tag}
-                variant="outline"
+                variant="default"
                 className="bg-slate-800 text-slate-300 border-slate-700"
               >
                 {tag}
@@ -235,7 +235,7 @@ export function BTPElementEditForm({
             <Button
               type="button"
               onClick={handleAddTag}
-              variant="outline"
+              variant="default"
               size="sm"
             >
               Ajouter
@@ -248,7 +248,7 @@ export function BTPElementEditForm({
       <div className="flex justify-end gap-3 pt-4 border-t border-slate-700">
         <Button
           type="button"
-          variant="outline"
+          variant="default"
           onClick={onCancel}
           disabled={isSaving || isLoading}
         >

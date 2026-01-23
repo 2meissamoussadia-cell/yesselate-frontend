@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { X, Filter, Calendar, Users, Target, CheckCircle2, AlertTriangle, Clock, Search } from 'lucide-react';
-import type { EvaluationsFilter } from '@/lib/services/evaluationsApiService';
+import type { EvaluationsFilters } from '@/lib/services/evaluationsApiService';
 
 export interface EvaluationsActiveFilters {
   status?: string[];
@@ -138,7 +138,7 @@ export function EvaluationsFiltersPanel({
             <Filter className="h-4 w-4 text-blue-400" />
             <h3 className="text-sm font-semibold text-slate-200">Filtres Avancés</h3>
             {activeCount > 0 && (
-              <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/30">
+              <Badge variant="default" className="bg-blue-500/10 text-blue-400 border-blue-500/30">
                 {activeCount}
               </Badge>
             )}
@@ -379,7 +379,7 @@ export function EvaluationsFiltersPanel({
           </Button>
           <div className="flex gap-2">
             <Button
-              variant="outline"
+              variant="default"
               size="sm"
               onClick={onClose}
               className="border-slate-700 text-slate-300 hover:bg-slate-800"

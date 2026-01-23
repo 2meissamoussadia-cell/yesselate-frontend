@@ -65,7 +65,7 @@ const defaultKPIs: KPIItem[] = [
     label: 'En cours',
     value: 0,
     trend: 'stable',
-    status: 'info',
+    status: 'neutral',
   },
   {
     id: 'terminees',
@@ -155,7 +155,7 @@ export const ConferencesKPIBar = React.memo(function ConferencesKPIBar({
         label: 'En cours',
         value: data.enCours,
         trend: 'stable',
-        status: 'info',
+        status: 'neutral',
       },
       {
         id: 'terminees',

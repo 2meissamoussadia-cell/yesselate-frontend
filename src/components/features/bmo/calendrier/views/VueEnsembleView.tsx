@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
+import { cn } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { AlertTriangle } from 'lucide-react';
@@ -206,7 +207,7 @@ export function VueEnsembleView({ section = 'global', view = 'gantt' }: VueEnsem
                     {statut.module.replace(/-/g, ' ')}
                   </span>
                   <Badge
-                    variant="outline"
+                    variant="gray"
                     className={cn(
                       'ml-auto text-xs',
                       statut.etat === 'synchronise'
@@ -230,22 +231,22 @@ export function VueEnsembleView({ section = 'global', view = 'gantt' }: VueEnsem
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-emerald-500" />
                   <span className="text-sm text-slate-400">Demandes</span>
-                  <Badge variant="outline" className="ml-auto">Synchronisé</Badge>
+                  <Badge variant="gray" className="ml-auto">Synchronisé</Badge>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-emerald-500" />
                   <span className="text-sm text-slate-400">Validations</span>
-                  <Badge variant="outline" className="ml-auto">Synchronisé</Badge>
+                  <Badge variant="gray" className="ml-auto">Synchronisé</Badge>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-emerald-500" />
                   <span className="text-sm text-slate-400">Projets</span>
-                  <Badge variant="outline" className="ml-auto">Synchronisé</Badge>
+                  <Badge variant="gray" className="ml-auto">Synchronisé</Badge>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-emerald-500" />
                   <span className="text-sm text-slate-400">RH</span>
-                  <Badge variant="outline" className="ml-auto">Synchronisé</Badge>
+                  <Badge variant="gray" className="ml-auto">Synchronisé</Badge>
                 </div>
               </>
             )}

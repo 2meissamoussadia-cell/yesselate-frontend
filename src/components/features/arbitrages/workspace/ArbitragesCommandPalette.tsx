@@ -158,7 +158,7 @@ export function ArbitragesCommandPalette() {
       action: () => {
         openTab({
           id: `wizard:create:${Date.now()}`,
-          type: 'wizard',
+          type: 'detail',
           title: 'Nouvel arbitrage',
           icon: '➕',
           data: { action: 'create' },

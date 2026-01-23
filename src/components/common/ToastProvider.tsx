@@ -189,11 +189,13 @@ function ToastContainer({ toasts, position, onRemove }: ToastContainerProps) {
 
   if (toasts.length === 0) return null;
 
+  const safePosition = position || 'top-right';
+
   return (
     <div
       className={cn(
         'fixed z-50 flex flex-col gap-3 pointer-events-none',
-        positionClasses[position]
+        positionClasses[safePosition]
       )}
     >
       {toasts.map((toast) => (

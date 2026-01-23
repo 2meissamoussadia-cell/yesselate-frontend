@@ -342,7 +342,7 @@ const OverviewDashboard = React.memo(function OverviewDashboard({
                       {tx.amount} XOF
                     </p>
                     <Badge
-                      variant={tx.status === 'completed' ? 'default' : 'outline'}
+                      variant={tx.status === 'completed' ? 'default' : 'gray'}
                       className="text-xs mt-1"
                     >
                       {tx.status === 'completed' ? 'Terminé' : 'En cours'}
@@ -419,7 +419,7 @@ const OverviewDashboard = React.memo(function OverviewDashboard({
           <h3 className="text-lg font-semibold text-slate-200">
             Exécution Budgétaire
           </h3>
-          <Badge variant="outline" className="text-xs">
+          <Badge variant="default" className="text-xs">
             Q4 2024
           </Badge>
         </div>

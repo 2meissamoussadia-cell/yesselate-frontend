@@ -52,7 +52,7 @@ export function CriticalBlockagesView() {
                   <Badge variant="destructive" className="text-xs">
                     Critique
                   </Badge>
-                  <Badge variant="outline" className="text-xs border-slate-700 text-slate-400">
+                  <Badge variant="default" className="text-xs border-slate-700 text-slate-400">
                     {blockage.type === 'contract' ? 'Contrat' : 'Inter-projets'}
                   </Badge>
                 </div>

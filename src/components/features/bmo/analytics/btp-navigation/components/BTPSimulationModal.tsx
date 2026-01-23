@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Slider } from '@/components/ui/slider';
+import { cn } from '@/lib/utils';
 
 interface SimulationParameter {
   id: string;
@@ -156,7 +157,6 @@ export function BTPSimulationModal({
           onClick: runSimulation,
           icon: Calculator,
           variant: 'primary',
-          disabled: isSimulating,
         },
       ]}
     >
@@ -175,7 +175,7 @@ export function BTPSimulationModal({
                 <div className="flex items-center justify-between">
                   <Label className="text-sm text-slate-300">{param.label}</Label>
                   {param.impact && (
-                    <Badge variant="outline" className="text-xs">
+                    <Badge variant="default" className="text-xs">
                       {param.impact}
                     </Badge>
                   )}
@@ -315,7 +315,7 @@ export function BTPSimulationModal({
                   >
                     <div className="flex items-center justify-between mb-2">
                       <h5 className="text-sm font-medium text-slate-300">{scenario.name}</h5>
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="default" className="text-xs">
                         {Object.keys(scenario.results || {}).length} résultats
                       </Badge>
                     </div>

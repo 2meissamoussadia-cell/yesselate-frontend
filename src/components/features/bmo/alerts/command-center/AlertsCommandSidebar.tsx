@@ -199,7 +199,7 @@ export function AlertsCommandSidebar({
 
                     {showBadge && (
                       <Badge
-                        variant="outline"
+                        variant="default"
                         className={cn(
                           'h-5 min-w-5 px-1.5 text-xs font-medium',
                           category.badgeType === 'critical'

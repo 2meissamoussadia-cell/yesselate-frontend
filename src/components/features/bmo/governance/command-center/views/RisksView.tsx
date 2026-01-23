@@ -129,15 +129,15 @@ export function RisksView() {
   const { navigation, openModal } = useGovernanceCommandCenterStore();
 
   // Router selon la sous-catégorie
-  if (navigation.subCategory === 'alerts') {
+  if ((navigation.subCategory as any) === 'alerts') {
     return <AlertsListView alerts={alertsData} />;
   }
 
-  if (navigation.subCategory === 'mitigation') {
+  if ((navigation.subCategory as any) === 'mitigation') {
     return <MitigationView />;
   }
 
-  if (navigation.subCategory === 'monitoring') {
+  if ((navigation.subCategory as any) === 'monitoring') {
     return <MonitoringView />;
   }
 
@@ -341,7 +341,7 @@ function AlertsListView({ alerts }: { alerts: AlertItem[] }) {
                   )}
                 </div>
                 <div className="flex items-center gap-3 mt-2">
-                  <Badge variant="outline" className="text-xs bg-slate-800 text-slate-500 border-slate-700">
+                  <Badge variant="default" className="text-xs bg-slate-800 text-slate-500 border-slate-700">
                     {alert.project}
                   </Badge>
                   <span className="text-xs text-slate-600">{alert.source}</span>

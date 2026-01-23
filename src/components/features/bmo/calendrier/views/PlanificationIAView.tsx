@@ -64,7 +64,7 @@ export function PlanificationIAView() {
                     <div className="flex items-center gap-2">
                       <Brain className="h-5 w-5 text-pink-400" />
                       <span className="text-sm font-medium text-slate-200">{suggestion.description}</span>
-                      <Badge variant="outline">{suggestion.type}</Badge>
+                      <Badge variant="gray">{suggestion.type}</Badge>
                     </div>
                   </div>
                   {suggestion.benefices && suggestion.benefices.length > 0 && (

@@ -193,7 +193,7 @@ export function BTPDomainView({ domainId }: BTPDomainViewProps) {
               return (
                 <Button
                   key={action.id}
-                  variant="outline"
+                  variant="default"
                   size="sm"
                   onClick={() => openModal('comparison')}
                   className="text-xs"
@@ -207,7 +207,7 @@ export function BTPDomainView({ domainId }: BTPDomainViewProps) {
               return (
                 <Button
                   key={action.id}
-                  variant="outline"
+                  variant="default"
                   size="sm"
                   onClick={() => openModal('simulation')}
                   className="text-xs"
@@ -221,7 +221,7 @@ export function BTPDomainView({ domainId }: BTPDomainViewProps) {
               return (
                 <Button
                   key={action.id}
-                  variant="outline"
+                  variant="default"
                   size="sm"
                   onClick={() => openModal('export')}
                   className="text-xs"
@@ -236,7 +236,7 @@ export function BTPDomainView({ domainId }: BTPDomainViewProps) {
             return (
               <Button
                 key={action.id}
-                variant="outline"
+                variant="default"
                 size="sm"
                 onClick={() => {
                   if (action.modal) {

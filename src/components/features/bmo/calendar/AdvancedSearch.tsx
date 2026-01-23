@@ -42,7 +42,7 @@ export function AdvancedSearch({ activities, onSelectActivity, onFilterChange }:
       const query = filters.query.toLowerCase();
       results = results.filter(a =>
         a.title?.toLowerCase().includes(query) ||
-        a.description?.toLowerCase().includes(query) ||
+        (a as any).description?.toLowerCase().includes(query) ||
         a.project?.toLowerCase().includes(query) ||
         a.location?.toLowerCase().includes(query)
       );

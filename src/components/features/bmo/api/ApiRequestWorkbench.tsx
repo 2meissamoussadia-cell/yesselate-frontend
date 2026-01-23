@@ -362,7 +362,7 @@ export function ApiRequestWorkbench({ endpoint }: { endpoint: EndpointLike }) {
         <CardContent className="p-3 space-y-2">
           <div className="flex items-center justify-between gap-2">
             <p className="text-xs text-slate-400">💾 Modèles sauvegardés</p>
-            <Badge variant="secondary">{endpointSaved.length}</Badge>
+            <Badge variant="gray">{endpointSaved.length}</Badge>
           </div>
 
           <div className="flex items-center gap-2">
@@ -414,7 +414,7 @@ export function ApiRequestWorkbench({ endpoint }: { endpoint: EndpointLike }) {
         <CardContent className="p-3 space-y-2">
           <div className="flex items-center justify-between gap-2">
             <p className="text-xs text-slate-400">🕒 Historique (cet endpoint)</p>
-            <Badge variant="secondary">{endpointHistory.length}</Badge>
+            <Badge variant="gray">{endpointHistory.length}</Badge>
           </div>
 
           {endpointHistory.length === 0 ? (

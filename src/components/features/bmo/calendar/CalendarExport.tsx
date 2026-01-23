@@ -71,7 +71,7 @@ export function CalendarExport({ activities, onImport }: CalendarExportProps) {
         `DTSTART:${formatDate(activity.date || '', activity.time)}`,
         `DTEND:${formatDate(activity.date || '', activity.time)}`,
         `SUMMARY:${activity.title || 'Sans titre'}`,
-        `DESCRIPTION:${activity.description || ''}`,
+        `DESCRIPTION:${(activity as any).description || ''}`,
         `LOCATION:${activity.location || ''}`,
         `STATUS:${activity.status?.toUpperCase() || 'CONFIRMED'}`,
         'END:VEVENT'
@@ -150,11 +150,12 @@ export function CalendarExport({ activities, onImport }: CalendarExportProps) {
                 type: 'meeting',
                 date: dtStart,
                 time: timeMatch ? `${timeMatch[1]}:${timeMatch[2]}` : '10:00',
-                description: descMatch?.[1] || undefined,
+                priority: 'normal' as const,
+                ...(descMatch?.[1] ? { description: descMatch[1] } : {}),
                 status: 'planned',
                 createdAt: new Date().toISOString(),
                 createdBy: 'USR-001',
-              });
+              } as any);
             }
           });
           

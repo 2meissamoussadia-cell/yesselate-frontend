@@ -95,7 +95,7 @@ export function DashboardSubNavigation() {
                       ? 'warning'
                       : sub.badgeVariant === 'success'
                       ? 'success'
-                      : 'secondary'
+                      : 'default'
                   }
                   className="text-xs px-1.5 py-0"
                 >

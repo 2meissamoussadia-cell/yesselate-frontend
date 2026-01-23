@@ -370,7 +370,7 @@ export const FinancialView = React.memo(function FinancialView({ subCategory }: 
                 : subCategory === 'expenses'
                 ? 'Dépenses vs Revenus par Bureau'
                 : 'Prévisions Trésorerie par Bureau'}
-              data={chartData}
+              data={chartData as any}
               type="bar"
               dataKeys={subCategory === 'budget' 
                 ? ['Budget Total', 'Budget Consommé', 'Budget Restant']

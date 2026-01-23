@@ -178,7 +178,7 @@ export function BTPElementDetailView({
           <div className="flex items-center gap-3 mb-2">
             <ElementIcon className="h-6 w-6 text-blue-400" />
             <h1 className="text-2xl font-semibold text-slate-200">{elementData.nom}</h1>
-            <Badge variant="outline" className="text-xs">
+            <Badge variant="default" className="text-xs">
               {elementData.statut}
             </Badge>
           </div>
@@ -192,7 +192,7 @@ export function BTPElementDetailView({
             {elementData.tags && elementData.tags.length > 0 && (
               <div className="flex items-center gap-2">
                 {elementData.tags.map((tag) => (
-                  <Badge key={tag} variant="outline" className="text-xs">
+                  <Badge key={tag} variant="default" className="text-xs">
                     {tag}
                   </Badge>
                 ))}
@@ -206,15 +206,15 @@ export function BTPElementDetailView({
               Fermer
             </Button>
           )}
-          <Button variant="outline" size="sm" onClick={() => setIsEditModalOpen(true)} className="text-xs">
+          <Button variant="default" size="sm" onClick={() => setIsEditModalOpen(true)} className="text-xs">
             <Edit className="h-4 w-4 mr-2" />
             Modifier
           </Button>
-          <Button variant="outline" size="sm" className="text-xs">
+          <Button variant="default" size="sm" className="text-xs">
             <Copy className="h-4 w-4 mr-2" />
             Dupliquer
           </Button>
-          <Button variant="outline" size="sm" className="text-xs">
+          <Button variant="default" size="sm" className="text-xs">
             <Download className="h-4 w-4 mr-2" />
             Exporter
           </Button>
@@ -249,7 +249,7 @@ export function BTPElementDetailView({
                       value={kpi.value}
                       target={kpi.target}
                       unit={kpi.unit}
-                      status={kpi.status}
+                      status={kpi.status === 'critical' ? 'error' : kpi.status === 'good' ? 'success' : kpi.status === 'warning' ? 'warning' : 'info'}
                       description={kpi.label}
                     />
                   </div>
@@ -300,7 +300,7 @@ export function BTPElementDetailView({
                       <div className="flex items-center gap-2">
                         <LinkIcon className="h-4 w-4 text-slate-400" />
                         <span className="text-sm text-slate-300">{rel.nom}</span>
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="default" className="text-xs">
                           {rel.type}
                         </Badge>
                       </div>
@@ -419,10 +419,10 @@ export function BTPElementDetailView({
                         <Badge
                           variant={
                             jalon.statut === 'Terminé'
-                              ? 'default'
+                              ? 'success'
                               : jalon.statut === 'En cours'
                               ? 'default'
-                              : 'outline'
+                              : 'gray'
                           }
                           className="text-xs"
                         >
@@ -485,7 +485,7 @@ export function BTPElementDetailView({
                   <p className="text-xs text-slate-400 mb-1">Certifications</p>
                   <div className="flex flex-wrap gap-2 mt-2">
                     {elementData.qse.certifications.map((cert) => (
-                      <Badge key={cert} variant="outline" className="text-xs">
+                      <Badge key={cert} variant="default" className="text-xs">
                         {cert}
                       </Badge>
                     ))}

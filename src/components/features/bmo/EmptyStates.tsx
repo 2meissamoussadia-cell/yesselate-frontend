@@ -30,7 +30,7 @@ export type EmptyStateType =
   | 'no-events' 
   | 'no-stats';
 
-interface EmptyStateProps {
+export interface EmptyStateProps {
   type?: EmptyStateType;
   title?: string;
   message?: string;

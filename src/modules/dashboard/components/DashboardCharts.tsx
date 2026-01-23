@@ -304,3 +304,4 @@ export function DashboardCharts({ trends, monthlyComparison, categoryDistributio
   );
 }
 
+

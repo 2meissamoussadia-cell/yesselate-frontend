@@ -167,7 +167,7 @@ export function DocumentsSubNavigation({
                 <span>{sub.label}</span>
                 {sub.badge !== undefined && sub.badge !== 0 && (
                   <Badge
-                    variant="outline"
+                    variant="default"
                     className={cn(
                       'h-4 min-w-4 px-1 text-xs',
                       sub.badgeType === 'critical'

@@ -32,7 +32,7 @@ export function CalendarTimelineGlobal({ isOpen, onClose }: CalendarTimelineGlob
             <span className="text-sm text-slate-400">Vue temporelle synchronisée</span>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
+            <Button variant="default" size="sm">
               <Calendar className="h-4 w-4 mr-2" />
               Filtrer
             </Button>
@@ -95,7 +95,7 @@ export function CalendarTimelineGlobal({ isOpen, onClose }: CalendarTimelineGlob
         </div>
 
         <div className="flex justify-end gap-2 pt-4 border-t border-slate-700">
-          <Button variant="outline" size="sm" onClick={onClose}>
+          <Button variant="default" size="sm" onClick={onClose}>
             Fermer
           </Button>
           <Button variant="default" size="sm">

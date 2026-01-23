@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import { contractsToSign } from '@/lib/data';
-import { FluentButton } from '@/src/components/ui/fluent-button';
+import { FluentButton } from '@/components/ui/fluent-button';
 import { cn } from '@/lib/utils';
 import {
   GitCompare,

@@ -443,7 +443,7 @@ export function AnalyticsCommandPalette() {
     const searchResults = searchWithScoring(
       commands,
       debouncedSearch,
-      ['label', 'category', ...(commands[0]?.keywords || [])]
+      ['label', 'category'] as (keyof Command)[]
     );
 
     return searchResults.map(result => ({
@@ -509,7 +509,6 @@ export function AnalyticsCommandPalette() {
       open={commandPaletteOpen}
       title=""
       onClose={closeCommandPalette}
-      size="lg"
     >
       <div className="space-y-4">
         {/* Barre de recherche */}
@@ -559,7 +558,7 @@ export function AnalyticsCommandPalette() {
                 </div>
                 <div className="space-y-1">
                   {cmds.map((cmd) => {
-                    const globalIndex = filteredCommands.indexOf(cmd);
+                    const globalIndex = filteredCommands.findIndex(c => c.id === cmd.id);
                     const isSelected = globalIndex === selectedIndex;
                     
                     return (

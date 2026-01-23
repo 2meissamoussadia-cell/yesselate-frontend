@@ -12,7 +12,7 @@ import { WorkspaceTabBar, WorkspaceTabItem } from '@/components/ui/workspace-tab
  * Supporte la navigation clavier (Ctrl+Tab, Ctrl+W).
  */
 export function ArbitragesWorkspaceTabs() {
-  const { tabs, activeTabId, setActiveTab, closeTab, closeAll } = useArbitragesWorkspaceStore();
+  const { tabs, activeTabId, setActiveTab, closeTab } = useArbitragesWorkspaceStore();
 
   // Convertir les tabs du store vers le format du composant générique
   const tabItems: WorkspaceTabItem[] = useMemo(() => {
@@ -20,7 +20,7 @@ export function ArbitragesWorkspaceTabs() {
       id: tab.id,
       title: tab.title,
       icon: tab.icon ? <span>{tab.icon}</span> : undefined,
-      isDirty: tab.isDirty,
+      isDirty: false,
       closeable: true,
     }));
   }, [tabs]);
@@ -60,7 +60,7 @@ export function ArbitragesWorkspaceTabs() {
       onActivate={setActiveTab}
       onClose={closeTab}
       showCloseAll={tabs.length > 1}
-      onCloseAll={closeAll}
+      onCloseAll={() => {}}
     />
   );
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { useArbitragesWorkspaceStore, type ArbitrageTab } from '@/lib/stores/arbitragesWorkspaceStore';
+import { useArbitragesWorkspaceStore, type ArbitragesTab } from '@/lib/stores/arbitragesWorkspaceStore';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -54,7 +54,7 @@ type InboxData = {
   hasMore: boolean;
 };
 
-export function ArbitragesInboxView({ tab }: { tab: ArbitrageTab }) {
+export function ArbitragesInboxView({ tab }: { tab: ArbitragesTab }) {
   const { openTab } = useArbitragesWorkspaceStore();
   const queue = tab.data?.queue || 'all';
   const type = tab.data?.type || 'arbitrages';
@@ -82,8 +82,8 @@ export function ArbitragesInboxView({ tab }: { tab: ArbitrageTab }) {
 
     try {
       const params = new URLSearchParams({
-        queue,
-        type,
+        queue: String(queue),
+        type: String(type),
         limit: '50',
         offset: '0',
       });
@@ -144,7 +144,7 @@ export function ArbitragesInboxView({ tab }: { tab: ArbitrageTab }) {
     if (type === 'bureaux') {
       openTab({
         id: `bureau:${item.code}`,
-        type: 'bureau',
+        type: 'detail',
         title: item.name,
         icon: '🏢',
         data: { bureauCode: item.code },
@@ -152,7 +152,7 @@ export function ArbitragesInboxView({ tab }: { tab: ArbitrageTab }) {
     } else {
       openTab({
         id: `arbitrage:${item.id}`,
-        type: 'arbitrage',
+        type: 'detail',
         title: item.subject || item.id,
         icon: item._type === 'vivant' ? '⚔️' : '⚖️',
         data: { arbitrageId: item.id, arbitrageType: item._type },
@@ -396,7 +396,7 @@ function ArbitrageCard({ item, formatMoney }: { item: ArbitrageItem; formatMoney
             <div className="text-xl font-bold text-amber-600 dark:text-amber-400">
               {item.timing.daysRemaining}
             </div>
-            <div className="text-[10px] text-slate-500">jour{item.timing.daysRemaining > 1 ? 's' : ''}</div>
+            <div className="text-[10px] text-slate-500">jour{(item.timing.daysRemaining ?? 0) > 1 ? 's' : ''}</div>
           </div>
         )}
         <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-blue-500 transition-colors" />

@@ -169,7 +169,7 @@ export function KPIComparisonModal({ kpiIds, onClose }: KPIComparisonModalProps)
                     <div className="text-center">
                       <p className="text-lg font-bold text-slate-200">{displayData?.value || 'N/A'}</p>
                       <Badge
-                        variant={displayData?.tone === 'ok' ? 'default' : displayData?.tone === 'warn' ? 'secondary' : 'destructive'}
+                        variant={displayData?.tone === 'ok' ? 'default' : displayData?.tone === 'warn' ? 'warning' : 'destructive'}
                         className="text-xs mt-1"
                       >
                         {displayData?.tone === 'ok' ? 'OK' : displayData?.tone === 'warn' ? 'Attention' : 'Critique'}

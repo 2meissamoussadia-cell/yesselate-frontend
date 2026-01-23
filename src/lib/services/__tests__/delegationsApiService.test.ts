@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
-import { DelegationsApiService } from '../delegationsApiService';
+import { delegationsApiService } from '../delegationsApiService';
 import type { DelegationFilter } from '@/lib/types/substitution.types';
 
 // Mock des données

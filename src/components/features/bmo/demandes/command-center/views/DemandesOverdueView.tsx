@@ -132,8 +132,13 @@ export function DemandesOverdueView() {
               </div>
             </div>
           );
-        })}
-      </div>
+        }}
+        </VirtualizedList>
+      ) : (
+        <div className="flex items-center justify-center py-12 text-slate-400 text-sm">
+          Aucune demande en retard
+        </div>
+      )}
     </div>
   );
 }

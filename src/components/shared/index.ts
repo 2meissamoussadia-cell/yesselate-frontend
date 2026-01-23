@@ -1,18 +1,6 @@
 /**
- * Shared Components - Index Central
- * ==================================
- * 
- * Export centralisé pour tous les composants partagés
+ * Exports des composants shared
  */
 
-// Modal Manager
-export { ModalManager, ModalWrapper } from './ModalManager';
-export type { ModalWrapperProps } from './ModalManager';
-
-
-
-
-
-
-
-
+export { VirtualizedList } from './VirtualizedList';
+export { VirtualizedTable } from './VirtualizedTable';

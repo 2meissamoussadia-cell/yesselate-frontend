@@ -28,6 +28,9 @@ import {
   Command,
 } from 'lucide-react';
 import { useDashboardCommandCenterStore, type DashboardMainCategory } from '@/lib/stores/dashboardCommandCenterStore';
+import { dashboardNavigationConfig, findNavNodeById } from '@/modules/dashboard/navigation/dashboardNavigationConfig';
+import { useDashboardNavigationStore } from '@/lib/stores/dashboardNavigationStore';
+import type { DashboardMainCategory as NavMainCategory } from '@/modules/dashboard/types/dashboardNavigationTypes';
 
 interface CommandItem {
   id: string;
@@ -37,6 +40,8 @@ interface CommandItem {
   icon: React.ElementType;
   shortcut?: string;
   action: () => void;
+  keywords?: string[];
+  category?: string;
 }
 
 export function DashboardCommandPalette() {
@@ -47,139 +52,170 @@ export function DashboardCommandPalette() {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  // Commandes disponibles
-  const commands: CommandItem[] = useMemo(
-    () => [
-      // Navigation Dashboard
-      {
-        id: 'nav-overview',
-        type: 'navigation',
-        label: 'Vue d\'ensemble',
-        hint: 'Dashboard principal',
-        icon: LayoutDashboard,
-        action: () => navigate('overview'),
-      },
-      {
-        id: 'nav-performance',
-        type: 'navigation',
-        label: 'Performance',
-        hint: 'KPIs et métriques',
-        icon: TrendingUp,
-        action: () => navigate('performance'),
-      },
-      {
-        id: 'nav-actions',
-        type: 'navigation',
-        label: 'Actions prioritaires',
-        hint: 'Work Inbox',
-        icon: Zap,
-        action: () => navigate('actions'),
-      },
-      {
-        id: 'nav-risks',
-        type: 'navigation',
-        label: 'Risques',
-        hint: 'Risk Radar',
-        icon: AlertTriangle,
-        action: () => navigate('risks'),
-      },
-      {
-        id: 'nav-decisions',
-        type: 'navigation',
-        label: 'Décisions',
-        hint: 'Timeline & suivi',
-        icon: Scale,
-        action: () => navigate('decisions'),
-      },
-      {
-        id: 'nav-realtime',
-        type: 'navigation',
-        label: 'Temps réel',
-        hint: 'Monitoring live',
-        icon: Activity,
-        action: () => navigate('realtime'),
-      },
-      // Navigation externe
-      {
-        id: 'nav-substitution',
-        type: 'navigation',
-        label: 'Substitutions',
-        hint: 'Blocages & délégations',
-        icon: Users,
-        action: () => router.push('/maitre-ouvrage/substitution'),
-      },
-      {
-        id: 'nav-validation-bc',
-        type: 'navigation',
-        label: 'Validation BC',
-        hint: 'Bons de commande',
-        icon: FileCheck,
-        action: () => router.push('/maitre-ouvrage/validation-bc'),
-      },
-      {
-        id: 'nav-paiements',
-        type: 'navigation',
-        label: 'Paiements',
-        hint: 'Validation paiements',
-        icon: Wallet,
-        action: () => router.push('/maitre-ouvrage/validation-paiements'),
-      },
-      {
-        id: 'nav-contrats',
-        type: 'navigation',
-        label: 'Contrats',
-        hint: 'Validation contrats',
-        icon: FileText,
-        action: () => router.push('/maitre-ouvrage/validation-contrats'),
-      },
-      {
-        id: 'nav-governance',
-        type: 'navigation',
-        label: 'Gouvernance',
-        hint: 'Centre de commandement',
-        icon: Scale,
-        action: () => router.push('/maitre-ouvrage/governance'),
-      },
-      // Actions
-      {
-        id: 'action-export',
-        type: 'action',
-        label: 'Exporter',
-        hint: 'Export données',
-        icon: Download,
-        shortcut: '⌘E',
-        action: () => openModal('export'),
-      },
-      {
-        id: 'action-settings',
-        type: 'action',
-        label: 'Paramètres',
-        hint: 'Configuration dashboard',
-        icon: Settings,
-        action: () => openModal('settings'),
-      },
-      {
-        id: 'action-help',
-        type: 'action',
-        label: 'Aide',
-        hint: 'Raccourcis & documentation',
-        icon: HelpCircle,
-        shortcut: '?',
-        action: () => openModal('shortcuts'),
-      },
-    ],
-    [navigate, router, openModal]
-  );
+  // Commandes disponibles - Génération dynamique depuis la config
+  const commands: CommandItem[] = useMemo(() => {
+    const items: CommandItem[] = [];
 
-  // Filtrer les commandes
+    // Parcourir toutes les catégories principales
+    Object.entries(dashboardNavigationConfig).forEach(([mainId, mainNode]) => {
+      const mainCategory = mainId as NavMainCategory;
+      
+      // Catégorie principale
+      items.push({
+        id: `nav-${mainId}`,
+        type: 'navigation',
+        label: mainNode.label,
+        hint: `Section ${mainNode.label}`,
+        icon: mainNode.icon || LayoutDashboard,
+        category: 'Navigation',
+        keywords: [mainId, mainNode.label.toLowerCase()],
+        action: () => {
+          const { setMain, setSub, setLeaf } = useDashboardNavigationStore.getState();
+          setMain(mainCategory);
+          setSub(null);
+          setLeaf(null);
+          toggleCommandPalette();
+        },
+      });
+
+      // Sous-catégories
+      mainNode.children?.forEach((subNode) => {
+        items.push({
+          id: `nav-${mainId}-${subNode.id}`,
+          type: 'navigation',
+          label: `${mainNode.label} → ${subNode.label}`,
+          hint: subNode.label,
+          icon: mainNode.icon || LayoutDashboard,
+          category: 'Navigation',
+          keywords: [mainId, subNode.id, subNode.label.toLowerCase()],
+          action: () => {
+            const { setMain, setSub, setLeaf } = useDashboardNavigationStore.getState();
+            setMain(mainCategory);
+            setSub(subNode.id);
+            setLeaf(null);
+            toggleCommandPalette();
+          },
+        });
+
+        // Pages finales (leaf)
+        subNode.children?.forEach((leafNode) => {
+          items.push({
+            id: `nav-${mainId}-${subNode.id}-${leafNode.id}`,
+            type: 'navigation',
+            label: `${mainNode.label} → ${subNode.label} → ${leafNode.label}`,
+            hint: leafNode.label,
+            icon: mainNode.icon || LayoutDashboard,
+            category: 'Navigation',
+            keywords: [
+              mainId,
+              subNode.id,
+              leafNode.id,
+              leafNode.label.toLowerCase(),
+            ],
+            action: () => {
+              const { setMain, setSub, setLeaf } = useDashboardNavigationStore.getState();
+              setMain(mainCategory);
+              setSub(subNode.id);
+              setLeaf(leafNode.id);
+              toggleCommandPalette();
+            },
+          });
+        });
+      });
+    });
+    
+    // Navigation externe
+    items.push({
+      id: 'nav-substitution',
+      type: 'navigation',
+      label: 'Substitutions',
+      hint: 'Blocages & délégations',
+      icon: Users,
+      action: () => router.push('/maitre-ouvrage/substitution'),
+    });
+    items.push({
+      id: 'nav-validation-bc',
+      type: 'navigation',
+      label: 'Validation BC',
+      hint: 'Bons de commande',
+      icon: FileCheck,
+      action: () => router.push('/maitre-ouvrage/validation-bc'),
+    });
+    items.push({
+      id: 'nav-paiements',
+      type: 'navigation',
+      label: 'Paiements',
+      hint: 'Validation paiements',
+      icon: Wallet,
+      action: () => router.push('/maitre-ouvrage/validation-paiements'),
+    });
+    items.push({
+      id: 'nav-contrats',
+      type: 'navigation',
+      label: 'Contrats',
+      hint: 'Validation contrats',
+      icon: FileText,
+      action: () => router.push('/maitre-ouvrage/validation-contrats'),
+    });
+    items.push({
+      id: 'nav-governance',
+      type: 'navigation',
+      label: 'Gouvernance',
+      hint: 'Centre de commandement',
+      icon: Scale,
+      action: () => router.push('/maitre-ouvrage/governance'),
+    });
+    
+    // Actions
+    items.push({
+      id: 'action-export',
+      type: 'action',
+      label: 'Exporter',
+      hint: 'Export données',
+      icon: Download,
+      shortcut: '⌘E',
+      action: () => openModal('export'),
+    });
+    items.push({
+      id: 'action-settings',
+      type: 'action',
+      label: 'Paramètres',
+      hint: 'Configuration dashboard',
+      icon: Settings,
+      action: () => openModal('settings'),
+    });
+    items.push({
+      id: 'action-help',
+      type: 'action',
+      label: 'Aide',
+      hint: 'Raccourcis & documentation',
+      icon: HelpCircle,
+      shortcut: '?',
+      action: () => openModal('shortcuts'),
+    });
+
+    return items;
+
+    return items;
+  }, [navigate, router, openModal, toggleCommandPalette]);
+
+  // Filtrer les commandes avec recherche améliorée
   const filteredCommands = useMemo(() => {
-    if (!query) return commands;
-    const q = query.toLowerCase();
-    return commands.filter(
-      (cmd) =>
-        cmd.label.toLowerCase().includes(q) ||
-        cmd.hint?.toLowerCase().includes(q)
-    );
+    if (!query.trim()) return commands;
+    
+    const q = query.toLowerCase().trim();
+    const queryWords = q.split(/\s+/);
+    
+    return commands.filter((cmd) => {
+      const searchText = [
+        cmd.label.toLowerCase(),
+        cmd.hint?.toLowerCase() || '',
+        ...(cmd.keywords || []).map(k => k.toLowerCase()),
+      ].join(' ');
+      
+      // Recherche par mots-clés (tous les mots doivent être trouvés)
+      return queryWords.every(word => searchText.includes(word));
+    });
   }, [commands, query]);
 
   // Reset selection on query change

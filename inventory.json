@@ -1,0 +1,225 @@
+{
+  "project": {
+    "name": "yesselate-frontend",
+    "version": "0.1.0",
+    "type": "Next.js Application",
+    "framework": "Next.js 16.1.1",
+    "react": "19.2.3",
+    "typescript": "^5"
+  },
+  "packageManager": {
+    "type": "npm",
+    "lockFile": "package-lock.json"
+  },
+  "dependencies": {
+    "core": {
+      "next": "16.1.1",
+      "react": "19.2.3",
+      "react-dom": "19.2.3",
+      "typescript": "^5"
+    },
+    "stateManagement": {
+      "zustand": "^5.0.9",
+      "@tanstack/react-query": "^5.90.12"
+    },
+    "ui": {
+      "@radix-ui/react-dialog": "^1.1.15",
+      "@radix-ui/react-popover": "^1.1.15",
+      "@radix-ui/react-select": "^2.2.6",
+      "@radix-ui/react-tooltip": "^1.2.8",
+      "lucide-react": "^0.562.0",
+      "framer-motion": "^12.25.0",
+      "tailwindcss": "^4"
+    },
+    "forms": {
+      "react-hook-form": "^7.69.0",
+      "@hookform/resolvers": "^5.2.2",
+      "zod": "^4.2.1"
+    },
+    "data": {
+      "@prisma/client": "5.22.0",
+      "axios": "^1.13.2"
+    },
+    "virtualization": {
+      "@tanstack/react-virtual": "^3.13.18"
+    },
+    "pwa": {
+      "next-pwa": "^5.6.0"
+    },
+    "charts": {
+      "chart.js": "^4.5.1",
+      "react-chartjs-2": "^5.3.1",
+      "recharts": "^3.6.0"
+    },
+    "maps": {
+      "leaflet": "^1.9.4",
+      "react-leaflet": "^5.0.0"
+    },
+    "pdf": {
+      "react-pdf": "^10.2.0",
+      "jspdf": "^3.0.4",
+      "html2canvas": "^1.4.1"
+    }
+  },
+  "structure": {
+    "app": {
+      "routes": {
+        "portals": {
+          "maitre-ouvrage": {
+            "pages": 113,
+            "subRoutes": [
+              "dashboard",
+              "demandes",
+              "validation-bc",
+              "validation-contrats",
+              "validation-paiements",
+              "governance",
+              "alerts",
+              "blocked",
+              "substitution",
+              "delegations",
+              "clients",
+              "projets-en-cours",
+              "finances",
+              "recouvrements",
+              "litiges",
+              "employes",
+              "missions",
+              "evaluations",
+              "demandes-rh",
+              "organigramme",
+              "calendrier",
+              "analytics",
+              "audit",
+              "logs",
+              "system-logs",
+              "ia",
+              "tickets-clients",
+              "echanges-structures",
+              "messages-externes",
+              "conferences"
+            ]
+          }
+        },
+        "api": {
+          "routes": 244,
+          "domains": [
+            "validation-bc",
+            "demands",
+            "alerts",
+            "bmo",
+            "analytics",
+            "calendar",
+            "dashboard",
+            "delegations",
+            "paiements"
+          ]
+        }
+      }
+    },
+    "src": {
+      "components": {
+        "features": {
+          "bmo": 995,
+          "alerts": 17,
+          "arbitrages": 14,
+          "delegations": 41,
+          "validation-bc": 62,
+          "calendar": 20
+        },
+        "ui": 53,
+        "shared": 13
+      },
+      "lib": {
+        "stores": 66,
+        "services": 61,
+        "api": 28,
+        "types": 15,
+        "utils": 26
+      },
+      "modules": {
+        "dashboard": 62,
+        "demandes": 44,
+        "validation-bc": 45,
+        "validation-contrats": 44,
+        "calendrier": 60,
+        "gouvernance": 49,
+        "centre-alertes": 38,
+        "chantiers": "present"
+      },
+      "hooks": 50,
+      "domain": {
+        "analytics": 9
+      }
+    }
+  },
+  "testing": {
+    "framework": "Jest",
+    "testingLibrary": "@testing-library/react",
+    "coverageThreshold": {
+      "branches": 70,
+      "functions": 70,
+      "lines": 70,
+      "statements": 70
+    },
+    "testFiles": 11,
+    "coverage": "low"
+  },
+  "build": {
+    "config": "next.config.js (not found, using defaults)",
+    "tsconfig": "strict: true",
+    "paths": {
+      "@/*": "./src/*",
+      "@/domain/*": "./src/domain/*"
+    }
+  },
+  "ci": {
+    "status": "not configured",
+    "files": []
+  },
+  "entryPoints": {
+    "main": "app/layout.tsx",
+    "dashboard": "app/(portals)/maitre-ouvrage/dashboard/page.tsx",
+    "api": "app/api"
+  },
+  "businessDomains": {
+    "identified": [
+      "chantiers",
+      "pointages",
+      "planning",
+      "materiel",
+      "achats",
+      "stocks",
+      "facturation",
+      "situations-travaux",
+      "rh",
+      "documents-doe",
+      "validation-bc",
+      "validation-contrats",
+      "validation-paiements",
+      "governance",
+      "alerts",
+      "blocked",
+      "delegations",
+      "analytics"
+    ]
+  },
+  "architecture": {
+    "pattern": "Feature-based modules",
+    "stateManagement": "Zustand + React Query",
+    "dataFetching": "Axios + React Query",
+    "forms": "React Hook Form + Zod",
+    "styling": "Tailwind CSS",
+    "uiComponents": "Radix UI + Custom"
+  },
+  "metrics": {
+    "totalPages": 113,
+    "totalApiRoutes": 244,
+    "totalStores": 66,
+    "totalServices": 61,
+    "totalComponents": 1200,
+    "testCoverage": "low",
+    "typescriptStrict": true
+  }
+}
+

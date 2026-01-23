@@ -172,9 +172,9 @@ export const LogsCommandSidebar = React.memo(function LogsCommandSidebar({
 
                     {category.badge && (
                       <Badge
-                        variant="outline"
+                        variant="default"
                         className={cn(
-                          'h-5 min-w-5 px-1.5 text-xs font-medium transition-all duration-200',
+                          'h-5 min-w-5 px-1.5 text-xs font-medium transition-all duration-200 border',
                           category.badgeType === 'critical'
                             ? 'bg-red-500/20 text-red-400 border-red-500/30 group-hover:bg-red-500/30'
                             : category.badgeType === 'warning'

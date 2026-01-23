@@ -40,9 +40,10 @@ export function Spinner({ size = 'md', className, color = 'primary' }: SpinnerPr
 interface SkeletonProps {
   className?: string;
   variant?: 'text' | 'circular' | 'rectangular';
+  style?: React.CSSProperties;
 }
 
-export function Skeleton({ className, variant = 'rectangular' }: SkeletonProps) {
+export function Skeleton({ className, variant = 'rectangular', style }: SkeletonProps) {
   const variantClasses = {
     text: 'h-4 rounded',
     circular: 'rounded-full aspect-square',
@@ -56,6 +57,7 @@ export function Skeleton({ className, variant = 'rectangular' }: SkeletonProps) 
         variantClasses[variant],
         className
       )}
+      style={style}
     />
   );
 }
@@ -113,9 +115,16 @@ export function SkeletonCard({ className, showAvatar = false, lines = 3 }: Skele
         {showAvatar && <Skeleton variant="circular" className="w-12 h-12" />}
         <div className="flex-1 space-y-2">
           <Skeleton className="h-5 w-3/4" />
-          {Array.from({ length: lines }).map((_, i) => (
-            <Skeleton key={i} className="h-4" style={{ width: `${100 - i * 10}%` }} />
-          ))}
+          {Array.from({ length: lines }).map((_, i) => {
+            const widthPercent = 100 - i * 10;
+            return (
+              <Skeleton 
+                key={i} 
+                className="h-4" 
+                style={{ width: `${widthPercent}%` }}
+              />
+            );
+          })}
         </div>
       </div>
     </div>

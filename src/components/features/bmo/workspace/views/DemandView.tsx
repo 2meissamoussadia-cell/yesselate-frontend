@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState, useCallback } from 'react';
 import { useWorkspaceStore, WorkspaceTab } from '@/lib/stores/workspaceStore';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { cn } from '@/lib/utils';
+import { adaptLocalDemandToDomain } from '@/domain/demandes/adapters/demande.adapter';
+import { useDemandeService } from '@/hooks/useDemandeService';
 import { 
   RefreshCw, Check, X, UserPlus, MessageSquare, FileText, 
   Clock, Building2, Tag, DollarSign, AlertTriangle, User,
@@ -292,15 +294,24 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
   const statusConfig = STATUS_CONFIG[data?.status as keyof typeof STATUS_CONFIG] ?? STATUS_CONFIG.pending;
   const StatusIcon = statusConfig.icon;
 
-  // Calcul budget
-  const budgetUsage = data?.budget?.available && data?.amount
-    ? Math.round((data.amount / data.budget.available) * 100)
-    : null;
+  // ✅ Utiliser le hook du domaine pour tous les calculs et validations
+  const demandeForService = useMemo(() => {
+    if (!data) return null;
+    return adaptLocalDemandToDomain(data);
+  }, [data]);
 
-  // Calcul risque global
-  const maxRiskScore = data?.risks?.length 
-    ? Math.max(...data.risks.map(r => r.score))
-    : 0;
+  const {
+    budgetUsage,
+    budgetMetrics,
+    globalRiskScore: maxRiskScore,
+    riskLevel,
+    risks: evaluatedRisks,
+    validation,
+    warnings,
+    approver,
+    canAutoApprove,
+    shouldEscalate
+  } = useDemandeService(demandeForService);
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-[1fr_380px] gap-4">
@@ -459,14 +470,20 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
               <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/50">
                 <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
                   <Shield className="w-3 h-3" />
-                  Risque max
+                  Risque global
                 </div>
                 <div className={cn(
                   "font-semibold",
-                  maxRiskScore >= 15 ? "text-rose-500" : maxRiskScore >= 9 ? "text-amber-500" : "text-emerald-500"
+                  riskLevel === 'critical' ? "text-rose-500" : 
+                  riskLevel === 'high' ? "text-amber-500" : 
+                  riskLevel === 'medium' ? "text-yellow-500" : 
+                  "text-emerald-500"
                 )}>
-                  {maxRiskScore > 0 ? `${maxRiskScore}/25` : '—'}
+                  {maxRiskScore > 0 ? `${maxRiskScore}/100` : '—'}
                 </div>
+                {riskLevel && (
+                  <div className="text-xs mt-1 capitalize text-slate-400">{riskLevel}</div>
+                )}
               </div>
             </div>
 
@@ -589,9 +606,11 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
                   {budgetUsage !== null && (
                     <span className={cn(
                       "text-xs px-2 py-0.5 rounded-full",
-                      budgetUsage > 100 ? "bg-rose-500/20 text-rose-500" : budgetUsage > 80 ? "bg-amber-500/20 text-amber-500" : "bg-emerald-500/20 text-emerald-500"
+                      budgetCritical ? "bg-rose-500/20 text-rose-500" : 
+                      budgetWarning ? "bg-amber-500/20 text-amber-500" : 
+                      "bg-emerald-500/20 text-emerald-500"
                     )}>
-                      {budgetUsage}% du disponible
+                      {budgetUsage.toFixed(1)}% {budgetCritical ? '⚠️' : budgetWarning ? '⚠' : ''}
                     </span>
                   )}
                 </h3>
@@ -620,16 +639,38 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
                   </div>
                   
                   {budgetUsage !== null && (
-                    <div className="mt-3">
+                    <div className="mt-3 space-y-2">
                       <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                         <div 
                           className={cn(
                             "h-full rounded-full transition-all",
-                            budgetUsage > 100 ? "bg-rose-500" : budgetUsage > 80 ? "bg-amber-500" : "bg-emerald-500"
+                            budgetCritical ? "bg-rose-500" : 
+                            budgetWarning ? "bg-amber-500" : 
+                            "bg-emerald-500"
                           )}
                           style={{ width: `${Math.min(100, budgetUsage)}%` }}
                         />
                       </div>
+                      {budgetMetrics && (
+                        <div className="flex justify-between text-xs text-slate-500">
+                          <span>Utilisé: {budgetUsage.toFixed(1)}%</span>
+                          {budgetRemaining !== null && (
+                            <span>Restant: {budgetRemaining.toLocaleString()} FCFA</span>
+                          )}
+                        </div>
+                      )}
+                      {budgetCritical && (
+                        <div className="text-xs text-rose-500 flex items-center gap-1">
+                          <AlertTriangle className="w-3 h-3" />
+                          Budget critique
+                        </div>
+                      )}
+                      {budgetWarning && !budgetCritical && (
+                        <div className="text-xs text-amber-500 flex items-center gap-1">
+                          <AlertCircle className="w-3 h-3" />
+                          Budget en alerte
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

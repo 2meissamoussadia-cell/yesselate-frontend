@@ -67,6 +67,7 @@ import {
   DashboardSubNavigation, 
   DashboardViewRouter,
 } from '@/modules/dashboard';
+import { DashboardBreadcrumbs } from '@/modules/dashboard/components/DashboardBreadcrumbs';
 
 // ✅ Importer les modals
 import { DashboardModals } from '@/components/features/bmo/dashboard/command-center/DashboardModals';
@@ -1324,6 +1325,9 @@ function DashboardContent() {
         <div className="relative">
           <DashboardSubNavigation stats={stats} />
         </div>
+
+        {/* Breadcrumbs - Fil d'Ariane pour la navigation */}
+        <DashboardBreadcrumbs />
 
         {/* KPI Strip - Amélioré avec animations */}
         <div 

@@ -118,12 +118,12 @@ export function LogDetailModal({ open, onClose, logId }: LogDetailModalProps) {
                           </h2>
                           <div className="flex items-center gap-2 mt-1">
                             <Badge
-                              variant="outline"
-                              className={cn('text-xs', levelColors[log.level as keyof typeof levelColors] || levelColors.info)}
+                              variant="default"
+                              className={cn('text-xs border', levelColors[log.level as keyof typeof levelColors] || levelColors.info)}
                             >
                               {logsApiService.getLevelLabel(log.level)}
                             </Badge>
-                            <Badge variant="outline" className="text-xs bg-slate-800/50 text-slate-400 border-slate-700/50">
+                            <Badge variant="default" className="text-xs bg-slate-800/50 text-slate-400 border border-slate-700/50">
                               <SourceIcon className="h-3 w-3 mr-1" />
                               {logsApiService.getSourceLabel(log.source)}
                             </Badge>
@@ -259,7 +259,7 @@ function DetailsTab({ log, levelColors, sourceIcons }: { log: LogEntry; levelCol
             icon={<FileText className="h-4 w-4" />}
             label="Niveau"
             value={
-              <Badge variant="outline" className={cn('text-xs', levelColors[log.level as keyof typeof levelColors] || levelColors.info)}>
+              <Badge variant="default" className={cn('text-xs border', levelColors[log.level as keyof typeof levelColors] || levelColors.info)}>
                 {logsApiService.getLevelLabel(log.level)}
               </Badge>
             }

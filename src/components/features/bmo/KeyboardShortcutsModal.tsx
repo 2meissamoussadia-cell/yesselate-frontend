@@ -153,7 +153,7 @@ export function KeyboardShortcutsModal({ isOpen, onClose }: KeyboardShortcutsMod
                         {shortcut.keys.map((key, keyIdx) => (
                           <Fragment key={keyIdx}>
                             <Badge
-                              variant="secondary"
+                              variant="default"
                               className={cn(
                                 'text-[9px] font-mono px-1.5 py-0.5',
                                 darkMode ? 'bg-slate-700 text-slate-200' : 'bg-gray-200 text-gray-800'

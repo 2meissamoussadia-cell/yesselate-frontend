@@ -3,6 +3,7 @@
 import { useEffect, useRef, useMemo } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useDashboardNavigationStore } from '@/lib/stores/dashboardNavigationStore';
+import { applyRedirect } from '../utils/navigationRedirects';
 
 export function useDashboardNavigationSync() {
   const params = useSearchParams();
@@ -12,17 +13,27 @@ export function useDashboardNavigationSync() {
     useDashboardNavigationStore();
 
   // ✅ Extraire et stabiliser les valeurs de l'URL avec useMemo
-  const urlValues = useMemo(() => ({
-    main: params.get('main') || 'overview',
-    sub: params.get('sub'),
-    leaf: params.get('leaf'),
-  }), [params]);
+  const urlValues = useMemo(() => {
+    const mainParam = params.get('main') || 'overview';
+    const subParam = params.get('sub');
+    const leafParam = params.get('leaf');
+    
+    // ✅ Appliquer les redirections automatiques
+    const redirected = applyRedirect(mainParam, subParam, leafParam);
+    
+    return {
+      main: redirected.main,
+      sub: redirected.sub,
+      leaf: redirected.leaf,
+      wasRedirected: redirected.redirected,
+    };
+  }, [params]);
 
   // Ref pour éviter les mises à jour simultanées
   const isUpdatingRef = useRef(false);
   const lastUrlRef = useRef<string>('');
 
-  // URL → Store
+  // URL → Store (avec redirections)
   useEffect(() => {
     if (isUpdatingRef.current) return;
 
@@ -46,6 +57,16 @@ export function useDashboardNavigationSync() {
 
     isUpdatingRef.current = true;
     try {
+      // ✅ Si une redirection a été appliquée, mettre à jour l'URL
+      if (urlValues.wasRedirected) {
+        const query = new URLSearchParams();
+        query.set('main', urlValues.main);
+        if (urlValues.sub) query.set('sub', urlValues.sub);
+        if (urlValues.leaf) query.set('leaf', urlValues.leaf);
+        
+        router.replace(`/maitre-ouvrage/dashboard?${query.toString()}`, { scroll: false });
+      }
+      
       setMain(urlValues.main);
       setSub(urlValues.sub);
       setLeaf(urlValues.leaf);
@@ -55,7 +76,7 @@ export function useDashboardNavigationSync() {
         isUpdatingRef.current = false;
       });
     }
-  }, [urlValues.main, urlValues.sub, urlValues.leaf, setMain, setSub, setLeaf]);
+  }, [urlValues.main, urlValues.sub, urlValues.leaf, urlValues.wasRedirected, setMain, setSub, setLeaf, router]);
 
   // Store → URL
   useEffect(() => {

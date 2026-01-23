@@ -140,13 +140,13 @@ function LogDetailContent({ data }: { data: Record<string, unknown> }) {
         </h4>
         <div className="flex items-center gap-2 flex-wrap">
           <Badge
-            variant="outline"
-            className={cn('text-xs font-medium', levelColors[level as keyof typeof levelColors] || levelColors.info)}
+            variant="default"
+            className={cn('text-xs font-medium border', levelColors[level as keyof typeof levelColors] || levelColors.info)}
           >
             {logsApiService.getLevelLabel(level)}
           </Badge>
           <Badge
-            variant="outline"
+            variant="default"
             className="text-xs bg-slate-800/50 text-slate-400 border-slate-700/50"
           >
             <SourceIcon className="h-3 w-3 mr-1" />
@@ -156,23 +156,23 @@ function LogDetailContent({ data }: { data: Record<string, unknown> }) {
       </div>
 
       {/* Value / Stats */}
-      {data.value !== undefined && (
+      {data.value !== undefined ? (
         <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-slate-100">{data.value as string}</span>
-            {data.label && (
-              <span className="text-sm text-slate-500">{(data.label as string)}</span>
-            )}
+            <span className="text-2xl font-bold text-slate-100">{String(data.value)}</span>
+            {data.label ? (
+              <span className="text-sm text-slate-500">{String(data.label)}</span>
+            ) : null}
           </div>
-          {data.trendValue && (
+          {data.trendValue ? (
             <div className="flex items-center gap-2 mt-2">
               <span className="text-xs text-slate-400">
-                {(data.trendValue as string)}
+                {String(data.trendValue)}
               </span>
             </div>
-          )}
+          ) : null}
         </div>
-      )}
+      ) : null}
 
       {/* Module */}
       {data.module && (

@@ -23,7 +23,7 @@ import {
   XCircle,
 } from 'lucide-react';
 
-interface Litige {
+export interface Litige {
   id: string;
   reference: string;
   titre: string;
@@ -38,7 +38,7 @@ interface Litige {
   responsable: string;
 }
 
-interface LitigeDetailModalProps {
+export interface LitigeDetailModalProps {
   litiges: Litige[];
   selectedId: string | null;
   onClose: () => void;
@@ -314,7 +314,7 @@ function CommunicationItem({
           <User className="w-4 h-4 text-slate-400" />
           <span className="text-sm font-medium text-slate-200">{sender}</span>
         </div>
-        <Badge variant="outline" className="text-xs">
+        <Badge variant="default" className="text-xs border">
           {type === 'internal' ? 'Interne' : 'Externe'}
         </Badge>
       </div>

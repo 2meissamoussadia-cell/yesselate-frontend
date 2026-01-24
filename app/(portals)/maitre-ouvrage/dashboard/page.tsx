@@ -1,20 +1,34 @@
 /* -----------------------------------------------------------------------
    FILE: app/maitre-ouvrage/dashboard/page.tsx
-   VERSION: 6.0 - ENTERPRISE SHELL (UI MÉTIER)
-   Objectifs:
-   - Header clair + breadcrumbs + actions
-   - KPI Bar dédiée (boutons réels + z-index clean)
-   - Fond sobre (moins "gradient demo", plus "produit")
-   - Aucun calque décoratif ne doit capter les clics
+   VERSION: 6.0 - SHELL + UI PLUS "LOGICIEL MÉTIER"
 ------------------------------------------------------------------------ */
 
 'use client';
 
-import React, { Suspense, useCallback, useEffect, useMemo, useState } from 'react';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { ErrorBoundary } from '@/components/shared/ErrorBoundary';
+import React, { Suspense, useMemo, memo, useCallback, useEffect, useState, useRef } from 'react';
 import { cn } from '@/lib/utils';
-import { Command, Settings2 } from 'lucide-react';
+import {
+  Loader2,
+  RefreshCw,
+  Search,
+  X,
+  Download,
+  Zap,
+  Activity,
+  Info,
+  FileText,
+  CheckCircle2,
+  AlertTriangle,
+  AlertCircle,
+  DollarSign,
+  Clock,
+  TrendingUp,
+  BarChart3,
+  Settings,
+} from 'lucide-react';
+
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { ErrorBoundary } from '@/components/shared/ErrorBoundary';
 
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import type { DashboardMainCategory } from '@/modules/dashboard/types/dashboardNavigationTypes';
@@ -24,34 +38,27 @@ import {
   DashboardSubNavigation,
   DashboardUrlSync,
   DashboardViewRouter,
-  DashboardKPIBar,
   DashboardBreadcrumbs,
 } from '@/modules/dashboard';
+import { DashboardShell } from '@/modules/dashboard/components/shared/DashboardShell';
 
-import { useDashboardKPIs } from '@/lib/hooks/useDashboardKPIs';
+import { DashboardModals } from '@/components/features/bmo/dashboard/command-center/DashboardModals';
 import { getKPIMappingByLabel } from '@/lib/mappings/dashboardKPIMapping';
+import { useDashboardKPIs } from '@/lib/hooks/useDashboardKPIs';
+import { KPIAlertsSystem } from '@/components/features/bmo/dashboard/command-center/KPIAlertsSystem';
+import { useLogger } from '@/lib/utils/logger';
+
+/* =========================
+   Loading
+========================= */
 
 function DashboardSkeleton() {
   return (
     <div className="h-full w-full flex items-center justify-center bg-slate-950">
       <div className="flex flex-col items-center gap-3 animate-pulse">
-        <div className="h-8 w-8 rounded-full bg-slate-800" />
-        <p className="text-slate-400 text-sm">Chargement du dashboard…</p>
+        <Loader2 className="h-7 w-7 animate-spin text-blue-400" />
+        <p className="text-slate-400 text-sm font-medium">Chargement du dashboard…</p>
       </div>
-    </div>
-  );
-}
-
-function ContentLoadingSkeleton() {
-  return (
-    <div className="space-y-6 animate-fadeIn">
-      <div className="h-10 bg-slate-900/60 rounded-xl w-1/3" />
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="h-40 rounded-2xl border border-slate-800/70 bg-slate-900/40" />
-        ))}
-      </div>
-      <div className="h-80 rounded-2xl border border-slate-800/70 bg-slate-900/40" />
     </div>
   );
 }
@@ -66,8 +73,30 @@ export default function DashboardPage() {
   );
 }
 
+/* =========================
+   Types
+========================= */
+
+type KPITone = 'ok' | 'warn' | 'crit' | 'info';
+type KPITrend = 'up' | 'down' | 'neutral';
+
+interface KPIData {
+  label: string;
+  value: string | number;
+  delta: string;
+  tone: KPITone;
+  trend: KPITrend;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
+/* =========================
+   Content
+========================= */
+
 function DashboardContent() {
-  // Store navigation (source unique)
+  const log = useLogger('DashboardContent');
+
+  // stores
   const navigation = useDashboardCommandCenterStore((s) => s.navigation);
   const navigate = useDashboardCommandCenterStore((s) => s.navigate);
   const sidebarCollapsed = useDashboardCommandCenterStore((s) => s.sidebarCollapsed);
@@ -77,41 +106,108 @@ function DashboardContent() {
 
   const { mainCategory, subCategory, subSubCategory } = navigation;
 
-  // KPIs (API)
+  useEffect(() => {
+    log.debug('Navigation', { mainCategory, subCategory, subSubCategory });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mainCategory, subCategory, subSubCategory]);
+
+  // UI state
+  const [kpiFilter, setKpiFilter] = useState<string>(() => {
+    if (typeof window !== 'undefined') return localStorage.getItem('dashboard-kpi-filter') || '';
+    return '';
+  });
+  const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [refreshCount, setRefreshCount] = useState(0);
+  const [retryCount, setRetryCount] = useState(0);
+  const maxRetries = 3;
+
+  const [showExportMenu, setShowExportMenu] = useState(false);
+  const exportMenuRef = useRef<HTMLDivElement | null>(null);
+
+  // 🔒 IMPORTANT : si on change de vue, on ferme les menus.
+  // (évite un overlay restant ouvert qui "mange" tous les clics)
+  useEffect(() => {
+    setShowExportMenu(false);
+  }, [mainCategory, subCategory, subSubCategory]);
+
+  // Fermer menu export si clic hors menu
+  useEffect(() => {
+    if (!showExportMenu) return;
+
+    const onDown = (e: MouseEvent) => {
+      const el = exportMenuRef.current;
+      if (!el) return;
+      if (!el.contains(e.target as Node)) setShowExportMenu(false);
+    };
+    window.addEventListener('mousedown', onDown, { capture: true });
+    return () => window.removeEventListener('mousedown', onDown, { capture: true } as any);
+  }, [showExportMenu]);
+
+  // Persist filtre
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (kpiFilter) localStorage.setItem('dashboard-kpi-filter', kpiFilter);
+    else localStorage.removeItem('dashboard-kpi-filter');
+  }, [kpiFilter]);
+
+  // Note: Les handlers de navigation ne sont plus nécessaires car DashboardSidebar et DashboardSubNavigation
+  // utilisent directement le store via useDashboardCommandCenterStore
+
+  const handleKPIClick = useCallback(
+    (kpi: KPIData) => {
+      const mapping = getKPIMappingByLabel(kpi.label);
+      if (mapping) openModal('kpi-drilldown', { kpi, kpiId: mapping.metadata.id });
+      else openModal('kpi-drilldown', { kpi });
+    },
+    [openModal]
+  );
+
+  // API KPIs
   const {
     kpis: apiKpis,
-    isLoading: kpisLoading,
-    error: kpisError,
     lastUpdate: apiLastUpdate,
     refetch: refetchKPIsFromAPI,
   } = useDashboardKPIs('year');
 
-  const kpis = useMemo(() => {
-    // fallback si API vide
-    if (!apiKpis || apiKpis.length === 0) {
-      return [
-        { id: 'demandes', label: 'Demandes', value: 247, delta: '+12', tone: 'ok', trend: 'up' },
-        { id: 'validations', label: 'Validations', value: '89%', delta: '+3%', tone: 'ok', trend: 'up' },
-        { id: 'blocages', label: 'Blocages', value: 5, delta: '-2', tone: 'warn', trend: 'down' },
-        { id: 'risques', label: 'Risques critiques', value: 3, delta: '+1', tone: 'crit', trend: 'up' },
-        { id: 'budget', label: 'Budget consommé', value: '67%', delta: '—', tone: 'info', trend: 'neutral' },
-        { id: 'decisions', label: 'Décisions en attente', value: 8, delta: '—', tone: 'warn', trend: 'neutral' },
-        { id: 'sla', label: 'Conformité SLA', value: '94%', delta: '+2%', tone: 'ok', trend: 'up' },
-      ] as const;
+  const allKpis = useMemo<KPIData[]>(() => {
+    if (apiKpis && apiKpis.length > 0) {
+      return apiKpis.map((kpi) => {
+        const mapping = getKPIMappingByLabel(kpi.label);
+        return {
+          label: kpi.label,
+          value: kpi.value,
+          delta: kpi.delta,
+          tone: kpi.tone,
+          trend: kpi.trend,
+          icon: mapping?.display.icon || kpi.icon || Activity,
+        };
+      });
     }
-    return apiKpis.map((k) => ({
-      id: k.id ?? k.label.toLowerCase().replace(/\s+/g, '-'),
-      label: k.label,
-      value: k.value,
-      delta: k.delta,
-      tone: k.tone,
-      trend: k.trend,
-    }));
+    // fallback
+    return [
+      { label: 'Demandes', value: 247, delta: '+12', tone: 'ok', icon: FileText, trend: 'up' },
+      { label: 'Validations', value: '89%', delta: '+3%', tone: 'ok', icon: CheckCircle2, trend: 'up' },
+      { label: 'Blocages', value: 5, delta: '-2', tone: 'warn', icon: AlertTriangle, trend: 'down' },
+      { label: 'Risques critiques', value: 3, delta: '+1', tone: 'crit', icon: AlertCircle, trend: 'up' },
+      { label: 'Budget consommé', value: '67%', delta: '—', tone: 'info', icon: DollarSign, trend: 'neutral' },
+      { label: 'Décisions en attente', value: 8, delta: '—', tone: 'warn', icon: Clock, trend: 'neutral' },
+      { label: 'Temps réponse', value: '2.4j', delta: '-0.3j', tone: 'warn', icon: Activity, trend: 'down' },
+      { label: 'Conformité SLA', value: '94%', delta: '+2%', tone: 'ok', icon: TrendingUp, trend: 'up' },
+    ];
   }, [apiKpis]);
 
-  const lastUpdate = useMemo(() => (apiLastUpdate ? new Date(apiLastUpdate) : new Date()), [apiLastUpdate]);
+  useEffect(() => {
+    if (apiLastUpdate) setLastUpdate(new Date(apiLastUpdate));
+  }, [apiLastUpdate]);
 
-  // Stats sidebar (exemple)
+  const topKpis = useMemo(() => {
+    const q = kpiFilter.trim().toLowerCase();
+    if (!q) return allKpis;
+    return allKpis.filter((k) => k.label.toLowerCase().includes(q));
+  }, [allKpis, kpiFilter]);
+
+  // stats sidebar
   const stats = useMemo(
     () => ({
       overview: 3,
@@ -124,163 +220,430 @@ function DashboardContent() {
     []
   );
 
-  const handleCategoryChange = useCallback(
-    (category: string, subCat?: string) => {
-      navigate(category as DashboardMainCategory, subCat || null, null);
+  // refresh hardened
+  const isRefreshingRef = useRef(false);
+  const refreshKPIsInternal = useCallback(
+    async (retryAttempt = 0): Promise<void> => {
+      if (isRefreshingRef.current) return;
+      isRefreshingRef.current = true;
+      setIsRefreshing(true);
+
+      try {
+        await refetchKPIsFromAPI?.();
+        if (retryAttempt > 0) setRetryCount(0);
+        setLastUpdate(new Date());
+        setRefreshCount((p) => p + 1);
+      } catch (e) {
+        if (retryAttempt < maxRetries) {
+          const delay = Math.min(1000 * Math.pow(2, retryAttempt), 8000);
+          setRetryCount(retryAttempt + 1);
+          setTimeout(() => refreshKPIsInternal(retryAttempt + 1), delay);
+          return;
+        }
+        setRetryCount(0);
+      } finally {
+        if (retryAttempt === 0 || retryAttempt >= maxRetries) {
+          isRefreshingRef.current = false;
+          setIsRefreshing(false);
+        }
+      }
     },
-    [navigate]
+    [refetchKPIsFromAPI]
   );
 
-  const handleSubCategoryChange = useCallback(
-    (subCat: string) => {
-      navigate(mainCategory, subCat, null);
-    },
-    [navigate, mainCategory]
-  );
+  const refreshKPIs = useCallback(() => refreshKPIsInternal(0), [refreshKPIsInternal]);
 
-  const handleSubSubCategoryChange = useCallback(
-    (subSubCat: string, subCat?: string) => {
-      navigate(mainCategory, subCat || subCategory, subSubCat);
-    },
-    [navigate, mainCategory, subCategory]
-  );
+  // keyboard shortcuts
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement;
+      if (t instanceof HTMLInputElement || t instanceof HTMLTextAreaElement || t.isContentEditable) return;
 
-  const handleKPIClick = useCallback(
-    (kpi: { label: string }) => {
-      const mapping = getKPIMappingByLabel(kpi.label);
-      if (mapping) openModal('kpi-drilldown', { kpiId: mapping.metadata.id, label: kpi.label });
-      else openModal('kpi-drilldown', { label: kpi.label });
-    },
-    [openModal]
-  );
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        toggleCommandPalette();
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'r') {
+        e.preventDefault();
+        refreshKPIs();
+      }
+      if (e.key === 'Escape') {
+        setShowExportMenu(false);
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [toggleCommandPalette, refreshKPIs]);
 
-  const handleExport = useCallback(() => {
-    openModal('export');
-  }, [openModal]);
+  // page title (simple mais efficace)
+  const pageTitle = useMemo(() => {
+    // fallback lisible (tu peux ensuite brancher ton mapping config)
+    const parts = [mainCategory, subCategory, subSubCategory].filter(Boolean);
+    return parts.length ? parts.join(' • ') : "Vue d'ensemble";
+  }, [mainCategory, subCategory, subSubCategory]);
 
   return (
     <>
       <DashboardUrlSync />
 
-      <div className="h-full w-full flex min-h-0">
+      <div className="h-full w-full flex min-h-0 bg-slate-950">
+        {/* SIDEBAR */}
         <DashboardSidebar
-          activeCategory={mainCategory}
-          activeSubCategory={subCategory || undefined}
           collapsed={sidebarCollapsed}
           stats={stats}
-          onCategoryChange={handleCategoryChange}
           onToggleCollapse={toggleSidebar}
           onOpenCommandPalette={toggleCommandPalette}
         />
 
-        {/* CONTENT */}
-        <section
-          className={cn(
-            'flex-1 min-w-0 flex flex-col min-h-0 overflow-hidden',
-            // Fond sobre "produit"
-            'bg-slate-950'
-          )}
-          role="main"
-          aria-label="Dashboard maître d'ouvrage"
-        >
-          {/* Header "Produit" */}
-          <header className="relative z-20 border-b border-slate-800/70 bg-slate-950/80 backdrop-blur-xl">
-            {/* décor: ne capte jamais les clics */}
-            <div
-              className="pointer-events-none absolute inset-0 opacity-[0.25]"
-              style={{
-                backgroundImage:
-                  'radial-gradient(circle at 20% 0%, rgba(59,130,246,0.16) 0%, transparent 40%), radial-gradient(circle at 80% 20%, rgba(16,185,129,0.10) 0%, transparent 35%)',
-              }}
-            />
-            <div className="relative px-4 sm:px-6 py-4 flex items-center justify-between gap-3">
-              <div className="min-w-0">
+        {/* MAIN */}
+        <DashboardShell
+          header={
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0 flex-1">
                 <DashboardBreadcrumbs />
-                <h1 className="mt-1 text-lg sm:text-xl font-semibold tracking-tight text-slate-100 truncate" style={{ fontSize: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
-                  Tableau de bord — Maître d'ouvrage
-                </h1>
-                <p className="text-xs text-slate-400 mt-1" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>
-                  Pilotage, risques, décisions et exécution — vue consolidée.
-                </p>
+                <div className="mt-2 flex items-center gap-3">
+                  <div className="text-[11px] text-slate-400">Maître d'ouvrage</div>
+                  <h1 className="text-base sm:text-lg font-semibold truncate">{pageTitle}</h1>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  type="button"
+                  className={cn(
+                    'inline-flex items-center gap-2 rounded-lg border border-slate-800/70',
+                    'bg-slate-900/40 px-3 py-2 text-xs text-slate-200',
+                    'hover:bg-slate-900/70 transition-colors duration-200',
+                    'focus:outline-none focus:ring-2 focus:ring-blue-500/40'
+                  )}
+                  onClick={() => openModal('stats')}
+                >
+                  <BarChart3 className="h-4 w-4 text-slate-300" />
+                  <span className="hidden sm:inline">Pilotage</span>
+                </button>
+
+                <button
+                  type="button"
+                  className={cn(
+                    'inline-flex items-center gap-2 rounded-lg border border-slate-800/70',
+                    'bg-slate-900/40 px-3 py-2 text-xs text-slate-200',
+                    'hover:bg-slate-900/70 transition-colors duration-200',
+                    'focus:outline-none focus:ring-2 focus:ring-blue-500/40'
+                  )}
+                  onClick={() => openModal('settings')}
+                >
+                  <Settings className="h-4 w-4 text-slate-300" />
+                  <span className="hidden sm:inline">Paramètres</span>
+                </button>
+              </div>
+            </div>
+          }
+          subnav={<DashboardSubNavigation stats={stats} />}
+        >
+
+          {/* KPI BAR (plus sobre, plus "produit") */}
+          <div
+            className={cn(
+              'border-b border-slate-800/60',
+              'bg-slate-950/40 backdrop-blur',
+              'px-4 sm:px-6 py-4'
+            )}
+            role="region"
+            aria-label="Indicateurs clés"
+          >
+            <div className="flex items-center justify-between gap-3 mb-3">
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+                <div className="text-[11px] uppercase tracking-wide text-slate-400 font-medium">
+                  Indicateurs clés
+                </div>
+                <div className="text-[11px] text-slate-500">
+                  ({topKpis.length}/{allKpis.length})
+                </div>
               </div>
 
               <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  className={cn(
-                    'inline-flex items-center gap-2 rounded-xl px-3 py-2',
-                    'border border-slate-800/70 bg-slate-900/40',
-                    'text-slate-200 font-medium',
-                    'hover:bg-slate-900/60 hover:border-slate-700',
-                    'transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40',
-                    'min-h-[32px]'
+                {/* Search KPI */}
+                <div className="relative">
+                  <input
+                    value={kpiFilter}
+                    onChange={(e) => setKpiFilter(e.target.value)}
+                    placeholder="Rechercher…"
+                    className={cn(
+                      'w-40 sm:w-56 px-3 py-2 text-xs rounded-lg',
+                      'bg-slate-900/40 border border-slate-800/70',
+                      'text-slate-200 placeholder:text-slate-500',
+                      'focus:outline-none focus:ring-2 focus:ring-blue-500/40'
+                    )}
+                  />
+                  {kpiFilter ? (
+                    <button
+                      type="button"
+                      onClick={() => setKpiFilter('')}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-200"
+                      aria-label="Effacer"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  ) : (
+                    <Search className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-600" />
                   )}
-                  style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}
-                  onClick={toggleCommandPalette}
-                >
-                  <Command className="h-4 w-4 text-slate-300" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />
-                  Commandes
-                  <span className="ml-1 rounded-md bg-slate-800/70 px-1.5 py-0.5 text-slate-300" style={{ fontSize: 'clamp(0.5625rem, 0.7vw, 0.625rem)' }}>
-                    Ctrl K
-                  </span>
-                </button>
+                </div>
 
-                <button
-                  type="button"
-                  className={cn(
-                    'inline-flex items-center justify-center rounded-xl p-2',
-                    'border border-slate-800/70 bg-slate-900/40',
-                    'text-slate-200',
-                    'hover:bg-slate-900/60 hover:border-slate-700',
-                    'transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40',
-                    'min-h-[32px] min-w-[32px]'
+                {/* Refresh */}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      onClick={refreshKPIs}
+                      disabled={isRefreshing}
+                      className={cn(
+                        'p-2 rounded-lg border border-slate-800/70 bg-slate-900/40',
+                        'hover:bg-slate-900/70 transition-colors',
+                        'disabled:opacity-50 disabled:cursor-not-allowed',
+                        'focus:outline-none focus:ring-2 focus:ring-blue-500/40'
+                      )}
+                      aria-label="Actualiser"
+                    >
+                      <RefreshCw className={cn('h-4 w-4', isRefreshing ? 'animate-spin text-blue-400' : 'text-slate-300')} />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <div className="space-y-1">
+                      <div>Actualiser (Ctrl+R)</div>
+                      {refreshCount > 0 && <div className="text-xs text-slate-400">{refreshCount} actualisation(s)</div>}
+                      {retryCount > 0 && <div className="text-xs text-amber-300">Tentative {retryCount}/{maxRetries}</div>}
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+
+                {/* Export */}
+                <div className="relative" ref={exportMenuRef}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        type="button"
+                        onClick={() => setShowExportMenu((v) => !v)}
+                        className={cn(
+                          'p-2 rounded-lg border border-slate-800/70 bg-slate-900/40',
+                          'hover:bg-slate-900/70 transition-colors',
+                          'focus:outline-none focus:ring-2 focus:ring-blue-500/40',
+                          showExportMenu && 'ring-2 ring-blue-500/20'
+                        )}
+                        aria-label="Exporter"
+                        aria-expanded={showExportMenu}
+                      >
+                        <Download className="h-4 w-4 text-slate-300" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>Exporter</TooltipContent>
+                  </Tooltip>
+
+                  {showExportMenu && (
+                    <div className="absolute right-0 top-full mt-2 w-56 z-50 rounded-xl border border-slate-800/70 bg-slate-950/95 shadow-2xl backdrop-blur-xl overflow-hidden">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          openModal('export');
+                          setShowExportMenu(false);
+                        }}
+                        className="w-full px-3 py-2.5 text-left text-xs text-slate-200 hover:bg-slate-900/60 flex items-center gap-2"
+                      >
+                        <FileText className="h-4 w-4" />
+                        Export CSV
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          openModal('export');
+                          setShowExportMenu(false);
+                        }}
+                        className="w-full px-3 py-2.5 text-left text-xs text-slate-200 hover:bg-slate-900/60 flex items-center gap-2"
+                      >
+                        <BarChart3 className="h-4 w-4" />
+                        Export JSON
+                      </button>
+                      <div className="h-px bg-slate-800/70" />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          openModal('stats');
+                          setShowExportMenu(false);
+                        }}
+                        className="w-full px-3 py-2.5 text-left text-xs text-slate-200 hover:bg-slate-900/60 flex items-center gap-2"
+                      >
+                        <BarChart3 className="h-4 w-4" />
+                        Statistiques
+                      </button>
+                    </div>
                   )}
-                  onClick={() => openModal('settings')}
-                  aria-label="Paramètres du dashboard"
-                >
-                  <Settings2 className="h-4 w-4" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />
-                </button>
+                </div>
+
+                <div className="text-[11px] text-slate-500 flex items-center gap-2">
+                  <span>Mise à jour : {formatTimeAgo(lastUpdate)}</span>
+                  {isRefreshing && (
+                    <span className="inline-flex items-center gap-1 text-blue-400">
+                      <Zap className="h-3 w-3" />
+                      sync…
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
 
-            <div className="px-4 sm:px-6 pb-4">
-              <DashboardSubNavigation
-                mainCategory={mainCategory}
-                subCategory={subCategory || undefined}
-                subSubCategory={subSubCategory || undefined}
-                onSubCategoryChange={handleSubCategoryChange}
-                onSubSubCategoryChange={handleSubSubCategoryChange}
-                stats={stats}
+            {/* KPI strip : horizontal scroll (très "produit") */}
+            {topKpis.length === 0 ? (
+              <div className="py-10 text-center">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-slate-900/50 border border-slate-800/70 mb-3">
+                  <Info className="h-5 w-5 text-slate-500" />
+                </div>
+                <div className="text-sm text-slate-300">Aucun indicateur trouvé</div>
+                <div className="text-xs text-slate-500 mt-1">Affiner la recherche ou effacer le filtre.</div>
+              </div>
+            ) : (
+              <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
+                {topKpis.map((kpi) => (
+                  <KPICardPro key={kpi.label} kpi={kpi} onClick={() => handleKPIClick(kpi)} />
+                ))}
+              </div>
+            )}
+
+            {/* alert system (si tu veux le garder) */}
+            <div className="mt-3 hidden md:block">
+              <KPIAlertsSystem
+                kpis={allKpis.map((k) => ({
+                  label: k.label,
+                  value: k.value,
+                  delta: k.delta,
+                  tone: k.tone,
+                  trend: k.trend,
+                  icon: k.icon,
+                }))}
+                onAlert={(alert) => {
+                  // tu peux brancher ton système de notif ici
+                  log.info('Alerte KPI', {
+                    kpiId: alert.kpiId,
+                    kpiLabel: alert.kpiLabel,
+                    message: alert.message,
+                    severity: alert.severity,
+                    timestamp: alert.timestamp.toISOString(),
+                  });
+                }}
               />
             </div>
-          </header>
-
-          {/* KPI BAR (propre, cliquable, moderne) */}
-          <div className="relative z-10 border-b border-slate-800/60 bg-slate-950/60">
-            <DashboardKPIBar
-              kpis={kpis}
-              onKPIClick={(kpi) => handleKPIClick({ label: kpi.label })}
-              onRefresh={async () => {
-                await refetchKPIsFromAPI?.();
-              }}
-              onExport={handleExport}
-              compact={true}
-              lastUpdate={lastUpdate}
-            />
           </div>
 
-          {/* Main */}
-          <div className="flex-1 min-h-0 overflow-y-auto">
-            <div className="p-4 sm:p-6 max-w-[1920px] mx-auto w-full dashboard-container">
-              <ErrorBoundary>
-                <Suspense fallback={<ContentLoadingSkeleton />}>
-                  <DashboardViewRouter />
-                </Suspense>
-              </ErrorBoundary>
+          {/* CONTENT */}
+          <ErrorBoundary>
+            <div key={`${mainCategory}-${subCategory}-${subSubCategory}`} className="animate-fadeIn">
+              <Suspense fallback={<ContentLoadingSkeleton />}>
+                <DashboardViewRouter />
+              </Suspense>
             </div>
-          </div>
-        </section>
+          </ErrorBoundary>
+        </DashboardShell>
       </div>
+
+      <DashboardModals />
     </>
   );
+}
+
+/* =========================
+   KPI Card PRO (horizontal tile)
+========================= */
+
+const KPICardPro = memo(function KPICardPro({
+  kpi,
+  onClick,
+}: {
+  kpi: KPIData;
+  onClick?: () => void;
+}) {
+  const Icon = kpi.icon;
+
+  const toneClasses =
+    kpi.tone === 'ok'
+      ? 'border-emerald-500/20 bg-emerald-500/5 hover:border-emerald-500/35'
+      : kpi.tone === 'warn'
+      ? 'border-amber-500/20 bg-amber-500/5 hover:border-amber-500/35'
+      : kpi.tone === 'crit'
+      ? 'border-red-500/20 bg-red-500/5 hover:border-red-500/35'
+      : 'border-slate-500/20 bg-slate-500/5 hover:border-slate-500/35';
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          onClick={onClick}
+          className={cn(
+            'min-w-[220px] sm:min-w-[260px] rounded-2xl border',
+            'px-4 py-3 text-left',
+            'transition-all duration-200',
+            'hover:translate-y-[-1px] hover:shadow-xl hover:shadow-black/25',
+            'focus:outline-none focus:ring-2 focus:ring-blue-500/40',
+            toneClasses
+          )}
+          aria-label={`${kpi.label}: ${kpi.value} (${kpi.delta})`}
+        >
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <div className="text-[11px] text-slate-400 uppercase tracking-wide truncate">{kpi.label}</div>
+              <div className="text-2xl font-semibold text-slate-100 truncate">{String(kpi.value)}</div>
+              <div className="text-xs text-slate-400 mt-1">
+                <span className="inline-flex items-center gap-1">
+                  <Activity className="h-3 w-3 text-slate-500" />
+                  {kpi.delta}
+                </span>
+              </div>
+            </div>
+            <div className="h-10 w-10 rounded-xl bg-slate-900/40 border border-slate-800/70 flex items-center justify-center">
+              <Icon className="h-5 w-5 text-slate-200" />
+            </div>
+          </div>
+        </button>
+      </TooltipTrigger>
+      <TooltipContent>
+        <div className="text-xs">
+          <div className="font-semibold">{kpi.label}</div>
+          <div className="text-slate-300">Valeur : {String(kpi.value)}</div>
+          <div className="text-slate-400">Variation : {kpi.delta}</div>
+          <div className="text-blue-300 mt-2">Cliquer pour détails</div>
+        </div>
+      </TooltipContent>
+    </Tooltip>
+  );
+});
+
+KPICardPro.displayName = 'KPICardPro';
+
+/* =========================
+   Skeleton (simple)
+========================= */
+
+function ContentLoadingSkeleton() {
+  return (
+    <div className="space-y-4 animate-pulse">
+      <div className="h-8 w-64 rounded-xl bg-slate-900/50 border border-slate-800/60" />
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="h-40 rounded-2xl bg-slate-900/40 border border-slate-800/60" />
+        ))}
+      </div>
+      <div className="h-80 rounded-2xl bg-slate-900/40 border border-slate-800/60" />
+    </div>
+  );
+}
+
+function formatTimeAgo(date: Date): string {
+  const now = new Date();
+  const diff = Math.floor((now.getTime() - date.getTime()) / 1000);
+  if (diff < 60) return "à l'instant";
+  const m = Math.floor(diff / 60);
+  if (m < 60) return `il y a ${m} min`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `il y a ${h}h`;
+  const d = Math.floor(h / 24);
+  return `il y a ${d}j`;
 }

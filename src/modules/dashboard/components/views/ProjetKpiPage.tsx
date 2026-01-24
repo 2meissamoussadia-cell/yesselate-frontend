@@ -282,11 +282,11 @@ export const ProjetKpiPage = memo(function ProjetKpiPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-3 sm:mb-4 min-w-0">
         {/* Avancement */}
         <div>
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-slate-300">Avancement</span>
-            <span className="text-sm font-semibold text-white">{projet.avancement}%</span>
+          <div className="flex items-center justify-between" style={{ marginBottom: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+            <span className="text-slate-300" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>Avancement</span>
+            <span className="font-semibold text-white" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{projet.avancement}%</span>
           </div>
-          <div className="h-2 bg-slate-700/50 rounded-full overflow-hidden">
+          <div className="bg-slate-700/50 rounded-full overflow-hidden" style={{ height: 'clamp(0.25rem, 0.375vw, 0.5rem)' }}>
             <div
               className={cn(
                 'h-full transition-all duration-500',
@@ -301,11 +301,11 @@ export const ProjetKpiPage = memo(function ProjetKpiPage() {
 
         {/* Budget */}
         <div>
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-slate-300">Budget</span>
-            <span className="text-sm font-semibold text-white">{projet.budget.pourcentage}%</span>
+          <div className="flex items-center justify-between" style={{ marginBottom: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+            <span className="text-slate-300" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>Budget</span>
+            <span className="font-semibold text-white" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{projet.budget.pourcentage}%</span>
           </div>
-          <div className="h-2 bg-slate-700/50 rounded-full overflow-hidden">
+          <div className="bg-slate-700/50 rounded-full overflow-hidden" style={{ height: 'clamp(0.25rem, 0.375vw, 0.5rem)' }}>
             <div
               className={cn(
                 'h-full transition-all duration-500',
@@ -316,30 +316,31 @@ export const ProjetKpiPage = memo(function ProjetKpiPage() {
               style={{ width: `${Math.min(projet.budget.pourcentage, 100)}%` }}
             />
           </div>
-          <div className="text-xs text-slate-400 mt-1">
+          <div className="text-slate-400" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)', marginTop: 'clamp(0.25rem, 0.5vw, 0.5rem)' }}>
             {formatCurrency(projet.budget.consomme)} / {formatCurrency(projet.budget.alloue)}
           </div>
         </div>
 
         {/* Litiges */}
         <div>
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-slate-300">Litiges</span>
-            <div className="flex items-center gap-1">
-              {projet.litiges > 0 && <Gavel className="h-3 w-3 text-amber-400" />}
+          <div className="flex items-center justify-between" style={{ marginBottom: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+            <span className="text-slate-300" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>Litiges</span>
+            <div className="flex items-center" style={{ gap: 'clamp(0.25rem, 0.5vw, 0.5rem)' }}>
+              {projet.litiges > 0 && <Gavel className="text-amber-400" style={{ width: 'clamp(0.75rem, 0.875vw, 0.875rem)', height: 'clamp(0.75rem, 0.875vw, 0.875rem)', minWidth: '0.75rem', minHeight: '0.75rem' }} />}
               <span className={cn(
-                'text-sm font-semibold',
+                'font-semibold',
                 projet.litiges === 0 ? 'text-emerald-400' : 'text-amber-400'
-              )}>
+              )}
+              style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>
                 {projet.litiges}
               </span>
             </div>
           </div>
           {projet.litiges > 0 && (
-            <p className="text-xs text-amber-400">Action requise</p>
+            <p className="text-amber-400" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>Action requise</p>
           )}
           {projet.litiges === 0 && (
-            <p className="text-xs text-slate-500">Aucun litige</p>
+            <p className="text-slate-500" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>Aucun litige</p>
           )}
         </div>
       </div>
@@ -423,14 +424,15 @@ export const ProjetKpiPage = memo(function ProjetKpiPage() {
           </>
         }
       >
-        <DashboardPanel className="p-4 sm:p-6">
-          {/* KPIs principaux */}
-          <section className="min-w-0">
-            <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center gap-2 break-words">
-              <Activity className="h-5 w-5 text-blue-400 flex-shrink-0" />
-              <span className="min-w-0">Indicateurs clés</span>
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 min-w-0">
+        <DashboardPanel>
+          <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
+            {/* KPIs principaux */}
+            <section className="min-w-0">
+              <h2 className="font-semibold text-white flex items-center break-words" style={{ fontSize: 'clamp(0.875rem, 1.5vw, 1.125rem)', marginBottom: 'clamp(0.75rem, 1vw, 1rem)', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+                <Activity className="text-blue-400 flex-shrink-0" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
+                <span className="min-w-0">Indicateurs clés</span>
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 min-w-0" style={{ gap: 'clamp(0.75rem, 1vw, 1rem)' }}>
               {projetKPIs.map((kpi) => (
                 <KPICard
                   key={kpi.id}
@@ -449,24 +451,26 @@ export const ProjetKpiPage = memo(function ProjetKpiPage() {
                   size="md"
                 />
               ))}
-            </div>
-          </section>
+              </div>
+            </section>
+          </div>
         </DashboardPanel>
 
       {/* Liste des projets */}
-      <DashboardPanel className="p-4 sm:p-6">
-      <section className="min-w-0">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-            <FileText className="h-5 w-5 text-blue-400" />
-            Détails par projet
-          </h2>
-          {searchQuery && (
-            <span className="text-sm text-slate-300">
-              {filteredProjets.length} projet{filteredProjets.length > 1 ? 's' : ''} trouvé{filteredProjets.length > 1 ? 's' : ''}
-            </span>
-          )}
-        </div>
+      <DashboardPanel>
+        <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
+          <section className="min-w-0">
+            <div className="flex items-center justify-between" style={{ marginBottom: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
+              <h2 className="font-semibold text-white flex items-center" style={{ fontSize: 'clamp(1rem, 1.5vw, 1.125rem)', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+                <FileText className="text-blue-400" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
+                Détails par projet
+              </h2>
+              {searchQuery && (
+                <span className="text-slate-300" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>
+                  {filteredProjets.length} projet{filteredProjets.length > 1 ? 's' : ''} trouvé{filteredProjets.length > 1 ? 's' : ''}
+                </span>
+              )}
+            </div>
         {filteredProjets.length === 0 ? (
           <EmptyState
             variant="search"
@@ -476,7 +480,8 @@ export const ProjetKpiPage = memo(function ProjetKpiPage() {
               searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+                  className="text-blue-400 hover:text-blue-300 transition-colors"
+                  style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}
                 >
                   Effacer la recherche
                 </button>
@@ -492,11 +497,12 @@ export const ProjetKpiPage = memo(function ProjetKpiPage() {
                 <div
                   key={projet.id}
                   className={cn(
-                    'relative rounded-2xl p-5 border border-slate-800/60 bg-slate-900/30 mb-4',
-                    'transition-colors hover:bg-slate-900/45 hover:border-slate-700/60',
+                    'relative rounded-2xl border border-slate-800/60 bg-slate-900/30',
+                    'transition-colors duration-200 hover:bg-slate-900/45 hover:border-slate-700/60',
                     projet.statut === 'retard' && 'ring-1 ring-amber-500/15',
                     projet.statut === 'critique' && 'ring-1 ring-rose-500/20'
                   )}
+                  style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)', marginBottom: 'clamp(1rem, 1.5vw, 1.25rem)' }}
                 >
                   {renderProjetCard(projet)}
                 </div>
@@ -506,16 +512,17 @@ export const ProjetKpiPage = memo(function ProjetKpiPage() {
               containerHeight="600px"
             />
           ) : (
-            <div className="space-y-4">
+            <div style={{ gap: 'clamp(1rem, 1.5vw, 1.25rem)' }} className="space-y-4">
               {filteredProjets.map((projet) => (
                 <div
                   key={projet.id}
                   className={cn(
-                    'relative rounded-2xl p-5 border border-slate-800/60 bg-slate-900/30',
-                    'transition-colors hover:bg-slate-900/45 hover:border-slate-700/60',
+                    'relative rounded-2xl border border-slate-800/60 bg-slate-900/30',
+                    'transition-colors duration-200 hover:bg-slate-900/45 hover:border-slate-700/60',
                     projet.statut === 'retard' && 'ring-1 ring-amber-500/15',
                     projet.statut === 'critique' && 'ring-1 ring-rose-500/20'
                   )}
+                  style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}
                 >
                   {renderProjetCard(projet)}
                 </div>
@@ -523,61 +530,66 @@ export const ProjetKpiPage = memo(function ProjetKpiPage() {
             </div>
           )
         )}
-      </section>
+          </section>
+        </div>
       </DashboardPanel>
 
       {/* Performance par région */}
-      <DashboardPanel className="p-4 sm:p-6">
-      <section className="min-w-0">
-        <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <MapPin className="h-5 w-5 text-purple-400" />
-          Performance par région
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 min-w-0">
-          {performanceRegion.map((perf) => (
-            <div
-              key={perf.region}
-              className="bg-slate-950/30 border border-slate-800/60 rounded-xl p-5"
-            >
-              <div className="flex items-center gap-2 mb-4">
-                <MapPin className="h-4 w-4 text-purple-400" />
-                <h3 className="text-base font-semibold text-white">{perf.region}</h3>
-              </div>
-              <div className="space-y-3">
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-slate-300">Projets</span>
-                    <span className="text-sm font-semibold text-white">{perf.projets}</span>
+      <DashboardPanel>
+        <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
+          <section className="min-w-0">
+            <h2 className="font-semibold text-white flex items-center" style={{ fontSize: 'clamp(1rem, 1.5vw, 1.125rem)', marginBottom: 'clamp(1rem, 1.5vw, 1.25rem)', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+              <MapPin className="text-purple-400" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
+              Performance par région
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 min-w-0" style={{ gap: 'clamp(0.75rem, 1vw, 1rem)' }}>
+              {performanceRegion.map((perf) => (
+                <div
+                  key={perf.region}
+                  className="bg-slate-950/30 border border-slate-800/60 rounded-xl"
+                  style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}
+                >
+                  <div className="flex items-center" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
+                    <MapPin className="text-purple-400" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />
+                    <h3 className="font-semibold text-white" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>{perf.region}</h3>
+                  </div>
+                  <div style={{ gap: 'clamp(0.75rem, 1vw, 1rem)' }} className="space-y-3">
+                    <div>
+                      <div className="flex items-center justify-between" style={{ marginBottom: 'clamp(0.25rem, 0.5vw, 0.5rem)' }}>
+                        <span className="text-slate-300" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>Projets</span>
+                        <span className="font-semibold text-white" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{perf.projets}</span>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between" style={{ marginBottom: 'clamp(0.25rem, 0.5vw, 0.5rem)' }}>
+                        <span className="text-slate-400" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>Avancement moyen</span>
+                        <span className="font-semibold text-white" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{perf.avancement}%</span>
+                      </div>
+                      <div className="bg-slate-700/50 rounded-full overflow-hidden" style={{ height: 'clamp(0.25rem, 0.375vw, 0.5rem)' }}>
+                        <div
+                          className="h-full bg-purple-500 transition-all duration-500"
+                          style={{ width: `${perf.avancement}%` }}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between" style={{ marginBottom: 'clamp(0.25rem, 0.5vw, 0.5rem)' }}>
+                        <span className="text-slate-300" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>Projets en retard</span>
+                        <span className={cn(
+                          'font-semibold',
+                          perf.retard === 0 ? 'text-emerald-400' : 'text-amber-400'
+                        )}
+                        style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>
+                          {perf.retard}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-slate-400">Avancement moyen</span>
-                    <span className="text-sm font-semibold text-white">{perf.avancement}%</span>
-                  </div>
-                  <div className="h-2 bg-slate-700/50 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-purple-500 transition-all duration-500"
-                      style={{ width: `${perf.avancement}%` }}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-slate-300">Projets en retard</span>
-                    <span className={cn(
-                      'text-sm font-semibold',
-                      perf.retard === 0 ? 'text-emerald-400' : 'text-amber-400'
-                    )}>
-                      {perf.retard}
-                    </span>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
-          ))}
+          </section>
         </div>
-      </section>
       </DashboardPanel>
       </DashboardPageShell>
     </TooltipProvider>

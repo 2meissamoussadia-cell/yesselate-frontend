@@ -234,49 +234,63 @@ export function BudgetKpiPage() {
       rightSlot={
         <>
           <div className="relative">
-            <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <Search 
+              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" 
+              style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }}
+            />
             <Input
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="Rechercher un projet…"
-              className="pl-9 w-[260px] bg-slate-950/40 border-slate-800/70"
+              className="bg-slate-950/40 border-slate-800/70"
+              style={{ paddingLeft: 'clamp(2rem, 2.5vw, 2.25rem)', width: 'clamp(200px, 16vw, 260px)' }}
             />
           </div>
 
           <Button
             variant="outline"
             className="border-slate-800/70 bg-slate-950/30 hover:bg-slate-900/40"
+            style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)', padding: 'clamp(0.5rem, 1vw, 0.625rem) clamp(0.75rem, 1.5vw, 1rem)' }}
           >
-            <Download className="h-4 w-4 mr-2" />
+            <Download 
+              className="mr-2" 
+              style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }}
+            />
             Exporter
           </Button>
         </>
       }
     >
       {/* KPI GRID */}
-      <DashboardPanel className="p-4 sm:p-5">
-        <SectionTitle
-          title="Indicateurs clés"
-          subtitle="Synthèse instantanée — clique un KPI pour ouvrir le détail"
-          size="md"
-        />
+      <DashboardPanel>
+        <div style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
+          <SectionTitle
+            title="Indicateurs clés"
+            subtitle="Synthèse instantanée — clique un KPI pour ouvrir le détail"
+            size="md"
+          />
 
-        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
-          {kpis.map((k) => (
-            <KPICard key={k.id} kpi={k} size="md" />
-          ))}
+          <div 
+            className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3" 
+            style={{ marginTop: 'clamp(1rem, 1.5vw, 1.25rem)', gap: 'clamp(0.75rem, 1vw, 1rem)' }}
+          >
+            {kpis.map((k) => (
+              <KPICard key={k.id} kpi={k} size="md" />
+            ))}
+          </div>
         </div>
       </DashboardPanel>
 
       {/* Budget par projet */}
-      <DashboardPanel className="p-4 sm:p-6">
-        <SectionTitle
-          title="Budget par projet"
-          subtitle="Comparatif alloué / consommé + dépassements"
-          size="md"
-        />
+      <DashboardPanel>
+        <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
+          <SectionTitle
+            title="Budget par projet"
+            subtitle="Comparatif alloué / consommé + dépassements"
+            size="md"
+          />
 
-        <div className="mt-4 space-y-3">
+          <div style={{ marginTop: 'clamp(1rem, 1.5vw, 1.25rem)', gap: 'clamp(0.75rem, 1vw, 1rem)' }} className="space-y-3">
           {filteredProjects.map((p) => {
             const ratio = p.alloue > 0 ? (p.consomme / p.alloue) * 100 : 0;
             const over = ratio > 100;
@@ -286,16 +300,16 @@ export function BudgetKpiPage() {
                 key={p.id}
                 className={cn(
                   'rounded-xl border border-slate-800/60 bg-slate-950/30',
-                  'px-4 py-4 sm:px-5 sm:py-5',
                   'transition-colors hover:bg-slate-950/45'
                 )}
+                style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}
               >
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start justify-between" style={{ gap: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
                   <div className="min-w-0">
-                    <div className="text-base font-semibold text-slate-50 truncate">
+                    <div className="font-semibold text-slate-50 truncate" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>
                       {p.nom}
                     </div>
-                    <div className="mt-1 text-xs text-slate-400">
+                    <div className="text-slate-400" style={{ marginTop: 'clamp(0.25rem, 0.5vw, 0.5rem)', fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>
                       Alloué :{' '}
                       <span className="text-slate-200 tabular-nums">{formatMoneyFCFA(p.alloue)} FCFA</span>
                       {' · '}
@@ -312,7 +326,10 @@ export function BudgetKpiPage() {
                   </EnterpriseBadge>
                 </div>
 
-                <div className="mt-3 h-2.5 rounded-full bg-slate-800/60 overflow-hidden">
+                <div 
+                  className="rounded-full bg-slate-800/60 overflow-hidden"
+                  style={{ marginTop: 'clamp(0.75rem, 1vw, 1rem)', height: 'clamp(0.375rem, 0.5vw, 0.625rem)' }}
+                >
                   <div
                     className={cn(
                       'h-full rounded-full transition-all',
@@ -323,44 +340,46 @@ export function BudgetKpiPage() {
                 </div>
 
                 {over ? (
-                  <div className="mt-2 text-xs text-red-300/90">
+                  <div className="text-red-300/90" style={{ marginTop: 'clamp(0.5rem, 0.75vw, 0.75rem)', fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>
                     Dépassement : +{formatMoneyFCFA(p.consomme - p.alloue)} FCFA
                   </div>
                 ) : null}
               </div>
             );
           })}
+          </div>
         </div>
       </DashboardPanel>
 
       {/* Paiements en retard + Rentabilité */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <DashboardPanel className="p-4 sm:p-6">
-          <SectionTitle
-            title="Paiements en retard"
-            subtitle="Retards de paiement par projet (SLA)"
-            size="md"
-          />
+      <div className="grid grid-cols-1 xl:grid-cols-2" style={{ gap: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
+        <DashboardPanel>
+          <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
+            <SectionTitle
+              title="Paiements en retard"
+              subtitle="Retards de paiement par projet (SLA)"
+              size="md"
+            />
 
-          <div className="mt-4 space-y-3">
+            <div style={{ marginTop: 'clamp(1rem, 1.5vw, 1.25rem)', gap: 'clamp(0.75rem, 1vw, 1rem)' }} className="space-y-3">
             {filteredLate.map((p) => (
               <div
                 key={p.id}
                 className={cn(
                   'rounded-xl border border-slate-800/60 bg-slate-950/30',
-                  'px-4 py-4',
-                  'flex items-center justify-between gap-4',
+                  'flex items-center justify-between',
                   'transition-colors hover:bg-slate-950/45'
                 )}
+                style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)', gap: 'clamp(1rem, 1.5vw, 1.25rem)' }}
               >
                 <div className="min-w-0">
-                  <div className="font-semibold text-slate-50 truncate">{p.projet}</div>
-                  <div className="mt-1 text-xs text-slate-400">
+                  <div className="font-semibold text-slate-50 truncate" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>{p.projet}</div>
+                  <div className="text-slate-400" style={{ marginTop: 'clamp(0.25rem, 0.5vw, 0.5rem)', fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>
                     {p.retardJours} jour{p.retardJours > 1 ? 's' : ''} de retard
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 shrink-0">
+                <div className="flex items-center shrink-0" style={{ gap: 'clamp(0.75rem, 1vw, 1rem)' }}>
                   <Badge
                     className={cn(
                       p.priorite === 'critique' && 'bg-red-500/15 text-red-300 border border-red-500/30',
@@ -375,36 +394,38 @@ export function BudgetKpiPage() {
                         : 'Moyenne'}
                   </Badge>
 
-                  <div className="text-sm font-semibold text-slate-100 tabular-nums">
+                  <div className="font-semibold text-slate-100 tabular-nums" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>
                     {formatMoneyFCFA(p.montant)} FCFA
                   </div>
                 </div>
               </div>
             ))}
+            </div>
           </div>
         </DashboardPanel>
 
-        <DashboardPanel className="p-4 sm:p-6">
-          <SectionTitle
-            title="Rentabilité par projet"
-            subtitle="Investissement / retour attendu / retour réel"
-            size="md"
-          />
+        <DashboardPanel>
+          <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
+            <SectionTitle
+              title="Rentabilité par projet"
+              subtitle="Investissement / retour attendu / retour réel"
+              size="md"
+            />
 
-          <div className="mt-4 space-y-3">
+            <div style={{ marginTop: 'clamp(1rem, 1.5vw, 1.25rem)', gap: 'clamp(0.75rem, 1vw, 1rem)' }} className="space-y-3">
             {profitability.map((r) => (
               <div
                 key={r.id}
                 className={cn(
                   'rounded-xl border border-slate-800/60 bg-slate-950/30',
-                  'px-4 py-4 sm:px-5 sm:py-5',
                   'transition-colors hover:bg-slate-950/45'
                 )}
+                style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}
               >
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start justify-between" style={{ gap: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
                   <div className="min-w-0">
-                    <div className="font-semibold text-slate-50 truncate">{r.projet}</div>
-                    <div className="mt-1 text-xs text-slate-400">
+                    <div className="font-semibold text-slate-50 truncate" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>{r.projet}</div>
+                    <div className="text-slate-400" style={{ marginTop: 'clamp(0.25rem, 0.5vw, 0.5rem)', fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>
                       Invest.{' '}
                       <span className="text-slate-200 tabular-nums">{formatMoneyFCFA(r.investissement)} FCFA</span>
                       {' · '}
@@ -422,7 +443,10 @@ export function BudgetKpiPage() {
                 </div>
 
                 {/* Barre de progression retour réel vs attendu */}
-                <div className="mt-3 h-2.5 rounded-full bg-slate-800/60 overflow-hidden">
+                <div 
+                  className="rounded-full bg-slate-800/60 overflow-hidden"
+                  style={{ marginTop: 'clamp(0.75rem, 1vw, 1rem)', height: 'clamp(0.375rem, 0.5vw, 0.625rem)' }}
+                >
                   <div
                     className="h-full bg-emerald-500 rounded-full"
                     style={{
@@ -431,7 +455,7 @@ export function BudgetKpiPage() {
                   />
                 </div>
 
-                <div className="mt-2 text-xs text-slate-400">
+                <div className="text-slate-400" style={{ marginTop: 'clamp(0.5rem, 0.75vw, 0.75rem)', fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>
                   Réel / Attendu :{' '}
                   <span className="text-slate-200 tabular-nums">
                     {Math.round((r.retourReel / Math.max(1, r.retourAttendu)) * 100)}%
@@ -439,12 +463,13 @@ export function BudgetKpiPage() {
                 </div>
               </div>
             ))}
+            </div>
           </div>
         </DashboardPanel>
       </div>
 
       {/* Contexte / méta */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3" style={{ gap: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
         <DataCard
           title="Dernière mise à jour"
           value={lastUpdateLabel}

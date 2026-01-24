@@ -35,9 +35,9 @@ export function HistoriqueTab() {
     try {
       const { mockTimelineEvents } = await import('@/lib/data/timeline-documents-mock-data');
       
-      // Sort by timestamp descending (most recent first)
+      // Sort by createdAt descending (most recent first)
       const sorted = [...mockTimelineEvents].sort(
-        (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
       
       setEvents(sorted);
@@ -58,12 +58,12 @@ export function HistoriqueTab() {
 
     if (filter.dateFrom) {
       const fromDate = new Date(filter.dateFrom);
-      filtered = filtered.filter(e => new Date(e.timestamp) >= fromDate);
+      filtered = filtered.filter(e => new Date(e.createdAt) >= fromDate);
     }
 
     if (filter.dateTo) {
       const toDate = new Date(filter.dateTo);
-      filtered = filtered.filter(e => new Date(e.timestamp) <= toDate);
+      filtered = filtered.filter(e => new Date(e.createdAt) <= toDate);
     }
 
     if (filter.search) {
@@ -82,7 +82,7 @@ export function HistoriqueTab() {
     const groups: Record<string, TimelineEvent[]> = {};
     
     events.forEach(event => {
-      const date = new Date(event.timestamp).toLocaleDateString('fr-FR', {
+      const date = new Date(event.createdAt).toLocaleDateString('fr-FR', {
         day: 'numeric',
         month: 'long',
         year: 'numeric',
@@ -202,7 +202,7 @@ export function HistoriqueTab() {
                             <div className="flex items-start justify-between mb-2">
                               <div className="font-medium text-white">{event.title}</div>
                               <div className="text-xs text-slate-500">
-                                {new Date(event.timestamp).toLocaleTimeString('fr-FR', {
+                                {new Date(event.createdAt).toLocaleTimeString('fr-FR', {
                                   hour: '2-digit',
                                   minute: '2-digit',
                                 })}

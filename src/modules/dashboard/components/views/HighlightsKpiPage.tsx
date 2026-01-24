@@ -355,14 +355,15 @@ export const HighlightsKpiPage = memo(function HighlightsKpiPage() {
           <ExportButton onExportCSV={handleExportCSV} onExportJSON={handleExportJSON} label="Exporter" />
         }
       >
-        <DashboardPanel className="p-4 sm:p-6">
-          {/* Top KPIs */}
-          <section className="min-w-0">
-            <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center gap-2 break-words">
-              <Zap className="h-5 w-5 text-yellow-400 flex-shrink-0" />
-              <span className="min-w-0">Indicateurs clés</span>
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 min-w-0">
+        <DashboardPanel>
+          <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
+            {/* Top KPIs */}
+            <section className="min-w-0">
+              <h2 className="font-semibold text-white flex items-center break-words" style={{ fontSize: 'clamp(0.875rem, 1.5vw, 1.125rem)', marginBottom: 'clamp(0.75rem, 1vw, 1rem)', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+                <Zap className="text-yellow-400 flex-shrink-0" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
+                <span className="min-w-0">Indicateurs clés</span>
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 min-w-0" style={{ gap: 'clamp(0.75rem, 1vw, 1rem)' }}>
               {topKPIs.map((kpi) => {
                 const color =
                   kpi.tone === 'success'
@@ -391,18 +392,20 @@ export const HighlightsKpiPage = memo(function HighlightsKpiPage() {
                   />
                 );
               })}
-            </div>
-          </section>
+              </div>
+            </section>
+          </div>
         </DashboardPanel>
 
-        <DashboardPanel className="p-4 sm:p-6">
-          {/* Tendances clés */}
-          <section className="min-w-0">
-            <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center gap-2 break-words">
-              <Activity className="h-5 w-5 text-blue-400 flex-shrink-0" />
-              <span className="min-w-0">Tendances principales</span>
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 min-w-0">
+        <DashboardPanel>
+          <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
+            {/* Tendances clés */}
+            <section className="min-w-0">
+              <h2 className="font-semibold text-white flex items-center break-words" style={{ fontSize: 'clamp(0.875rem, 1.5vw, 1.125rem)', marginBottom: 'clamp(0.75rem, 1vw, 1rem)', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+                <Activity className="text-blue-400 flex-shrink-0" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
+                <span className="min-w-0">Tendances principales</span>
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 min-w-0" style={{ gap: 'clamp(0.75rem, 1vw, 1rem)' }}>
               {trends.map((trend) => (
                 <div
                   key={trend.id}
@@ -419,52 +422,61 @@ export const HighlightsKpiPage = memo(function HighlightsKpiPage() {
                   <p className="text-xs text-slate-400">{trend.description}</p>
                 </div>
               ))}
-            </div>
-          </section>
+              </div>
+            </section>
+          </div>
         </DashboardPanel>
 
-        <DashboardPanel className="p-4 sm:p-6">
-      {/* Risques et alertes */}
-      <section className="min-w-0">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0 mb-3 sm:mb-4 min-w-0">
-          <h2 className="text-base sm:text-lg font-semibold text-white flex items-center gap-2 break-words">
-            <AlertTriangle className="h-5 w-5 text-amber-400 flex-shrink-0" />
-            <span className="min-w-0">Risques et alertes critiques</span>
-          </h2>
-          {risks.filter(r => r.severity === 'high').length > 0 && (
-            <EnterpriseBadge variant="critique" size="sm" className="flex-shrink-0">
-              {risks.filter(r => r.severity === 'high').length} critique{risks.filter(r => r.severity === 'high').length > 1 ? 's' : ''}
-            </EnterpriseBadge>
-          )}
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 min-w-0">
+        <DashboardPanel>
+          <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
+            {/* Risques et alertes */}
+            <section className="min-w-0">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between min-w-0" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.75rem, 1vw, 1rem)' }}>
+                <h2 className="font-semibold text-white flex items-center break-words" style={{ fontSize: 'clamp(0.875rem, 1.5vw, 1.125rem)', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+                  <AlertTriangle className="text-amber-400 flex-shrink-0" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
+                  <span className="min-w-0">Risques et alertes critiques</span>
+                </h2>
+                {risks.filter(r => r.severity === 'high').length > 0 && (
+                  <EnterpriseBadge variant="critique" size="sm" className="flex-shrink-0">
+                    {risks.filter(r => r.severity === 'high').length} critique{risks.filter(r => r.severity === 'high').length > 1 ? 's' : ''}
+                  </EnterpriseBadge>
+                )}
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 min-w-0" style={{ gap: 'clamp(0.75rem, 1vw, 1rem)' }}>
           {risks.map((risk) => (
-            <div
+            <button
               key={risk.id}
+              type="button"
+              onClick={() => {
+                // TODO: Implémenter la navigation vers le détail du risque
+              }}
               className={cn(
-                'relative rounded-2xl p-3 sm:p-4 border border-slate-800/60 bg-slate-900/30 min-w-0 overflow-hidden',
-                'cursor-pointer transition-colors hover:bg-slate-900/45 hover:border-slate-700/60',
+                'relative rounded-2xl border border-slate-800/60 bg-slate-900/30 min-w-0 overflow-hidden',
+                'text-left transition-colors duration-200',
+                'hover:bg-slate-900/45 hover:border-slate-700/60',
+                'focus:outline-none focus:ring-2 focus:ring-blue-500/40',
                 risk.severity === 'high' && 'ring-1 ring-rose-500/20',
                 risk.severity === 'medium' && 'ring-1 ring-amber-500/15'
               )}
-              role="button"
-              tabIndex={0}
+              style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}
+              aria-label={`Risque: ${risk.label} - ${risk.count} occurrence(s)`}
             >
               <span
                 aria-hidden="true"
                 className={cn(
-                  'absolute inset-x-0 top-0 h-[2px]',
+                  'absolute inset-x-0 top-0',
                   risk.severity === 'high' && 'bg-rose-400/80',
                   risk.severity === 'medium' && 'bg-amber-400/80',
                   risk.severity === 'low' && 'bg-blue-400/80'
                 )}
+                style={{ height: 'clamp(0.125rem, 0.25vw, 0.125rem)' }}
               />
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-2 min-w-0">
-                <div className="flex items-center gap-2 min-w-0">
-                  {risk.severity === 'high' && <AlertCircle className="h-4 w-4 text-red-400 animate-pulse flex-shrink-0" />}
-                  {risk.severity === 'medium' && <AlertTriangle className="h-4 w-4 text-amber-400 flex-shrink-0" />}
-                  {risk.severity === 'low' && <Activity className="h-4 w-4 text-blue-400 flex-shrink-0" />}
-                  <p className="text-sm font-medium text-white break-words min-w-0">{risk.label}</p>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between min-w-0" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+                <div className="flex items-center min-w-0" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+                  {risk.severity === 'high' && <AlertCircle className="text-red-400 animate-pulse flex-shrink-0" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />}
+                  {risk.severity === 'medium' && <AlertTriangle className="text-amber-400 flex-shrink-0" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />}
+                  {risk.severity === 'low' && <Activity className="text-blue-400 flex-shrink-0" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />}
+                  <p className="font-medium text-white break-words min-w-0" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{risk.label}</p>
                 </div>
                 <EnterpriseBadge
                   variant={risk.severity === 'high' ? 'critique' : risk.severity === 'medium' ? 'haute' : 'moyenne'}
@@ -474,65 +486,70 @@ export const HighlightsKpiPage = memo(function HighlightsKpiPage() {
                   {risk.count}
                 </EnterpriseBadge>
               </div>
-              <p className="text-xs text-slate-400 break-words">
+              <p className="text-slate-400 break-words" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>
                 Évolution: {risk.trend === 'stable' ? 'Stable' : risk.trend}
               </p>
-            </div>
+            </button>
           ))}
-        </div>
-      </section>
+              </div>
+            </section>
+          </div>
         </DashboardPanel>
 
-        <DashboardPanel className="p-4 sm:p-6">
-      {/* Classements */}
-      <section className="min-w-0">
-        <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center gap-2 break-words">
-          <Award className="h-5 w-5 text-yellow-400 flex-shrink-0" />
-          <span className="min-w-0">Classements performance</span>
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 min-w-0">
-          {rankings.map((ranking) => (
-            <div
-              key={ranking.id}
-              className="bg-slate-800/40 border border-slate-700/40 rounded-xl p-4 sm:p-5 min-w-0 overflow-hidden"
-            >
-              <div className="flex items-center gap-2 mb-3 sm:mb-4 min-w-0">
-                {ranking.type === 'bureau' && <Building2 className="h-4 w-4 text-blue-400 flex-shrink-0" />}
-                {ranking.type === 'region' && <Globe className="h-4 w-4 text-purple-400 flex-shrink-0" />}
-                {ranking.type === 'projet' && <Target className="h-4 w-4 text-emerald-400 flex-shrink-0" />}
-                <h3 className="text-sm font-semibold text-white break-words min-w-0">{ranking.label}</h3>
-              </div>
-              <div className="space-y-2 sm:space-y-3 min-w-0">
-                {ranking.items.map((item, index) => (
+        <DashboardPanel>
+          <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
+            {/* Classements */}
+            <section className="min-w-0">
+              <h2 className="font-semibold text-white flex items-center break-words" style={{ fontSize: 'clamp(0.875rem, 1.5vw, 1.125rem)', marginBottom: 'clamp(0.75rem, 1vw, 1rem)', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+                <Award className="text-yellow-400 flex-shrink-0" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
+                <span className="min-w-0">Classements performance</span>
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 min-w-0" style={{ gap: 'clamp(0.75rem, 1vw, 1rem)' }}>
+                {rankings.map((ranking) => (
                   <div
-                    key={index}
-                    className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0 p-2 rounded-lg bg-slate-700/30 hover:bg-slate-700/50 transition-colors min-w-0 overflow-hidden"
+                    key={ranking.id}
+                    className="bg-slate-800/40 border border-slate-700/40 rounded-xl min-w-0 overflow-hidden"
+                    style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}
                   >
-                    <div className="flex items-center gap-2 min-w-0">
-                      <span className="text-xs font-bold text-slate-300 w-4 flex-shrink-0">
-                        #{index + 1}
-                      </span>
-                      <span className="text-sm text-white break-words min-w-0">{item.name}</span>
+                    <div className="flex items-center min-w-0" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.75rem, 1vw, 1rem)' }}>
+                      {ranking.type === 'bureau' && <Building2 className="text-blue-400 flex-shrink-0" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />}
+                      {ranking.type === 'region' && <Globe className="text-purple-400 flex-shrink-0" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />}
+                      {ranking.type === 'projet' && <Target className="text-emerald-400 flex-shrink-0" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />}
+                      <h3 className="font-semibold text-white break-words min-w-0" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{ranking.label}</h3>
                     </div>
-                    <div className="flex items-center gap-2 flex-shrink-0">
-                      <span className="text-sm font-bold text-white">{item.score}%</span>
-                      {item.trend === 'up' && (
-                        <TrendingUp className="h-3 w-3 text-emerald-400" />
-                      )}
-                      {item.trend === 'down' && (
-                        <TrendingDown className="h-3 w-3 text-red-400" />
-                      )}
-                      {item.trend === 'neutral' && (
-                        <div className="h-3 w-3 rounded-full bg-slate-500" />
-                      )}
+                    <div style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }} className="space-y-2 sm:space-y-3 min-w-0">
+                      {ranking.items.map((item, index) => (
+                        <div
+                          key={index}
+                          className="flex flex-col sm:flex-row items-start sm:items-center justify-between rounded-lg bg-slate-700/30 hover:bg-slate-700/50 transition-colors min-w-0 overflow-hidden"
+                          style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', padding: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}
+                        >
+                          <div className="flex items-center min-w-0" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+                            <span className="font-bold text-slate-300 flex-shrink-0" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)', width: 'clamp(1rem, 1.25vw, 1.25rem)' }}>
+                              #{index + 1}
+                            </span>
+                            <span className="text-white break-words min-w-0" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{item.name}</span>
+                          </div>
+                          <div className="flex items-center flex-shrink-0" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+                            <span className="font-bold text-white" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{item.score}%</span>
+                            {item.trend === 'up' && (
+                              <TrendingUp className="text-emerald-400" style={{ width: 'clamp(0.75rem, 0.875vw, 0.875rem)', height: 'clamp(0.75rem, 0.875vw, 0.875rem)', minWidth: '0.75rem', minHeight: '0.75rem' }} />
+                            )}
+                            {item.trend === 'down' && (
+                              <TrendingDown className="text-red-400" style={{ width: 'clamp(0.75rem, 0.875vw, 0.875rem)', height: 'clamp(0.75rem, 0.875vw, 0.875rem)', minWidth: '0.75rem', minHeight: '0.75rem' }} />
+                            )}
+                            {item.trend === 'neutral' && (
+                              <div className="rounded-full bg-slate-500" style={{ width: 'clamp(0.75rem, 0.875vw, 0.875rem)', height: 'clamp(0.75rem, 0.875vw, 0.875rem)', minWidth: '0.75rem', minHeight: '0.75rem' }} />
+                            )}
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 ))}
               </div>
-            </div>
-          ))}
-        </div>
-      </section>
+            </section>
+          </div>
         </DashboardPanel>
       </DashboardPageShell>
     </TooltipProvider>

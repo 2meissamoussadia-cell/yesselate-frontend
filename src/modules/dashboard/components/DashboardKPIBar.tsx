@@ -88,6 +88,7 @@ interface LegacyKPICardProps {
 // Si vous voyez une erreur "KPICard is defined multiple times", vérifiez que cette ligne contient bien "LegacyKPICard" et non "KPICard"
 // ⚠️ CRITIQUE: Ce composant DOIT s'appeler LegacyKPICard, pas KPICard
 // Si vous voyez "KPICard is defined multiple times", c'est que ce nom a été changé en KPICard
+// ⚠️ IMPORTANT: Ce composant DOIT s'appeler LegacyKPICard (pas KPICard) pour éviter le conflit avec l'import
 const LegacyKPICard = memo(function LegacyKPICard({ 
   kpi, 
   icon: Icon, 
@@ -162,10 +163,10 @@ const LegacyKPICard = memo(function LegacyKPICard({
           disabled={!onClick}
           className={cn(
             'group relative w-full overflow-hidden rounded-2xl text-left',
-            'bg-gradient-to-b from-slate-900/60 to-slate-950/20',
-            'ring-1 ring-slate-700/40 shadow-sm',
-            'transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:ring-slate-600/50',
-            'focus:outline-none focus-within:ring-2 focus-within:ring-emerald-400/30',
+            'bg-slate-900/40',
+            'ring-1 ring-slate-800/60',
+            'transition-colors duration-200 hover:bg-slate-900/55 hover:ring-slate-700/60',
+            'focus:outline-none focus:ring-2 focus:ring-blue-500/40',
             clickable && 'cursor-pointer',
             !clickable && 'cursor-default',
             !clickable && 'opacity-85'
@@ -662,7 +663,7 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
                 'w-56 pl-8 pr-8 py-2 text-xs rounded-lg',
                 'bg-slate-900/40 border border-slate-800/70',
                 'text-slate-200 placeholder:text-slate-500',
-                'focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/30'
+                'focus:outline-none focus:ring-2 focus:ring-blue-500/40'
               )}
               aria-label="Rechercher un indicateur"
             />

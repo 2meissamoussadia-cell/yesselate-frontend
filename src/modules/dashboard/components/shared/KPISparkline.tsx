@@ -67,13 +67,13 @@ export const KPISparkline = memo(function KPISparkline({
 
   return (
     <div 
-      className="mt-1.5 opacity-60 group-hover:opacity-100 transition-opacity duration-300" 
+      className="mt-1.5 opacity-60 group-hover:opacity-100 transition-opacity duration-200" 
       aria-label={ariaLabel}
     >
       <svg 
         width={width} 
         height={height} 
-        className="overflow-visible transition-transform duration-300 group-hover:scale-105"
+        className="overflow-visible transition-opacity duration-200"
         aria-hidden="true"
         role="img"
       >

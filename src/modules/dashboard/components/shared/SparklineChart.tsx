@@ -74,7 +74,7 @@ export const SparklineChart = memo(function SparklineChart({
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className={cn(colorClasses[color], 'transition-all duration-300')}
+          className={cn(colorClasses[color], 'transition-opacity duration-200')}
         />
         {/* Zone remplie sous la courbe */}
         <polygon

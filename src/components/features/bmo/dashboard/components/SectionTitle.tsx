@@ -82,7 +82,7 @@ export const SectionTitle = memo(function SectionTitle({
     <div className={cn('flex items-center justify-between mb-4', className)}>
       <div className="flex items-center gap-3">
         {Icon && (
-          <Icon className={cn('text-slate-300 flex-shrink-0', sizes.icon)} style={sizeStyles.icon} />
+          <Icon className={cn('text-slate-300 flex-shrink-0', sizes.icon)} />
         )}
         <div>
           <h2 className={cn('text-slate-200', sizes.title)} style={sizeStyles.title}>

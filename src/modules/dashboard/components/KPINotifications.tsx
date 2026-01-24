@@ -50,28 +50,21 @@ export const KPINotifications = memo(function KPINotifications({
           : false;
         
         return (
-          <div
+          <button
             key={notification.id}
+            type="button"
             className={cn(
-              'rounded-lg border p-3 shadow-lg backdrop-blur-xl animate-fadeIn',
+              'rounded-lg border p-3 shadow-md backdrop-blur-xl animate-fadeIn',
               'bg-slate-900/95 border-slate-700/50',
-              'flex items-start gap-3',
-              'hover:shadow-xl hover:scale-[1.02] transition-all duration-200',
-              'cursor-pointer'
+              'flex items-start gap-3 w-full text-left',
+              'hover:bg-slate-900/80 transition-colors duration-200',
+              'focus:outline-none focus:ring-2 focus:ring-blue-500/40'
             )}
             style={{
               animationDelay: `${idx * 100}ms`,
             }}
             onClick={() => handleDismiss(notification.id)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                onDismiss(notification.id);
-              }
-            }}
-            aria-label={`Notification: ${notification.label} - ${notification.oldValue} → ${notification.newValue}`}
+            aria-label={`Notification: ${notification.label} - ${notification.oldValue} → ${notification.newValue}. Cliquer pour fermer`}
           >
             <div className={cn(
               'p-1.5 rounded-md',
@@ -108,12 +101,12 @@ export const KPINotifications = memo(function KPINotifications({
                 e.stopPropagation();
                 handleDismiss(notification.id);
               }}
-              className="text-slate-500 hover:text-slate-300 transition-all duration-200 hover:scale-110 active:scale-95 flex-shrink-0"
+              className="text-slate-500 hover:text-slate-300 transition-colors duration-200 flex-shrink-0"
               aria-label="Fermer la notification"
             >
               <X className="h-3.5 w-3.5" />
             </button>
-          </div>
+          </button>
         );
       })}
       {notifications.length > 5 && (

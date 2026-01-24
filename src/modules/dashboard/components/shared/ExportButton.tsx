@@ -61,7 +61,7 @@ export function ExportButton({
     'flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all',
     'bg-slate-800/50 border border-slate-700/50 text-slate-300 whitespace-nowrap',
     'hover:bg-slate-800/70 hover:border-slate-600/50',
-    'focus:outline-none focus:ring-2 focus:ring-blue-500/50',
+    'focus:outline-none focus:ring-2 focus:ring-blue-500/40',
     'disabled:opacity-50 disabled:cursor-not-allowed',
     'min-w-0 flex-shrink-0',
     isOpen && 'bg-slate-800/70 border-slate-600/50'

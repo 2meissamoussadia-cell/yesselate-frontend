@@ -314,13 +314,13 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
                 type="button"
                 onClick={handleClick}
                 className={cn(
-                  'w-full flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg transition-all duration-300 text-left min-w-0',
+                  'w-full flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg transition-colors duration-200 text-left min-w-0',
                   'group relative cursor-pointer border',
-                  'hover:scale-[1.02] hover:shadow-lg hover:shadow-blue-500/10',
+                  'hover:bg-slate-800/40',
                   isActive
-                    ? 'bg-blue-500/10 border-blue-500/30 text-blue-300 shadow-md shadow-blue-500/20'
-                    : 'hover:bg-slate-700/40 border-transparent text-slate-300',
-                  'focus:outline-none focus:ring-2 focus:ring-blue-500/50'
+                    ? 'bg-slate-800/55 border-slate-600/50 text-slate-100'
+                    : 'border-transparent text-slate-300',
+                  'focus:outline-none focus:ring-2 focus:ring-blue-500/40'
                 )}
                 aria-label={`${node.label}${badge ? `, ${badge} éléments` : ''}`}
                 aria-current={isActive ? 'page' : undefined}
@@ -340,7 +340,7 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
                 {node.icon && (
                   <node.icon className={cn(
                     'h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0',
-                    isActive ? 'text-blue-400' : 'text-slate-400'
+                    isActive ? 'text-slate-200' : 'text-slate-400'
                   )} />
                 )}
                 <span className="flex-1 truncate min-w-0 text-xs sm:text-sm">{node.label}</span>

@@ -1,189 +1,128 @@
-/**
- * Composant KPI Card réutilisable et optimisé
- * Avec memo pour éviter les re-renders inutiles
- */
-
 'use client';
 
-import React, { memo, useCallback, useMemo } from 'react';
-import { TrendingUp, TrendingDown, Info } from 'lucide-react';
+import React, { memo, useMemo } from 'react';
 import { cn } from '@/lib/utils';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { getTrendIcon, getTrendColor } from './getTrendIcon';
 import { SparklineChart } from './SparklineChart';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import type { LucideIcon } from 'lucide-react';
 
-interface KPICardProps {
+export interface KPICardData {
   id: string;
   label: string;
   value: string | number;
-  trend: string;
-  trendDirection: 'up' | 'down' | 'neutral';
-  icon: LucideIcon;
-  color: 'blue' | 'emerald' | 'amber' | 'red' | 'purple' | 'orange' | 'cyan';
-  sparkline?: number[];
+  trend?: number;
+  trendType?: 'up' | 'down' | 'neutral';
+  icon: React.ComponentType<{ className?: string }>;
+  color?: 'blue' | 'emerald' | 'amber' | 'purple' | 'rose' | 'cyan';
   description?: string;
   onClick?: () => void;
-  isPositive?: boolean;
-  isNegative?: boolean;
+  sparkline?: number[];
 }
 
-const colorClasses = {
-  blue: {
-    card: 'bg-gradient-to-br from-blue-500/20 to-blue-600/10 border-blue-500/50 hover:border-blue-400',
-    icon: 'bg-blue-500/20 text-blue-400',
-  },
-  emerald: {
-    card: 'bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 border-emerald-500/50 hover:border-emerald-400',
-    icon: 'bg-emerald-500/20 text-emerald-400',
-  },
-  amber: {
-    card: 'bg-gradient-to-br from-amber-500/20 to-amber-600/10 border-amber-500/50 hover:border-amber-400',
-    icon: 'bg-amber-500/20 text-amber-400',
-  },
-  red: {
-    card: 'bg-gradient-to-br from-red-500/20 to-red-600/10 border-red-500/50 hover:border-red-400',
-    icon: 'bg-red-500/20 text-red-400',
-  },
-  purple: {
-    card: 'bg-gradient-to-br from-purple-500/20 to-purple-600/10 border-purple-500/50 hover:border-purple-400',
-    icon: 'bg-purple-500/20 text-purple-400',
-  },
-  orange: {
-    card: 'bg-gradient-to-br from-orange-500/20 to-orange-600/10 border-orange-500/50 hover:border-orange-400',
-    icon: 'bg-orange-500/20 text-orange-400',
-  },
-  cyan: {
-    card: 'bg-gradient-to-br from-cyan-500/20 to-cyan-600/10 border-cyan-500/50 hover:border-cyan-400',
-    icon: 'bg-cyan-500/20 text-cyan-400',
-  },
+interface KPICardProps {
+  kpi: KPICardData;
+  size?: 'sm' | 'md' | 'lg';
+  className?: string;
+}
+
+const accentByColor: Record<NonNullable<KPICardData['color']>, string> = {
+  blue: 'bg-blue-500',
+  emerald: 'bg-emerald-500',
+  amber: 'bg-amber-500',
+  purple: 'bg-purple-500',
+  rose: 'bg-rose-500',
+  cyan: 'bg-cyan-500',
 };
 
-export const KPICard = memo(function KPICard({
-  id,
-  label,
-  value,
-  trend,
-  trendDirection,
-  icon: Icon,
-  color,
-  sparkline,
-  description,
-  onClick,
-  isPositive,
-  isNegative,
-}: KPICardProps) {
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if ((e.key === 'Enter' || e.key === ' ') && onClick) {
-      e.preventDefault();
-      onClick();
-    }
-  }, [onClick]);
+const sizeTokens = {
+  sm: { root: 'p-3', label: 'text-[11px]', value: 'text-lg', icon: 'h-4 w-4' },
+  md: { root: 'p-4', label: 'text-xs', value: 'text-xl', icon: 'h-5 w-5' },
+  lg: { root: 'p-5', label: 'text-sm', value: 'text-2xl', icon: 'h-5 w-5' },
+} as const;
 
-  const colors = colorClasses[color];
-  const hasPositiveTrend = isPositive ?? false;
-  const hasNegativeTrend = isNegative ?? false;
+export const KPICard = memo(function KPICard({ kpi, size = 'md', className }: KPICardProps) {
+  const Icon = kpi.icon;
+  const tokens = sizeTokens[size];
+  const color = kpi.color ?? 'blue';
+  const accent = accentByColor[color];
 
-  // Mémoriser className pour éviter les re-renders
-  // ✅ Utilise container queries pour adaptation basée sur la taille du conteneur
-  const cardClassName = useMemo(() => cn(
-    '@container rounded-xl p-4 sm:p-5 @container/sm:p-5 @container/md:p-6 border-2 transition-all duration-300 min-w-0 overflow-hidden',
-    onClick && 'cursor-pointer hover:scale-[1.02] hover:shadow-lg hover:shadow-black/20',
-    'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
-    colors.card
-  ), [onClick, colors.card]);
+  const TrendIcon = useMemo(() => getTrendIcon(kpi.trendType, kpi.trend), [kpi.trendType, kpi.trend]);
+  const trendColor = useMemo(() => getTrendColor(kpi.trendType, kpi.trend), [kpi.trendType, kpi.trend]);
 
-  // Mémoriser aria-label pour éviter les re-renders
-  const ariaLabel = useMemo(() => 
-    onClick ? `${label}: ${value}. Cliquez pour voir les détails` : `${label}: ${value}`,
-    [label, value, onClick]
-  );
+  const clickable = Boolean(kpi.onClick);
 
-  // Mémoriser le contenu du tooltip
-  const tooltipContent = useMemo(() => {
-    if (!description) return null;
-    return (
-      <div className="space-y-1">
-        <p className="font-semibold">{label}</p>
-        <p className="text-xs text-slate-300">{description}</p>
-        {onClick && (
-          <p className="text-xs text-slate-300 pt-1 border-t border-slate-700">
-            Cliquez pour voir les détails et l’historique
-          </p>
-        )}
-      </div>
-    );
-  }, [description, label, onClick]);
+  const Card = (
+    <button
+      type="button"
+      onClick={kpi.onClick}
+      className={cn(
+        // surface
+        'relative w-full text-left rounded-2xl border bg-slate-950/35 backdrop-blur',
+        'border-slate-800/70 hover:border-slate-700/80',
+        'shadow-[0_10px_30px_-20px_rgba(0,0,0,0.8)]',
+        'transition-colors',
+        clickable ? 'cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60' : 'cursor-default',
+        tokens.root,
+        className
+      )}
+      aria-label={kpi.description ? `${kpi.label} — ${kpi.description}` : kpi.label}
+      disabled={!clickable}
+    >
+      {/* Accent bar */}
+      <span className={cn('absolute left-0 top-3 bottom-3 w-[3px] rounded-full opacity-90', accent)} />
 
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <div
-          onClick={onClick}
-          className={cardClassName}
-          role={onClick ? 'button' : undefined}
-          tabIndex={onClick ? 0 : undefined}
-          onKeyDown={handleKeyDown}
-          aria-label={ariaLabel}
-        >
-          <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3 min-w-0">
-            <div className={cn('w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center transition-all flex-shrink-0', colors.icon)}>
-              <Icon className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
-            </div>
-            <div className="flex-1 min-w-0 overflow-hidden">
-              <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
-                <p className="text-xs sm:text-sm text-slate-300 truncate min-w-0">{label}</p>
-                {onClick && <Info className="h-3 w-3 text-slate-400 flex-shrink-0" aria-hidden="true" />}
-              </div>
-              <p className="text-xl sm:text-2xl font-bold text-white truncate min-w-0">{value}</p>
-            </div>
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className={cn('text-slate-300/90 font-medium tracking-wide truncate', tokens.label)}>
+            {kpi.label}
+          </div>
+          <div className={cn('mt-1 font-semibold text-slate-50 leading-none', tokens.value)}>
+            {kpi.value}
           </div>
 
-          {sparkline && (
-            <div className="mb-2" aria-hidden="true">
-              <SparklineChart
-                data={sparkline}
-                color={color}
-                width={60}
-                height={20}
-              />
-            </div>
-          )}
-
-          <div
-            className={cn(
-              'flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-0 text-xs min-w-0',
-              hasPositiveTrend && 'text-emerald-400',
-              hasNegativeTrend && 'text-red-400',
-              !hasPositiveTrend && !hasNegativeTrend && 'text-slate-300'
-            )}
-          >
-            <div className="flex items-center gap-1 font-medium min-w-0">
-              {trendDirection !== 'neutral' && (
-                <>
-                  {hasPositiveTrend ? (
-                    <TrendingUp className="h-3 w-3 flex-shrink-0" aria-hidden="true" />
-                  ) : (
-                    <TrendingDown className="h-3 w-3 flex-shrink-0" aria-hidden="true" />
-                  )}
-                  <span className="truncate min-w-0">{trend}</span>
-                </>
-              )}
-              {trendDirection === 'neutral' && <span className="truncate min-w-0">{trend}</span>}
-            </div>
-            {onClick && (
-              <span className="text-slate-400 text-[10px] sm:text-xs whitespace-nowrap flex-shrink-0" aria-hidden="true">
-                Cliquer pour détails
+          <div className="mt-2 flex items-center gap-2">
+            {TrendIcon ? <TrendIcon className={cn('h-3.5 w-3.5', trendColor)} /> : null}
+            {typeof kpi.trend === 'number' ? (
+              <span className={cn('text-xs font-medium tabular-nums', trendColor)}>
+                {kpi.trend > 0 ? `+${kpi.trend}%` : `${kpi.trend}%`}
               </span>
+            ) : (
+              <span className="text-xs text-slate-500">—</span>
             )}
+            {kpi.description ? (
+              <span className="text-xs text-slate-500 truncate">• {kpi.description}</span>
+            ) : null}
           </div>
         </div>
-      </TooltipTrigger>
-      {tooltipContent && (
+
+        <div className="flex flex-col items-end gap-2">
+          <div className={cn('inline-flex items-center justify-center rounded-xl border border-slate-800/60 bg-slate-900/40 p-2')}>
+            <Icon className={cn(tokens.icon, 'text-slate-200')} />
+          </div>
+
+          {kpi.sparkline?.length ? (
+            <div className="w-[92px] opacity-90">
+              <SparklineChart data={kpi.sparkline} />
+            </div>
+          ) : null}
+        </div>
+      </div>
+    </button>
+  );
+
+  if (!kpi.description) return Card;
+
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>{Card}</TooltipTrigger>
         <TooltipContent side="top" className="max-w-xs">
-          {tooltipContent}
+          <div className="text-xs">
+            <div className="font-semibold text-slate-100">{kpi.label}</div>
+            <div className="mt-1 text-slate-300">{kpi.description}</div>
+          </div>
         </TooltipContent>
-      )}
-    </Tooltip>
+      </Tooltip>
+    </TooltipProvider>
   );
 });
-

@@ -218,10 +218,10 @@ export const TendancesPage = memo(function TendancesPage() {
       title="Tendances"
       subtitle="Évolution temporelle des indicateurs clés"
       rightSlot={
-        <div className="flex flex-wrap items-center gap-2 sm:gap-4 min-w-0">
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-slate-400">Période :</span>
-            <div className="flex gap-2">
+        <div className="flex flex-wrap items-center min-w-0" style={{ gap: 'clamp(0.5rem, 0.75vw, 1rem)' }}>
+          <div className="flex items-center" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+            <span className="text-slate-400" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>Période :</span>
+            <div className="flex" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
               {timeRangeOptions.map((option) => (
                 <Button
                   key={option.value}
@@ -232,15 +232,16 @@ export const TendancesPage = memo(function TendancesPage() {
                     timeRange === option.value && 'bg-blue-600 hover:bg-blue-700',
                     timeRange !== option.value && 'border-slate-800/70 bg-slate-950/30 text-slate-300 hover:bg-slate-900/40'
                   )}
+                  style={{ fontSize: 'clamp(0.625rem, 0.875vw, 0.75rem)', padding: 'clamp(0.375rem, 0.75vw, 0.5rem) clamp(0.625rem, 1vw, 0.75rem)' }}
                 >
                   {option.label}
                 </Button>
               ))}
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-slate-300">Type :</span>
-            <div className="flex gap-2">
+          <div className="flex items-center" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+            <span className="text-slate-300" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>Type :</span>
+            <div className="flex" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
               <Button
                 variant={trendType === 'mensuelles' ? 'default' : 'outline'}
                 size="sm"
@@ -249,6 +250,7 @@ export const TendancesPage = memo(function TendancesPage() {
                   trendType === 'mensuelles' && 'bg-purple-600 hover:bg-purple-700',
                   trendType !== 'mensuelles' && 'border-slate-800/70 bg-slate-950/30 text-slate-300 hover:bg-slate-900/40'
                 )}
+                style={{ fontSize: 'clamp(0.625rem, 0.875vw, 0.75rem)', padding: 'clamp(0.375rem, 0.75vw, 0.5rem) clamp(0.625rem, 1vw, 0.75rem)' }}
               >
                 Mensuelles
               </Button>
@@ -260,6 +262,7 @@ export const TendancesPage = memo(function TendancesPage() {
                   trendType === 'trimestrielles' && 'bg-purple-600 hover:bg-purple-700',
                   trendType !== 'trimestrielles' && 'border-slate-800/70 bg-slate-950/30 text-slate-300 hover:bg-slate-900/40'
                 )}
+                style={{ fontSize: 'clamp(0.625rem, 0.875vw, 0.75rem)', padding: 'clamp(0.375rem, 0.75vw, 0.5rem) clamp(0.625rem, 1vw, 0.75rem)' }}
               >
                 Trimestrielles
               </Button>
@@ -268,14 +271,15 @@ export const TendancesPage = memo(function TendancesPage() {
         </div>
       }
     >
-      <DashboardPanel className="p-4 sm:p-6">
-        {/* Vue d'ensemble des tendances */}
-        <section className="space-y-4 min-w-0">
-          <h2 className="text-lg sm:text-xl font-semibold text-white flex items-center gap-2 break-words">
-            <TrendingUp className="w-5 h-5 text-blue-400 flex-shrink-0" />
-            <span className="min-w-0">Vue d'ensemble</span>
-          </h2>
-          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 xs:gap-3 sm:gap-4 lg:gap-6 min-w-0">
+      <DashboardPanel>
+        <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
+          {/* Vue d'ensemble des tendances */}
+          <section style={{ gap: 'clamp(1rem, 1.5vw, 1.25rem)' }} className="space-y-4 min-w-0">
+            <h2 className="font-semibold text-white flex items-center break-words" style={{ fontSize: 'clamp(1rem, 1.75vw, 1.25rem)', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+              <TrendingUp className="text-blue-400 flex-shrink-0" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
+              <span className="min-w-0">Vue d'ensemble</span>
+            </h2>
+            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 min-w-0" style={{ gap: 'clamp(0.5rem, 1vw, 1.5rem)' }}>
             {trendIndicators.map(renderTrendCard)}
           </div>
         </section>
@@ -314,12 +318,12 @@ export const TendancesPage = memo(function TendancesPage() {
                 <XAxis 
                   dataKey="date" 
                   stroke="#94a3b8"
-                  style={{ fontSize: '12px' }}
+                  style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}
                   tick={{ fill: '#94a3b8' }}
                 />
                 <YAxis 
                   stroke="#94a3b8"
-                  style={{ fontSize: '12px' }}
+                  style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}
                   tick={{ fill: '#94a3b8' }}
                 />
                 <Tooltip 
@@ -368,9 +372,9 @@ export const TendancesPage = memo(function TendancesPage() {
                 />
               </AreaChart>
             </ResponsiveContainer>
-          </div>
+            </div>
+          </section>
         </div>
-      </section>
       </DashboardPanel>
 
       {/* Groupes par catégorie */}
@@ -385,42 +389,46 @@ export const TendancesPage = memo(function TendancesPage() {
         };
 
         return (
-          <DashboardPanel key={category} className="p-4 sm:p-6">
-            <section className="space-y-4 min-w-0">
-              <h2 className="text-lg sm:text-xl font-semibold text-white">{categoryLabels[category as keyof typeof categoryLabels]}</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 min-w-0">
-                {indicators.map(renderTrendCard)}
-              </div>
-            </section>
+          <DashboardPanel key={category}>
+            <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
+              <section style={{ gap: 'clamp(1rem, 1.5vw, 1.25rem)' }} className="space-y-4 min-w-0">
+                <h2 className="font-semibold text-white" style={{ fontSize: 'clamp(1rem, 1.75vw, 1.25rem)' }}>{categoryLabels[category as keyof typeof categoryLabels]}</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 min-w-0" style={{ gap: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
+                  {indicators.map(renderTrendCard)}
+                </div>
+              </section>
+            </div>
           </DashboardPanel>
         );
       })}
 
       {/* Section contexte */}
-      <DashboardPanel className="p-4 sm:p-6">
-        <div className="space-y-4 min-w-0 overflow-hidden">
-          <h2 className="text-lg sm:text-xl font-semibold text-white flex items-center gap-2 break-words">
-            <Calendar className="w-5 h-5 text-emerald-400 flex-shrink-0" />
-            <span className="min-w-0">À propos des tendances</span>
-          </h2>
-          <p className="text-slate-300 text-sm sm:text-base break-words">
-            Cette section présente l'évolution temporelle des indicateurs clés du système.
-            Les tendances sont calculées sur différentes périodes pour permettre une analyse approfondie.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-            <div className="bg-slate-950/30 border border-slate-800/60 rounded-xl p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <TrendingUp className="w-5 h-5 text-emerald-400" />
-                <h3 className="font-semibold text-white">Tendances positives</h3>
+      <DashboardPanel>
+        <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
+          <div style={{ gap: 'clamp(1rem, 1.5vw, 1.25rem)' }} className="space-y-4 min-w-0 overflow-hidden">
+            <h2 className="font-semibold text-white flex items-center break-words" style={{ fontSize: 'clamp(1rem, 1.75vw, 1.25rem)', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+              <Calendar className="text-emerald-400 flex-shrink-0" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
+              <span className="min-w-0">À propos des tendances</span>
+            </h2>
+            <p className="text-slate-300 break-words" style={{ fontSize: 'clamp(0.75rem, 1vw, 1rem)' }}>
+              Cette section présente l'évolution temporelle des indicateurs clés du système.
+              Les tendances sont calculées sur différentes périodes pour permettre une analyse approfondie.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 'clamp(1rem, 1.5vw, 1.25rem)', marginTop: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
+              <div className="bg-slate-950/30 border border-slate-800/60 rounded-xl" style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
+                <div className="flex items-center" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+                  <TrendingUp className="text-emerald-400" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
+                  <h3 className="font-semibold text-white" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Tendances positives</h3>
+                </div>
+                <p className="text-slate-400" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>Indicateurs en amélioration sur la période sélectionnée</p>
               </div>
-              <p className="text-sm text-slate-400">Indicateurs en amélioration sur la période sélectionnée</p>
-            </div>
-            <div className="bg-slate-950/30 border border-slate-800/60 rounded-xl p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <TrendingDown className="w-5 h-5 text-rose-400" />
-                <h3 className="font-semibold text-white">Tendances négatives</h3>
+              <div className="bg-slate-950/30 border border-slate-800/60 rounded-xl" style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
+                <div className="flex items-center" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+                  <TrendingDown className="text-rose-400" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
+                  <h3 className="font-semibold text-white" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Tendances négatives</h3>
+                </div>
+                <p className="text-slate-300" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>Indicateurs nécessitant une attention particulière</p>
               </div>
-              <p className="text-sm text-slate-300">Indicateurs nécessitant une attention particulière</p>
             </div>
           </div>
         </div>

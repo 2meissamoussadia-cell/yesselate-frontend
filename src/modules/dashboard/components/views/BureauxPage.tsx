@@ -1035,8 +1035,8 @@ export const BureauxPage = memo(function BureauxPage() {
     const Icon = badge.icon;
     
     return (
-      <Badge className={cn(badge.className, 'flex items-center gap-1')}>
-        <Icon className="w-3 h-3" />
+      <Badge className={cn(badge.className, 'flex items-center')} style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)', gap: 'clamp(0.25rem, 0.5vw, 0.375rem)' }}>
+        <Icon style={{ width: 'clamp(0.75rem, 1vw, 0.875rem)', height: 'clamp(0.75rem, 1vw, 0.875rem)' }} />
         {badge.label}
       </Badge>
     );
@@ -1132,20 +1132,20 @@ export const BureauxPage = memo(function BureauxPage() {
     const shouldShowDetails = viewMode !== 'compact' || isExpanded;
     
     return (
-      <div
+      <button
         key={bureau.id}
+        type="button"
         className={cn(
-          'relative overflow-hidden rounded-2xl bg-slate-900/40 p-6',
-          'ring-1 ring-slate-800/60 transition-all duration-200',
-          'hover:bg-slate-900/55 hover:ring-slate-700/60 hover:shadow-xl hover:shadow-black/20',
+          'relative overflow-hidden rounded-2xl bg-slate-900/40 w-full text-left',
+          'ring-1 ring-slate-800/60 transition-colors duration-200',
+          'hover:bg-slate-900/45 hover:ring-slate-700/60',
+          'focus:outline-none focus:ring-2 focus:ring-blue-500/40',
           hasAlerts && 'ring-2 ring-amber-500/30',
-          isSelected && 'ring-4 ring-blue-500/50 border-blue-500',
-          'group cursor-pointer'
+          isSelected && 'ring-2 ring-slate-600/50 border-slate-600/50 bg-slate-900/55',
+          'group'
         )}
-        role="article"
         aria-label={`Bureau ${bureau.code}: ${bureau.name}`}
-        aria-selected={isSelected}
-        tabIndex={0}
+        aria-pressed={isSelected}
         onClick={(e) => {
           if (e.shiftKey || e.ctrlKey || e.metaKey) {
             e.stopPropagation();
@@ -1154,41 +1154,37 @@ export const BureauxPage = memo(function BureauxPage() {
             handleToggleBureau(bureau.id);
           }
         }}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            handleToggleBureau(bureau.id);
-          }
-        }}
+        style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}
       >
         {/* accent fin en haut */}
-        <span className={cn('absolute inset-x-0 top-0 h-[2px]', accentBarClass)} aria-hidden="true" />
+        <span className={cn('absolute inset-x-0 top-0', accentBarClass)} aria-hidden="true" style={{ height: 'clamp(2px, 0.25vw, 2px)' }} />
 
         {/* Header */}
-        <div className="flex items-start justify-between mb-6">
-          <div className="flex items-center gap-3">
+        <div className="flex items-start justify-between" style={{ marginBottom: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
+          <div className="flex items-center" style={{ gap: 'clamp(0.75rem, 1vw, 1rem)' }}>
             <TooltipProvider delayDuration={200}>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div
                     className={cn(
-                      'w-12 h-12 rounded-lg flex items-center justify-center text-white font-bold text-lg',
+                      'rounded-lg flex items-center justify-center text-white font-bold',
                       iconBgClasses
                     )}
+                    style={{ width: 'clamp(3rem, 3.5vw, 3rem)', height: 'clamp(3rem, 3.5vw, 3rem)' }}
                   >
-                    <Building2 className="w-6 h-6" />
+                    <Building2 style={{ width: 'clamp(1.5rem, 1.75vw, 1.5rem)', height: 'clamp(1.5rem, 1.75vw, 1.5rem)' }} />
                   </div>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p className="font-semibold">{bureau.name}</p>
-                  <p className="text-xs text-slate-300">Score: {bureau.performanceScore}/100</p>
+                  <p className="text-slate-300" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>Score: {bureau.performanceScore}/100</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
             <div className="min-w-0 flex-1">
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <h3 className="text-xl font-bold text-white truncate min-w-0">{bureau.code}</h3>
+                  <h3 className="font-bold text-white truncate min-w-0" style={{ fontSize: 'clamp(1rem, 1.5vw, 1.25rem)' }}>{bureau.code}</h3>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>{bureau.code}</p>
@@ -1196,7 +1192,7 @@ export const BureauxPage = memo(function BureauxPage() {
               </Tooltip>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <p className="text-sm text-slate-300 truncate min-w-0">{bureau.name}</p>
+                  <p className="text-slate-300 truncate min-w-0" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{bureau.name}</p>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>{bureau.name}</p>
@@ -1204,19 +1200,19 @@ export const BureauxPage = memo(function BureauxPage() {
               </Tooltip>
             </div>
           </div>
-          <div className="flex flex-col items-end gap-2">
+          <div className="flex flex-col items-end" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
             {getStatusBadge(bureau.status)}
             {hasAlerts && (
               <TooltipProvider delayDuration={200}>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Badge className="bg-amber-600 text-white text-xs flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
+                    <Badge className="bg-amber-600 text-white flex items-center" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)', gap: 'clamp(0.25rem, 0.5vw, 0.375rem)' }}>
+                      <AlertCircle style={{ width: 'clamp(0.75rem, 1vw, 0.875rem)', height: 'clamp(0.75rem, 1vw, 0.875rem)' }} />
                       Alertes
                     </Badge>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <div className="space-y-1 text-xs">
+                    <div className="space-y-1" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>
                       {bureau.alerts.surcharge && <p>⚠️ Surcharge</p>}
                       {bureau.alerts.retard && <p>⏱️ Retard</p>}
                       {bureau.alerts.blocage && <p>🚫 Blocage</p>}
@@ -1233,33 +1229,35 @@ export const BureauxPage = memo(function BureauxPage() {
         <TooltipProvider delayDuration={200}>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="mb-4 pb-4 border-b border-slate-700/50 cursor-help">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs text-slate-300">Score de performance</span>
+              <div className="border-b border-slate-700/50 cursor-help" style={{ marginBottom: 'clamp(1rem, 1.5vw, 1.25rem)', paddingBottom: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
+                <div className="flex items-center justify-between" style={{ marginBottom: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+                  <span className="text-slate-300" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>Score de performance</span>
                   <span className={cn(
-                    'text-lg font-bold',
+                    'font-bold',
                     bureau.performanceScore >= 85 && 'text-emerald-400',
                     bureau.performanceScore >= 75 && bureau.performanceScore < 85 && 'text-amber-400',
                     bureau.performanceScore < 75 && 'text-red-400'
-                  )}>
+                  )}
+                  style={{ fontSize: 'clamp(1rem, 1.5vw, 1.125rem)' }}
+                  >
                     {bureau.performanceScore}/100
                   </span>
                 </div>
-                <div className="w-full bg-slate-800/50 rounded-full h-2">
+                <div className="w-full bg-slate-800/50 rounded-full" style={{ height: 'clamp(0.375rem, 0.5vw, 0.5rem)' }}>
                   <div
                     className={cn(
-                      'h-2 rounded-full transition-all duration-300',
+                      'rounded-full transition-colors duration-200',
                       bureau.performanceScore >= 85 && 'bg-emerald-500',
                       bureau.performanceScore >= 75 && bureau.performanceScore < 85 && 'bg-amber-500',
                       bureau.performanceScore < 75 && 'bg-red-500'
                     )}
-                    style={{ width: `${bureau.performanceScore}%` }}
+                    style={{ width: `${bureau.performanceScore}%`, height: 'clamp(0.375rem, 0.5vw, 0.5rem)' }}
                   />
                 </div>
               </div>
             </TooltipTrigger>
             <TooltipContent>
-              <div className="space-y-1 text-xs">
+              <div className="space-y-1" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>
                 <p>Score calculé sur la base de:</p>
                 <p>• Performance opérationnelle</p>
                 <p>• Respect des délais</p>
@@ -1272,25 +1270,25 @@ export const BureauxPage = memo(function BureauxPage() {
 
         {/* Alertes */}
         {hasAlerts && shouldShowDetails && (
-          <div className="mb-4 pb-4 border-b border-slate-700/50">
-            <div className="flex flex-wrap gap-2">
+          <div className="border-b border-slate-700/50" style={{ marginBottom: 'clamp(1rem, 1.5vw, 1.25rem)', paddingBottom: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
+            <div className="flex flex-wrap" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
               {bureau.alerts.surcharge && (
-                <Badge className="bg-orange-500/20 text-orange-400 border-orange-500/50 text-xs">
+                <Badge className="bg-orange-500/20 text-orange-400 border-orange-500/50" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>
                   Surcharge
                 </Badge>
               )}
               {bureau.alerts.retard && (
-                <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/50 text-xs">
+                <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/50" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>
                   Retard
                 </Badge>
               )}
               {bureau.alerts.blocage && (
-                <Badge className="bg-red-500/20 text-red-400 border-red-500/50 text-xs">
+                <Badge className="bg-red-500/20 text-red-400 border-red-500/50" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>
                   Blocage
                 </Badge>
               )}
               {bureau.alerts.risqueCritique && (
-                <Badge className="bg-red-600/20 text-red-400 border-red-600/50 text-xs">
+                <Badge className="bg-red-600/20 text-red-400 border-red-600/50" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>
                   Risque critique
                 </Badge>
               )}
@@ -1300,29 +1298,29 @@ export const BureauxPage = memo(function BureauxPage() {
 
         {/* Summary Stats */}
         {shouldShowDetails && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4 sm:mb-6 pb-4 sm:pb-6 border-b border-slate-700/50 min-w-0">
-          <div className="bg-slate-800/50 rounded-lg p-3">
-            <p className="text-xs text-slate-300 mb-1">Projets</p>
-            <p className="text-lg font-bold text-white">{bureau.summary.totalProjects}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 min-w-0 border-b border-slate-700/50" style={{ gap: 'clamp(0.75rem, 1vw, 1rem)', marginBottom: 'clamp(1rem, 1.5vw, 1.5rem)', paddingBottom: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
+          <div className="bg-slate-800/50 rounded-lg" style={{ padding: 'clamp(0.75rem, 1vw, 1rem)' }}>
+            <p className="text-slate-300" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.25rem, 0.5vw, 0.375rem)' }}>Projets</p>
+            <p className="font-bold text-white" style={{ fontSize: 'clamp(1rem, 1.5vw, 1.125rem)' }}>{bureau.summary.totalProjects}</p>
           </div>
-          <div className="bg-slate-800/50 rounded-lg p-3">
-            <p className="text-xs text-slate-400 mb-1">Budget</p>
-            <p className="text-lg font-bold text-white">{bureau.summary.budgetConsumed}%</p>
+          <div className="bg-slate-800/50 rounded-lg" style={{ padding: 'clamp(0.75rem, 1vw, 1rem)' }}>
+            <p className="text-slate-400" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.25rem, 0.5vw, 0.375rem)' }}>Budget</p>
+            <p className="font-bold text-white" style={{ fontSize: 'clamp(1rem, 1.5vw, 1.125rem)' }}>{bureau.summary.budgetConsumed}%</p>
           </div>
-          <div className="bg-slate-800/50 rounded-lg p-3">
-            <p className="text-xs text-slate-300 mb-1">Risques</p>
-            <p className="text-lg font-bold text-white">
+          <div className="bg-slate-800/50 rounded-lg" style={{ padding: 'clamp(0.75rem, 1vw, 1rem)' }}>
+            <p className="text-slate-300" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.25rem, 0.5vw, 0.375rem)' }}>Risques</p>
+            <p className="font-bold text-white" style={{ fontSize: 'clamp(1rem, 1.5vw, 1.125rem)' }}>
               {bureau.summary.risks}
               {bureau.summary.risksCritiques > 0 && (
-                <span className="text-red-400 ml-1">({bureau.summary.risksCritiques})</span>
+                <span className="text-red-400" style={{ marginLeft: 'clamp(0.25rem, 0.5vw, 0.375rem)' }}>({bureau.summary.risksCritiques})</span>
               )}
             </p>
           </div>
-          <div className="bg-slate-800/50 rounded-lg p-3">
-            <p className="text-xs text-slate-400 mb-1">Validations</p>
-            <p className="text-lg font-bold text-white">
+          <div className="bg-slate-800/50 rounded-lg" style={{ padding: 'clamp(0.75rem, 1vw, 1rem)' }}>
+            <p className="text-slate-400" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.25rem, 0.5vw, 0.375rem)' }}>Validations</p>
+            <p className="font-bold text-white" style={{ fontSize: 'clamp(1rem, 1.5vw, 1.125rem)' }}>
               {bureau.summary.validationsCeMois}
-              <span className="text-xs text-slate-400 ml-1">/{bureau.summary.validations}</span>
+              <span className="text-slate-400" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)', marginLeft: 'clamp(0.25rem, 0.5vw, 0.375rem)' }}>/{bureau.summary.validations}</span>
             </p>
           </div>
         </div>
@@ -1433,55 +1431,58 @@ export const BureauxPage = memo(function BureauxPage() {
             </div>
           </div>
         </div>
-      </div>
+      </button>
     );
   }, [viewMode, expandedBureaux, selectedBureaux, handleToggleBureau, handleToggleBureauSelection, getStatusBadge]);
 
   return (
     <TooltipProvider delayDuration={200}>
-      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 animate-fadeIn min-w-0 overflow-hidden" role="main" aria-label="Vue des bureaux métiers">
+      <div className="animate-fadeIn min-w-0 overflow-hidden" role="main" aria-label="Vue des bureaux métiers" style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)', display: 'flex', flexDirection: 'column', gap: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
         {/* En-tête */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 min-w-0">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between min-w-0" style={{ gap: 'clamp(0.75rem, 1vw, 1rem)' }}>
           <div className="min-w-0 flex-1">
-            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2 break-words">Bureaux Métiers</h1>
-            <p className="text-slate-300 text-sm sm:text-lg break-words">
+            <h1 className="font-bold text-white break-words" style={{ fontSize: 'clamp(1.5rem, 2.5vw, 1.875rem)', marginBottom: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>Bureaux Métiers</h1>
+            <p className="text-slate-300 break-words" style={{ fontSize: 'clamp(0.75rem, 1.25vw, 1.125rem)' }}>
               Indicateurs de performance par bureau ({sortedBureaux.length} bureau{sortedBureaux.length > 1 ? 'x' : ''} affiché{sortedBureaux.length > 1 ? 's' : ''})
             </p>
           </div>
-          <div className="flex items-center gap-2 flex-shrink-0 flex-wrap">
+          <div className="flex items-center flex-shrink-0 flex-wrap" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
             {/* Sélection multiple */}
             {selectedBureaux.size > 0 && (
-              <div className="flex items-center gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg bg-blue-500/10 border border-blue-500/50 min-w-0">
-                <span className="text-sm text-blue-400">{selectedBureaux.size} sélectionné{selectedBureaux.size > 1 ? 's' : ''}</span>
+              <div className="flex items-center rounded-lg bg-blue-500/10 border border-blue-500/50 min-w-0" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', padding: 'clamp(0.375rem, 0.75vw, 0.5rem) clamp(0.5rem, 1vw, 0.75rem)' }}>
+                <span className="text-blue-400" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{selectedBureaux.size} sélectionné{selectedBureaux.size > 1 ? 's' : ''}</span>
                 <button
                   onClick={handleCompareSelected}
                   disabled={selectedBureaux.size < 2}
-                  className="text-xs px-2 py-1 bg-blue-500/20 text-blue-400 rounded hover:bg-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-blue-500/20 text-blue-400 rounded hover:bg-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)', padding: 'clamp(0.25rem, 0.5vw, 0.375rem) clamp(0.5rem, 0.75vw, 0.625rem)' }}
                 >
-                  <GitCompare className="w-3 h-3 inline mr-1" />
+                  <GitCompare className="inline" style={{ width: 'clamp(0.75rem, 1vw, 0.875rem)', height: 'clamp(0.75rem, 1vw, 0.875rem)', marginRight: 'clamp(0.25rem, 0.5vw, 0.375rem)' }} />
                   Comparer
                 </button>
                 <button
                   onClick={handleClearSelection}
-                  className="text-xs px-2 py-1 text-slate-400 hover:text-white"
+                  className="text-slate-400 hover:text-white"
+                  style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)', padding: 'clamp(0.25rem, 0.5vw, 0.375rem) clamp(0.5rem, 0.75vw, 0.625rem)' }}
                 >
-                  <X className="w-3 h-3" />
+                  <X style={{ width: 'clamp(0.75rem, 1vw, 0.875rem)', height: 'clamp(0.75rem, 1vw, 0.875rem)' }} />
                 </button>
               </div>
             )}
             
             {/* Mode de vue */}
-            <div className="flex items-center gap-1 bg-slate-800/50 rounded-lg p-1 border border-slate-700/50">
+            <div className="flex items-center bg-slate-800/50 rounded-lg border border-slate-700/50" style={{ gap: 'clamp(0.25rem, 0.5vw, 0.375rem)', padding: 'clamp(0.25rem, 0.5vw, 0.375rem)' }}>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button
                     onClick={() => setViewMode('grid')}
                     className={cn(
-                      'p-2 rounded transition-all',
+                      'rounded transition-all',
                       viewMode === 'grid' ? 'bg-blue-500/20 text-blue-400' : 'text-slate-300 hover:text-white'
                     )}
+                    style={{ padding: 'clamp(0.5rem, 0.75vw, 0.625rem)' }}
                   >
-                    <Grid3x3 className="w-4 h-4" />
+                    <Grid3x3 style={{ width: 'clamp(1rem, 1.25vw, 1rem)', height: 'clamp(1rem, 1.25vw, 1rem)' }} />
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>Vue grille</TooltipContent>
@@ -1491,11 +1492,12 @@ export const BureauxPage = memo(function BureauxPage() {
                   <button
                     onClick={() => setViewMode('table')}
                     className={cn(
-                      'p-2 rounded transition-all',
+                      'rounded transition-all',
                       viewMode === 'table' ? 'bg-blue-500/20 text-blue-400' : 'text-slate-300 hover:text-white'
                     )}
+                    style={{ padding: 'clamp(0.5rem, 0.75vw, 0.625rem)' }}
                   >
-                    <Table className="w-4 h-4" />
+                    <Table style={{ width: 'clamp(1rem, 1.25vw, 1rem)', height: 'clamp(1rem, 1.25vw, 1rem)' }} />
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>Vue tableau</TooltipContent>
@@ -1505,11 +1507,12 @@ export const BureauxPage = memo(function BureauxPage() {
                   <button
                     onClick={() => setViewMode('compact')}
                     className={cn(
-                      'p-2 rounded transition-all',
+                      'rounded transition-all',
                       viewMode === 'compact' ? 'bg-blue-500/20 text-blue-400' : 'text-slate-300 hover:text-white'
                     )}
+                    style={{ padding: 'clamp(0.5rem, 0.75vw, 0.625rem)' }}
                   >
-                    <Layers className="w-4 h-4" />
+                    <Layers style={{ width: 'clamp(1rem, 1.25vw, 1rem)', height: 'clamp(1rem, 1.25vw, 1rem)' }} />
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>Vue compacte</TooltipContent>
@@ -1521,15 +1524,16 @@ export const BureauxPage = memo(function BureauxPage() {
                 <button
                   onClick={handleToggleFilters}
                   className={cn(
-                    'flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200',
+                    'flex items-center rounded-lg transition-all duration-200',
                     'bg-slate-800/50 border border-slate-700/50 text-slate-300',
                     'hover:bg-slate-800 hover:border-slate-600',
                     viewMode === 'compact' && 'bg-blue-500/10 border-blue-500/50 text-blue-400'
                   )}
                   aria-label="Afficher/masquer les filtres"
+                  style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', padding: 'clamp(0.5rem, 0.75vw, 0.625rem) clamp(1rem, 1.5vw, 1.25rem)' }}
                 >
-                  <Filter className="w-4 h-4" />
-                  <span className="hidden sm:inline">Filtres</span>
+                  <Filter style={{ width: 'clamp(1rem, 1.25vw, 1rem)', height: 'clamp(1rem, 1.25vw, 1rem)' }} />
+                  <span className="hidden sm:inline" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>Filtres</span>
                 </button>
               </TooltipTrigger>
               <TooltipContent>
@@ -1545,18 +1549,19 @@ export const BureauxPage = memo(function BureauxPage() {
                   handleExportData(e.ctrlKey || e.metaKey ? 'json' : 'csv');
                 }}
                 className={cn(
-                  'flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200',
+                  'flex items-center rounded-lg transition-all duration-200',
                   'bg-slate-800/50 border border-slate-700/50 text-slate-300',
                   'hover:bg-slate-800 hover:border-slate-600'
                 )}
                 aria-label="Exporter les données"
+                style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', padding: 'clamp(0.5rem, 0.75vw, 0.625rem) clamp(1rem, 1.5vw, 1.25rem)' }}
               >
-                <Download className="w-4 h-4" />
-                <span className="hidden sm:inline">Exporter</span>
+                <Download style={{ width: 'clamp(1rem, 1.25vw, 1rem)', height: 'clamp(1rem, 1.25vw, 1rem)' }} />
+                <span className="hidden sm:inline" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>Exporter</span>
               </button>
               </TooltipTrigger>
               <TooltipContent>
-                <div className="space-y-1 text-xs">
+                <div className="space-y-1" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>
                   <p>Exporter les données</p>
                   <p className="text-slate-400">Cliquez pour CSV, Ctrl+Click pour JSON</p>
                 </div>
@@ -1565,29 +1570,30 @@ export const BureauxPage = memo(function BureauxPage() {
             <button
               onClick={handleToggleFilters}
               className={cn(
-                'flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200',
+                'flex items-center rounded-lg transition-all duration-200',
                 'bg-slate-800/50 border border-slate-700/50 text-slate-300',
                 'hover:bg-slate-800 hover:border-slate-600',
                 showFilters && 'bg-blue-500/10 border-blue-500/50 text-blue-400'
               )}
               aria-label="Afficher/masquer les filtres"
               aria-expanded={showFilters}
+              style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', padding: 'clamp(0.5rem, 0.75vw, 0.625rem) clamp(1rem, 1.5vw, 1.25rem)' }}
             >
-              <Filter className="w-4 h-4" />
-              <span className="hidden sm:inline">Filtres</span>
-              <ChevronDown className={cn('w-4 h-4 transition-transform', showFilters && 'rotate-180')} />
+              <Filter style={{ width: 'clamp(1rem, 1.25vw, 1rem)', height: 'clamp(1rem, 1.25vw, 1rem)' }} />
+              <span className="hidden sm:inline" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>Filtres</span>
+              <ChevronDown className={cn('transition-transform', showFilters && 'rotate-180')} style={{ width: 'clamp(1rem, 1.25vw, 1rem)', height: 'clamp(1rem, 1.25vw, 1rem)' }} />
             </button>
           </div>
         </div>
 
       {/* Statistiques globales */}
-      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 xs:gap-3 sm:gap-4 min-w-0" role="region" aria-label="Statistiques globales">
+      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 min-w-0" role="region" aria-label="Statistiques globales" style={{ gap: 'clamp(0.5rem, 1vw, 1rem)' }}>
         <TooltipProvider delayDuration={200}>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700/50 hover:border-slate-600 transition-colors cursor-help">
-                <p className="text-xs text-slate-300 mb-1">Total</p>
-                <p className="text-2xl font-bold text-white">{stats.total}</p>
+              <div className="bg-slate-800/50 rounded-lg border border-slate-700/50 hover:border-slate-600 transition-colors cursor-help" style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
+                <p className="text-slate-300" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.25rem, 0.5vw, 0.375rem)' }}>Total</p>
+                <p className="font-bold text-white" style={{ fontSize: 'clamp(1.25rem, 2vw, 1.5rem)' }}>{stats.total}</p>
               </div>
             </TooltipTrigger>
             <TooltipContent>
@@ -1596,9 +1602,9 @@ export const BureauxPage = memo(function BureauxPage() {
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="bg-emerald-500/10 rounded-lg p-4 border border-emerald-500/20 hover:border-emerald-500/40 transition-colors cursor-help">
-                <p className="text-xs text-emerald-400 mb-1">Actifs</p>
-                <p className="text-2xl font-bold text-emerald-400">{stats.actifs}</p>
+              <div className="bg-emerald-500/10 rounded-lg border border-emerald-500/20 hover:border-emerald-500/40 transition-colors cursor-help" style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
+                <p className="text-emerald-400" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.25rem, 0.5vw, 0.375rem)' }}>Actifs</p>
+                <p className="font-bold text-emerald-400" style={{ fontSize: 'clamp(1.25rem, 2vw, 1.5rem)' }}>{stats.actifs}</p>
               </div>
             </TooltipTrigger>
             <TooltipContent>
@@ -1607,9 +1613,9 @@ export const BureauxPage = memo(function BureauxPage() {
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="bg-amber-500/10 rounded-lg p-4 border border-amber-500/20 hover:border-amber-500/40 transition-colors cursor-help">
-                <p className="text-xs text-amber-400 mb-1">Attention</p>
-                <p className="text-2xl font-bold text-amber-400">{stats.enAttention}</p>
+              <div className="bg-amber-500/10 rounded-lg border border-amber-500/20 hover:border-amber-500/40 transition-colors cursor-help" style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
+                <p className="text-amber-400" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.25rem, 0.5vw, 0.375rem)' }}>Attention</p>
+                <p className="font-bold text-amber-400" style={{ fontSize: 'clamp(1.25rem, 2vw, 1.5rem)' }}>{stats.enAttention}</p>
               </div>
             </TooltipTrigger>
             <TooltipContent>
@@ -1618,9 +1624,9 @@ export const BureauxPage = memo(function BureauxPage() {
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="bg-red-500/10 rounded-lg p-4 border border-red-500/20 hover:border-red-500/40 transition-colors cursor-help">
-                <p className="text-xs text-red-400 mb-1">Critiques</p>
-                <p className="text-2xl font-bold text-red-400">{stats.critiques}</p>
+              <div className="bg-red-500/10 rounded-lg border border-red-500/20 hover:border-red-500/40 transition-colors cursor-help" style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
+                <p className="text-red-400" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.25rem, 0.5vw, 0.375rem)' }}>Critiques</p>
+                <p className="font-bold text-red-400" style={{ fontSize: 'clamp(1.25rem, 2vw, 1.5rem)' }}>{stats.critiques}</p>
               </div>
             </TooltipTrigger>
             <TooltipContent>
@@ -1629,9 +1635,9 @@ export const BureauxPage = memo(function BureauxPage() {
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="bg-orange-500/10 rounded-lg p-4 border border-orange-500/20 hover:border-orange-500/40 transition-colors cursor-help">
-                <p className="text-xs text-orange-400 mb-1">Risques</p>
-                <p className="text-2xl font-bold text-orange-400">{stats.totalRisques}</p>
+              <div className="bg-orange-500/10 rounded-lg border border-orange-500/20 hover:border-orange-500/40 transition-colors cursor-help" style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
+                <p className="text-orange-400" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.25rem, 0.5vw, 0.375rem)' }}>Risques</p>
+                <p className="font-bold text-orange-400" style={{ fontSize: 'clamp(1.25rem, 2vw, 1.5rem)' }}>{stats.totalRisques}</p>
               </div>
             </TooltipTrigger>
             <TooltipContent>
@@ -1640,9 +1646,9 @@ export const BureauxPage = memo(function BureauxPage() {
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="bg-red-600/10 rounded-lg p-4 border border-red-600/20 hover:border-red-600/40 transition-colors cursor-help">
-                <p className="text-xs text-red-400 mb-1">Risques critiques</p>
-                <p className="text-2xl font-bold text-red-400">{stats.totalRisquesCritiques}</p>
+              <div className="bg-red-600/10 rounded-lg border border-red-600/20 hover:border-red-600/40 transition-colors cursor-help" style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
+                <p className="text-red-400" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.25rem, 0.5vw, 0.375rem)' }}>Risques critiques</p>
+                <p className="font-bold text-red-400" style={{ fontSize: 'clamp(1.25rem, 2vw, 1.5rem)' }}>{stats.totalRisquesCritiques}</p>
               </div>
             </TooltipTrigger>
             <TooltipContent>
@@ -1654,36 +1660,39 @@ export const BureauxPage = memo(function BureauxPage() {
 
       {/* Filtres et recherche */}
       {showFilters && (
-        <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-4 space-y-4">
-          <div className="flex flex-col md:flex-row gap-4">
+        <div className="bg-slate-900/50 border border-slate-800 rounded-xl" style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)', display: 'flex', flexDirection: 'column', gap: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
+          <div className="flex flex-col md:flex-row" style={{ gap: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
             {/* Recherche */}
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Search className="absolute text-slate-400" style={{ left: 'clamp(0.75rem, 1vw, 1rem)', top: '50%', transform: 'translateY(-50%)', width: 'clamp(1rem, 1.25vw, 1rem)', height: 'clamp(1rem, 1.25vw, 1rem)' }} />
               <input
                 type="text"
                 placeholder="Rechercher un bureau..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-10 py-2 min-h-[44px] bg-slate-800/50 border border-slate-700/50 rounded-lg text-slate-300 placeholder:text-slate-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                className="w-full bg-slate-800/50 border border-slate-700/50 rounded-lg text-slate-300 placeholder:text-slate-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                style={{ paddingLeft: 'clamp(2.5rem, 3vw, 2.75rem)', paddingRight: searchQuery ? 'clamp(2.5rem, 3vw, 2.75rem)' : 'clamp(1rem, 1.5vw, 1.25rem)', paddingTop: 'clamp(0.5rem, 0.75vw, 0.625rem)', paddingBottom: 'clamp(0.5rem, 0.75vw, 0.625rem)', minHeight: 'clamp(2.75rem, 3.5vw, 2.75rem)' }}
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 min-h-[44px] min-w-[44px] flex items-center justify-center text-slate-400 hover:text-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded"
+                  className="absolute flex items-center justify-center text-slate-400 hover:text-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded"
                   aria-label="Effacer la recherche"
+                  style={{ right: 'clamp(0.75rem, 1vw, 1rem)', top: '50%', transform: 'translateY(-50%)', minHeight: 'clamp(2.75rem, 3.5vw, 2.75rem)', minWidth: 'clamp(2.75rem, 3.5vw, 2.75rem)' }}
                 >
-                  <X className="w-4 h-4" />
+                  <X style={{ width: 'clamp(1rem, 1.25vw, 1rem)', height: 'clamp(1rem, 1.25vw, 1rem)' }} />
                 </button>
               )}
             </div>
 
             {/* Filtre par statut */}
-            <div className="flex items-center gap-2">
-              <label className="text-sm text-slate-300 whitespace-nowrap">Statut:</label>
+            <div className="flex items-center" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+              <label className="text-slate-300 whitespace-nowrap" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>Statut:</label>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value as FilterOption)}
-                className="px-3 py-2 min-h-[44px] bg-slate-800/50 border border-slate-700/50 rounded-lg text-slate-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                className="bg-slate-800/50 border border-slate-700/50 rounded-lg text-slate-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                style={{ padding: 'clamp(0.5rem, 0.75vw, 0.625rem) clamp(0.75rem, 1vw, 1rem)', minHeight: 'clamp(2.75rem, 3.5vw, 2.75rem)', fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}
               >
                 <option value="all">Tous</option>
                 <option value="performant">Performant</option>
@@ -1694,12 +1703,13 @@ export const BureauxPage = memo(function BureauxPage() {
             </div>
 
             {/* Tri */}
-            <div className="flex items-center gap-2">
-              <label className="text-sm text-slate-400 whitespace-nowrap">Trier par:</label>
+            <div className="flex items-center" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+              <label className="text-slate-400 whitespace-nowrap" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>Trier par:</label>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as SortOption)}
-                className="px-3 py-2 bg-slate-800/50 border border-slate-700/50 rounded-lg text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                className="bg-slate-800/50 border border-slate-700/50 rounded-lg text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+                style={{ padding: 'clamp(0.5rem, 0.75vw, 0.625rem) clamp(0.75rem, 1vw, 1rem)', fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}
               >
                 <option value="performance">Performance</option>
                 <option value="criticity">Criticité</option>
@@ -1710,23 +1720,24 @@ export const BureauxPage = memo(function BureauxPage() {
               </select>
               <button
                 onClick={() => setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')}
-                className="min-h-[44px] min-w-[44px] p-2 rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-300 hover:bg-slate-800/70 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                className="bg-slate-800/50 border border-slate-700/50 text-slate-300 hover:bg-slate-800/70 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded-lg"
                 aria-label={`Trier ${sortDirection === 'asc' ? 'décroissant' : 'croissant'}`}
                 title={sortDirection === 'asc' ? 'Croissant' : 'Décroissant'}
+                style={{ minHeight: 'clamp(2.75rem, 3.5vw, 2.75rem)', minWidth: 'clamp(2.75rem, 3.5vw, 2.75rem)', padding: 'clamp(0.5rem, 0.75vw, 0.625rem)' }}
               >
-                {sortDirection === 'asc' ? <SortAsc className="w-4 h-4" /> : <SortDesc className="w-4 h-4" />}
+                {sortDirection === 'asc' ? <SortAsc style={{ width: 'clamp(1rem, 1.25vw, 1rem)', height: 'clamp(1rem, 1.25vw, 1rem)' }} /> : <SortDesc style={{ width: 'clamp(1rem, 1.25vw, 1rem)', height: 'clamp(1rem, 1.25vw, 1rem)' }} />}
               </button>
             </div>
           </div>
           
           {/* Filtres avancés */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-4 border-t border-slate-700/50 min-w-0">
-            <div className="space-y-2">
-              <label className="text-sm text-slate-300 flex items-center gap-2">
-                <DollarSign className="w-4 h-4" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 min-w-0 border-t border-slate-700/50" style={{ gap: 'clamp(0.75rem, 1vw, 1rem)', paddingTop: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+              <label className="text-slate-300 flex items-center" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+                <DollarSign style={{ width: 'clamp(1rem, 1.25vw, 1rem)', height: 'clamp(1rem, 1.25vw, 1rem)' }} />
                 Budget consommé minimum (%)
               </label>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
                 <input
                   type="range"
                   min="0"
@@ -1735,15 +1746,15 @@ export const BureauxPage = memo(function BureauxPage() {
                   onChange={(e) => setMinBudgetFilter(Number(e.target.value))}
                   className="flex-1"
                 />
-                <span className="text-sm text-slate-300 w-12 text-right">{minBudgetFilter}%</span>
+                <span className="text-slate-300 text-right" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)', width: 'clamp(3rem, 4vw, 3.5rem)' }}>{minBudgetFilter}%</span>
               </div>
             </div>
-            <div className="space-y-2">
-              <label className="text-sm text-slate-400 flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4" />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+              <label className="text-slate-400 flex items-center" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+                <AlertTriangle style={{ width: 'clamp(1rem, 1.25vw, 1rem)', height: 'clamp(1rem, 1.25vw, 1rem)' }} />
                 Risques maximum
               </label>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
                 <input
                   type="range"
                   min="0"
@@ -1752,7 +1763,7 @@ export const BureauxPage = memo(function BureauxPage() {
                   onChange={(e) => setMaxRisksFilter(Number(e.target.value))}
                   className="flex-1"
                 />
-                <span className="text-sm text-slate-300 w-12 text-right">{maxRisksFilter}</span>
+                <span className="text-slate-300 text-right" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)', width: 'clamp(3rem, 4vw, 3.5rem)' }}>{maxRisksFilter}</span>
               </div>
             </div>
           </div>
@@ -1761,10 +1772,10 @@ export const BureauxPage = memo(function BureauxPage() {
 
       {/* Grille des bureaux */}
       {sortedBureaux.length === 0 ? (
-        <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-12 text-center" role="status" aria-live="polite">
-          <AlertCircle className="w-12 h-12 text-slate-500 mx-auto mb-4" aria-hidden="true" />
-          <p className="text-lg font-semibold text-slate-300 mb-2">Aucun bureau trouvé</p>
-          <p className="text-sm text-slate-500">
+        <div className="bg-slate-900/50 border border-slate-800 rounded-xl text-center" role="status" aria-live="polite" style={{ padding: 'clamp(3rem, 4vw, 3.5rem)' }}>
+          <AlertCircle className="text-slate-500 mx-auto" aria-hidden="true" style={{ width: 'clamp(3rem, 3.5vw, 3rem)', height: 'clamp(3rem, 3.5vw, 3rem)', marginBottom: 'clamp(1rem, 1.5vw, 1.25rem)' }} />
+          <p className="font-semibold text-slate-300" style={{ fontSize: 'clamp(1rem, 1.5vw, 1.125rem)', marginBottom: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>Aucun bureau trouvé</p>
+          <p className="text-slate-500" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>
             {searchQuery ? `Aucun résultat pour "${searchQuery}"` : 'Aucun bureau ne correspond aux filtres sélectionnés'}
           </p>
           {(searchQuery || statusFilter !== 'all') && (
@@ -1773,7 +1784,8 @@ export const BureauxPage = memo(function BureauxPage() {
                 setSearchQuery('');
                 setStatusFilter('all');
               }}
-              className="mt-4 px-4 py-2 bg-blue-500/10 border border-blue-500/50 text-blue-400 rounded-lg hover:bg-blue-500/20 transition-colors"
+              className="bg-blue-500/10 border border-blue-500/50 text-blue-400 rounded-lg hover:bg-blue-500/20 transition-colors"
+              style={{ marginTop: 'clamp(1rem, 1.5vw, 1.25rem)', padding: 'clamp(0.5rem, 0.75vw, 0.625rem) clamp(1rem, 1.5vw, 1.25rem)', fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}
             >
               Réinitialiser les filtres
             </button>
@@ -1804,39 +1816,38 @@ export const BureauxPage = memo(function BureauxPage() {
       )}
 
       {/* Section contexte */}
-      <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 space-y-4">
-        <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-          <Building2 className="w-6 h-6 text-blue-400" />
+      <div className="bg-slate-900/50 border border-slate-800 rounded-xl" style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)', display: 'flex', flexDirection: 'column', gap: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
+        <h2 className="font-bold text-white flex items-center" style={{ fontSize: 'clamp(1.25rem, 2vw, 1.5rem)', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+          <Building2 className="text-blue-400" style={{ width: 'clamp(1.5rem, 1.75vw, 1.5rem)', height: 'clamp(1.5rem, 1.75vw, 1.5rem)' }} />
           Vue d'ensemble des bureaux métiers
         </h2>
-        <p className="text-slate-300">
+        <p className="text-slate-300" style={{ fontSize: 'clamp(0.875rem, 1.25vw, 1rem)' }}>
           Cette section présente les indicateurs de performance pour tous les bureaux métiers de l'organisation.
           Les métriques sont mises à jour en temps réel et permettent un suivi détaillé de l'activité de chaque bureau.
         </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mt-4 min-w-0">
-          <div className="bg-slate-800/50 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Activity className="w-5 h-5 text-blue-400" />
-              <h3 className="font-semibold text-white">Activité</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 min-w-0" style={{ gap: 'clamp(0.75rem, 1vw, 1rem)', marginTop: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
+          <div className="bg-slate-800/50 rounded-lg" style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
+            <div className="flex items-center" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+              <Activity className="text-blue-400" style={{ width: 'clamp(1.25rem, 1.5vw, 1.25rem)', height: 'clamp(1.25rem, 1.5vw, 1.25rem)' }} />
+              <h3 className="font-semibold text-white" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Activité</h3>
             </div>
-            <p className="text-sm text-slate-400">Suivi des validations et temps de réponse par bureau</p>
+            <p className="text-slate-400" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>Suivi des validations et temps de réponse par bureau</p>
           </div>
-          <div className="bg-slate-800/50 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <AlertTriangle className="w-5 h-5 text-red-400" />
-              <h3 className="font-semibold text-white">Risques</h3>
+          <div className="bg-slate-800/50 rounded-lg" style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
+            <div className="flex items-center" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+              <AlertTriangle className="text-red-400" style={{ width: 'clamp(1.25rem, 1.5vw, 1.25rem)', height: 'clamp(1.25rem, 1.5vw, 1.25rem)' }} />
+              <h3 className="font-semibold text-white" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Risques</h3>
             </div>
-            <p className="text-sm text-slate-400">Identification et suivi des risques critiques</p>
+            <p className="text-slate-400" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>Identification et suivi des risques critiques</p>
           </div>
-          <div className="bg-slate-800/50 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <DollarSign className="w-5 h-5 text-emerald-400" />
-              <h3 className="font-semibold text-white">Budget</h3>
+          <div className="bg-slate-800/50 rounded-lg" style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
+            <div className="flex items-center" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+              <DollarSign className="text-emerald-400" style={{ width: 'clamp(1.25rem, 1.5vw, 1.25rem)', height: 'clamp(1.25rem, 1.5vw, 1.25rem)' }} />
+              <h3 className="font-semibold text-white" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Budget</h3>
             </div>
-            <p className="text-sm text-slate-400">Consommation budgétaire et conformité</p>
+            <p className="text-slate-400" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>Consommation budgétaire et conformité</p>
           </div>
         </div>
-      </div>
       </div>
     </TooltipProvider>
   );

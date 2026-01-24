@@ -11,7 +11,7 @@ import { useState, useEffect } from 'react';
 import { Calendar, User, Clock, Filter, Plus, TrendingUp, AlertCircle, Loader2, Eye } from 'lucide-react';
 import { absencesApiService } from '@/lib/services/absencesApiService';
 import { AbsenceDetailModal } from '@/components/features/bmo/substitution/modals';
-import type { Absence, AbsenceStats } from '@/lib/types/substitution.types';
+import type { Absence, AbsenceStats, AbsenceFilter } from '@/lib/types/substitution.types';
 
 export function AbsencesTab() {
   const [loading, setLoading] = useState(true);
@@ -26,6 +26,15 @@ export function AbsencesTab() {
   const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [selectedAbsenceId, setSelectedAbsenceId] = useState<string | null>(null);
 
+  const apiFilter: AbsenceFilter | undefined = (() => {
+    if (!filter.type && !filter.status && !filter.bureau) return undefined;
+    const f: AbsenceFilter = {};
+    if (filter.type) f.type = filter.type as Absence['type'];
+    if (filter.status) f.status = filter.status as Absence['status'];
+    if (filter.bureau) f.bureau = filter.bureau;
+    return Object.keys(f).length > 0 ? f : undefined;
+  })();
+
   useEffect(() => {
     loadAbsences();
   }, [filter]);
@@ -34,12 +43,12 @@ export function AbsencesTab() {
     setLoading(true);
     try {
       const { data } = await absencesApiService.getAll(
-        Object.keys(filter).length > 0 ? filter : undefined,
+        apiFilter,
         'startDate',
         1,
         50
       );
-      const statsData = await absencesApiService.getStats(filter);
+      const statsData = await absencesApiService.getStats(apiFilter);
       
       setAbsences(data);
       setStats(statsData);
@@ -94,7 +103,6 @@ export function AbsencesTab() {
       )}
 
       <div className="h-full flex flex-col">
-    <div className="h-full flex flex-col">
       {/* Header with Stats */}
       <div className="flex-shrink-0 p-6 bg-slate-900 border-b border-slate-700">
         <div className="flex items-center justify-between mb-4">

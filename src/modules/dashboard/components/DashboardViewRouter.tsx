@@ -10,18 +10,21 @@
 'use client';
 
 import { Suspense, useEffect, useState, useMemo, memo } from 'react';
-import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { BarChart3 } from 'lucide-react';
+import { EmptyState } from './views/EmptyState';
 import { loadComponent } from '../utils/loadComponent';
-import { useDashboardNavigation } from '../context/DashboardNavigationContext';
 import {
-  getNavigationConfig,
   getRouteComponent,
   isValidRoute,
   getAvailableRoutes,
+  normalizeRoute,
 } from '../utils/routeValidation';
 import { useLogger } from '@/lib/utils/logger';
+import { cn } from '@/lib/utils';
 import type { ComponentType } from 'react';
 import { useTouchGestures } from '../hooks/useTouchGestures';
+import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 
 // ✅ Cache des composants chargés pour éviter les rechargements inutiles
 const componentCache = new Map<string, ComponentType>();
@@ -29,14 +32,29 @@ const componentCache = new Map<string, ComponentType>();
 // ✅ Set pour tracker les routes déjà loggées comme "non trouvées" (évite le spam de warnings)
 const warnedRoutes = new Set<string>();
 
-export const DashboardViewRouter = memo(function DashboardViewRouter() {
+interface DashboardViewRouterProps {
+  className?: string;
+  debug?: boolean;
+}
+
+export const DashboardViewRouter = memo(function DashboardViewRouter({
+  className,
+  debug = false,
+}: DashboardViewRouterProps) {
   // ✅ Initialiser le logger
   const log = useLogger('DashboardViewRouter');
-  
-  // ✅ Utiliser le hook directement - le guard est dans le contexte
-  // Le contexte retourne déjà des valeurs par défaut en production si le provider est manquant
-  const navigation = useDashboardNavigation();
-  const { main, sub, leaf } = navigation;
+
+  // ✅ Source de vérité: Command Center store (évite "je clique et rien")
+  const nav = useDashboardCommandCenterStore((s) => s.navigation);
+
+  const normalized = useMemo(() => {
+    return normalizeRoute(nav.mainCategory, nav.subCategory, nav.subSubCategory);
+  }, [nav.mainCategory, nav.subCategory, nav.subSubCategory]);
+
+  const main = normalized.main;
+  const sub = normalized.sub;
+  const leaf = normalized.leaf;
+
   const [Component, setComponent] = useState<ComponentType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -137,28 +155,19 @@ export const DashboardViewRouter = memo(function DashboardViewRouter() {
           const availableRoutes = getAvailableRoutes(routeMain);
           const leaves = routeSub ? availableRoutes.leaves[routeSub] || [] : [];
           
+          // Utiliser EmptyState pour un affichage propre
           const errorComponent = () => (
-            <div className="p-4 sm:p-6 text-red-400 space-y-2 min-w-0 overflow-hidden">
-              <p className="font-bold">Section inconnue ou non configurée.</p>
-              <p className="text-sm text-red-300 break-words">
-                Route demandée:{' '}
-                <code className="bg-red-900/50 px-2 py-1 rounded break-all">
-                  {routeMain}/{routeSub || ''}/{routeLeaf || ''}
-                </code>
-              </p>
-              <p className="text-sm text-yellow-300 break-words">
-                Routes disponibles pour{' '}
-                <code className="bg-yellow-900/50 px-2 py-1 rounded break-all">
-                  {routeMain}/{routeSub || 'N/A'}
-                </code>
-                :
-              </p>
-              <ul className="text-sm text-yellow-200 list-disc list-inside ml-4 break-words">
-                {leaves.length > 0
-                  ? leaves.map((key) => <li key={key} className="break-words">{key}</li>)
-                  : <li>Aucune route disponible</li>}
-              </ul>
-            </div>
+            <EmptyState
+              title="Section non configurée"
+              description={`La route "${routeMain}${routeSub ? `/${routeSub}` : ''}${routeLeaf ? `/${routeLeaf}` : ''}" n'est pas encore disponible.`}
+              icon={BarChart3}
+              actionLabel={leaves.length > 0 ? 'Voir les sections disponibles' : undefined}
+              onAction={leaves.length > 0 ? () => {
+                // Navigation vers la première route disponible
+                const navigate = useDashboardCommandCenterStore.getState().navigate;
+                navigate(routeMain, routeSub || null, leaves[0]);
+              } : undefined}
+            />
           );
           
           if (cancelled) return;
@@ -206,19 +215,36 @@ export const DashboardViewRouter = memo(function DashboardViewRouter() {
 
   if (isLoading) {
     return (
-      <div className="p-4 sm:p-6 text-gray-400 flex items-center justify-center min-h-[200px] min-w-0">
-        <div className="animate-pulse">Chargement…</div>
+      <div className={cn('min-w-0', className)}>
+        <div className="p-4 sm:p-6 text-gray-400 flex items-center justify-center min-h-[200px] min-w-0">
+          <div className="animate-pulse">Chargement…</div>
+        </div>
       </div>
     );
   }
 
   if (!Component) {
     return (
-      <div className="p-4 sm:p-6 text-yellow-400 min-w-0 overflow-hidden break-words">
-        Aucun composant disponible pour cette route.
+      <div className={cn('min-w-0', className)}>
+        <div className="p-4 sm:p-6 text-yellow-400 min-w-0 overflow-hidden break-words">
+          Aucun composant disponible pour cette route.
+        </div>
       </div>
     );
   }
+
+  // Variants pour les transitions
+  const pageVariants = {
+    initial: { opacity: 0, y: 8, scale: 0.98 },
+    animate: { opacity: 1, y: 0, scale: 1 },
+    exit: { opacity: 0, y: -8, scale: 0.98 },
+  };
+
+  const pageTransition = {
+    type: 'tween',
+    ease: [0.4, 0, 0.2, 1],
+    duration: 0.3,
+  };
 
   return (
     <Suspense
@@ -228,7 +254,32 @@ export const DashboardViewRouter = memo(function DashboardViewRouter() {
         </div>
       }
     >
-      <Component />
+      <div ref={containerRef} className={cn('min-w-0', className)}>
+        {debug ? (
+          <div className="mb-3 rounded-xl border border-slate-800/60 bg-slate-950/30 px-3 py-2 text-xs text-slate-300">
+            <div className="font-medium text-slate-200">DashboardViewRouter</div>
+            <div className="mt-1 tabular-nums">
+              Route: <span className="text-slate-100">{currentRoute.main}</span>
+              {currentRoute.sub ? <span className="text-slate-100"> / {currentRoute.sub}</span> : null}
+              {currentRoute.leaf ? <span className="text-slate-100"> / {currentRoute.leaf}</span> : null}
+            </div>
+            {error ? <div className="mt-1 text-rose-300">Erreur: {error}</div> : null}
+          </div>
+        ) : null}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentRoute.routeKey}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            variants={pageVariants}
+            transition={pageTransition}
+            className="min-w-0"
+          >
+            <Component />
+          </motion.div>
+        </AnimatePresence>
+      </div>
     </Suspense>
   );
 });

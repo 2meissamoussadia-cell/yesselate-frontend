@@ -26,14 +26,14 @@ export function DashboardPageShell({
 }: DashboardPageShellProps) {
   return (
     <div className={cn('w-full', className)}>
-      <div className="mx-auto w-full max-w-[1440px] px-5 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <div className="mx-auto w-full max-w-[1440px]" style={{ padding: 'clamp(1rem, 2vw, 2rem)' }}>
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
-            <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-slate-50">
+            <h1 className="font-semibold tracking-tight text-slate-50" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>
               {title}
             </h1>
             {subtitle ? (
-              <p className="mt-1 text-sm text-slate-400">{subtitle}</p>
+              <p className="mt-1 text-slate-400" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{subtitle}</p>
             ) : null}
           </div>
 

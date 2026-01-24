@@ -13,7 +13,8 @@ export type DashboardMainCategory =
   | 'actions' 
   | 'risks' 
   | 'decisions' 
-  | 'realtime';
+  | 'realtime'
+  | 'administration';
 
 export type DashboardSubCategory =
   | 'summary'
@@ -66,6 +67,15 @@ export interface DashboardCommandCenterStore {
   navigate: (
     mainCategory: DashboardMainCategory, 
     subCategory?: string | null, 
+    filter?: string | null
+  ) => void;
+  /**
+   * Alias compat: certains composants/historiques utilisent `navigateTo`.
+   * Même signature que `navigate`.
+   */
+  navigateTo: (
+    mainCategory: DashboardMainCategory,
+    subCategory?: string | null,
     filter?: string | null
   ) => void;
   setMainCategory: (category: DashboardMainCategory) => void;
@@ -219,6 +229,11 @@ export const useDashboardCommandCenterStore = create<DashboardCommandCenterStore
           
           return updated;
         }, false, { type: 'navigate', payload: newNavigation });
+      },
+
+      // Alias compat (évite les "ça ne réagit pas" si un composant appelle navigateTo)
+      navigateTo: (mainCategory, subCategory = null, subSubCategory = null) => {
+        get().navigate(mainCategory, subCategory, subSubCategory);
       },
 
       // Set main category seul

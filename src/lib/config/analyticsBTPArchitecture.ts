@@ -705,8 +705,8 @@ export function findSubModule(
   moduleId: string,
   subModuleId: string
 ): AnalyticsSubModule | undefined {
-  const module = findModule(domainId, moduleId);
-  return module?.subModules.find((s) => s.id === subModuleId);
+  const mod = findModule(domainId, moduleId);
+  return mod?.subModules.find((s) => s.id === subModuleId);
 }
 
 /**
@@ -731,8 +731,8 @@ export function getSubModulesByModule(
   domainId: string,
   moduleId: string
 ): AnalyticsSubModule[] {
-  const module = findModule(domainId, moduleId);
-  return module?.subModules || [];
+  const mod = findModule(domainId, moduleId);
+  return mod?.subModules || [];
 }
 
 /**

@@ -1,19 +1,27 @@
 /**
- * Contexte de navigation pour le Dashboard
- * Fournit un accès au store Zustand via React Context
- * ✅ Amélioré avec meilleure gestion SSR, validation et fallbacks
+ * Contexte de navigation pour le Dashboard (compat legacy).
+ *
+ * ⚠️ NOTE IMPORTANT:
+ * - La navigation du dashboard est désormais unifiée via `dashboardCommandCenterStore`.
+ * - Ce provider/context est conservé pour compat avec d'anciens imports,
+ *   mais s'appuie maintenant sur le store unifié (et non plus sur l'ancien store de navigation).
  */
 
 'use client';
 
-import { createContext, useContext, ReactNode, useMemo, useRef, useEffect } from 'react';
-import { 
-  useDashboardNavigationStore,
-} from '@/lib/stores/dashboardNavigationStore';
+import { createContext, useContext, ReactNode, useMemo, useRef, useEffect, useCallback } from 'react';
+import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { useLogger } from '@/lib/utils/logger';
-import { isValidRoute } from '../utils/routeValidation';
+import { isValidRoute, normalizeRoute } from '../utils/routeValidation';
 
-type DashboardNavigationStore = ReturnType<typeof useDashboardNavigationStore>;
+type DashboardNavigationStore = {
+  main: string;
+  sub: string | null;
+  leaf: string | null;
+  setMain: (main: string) => void;
+  setSub: (sub: string | null) => void;
+  setLeaf: (leaf: string | null) => void;
+};
 
 export const DashboardNavigationContext = createContext<DashboardNavigationStore | null>(null);
 
@@ -42,17 +50,29 @@ const DEFAULT_CONTEXT_VALUE: DashboardNavigationStore = {
 export function DashboardNavigationProvider({ children }: { children: ReactNode }) {
   const log = useLogger('DashboardNavigationProvider');
   
-  // ✅ Utiliser des sélecteurs individuels directement pour éviter les problèmes avec getServerSnapshot
-  // Ne pas utiliser useDashboardNavigationState qui retourne un objet (peut causer des problèmes SSR)
-  const main = useDashboardNavigationStore((state) => state.main);
-  const sub = useDashboardNavigationStore((state) => state.sub);
-  const leaf = useDashboardNavigationStore((state) => state.leaf);
-  
-  // ✅ Récupérer les actions une seule fois (elles sont stables avec Zustand)
-  // Les actions Zustand sont créées une seule fois et ne changent jamais
-  const setMain = useDashboardNavigationStore((state) => state.setMain);
-  const setSub = useDashboardNavigationStore((state) => state.setSub);
-  const setLeaf = useDashboardNavigationStore((state) => state.setLeaf);
+  const mainCategory = useDashboardCommandCenterStore((state) => state.navigation.mainCategory);
+  const subCategory = useDashboardCommandCenterStore((state) => state.navigation.subCategory);
+  const leafCategory = useDashboardCommandCenterStore((state) => state.navigation.subSubCategory);
+  const navigate = useDashboardCommandCenterStore((state) => state.navigate);
+
+  const main = mainCategory;
+  const sub = subCategory;
+  const leaf = leafCategory;
+
+  const setMain = useCallback(
+    (m: string) => navigate(m as any, null, null),
+    [navigate]
+  );
+
+  const setSub = useCallback(
+    (s: string | null) => navigate(mainCategory as any, s, null),
+    [navigate, mainCategory]
+  );
+
+  const setLeaf = useCallback(
+    (l: string | null) => navigate(mainCategory as any, subCategory, l),
+    [navigate, mainCategory, subCategory]
+  );
 
   // ✅ Validation de la route actuelle et correction si nécessaire
   const previousRouteRef = useRef({ main, sub, leaf });
@@ -73,13 +93,12 @@ export function DashboardNavigationProvider({ children }: { children: ReactNode 
           leaf,
         });
         
-        // Corriger automatiquement vers une route valide
-        setMain('overview');
-        setSub(null);
-        setLeaf(null);
+        // Corriger automatiquement vers une route valide (route par défaut canonique)
+        const normalized = normalizeRoute('overview', null, null);
+        navigate(normalized.main as any, normalized.sub, normalized.leaf);
       }
     }
-  }, [main, sub, leaf, setMain, setSub, setLeaf, log]);
+  }, [main, sub, leaf, navigate, log]);
 
   // ✅ Mémoriser avec shallow comparison - seulement les valeurs changent
   // Les fonctions setMain, setSub, setLeaf sont stables (créées une seule fois par Zustand)

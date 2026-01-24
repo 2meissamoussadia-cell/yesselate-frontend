@@ -48,19 +48,20 @@ export const DataCard = memo(function DataCard({
         // Surface premium (pas de hover:scale, pas de border-2)
         'rounded-2xl border border-slate-800/60 bg-slate-900/25',
         'shadow-[0_0_0_1px_rgba(255,255,255,0.03)] backdrop-blur-sm',
-        'p-4 transition-colors',
+        'transition-colors',
         onClick && 'cursor-pointer hover:bg-slate-900/40 hover:border-slate-700/60',
         className
       )}
       onClick={onClick}
+      style={{ padding: 'clamp(0.75rem, 1.5vw, 1rem)', minHeight: '80px' }}
     >
       {(title || Icon) && (
         <div className="flex items-center justify-between mb-3">
           {title && (
-            <h3 className="text-sm font-semibold text-slate-300">{title}</h3>
+            <h3 className="font-semibold text-slate-300" style={{ fontSize: 'clamp(0.875rem, 1vw, 0.9375rem)' }}>{title}</h3>
           )}
           {Icon && (
-            <Icon className="w-4 h-4 text-slate-400" />
+            <Icon className="text-slate-400 w-[clamp(0.875rem,1vw,1rem)] h-[clamp(0.875rem,1vw,1rem)] min-w-[0.875rem] min-h-[0.875rem]" />
           )}
         </div>
       )}
@@ -68,19 +69,20 @@ export const DataCard = memo(function DataCard({
       <div className="flex items-baseline justify-between gap-2">
         <div className="flex-1 min-w-0">
           {typeof value === 'string' || typeof value === 'number' ? (
-            <p className="text-2xl font-bold text-slate-200 mb-1">{value}</p>
+            <p className="font-bold text-slate-200 mb-1" style={{ fontSize: 'clamp(1.25rem, 2vw, 1.5rem)' }}>{value}</p>
           ) : (
             <div className="mb-1">{value}</div>
           )}
           {label && (
-            <p className="text-xs text-slate-400">{label}</p>
+            <p className="text-slate-400" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{label}</p>
           )}
         </div>
         
         {badge !== undefined && (
           <Badge
             variant="default"
-            className={cn('text-xs flex-shrink-0', badgeClasses[badgeVariant])}
+            className={cn('flex-shrink-0', badgeClasses[badgeVariant])}
+            style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}
           >
             {badge}
           </Badge>

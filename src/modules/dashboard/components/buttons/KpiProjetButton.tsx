@@ -1,25 +1,21 @@
 /**
  * Bouton de navigation vers la page KPIs Projet
- * Utilise le contexte de navigation et NAV_MAP
+ * Utilise le store Command Center (source de vérité)
  */
 
 'use client';
 
 import React from 'react';
-import { useDashboardNavigation } from '../../context/DashboardNavigationContext';
-import { NAV_MAP } from '../../config/navigationMap';
+import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
+import { Button, type ButtonProps } from '@/components/ui/button';
 
-export function KpiProjetButton() {
-  const { setMain, setSub, setLeaf } = useDashboardNavigation();
+export function KpiProjetButton({ children, ...props }: ButtonProps) {
+  const navigateTo = useDashboardCommandCenterStore((s) => s.navigateTo);
 
-  const handleClick = () => {
-    const target = NAV_MAP["KPIs Projet"];
-    if (!target) return;
-    setMain(target.main);
-    setSub(target.sub);
-    setLeaf(target.leaf);
-  };
-
-  return <button onClick={handleClick}>KPIs Projet</button>;
+  return (
+    <Button type="button" onClick={() => navigateTo('overview' as any, 'kpis' as any, 'projets')} {...props}>
+      {children ?? 'KPIs Projet'}
+    </Button>
+  );
 }
 

@@ -26,11 +26,13 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { KPICard } from '@/components/features/bmo/dashboard/components';
 import { AnimatedBadge } from '../shared/AnimatedBadge';
+import { EnterpriseBadge } from '../shared/EnterpriseBadge';
 import { SearchFilter } from '../shared/SearchFilter';
 import { EmptyState } from '../shared/EmptyState';
 import { ExportButton } from '../shared/ExportButton';
 import { DashboardPageShell } from '../shared/DashboardPageShell';
 import { DashboardPanel } from '../shared/DashboardPanel';
+import { VirtualizedList } from '@/components/shared/VirtualizedList';
 
 interface ProjetKPI {
   id: string;
@@ -69,9 +71,9 @@ export const ProjetKpiPage = memo(function ProjetKpiPage() {
       kpi: {
         label: kpi.label,
         value: kpi.value,
-        delta: kpi.trend,
+        trend: typeof kpi.trend === 'string' ? parseFloat(kpi.trend.replace(/[^\d.-]/g, '')) || 0 : 0,
+        trendType: kpi.trendDirection,
         tone: kpi.color === 'emerald' ? 'ok' : kpi.color === 'amber' || kpi.color === 'red' ? 'warn' : 'info',
-        trend: kpi.trendDirection === 'up' ? 'up' : kpi.trendDirection === 'down' ? 'down' : 'neutral',
         icon: kpi.icon,
       },
     });
@@ -226,6 +228,124 @@ export const ProjetKpiPage = memo(function ProjetKpiPage() {
     }).format(value).replace('XOF', 'FCFA');
   };
 
+  // Fonction de rendu pour une carte projet (réutilisable pour virtualisation)
+  const renderProjetCard = useCallback((projet: Projet) => (
+    <>
+      <span
+        aria-hidden="true"
+        className={cn(
+          'absolute inset-x-0 top-0 h-[2px]',
+          projet.statut === 'normal' && 'bg-slate-300/40',
+          projet.statut === 'retard' && 'bg-amber-400/80',
+          projet.statut === 'critique' && 'bg-rose-400/80'
+        )}
+      />
+      <div className="flex items-start justify-between mb-4">
+        <div className="flex-1">
+          <div className="flex items-center gap-3 mb-2 min-w-0">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <h3 className="text-lg font-bold text-white truncate min-w-0">{projet.nom}</h3>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{projet.nom}</p>
+              </TooltipContent>
+            </Tooltip>
+                    <EnterpriseBadge
+                      variant={projet.risque === 'high' ? 'critique' : projet.risque === 'medium' ? 'haute' : 'faible'}
+                      size="sm"
+                      className="flex-shrink-0"
+                    >
+                      Risque {projet.risque === 'low' ? 'Faible' : projet.risque === 'medium' ? 'Moyen' : 'Élevé'}
+                    </EnterpriseBadge>
+          </div>
+          <div className="flex items-center gap-2 text-sm text-slate-300 min-w-0">
+            <MapPin className="h-3 w-3 flex-shrink-0" />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="truncate min-w-0">{projet.region}</span>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{projet.region}</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+        </div>
+        {projet.retard > 0 && (
+          <div className="flex items-center gap-2 text-amber-400">
+            <Clock className="h-4 w-4" />
+            <span className="text-sm font-medium">{projet.retard}j de retard</span>
+          </div>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-3 sm:mb-4 min-w-0">
+        {/* Avancement */}
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs text-slate-300">Avancement</span>
+            <span className="text-sm font-semibold text-white">{projet.avancement}%</span>
+          </div>
+          <div className="h-2 bg-slate-700/50 rounded-full overflow-hidden">
+            <div
+              className={cn(
+                'h-full transition-all duration-500',
+                projet.avancement >= 80 && 'bg-emerald-500',
+                projet.avancement >= 60 && projet.avancement < 80 && 'bg-amber-500',
+                projet.avancement < 60 && 'bg-red-500'
+              )}
+              style={{ width: `${projet.avancement}%` }}
+            />
+          </div>
+        </div>
+
+        {/* Budget */}
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs text-slate-300">Budget</span>
+            <span className="text-sm font-semibold text-white">{projet.budget.pourcentage}%</span>
+          </div>
+          <div className="h-2 bg-slate-700/50 rounded-full overflow-hidden">
+            <div
+              className={cn(
+                'h-full transition-all duration-500',
+                projet.budget.pourcentage <= 80 && 'bg-emerald-500',
+                projet.budget.pourcentage > 80 && projet.budget.pourcentage <= 100 && 'bg-amber-500',
+                projet.budget.pourcentage > 100 && 'bg-red-500'
+              )}
+              style={{ width: `${Math.min(projet.budget.pourcentage, 100)}%` }}
+            />
+          </div>
+          <div className="text-xs text-slate-400 mt-1">
+            {formatCurrency(projet.budget.consomme)} / {formatCurrency(projet.budget.alloue)}
+          </div>
+        </div>
+
+        {/* Litiges */}
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs text-slate-300">Litiges</span>
+            <div className="flex items-center gap-1">
+              {projet.litiges > 0 && <Gavel className="h-3 w-3 text-amber-400" />}
+              <span className={cn(
+                'text-sm font-semibold',
+                projet.litiges === 0 ? 'text-emerald-400' : 'text-amber-400'
+              )}>
+                {projet.litiges}
+              </span>
+            </div>
+          </div>
+          {projet.litiges > 0 && (
+            <p className="text-xs text-amber-400">Action requise</p>
+          )}
+          {projet.litiges === 0 && (
+            <p className="text-xs text-slate-500">Aucun litige</p>
+          )}
+        </div>
+      </div>
+    </>
+  ), [formatCurrency]);
+
   // Fonctions d'export
   const handleExportCSV = useCallback(() => {
     const headers = ['Projet', 'Région', 'Avancement (%)', 'Retard (jours)', 'Budget Alloué', 'Budget Consommé', 'Pourcentage', 'Statut', 'Litiges', 'Risque'];
@@ -318,11 +438,12 @@ export const ProjetKpiPage = memo(function ProjetKpiPage() {
                     id: kpi.id,
                     label: kpi.label,
                     value: kpi.value,
-                    delta: kpi.trend,
+                    trend: typeof kpi.trend === 'string' ? parseFloat(kpi.trend.replace(/[^\d.-]/g, '')) || 0 : 0,
                     trendType: kpi.trendDirection,
                     icon: kpi.icon,
                     color: (kpi.color === 'red' ? 'rose' : kpi.color) as any,
                     description: kpi.description,
+                    sparkline: kpi.sparkline,
                     onClick: () => handleKPIClick(kpi),
                   }}
                   size="md"
@@ -363,132 +484,44 @@ export const ProjetKpiPage = memo(function ProjetKpiPage() {
             }
           />
         ) : (
-          <div className="space-y-4">
-            {filteredProjets.map((projet) => (
-            <div
-              key={projet.id}
-              className={cn(
-                'relative rounded-2xl p-5 border border-slate-800/60 bg-slate-900/30',
-                'transition-colors hover:bg-slate-900/45 hover:border-slate-700/60',
-                projet.statut === 'retard' && 'ring-1 ring-amber-500/15',
-                projet.statut === 'critique' && 'ring-1 ring-rose-500/20'
+          // Virtualisation conditionnelle (si >30 items pour performance)
+          filteredProjets.length > 30 ? (
+            <VirtualizedList
+              items={filteredProjets}
+              renderItem={(projet) => (
+                <div
+                  key={projet.id}
+                  className={cn(
+                    'relative rounded-2xl p-5 border border-slate-800/60 bg-slate-900/30 mb-4',
+                    'transition-colors hover:bg-slate-900/45 hover:border-slate-700/60',
+                    projet.statut === 'retard' && 'ring-1 ring-amber-500/15',
+                    projet.statut === 'critique' && 'ring-1 ring-rose-500/20'
+                  )}
+                >
+                  {renderProjetCard(projet)}
+                </div>
               )}
-            >
-              <span
-                aria-hidden="true"
-                className={cn(
-                  'absolute inset-x-0 top-0 h-[2px]',
-                  projet.statut === 'normal' && 'bg-slate-300/40',
-                  projet.statut === 'retard' && 'bg-amber-400/80',
-                  projet.statut === 'critique' && 'bg-rose-400/80'
-                )}
-              />
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2 min-w-0">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <h3 className="text-lg font-bold text-white truncate min-w-0">{projet.nom}</h3>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{projet.nom}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                    <AnimatedBadge
-                      variant={projet.risque === 'high' ? 'critical' : projet.risque === 'medium' ? 'warning' : 'success'}
-                      pulse={projet.risque === 'high'}
-                      className="flex-shrink-0"
-                    >
-                      Risque {projet.risque === 'low' ? 'Faible' : projet.risque === 'medium' ? 'Moyen' : 'Élevé'}
-                    </AnimatedBadge>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-slate-300 min-w-0">
-                    <MapPin className="h-3 w-3 flex-shrink-0" />
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <span className="truncate min-w-0">{projet.region}</span>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{projet.region}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </div>
-                </div>
-                {projet.retard > 0 && (
-                  <div className="flex items-center gap-2 text-amber-400">
-                    <Clock className="h-4 w-4" />
-                    <span className="text-sm font-medium">{projet.retard}j de retard</span>
-                  </div>
-                )}
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-3 sm:mb-4 min-w-0">
-                {/* Avancement */}
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-slate-300">Avancement</span>
-                    <span className="text-sm font-semibold text-white">{projet.avancement}%</span>
-                  </div>
-                  <div className="h-2 bg-slate-700/50 rounded-full overflow-hidden">
-                    <div
-                      className={cn(
-                        'h-full transition-all duration-500',
-                        projet.avancement >= 80 && 'bg-emerald-500',
-                        projet.avancement >= 60 && projet.avancement < 80 && 'bg-amber-500',
-                        projet.avancement < 60 && 'bg-red-500'
-                      )}
-                      style={{ width: `${projet.avancement}%` }}
-                    />
-                  </div>
-                </div>
-
-                {/* Budget */}
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-slate-300">Budget</span>
-                    <span className="text-sm font-semibold text-white">{projet.budget.pourcentage}%</span>
-                  </div>
-                  <div className="h-2 bg-slate-700/50 rounded-full overflow-hidden">
-                    <div
-                      className={cn(
-                        'h-full transition-all duration-500',
-                        projet.budget.pourcentage <= 80 && 'bg-emerald-500',
-                        projet.budget.pourcentage > 80 && projet.budget.pourcentage <= 100 && 'bg-amber-500',
-                        projet.budget.pourcentage > 100 && 'bg-red-500'
-                      )}
-                      style={{ width: `${Math.min(projet.budget.pourcentage, 100)}%` }}
-                    />
-                  </div>
-                  <div className="text-xs text-slate-400 mt-1">
-                    {formatCurrency(projet.budget.consomme)} / {formatCurrency(projet.budget.alloue)}
-                  </div>
-                </div>
-
-                {/* Litiges */}
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-slate-300">Litiges</span>
-                    <div className="flex items-center gap-1">
-                      {projet.litiges > 0 && <Gavel className="h-3 w-3 text-amber-400" />}
-                      <span className={cn(
-                        'text-sm font-semibold',
-                        projet.litiges === 0 ? 'text-emerald-400' : 'text-amber-400'
-                      )}>
-                        {projet.litiges}
-                      </span>
-                    </div>
-                  </div>
-                  {projet.litiges > 0 && (
-                    <p className="text-xs text-amber-400">Action requise</p>
+              estimateSize={280}
+              overscan={5}
+              containerHeight="600px"
+            />
+          ) : (
+            <div className="space-y-4">
+              {filteredProjets.map((projet) => (
+                <div
+                  key={projet.id}
+                  className={cn(
+                    'relative rounded-2xl p-5 border border-slate-800/60 bg-slate-900/30',
+                    'transition-colors hover:bg-slate-900/45 hover:border-slate-700/60',
+                    projet.statut === 'retard' && 'ring-1 ring-amber-500/15',
+                    projet.statut === 'critique' && 'ring-1 ring-rose-500/20'
                   )}
-                  {projet.litiges === 0 && (
-                    <p className="text-xs text-slate-500">Aucun litige</p>
-                  )}
+                >
+                  {renderProjetCard(projet)}
                 </div>
-              </div>
+              ))}
             </div>
-          ))}
-        </div>
+          )
         )}
       </section>
       </DashboardPanel>

@@ -37,6 +37,7 @@ import {
   Clock,
   AlertTriangle,
   Upload,
+  ChevronRight,
   X,
 } from 'lucide-react';
 

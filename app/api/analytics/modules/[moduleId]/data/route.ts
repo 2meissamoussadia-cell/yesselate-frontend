@@ -32,7 +32,7 @@ export async function GET(
     // Pour l'instant, utiliser les données mockées
     // TODO: Remplacer par un appel à la base de données
     const mockData = getMockDataForDomain(domainId);
-    const module = findModule(domainId, moduleId);
+    const moduleMeta = findModule(domainId, moduleId);
     
     const data = mockData?.list || [];
 
@@ -40,7 +40,7 @@ export async function GET(
       data,
       moduleId,
       domainId,
-      module: module ? { id: module.id, label: module.label } : null,
+      module: moduleMeta ? { id: moduleMeta.id, label: moduleMeta.label } : null,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {

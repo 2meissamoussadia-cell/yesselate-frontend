@@ -11,7 +11,7 @@ import { useState, useEffect } from 'react';
 import { Users, Shield, Clock, Plus, Settings, Loader2, AlertCircle, Eye } from 'lucide-react';
 import { delegationsApiService } from '@/lib/services/delegationsApiService';
 import { DelegationDetailModal } from '@/components/features/bmo/substitution/modals';
-import type { Delegation, DelegationStats, DelegationRule } from '@/lib/types/substitution.types';
+import type { Delegation, DelegationStats, DelegationRule, DelegationFilter } from '@/lib/types/substitution.types';
 
 export function DelegationsTab() {
   const [loading, setLoading] = useState(true);
@@ -23,6 +23,14 @@ export function DelegationsTab() {
   const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [selectedDelegationId, setSelectedDelegationId] = useState<string | null>(null);
 
+  const apiFilter: DelegationFilter | undefined = (() => {
+    if (!filter.type && !filter.status) return undefined;
+    const f: DelegationFilter = {};
+    if (filter.type) f.type = filter.type as Delegation['type'];
+    if (filter.status) f.status = filter.status as Delegation['status'];
+    return Object.keys(f).length > 0 ? f : undefined;
+  })();
+
   useEffect(() => {
     loadData();
   }, [filter]);
@@ -30,9 +38,9 @@ export function DelegationsTab() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const { data } = await delegationsApiService.getAll(filter, 'createdAt', 1, 50);
+      const { data } = await delegationsApiService.getAll(apiFilter, 'createdAt', 1, 50);
       const rulesData = await delegationsApiService.getRules();
-      const statsData = await delegationsApiService.getStats(filter);
+      const statsData = await delegationsApiService.getStats(apiFilter);
       
       setDelegations(data);
       setRules(rulesData);
@@ -84,7 +92,6 @@ export function DelegationsTab() {
       )}
 
       <div className="h-full flex flex-col">
-    <div className="h-full flex flex-col">
       {/* Header */}
       <div className="flex-shrink-0 p-6 bg-slate-900 border-b border-slate-700">
         <div className="flex items-center justify-between mb-4">
@@ -272,10 +279,10 @@ export function DelegationsTab() {
                     ))}
                   </div>
 
-                  {rule.maxDuration && (
+                  {rule.conditions?.maxDuration && (
                     <div className="mt-2 text-xs text-slate-500 flex items-center gap-1">
                       <AlertCircle className="w-3 h-3" />
-                      Durée maximale: {rule.maxDuration} jours
+                      Durée maximale: {rule.conditions.maxDuration} jours
                     </div>
                   )}
                 </div>

@@ -7,8 +7,6 @@
 'use client';
 
 import React, { Suspense } from 'react';
-import { DashboardNavigationProvider } from '@/modules/dashboard/context/DashboardNavigationContext';
-import { useDashboardNavigationSync } from '@/modules/dashboard/hooks/useDashboardNavigationSync';
 import { ErrorBoundary } from '@/components/shared/ErrorBoundary';
 
 /**
@@ -17,7 +15,8 @@ import { ErrorBoundary } from '@/components/shared/ErrorBoundary';
  * ✅ Wrappé dans Suspense pour éviter les erreurs SSR
  */
 function DashboardSync() {
-  useDashboardNavigationSync();
+  // Navigation unifiée: la sync URL <-> store est gérée par
+  // `useDashboardCommandCenterUrlSync()` dans la page dashboard.
   return null;
 }
 
@@ -60,14 +59,12 @@ function DashboardLayoutError({ error }: { error: Error }) {
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <ErrorBoundary fallback={(error) => <DashboardLayoutError error={error} />}>
-      <DashboardNavigationProvider>
-        <Suspense fallback={<DashboardLayoutFallback />}>
-          <DashboardSync />
-        </Suspense>
-        <ErrorBoundary fallback={(error) => <DashboardLayoutError error={error} />}>
-          {children}
-        </ErrorBoundary>
-      </DashboardNavigationProvider>
+      <Suspense fallback={<DashboardLayoutFallback />}>
+        <DashboardSync />
+      </Suspense>
+      <ErrorBoundary fallback={(error) => <DashboardLayoutError error={error} />}>
+        {children}
+      </ErrorBoundary>
     </ErrorBoundary>
   );
 }

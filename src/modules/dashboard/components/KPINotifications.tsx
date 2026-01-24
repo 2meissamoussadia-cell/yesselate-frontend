@@ -26,15 +26,15 @@ export const KPINotifications = memo(function KPINotifications({
   notifications, 
   onDismiss 
 }: KPINotificationsProps) {
-  if (notifications.length === 0) return null;
-
-  // Limiter le nombre de notifications affichées (max 5)
-  const displayedNotifications = notifications.slice(-5);
-
   // Mémoriser le handler de dismiss pour éviter les re-renders
   const handleDismiss = useCallback((id: string) => {
     onDismiss(id);
   }, [onDismiss]);
+
+  if (notifications.length === 0) return null;
+
+  // Limiter le nombre de notifications affichées (max 5)
+  const displayedNotifications = notifications.slice(-5);
 
   return (
     <div 

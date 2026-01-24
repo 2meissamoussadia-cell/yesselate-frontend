@@ -26,6 +26,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { KPICard } from '@/components/features/bmo/dashboard/components';
 import { AnimatedBadge } from '../shared/AnimatedBadge';
+import { EnterpriseBadge } from '../shared/EnterpriseBadge';
 import { ExportButton } from '../shared/ExportButton';
 import { DashboardPageShell } from '../shared/DashboardPageShell';
 import { DashboardPanel } from '../shared/DashboardPanel';
@@ -69,9 +70,9 @@ export const HighlightsKpiPage = memo(function HighlightsKpiPage() {
       kpi: {
         label: kpi.label,
         value: kpi.value,
-        delta: kpi.trend,
+        trend: typeof kpi.trend === 'string' ? parseFloat(kpi.trend.replace(/[^\d.-]/g, '')) || 0 : 0,
+        trendType: kpi.trendDirection,
         tone: kpi.tone === 'success' ? 'ok' : kpi.tone === 'warning' ? 'warn' : 'crit',
-        trend: kpi.trendDirection === 'up' ? 'up' : kpi.trendDirection === 'down' ? 'down' : 'neutral',
         icon: kpi.icon,
       },
     });
@@ -378,11 +379,12 @@ export const HighlightsKpiPage = memo(function HighlightsKpiPage() {
                       id: kpi.id,
                       label: kpi.label,
                       value: kpi.value,
-                      delta: kpi.trend,
+                      trend: typeof kpi.trend === 'string' ? parseFloat(kpi.trend.replace(/[^\d.-]/g, '')) || 0 : 0,
                       trendType: kpi.trendDirection,
                       icon: kpi.icon,
                       color,
                       description: kpi.description,
+                      sparkline: kpi.sparkline,
                       onClick: () => handleKPIClick(kpi),
                     }}
                     size="md"
@@ -430,9 +432,9 @@ export const HighlightsKpiPage = memo(function HighlightsKpiPage() {
             <span className="min-w-0">Risques et alertes critiques</span>
           </h2>
           {risks.filter(r => r.severity === 'high').length > 0 && (
-            <AnimatedBadge variant="critical" pulse className="flex-shrink-0">
+            <EnterpriseBadge variant="critique" size="sm" className="flex-shrink-0">
               {risks.filter(r => r.severity === 'high').length} critique{risks.filter(r => r.severity === 'high').length > 1 ? 's' : ''}
-            </AnimatedBadge>
+            </EnterpriseBadge>
           )}
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 min-w-0">
@@ -464,13 +466,13 @@ export const HighlightsKpiPage = memo(function HighlightsKpiPage() {
                   {risk.severity === 'low' && <Activity className="h-4 w-4 text-blue-400 flex-shrink-0" />}
                   <p className="text-sm font-medium text-white break-words min-w-0">{risk.label}</p>
                 </div>
-                <AnimatedBadge 
-                  variant={risk.severity === 'high' ? 'critical' : risk.severity === 'medium' ? 'warning' : 'info'}
-                  pulse={risk.severity === 'high'}
+                <EnterpriseBadge
+                  variant={risk.severity === 'high' ? 'critique' : risk.severity === 'medium' ? 'haute' : 'moyenne'}
+                  size="sm"
                   className="flex-shrink-0"
                 >
                   {risk.count}
-                </AnimatedBadge>
+                </EnterpriseBadge>
               </div>
               <p className="text-xs text-slate-400 break-words">
                 Évolution: {risk.trend === 'stable' ? 'Stable' : risk.trend}

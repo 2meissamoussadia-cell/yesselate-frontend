@@ -6,7 +6,7 @@
 
 'use client';
 
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 interface LastUpdateDisplayProps {
@@ -46,19 +46,16 @@ export const LastUpdateDisplay = memo(function LastUpdateDisplay({
   prefix = 'Mise à jour',
   className,
 }: LastUpdateDisplayProps) {
-  const [timeAgo, setTimeAgo] = useState(() => formatTimeAgo(lastUpdate));
+  const [tick, setTick] = useState(0);
 
   useEffect(() => {
-    // Mettre à jour immédiatement quand lastUpdate change
-    setTimeAgo(formatTimeAgo(lastUpdate));
-    
-    // Puis mettre à jour toutes les minutes
     const interval = setInterval(() => {
-      setTimeAgo(formatTimeAgo(lastUpdate));
+      setTick((t) => t + 1);
     }, 60000); // 1 minute
-
     return () => clearInterval(interval);
-  }, [lastUpdate]);
+  }, []);
+
+  const timeAgo = useMemo(() => formatTimeAgo(lastUpdate), [lastUpdate, tick]);
 
   return (
     <span className={cn('text-[10px] text-slate-500 normal-case', className)}>

@@ -62,7 +62,7 @@ export const useNavigationStore = create<NavigationStore>()(
       reset: () => set(initialState),
     }),
     {
-      name: 'general-navigation-storage', // Nom de la clé dans localStorage (renommé pour éviter conflit avec dashboardNavigationStore)
+      name: 'general-navigation-storage', // Nom de la clé dans localStorage (évite les conflits de noms)
       // ✅ NOUVEAU: getServerSnapshot pour SSR
       getServerSnapshot,
       // Optionnel: ne persister que certaines clés

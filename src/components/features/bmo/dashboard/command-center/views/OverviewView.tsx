@@ -38,7 +38,6 @@ import {
   Target,
 } from 'lucide-react';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
-import { useDashboardNavigationStore } from '@/lib/stores/dashboardNavigationStore';
 import { useApiQuery } from '@/lib/api/hooks/useApiQuery';
 import { dashboardAPI } from '@/lib/api/pilotage/dashboardClient';
 import { useLogger } from '@/lib/utils/logger';
@@ -348,18 +347,10 @@ const decisions: Decision[] = [
 export function OverviewView() {
   const log = useLogger('OverviewView');
   const openModal = useDashboardCommandCenterStore((state) => state.openModal);
-  const mainCategory = useDashboardNavigationStore((s) => s.main);
-  const subCategory = useDashboardNavigationStore((s) => s.sub);
-  const subSubCategory = useDashboardNavigationStore((s) => s.leaf);
-  const setMain = useDashboardNavigationStore((s) => s.setMain);
-  const setSub = useDashboardNavigationStore((s) => s.setSub);
-  const setLeaf = useDashboardNavigationStore((s) => s.setLeaf);
-
-  const navigate = (main: string, sub?: string | null, leaf?: string | null) => {
-    setMain(main);
-    setSub(sub ?? null);
-    setLeaf(leaf ?? null);
-  };
+  const navigate = useDashboardCommandCenterStore((s) => s.navigate);
+  const mainCategory = useDashboardCommandCenterStore((s) => s.navigation.mainCategory);
+  const subCategory = useDashboardCommandCenterStore((s) => s.navigation.subCategory);
+  const subSubCategory = useDashboardCommandCenterStore((s) => s.navigation.subSubCategory);
 
   // API Queries
   const { data: statsData, isLoading: statsLoading } = useApiQuery(
@@ -952,9 +943,9 @@ export function OverviewView() {
                   {decision.description}
                 </p>
                 <div className="flex items-center justify-between pt-3 border-t border-slate-700/50">
-                  {decision.demandeur && (
+                  {decision.demandeur != null && (decision.demandeur.nom != null || decision.demandeur.bureau != null) && (
                     <span className="text-xs text-slate-500">
-                      {decision.demandeur.nom} ({decision.demandeur.bureau})
+                      {decision.demandeur.nom ?? '—'} ({decision.demandeur.bureau ?? '—'})
                     </span>
                   )}
                   <Button

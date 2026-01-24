@@ -1,25 +1,21 @@
 /**
  * Bouton de navigation vers la page KPIs Budget
- * Utilise le contexte de navigation et NAV_MAP
+ * Utilise le store Command Center (source de vérité)
  */
 
 'use client';
 
 import React from 'react';
-import { useDashboardNavigation } from '../../context/DashboardNavigationContext';
-import { NAV_MAP } from '../../config/navigationMap';
+import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
+import { Button, type ButtonProps } from '@/components/ui/button';
 
-export function KpiBudgetButton() {
-  const { setMain, setSub, setLeaf } = useDashboardNavigation();
+export function KpiBudgetButton({ children, ...props }: ButtonProps) {
+  const navigateTo = useDashboardCommandCenterStore((s) => s.navigateTo);
 
-  const handleClick = () => {
-    const target = NAV_MAP["KPIs Budget"];
-    if (!target) return;
-    setMain(target.main);
-    setSub(target.sub);
-    setLeaf(target.leaf);
-  };
-
-  return <button onClick={handleClick}>KPIs Budget</button>;
+  return (
+    <Button type="button" onClick={() => navigateTo('overview' as any, 'kpis' as any, 'budget')} {...props}>
+      {children ?? 'KPIs Budget'}
+    </Button>
+  );
 }
 

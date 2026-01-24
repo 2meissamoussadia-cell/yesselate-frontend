@@ -34,10 +34,10 @@ export function BTPSubModuleView({
   const [selectedModal, setSelectedModal] = React.useState<string | null>(null);
 
   const domain = findDomain(domainId);
-  const module = findModule(domainId, moduleId);
+  const mod = findModule(domainId, moduleId);
   const subModule = findSubModule(domainId, moduleId, subModuleId);
 
-  if (!domain || !module || !subModule) {
+  if (!domain || !mod || !subModule) {
     return (
       <div className="flex items-center justify-center h-full">
         <p className="text-slate-400">Sous-module introuvable</p>
@@ -87,7 +87,7 @@ export function BTPSubModuleView({
       <div className="flex items-center gap-2 text-sm text-slate-400">
         <span>{domain.label}</span>
         <ChevronRight className="h-4 w-4" />
-        <span>{module.label}</span>
+        <span>{mod.label}</span>
         <ChevronRight className="h-4 w-4" />
         <span className="text-slate-300">{subModule.label}</span>
       </div>

@@ -29,6 +29,8 @@ export { LastUpdateDisplay } from './LastUpdateDisplay';
 export { ContentLoadingSkeleton } from './ContentLoadingSkeleton';
 export { KPISparkline } from './shared/KPISparkline';
 export type { KPITone, KPITrend } from './shared/KPISparkline';
+export { EnterpriseBadge } from './shared/EnterpriseBadge';
+export type { EnterpriseBadgeVariant } from './shared/EnterpriseBadge';
 
 // Export des vues
 export * from './views';

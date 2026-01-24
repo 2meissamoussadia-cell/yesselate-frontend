@@ -80,10 +80,11 @@ export const RiskScoreCard = memo(function RiskScoreCard({
   onClick,
   className,
 }: RiskScoreCardProps) {
-  // Validation et fallback pour l'impact
-  const riskImpact = risk.impact || 'moyen';
-  const impact = impactConfig[riskImpact] || impactConfig.moyen;
-  const ImpactIcon = impact.icon;
+  // Validation et fallback pour l'impact (normaliser clé)
+  const rawImpact = (risk.impact || 'moyen').toString().toLowerCase();
+  const riskImpact = (['critique', 'majeur', 'moyen', 'mineur'].includes(rawImpact) ? rawImpact : 'moyen') as RiskImpact;
+  const impact = impactConfig[riskImpact] ?? impactConfig.moyen;
+  const ImpactIcon = impact?.icon ?? Info;
 
   // Validation et fallback pour la probabilité
   const riskProbabilite = risk.probabilite || 'moyenne';
@@ -108,23 +109,25 @@ export const RiskScoreCard = memo(function RiskScoreCard({
         className
       )}
       onClick={onClick}
+      style={{ padding: 'clamp(0.75rem, 1.5vw, 1rem)', minHeight: '120px' }}
     >
       {/* Header: Score + Impact */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">
-          <ImpactIcon className={cn('w-5 h-5', impact.color)} />
+          <ImpactIcon className={cn(impact.color)} style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
           <Badge
             variant="default"
-            className={cn('text-xs border', impact.bg, impact.border, impact.color)}
+            className={cn('border', impact.bg, impact.border, impact.color)}
+            style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}
           >
             {impact.label}
           </Badge>
         </div>
         <div className="text-right">
-          <p className={cn('text-2xl font-bold', scoreColor)}>
+          <p className={cn('font-bold', scoreColor)} style={{ fontSize: 'clamp(1.25rem, 2vw, 1.5rem)' }}>
             {risk.score}
           </p>
-          <p className="text-[10px] text-slate-400">Score</p>
+          <p className="text-slate-400" style={{ fontSize: 'clamp(0.5625rem, 0.7vw, 0.625rem)' }}>Score</p>
         </div>
       </div>
 
@@ -141,13 +144,13 @@ export const RiskScoreCard = memo(function RiskScoreCard({
       {/* Footer: Probabilité + Age */}
       <div className="flex items-center justify-between pt-3 border-t border-slate-700/50">
         <div className="flex items-center gap-2">
-          <span className="text-[10px] text-slate-500">Probabilité:</span>
-          <span className={cn('text-xs font-medium', probability.color)}>
+          <span className="text-slate-500" style={{ fontSize: 'clamp(0.5625rem, 0.7vw, 0.625rem)' }}>Probabilité:</span>
+          <span className={cn('font-medium', probability.color)} style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>
             {probability.label}
           </span>
         </div>
         {risk.age !== undefined && (
-          <span className="text-[10px] text-slate-500">
+          <span className="text-slate-500" style={{ fontSize: 'clamp(0.5625rem, 0.7vw, 0.625rem)' }}>
             {risk.age}j
           </span>
         )}

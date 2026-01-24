@@ -32,9 +32,9 @@ export function BTPModuleView({ domainId, moduleId }: BTPModuleViewProps) {
   const [selectedElement, setSelectedElement] = useState<{ id: string; type: string } | null>(null);
   
   const domain = findDomain(domainId);
-  const module = findModule(domainId, moduleId);
+  const mod = findModule(domainId, moduleId);
 
-  if (!domain || !module) {
+  if (!domain || !mod) {
     return (
       <div className="flex items-center justify-center h-full">
         <p className="text-slate-400">Module introuvable</p>
@@ -71,15 +71,15 @@ export function BTPModuleView({ domainId, moduleId }: BTPModuleViewProps) {
       <div className="flex items-center gap-2 text-sm text-slate-400">
         <span>{domain.label}</span>
         <ChevronRight className="h-4 w-4" />
-        <span className="text-slate-300">{module.label}</span>
+        <span className="text-slate-300">{mod.label}</span>
       </div>
 
       {/* Header */}
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <h2 className="text-xl font-semibold text-slate-200 mb-2">{module.label}</h2>
-          {module.description && (
-            <p className="text-slate-400 text-sm">{module.description}</p>
+          <h2 className="text-xl font-semibold text-slate-200 mb-2">{mod.label}</h2>
+          {mod.description && (
+            <p className="text-slate-400 text-sm">{mod.description}</p>
           )}
         </div>
         <div className="flex items-center gap-2">
@@ -221,7 +221,7 @@ export function BTPModuleView({ domainId, moduleId }: BTPModuleViewProps) {
 
       {/* Sous-Modules */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {module.subModules.map((subMod) => (
+        {mod.subModules.map((subMod) => (
           <div
             key={subMod.id}
             onClick={() => navigateToSubModule(domainId, moduleId, subMod.id)}

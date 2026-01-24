@@ -113,9 +113,9 @@ export async function loadComponent(name: string): Promise<ComponentType> {
   // ✅ Créer la promesse de chargement avec retry
   const loadPromise = retryWithBackoff(async () => {
     try {
-      const module = await loader();
+      const loadedModule = await loader();
       
-      if (!module) {
+      if (!loadedModule) {
         throw new Error(`Component "${name}" module is empty or undefined`);
       }
 
@@ -123,19 +123,19 @@ export async function loadComponent(name: string): Promise<ComponentType> {
       // Certains composants utilisent named export (SummaryPage, OverviewPage, etc.)
       let component: ComponentType;
       
-      if (module.default) {
+      if (loadedModule.default) {
         // Default export (cas le plus courant)
-        component = module.default;
+        component = loadedModule.default;
       } else {
         // Named export - chercher le composant avec le même nom
-        const namedExport = module[name as keyof typeof module];
+        const namedExport = loadedModule[name as keyof typeof loadedModule];
         if (namedExport && typeof namedExport === 'function') {
           component = namedExport as ComponentType;
         } else {
           // Fallback: prendre le premier export nommé disponible
-          const exports = Object.keys(module);
+          const exports = Object.keys(loadedModule);
           if (exports.length > 0) {
-            const firstExport = module[exports[0] as keyof typeof module];
+            const firstExport = loadedModule[exports[0] as keyof typeof loadedModule];
             if (typeof firstExport === 'function') {
               component = firstExport as ComponentType;
             } else {

@@ -1,18 +1,19 @@
 /**
  * Sidebar de navigation pour le module Dashboard
- * VERSION CORRIGÉE - Utilise uniquement useDashboardNavigationStore
+ * VERSION CORRIGÉE - Navigation unifiée (Command Center store)
  */
 
 'use client';
 
 import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ChevronDown, ChevronRight, ChevronLeft, Search } from 'lucide-react';
 import { dashboardNavigationConfig, type NavNode } from './dashboardNavigationConfig';
-import { useDashboardNavigation } from '../context/DashboardNavigationContext';
+import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { useLogger } from '@/lib/utils/logger';
 import { getDefaultLeafForSub, isValidRoute, normalizeRoute } from '../utils/routeValidation';
 
@@ -37,9 +38,14 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
   onOpenCommandPalette,
 }: DashboardSidebarProps) {
   const log = useLogger('DashboardSidebar');
+  const router = useRouter();
+  const params = useSearchParams();
   
-  // ✅ Utiliser uniquement useDashboardNavigationStore
-  const { main, sub, leaf, setMain, setSub, setLeaf } = useDashboardNavigation();
+  // ✅ Store Command Center = source de vérité
+  const main = useDashboardCommandCenterStore((state) => state.navigation.mainCategory);
+  const sub = useDashboardCommandCenterStore((state) => state.navigation.subCategory);
+  const leaf = useDashboardCommandCenterStore((state) => state.navigation.subSubCategory);
+  const navigate = useDashboardCommandCenterStore((state) => state.navigate);
   
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set([main || 'overview']));
   const [searchQuery, setSearchQuery] = useState('');
@@ -142,9 +148,16 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
         { main: mainId, sub: subId, leaf: leafId }
       );
       
-      setMain(mainId);
-      setSub(subId || null);
-      setLeaf(leafId || null);
+      navigate(mainId as any, subId || null, leafId || null);
+
+      // ✅ URL = source de vérité → pousser la route immédiatement
+      const sp = new URLSearchParams(params.toString());
+      sp.set('main', mainId);
+      if (subId) sp.set('sub', subId);
+      else sp.delete('sub');
+      if (leafId) sp.set('leaf', leafId);
+      else sp.delete('leaf');
+      router.push(`/maitre-ouvrage/dashboard?${sp.toString()}`);
     } catch (error) {
       log.error('Erreur lors de la navigation', error instanceof Error ? error : new Error(String(error)), {
         main: mainId,
@@ -152,7 +165,7 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
         leaf: leafId,
       });
     }
-  }, [main, sub, leaf, setMain, setSub, setLeaf, log]);
+  }, [main, sub, leaf, navigate, log, router, params]);
 
   // Composant interne pour les nœuds
   const NavNodeComponent = React.memo(function NavNodeComponent({
@@ -332,7 +345,10 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
                 )}
                 <span className="flex-1 truncate min-w-0 text-xs sm:text-sm">{node.label}</span>
                 {badge !== undefined && badge !== null && badge !== 0 && (
-                  <Badge variant="secondary" className="ml-auto">
+                  <Badge
+                    variant="default"
+                    className="ml-auto bg-slate-800/50 text-slate-200 border border-slate-700/60"
+                  >
                     {badge}
                   </Badge>
                 )}
@@ -378,7 +394,7 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
     }
     
     const query = debouncedSearchQuery.toLowerCase();
-    const filtered: typeof dashboardNavigationConfig = {};
+    const filtered: Record<string, NavNode> = {};
     
     // ✅ Recherche récursive dans les nœuds
     const searchInNode = (node: NavNode): boolean => {

@@ -133,7 +133,7 @@ const mainCategoryLabels = {
 } as const;
 
 // Sous-catégories par catégorie principale
-const subCategoriesMap = {
+const subCategoriesMap: Record<string, Array<{ id: string; label: string }>> = {
   overview: [
     { id: 'summary', label: 'Synthèse' },
     { id: 'kpis', label: 'KPIs' },
@@ -245,7 +245,7 @@ function BlockedPageContent() {
   }, [activeCategory]);
 
   const currentSubCategories = useMemo(() => {
-    return (subCategoriesMap as any)[activeCategory] || [];
+    return subCategoriesMap[activeCategory] || [];
   }, [activeCategory]);
 
   // Load stats from API
@@ -311,7 +311,7 @@ function BlockedPageContent() {
     const cat = category as typeof activeCategory;
     setActiveCategory(cat);
     navigate(cat);
-    const defaultSub = subCategory || (subCategoriesMap as any)[cat]?.[0]?.id || null;
+    const defaultSub = (subCategory || subCategoriesMap[cat]?.[0]?.id || null) as BlockedSubCategory | null;
     setActiveSubCategory(defaultSub);
     setActiveSubSubCategory(undefined); // Reset level 3
   }, [navigate]);

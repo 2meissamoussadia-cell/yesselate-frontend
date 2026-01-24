@@ -16,7 +16,7 @@ export function BTPDrillDown() {
   const { domainId, moduleId, subModuleId } = navigation;
 
   const domain = domainId ? findDomain(domainId) : null;
-  const module = domainId && moduleId ? findModule(domainId, moduleId) : null;
+  const mod = domainId && moduleId ? findModule(domainId, moduleId) : null;
   const subModule = domainId && moduleId && subModuleId ? findSubModule(domainId, moduleId, subModuleId) : null;
 
   if (!domainId) return null;
@@ -26,10 +26,10 @@ export function BTPDrillDown() {
     { id: domainId, label: domain?.label || domainId, onClick: () => navigateToDomain(domainId) },
   ];
 
-  if (module) {
+  if (mod) {
     path.push({
       id: moduleId!,
-      label: module.label,
+      label: mod.label,
       onClick: () => navigateToModule(domainId, moduleId!),
     });
   }

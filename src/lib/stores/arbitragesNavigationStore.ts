@@ -1,6 +1,6 @@
 /**
  * Store Zustand pour la navigation du module Arbitrages-Vivants
- * Pattern cohérent avec dashboardNavigationStore
+ * Pattern cohérent avec les stores de navigation du projet
  */
 
 'use client';

@@ -143,11 +143,12 @@ export const KpiOverviewPage = memo(function KpiOverviewPage() {
       <div
         key={category.id}
         className={cn(
-          'group relative rounded-2xl p-6 border border-slate-800/60 bg-slate-900/30',
+          'group relative rounded-2xl border border-slate-800/60 bg-slate-900/30',
           'transition-colors hover:bg-slate-900/45 hover:border-slate-700/60 cursor-pointer',
           category.status === 'warning' && 'ring-1 ring-amber-500/15',
           category.status === 'critical' && 'ring-1 ring-rose-500/20'
         )}
+        style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)', minHeight: '200px' }}
       >
         <span
           aria-hidden="true"
@@ -162,42 +163,43 @@ export const KpiOverviewPage = memo(function KpiOverviewPage() {
         <div className="flex items-start justify-between mb-4">
           <div
             className={cn(
-              "w-12 h-12 rounded-xl flex items-center justify-center bg-slate-900/40 ring-1 ring-slate-800/60"
+              "rounded-xl flex items-center justify-center bg-slate-900/40 ring-1 ring-slate-800/60"
             )}
+            style={{ width: 'clamp(2.5rem, 3.5vw, 3rem)', height: 'clamp(2.5rem, 3.5vw, 3rem)', minWidth: '2.5rem', minHeight: '2.5rem' }}
           >
             <CategoryIcon
               className={cn(
-                'w-6 h-6',
                 category.color === 'blue' && 'text-blue-300',
                 category.color === 'purple' && 'text-purple-300',
                 category.color === 'emerald' && 'text-emerald-300'
               )}
+              style={{ width: 'clamp(1.25rem, 1.75vw, 1.5rem)', height: 'clamp(1.25rem, 1.75vw, 1.5rem)', minWidth: '1.25rem', minHeight: '1.25rem' }}
             />
           </div>
-          <Badge className={cn(statusColors[category.status], "text-white")}>
+          <Badge className={cn(statusColors[category.status], "text-white")} style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>
             {category.count} KPIs
           </Badge>
         </div>
 
         {/* Title et description */}
-        <h3 className="text-xl font-bold text-white mb-2">{category.title}</h3>
-        <p className="text-slate-300 text-sm mb-4">{category.description}</p>
+        <h3 className="font-bold text-white mb-2" style={{ fontSize: 'clamp(1rem, 1.5vw, 1.25rem)' }}>{category.title}</h3>
+        <p className="text-slate-300 mb-4" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{category.description}</p>
 
         {/* Indicateurs clés */}
         {category.indicators && category.indicators.length > 0 && (
           <div className="space-y-2 mb-4 pt-4 border-t border-slate-700/50">
             {category.indicators.map((indicator, idx) => (
-              <div key={idx} className="flex items-center justify-between text-sm">
+              <div key={idx} className="flex items-center justify-between" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>
                 <span className="text-slate-300">{indicator.label}</span>
                 <div className="flex items-center gap-2">
                   <span className="text-white font-semibold">{indicator.value}</span>
                   <span
                     className={cn(
-                      'text-xs',
                       indicator.trendType === 'up' && 'text-green-400',
                       indicator.trendType === 'down' && 'text-red-400',
                       indicator.trendType === 'neutral' && 'text-slate-400'
                     )}
+                    style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}
                   >
                     {indicator.trend}
                   </span>
@@ -208,9 +210,9 @@ export const KpiOverviewPage = memo(function KpiOverviewPage() {
         )}
 
         {/* Call to action */}
-        <div className="flex items-center gap-2 text-sm text-slate-300 group-hover:text-white transition-colors">
+        <div className="flex items-center gap-2 text-slate-300 group-hover:text-white transition-colors" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>
           <span>Voir les détails</span>
-          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          <ArrowRight className="group-hover:translate-x-1 transition-transform" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />
         </div>
       </div>
     );
@@ -238,8 +240,8 @@ export const KpiOverviewPage = memo(function KpiOverviewPage() {
         <DashboardPanel className="p-4 sm:p-6">
           {/* KPI Categories */}
           <section className="space-y-4 min-w-0">
-            <h2 className="text-lg sm:text-xl font-semibold text-white flex items-center gap-2 break-words">
-              <BarChart3 className="w-5 h-5 text-purple-400 flex-shrink-0" />
+            <h2 className="font-semibold text-white flex items-center gap-2 break-words" style={{ fontSize: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
+              <BarChart3 className="text-purple-400 flex-shrink-0" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
               <span className="min-w-0">Catégories de KPIs</span>
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 min-w-0">
@@ -251,35 +253,35 @@ export const KpiOverviewPage = memo(function KpiOverviewPage() {
         <DashboardPanel className="p-4 sm:p-6">
           {/* Context Section */}
           <section className="space-y-4 min-w-0 overflow-hidden">
-            <h2 className="text-lg sm:text-xl font-semibold text-white flex items-center gap-2 break-words">
-              <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+            <h2 className="font-semibold text-white flex items-center gap-2 break-words" style={{ fontSize: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
+              <CheckCircle className="text-emerald-400 flex-shrink-0" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
               <span className="min-w-0">À propos des KPIs</span>
             </h2>
-            <p className="text-slate-300 text-sm sm:text-base break-words">
+            <p className="text-slate-300 break-words" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>
               Cette section présente tous les indicateurs de performance disponibles dans le système.
               Les KPIs sont organisés par catégorie pour faciliter la navigation et l'analyse.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 min-w-0">
-              <div className="bg-slate-950/30 border border-slate-800/60 rounded-xl p-4">
+              <div className="bg-slate-950/30 border border-slate-800/60 rounded-xl" style={{ padding: 'clamp(0.75rem, 1.5vw, 1rem)', minHeight: '120px' }}>
                 <div className="flex items-center gap-2 mb-2">
-                  <Target className="w-5 h-5 text-blue-400" />
-                  <h3 className="font-semibold text-white">KPIs Projet</h3>
+                  <Target className="text-blue-400" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
+                  <h3 className="font-semibold text-white" style={{ fontSize: 'clamp(0.875rem, 1vw, 0.9375rem)' }}>KPIs Projet</h3>
                 </div>
-                <p className="text-sm text-slate-400">Indicateurs spécifiques à chaque projet individuel</p>
+                <p className="text-slate-400" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>Indicateurs spécifiques à chaque projet individuel</p>
               </div>
-              <div className="bg-slate-950/30 border border-slate-800/60 rounded-xl p-4">
+              <div className="bg-slate-950/30 border border-slate-800/60 rounded-xl" style={{ padding: 'clamp(0.75rem, 1.5vw, 1rem)', minHeight: '120px' }}>
                 <div className="flex items-center gap-2 mb-2">
-                  <BarChart3 className="w-5 h-5 text-purple-400" />
-                  <h3 className="font-semibold text-white">KPIs Projets</h3>
+                  <BarChart3 className="text-purple-400" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
+                  <h3 className="font-semibold text-white" style={{ fontSize: 'clamp(0.875rem, 1vw, 0.9375rem)' }}>KPIs Projets</h3>
                 </div>
-                <p className="text-sm text-slate-300">Vue agrégée de tous les projets</p>
+                <p className="text-slate-300" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>Vue agrégée de tous les projets</p>
               </div>
-              <div className="bg-slate-950/30 border border-slate-800/60 rounded-xl p-4">
+              <div className="bg-slate-950/30 border border-slate-800/60 rounded-xl" style={{ padding: 'clamp(0.75rem, 1.5vw, 1rem)', minHeight: '120px' }}>
                 <div className="flex items-center gap-2 mb-2">
-                  <DollarSign className="w-5 h-5 text-emerald-400" />
-                  <h3 className="font-semibold text-white">KPIs Budget</h3>
+                  <DollarSign className="text-emerald-400" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
+                  <h3 className="font-semibold text-white" style={{ fontSize: 'clamp(0.875rem, 1vw, 0.9375rem)' }}>KPIs Budget</h3>
                 </div>
-                <p className="text-sm text-slate-300">Suivi financier et consommation budgétaire</p>
+                <p className="text-slate-300" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>Suivi financier et consommation budgétaire</p>
               </div>
             </div>
           </section>

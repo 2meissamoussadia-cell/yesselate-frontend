@@ -23,7 +23,6 @@ import {
   EyeOff,
 } from 'lucide-react';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
-import { useDashboardNavigationStore } from '@/lib/stores/dashboardNavigationStore';
 import { useApiQuery } from '@/lib/api/hooks/useApiQuery';
 import { dashboardAPI } from '@/lib/api/pilotage/dashboardClient';
 import { SectionTitle, RiskScoreCard, DataCard } from '@/components/features/bmo/dashboard/components';
@@ -123,8 +122,8 @@ const kindLabels = {
 
 export function RisksView() {
   const openModal = useDashboardCommandCenterStore((s) => s.openModal);
-  const subCategory = useDashboardNavigationStore((s) => s.sub);
-  const subSubCategory = useDashboardNavigationStore((s) => s.leaf);
+  const subCategory = useDashboardCommandCenterStore((s) => s.navigation.subCategory);
+  const subSubCategory = useDashboardCommandCenterStore((s) => s.navigation.subSubCategory);
   const navigation = { subCategory, subSubCategory } as const;
   const [snoozedRisks, setSnoozedRisks] = useState<Set<string>>(new Set());
 

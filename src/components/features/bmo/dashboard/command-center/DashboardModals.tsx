@@ -5,7 +5,7 @@
 
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, Suspense, lazy } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -47,13 +47,20 @@ import {
   Eye,
 } from 'lucide-react';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
-import { KPIAdvancedModal } from './KPIAdvancedModal';
-import { KPIComparisonModal } from './KPIComparisonModal';
 import { getKPIMappingByLabel } from '@/lib/mappings/dashboardKPIMapping';
 import { KPIHistoryChart } from './charts/KPIHistoryChart';
 import { DistributionChart } from './charts/DistributionChart';
 import { useApiQuery } from '@/lib/api/hooks/useApiQuery';
 import { dashboardAPI } from '@/lib/api/pilotage/dashboardClient';
+
+// Lazy loading des modals lourds (avec graphiques et données complexes)
+const KPIAdvancedModal = lazy(() => 
+  import('./KPIAdvancedModal').then(m => ({ default: m.KPIAdvancedModal }))
+);
+const KPIComparisonModal = lazy(() => 
+  import('./KPIComparisonModal').then(m => ({ default: m.KPIComparisonModal }))
+);
+// KPIDrillDownModal est défini localement ci-dessous comme fallback
 
 export function DashboardModals() {
   const { modal, closeModal } = useDashboardCommandCenterStore();
@@ -82,11 +89,10 @@ export function DashboardModals() {
         </TooltipProvider>
       );
     }
-    // Sinon utiliser l'ancien modal
+    // Sinon utiliser l'ancien modal local
     return (
       <TooltipProvider>
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50" onClick={closeModal} />
-        <KPIDrillDownModal />
+        <KPIDrillDownModalLocal />
       </TooltipProvider>
     );
   }
@@ -101,10 +107,18 @@ export function DashboardModals() {
 
       {/* Modal content based on type */}
       {modal.type === 'kpi-comparison' && (
-        <KPIComparisonModal
-          kpiIds={modal.data?.kpiIds || []}
-          onClose={closeModal}
-        />
+        <Suspense fallback={
+          <div className="fixed inset-0 z-50 flex items-center justify-center">
+            <div className="bg-slate-900 rounded-xl p-8 border border-slate-800">
+              <div className="animate-pulse text-slate-400">Chargement de la comparaison...</div>
+            </div>
+          </div>
+        }>
+          <KPIComparisonModal
+            kpiIds={modal.data?.kpiIds || []}
+            onClose={closeModal}
+          />
+        </Suspense>
       )}
       {(modal.type === 'risk-detail' || modal.type === 'risk-details') && <RiskDetailModal />}
       {(modal.type === 'action-detail' || modal.type === 'action-details') && <ActionDetailModal />}
@@ -163,10 +177,10 @@ function ModalWrapper({
 }
 
 // ============================================
-// KPI Drill Down Modal - Complet avec graphiques
+// KPI Drill Down Modal - Complet avec graphiques (Local fallback)
 // ============================================
 
-function KPIDrillDownModal() {
+function KPIDrillDownModalLocal() {
   const { modal, closeModal } = useDashboardCommandCenterStore();
   const kpiData = modal.data?.kpi as {
     label: string;

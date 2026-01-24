@@ -1,11 +1,12 @@
 /**
  * Navigation secondaire et tertiaire pour le module Dashboard
- * VERSION CORRIGÉE - Utilise uniquement useDashboardNavigationStore
+ * VERSION CORRIGÉE - Navigation unifiée (Command Center store)
  */
 
 'use client';
 
 import React, { useCallback, memo } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -16,10 +17,11 @@ import {
   getSubSubCategories,
   type NavNode,
 } from './dashboardNavigationConfig';
-import { useDashboardNavigation } from '../context/DashboardNavigationContext';
+import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { useLogger } from '@/lib/utils/logger';
 import { getDefaultLeafForSub, isValidRoute } from '../utils/routeValidation';
 import { zIndexClass } from '../utils/zIndex';
+import type { DashboardMainCategory } from '../types/dashboardNavigationTypes';
 
 interface DashboardSubNavigationProps {
   stats?: {
@@ -30,22 +32,44 @@ interface DashboardSubNavigationProps {
     decisions?: number;
     realtime?: number;
   };
+  /** Par défaut: on évite une 2e breadcrumb (DashboardBreadcrumbs fait déjà le job) */
+  showBreadcrumbs?: boolean;
 }
 
 export const DashboardSubNavigation = memo(function DashboardSubNavigation({
   stats = {},
+  showBreadcrumbs = false,
 }: DashboardSubNavigationProps) {
   const log = useLogger('DashboardSubNavigation');
+  const router = useRouter();
+  const params = useSearchParams();
   
-  // ✅ Utiliser uniquement useDashboardNavigationStore
-  const { main, sub, leaf, setMain, setSub, setLeaf } = useDashboardNavigation();
+  const main = useDashboardCommandCenterStore((state) => state.navigation.mainCategory);
+  const sub = useDashboardCommandCenterStore((state) => state.navigation.subCategory);
+  const leaf = useDashboardCommandCenterStore((state) => state.navigation.subSubCategory);
+  const navigate = useDashboardCommandCenterStore((state) => state.navigate);
+
+  const pushRoute = useCallback(
+    (next: { main: string; sub: string | null; leaf: string | null }) => {
+      const sp = new URLSearchParams(params.toString());
+      sp.set('main', next.main);
+      if (next.sub) sp.set('sub', next.sub);
+      else sp.delete('sub');
+      if (next.leaf) sp.set('leaf', next.leaf);
+      else sp.delete('leaf');
+      router.push(`/maitre-ouvrage/dashboard?${sp.toString()}`);
+    },
+    [router, params]
+  );
+
+  const currentMainCategory = (main || 'overview') as DashboardMainCategory;
 
   // Récupérer les sous-catégories (niveau 2)
-  const subCategories = getSubCategories(main || 'overview') || [];
+  const subCategories = getSubCategories(currentMainCategory) || [];
 
   // Récupérer les sous-sous-catégories (niveau 3)
   const subSubCategories = (sub
-    ? getSubSubCategories(main || 'overview', sub)
+    ? getSubSubCategories(currentMainCategory, sub)
     : []) || [];
 
   // Labels pour le breadcrumb
@@ -100,7 +124,7 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
       log.warn('Erreur lors de la résolution du leaf', { error: e, main: currentMain, sub: subCatId });
       
       // Fallback: utiliser getSubSubCategories si routeValidation échoue
-      const subSubCategoriesForThisSub = getSubSubCategories(currentMain, subCatId);
+      const subSubCategoriesForThisSub = getSubSubCategories(currentMainCategory, subCatId);
       defaultLeaf = subSubCategoriesForThisSub && subSubCategoriesForThisSub.length > 0 
         ? subSubCategoriesForThisSub[0].id 
         : null;
@@ -112,9 +136,9 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
       { main: currentMain, sub: subCatId, leaf: defaultLeaf }
     );
     
-    setSub(subCatId);
-    setLeaf(defaultLeaf);
-  }, [main, sub, leaf, setSub, setLeaf, log]);
+    navigate(currentMain as any, subCatId, defaultLeaf);
+    pushRoute({ main: currentMain, sub: subCatId, leaf: defaultLeaf || null });
+  }, [main, sub, leaf, navigate, log, pushRoute]);
 
   // ✅ Handler pour niveau 3 (sub-sub-category / leaf) avec validation
   const handleSubSubCategoryClick = useCallback((leafId: string) => {
@@ -147,39 +171,42 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
       { main: currentMain, sub, leaf: leafId }
     );
     
-    setLeaf(leafId);
-  }, [main, sub, leaf, setLeaf, log]);
+    navigate(currentMain as any, sub, leafId);
+    pushRoute({ main: currentMain, sub, leaf: leafId });
+  }, [main, sub, leaf, navigate, log, pushRoute]);
 
   return (
     <div className="bg-slate-900/60 border-b border-slate-700/50 backdrop-blur-xl relative overflow-hidden">
       {/* Effet de brillance subtil */}
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
       
-      {/* Breadcrumb */}
-      <div 
-        className={cn("px-2 sm:px-4 py-2 sm:py-2.5 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm border-b border-slate-800/50 relative min-w-0 overflow-x-auto", zIndexClass('breadcrumbs'))}
-        role="navigation"
-        aria-label="Fil d'Ariane"
-      >
-        <span className="text-slate-400">Dashboard</span>
-        <ChevronRight className="h-3 w-3 text-slate-500" />
-        <span className="text-slate-200 font-medium">{mainLabel}</span>
-        {sub && activeSubLabel && (
-          <>
-            <ChevronRight className="h-3 w-3 text-slate-500" />
-            <span className="text-slate-300">{activeSubLabel}</span>
-          </>
-        )}
-        {leaf && activeSubSubLabel && (
-          <>
-            <ChevronRight className="h-3 w-3 text-slate-500" />
-            <span className="text-slate-400 text-xs flex items-center gap-1">
-              <Sparkles className="h-3 w-3" />
-              {activeSubSubLabel}
-            </span>
-          </>
-        )}
-      </div>
+      {/* Breadcrumb (optionnel). Par défaut on évite la double breadcrumb. */}
+      {showBreadcrumbs ? (
+        <div 
+          className={cn("px-2 sm:px-4 py-2 sm:py-2.5 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm border-b border-slate-800/50 relative min-w-0 overflow-x-auto", zIndexClass('breadcrumbs'))}
+          role="navigation"
+          aria-label="Fil d'Ariane"
+        >
+          <span className="text-slate-400">Dashboard</span>
+          <ChevronRight className="h-3 w-3 text-slate-500" />
+          <span className="text-slate-200 font-medium">{mainLabel}</span>
+          {sub && activeSubLabel && (
+            <>
+              <ChevronRight className="h-3 w-3 text-slate-500" />
+              <span className="text-slate-300">{activeSubLabel}</span>
+            </>
+          )}
+          {leaf && activeSubSubLabel && (
+            <>
+              <ChevronRight className="h-3 w-3 text-slate-500" />
+              <span className="text-slate-400 text-xs flex items-center gap-1">
+                <Sparkles className="h-3 w-3" />
+                {activeSubSubLabel}
+              </span>
+            </>
+          )}
+        </div>
+      ) : null}
 
       {/* Level 2 Navigation - Sub Categories */}
       {subCategories.length > 0 && (

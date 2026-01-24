@@ -135,8 +135,9 @@ export function DashboardKPIBar({
           <Button
             variant="ghost"
             size="sm"
-            onClick={onRefresh}
-            className="h-6 w-6 p-0 text-slate-500 hover:text-slate-300"
+            onClick={typeof onRefresh === 'function' ? onRefresh : undefined}
+            disabled={typeof onRefresh !== 'function'}
+            className="h-6 w-6 p-0 text-slate-500 hover:text-slate-300 disabled:opacity-50"
           >
             <RefreshCw className={cn('h-3 w-3', isRefreshing && 'animate-spin')} />
           </Button>

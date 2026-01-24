@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 
 import { KPICard, SectionTitle, DataCard } from '@/components/features/bmo/dashboard/components';
+import { EnterpriseBadge } from '../shared/EnterpriseBadge';
 
 import { DashboardPageShell } from '../shared/DashboardPageShell';
 import { DashboardPanel } from '../shared/DashboardPanel';
@@ -303,18 +304,12 @@ export function BudgetKpiPage() {
                     </div>
                   </div>
 
-                  <Badge
-                    className={cn(
-                      'shrink-0',
-                      over
-                        ? 'bg-red-500/15 text-red-300 border border-red-500/30'
-                        : ratio >= 80
-                          ? 'bg-amber-500/15 text-amber-300 border border-amber-500/30'
-                          : 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
-                    )}
+                  <EnterpriseBadge
+                    variant={over ? 'critique' : ratio >= 80 ? 'haute' : 'success'}
+                    size="sm"
                   >
                     {Math.round(ratio)}%
-                  </Badge>
+                  </EnterpriseBadge>
                 </div>
 
                 <div className="mt-3 h-2.5 rounded-full bg-slate-800/60 overflow-hidden">
@@ -421,9 +416,9 @@ export function BudgetKpiPage() {
                     </div>
                   </div>
 
-                  <Badge className="bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shrink-0">
+                  <EnterpriseBadge variant="success" size="sm">
                     {r.margePct}% marge
-                  </Badge>
+                  </EnterpriseBadge>
                 </div>
 
                 {/* Barre de progression retour réel vs attendu */}

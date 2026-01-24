@@ -46,22 +46,35 @@ interface KPIDrillDownModalProps {
 }
 
 export function KPIDrillDownModal({ kpi, isOpen, onClose, historicalData }: KPIDrillDownModalProps) {
-  if (!isOpen) return null;
+  const history = useMemo<Array<{ date: string; value: number }>>(() => {
+    if (!isOpen) return [];
+    if (historicalData && historicalData.length > 0) return historicalData;
 
-  // Générer des données historiques si non fournies
-  const chartData = useMemo(() => {
-    const data = historicalData || Array.from({ length: 30 }, (_, i) => {
+    // Données mock déterministes (évite Math.random / Date.now → lint purity)
+    const points = 30;
+    const seed =
+      kpi.label.split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0) +
+      (typeof kpi.value === 'number' ? Math.round(kpi.value) : 0);
+
+    const base = typeof kpi.value === 'number' ? kpi.value : (seed % 100);
+
+    return Array.from({ length: points }, (_, i) => {
       const date = new Date();
-      date.setDate(date.getDate() - (29 - i));
+      date.setDate(date.getDate() - (points - 1 - i));
+
+      const pr = ((seed * 9301 + i * 49297) % 233280) / 233280; // [0..1)
+      const jitter = Math.floor((pr - 0.5) * 50); // ~[-25..+25]
+
       return {
         date: date.toISOString().split('T')[0],
-        value: typeof kpi.value === 'number' 
-          ? kpi.value + Math.floor(Math.random() * 50 - 25)
-          : Math.floor(Math.random() * 100),
+        value: Math.max(0, Math.round(base + jitter)),
       };
     });
+  }, [isOpen, historicalData, kpi.label, kpi.value]);
 
-    const labels = data.map(d => {
+  // Générer chart.js data
+  const chartData = useMemo(() => {
+    const labels = history.map((d) => {
       const date = new Date(d.date);
       return `${date.getDate()}/${date.getMonth() + 1}`;
     });
@@ -71,7 +84,7 @@ export function KPIDrillDownModal({ kpi, isOpen, onClose, historicalData }: KPID
       datasets: [
         {
           label: kpi.label,
-          data: data.map(d => d.value),
+          data: history.map((d) => d.value),
           borderColor: 'rgb(59, 130, 246)',
           backgroundColor: 'rgba(59, 130, 246, 0.1)',
           fill: true,
@@ -79,11 +92,12 @@ export function KPIDrillDownModal({ kpi, isOpen, onClose, historicalData }: KPID
         },
       ],
     };
-  }, [kpi, historicalData]);
+  }, [history, kpi.label]);
 
   const stats = useMemo(() => {
-    if (!historicalData || historicalData.length === 0) return null;
-    const values = historicalData.map(d => d.value);
+    if (!isOpen) return null;
+    if (!history || history.length === 0) return null;
+    const values = history.map((d) => d.value);
     const avg = values.reduce((a, b) => a + b, 0) / values.length;
     const min = Math.min(...values);
     const max = Math.max(...values);
@@ -93,7 +107,9 @@ export function KPIDrillDownModal({ kpi, isOpen, onClose, historicalData }: KPID
     const changePercent = previous !== 0 ? ((change / previous) * 100) : 0;
 
     return { avg, min, max, current, change, changePercent };
-  }, [historicalData]);
+  }, [isOpen, history]);
+
+  if (!isOpen) return null;
 
   return (
     <div className={cn("fixed inset-0 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn", zIndexClass('modal'))}>

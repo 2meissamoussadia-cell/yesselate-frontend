@@ -53,7 +53,8 @@ import {
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { useDashboardNavigationStore } from '@/lib/stores/dashboardNavigationStore';
+import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
+import { VirtualizedGrid } from '../shared/VirtualizedGrid';
 
 // ============================================
 // TYPES & INTERFACES
@@ -842,7 +843,7 @@ const ALL_BUREAUX: Bureau[] = [
 // ============================================
 
 export const BureauxPage = memo(function BureauxPage() {
-  const { leaf } = useDashboardNavigationStore();
+  const leaf = useDashboardCommandCenterStore((s) => s.navigation.subSubCategory);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<FilterOption>('all');
   const [sortBy, setSortBy] = useState<SortOption>('performance');
@@ -1779,13 +1780,27 @@ export const BureauxPage = memo(function BureauxPage() {
           )}
         </div>
       ) : (
-        <div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          role="list"
-          aria-label={`Liste de ${sortedBureaux.length} bureau${sortedBureaux.length > 1 ? 'x' : ''}`}
-        >
-          {sortedBureaux.map(renderBureauCard)}
-        </div>
+        // Virtualisation conditionnelle (si >30 items pour performance)
+        sortedBureaux.length > 30 ? (
+          <VirtualizedGrid
+            items={sortedBureaux}
+            renderItem={(bureau) => renderBureauCard(bureau)}
+            responsiveColumns={[1, 2, 3]}
+            gap={24}
+            estimateSize={400}
+            overscan={3}
+            containerHeight="800px"
+            containerClassName="rounded-xl"
+          />
+        ) : (
+          <div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            role="list"
+            aria-label={`Liste de ${sortedBureaux.length} bureau${sortedBureaux.length > 1 ? 'x' : ''}`}
+          >
+            {sortedBureaux.map(renderBureauCard)}
+          </div>
+        )
       )}
 
       {/* Section contexte */}

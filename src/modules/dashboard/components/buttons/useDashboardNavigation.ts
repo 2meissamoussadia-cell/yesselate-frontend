@@ -1,13 +1,13 @@
 /**
  * Hook personnalisé pour la navigation du dashboard avec URL
- * Combine le store de navigation et la navigation Next.js
+ * ✅ Version unifiée: Command Center store + URL
  */
 
 'use client';
 
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { useNavigationStore } from '@/lib/stores/navigationStore';
 import { useCallback } from 'react';
+import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 
 /**
  * Hook pour naviguer dans le dashboard avec synchronisation URL
@@ -17,7 +17,7 @@ export function useDashboardNavigationWithUrl() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { setMain, setSub, setLeaf, navigate: storeNavigate } = useNavigationStore();
+  const navigateStore = useDashboardCommandCenterStore((s) => s.navigate);
 
   /**
    * Naviguer vers une route spécifique
@@ -25,8 +25,8 @@ export function useDashboardNavigationWithUrl() {
    */
   const navigate = useCallback(
     (main: string, sub?: string | null, leaf?: string | null) => {
-      // Mettre à jour le store
-      storeNavigate(main, sub, leaf);
+      // Mettre à jour le store (source de vérité)
+      navigateStore(main as any, sub ?? null, leaf ?? null);
 
       // Mettre à jour l'URL
       const params = new URLSearchParams(searchParams.toString());
@@ -44,7 +44,7 @@ export function useDashboardNavigationWithUrl() {
 
       router.push(`${pathname}?${params.toString()}`);
     },
-    [router, pathname, searchParams, storeNavigate]
+    [router, pathname, searchParams, navigateStore]
   );
 
   /**
@@ -74,9 +74,6 @@ export function useDashboardNavigationWithUrl() {
   return {
     navigate,
     navigateToUrl,
-    setMain,
-    setSub,
-    setLeaf,
   };
 }
 

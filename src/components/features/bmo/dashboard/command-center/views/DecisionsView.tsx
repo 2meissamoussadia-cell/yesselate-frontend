@@ -22,7 +22,6 @@ import {
   Key,
 } from 'lucide-react';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
-import { useDashboardNavigationStore } from '@/lib/stores/dashboardNavigationStore';
 import { useApiQuery } from '@/lib/api/hooks/useApiQuery';
 import { dashboardAPI } from '@/lib/api/pilotage/dashboardClient';
 import { SectionTitle, DataCard } from '@/components/features/bmo/dashboard/components';
@@ -119,8 +118,8 @@ const typeLabels = {
 
 export function DecisionsView() {
   const openModal = useDashboardCommandCenterStore((s) => s.openModal);
-  const subCategory = useDashboardNavigationStore((s) => s.sub);
-  const subSubCategory = useDashboardNavigationStore((s) => s.leaf);
+  const subCategory = useDashboardCommandCenterStore((s) => s.navigation.subCategory);
+  const subSubCategory = useDashboardCommandCenterStore((s) => s.navigation.subSubCategory);
   const navigation = { subCategory, subSubCategory } as const;
 
   const { data: decisionsData } = useApiQuery(async (_signal: AbortSignal) => dashboardAPI.getDecisions({ limit: 50 }), []);

@@ -1,12 +1,21 @@
 'use client';
 
 import { useEffect, useMemo, useState, memo, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Loader2, AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { dashboardRegistry, navToKey, type NavKey } from '../registry/dashboardRegistry';
+
+type LoaderResult = { data: unknown; fetchedAt: number };
+
+function isLoaderResult(value: unknown): value is LoaderResult {
+  if (!value || typeof value !== 'object') return false;
+  const v = value as Record<string, unknown>;
+  return 'data' in v && 'fetchedAt' in v && typeof v.fetchedAt === 'number';
+}
 
 function resolveViewKey(nav: NavKey) {
   // fallback intelligent si un niveau manque
@@ -33,7 +42,7 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
   const view = dashboardRegistry[viewKey];
 
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<unknown>(null);
   const [error, setError] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -85,7 +94,7 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
         });
 
         const loadPromise = view.loader(nav);
-        const res = await Promise.race([loadPromise, timeoutPromise]);
+        const resUnknown = await Promise.race([loadPromise, timeoutPromise]);
         
         if (cancelled) return;
         if (timeoutId) {
@@ -93,13 +102,17 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
           timeoutId = null;
         }
         
-        setData(res.data);
+        if (!isLoaderResult(resUnknown)) {
+          throw new Error('Réponse loader invalide');
+        }
+
+        setData(resUnknown.data);
         // Utiliser setCache depuis le store directement
         const setCacheFn = useDashboardCommandCenterStore.getState().setCache;
-        setCacheFn(key, { data: res.data, fetchedAt: res.fetchedAt, ttl });
+        setCacheFn(key, { data: resUnknown.data, fetchedAt: resUnknown.fetchedAt, ttl });
         setRetryCount(0);
         setIsTransitioning(false);
-      } catch (e: any) {
+      } catch (e: unknown) {
         if (cancelled) return;
         if (timeoutId) {
           clearTimeout(timeoutId);
@@ -119,7 +132,7 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
           return;
         }
 
-        setError(e?.message ?? 'Erreur de chargement');
+        setError(e instanceof Error ? e.message : 'Erreur de chargement');
         setRetryCount(0);
         setIsTransitioning(false);
       } finally {
@@ -166,7 +179,7 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
     <div className="relative min-h-[300px]">
       {/* Loading overlay amélioré */}
       {loading && (
-        <div className={cn("absolute inset-0 flex items-center justify-center bg-slate-950/50 backdrop-blur-md animate-fadeIn", zIndexClass('loading'))}>
+        <div className="absolute inset-0 flex items-center justify-center bg-slate-950/50 backdrop-blur-md z-10 animate-fadeIn">
           <div className="flex flex-col items-center gap-4 p-6 rounded-xl border border-slate-700/50 bg-slate-900/80 shadow-xl">
             <div className="relative">
               <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
@@ -220,16 +233,22 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
         </div>
       )}
 
-      {/* Content avec transition */}
-      <div
-        className={cn(
-          'transition-all duration-300 ease-out',
-          isTransitioning && 'opacity-50 scale-[0.98]',
-          !isTransitioning && 'opacity-100 scale-100'
-        )}
-      >
-        {view.render({ nav, data })}
-      </div>
+      {/* Content avec transition framer-motion */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={viewKey}
+          initial={{ opacity: 0, y: 8, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -8, scale: 0.98 }}
+          transition={{
+            type: 'tween',
+            ease: [0.4, 0, 0.2, 1],
+            duration: 0.3,
+          }}
+        >
+          {view.render({ nav, data })}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 });

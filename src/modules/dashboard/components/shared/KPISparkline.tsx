@@ -32,17 +32,12 @@ export const KPISparkline = memo(function KPISparkline({
     // Seed simple pour générer des valeurs pseudo-aléatoires mais stables
     const seed = (tone.charCodeAt(0) + trend.charCodeAt(0)) % 100;
     
-    // Fonction pseudo-aléatoire simple basée sur le seed
-    let currentSeed = seed;
-    const pseudoRandom = () => {
-      currentSeed = (currentSeed * 9301 + 49297) % 233280;
-      return currentSeed / 233280;
-    };
-    
     return Array.from({ length: points }, (_, i) => {
       const progress = i / (points - 1);
-      // Utiliser pseudoRandom au lieu de Math.random pour stabilité
-      const randomVariation = (pseudoRandom() - 0.5) * 10;
+      // Pseudo-aléatoire déterministe (sans mutation → compatible immutability lint)
+      const x = Math.sin(seed * 12.9898 + i * 78.233) * 43758.5453;
+      const pr = x - Math.floor(x); // [0..1)
+      const randomVariation = (pr - 0.5) * 10;
       return Math.max(0, Math.min(100, baseValue + variation * progress + randomVariation));
     });
   }, [tone, trend]);

@@ -107,7 +107,7 @@ export const KPICard = memo(function KPICard({
         <p className="text-xs text-slate-300">{description}</p>
         {onClick && (
           <p className="text-xs text-slate-300 pt-1 border-t border-slate-700">
-            Cliquez pour voir les détails et l'historique
+            Cliquez pour voir les détails et l’historique
           </p>
         )}
       </div>

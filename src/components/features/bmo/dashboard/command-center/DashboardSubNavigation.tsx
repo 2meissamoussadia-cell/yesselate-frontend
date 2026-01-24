@@ -59,6 +59,12 @@ const subCategoriesMap: Record<DashboardMainCategory, SubNavItem[]> = {
     { id: 'notifications', label: 'Notifications', badge: 5 },
     { id: 'sync', label: 'Sync' },
   ],
+  administration: [
+    { id: 'summary', label: 'Paramètres' },
+    { id: 'kpis', label: 'KPIs' },
+    { id: 'notifications', label: 'Notifications' },
+    { id: 'sync', label: 'Sync' },
+  ],
 };
 
 export function DashboardSubNavigation() {

@@ -31,7 +31,7 @@ export function BaseDomainView({
   customContent,
 }: BaseDomainViewProps) {
   const domain = findDomain(domainId);
-  const module = moduleId ? findModule(domainId, moduleId) : null;
+  const mod = moduleId ? findModule(domainId, moduleId) : null;
   const subModule = moduleId && subModuleId ? findSubModule(domainId, moduleId, subModuleId) : null;
 
   if (!domain) {
@@ -52,7 +52,7 @@ export function BaseDomainView({
   if (customContent) {
     return (
       <div className="h-full p-6">
-        {customContent({ domain, module, subModule })}
+        {customContent({ domain, module: mod, subModule })}
       </div>
     );
   }
@@ -76,13 +76,13 @@ export function BaseDomainView({
       </div>
 
       {/* Breadcrumb */}
-      {(module || subModule) && (
+      {(mod || subModule) && (
         <div className="flex items-center gap-2 mb-6 text-sm text-slate-400">
           <span>{domain.label}</span>
-          {module && (
+          {mod && (
             <>
               <ChevronRight className="h-4 w-4" />
-              <span>{module.label}</span>
+              <span>{mod.label}</span>
             </>
           )}
           {subModule && (
@@ -96,9 +96,9 @@ export function BaseDomainView({
 
       {/* Content */}
       {subModule ? (
-        <SubModuleContent domain={domain} module={module} subModule={subModule} />
-      ) : module ? (
-        <ModuleContent domain={domain} module={module} />
+        <SubModuleContent domain={domain} module={mod} subModule={subModule} />
+      ) : mod ? (
+        <ModuleContent domain={domain} module={mod} />
       ) : (
         <DomainOverview domain={domain} />
       )}

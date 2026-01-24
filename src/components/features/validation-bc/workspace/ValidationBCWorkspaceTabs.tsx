@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useCallback, useMemo } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useValidationBCWorkspaceStore } from '@/lib/stores/validationBCWorkspaceStore';
 import { X, FileText, FileCheck, Receipt, FileEdit, GitCompare, Search, ChevronLeft, ChevronRight, ArrowLeft, LayoutDashboard } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -13,7 +13,7 @@ export function ValidationBCWorkspaceTabs({ onBackToDashboard }: ValidationBCWor
   const { tabs, activeTabId, setActiveTab, closeTab, goToNextTab, goToPreviousTab, closeAllTabs } = useValidationBCWorkspaceStore();
 
   // Memoize tab icon function
-  const getTabIcon = useMemo(() => (type: string, icon: string) => {
+  const getTabIcon = useCallback((type: string, icon: string) => {
     switch (type) {
       case 'inbox':
         return <FileText className="w-4 h-4" />;

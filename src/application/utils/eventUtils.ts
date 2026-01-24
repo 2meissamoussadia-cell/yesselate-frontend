@@ -7,12 +7,12 @@
  * Crée un EventEmitter simple
  */
 export class EventEmitter {
-  private events: Map<string, Set<Function>> = new Map();
+  private events: Map<string, Set<(...args: unknown[]) => void>> = new Map();
 
   /**
    * Écoute un événement
    */
-  on(event: string, listener: Function): () => void {
+  on(event: string, listener: (...args: unknown[]) => void): () => void {
     if (!this.events.has(event)) {
       this.events.set(event, new Set());
     }
@@ -27,7 +27,7 @@ export class EventEmitter {
   /**
    * Écoute un événement une seule fois
    */
-  once(event: string, listener: Function): void {
+  once(event: string, listener: (...args: unknown[]) => void): void {
     const onceWrapper = (...args: any[]) => {
       listener(...args);
       this.off(event, onceWrapper);
@@ -38,7 +38,7 @@ export class EventEmitter {
   /**
    * Arrête d'écouter un événement
    */
-  off(event: string, listener: Function): void {
+  off(event: string, listener: (...args: unknown[]) => void): void {
     const listeners = this.events.get(event);
     if (listeners) {
       listeners.delete(listener);
@@ -51,7 +51,7 @@ export class EventEmitter {
   /**
    * Émet un événement
    */
-  emit(event: string, ...args: any[]): void {
+  emit(event: string, ...args: unknown[]): void {
     const listeners = this.events.get(event);
     if (listeners) {
       listeners.forEach(listener => {

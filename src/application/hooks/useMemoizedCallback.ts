@@ -24,11 +24,10 @@ export function useMemoizedCallback<T extends (...args: any[]) => any>(
     depsRef.current = deps;
   }
 
-  return useCallback(
-    ((...args: Parameters<T>) => {
-      return callbackRef.current(...args);
-    }) as T,
-    []
-  );
+  const memoized = useCallback((...args: Parameters<T>) => {
+    return callbackRef.current(...args);
+  }, []);
+
+  return memoized as T;
 }
 

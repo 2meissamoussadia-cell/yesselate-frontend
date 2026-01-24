@@ -4,7 +4,7 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { X, Bell, AlertCircle, CheckCircle2, Info, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { zIndexClass } from '../utils/zIndex';
@@ -210,11 +210,13 @@ function formatTimeAgo(date: Date): string {
 // Hook pour gérer les notifications
 export function useDashboardNotifications() {
   const [notifications, setNotifications] = useState<DashboardNotification[]>([]);
+  const nextIdRef = useRef(0);
 
   const addNotification = (notification: Omit<DashboardNotification, 'id' | 'timestamp'>) => {
+    nextIdRef.current += 1;
     const newNotification: DashboardNotification = {
       ...notification,
-      id: `notif-${Date.now()}-${Math.random()}`,
+      id: `notif-${nextIdRef.current}`,
       timestamp: new Date(),
       read: false,
     };

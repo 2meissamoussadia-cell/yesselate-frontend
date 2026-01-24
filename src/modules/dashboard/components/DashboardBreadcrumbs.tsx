@@ -1,102 +1,94 @@
 /**
- * Composant Breadcrumbs (Fil d'Ariane) pour la navigation du dashboard
- * Affiche le chemin de navigation actuel : Dashboard > [Main] > [Sub] > [Leaf]
+ * Breadcrumbs (fil d’Ariane) calé sur l’URL (source de vérité)
+ * Objectif : éviter les désynchronisations store/context → UI figée
  */
 
 'use client';
 
-import React, { memo, useMemo } from 'react';
-import { ChevronRight, Home } from 'lucide-react';
+import { useMemo } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { useDashboardNavigationStore } from '@/lib/stores/dashboardNavigationStore';
+import { ChevronRight, Home } from 'lucide-react';
 import { getNavigationConfig } from '../utils/routeValidation';
 
-interface BreadcrumbItem {
-  label: string;
-  path?: string;
-}
+const formatLabel = (s: string) => s.replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 
-/**
- * Composant Breadcrumbs pour le dashboard
- * Lit l'état de navigation et affiche un fil d'Ariane cohérent
- */
-export const DashboardBreadcrumbs = memo(function DashboardBreadcrumbs() {
-  // ✅ Utiliser directement le store pour éviter les problèmes de typage
-  const main = useDashboardNavigationStore((state) => state.main);
-  const sub = useDashboardNavigationStore((state) => state.sub);
-  const leaf = useDashboardNavigationStore((state) => state.leaf);
-  
-  // ✅ Mémoriser la config pour éviter les recalculs
-  // NavigationConfig est maintenant exporté, plus besoin de type assertion
-  const navConfig = useMemo(() => getNavigationConfig(), []);
+export function DashboardBreadcrumbs({ className }: { className?: string }) {
+  const router = useRouter();
+  const params = useSearchParams();
 
-  // ✅ Construire les items du breadcrumb
-  const breadcrumbItems = useMemo<BreadcrumbItem[]>(() => {
-    const items: BreadcrumbItem[] = [
-      {
-        label: 'Dashboard',
-        path: '/maitre-ouvrage/dashboard',
-      },
-    ];
+  const main = (params.get('main') || 'overview') as string;
+  const sub = (params.get('sub') || '') as string;
+  const leaf = (params.get('leaf') || '') as string;
 
-    // Ajouter main
-    if (main && navConfig[main]) {
-      items.push({
-        label: navConfig[main].label || main,
-      });
-    }
+  const config = useMemo(() => getNavigationConfig(), []);
+  const mainConf = config[main];
 
-    // Ajouter sub
-    if (main && sub && navConfig[main]?.sub?.[sub]) {
-      items.push({
-        label: navConfig[main].sub[sub].label || sub,
-      });
-    }
+  const mainLabel = mainConf?.label ?? formatLabel(main);
+  const subLabel = sub ? mainConf?.sub?.[sub]?.label ?? formatLabel(sub) : null;
+  const leafLabel =
+    leaf && sub ? mainConf?.sub?.[sub]?.leaf?.[leaf]?.label ?? formatLabel(leaf) : null;
 
-    // Ajouter leaf
-    if (main && sub && leaf && navConfig[main]?.sub?.[sub]?.leaf?.[leaf]) {
-      items.push({
-        label: navConfig[main].sub[sub].leaf[leaf].label || leaf,
-      });
-    }
+  const go = (next: { main?: string; sub?: string; leaf?: string }) => {
+    const nextMain = next.main ?? main;
+    const nextSub = next.sub ?? (next.main ? '' : sub);
+    const nextLeaf = next.leaf ?? (next.sub || next.main ? '' : leaf);
 
-    return items;
-  }, [main, sub, leaf, navConfig]);
+    const sp = new URLSearchParams(params.toString());
+    sp.set('main', nextMain);
+    if (nextSub) sp.set('sub', nextSub);
+    else sp.delete('sub');
+    if (nextLeaf) sp.set('leaf', nextLeaf);
+    else sp.delete('leaf');
 
-  // Ne pas afficher si seulement Dashboard
-  if (breadcrumbItems.length <= 1) {
-    return null;
-  }
+    router.push(`/maitre-ouvrage/dashboard?${sp.toString()}`);
+  };
 
   return (
-    <nav
-      className="flex items-center gap-2 px-6 py-3 text-sm text-slate-300 border-b border-slate-800/60 bg-slate-900/40 min-w-0 overflow-hidden"
-      aria-label="Fil d'Ariane"
-    >
-      <Home className="h-4 w-4 flex-shrink-0 text-slate-400" aria-hidden="true" />
-      {breadcrumbItems.map((item, index) => {
-        const isLast = index === breadcrumbItems.length - 1;
-        return (
-          <React.Fragment key={`${item.label}-${index}`}>
-            {index > 0 && (
-              <ChevronRight className="h-3.5 w-3.5 text-slate-500 flex-shrink-0" aria-hidden="true" />
-            )}
-            <span
-              className={cn(
-                'transition-colors truncate min-w-0',
-                isLast
-                  ? 'text-slate-100 font-semibold'
-                  : 'text-slate-400 hover:text-slate-200'
-              )}
-              aria-current={isLast ? 'page' : undefined}
-            >
-              {item.label}
-            </span>
-          </React.Fragment>
-        );
-      })}
+    <nav className={cn('flex items-center gap-2 text-sm', className)} aria-label="Fil d’Ariane">
+      <button
+        type="button"
+        onClick={() => go({ main: 'overview', sub: '', leaf: '' })}
+        className={cn(
+          'group inline-flex items-center gap-2 rounded-lg px-2 py-1',
+          'text-slate-400 transition-colors hover:bg-slate-900/40 hover:text-slate-200'
+        )}
+        title="Accueil"
+      >
+        <Home className="h-4 w-4" />
+        <span className="hidden sm:inline">Tableau de bord</span>
+        <span className="sm:hidden">Accueil</span>
+      </button>
+
+      <ChevronRight className="h-4 w-4 text-slate-600" />
+
+      <button
+        type="button"
+        onClick={() => go({ main })}
+        className="rounded-lg px-2 py-1 text-slate-200 transition-colors hover:bg-slate-900/40"
+      >
+        {mainLabel}
+      </button>
+
+      {subLabel ? (
+        <>
+          <ChevronRight className="h-4 w-4 text-slate-600" />
+          <button
+            type="button"
+            onClick={() => go({ main, sub })}
+            className="rounded-lg px-2 py-1 text-slate-200 transition-colors hover:bg-slate-900/40"
+          >
+            {subLabel}
+          </button>
+        </>
+      ) : null}
+
+      {leafLabel ? (
+        <>
+          <ChevronRight className="h-4 w-4 text-slate-600" />
+          <span className="rounded-lg px-2 py-1 font-medium text-slate-100">{leafLabel}</span>
+        </>
+      ) : null}
     </nav>
   );
-});
-
-DashboardBreadcrumbs.displayName = 'DashboardBreadcrumbs';
+}

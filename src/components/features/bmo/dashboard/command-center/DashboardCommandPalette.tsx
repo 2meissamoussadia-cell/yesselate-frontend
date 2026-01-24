@@ -29,8 +29,9 @@ import {
 } from 'lucide-react';
 import { useDashboardCommandCenterStore, type DashboardMainCategory } from '@/lib/stores/dashboardCommandCenterStore';
 import { dashboardNavigationConfig, findNavNodeById } from '@/modules/dashboard/navigation/dashboardNavigationConfig';
-import { useDashboardNavigationStore } from '@/lib/stores/dashboardNavigationStore';
 import type { DashboardMainCategory as NavMainCategory } from '@/modules/dashboard/types/dashboardNavigationTypes';
+import { useGlobalSearch } from '@/modules/dashboard/hooks/useGlobalSearch';
+import { useDashboardKPIs } from '@/lib/hooks/useDashboardKPIs';
 
 interface CommandItem {
   id: string;
@@ -51,6 +52,12 @@ export function DashboardCommandPalette() {
 
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
+  
+  // Récupérer les KPIs pour la recherche globale
+  const { kpis } = useDashboardKPIs('year');
+  
+  // Recherche globale (KPIs, projets, etc.)
+  const globalSearchResults = useGlobalSearch(query, kpis);
 
   // Commandes disponibles - Génération dynamique depuis la config
   const commands: CommandItem[] = useMemo(() => {
@@ -70,10 +77,7 @@ export function DashboardCommandPalette() {
         category: 'Navigation',
         keywords: [mainId, mainNode.label.toLowerCase()],
         action: () => {
-          const { setMain, setSub, setLeaf } = useDashboardNavigationStore.getState();
-          setMain(mainCategory);
-          setSub(null);
-          setLeaf(null);
+          navigate(mainCategory as unknown as DashboardMainCategory, null, null);
           toggleCommandPalette();
         },
       });
@@ -89,10 +93,7 @@ export function DashboardCommandPalette() {
           category: 'Navigation',
           keywords: [mainId, subNode.id, subNode.label.toLowerCase()],
           action: () => {
-            const { setMain, setSub, setLeaf } = useDashboardNavigationStore.getState();
-            setMain(mainCategory);
-            setSub(subNode.id);
-            setLeaf(null);
+            navigate(mainCategory as unknown as DashboardMainCategory, subNode.id, null);
             toggleCommandPalette();
           },
         });
@@ -113,10 +114,7 @@ export function DashboardCommandPalette() {
               leafNode.label.toLowerCase(),
             ],
             action: () => {
-              const { setMain, setSub, setLeaf } = useDashboardNavigationStore.getState();
-              setMain(mainCategory);
-              setSub(subNode.id);
-              setLeaf(leafNode.id);
+              navigate(mainCategory as unknown as DashboardMainCategory, subNode.id, leafNode.id);
               toggleCommandPalette();
             },
           });
@@ -195,8 +193,6 @@ export function DashboardCommandPalette() {
     });
 
     return items;
-
-    return items;
   }, [navigate, router, openModal, toggleCommandPalette]);
 
   // Filtrer les commandes avec recherche améliorée
@@ -206,7 +202,7 @@ export function DashboardCommandPalette() {
     const q = query.toLowerCase().trim();
     const queryWords = q.split(/\s+/);
     
-    return commands.filter((cmd) => {
+    const filtered = commands.filter((cmd) => {
       const searchText = [
         cmd.label.toLowerCase(),
         cmd.hint?.toLowerCase() || '',
@@ -216,7 +212,26 @@ export function DashboardCommandPalette() {
       // Recherche par mots-clés (tous les mots doivent être trouvés)
       return queryWords.every(word => searchText.includes(word));
     });
-  }, [commands, query]);
+    
+    // Ajouter les résultats de recherche globale (KPIs, etc.)
+    const globalItems: CommandItem[] = globalSearchResults.map((result) => ({
+      id: result.id,
+      type: result.type === 'kpi' ? 'action' : 'navigation',
+      label: result.label,
+      hint: result.description || result.value?.toString(),
+      icon: result.type === 'kpi' ? Activity : LayoutDashboard,
+      category: result.type === 'kpi' ? 'KPIs' : 'Données',
+      keywords: result.keywords,
+      action: result.action,
+    }));
+    
+    // Combiner et trier par pertinence (résultats globaux en premier si score élevé)
+    return [...globalItems, ...filtered].sort((a, b) => {
+      const aScore = globalSearchResults.find(r => r.id === a.id)?.score || 0;
+      const bScore = globalSearchResults.find(r => r.id === b.id)?.score || 0;
+      return bScore - aScore;
+    });
+  }, [commands, query, globalSearchResults]);
 
   // Reset selection on query change
   useEffect(() => {

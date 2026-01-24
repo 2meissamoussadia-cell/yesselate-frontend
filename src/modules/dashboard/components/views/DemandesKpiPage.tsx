@@ -27,6 +27,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { KPICard } from '@/components/features/bmo/dashboard/components';
 import { AnimatedBadge } from '../shared/AnimatedBadge';
+import { EnterpriseBadge } from '../shared/EnterpriseBadge';
 import { SearchFilter } from '../shared/SearchFilter';
 import { EmptyState } from '../shared/EmptyState';
 import { ExportButton } from '../shared/ExportButton';
@@ -70,9 +71,9 @@ export const DemandesKpiPage = memo(function DemandesKpiPage() {
       kpi: {
         label: kpi.label,
         value: kpi.value,
-        delta: kpi.trend,
+        trend: typeof kpi.trend === 'string' ? parseFloat(kpi.trend.replace(/[^\d.-]/g, '')) || 0 : 0,
+        trendType: kpi.trendDirection,
         tone: kpi.color === 'emerald' ? 'ok' : kpi.color === 'amber' || kpi.color === 'red' ? 'warn' : 'info',
-        trend: kpi.trendDirection === 'up' ? 'up' : kpi.trendDirection === 'down' ? 'down' : 'neutral',
         icon: kpi.icon,
       },
     });
@@ -310,11 +311,12 @@ export const DemandesKpiPage = memo(function DemandesKpiPage() {
                     id: kpi.id,
                     label: kpi.label,
                     value: kpi.value,
-                    delta: kpi.trend,
+                    trend: typeof kpi.trend === 'string' ? parseFloat(kpi.trend.replace(/[^\d.-]/g, '')) || 0 : 0,
                     trendType: kpi.trendDirection,
                     icon: kpi.icon,
                     color: (kpi.color === 'red' ? 'rose' : kpi.color) as any,
                     description: kpi.description,
+                    sparkline: kpi.sparkline,
                     onClick: () => handleKPIClick(kpi),
                   }}
                   size="md"
@@ -489,18 +491,12 @@ export const DemandesKpiPage = memo(function DemandesKpiPage() {
                       </div>
                       <div className="flex flex-col items-end gap-2">
                         <span className="text-2xl font-bold text-white tabular-nums">{blocage.count}</span>
-                        <AnimatedBadge
-                          variant={
-                            blocage.priorite === 'critique'
-                              ? 'critical'
-                              : blocage.priorite === 'haute'
-                                ? 'warning'
-                                : 'info'
-                          }
-                          pulse={blocage.priorite === 'critique'}
+                        <EnterpriseBadge
+                          variant={blocage.priorite === 'critique' ? 'critique' : blocage.priorite === 'haute' ? 'haute' : 'moyenne'}
+                          size="sm"
                         >
                           {blocage.priorite === 'critique' ? 'Critique' : blocage.priorite === 'haute' ? 'Haute' : 'Moyenne'}
-                        </AnimatedBadge>
+                        </EnterpriseBadge>
                       </div>
                     </div>
                   </div>

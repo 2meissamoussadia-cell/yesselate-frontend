@@ -6,6 +6,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { AnalyticsDomain, AnalyticsModule, AnalyticsSubModule } from '@/lib/config/analyticsBTPArchitecture';
+import { findDomain, findModule, findSubModule } from '@/lib/config/analyticsBTPArchitecture';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -171,21 +172,18 @@ export const useAnalyticsBTPNavigationStore = create<AnalyticsBTPNavigationState
       getCurrentDomain: () => {
         const { domainId } = get().navigation;
         if (!domainId) return null;
-        const { findDomain } = require('@/lib/config/analyticsBTPArchitecture');
         return findDomain(domainId) || null;
       },
 
       getCurrentModule: () => {
         const { domainId, moduleId } = get().navigation;
         if (!domainId || !moduleId) return null;
-        const { findModule } = require('@/lib/config/analyticsBTPArchitecture');
         return findModule(domainId, moduleId) || null;
       },
 
       getCurrentSubModule: () => {
         const { domainId, moduleId, subModuleId } = get().navigation;
         if (!domainId || !moduleId || !subModuleId) return null;
-        const { findSubModule } = require('@/lib/config/analyticsBTPArchitecture');
         return findSubModule(domainId, moduleId, subModuleId) || null;
       },
 

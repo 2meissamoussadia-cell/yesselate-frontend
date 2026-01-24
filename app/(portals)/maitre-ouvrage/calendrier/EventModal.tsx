@@ -52,22 +52,25 @@ export function EventModal({
   onSave: (data: EventFormData) => void;
   darkMode: boolean;
 }) {
-  const [formData, setFormData] = useState<EventFormData>({
-    title: '',
-    description: '',
-    kind: 'meeting',
-    bureau: undefined,
-    assignees: [],
-    start: initialDate || new Date(),
-    end: new Date((initialDate?.getTime() || Date.now()) + 60 * 60000),
-    priority: 'normale',
-    severity: 'info',
-    status: 'open',
-    project: '',
-    recurrence: 'none',
-    recurrenceEnd: undefined,
-    notation: undefined,
-    notes: '',
+  const [formData, setFormData] = useState<EventFormData>(() => {
+    const start = initialDate ?? new Date();
+    return {
+      title: '',
+      description: '',
+      kind: 'meeting',
+      bureau: undefined,
+      assignees: [],
+      start,
+      end: new Date(start.getTime() + 60 * 60000),
+      priority: 'normale',
+      severity: 'info',
+      status: 'open',
+      project: '',
+      recurrence: 'none',
+      recurrenceEnd: undefined,
+      notation: undefined,
+      notes: '',
+    };
   });
 
   useEffect(() => {
@@ -349,7 +352,7 @@ export function EventModal({
                 </select>
                 {formData.recurrence !== 'none' && (
                   <div>
-                    <label className="text-xs text-slate-400 mb-1 block">Jusqu'au (optionnel)</label>
+                    <label className="text-xs text-slate-400 mb-1 block">Jusqu’au (optionnel)</label>
                     <Input
                       type="date"
                       value={formData.recurrenceEnd?.toISOString().slice(0, 10) || ''}

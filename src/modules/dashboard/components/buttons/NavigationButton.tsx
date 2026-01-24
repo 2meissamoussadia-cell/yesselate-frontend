@@ -1,62 +1,75 @@
-/**
- * Bouton de navigation générique utilisant NAV_MAP
- * Permet de naviguer vers n'importe quelle page via son label
- */
-
 'use client';
 
 import React from 'react';
-import { useDashboardNavigation } from '../../context/DashboardNavigationContext';
-import { NAV_MAP, type NavigationLabel, hasNavigationLabel } from '../../config/navigationMap';
 import { cn } from '@/lib/utils';
+import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
+import type { DashboardMainCategory as MainDashboardCategory } from '@/lib/stores/dashboardCommandCenterStore';
 
-interface NavigationButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  label: NavigationLabel | string;
-  children?: React.ReactNode;
+export type SubDashboardCategory = string;
+
+interface NavigationButtonProps {
+  label: string;
+  main: MainDashboardCategory;
+  sub?: SubDashboardCategory;
+  leaf?: string;
+  icon?: React.ComponentType<{ className?: string }>;
   className?: string;
 }
 
-/**
- * Bouton de navigation générique qui utilise NAV_MAP pour naviguer
- */
 export function NavigationButton({
   label,
-  children,
+  main,
+  sub,
+  leaf,
+  icon: Icon,
   className,
-  onClick,
-  ...props
 }: NavigationButtonProps) {
-  const { setMain, setSub, setLeaf } = useDashboardNavigation();
+  const nav = useDashboardCommandCenterStore((s) => s.navigation);
+  const navigateTo = useDashboardCommandCenterStore((s) => s.navigateTo);
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // Vérifier si le label existe dans NAV_MAP
-    if (!hasNavigationLabel(label)) {
-      console.warn(`Label "${label}" n'existe pas dans NAV_MAP`);
-      return;
-    }
+  const isActive =
+    nav?.mainCategory === main &&
+    (sub ? nav?.subCategory === sub : true) &&
+    (leaf ? nav?.subSubCategory === leaf : true);
 
-    const target = NAV_MAP[label];
-    if (!target) {
-      console.warn(`Aucune cible trouvée pour le label "${label}"`);
-      return;
-    }
-
-    // Mettre à jour la navigation
-    setMain(target.main);
-    setSub(target.sub);
-    setLeaf(target.leaf);
-
-    // Appeler le onClick personnalisé si fourni
-    onClick?.(e);
-  };
+  const onClick = () => navigateTo(main, sub, leaf);
 
   return (
     <button
-      onClick={handleClick}
-      className={cn('transition-colors', className)}
-      {...props}
+      type="button"
+      onClick={onClick}
+      aria-current={isActive ? 'page' : undefined}
+      className={cn(
+        'group inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium',
+        'transition-all duration-200',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/40',
+        isActive
+          ? 'bg-gradient-to-b from-slate-800/90 to-slate-900/70 ring-1 ring-emerald-400/20 text-white shadow-sm'
+          : 'bg-slate-900/30 text-slate-200 hover:bg-slate-800/50 ring-1 ring-slate-700/40',
+        className
+      )}
     >
-      {children || label}
+      {Icon ? (
+        <span
+          className={cn(
+            'grid h-8 w-8 place-items-center rounded-xl',
+            isActive
+              ? 'bg-emerald-500/10 ring-1 ring-emerald-500/20'
+              : 'bg-slate-800/50 ring-1 ring-slate-700/40'
+          )}
+        >
+          <Icon className={cn('h-4 w-4', isActive ? 'text-emerald-200' : 'text-slate-300')} />
+        </span>
+      ) : null}
+
+      <span className="truncate">{label}</span>
+
+      <span
+        className={cn(
+          'ml-auto h-1.5 w-1.5 rounded-full transition-opacity',
+          isActive ? 'bg-emerald-400 opacity-100' : 'bg-slate-600 opacity-0 group-hover:opacity-60'
+        )}
+      />
     </button>
   );
 }

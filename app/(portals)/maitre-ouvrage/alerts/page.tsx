@@ -125,6 +125,30 @@ interface AlertStats {
   avgResolutionTime: number;
 }
 
+type WorkflowModalAlert = {
+  id: string;
+  type: 'critical' | 'warning' | 'info' | 'success';
+  title: string;
+  description: string;
+  source: string;
+  createdAt: string;
+  acknowledgedAt?: string;
+  acknowledgedBy?: string;
+  resolvedAt?: string;
+  resolvedBy?: string;
+  escalatedTo?: string;
+  relatedItem?: string;
+  bureau?: string;
+};
+
+function toTriSeverity(
+  type: WorkflowModalAlert['type']
+): 'critical' | 'warning' | 'info' {
+  if (type === 'critical') return 'critical';
+  if (type === 'warning') return 'warning';
+  return 'info';
+}
+
 // ================================
 // Helpers
 // ================================
@@ -237,7 +261,7 @@ function AlertsPageContent() {
   const [helpOpen, setHelpOpen] = useState(false);
 
   // Workflow modals
-  const [selectedAlert, setSelectedAlert] = useState<any | null>(null);
+  const [selectedAlert, setSelectedAlert] = useState<WorkflowModalAlert | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
   const [ackOpen, setAckOpen] = useState(false);
   const [resolveOpen, setResolveOpen] = useState(false);
@@ -247,7 +271,7 @@ function AlertsPageContent() {
 
   // Navigation entre alertes (J/K keys)
   const [currentAlertIndex, setCurrentAlertIndex] = useState(0);
-  const [visibleAlerts, setVisibleAlerts] = useState<any[]>([]);
+  const [visibleAlerts, setVisibleAlerts] = useState<WorkflowModalAlert[]>([]);
 
   // React Query hooks - TOUS les hooks doivent être appelés dans le même ordre à chaque render
   const {
@@ -998,7 +1022,16 @@ function AlertsPageContent() {
       <CommentModal
         open={commentOpen}
         onClose={() => setCommentOpen(false)}
-        alert={selectedAlert}
+        alert={
+          selectedAlert
+            ? {
+                id: selectedAlert.id,
+                title: selectedAlert.title,
+                type: selectedAlert.type,
+                severity: toTriSeverity(selectedAlert.type),
+              }
+            : null
+        }
         onConfirm={async (comment) => {
           if (!selectedAlert?.id) return;
           try {
@@ -1015,7 +1048,17 @@ function AlertsPageContent() {
       <AssignModal
         open={assignOpen}
         onClose={() => setAssignOpen(false)}
-        alert={selectedAlert}
+        alert={
+          selectedAlert
+            ? {
+                id: selectedAlert.id,
+                title: selectedAlert.title,
+                type: selectedAlert.type,
+                severity: toTriSeverity(selectedAlert.type),
+                bureau: selectedAlert.bureau,
+              }
+            : null
+        }
         onConfirm={async (userId, note) => {
           if (!selectedAlert?.id) return;
           try {

@@ -323,7 +323,7 @@ export function EventDetailModal({
         content: (
           <div className="space-y-4">
             <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
-              Historique de l'événement
+              Historique de l’événement
             </h3>
             <div className="space-y-3">
               {event.createdAt && (

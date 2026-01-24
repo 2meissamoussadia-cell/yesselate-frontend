@@ -24,7 +24,6 @@ import {
   BarChart3,
 } from 'lucide-react';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
-import { useDashboardNavigationStore } from '@/lib/stores/dashboardNavigationStore';
 import { TrendChart } from '@/components/features/bmo/dashboard/charts';
 import { dashboardAPI } from '@/lib/api/pilotage/dashboardClient';
 import { SectionTitle, KPICard, DataCard } from '@/components/features/bmo/dashboard/components';
@@ -48,7 +47,7 @@ const recentActivity = [
 
 export function RealtimeView() {
   const { liveStats, startRefresh, endRefresh } = useDashboardCommandCenterStore();
-  const subSubCategory = useDashboardNavigationStore((s) => s.leaf);
+  const subSubCategory = useDashboardCommandCenterStore((s) => s.navigation.subSubCategory);
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [refreshInterval, setRefreshInterval] = useState(30);
   const [lastRefresh, setLastRefresh] = useState(new Date());

@@ -32,7 +32,7 @@ export interface DashboardContentRouterProps {
 // MAPPING DES ROUTES
 // ============================================
 
-type ViewComponent = React.ComponentType<any>;
+type ViewComponent = React.ComponentType<Record<string, unknown>>;
 
 const ROUTE_MAPPING: Record<DashboardMainCategory, ViewComponent> = {
   overview: OverviewView,
@@ -41,6 +41,7 @@ const ROUTE_MAPPING: Record<DashboardMainCategory, ViewComponent> = {
   risks: RisksView,
   decisions: DecisionsView,
   realtime: RealtimeView,
+  administration: OverviewView,
 };
 
 // ============================================
@@ -71,7 +72,7 @@ export function DashboardContentRouter({
   // ============================================
 
   const navigationLog = useMemo(() => {
-    const log = {
+    const payload = {
       mainCategory,
       subCategory: subCategory || 'null',
       subSubCategory: subSubCategory || 'null',
@@ -87,10 +88,10 @@ export function DashboardContentRouter({
       },
     };
 
-    log.debug('Routing', log);
+    log.debug('Routing', payload);
 
-    return log;
-  }, [mainCategory, subCategory, subSubCategory, navigation, propMainCategory, propSubCategory, propSubSubCategory]);
+    return payload;
+  }, [mainCategory, subCategory, subSubCategory, navigation, propMainCategory, propSubCategory, propSubSubCategory, log]);
 
   // ============================================
   // RESOLVE VIEW COMPONENT
@@ -180,7 +181,7 @@ export function NavigationDebugger() {
 // ============================================
 
 interface DashboardContentRouterWithPropsProps extends DashboardContentRouterProps {
-  viewProps?: Record<string, any>;
+  viewProps?: Record<string, unknown>;
 }
 
 export function DashboardContentRouterWithProps({

@@ -90,9 +90,10 @@ export const ActionItem = memo(function ActionItem({
   const type = typeConfig[actionType] || typeConfig.contrat;
   const TypeIcon = type.icon;
 
-  // Validation et fallback pour la priorité
-  const actionPriorite = action.priorite || 'moyenne';
-  const priority = priorityConfig[actionPriorite] || priorityConfig.moyenne;
+  // Validation et fallback pour la priorité (normaliser clé)
+  const raw = (action.priorite || 'moyenne').toString().toLowerCase();
+  const actionPriorite = (['critique', 'haute', 'moyenne'].includes(raw) ? raw : 'moyenne') as ActionPriority;
+  const priority = priorityConfig[actionPriorite] ?? priorityConfig.moyenne;
 
   // Formater le montant
   const formattedAmount = action.montant
@@ -110,48 +111,51 @@ export const ActionItem = memo(function ActionItem({
         className
       )}
       onClick={onClick}
+      style={{ padding: 'clamp(0.75rem, 1.5vw, 1rem)', minHeight: '120px' }}
     >
       {/* Header: Type + Priority */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">
-          <div className={cn('p-1.5 rounded border', type.bg, type.border)}>
-            <TypeIcon className={cn('w-4 h-4', type.color)} />
+          <div className={cn('rounded border', type.bg, type.border)} style={{ padding: 'clamp(0.25rem, 0.5vw, 0.375rem)' }}>
+            <TypeIcon className={cn(type.color)} style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />
           </div>
           <Badge
             variant="default"
-            className={cn('text-[10px] border', priority.bg, priority.color)}
+            className={cn('border', priority?.bg ?? 'bg-amber-500/20', priority?.color ?? 'text-amber-400')}
+            style={{ fontSize: 'clamp(0.5625rem, 0.7vw, 0.625rem)' }}
           >
-            {priority.label}
+            {priority?.label ?? 'Moyenne'}
           </Badge>
           {action.code && (
             <Badge
               variant="default"
-              className="text-[10px] border bg-slate-700/50 text-slate-300 border-slate-600/50"
+              className="border bg-slate-700/50 text-slate-300 border-slate-600/50"
+              style={{ fontSize: 'clamp(0.5625rem, 0.7vw, 0.625rem)' }}
             >
               {action.code}
             </Badge>
           )}
         </div>
         {onClick && (
-          <ArrowRight className="w-4 h-4 text-slate-500" />
+          <ArrowRight className="text-slate-500" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />
         )}
       </div>
 
       {/* Titre */}
-      <h3 className="text-sm font-semibold text-slate-200 mb-2 line-clamp-2">
+      <h3 className="font-semibold text-slate-200 mb-2 line-clamp-2" style={{ fontSize: 'clamp(0.875rem, 1vw, 0.9375rem)' }}>
         {action.titre}
       </h3>
 
       {/* Projet */}
       {action.projet && (
-        <p className="text-xs text-slate-400 mb-2">
+        <p className="text-slate-400 mb-2" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>
           {action.projet.nom}
         </p>
       )}
 
       {/* Montant */}
       {formattedAmount && (
-        <p className="text-sm font-bold text-slate-300 mb-2">
+        <p className="font-bold text-slate-300 mb-2" style={{ fontSize: 'clamp(0.875rem, 1vw, 0.9375rem)' }}>
           {formattedAmount}
         </p>
       )}
@@ -159,13 +163,13 @@ export const ActionItem = memo(function ActionItem({
       {/* Footer: Deadline + Responsable */}
       <div className="flex items-center justify-between pt-3 border-t border-slate-700/50">
         <div className="flex items-center gap-2">
-          <Clock className="w-3.5 h-3.5 text-slate-500" />
-          <span className="text-xs text-slate-400">{action.deadline}</span>
+          <Clock className="text-slate-500" style={{ width: 'clamp(0.75rem, 0.875vw, 0.875rem)', height: 'clamp(0.75rem, 0.875vw, 0.875rem)', minWidth: '0.75rem', minHeight: '0.75rem' }} />
+          <span className="text-slate-400" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{action.deadline}</span>
         </div>
         {action.responsable && (
           <div className="flex items-center gap-1">
-            <User className="w-3.5 h-3.5 text-slate-500" />
-            <span className="text-xs text-slate-400">{action.responsable.nom}</span>
+            <User className="text-slate-500" style={{ width: 'clamp(0.75rem, 0.875vw, 0.875rem)', height: 'clamp(0.75rem, 0.875vw, 0.875rem)', minWidth: '0.75rem', minHeight: '0.75rem' }} />
+            <span className="text-slate-400" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{action.responsable.nom}</span>
           </div>
         )}
       </div>

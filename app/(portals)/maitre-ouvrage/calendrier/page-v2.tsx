@@ -28,6 +28,7 @@ import {
   CalendrierContentRouter,
 } from '@/components/features/bmo/calendrier/command-center';
 import { coerceNavigationState, buildNavigationParams } from '@/lib/utils/calendrier-navigation';
+import type { CalendrierDomain, CalendrierSection, CalendrierView } from '@/lib/types/calendrier.types';
 
 type Period = 'week' | 'month' | 'quarter';
 type CalendarView = 'gantt' | 'calendar' | 'timeline';
@@ -203,10 +204,10 @@ export default function CalendarPageV2() {
     initial[domain] = true;
     return initial;
   });
-
-  useEffect(() => {
-    setOpenDomains((prev) => ({ ...prev, [domain]: true }));
-  }, [domain]);
+  const openDomainsView = useMemo(
+    () => ({ ...openDomains, [domain]: true }),
+    [openDomains, domain]
+  );
 
   const activeDomain = useMemo(() => NAV_CAL.find((d) => d.id === domain)!, [domain]);
   const activeItem = useMemo(() => activeDomain.items.find((i) => i.id === section) ?? activeDomain.items[0], [activeDomain, section]);
@@ -261,7 +262,7 @@ export default function CalendarPageV2() {
 
           <div className="h-[calc(100%-56px)] overflow-y-auto px-2 py-2">
             {NAV_CAL.map((d) => {
-              const isOpen = Boolean(openDomains[d.id]);
+              const isOpen = Boolean(openDomainsView[d.id]);
               const isActiveDomain = d.id === domain;
               const Icon = d.icon;
 
@@ -428,9 +429,9 @@ export default function CalendarPageV2() {
           {/* Zone vue - Utilise le router de contenu existant */}
           <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
             <CalendrierContentRouter 
-              domain={domain as any} 
-              section={section as any} 
-              view={view as any} 
+              domain={domain as CalendrierDomain} 
+              section={section as CalendrierSection} 
+              view={view as CalendrierView} 
             />
           </div>
         </main>

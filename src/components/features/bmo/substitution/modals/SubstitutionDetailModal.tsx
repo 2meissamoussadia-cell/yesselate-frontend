@@ -83,7 +83,12 @@ export function SubstitutionDetailModal({
         const docsData = getDocumentsByEntity('substitution', substitutionId);
         const commentsData = getCommentsByEntity('substitution', substitutionId);
 
-        setSubstitution(sub ?? null);
+        const raw = sub as unknown as { createdAt?: Date; updatedAt?: Date };
+        setSubstitution(
+          sub
+            ? ({ ...sub, createdAt: raw?.createdAt ?? new Date(), updatedAt: raw?.updatedAt ?? new Date() } as unknown as Substitution)
+            : null
+        );
         setTimeline(timelineData);
         setDocuments(docsData);
         setComments(commentsData);
@@ -175,6 +180,18 @@ export function SubstitutionDetailModal({
     if (bytes < 1024) return `${bytes} B`;
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  };
+
+  const timelineTypeLabel: Record<TimelineEvent['type'], string> = {
+    created: 'Créé',
+    updated: 'Mis à jour',
+    assigned: 'Assigné',
+    escalated: 'Escaladé',
+    completed: 'Terminé',
+    commented: 'Commenté',
+    approved: 'Approuvé',
+    rejected: 'Rejeté',
+    revoked: 'Révoqué',
   };
 
   if (loading) {
@@ -397,7 +414,7 @@ export function SubstitutionDetailModal({
 
                         <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-3">
                           <div className="flex items-start justify-between mb-1">
-                            <h4 className="font-medium text-white">{event.title}</h4>
+                            <h4 className="font-medium text-white">{timelineTypeLabel[event.type]}</h4>
                             <span className="text-xs text-slate-500">
                               {formatRelativeTime(event.createdAt)}
                             </span>

@@ -72,26 +72,29 @@ export const AgendaItem = memo(function AgendaItem({
         className
       )}
       onClick={onClick}
+      style={{ padding: 'clamp(0.75rem, 1.5vw, 1rem)', minHeight: '140px' }}
     >
       {/* Header: Date + Type */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">
-          <div className="flex flex-col items-center min-w-[50px]">
-            <span className="text-[10px] text-slate-400 uppercase">{dayName}</span>
-            <span className="text-lg font-bold text-slate-200">{dayNumber}</span>
-            <span className="text-[10px] text-slate-400">{month}</span>
+          <div className="flex flex-col items-center" style={{ minWidth: 'clamp(3rem, 4vw, 3.125rem)' }}>
+            <span className="text-slate-400 uppercase" style={{ fontSize: 'clamp(0.5625rem, 0.7vw, 0.625rem)' }}>{dayName}</span>
+            <span className="font-bold text-slate-200" style={{ fontSize: 'clamp(1rem, 1.5vw, 1.125rem)' }}>{dayNumber}</span>
+            <span className="text-slate-400" style={{ fontSize: 'clamp(0.5625rem, 0.7vw, 0.625rem)' }}>{month}</span>
           </div>
           <div className="flex-1">
             <Badge
               variant="default"
-              className={cn('text-[10px] mb-1 border', type.bg, type.border, type.color)}
+              className={cn('mb-1 border', type.bg, type.border, type.color)}
+              style={{ fontSize: 'clamp(0.5625rem, 0.7vw, 0.625rem)' }}
             >
               {type.label}
             </Badge>
             {event.priorite !== 'normal' && (
               <Badge
                 variant="default"
-                className={cn('text-[10px] ml-1 border', priority.bg, priority.color)}
+                className={cn('ml-1 border', priority.bg, priority.color)}
+                style={{ fontSize: 'clamp(0.5625rem, 0.7vw, 0.625rem)' }}
               >
                 {priority.label}
               </Badge>
@@ -101,32 +104,32 @@ export const AgendaItem = memo(function AgendaItem({
       </div>
 
       {/* Time */}
-      <div className="flex items-center gap-2 mb-2 text-xs text-slate-400">
-        <Clock className="w-3.5 h-3.5" />
+      <div className="flex items-center gap-2 mb-2 text-slate-400" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>
+        <Clock style={{ width: 'clamp(0.75rem, 0.875vw, 0.875rem)', height: 'clamp(0.75rem, 0.875vw, 0.875rem)', minWidth: '0.75rem', minHeight: '0.75rem' }} />
         <span>{event.time}</span>
       </div>
 
       {/* Titre */}
-      <h3 className="text-sm font-semibold text-slate-200 mb-1 line-clamp-2">
+      <h3 className="font-semibold text-slate-200 mb-1 line-clamp-2" style={{ fontSize: 'clamp(0.875rem, 1vw, 0.9375rem)' }}>
         {event.titre}
       </h3>
 
       {/* Description */}
-      <p className="text-xs text-slate-400 mb-3 line-clamp-2">
+      <p className="text-slate-400 mb-3 line-clamp-2" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>
         {event.description}
       </p>
 
       {/* Footer: Projet + Participants */}
       <div className="flex items-center justify-between pt-2 border-t border-slate-700/50">
         {event.projet && (
-          <span className="text-[10px] text-slate-500 truncate">
+          <span className="text-slate-500 truncate" style={{ fontSize: 'clamp(0.5625rem, 0.7vw, 0.625rem)' }}>
             {event.projet}
           </span>
         )}
         {event.participants && event.participants.length > 0 && (
           <div className="flex items-center gap-1">
-            <Users className="w-3 h-3 text-slate-500" />
-            <span className="text-[10px] text-slate-500">
+            <Users className="text-slate-500" style={{ width: 'clamp(0.75rem, 0.875vw, 0.875rem)', height: 'clamp(0.75rem, 0.875vw, 0.875rem)', minWidth: '0.75rem', minHeight: '0.75rem' }} />
+            <span className="text-slate-500" style={{ fontSize: 'clamp(0.5625rem, 0.7vw, 0.625rem)' }}>
               {event.participants.length}
             </span>
           </div>

@@ -17,6 +17,7 @@ import {
   Users,
   FileText,
   BarChart3,
+  Building2,
 } from 'lucide-react';
 import {
   LineChart,

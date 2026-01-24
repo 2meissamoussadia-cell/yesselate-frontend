@@ -13,6 +13,7 @@ import type {
   WorkloadData,
   Document,
 } from '@/lib/types/substitution.types';
+import { formatFileSize as formatFileSizeUtil } from '@/lib/data/timeline-documents-mock-data';
 
 // ================================
 // EMPLOYEES API SERVICE
@@ -305,8 +306,7 @@ class DocumentsApiService {
   }
 
   formatFileSize(bytes: number): string {
-    const { formatFileSize } = require('@/lib/data/timeline-documents-mock-data');
-    return formatFileSize(bytes);
+    return formatFileSizeUtil(bytes);
   }
 
   getFileIcon(type: string): string {

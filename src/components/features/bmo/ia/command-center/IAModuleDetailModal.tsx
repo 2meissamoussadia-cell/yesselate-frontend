@@ -7,6 +7,8 @@
 
 'use client';
 
+/* eslint-disable @next/next/no-assign-module-variable */
+
 import React, { useMemo } from 'react';
 import { GenericDetailModal, type TabConfig, type ActionButton } from '@/components/ui/GenericDetailModal';
 import {

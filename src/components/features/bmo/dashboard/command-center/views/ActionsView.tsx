@@ -33,7 +33,6 @@ import {
   Download,
 } from 'lucide-react';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
-import { useDashboardNavigationStore } from '@/lib/stores/dashboardNavigationStore';
 import { useApiQuery } from '@/lib/api/hooks/useApiQuery';
 import { dashboardAPI } from '@/lib/api/pilotage/dashboardClient';
 import { SectionTitle, ActionItem } from '@/components/features/bmo/dashboard/components';
@@ -134,8 +133,8 @@ const typeLabels = {
 
 export function ActionsView() {
   const openModal = useDashboardCommandCenterStore((s) => s.openModal);
-  const subCategory = useDashboardNavigationStore((s) => s.sub);
-  const subSubCategory = useDashboardNavigationStore((s) => s.leaf);
+  const subCategory = useDashboardCommandCenterStore((s) => s.navigation.subCategory);
+  const subSubCategory = useDashboardCommandCenterStore((s) => s.navigation.subSubCategory);
   const navigation = { subCategory, subSubCategory } as const;
 
   const [selectedItems, setSelectedItems] = useState<string[]>([]);

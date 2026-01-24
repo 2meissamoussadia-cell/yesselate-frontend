@@ -23,10 +23,21 @@ import {
   Scale,
   MoreHorizontal,
   ChevronDown,
+  Zap,
+  Inbox,
+  User,
+  Users,
+  Archive,
+  TrendingUp,
+  Calendar,
+  Download,
 } from 'lucide-react';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
+import { useDashboardNavigationStore } from '@/lib/stores/dashboardNavigationStore';
 import { useApiQuery } from '@/lib/api/hooks/useApiQuery';
 import { dashboardAPI } from '@/lib/api/pilotage/dashboardClient';
+import { SectionTitle, ActionItem } from '@/components/features/bmo/dashboard/components';
+import type { ActionItemData } from '@/components/features/bmo/dashboard/components';
 
 // Types
 interface ActionItem {
@@ -122,8 +133,10 @@ const typeLabels = {
 };
 
 export function ActionsView() {
-  const { navigation, openModal } =
-    useDashboardCommandCenterStore();
+  const openModal = useDashboardCommandCenterStore((s) => s.openModal);
+  const subCategory = useDashboardNavigationStore((s) => s.sub);
+  const subSubCategory = useDashboardNavigationStore((s) => s.leaf);
+  const navigation = { subCategory, subSubCategory } as const;
 
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -159,22 +172,104 @@ export function ActionsView() {
     }));
   }, [actionsData]);
 
-  // Filtrer selon le sous-onglet
+  // Filtrer selon le sous-onglet (Version 4)
   const filteredActions = useMemo(() => {
     let actions = [...baseActions];
 
-    // Filtre par sous-catégorie
+    // Filtre par sous-catégorie selon Version 4
     switch (navigation.subCategory) {
-      case 'urgent':
+      case 'inbox': // Ma boîte de réception
+        const today = new Date().toISOString().split('T')[0];
+        const weekFromNow = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+        switch (navigation.subSubCategory) {
+          case 'urgentes':
+            actions = actions.filter((a) => a.urgency === 'critical' && a.status === 'pending');
+            break;
+          case 'aujourdhui':
+            actions = actions.filter((a) => {
+              const dueDate = new Date(a.dueDate.split('/').reverse().join('-'));
+              return dueDate.toISOString().split('T')[0] === today && a.status === 'pending';
+            });
+            break;
+          case 'semaine':
+            actions = actions.filter((a) => {
+              const dueDate = new Date(a.dueDate.split('/').reverse().join('-'));
+              return dueDate.toISOString().split('T')[0] <= weekFromNow && a.status === 'pending';
+            });
+            break;
+          default:
+            actions = actions.filter((a) => a.status === 'pending');
+        }
+        break;
+      case 'type': // Par type
+        switch (navigation.subSubCategory) {
+          case 'contrats':
+            actions = actions.filter((a) => a.type === 'contrat');
+            break;
+          case 'arbitrages':
+            actions = actions.filter((a) => a.type === 'arbitrage');
+            break;
+          case 'paiements':
+            actions = actions.filter((a) => a.type === 'paiement');
+            break;
+          case 'bc':
+            actions = actions.filter((a) => a.type === 'bc');
+            break;
+          case 'autres':
+            actions = actions.filter((a) => a.type === 'autre');
+            break;
+        }
+        break;
+      case 'priority': // Par priorité
+        switch (navigation.subSubCategory) {
+          case 'critique':
+            actions = actions.filter((a) => a.urgency === 'critical');
+            break;
+          case 'haute':
+            actions = actions.filter((a) => a.urgency === 'warning');
+            break;
+          case 'moyenne':
+            actions = actions.filter((a) => a.urgency === 'normal');
+            break;
+        }
+        break;
+      case 'urgent': // Urgentes (legacy)
         actions = actions.filter((a) => a.urgency === 'critical');
         break;
-      case 'blocked':
+      case 'blocked': // Bloquées
         actions = actions.filter((a) => a.delay.includes('retard'));
         break;
-      case 'pending':
+      case 'assigned': // Assignées
+        // TODO: Implémenter la logique d'assignation quand disponible
+        switch (navigation.subSubCategory) {
+          case 'moi':
+            // Filtrer par utilisateur actuel
+            break;
+          case 'equipe':
+            // Filtrer par équipe
+            break;
+          case 'non-assignees':
+            // Filtrer non assignées
+            break;
+        }
+        break;
+      case 'history': // Historique
+        switch (navigation.subSubCategory) {
+          case 'recentes':
+            actions = actions.filter((a) => a.status === 'completed');
+            break;
+          case 'anciennes':
+            actions = actions.filter((a) => a.status === 'completed');
+            break;
+          case 'archivees':
+            actions = actions.filter((a) => a.status === 'completed');
+            break;
+        }
+        break;
+      case 'pending': // En attente (legacy)
         actions = actions.filter((a) => a.status === 'pending');
         break;
-      case 'completed':
+      case 'completed': // Terminées (legacy)
         actions = actions.filter((a) => a.status === 'completed');
         break;
     }
@@ -206,30 +301,55 @@ export function ActionsView() {
     return actions;
   }, [baseActions, navigation.subCategory, searchQuery, sortBy]);
 
+  // Convertir les actions pour ActionItem
+  const actionsForComponent: ActionItemData[] = useMemo(() => {
+    return filteredActions.map((action) => ({
+      id: action.id,
+      titre: action.title,
+      type: (action.type === 'bc' ? 'bc' : action.type === 'paiement' ? 'paiement' : action.type === 'contrat' ? 'contrat' : action.type === 'arbitrage' ? 'arbitrage' : 'contrat') as ActionItemData['type'],
+      priorite: (action.urgency === 'critical' ? 'critique' : action.urgency === 'warning' ? 'haute' : 'moyenne') as ActionItemData['priorite'],
+      bureau: action.bureau,
+      code: action.delay,
+      deadline: action.dueDate,
+      montant: action.amount ? parseFloat(action.amount.replace(/[^\d.]/g, '')) * (action.amount.includes('M') ? 1000000 : 1000) : undefined,
+    }));
+  }, [filteredActions]);
+
   return (
-    <div className="p-6 space-y-4 max-w-[1800px] mx-auto">
-      {/* Header */}
+    <div className="p-6 space-y-8 max-w-[1920px] mx-auto">
+      {/* Header harmonisé */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl font-bold text-slate-200">Actions Prioritaires</h1>
-          <p className="text-sm text-slate-500 mt-0.5">
-            {filteredActions.length} actions à traiter
-          </p>
-        </div>
+        <SectionTitle
+          icon={navigation.subCategory === 'inbox' ? Inbox : Zap}
+          title={
+            navigation.subCategory === 'inbox' ? 'Ma boîte de réception' :
+            navigation.subCategory === 'type' ? 'Actions par type' :
+            navigation.subCategory === 'priority' ? 'Actions par priorité' :
+            navigation.subCategory === 'assigned' ? 'Actions assignées' :
+            navigation.subCategory === 'history' ? 'Historique des actions' :
+            'Actions & Tâches'
+          }
+          subtitle={`${filteredActions.length} action${filteredActions.length > 1 ? 's' : ''} à traiter`}
+          size="lg"
+        />
 
         <div className="flex items-center gap-2">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
             <Input
-              placeholder="Rechercher..."
+              placeholder="Rechercher une action..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-9 bg-slate-800/50 border-slate-700 text-slate-200 w-64"
             />
           </div>
-          <Button variant="default" size="sm" className="border-slate-700 text-slate-400">
+          <Button variant="default" size="sm" className="bg-slate-800/50 border border-slate-700 text-slate-300 hover:bg-slate-800/70">
             <Filter className="w-4 h-4 mr-2" />
             Filtres
+          </Button>
+          <Button variant="default" size="sm" className="bg-slate-800/50 border border-slate-700 text-slate-300 hover:bg-slate-800/70">
+            <Download className="w-4 h-4 mr-2" />
+            Exporter
           </Button>
         </div>
       </div>
@@ -258,132 +378,15 @@ export function ActionsView() {
         </div>
       )}
 
-      {/* Liste des actions */}
-      <div className="space-y-2">
-        {filteredActions.map((action) => {
-          const Icon = typeIcons[action.type];
-          const isSelected = selectedItems.includes(action.id);
-
-          return (
-            <div
-              key={action.id}
-              className={cn(
-                'flex items-center gap-4 p-4 rounded-xl border transition-all',
-                isSelected
-                  ? 'bg-slate-800/50 border-slate-600/60'
-                  : 'bg-slate-800/30 border-slate-700/50 hover:bg-slate-800/50'
-              )}
-            >
-              {/* Checkbox */}
-              <button
-                onClick={() => toggleItemSelection(action.id)}
-                className={cn(
-                  'w-5 h-5 rounded border-2 flex items-center justify-center transition-colors',
-                  isSelected
-                    ? 'bg-slate-200 border-slate-200'
-                    : 'border-slate-600 hover:border-slate-500'
-                )}
-              >
-                {isSelected && <CheckCircle className="w-3 h-3 text-slate-900" />}
-              </button>
-
-              {/* Indicateur urgence */}
-              <div
-                className={cn(
-                  'w-1.5 h-12 rounded-full flex-shrink-0',
-                  action.urgency === 'critical'
-                    ? 'bg-rose-500'
-                    : action.urgency === 'warning'
-                    ? 'bg-amber-500'
-                    : 'bg-slate-600'
-                )}
-              />
-
-              {/* Icône type */}
-              <div
-                className={cn(
-                  'p-2 rounded-lg flex-shrink-0 border border-slate-700/50 bg-slate-800/50'
-                )}
-              >
-                <Icon
-                  className={cn(
-                    'w-5 h-5',
-                    action.urgency === 'critical'
-                      ? 'text-rose-400'
-                      : action.urgency === 'warning'
-                      ? 'text-amber-400'
-                      : 'text-slate-400'
-                  )}
-                />
-              </div>
-
-              {/* Contenu */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs font-mono text-slate-500">{action.id}</span>
-                  <Badge
-                    variant="default"
-                    className="text-xs border-slate-700 text-slate-400"
-                  >
-                    {typeLabels[action.type]}
-                  </Badge>
-                  <Badge
-                    variant="default"
-                    className="text-xs border-slate-700 text-slate-400"
-                  >
-                    {action.bureau}
-                  </Badge>
-                </div>
-                <p className="text-sm font-medium text-slate-200 truncate">{action.title}</p>
-                <p className="text-xs text-slate-500 truncate">{action.description}</p>
-              </div>
-
-              {/* Montant */}
-              {action.amount && (
-                <div className="text-right flex-shrink-0">
-                  <p className="text-sm font-semibold text-slate-200">{action.amount}</p>
-                </div>
-              )}
-
-              {/* Délai */}
-              <div className="flex items-center gap-1.5 flex-shrink-0">
-                <Clock
-                  className={cn(
-                    'w-4 h-4',
-                    action.delay.includes('retard') ? 'text-rose-400' : 'text-slate-500'
-                  )}
-                />
-                <span
-                  className={cn(
-                    'text-sm font-medium',
-                    action.delay.includes('retard') ? 'text-rose-400' : 'text-slate-400'
-                  )}
-                >
-                  {action.delay}
-                </span>
-              </div>
-
-              {/* Actions */}
-              <div className="flex items-center gap-1 flex-shrink-0">
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => openModal('action-detail', { action })}
-                  className="text-slate-400 hover:text-slate-200"
-                >
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="text-slate-400 hover:text-slate-200"
-                >
-                  <MoreHorizontal className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-          );
-        })}
+      {/* Liste des actions avec composant réutilisable */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {actionsForComponent.map((action) => (
+          <ActionItem
+            key={action.id}
+            action={action}
+            onClick={() => openModal('action-detail', { actionId: action.id })}
+          />
+        ))}
       </div>
 
       {/* Empty state */}

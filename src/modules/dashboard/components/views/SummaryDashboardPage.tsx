@@ -12,3 +12,5 @@ export const SummaryDashboardPage = memo(function SummaryDashboardPage() {
   return <OverviewView />;
 });
 
+export default SummaryDashboardPage;
+

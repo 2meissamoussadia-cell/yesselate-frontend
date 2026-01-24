@@ -1,608 +1,474 @@
 /**
- * Page KPIs Budget
- * Affiche les indicateurs budgétaires et financiers
- * Version optimisée avec paiements en retard et rentabilité
+ * KPIs Budget — version "logiciel métier premium"
+ * - Hiérarchie claire (shell + panels)
+ * - Densité lisible (alignements, chiffres à droite)
+ * - Pas d'effets "arcade" (pas de dégradés agressifs, pas de hover:scale)
  */
 
 'use client';
 
-import React, { useCallback, memo, useMemo } from 'react';
-import { TrendingUp, TrendingDown, DollarSign, Wallet, PieChart, BarChart3, AlertTriangle, CheckCircle, Clock, Calendar, TrendingDown as TrendingDownIcon, Percent, Info } from 'lucide-react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { cn } from '@/lib/utils';
-import { SparklineChart } from '../shared/SparklineChart';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
-import { ExportButton } from '../shared/ExportButton';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import {
+  DollarSign,
+  Wallet,
+  PieChart,
+  TrendingUp,
+  AlertTriangle,
+  ShieldCheck,
+  Download,
+  Search,
+} from 'lucide-react';
 
-interface PaiementRetard {
+import { KPICard, SectionTitle, DataCard } from '@/components/features/bmo/dashboard/components';
+
+import { DashboardPageShell } from '../shared/DashboardPageShell';
+import { DashboardPanel } from '../shared/DashboardPanel';
+
+// ---------------------------
+// Helpers formatters
+// ---------------------------
+const formatMoneyFCFA = (n: number): string => {
+  if (!Number.isFinite(n)) return '—';
+  if (Math.abs(n) >= 1_000_000_000) return `${(n / 1_000_000_000).toFixed(1)} Md`;
+  if (Math.abs(n) >= 1_000_000) return `${(n / 1_000_000).toFixed(1)} M`;
+  if (Math.abs(n) >= 1_000) return `${Math.round(n / 1_000)} K`;
+  return `${n}`;
+};
+
+const clampPct = (n: number) => Math.max(0, Math.min(100, n));
+
+// ---------------------------
+// Mock data (garde tes vraies datas ensuite)
+// ---------------------------
+type BudgetProject = {
+  id: string;
+  nom: string;
+  alloue: number;
+  consomme: number;
+};
+
+type PaymentLate = {
   id: string;
   projet: string;
+  retardJours: number;
   montant: number;
-  joursRetard: number;
-  priorite: 'critique' | 'haute' | 'moyenne';
-}
+  priorite: 'haute' | 'moyenne' | 'critique';
+};
 
-interface Rentabilite {
+type ProfitRow = {
   id: string;
   projet: string;
   investissement: number;
   retourAttendu: number;
   retourReel: number;
-  marge: number;
-}
+  margePct: number;
+};
 
-function BudgetKpiPage() {
-  const openModal = useDashboardCommandCenterStore((state) => state.openModal);
+export function BudgetKpiPage() {
+  const [q, setQ] = useState('');
+  const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
 
-  const handleKPIClick = useCallback((kpi: any) => {
-    openModal('kpi-drilldown', {
-      kpi: {
-        label: kpi.label,
-        value: kpi.value,
-        delta: kpi.trend,
-        tone: kpi.color === 'emerald' || kpi.color === 'cyan' ? 'ok' : kpi.color === 'amber' || kpi.color === 'orange' ? 'warn' : kpi.color === 'red' ? 'crit' : 'info',
-        trend: kpi.trendDirection === 'up' ? 'up' : kpi.trendDirection === 'down' ? 'down' : 'neutral',
-        icon: kpi.icon,
-      },
-    });
-  }, [openModal]);
-
-  // Données budgétaires avec sparklines
-  const budgetKPIs = [
-    {
-      id: 'total',
-      label: 'Budget total',
-      value: '4.2 Mds',
-      trend: '+5%',
-      trendDirection: 'up' as const,
-      icon: DollarSign,
-      color: 'blue',
-      description: 'FCFA alloués',
-      sparkline: [3.8, 3.9, 4.0, 4.0, 4.1, 4.1, 4.2],
-    },
-    {
-      id: 'consomme',
-      label: 'Budget consommé',
-      value: '67%',
-      trend: '+2%',
-      trendDirection: 'up' as const,
-      icon: Wallet,
-      color: 'orange',
-      description: 'du budget total',
-      sparkline: [60, 62, 63, 64, 65, 66, 67],
-    },
-    {
-      id: 'reste',
-      label: 'Budget restant',
-      value: '1.4 Mds',
-      trend: '-2%',
-      trendDirection: 'down' as const,
-      icon: PieChart,
-      color: 'emerald',
-      description: 'FCFA disponibles',
-      sparkline: [1.6, 1.55, 1.5, 1.45, 1.42, 1.41, 1.4],
-    },
-    {
-      id: 'moyen',
-      label: 'Budget moyen/projet',
-      value: '125M',
-      trend: '—',
-      trendDirection: 'neutral' as const,
-      icon: BarChart3,
-      color: 'purple',
-      description: 'FCFA par projet',
-      sparkline: [120, 122, 123, 124, 124, 125, 125],
-    },
-    {
-      id: 'paiements',
-      label: 'Paiements en retard',
-      value: '8.5M',
-      trend: '-2.1M',
-      trendDirection: 'down' as const,
-      icon: Calendar,
-      color: 'red',
-      description: 'FCFA non réglés',
-      sparkline: [12.5, 11.8, 11.0, 10.5, 9.8, 9.2, 8.5],
-    },
-    {
-      id: 'rentabilite',
-      label: 'Rentabilité moyenne',
-      value: '18%',
-      trend: '+2%',
-      trendDirection: 'up' as const,
-      icon: Percent,
-      color: 'emerald',
-      description: 'marge bénéficiaire',
-      sparkline: [14, 15, 15.5, 16, 16.5, 17, 18],
-    },
-    {
-      id: 'alerte',
-      label: 'Projets en alerte',
-      value: '3',
-      trend: '-1',
-      trendDirection: 'down' as const,
-      icon: AlertTriangle,
-      color: 'amber',
-      description: 'dépassement budget',
-      sparkline: [5, 5, 4, 4, 4, 3, 3],
-    },
-    {
-      id: 'conforme',
-      label: 'Conformité budget',
-      value: '94%',
-      trend: '+1%',
-      trendDirection: 'up' as const,
-      icon: CheckCircle,
-      color: 'cyan',
-      description: 'projets conformes',
-      sparkline: [90, 91, 91.5, 92, 92.5, 93, 94],
-    },
-  ];
-
-  const budgetDetails = [
-    {
-      projet: 'Villa Diamniadio',
-      budget: '36.4M',
-      consomme: '24.7M',
-      pourcentage: 68,
-      statut: 'normal' as const,
-    },
-    {
-      projet: 'Complexe Résidentiel',
-      budget: '28.2M',
-      consomme: '22.1M',
-      pourcentage: 78,
-      statut: 'attention' as const,
-    },
-    {
-      projet: 'Infrastructure Route',
-      budget: '45.8M',
-      consomme: '48.2M',
-      pourcentage: 105,
-      statut: 'alerte' as const,
-    },
-  ];
-
-  // Paiements en retard
-  const paiementsRetard: PaiementRetard[] = [
-    {
-      id: 'p1',
-      projet: 'Villa Diamniadio',
-      montant: 3200000,
-      joursRetard: 15,
-      priorite: 'haute',
-    },
-    {
-      id: 'p2',
-      projet: 'Complexe Résidentiel',
-      montant: 2800000,
-      joursRetard: 25,
-      priorite: 'critique',
-    },
-    {
-      id: 'p3',
-      projet: 'École Primaire',
-      montant: 1500000,
-      joursRetard: 8,
-      priorite: 'moyenne',
-    },
-    {
-      id: 'p4',
-      projet: 'Centre de Santé',
-      montant: 1000000,
-      joursRetard: 5,
-      priorite: 'moyenne',
-    },
-  ];
-
-  // Rentabilité par projet
-  const rentabilite: Rentabilite[] = [
-    {
-      id: 'r1',
-      projet: 'Villa Diamniadio',
-      investissement: 36400000,
-      retourAttendu: 7280000,
-      retourReel: 6900000,
-      marge: 19,
-    },
-    {
-      id: 'r2',
-      projet: 'Complexe Résidentiel',
-      investissement: 28200000,
-      retourAttendu: 5640000,
-      retourReel: 5100000,
-      marge: 18,
-    },
-    {
-      id: 'r3',
-      projet: 'Infrastructure Route',
-      investissement: 45800000,
-      retourAttendu: 9160000,
-      retourReel: 8500000,
-      marge: 19,
-    },
-    {
-      id: 'r4',
-      projet: 'École Primaire',
-      investissement: 18500000,
-      retourAttendu: 3700000,
-      retourReel: 3600000,
-      marge: 19,
-    },
-  ];
-
-  // Fonctions d'export
-  const handleExportCSV = useCallback(() => {
-    const headers = ['Projet', 'Investissement', 'Retour Attendu', 'Retour Réel', 'Marge (%)'];
-    const rows = rentabilite.map(r => [
-      r.projet,
-      formatCurrency(r.investissement),
-      formatCurrency(r.retourAttendu),
-      formatCurrency(r.retourReel),
-      r.marge.toString(),
-    ]);
-    const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `budget-rentabilite-${new Date().toISOString().split('T')[0]}.csv`;
-    link.click();
-    URL.revokeObjectURL(url);
-  }, [rentabilite]);
-
-  const handleExportJSON = useCallback(() => {
-    const data = {
-      kpis: budgetKPIs.map(kpi => ({
-        label: kpi.label,
-        value: kpi.value,
-        trend: kpi.trend,
-      })),
-      rentabilite: rentabilite.map(r => ({
-        projet: r.projet,
-        investissement: r.investissement,
-        retourAttendu: r.retourAttendu,
-        retourReel: r.retourReel,
-        marge: r.marge,
-      })),
-      paiementsRetard: paiementsRetard.map(p => ({
-        projet: p.projet,
-        montant: p.montant,
-        joursRetard: p.joursRetard,
-        priorite: p.priorite,
-      })),
+  // Dernière synchro "réelle" (même source que l'auto-refresh dashboard)
+  useEffect(() => {
+    const readLast = () => {
+      if (typeof window === 'undefined') return;
+      const ts = (window as any).__lastDashboardRefresh;
+      if (typeof ts === 'number' && Number.isFinite(ts) && ts > 0) {
+        setLastUpdate(new Date(ts));
+      }
     };
-    const jsonContent = JSON.stringify(data, null, 2);
-    const blob = new Blob([jsonContent], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `budget-kpis-${new Date().toISOString().split('T')[0]}.json`;
-    link.click();
-    URL.revokeObjectURL(url);
-  }, [budgetKPIs, rentabilite, paiementsRetard]);
+    readLast();
+    window.addEventListener('focus', readLast);
+    document.addEventListener('visibilitychange', readLast);
+    return () => {
+      window.removeEventListener('focus', readLast);
+      document.removeEventListener('visibilitychange', readLast);
+    };
+  }, []);
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('fr-FR', {
-      style: 'currency',
-      currency: 'XOF',
-      maximumFractionDigits: 0,
-    }).format(value);
-  };
+  // KPIs (tu pourras brancher tes vraies stats)
+  const kpis = useMemo(() => {
+    return [
+      {
+        id: 'budget_total',
+        label: 'Budget total',
+        value: '4.2 Mds',
+        trend: 5,
+        trendType: 'up' as const,
+        icon: DollarSign,
+        color: 'blue' as const,
+        description: 'Total des enveloppes budgétaires (exercice en cours)',
+        onClick: () => {},
+      },
+      {
+        id: 'budget_consomme',
+        label: 'Budget consommé',
+        value: '67%',
+        trend: -2,
+        trendType: 'down' as const,
+        icon: PieChart,
+        color: 'amber' as const,
+        description: 'Part consommée (engagé + payé selon paramétrage)',
+        onClick: () => {},
+      },
+      {
+        id: 'budget_restant',
+        label: 'Budget restant',
+        value: '1.4 Mds',
+        trend: -2,
+        trendType: 'down' as const,
+        icon: Wallet,
+        color: 'emerald' as const,
+        description: "Reste à engager sur l’exercice",
+        onClick: () => {},
+      },
+      {
+        id: 'budget_moyen',
+        label: 'Budget moyen / projet',
+        value: '125 M',
+        trend: 1,
+        trendType: 'up' as const,
+        icon: TrendingUp,
+        color: 'purple' as const,
+        description: 'Moyenne sur la sélection de projets',
+        onClick: () => {},
+      },
+      {
+        id: 'paiements_retard',
+        label: 'Paiements en retard',
+        value: '8.5 M',
+        icon: AlertTriangle,
+        color: 'rose' as const,
+        description: 'Total des paiements dépassant le SLA',
+        onClick: () => {},
+      },
+      {
+        id: 'conformite_budget',
+        label: 'Conformité budget',
+        value: '94%',
+        trend: 2,
+        trendType: 'up' as const,
+        icon: ShieldCheck,
+        color: 'cyan' as const,
+        description: 'Respect des règles budget / engagement / pièces',
+        onClick: () => {},
+      },
+    ];
+  }, []);
+
+  const projects: BudgetProject[] = useMemo(
+    () => [
+      { id: 'p1', nom: 'Villa Diamniadio', alloue: 36_400_000, consomme: 24_700_000 },
+      { id: 'p2', nom: 'Complexe Résidentiel', alloue: 28_200_000, consomme: 22_100_000 },
+      { id: 'p3', nom: 'Infrastructure Route', alloue: 45_800_000, consomme: 48_200_000 },
+    ],
+    []
+  );
+
+  const latePayments: PaymentLate[] = useMemo(
+    () => [
+      { id: 'l1', projet: 'Villa Diamniadio', retardJours: 15, montant: 3_200_000, priorite: 'haute' },
+      { id: 'l2', projet: 'Complexe Résidentiel', retardJours: 25, montant: 2_800_000, priorite: 'critique' },
+      { id: 'l3', projet: 'École Primaire', retardJours: 8, montant: 1_500_000, priorite: 'moyenne' },
+      { id: 'l4', projet: 'Centre de Santé', retardJours: 5, montant: 1_000_000, priorite: 'moyenne' },
+    ],
+    []
+  );
+
+  const profitability: ProfitRow[] = useMemo(
+    () => [
+      {
+        id: 'r1',
+        projet: 'Villa Diamniadio',
+        investissement: 36_400_000,
+        retourAttendu: 7_280_000,
+        retourReel: 6_900_000,
+        margePct: 19,
+      },
+      {
+        id: 'r2',
+        projet: 'Complexe Résidentiel',
+        investissement: 28_200_000,
+        retourAttendu: 5_640_000,
+        retourReel: 5_100_000,
+        margePct: 18,
+      },
+      {
+        id: 'r3',
+        projet: 'Infrastructure Route',
+        investissement: 45_800_000,
+        retourAttendu: 9_160_000,
+        retourReel: 8_500_000,
+        margePct: 19,
+      },
+    ],
+    []
+  );
+
+  const filteredProjects = useMemo(() => {
+    const s = q.trim().toLowerCase();
+    if (!s) return projects;
+    return projects.filter((p) => p.nom.toLowerCase().includes(s));
+  }, [q, projects]);
+
+  const filteredLate = useMemo(() => {
+    const s = q.trim().toLowerCase();
+    if (!s) return latePayments;
+    return latePayments.filter((p) => p.projet.toLowerCase().includes(s));
+  }, [q, latePayments]);
+
+  const lastUpdateLabel = useMemo(() => {
+    if (!lastUpdate) return '—';
+    return lastUpdate.toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' });
+  }, [lastUpdate]);
 
   return (
-    <TooltipProvider delayDuration={200}>
-      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 animate-fadeIn min-w-0 overflow-hidden">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 min-w-0">
-          <div className="min-w-0 flex-1">
-            <h1 className="text-xl sm:text-2xl font-bold text-white mb-2 break-words">KPIs Budget</h1>
-            <p className="text-slate-300 text-sm sm:text-base break-words">Indicateurs budgétaires et financiers</p>
-          </div>
-          <div className="flex-shrink-0">
-            <ExportButton
-              onExportCSV={handleExportCSV}
-              onExportJSON={handleExportJSON}
-              label="Exporter"
+    <DashboardPageShell
+      title="KPIs Budget"
+      subtitle="Indicateurs budgétaires et financiers — lecture instantanée + drill-down"
+      rightSlot={
+        <>
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <Input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Rechercher un projet…"
+              className="pl-9 w-[260px] bg-slate-950/40 border-slate-800/70"
             />
           </div>
-        </div>
 
-        {/* Cartes KPIs */}
-        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 xs:gap-3 sm:gap-4 min-w-0">
-          {budgetKPIs.map((kpi) => {
-            const Icon = kpi.icon;
-            const isPositive = (kpi.trendDirection === 'up' && (kpi.id === 'total' || kpi.id === 'rentabilite' || kpi.id === 'conforme')) || 
-                             (kpi.trendDirection === 'down' && (kpi.id === 'paiements' || kpi.id === 'alerte'));
-            const isNegative = !isPositive && kpi.trendDirection !== 'neutral';
-            const isNeutral = kpi.trendDirection === 'neutral';
-            const sparklineColor = kpi.color === 'blue' ? 'blue' : 
-                                  kpi.color === 'orange' || kpi.color === 'amber' ? 'amber' : 
-                                  kpi.color === 'red' ? 'red' : 
-                                  kpi.color === 'cyan' || kpi.color === 'emerald' ? 'emerald' : 'purple';
+          <Button
+            variant="outline"
+            className="border-slate-800/70 bg-slate-950/30 hover:bg-slate-900/40"
+          >
+            <Download className="h-4 w-4 mr-2" />
+            Exporter
+          </Button>
+        </>
+      }
+    >
+      {/* KPI GRID */}
+      <DashboardPanel className="p-4 sm:p-5">
+        <SectionTitle
+          title="Indicateurs clés"
+          subtitle="Synthèse instantanée — clique un KPI pour ouvrir le détail"
+          size="md"
+        />
+
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
+          {kpis.map((k) => (
+            <KPICard key={k.id} kpi={k} size="md" />
+          ))}
+        </div>
+      </DashboardPanel>
+
+      {/* Budget par projet */}
+      <DashboardPanel className="p-4 sm:p-6">
+        <SectionTitle
+          title="Budget par projet"
+          subtitle="Comparatif alloué / consommé + dépassements"
+          size="md"
+        />
+
+        <div className="mt-4 space-y-3">
+          {filteredProjects.map((p) => {
+            const ratio = p.alloue > 0 ? (p.consomme / p.alloue) * 100 : 0;
+            const over = ratio > 100;
 
             return (
-              <Tooltip key={kpi.id}>
-                <TooltipTrigger asChild>
-                  <div
-                    onClick={() => handleKPIClick(kpi)}
+              <div
+                key={p.id}
+                className={cn(
+                  'rounded-xl border border-slate-800/60 bg-slate-950/30',
+                  'px-4 py-4 sm:px-5 sm:py-5',
+                  'transition-colors hover:bg-slate-950/45'
+                )}
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <div className="text-base font-semibold text-slate-50 truncate">
+                      {p.nom}
+                    </div>
+                    <div className="mt-1 text-xs text-slate-400">
+                      Alloué :{' '}
+                      <span className="text-slate-200 tabular-nums">{formatMoneyFCFA(p.alloue)} FCFA</span>
+                      {' · '}
+                      Consommé :{' '}
+                      <span className="text-slate-200 tabular-nums">{formatMoneyFCFA(p.consomme)} FCFA</span>
+                    </div>
+                  </div>
+
+                  <Badge
                     className={cn(
-                      'bg-gradient-to-br rounded-xl p-5 border-2 transition-all duration-300 cursor-pointer',
-                      'hover:scale-[1.02] hover:shadow-lg hover:shadow-black/20',
-                      'focus:outline-none focus:ring-2 focus:ring-blue-500/50',
-                      kpi.color === 'blue' && 'from-blue-500/20 to-blue-600/10 border-blue-500/50 hover:border-blue-400',
-                      kpi.color === 'orange' && 'from-orange-500/20 to-orange-600/10 border-orange-500/50 hover:border-orange-400',
-                      kpi.color === 'emerald' && 'from-emerald-500/20 to-emerald-600/10 border-emerald-500/50 hover:border-emerald-400',
-                      kpi.color === 'purple' && 'from-purple-500/20 to-purple-600/10 border-purple-500/50 hover:border-purple-400',
-                      kpi.color === 'red' && 'from-red-500/20 to-red-600/10 border-red-500/50 hover:border-red-400',
-                      kpi.color === 'cyan' && 'from-cyan-500/20 to-cyan-600/10 border-cyan-500/50 hover:border-cyan-400',
-                      kpi.color === 'amber' && 'from-amber-500/20 to-amber-600/10 border-amber-500/50 hover:border-amber-400'
+                      'shrink-0',
+                      over
+                        ? 'bg-red-500/15 text-red-300 border border-red-500/30'
+                        : ratio >= 80
+                          ? 'bg-amber-500/15 text-amber-300 border border-amber-500/30'
+                          : 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
                     )}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        handleKPIClick(kpi);
-                      }
-                    }}
                   >
-                    <div className="flex items-center gap-3 mb-3">
-                      <div
-                        className={cn(
-                          'w-10 h-10 rounded-lg flex items-center justify-center transition-all',
-                          kpi.color === 'blue' && 'bg-blue-500/20 text-blue-400',
-                          kpi.color === 'orange' && 'bg-orange-500/20 text-orange-400',
-                          kpi.color === 'emerald' && 'bg-emerald-500/20 text-emerald-400',
-                          kpi.color === 'purple' && 'bg-purple-500/20 text-purple-400',
-                          kpi.color === 'red' && 'bg-red-500/20 text-red-400',
-                          kpi.color === 'cyan' && 'bg-cyan-500/20 text-cyan-400',
-                          kpi.color === 'amber' && 'bg-amber-500/20 text-amber-400'
-                        )}
-                      >
-                        <Icon className="w-5 h-5" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <p className="text-sm text-slate-300 truncate min-w-0">{kpi.label}</p>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>{kpi.label}</p>
-                            </TooltipContent>
-                          </Tooltip>
-                          <Info className="h-3 w-3 text-slate-400 flex-shrink-0" />
-                        </div>
-                        <p className="text-2xl font-bold text-white">{kpi.value}</p>
-                      </div>
-                    </div>
+                    {Math.round(ratio)}%
+                  </Badge>
+                </div>
 
-                    {/* Sparkline */}
-                    {kpi.sparkline && (
-                      <div className="mb-2">
-                        <SparklineChart
-                          data={kpi.sparkline}
-                          color={sparklineColor}
-                          width={60}
-                          height={20}
-                        />
-                      </div>
+                <div className="mt-3 h-2.5 rounded-full bg-slate-800/60 overflow-hidden">
+                  <div
+                    className={cn(
+                      'h-full rounded-full transition-all',
+                      over ? 'bg-red-500' : ratio >= 80 ? 'bg-amber-500' : 'bg-emerald-500'
                     )}
+                    style={{ width: `${clampPct(ratio)}%` }}
+                  />
+                </div>
 
-                    <div
-                      className={cn(
-                        'flex items-center justify-between text-xs',
-                        isPositive && 'text-emerald-400',
-                        isNegative && 'text-red-400',
-                        isNeutral && 'text-slate-300'
-                      )}
-                    >
-                      <div className="flex items-center gap-1 font-medium">
-                        {!isNeutral && (
-                          <>
-                            {isPositive ? (
-                              <TrendingUp className="w-3 h-3" />
-                            ) : (
-                              <TrendingDown className="w-3 h-3" />
-                            )}
-                            <span>{kpi.trend}</span>
-                          </>
-                        )}
-                        {isNeutral && <span>{kpi.trend}</span>}
-                      </div>
-                      <span className="text-slate-400 text-[10px]">Cliquer pour détails</span>
-                    </div>
+                {over ? (
+                  <div className="mt-2 text-xs text-red-300/90">
+                    Dépassement : +{formatMoneyFCFA(p.consomme - p.alloue)} FCFA
                   </div>
-                </TooltipTrigger>
-                <TooltipContent side="top" className="max-w-xs">
-                  <div className="space-y-1">
-                    <p className="font-semibold">{kpi.label}</p>
-                    {kpi.description && (
-                      <p className="text-xs text-slate-300">{kpi.description}</p>
-                    )}
-                    <p className="text-xs text-slate-400 pt-1 border-t border-slate-700">
-                      Cliquez pour voir les détails et l'historique
-                    </p>
-                  </div>
-                </TooltipContent>
-              </Tooltip>
+                ) : null}
+              </div>
             );
           })}
         </div>
+      </DashboardPanel>
 
-      {/* Détails par projet */}
-      <div className="mt-6 sm:mt-8 bg-slate-800/40 border border-slate-700/40 rounded-xl p-4 sm:p-6 min-w-0 overflow-hidden">
-        <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 break-words">Budget par Projet</h2>
-        <div className="space-y-3 sm:space-y-4 min-w-0">
-          {budgetDetails.map((detail, index) => (
-            <div
-              key={index}
-              className={cn(
-                'p-3 sm:p-4 rounded-lg border min-w-0 overflow-hidden',
-                detail.statut === 'normal' && 'bg-slate-700/30 border-slate-600/50',
-                detail.statut === 'attention' && 'bg-orange-500/10 border-orange-500/30',
-                detail.statut === 'alerte' && 'bg-red-500/10 border-red-500/30'
-              )}
-            >
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-3 min-w-0">
-                <h3 className="font-semibold text-white break-words min-w-0">{detail.projet}</h3>
-                <span
-                  className={cn(
-                    'px-2 py-1 rounded text-xs font-medium',
-                    detail.statut === 'normal' && 'bg-green-500/20 text-green-400',
-                    detail.statut === 'attention' && 'bg-orange-500/20 text-orange-400',
-                    detail.statut === 'alerte' && 'bg-red-500/20 text-red-400'
-                  )}
-                >
-                  {detail.pourcentage}%
-                </span>
-              </div>
-              <div className="space-y-2 min-w-0">
-                <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0 text-sm min-w-0">
-                  <span className="text-slate-300 break-words">Budget alloué</span>
-                  <span className="text-white font-medium break-words sm:text-right">{detail.budget} FCFA</span>
-                </div>
-                <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0 text-sm min-w-0">
-                  <span className="text-slate-300 break-words">Budget consommé</span>
-                  <span className="text-white font-medium break-words sm:text-right">{detail.consomme} FCFA</span>
-                </div>
-                <div className="h-2 bg-slate-700 rounded-full overflow-hidden mt-2">
-                  <div
-                    className={cn(
-                      'h-full transition-all duration-300',
-                      detail.pourcentage <= 80 && 'bg-green-500',
-                      detail.pourcentage > 80 && detail.pourcentage <= 100 && 'bg-orange-500',
-                      detail.pourcentage > 100 && 'bg-red-500'
-                    )}
-                    style={{ width: `${Math.min(detail.pourcentage, 100)}%` }}
-                  />
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* Paiements en retard + Rentabilité */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <DashboardPanel className="p-4 sm:p-6">
+          <SectionTitle
+            title="Paiements en retard"
+            subtitle="Retards de paiement par projet (SLA)"
+            size="md"
+          />
 
-      {/* Paiements en retard */}
-      <div className="mt-6 sm:mt-8 bg-slate-800/40 border border-slate-700/40 rounded-xl p-4 sm:p-6 min-w-0 overflow-hidden">
-        <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center gap-2 break-words">
-          <Clock className="h-5 w-5 text-red-400" />
-          Paiements en retard
-        </h2>
-        {paiementsRetard.length > 0 ? (
-          <div className="space-y-3 sm:space-y-4 min-w-0">
-            {paiementsRetard.map((paiement) => (
+          <div className="mt-4 space-y-3">
+            {filteredLate.map((p) => (
               <div
-                key={paiement.id}
+                key={p.id}
                 className={cn(
-                  'p-3 sm:p-4 rounded-lg border-2 min-w-0 overflow-hidden',
-                  paiement.priorite === 'critique' && 'bg-red-500/10 border-red-500/30',
-                  paiement.priorite === 'haute' && 'bg-amber-500/10 border-amber-500/30',
-                  paiement.priorite === 'moyenne' && 'bg-blue-500/10 border-blue-500/30'
+                  'rounded-xl border border-slate-800/60 bg-slate-950/30',
+                  'px-4 py-4',
+                  'flex items-center justify-between gap-4',
+                  'transition-colors hover:bg-slate-950/45'
                 )}
               >
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-2 min-w-0">
-                  <h3 className="font-semibold text-white break-words min-w-0">{paiement.projet}</h3>
-                  <span
+                <div className="min-w-0">
+                  <div className="font-semibold text-slate-50 truncate">{p.projet}</div>
+                  <div className="mt-1 text-xs text-slate-400">
+                    {p.retardJours} jour{p.retardJours > 1 ? 's' : ''} de retard
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 shrink-0">
+                  <Badge
                     className={cn(
-                      'px-2 py-1 rounded text-xs font-medium',
-                      paiement.priorite === 'critique' && 'bg-red-500/20 text-red-400',
-                      paiement.priorite === 'haute' && 'bg-amber-500/20 text-amber-400',
-                      paiement.priorite === 'moyenne' && 'bg-blue-500/20 text-blue-400'
+                      p.priorite === 'critique' && 'bg-red-500/15 text-red-300 border border-red-500/30',
+                      p.priorite === 'haute' && 'bg-amber-500/15 text-amber-300 border border-amber-500/30',
+                      p.priorite === 'moyenne' && 'bg-blue-500/15 text-blue-300 border border-blue-500/30'
                     )}
                   >
-                    {paiement.priorite === 'critique' ? 'Critique' : paiement.priorite === 'haute' ? 'Haute' : 'Moyenne'}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2 text-slate-300">
-                    <Calendar className="h-4 w-4" />
-                    <span>{paiement.joursRetard} jours de retard</span>
+                    {p.priorite === 'critique'
+                      ? 'Critique'
+                      : p.priorite === 'haute'
+                        ? 'Haute'
+                        : 'Moyenne'}
+                  </Badge>
+
+                  <div className="text-sm font-semibold text-slate-100 tabular-nums">
+                    {formatMoneyFCFA(p.montant)} FCFA
                   </div>
-                  <span className="text-white font-semibold">{formatCurrency(paiement.montant)}</span>
                 </div>
               </div>
             ))}
           </div>
-        ) : (
-          <div className="text-center py-8 text-slate-300">
-            <CheckCircle className="h-12 w-12 mx-auto mb-2 text-emerald-400" />
-            <p>Aucun paiement en retard</p>
-          </div>
-        )}
-      </div>
+        </DashboardPanel>
 
-      {/* Rentabilité par projet */}
-      <div className="mt-6 bg-slate-800/40 border border-slate-700/40 rounded-xl p-4 sm:p-6 min-w-0 overflow-hidden">
-        <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center gap-2 break-words">
-          <Percent className="h-5 w-5 text-emerald-400 flex-shrink-0" />
-          <span className="min-w-0">Rentabilité par projet</span>
-        </h2>
-        <div className="space-y-3 sm:space-y-4 min-w-0">
-          {rentabilite.map((rent) => (
-            <div
-              key={rent.id}
-              className="p-3 sm:p-4 rounded-lg border border-slate-700/40 bg-slate-700/20 min-w-0 overflow-hidden"
-            >
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0 mb-3 sm:mb-4 min-w-0">
-                <h3 className="font-semibold text-white break-words min-w-0">{rent.projet}</h3>
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  <span className="text-base sm:text-lg font-bold text-emerald-400">{rent.marge}%</span>
-                  <span className="text-xs text-slate-400">marge</span>
-                </div>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 text-sm min-w-0">
-                <div>
-                  <p className="text-slate-300 mb-1">Investissement</p>
-                  <p className="text-white font-medium">{formatCurrency(rent.investissement)}</p>
-                </div>
-                <div>
-                  <p className="text-slate-300 mb-1">Retour attendu</p>
-                  <p className="text-white font-medium">{formatCurrency(rent.retourAttendu)}</p>
-                </div>
-                <div>
-                  <p className="text-slate-400 mb-1">Retour réel</p>
-                  <div className="flex items-center gap-2">
-                    <p className="text-white font-medium">{formatCurrency(rent.retourReel)}</p>
-                    {rent.retourReel >= rent.retourAttendu ? (
-                      <TrendingUp className="h-4 w-4 text-emerald-400" />
-                    ) : (
-                      <TrendingDownIcon className="h-4 w-4 text-red-400" />
-                    )}
+        <DashboardPanel className="p-4 sm:p-6">
+          <SectionTitle
+            title="Rentabilité par projet"
+            subtitle="Investissement / retour attendu / retour réel"
+            size="md"
+          />
+
+          <div className="mt-4 space-y-3">
+            {profitability.map((r) => (
+              <div
+                key={r.id}
+                className={cn(
+                  'rounded-xl border border-slate-800/60 bg-slate-950/30',
+                  'px-4 py-4 sm:px-5 sm:py-5',
+                  'transition-colors hover:bg-slate-950/45'
+                )}
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <div className="font-semibold text-slate-50 truncate">{r.projet}</div>
+                    <div className="mt-1 text-xs text-slate-400">
+                      Invest.{' '}
+                      <span className="text-slate-200 tabular-nums">{formatMoneyFCFA(r.investissement)} FCFA</span>
+                      {' · '}
+                      Attendu{' '}
+                      <span className="text-slate-200 tabular-nums">{formatMoneyFCFA(r.retourAttendu)} FCFA</span>
+                      {' · '}
+                      Réel{' '}
+                      <span className="text-slate-200 tabular-nums">{formatMoneyFCFA(r.retourReel)} FCFA</span>
+                    </div>
                   </div>
+
+                  <Badge className="bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shrink-0">
+                    {r.margePct}% marge
+                  </Badge>
+                </div>
+
+                {/* Barre de progression retour réel vs attendu */}
+                <div className="mt-3 h-2.5 rounded-full bg-slate-800/60 overflow-hidden">
+                  <div
+                    className="h-full bg-emerald-500 rounded-full"
+                    style={{
+                      width: `${clampPct((r.retourReel / Math.max(1, r.retourAttendu)) * 100)}%`,
+                    }}
+                  />
+                </div>
+
+                <div className="mt-2 text-xs text-slate-400">
+                  Réel / Attendu :{' '}
+                  <span className="text-slate-200 tabular-nums">
+                    {Math.round((r.retourReel / Math.max(1, r.retourAttendu)) * 100)}%
+                  </span>
                 </div>
               </div>
-              <div className="mt-3 h-2 bg-slate-700/50 rounded-full overflow-hidden">
-                <div
-                  className={cn(
-                    'h-full transition-all duration-500',
-                    rent.marge >= 18 ? 'bg-emerald-500' : 'bg-amber-500'
-                  )}
-                  style={{ width: `${Math.min((rent.marge / 25) * 100, 100)}%` }}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </DashboardPanel>
       </div>
 
-      {/* Informations supplémentaires */}
-      <div className="mt-6 bg-slate-800/40 border border-slate-700/40 rounded-xl p-4 sm:p-6 min-w-0 overflow-hidden">
-        <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 break-words">Contexte</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-sm text-slate-300 min-w-0">
-          <div>
-            <p className="text-slate-300 mb-2">Dernière mise à jour</p>
-            <p>{new Date().toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' })}</p>
-          </div>
-          <div>
-            <p className="text-slate-400 mb-2">Période d'analyse</p>
-            <p>Exercice en cours</p>
-          </div>
-        </div>
+      {/* Contexte / méta */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <DataCard
+          title="Dernière mise à jour"
+          value={lastUpdateLabel}
+          label="Horodatage"
+          badge={lastUpdate ? 'Live' : '—'}
+          badgeVariant={lastUpdate ? 'success' : 'default'}
+        />
+        <DataCard title="Période d’analyse" value="Exercice en cours" label="Filtre" />
+        <DataCard
+          title="Qualité données"
+          value="OK"
+          label="Contrôles"
+          badge="94%"
+          badgeVariant="default"
+        />
       </div>
-      </div>
-    </TooltipProvider>
+    </DashboardPageShell>
   );
 }
 
-export default memo(BudgetKpiPage);
+export default BudgetKpiPage;
+

@@ -6,16 +6,21 @@
 
 'use client';
 
-import React from 'react';
+import React, { memo } from 'react';
 import { BarChart3, TrendingUp, Target, Activity, DollarSign, Users, ArrowRight, CheckCircle, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import type { LucideIcon } from 'lucide-react';
+import { KPICard } from '@/components/features/bmo/dashboard/components';
+import { DashboardPageShell } from '../shared/DashboardPageShell';
+import { DashboardPanel } from '../shared/DashboardPanel';
 
 interface KpiCategory {
   id: string;
   title: string;
   description: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: LucideIcon;
   color: 'blue' | 'purple' | 'emerald';
   count: number;
   status: 'active' | 'warning' | 'critical';
@@ -33,7 +38,7 @@ interface SummaryStat {
   value: string;
   trend: string;
   trendType: 'up' | 'down' | 'neutral';
-  icon: React.ComponentType<{ className?: string }>;
+  icon: LucideIcon;
   color: 'blue' | 'emerald' | 'purple';
 }
 
@@ -110,61 +115,21 @@ export const KpiOverviewPage = memo(function KpiOverviewPage() {
     },
   ];
 
-  const renderSummaryStat = (stat: SummaryStat, index: number) => {
-    const StatIcon = stat.icon;
-    const isPositive = stat.trendType === 'up';
-    const isNegative = stat.trendType === 'down';
-    const isNeutral = stat.trendType === 'neutral';
-
-    return (
-      <div
-        key={index}
-        className={cn(
-          "bg-gradient-to-br rounded-xl p-6 border-2 shadow-lg",
-          stat.color === 'blue' && "from-blue-500/20 to-blue-600/10 border-blue-500/50",
-          stat.color === 'emerald' && "from-emerald-500/20 to-emerald-600/10 border-emerald-500/50",
-          stat.color === 'purple' && "from-purple-500/20 to-purple-600/10 border-purple-500/50"
-        )}
-      >
-        <div className="flex items-center gap-4 mb-4">
-          <div
-            className={cn(
-              "w-14 h-14 rounded-full flex items-center justify-center text-white",
-              stat.color === 'blue' && "bg-blue-600",
-              stat.color === 'emerald' && "bg-emerald-600",
-              stat.color === 'purple' && "bg-purple-600"
-            )}
-          >
-            <StatIcon className="w-7 h-7" />
-          </div>
-          <div className="flex-1">
-            <p className="text-lg text-slate-300 font-medium">{stat.label}</p>
-            <p className="text-4xl font-extrabold text-white">{stat.value}</p>
-          </div>
-        </div>
-        <div
-          className={cn(
-            "flex items-center gap-2 text-sm font-medium",
-            isPositive && "text-green-400",
-            isNegative && "text-red-400",
-            isNeutral && "text-slate-300"
-          )}
-        >
-          {!isNeutral && (
-            <>
-              {isPositive ? (
-                <TrendingUp className="w-4 h-4" />
-              ) : (
-                <TrendingUp className="w-4 h-4 rotate-180" />
-              )}
-              <span>{stat.trend} ce mois</span>
-            </>
-          )}
-          {isNeutral && <span>{stat.trend}</span>}
-        </div>
-      </div>
-    );
-  };
+  const renderSummaryStat = (stat: SummaryStat, index: number) => (
+    <KPICard
+      key={`${stat.label}-${index}`}
+      kpi={{
+        id: `${stat.label}-${index}`,
+        label: stat.label,
+        value: stat.value,
+        delta: `${stat.trend} ce mois`,
+        trendType: stat.trendType,
+        icon: stat.icon as any,
+        color: stat.color as any,
+      }}
+      size="md"
+    />
+  );
 
   const renderKpiCategory = (category: KpiCategory) => {
     const CategoryIcon = category.icon;
@@ -178,23 +143,36 @@ export const KpiOverviewPage = memo(function KpiOverviewPage() {
       <div
         key={category.id}
         className={cn(
-          "bg-gradient-to-br rounded-xl p-6 border-2 shadow-lg hover:shadow-xl transition-all cursor-pointer group",
-          category.color === 'blue' && "from-blue-500/20 to-blue-600/10 border-blue-500/50 hover:border-blue-400",
-          category.color === 'purple' && "from-purple-500/20 to-purple-600/10 border-purple-500/50 hover:border-purple-400",
-          category.color === 'emerald' && "from-emerald-500/20 to-emerald-600/10 border-emerald-500/50 hover:border-emerald-400"
+          'group relative rounded-2xl p-6 border border-slate-800/60 bg-slate-900/30',
+          'transition-colors hover:bg-slate-900/45 hover:border-slate-700/60 cursor-pointer',
+          category.status === 'warning' && 'ring-1 ring-amber-500/15',
+          category.status === 'critical' && 'ring-1 ring-rose-500/20'
         )}
       >
+        <span
+          aria-hidden="true"
+          className={cn(
+            'absolute inset-x-0 top-0 h-[2px]',
+            category.color === 'blue' && 'bg-blue-400/80',
+            category.color === 'purple' && 'bg-purple-400/80',
+            category.color === 'emerald' && 'bg-emerald-400/80'
+          )}
+        />
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div
             className={cn(
-              "w-12 h-12 rounded-full flex items-center justify-center text-white",
-              category.color === 'blue' && "bg-blue-600",
-              category.color === 'purple' && "bg-purple-600",
-              category.color === 'emerald' && "bg-emerald-600"
+              "w-12 h-12 rounded-xl flex items-center justify-center bg-slate-900/40 ring-1 ring-slate-800/60"
             )}
           >
-            <CategoryIcon className="w-6 h-6" />
+            <CategoryIcon
+              className={cn(
+                'w-6 h-6',
+                category.color === 'blue' && 'text-blue-300',
+                category.color === 'purple' && 'text-purple-300',
+                category.color === 'emerald' && 'text-emerald-300'
+              )}
+            />
           </div>
           <Badge className={cn(statusColors[category.status], "text-white")}>
             {category.count} KPIs
@@ -239,69 +217,76 @@ export const KpiOverviewPage = memo(function KpiOverviewPage() {
   };
 
   return (
-    <div className="p-4 sm:p-6 space-y-6 sm:space-y-8 animate-fadeIn min-w-0 overflow-hidden">
-      {/* En-tête */}
-      <div className="min-w-0">
-        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2 break-words">Vue d'ensemble des KPIs</h1>
-        <p className="text-slate-300 text-sm sm:text-lg break-words">Tous les indicateurs de performance disponibles organisés par catégorie</p>
-      </div>
-
-      {/* Stats Summary */}
-      <section className="space-y-4 min-w-0">
-        <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2 break-words">
-          <Activity className="w-5 h-5 text-blue-400 flex-shrink-0" />
-          <span className="min-w-0">Vue d'ensemble</span>
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 min-w-0">
-          {summaryStats.map(renderSummaryStat)}
-        </div>
-      </section>
-
-      {/* KPI Categories */}
-      <section className="space-y-4 min-w-0">
-        <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2 break-words">
-          <BarChart3 className="w-5 h-5 text-purple-400 flex-shrink-0" />
-          <span className="min-w-0">Catégories de KPIs</span>
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 min-w-0">
-          {kpiCategories.map(renderKpiCategory)}
-        </div>
-      </section>
-
-      {/* Context Section */}
-      <section className="bg-slate-900/50 border border-slate-800 rounded-xl p-4 sm:p-6 space-y-4 min-w-0 overflow-hidden">
-        <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 break-words">
-          <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-400 flex-shrink-0" />
-          <span className="min-w-0">À propos des KPIs</span>
-        </h2>
-        <p className="text-slate-300 text-sm sm:text-base break-words">
-          Cette section présente tous les indicateurs de performance disponibles dans le système.
-          Les KPIs sont organisés par catégorie pour faciliter la navigation et l'analyse.
-        </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 min-w-0">
-          <div className="bg-slate-800/50 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Target className="w-5 h-5 text-blue-400" />
-              <h3 className="font-semibold text-white">KPIs Projet</h3>
+    <TooltipProvider delayDuration={200}>
+      <DashboardPageShell
+        title="Vue d'ensemble des KPIs"
+        subtitle="Tous les indicateurs de performance disponibles organisés par catégorie"
+      >
+        <DashboardPanel className="p-4 sm:p-6">
+          {/* Stats Summary */}
+          <section className="space-y-4 min-w-0">
+            <h2 className="text-lg sm:text-xl font-semibold text-white flex items-center gap-2 break-words">
+              <Activity className="w-5 h-5 text-blue-400 flex-shrink-0" />
+              <span className="min-w-0">Vue d'ensemble</span>
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 min-w-0">
+              {summaryStats.map(renderSummaryStat)}
             </div>
-            <p className="text-sm text-slate-400">Indicateurs spécifiques à chaque projet individuel</p>
-          </div>
-          <div className="bg-slate-800/50 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <BarChart3 className="w-5 h-5 text-purple-400" />
-              <h3 className="font-semibold text-white">KPIs Projets</h3>
+          </section>
+        </DashboardPanel>
+
+        <DashboardPanel className="p-4 sm:p-6">
+          {/* KPI Categories */}
+          <section className="space-y-4 min-w-0">
+            <h2 className="text-lg sm:text-xl font-semibold text-white flex items-center gap-2 break-words">
+              <BarChart3 className="w-5 h-5 text-purple-400 flex-shrink-0" />
+              <span className="min-w-0">Catégories de KPIs</span>
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 min-w-0">
+              {kpiCategories.map(renderKpiCategory)}
             </div>
-            <p className="text-sm text-slate-300">Vue agrégée de tous les projets</p>
-          </div>
-          <div className="bg-slate-800/50 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <DollarSign className="w-5 h-5 text-emerald-400" />
-              <h3 className="font-semibold text-white">KPIs Budget</h3>
+          </section>
+        </DashboardPanel>
+
+        <DashboardPanel className="p-4 sm:p-6">
+          {/* Context Section */}
+          <section className="space-y-4 min-w-0 overflow-hidden">
+            <h2 className="text-lg sm:text-xl font-semibold text-white flex items-center gap-2 break-words">
+              <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+              <span className="min-w-0">À propos des KPIs</span>
+            </h2>
+            <p className="text-slate-300 text-sm sm:text-base break-words">
+              Cette section présente tous les indicateurs de performance disponibles dans le système.
+              Les KPIs sont organisés par catégorie pour faciliter la navigation et l'analyse.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 min-w-0">
+              <div className="bg-slate-950/30 border border-slate-800/60 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Target className="w-5 h-5 text-blue-400" />
+                  <h3 className="font-semibold text-white">KPIs Projet</h3>
+                </div>
+                <p className="text-sm text-slate-400">Indicateurs spécifiques à chaque projet individuel</p>
+              </div>
+              <div className="bg-slate-950/30 border border-slate-800/60 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <BarChart3 className="w-5 h-5 text-purple-400" />
+                  <h3 className="font-semibold text-white">KPIs Projets</h3>
+                </div>
+                <p className="text-sm text-slate-300">Vue agrégée de tous les projets</p>
+              </div>
+              <div className="bg-slate-950/30 border border-slate-800/60 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <DollarSign className="w-5 h-5 text-emerald-400" />
+                  <h3 className="font-semibold text-white">KPIs Budget</h3>
+                </div>
+                <p className="text-sm text-slate-300">Suivi financier et consommation budgétaire</p>
+              </div>
             </div>
-            <p className="text-sm text-slate-300">Suivi financier et consommation budgétaire</p>
-          </div>
-        </div>
-      </section>
-    </div>
+          </section>
+        </DashboardPanel>
+      </DashboardPageShell>
+    </TooltipProvider>
   );
 });
+
+export default KpiOverviewPage;

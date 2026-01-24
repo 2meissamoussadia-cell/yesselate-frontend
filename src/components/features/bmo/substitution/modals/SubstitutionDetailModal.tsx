@@ -83,7 +83,7 @@ export function SubstitutionDetailModal({
         const docsData = getDocumentsByEntity('substitution', substitutionId);
         const commentsData = getCommentsByEntity('substitution', substitutionId);
 
-        setSubstitution(sub);
+        setSubstitution(sub ?? null);
         setTimeline(timelineData);
         setDocuments(docsData);
         setComments(commentsData);

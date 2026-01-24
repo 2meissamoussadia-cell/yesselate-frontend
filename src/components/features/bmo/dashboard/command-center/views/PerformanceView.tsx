@@ -24,12 +24,23 @@ import {
   Eye,
   CheckCircle,
   XCircle,
+  DollarSign,
+  Wallet,
+  RefreshCw,
+  AlertTriangle,
+  Target,
+  Info,
+  ChevronDown,
 } from 'lucide-react';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
+import { useDashboardNavigationStore } from '@/lib/stores/dashboardNavigationStore';
 import { TrendChart, DistributionChart } from '@/components/features/bmo/dashboard/charts';
 import { useApiQuery } from '@/lib/api/hooks/useApiQuery';
 import { dashboardAPI } from '@/lib/api/pilotage/dashboardClient';
 import { validationsMock, type Validation } from '../data/validationsMock';
+import { SectionTitle, DataCard, KPICard } from '@/components/features/bmo/dashboard/components';
+
+import { BudgetKpiPage, DemandesKpiPage, ProjetKpiPage } from '@/modules/dashboard/components/views';
 
 // Composant Badge Bureau réutilisable
 function BureauBadge({ code, size = 'default' }: { code: string; size?: 'sm' | 'default' }) {
@@ -108,8 +119,13 @@ const bureauPerformance = [
   { code: 'BRH', name: 'Bureau RH', score: 91, trend: 'up', validations: 33, blocages: 0 },
 ];
 
+
+
 export function PerformanceView() {
-  const { navigation, openModal, navigate } = useDashboardCommandCenterStore();
+  const openModal = useDashboardCommandCenterStore((s) => s.openModal);
+  const subCategory = useDashboardNavigationStore((s) => s.sub);
+  const subSubCategory = useDashboardNavigationStore((s) => s.leaf);
+  const navigation = { subCategory, subSubCategory } as const;
 
   const { data: statsData } = useApiQuery(async (_signal: AbortSignal) => dashboardAPI.getStats({ period: 'year' }), []);
 
@@ -180,30 +196,58 @@ export function PerformanceView() {
     }));
   }, [statsData]);
 
+  const isBudgetView =
+    navigation.subCategory === 'budget' ||
+    (navigation.subCategory === 'indicators' && navigation.subSubCategory === 'budget');
+
+  const isDemandesIndicatorsView =
+    navigation.subCategory === 'indicators' && navigation.subSubCategory === 'demandes';
+
+  const isProjetsIndicatorsView =
+    navigation.subCategory === 'indicators' && navigation.subSubCategory === 'projets';
+
+  if (isBudgetView) {
+    return (
+      <div className="p-6 space-y-8 max-w-[1920px] mx-auto">
+        <BudgetKpiPage />
+      </div>
+    );
+  }
+
+  if (isDemandesIndicatorsView) {
+    return <DemandesKpiPage />;
+  }
+
+  if (isProjetsIndicatorsView) {
+    return <ProjetKpiPage />;
+  }
+
   return (
-    <div className="p-6 space-y-6 max-w-[1800px] mx-auto">
-      {/* Header */}
+    <div className="p-6 space-y-8 max-w-[1920px] mx-auto">
+      {/* Header harmonisé */}
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-bold text-slate-200">
-            {navigation.subCategory === 'validation' && navigation.subSubCategory === 'en-attente' && 'Validations en attente'}
-            {navigation.subCategory === 'validation' && navigation.subSubCategory === 'validees' && 'Validations approuvées'}
-            {navigation.subCategory === 'validation' && navigation.subSubCategory === 'rejetees' && 'Validations rejetées'}
-            {navigation.subCategory === 'validation' && !navigation.subSubCategory && 'Toutes les validations'}
-            {navigation.subCategory !== 'validation' && 'Performance & KPIs'}
-          </h1>
-          <p className="text-sm text-slate-500 mt-0.5">
-            {navigation.subCategory === 'validation' 
+        <SectionTitle
+          icon={BarChart3}
+          title={
+            navigation.subCategory === 'validation' && navigation.subSubCategory === 'en-attente' ? 'Validations en attente' :
+            navigation.subCategory === 'validation' && navigation.subSubCategory === 'validees' ? 'Validations approuvées' :
+            navigation.subCategory === 'validation' && navigation.subSubCategory === 'rejetees' ? 'Validations rejetées' :
+            navigation.subCategory === 'validation' && !navigation.subSubCategory ? 'Toutes les validations' :
+            'Performance & KPIs'
+          }
+          subtitle={
+            navigation.subCategory === 'validation' 
               ? `${filteredValidations.length} résultat${filteredValidations.length > 1 ? 's' : ''}`
-              : 'Suivi des indicateurs clés de performance'}
-          </p>
-        </div>
+              : 'Suivi des indicateurs clés de performance'
+          }
+          size="lg"
+        />
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="border-slate-700 text-slate-400">
+          <Button variant="default" size="sm" className="bg-slate-800/50 border border-slate-700 text-slate-300 hover:bg-slate-800/70">
             <Calendar className="w-4 h-4 mr-2" />
             Ce mois
           </Button>
-          <Button variant="outline" size="sm" className="border-slate-700 text-slate-400">
+          <Button variant="default" size="sm" className="bg-slate-800/50 border border-slate-700 text-slate-300 hover:bg-slate-800/70">
             <Download className="w-4 h-4 mr-2" />
             Exporter
           </Button>
@@ -343,42 +387,29 @@ export function PerformanceView() {
         </div>
       )}
 
-      {/* Métriques principales - Masqué pour vue validations */}
-      {navigation.subCategory !== 'validation' && (
-      <section>
-        <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">
-          Métriques clés
-        </h2>
+      {/* Métriques principales - Masqué pour vue validations et budget */}
+      {navigation.subCategory !== 'validation' && navigation.subCategory !== 'budget' && (
+      <section aria-label="Métriques clés">
+        <SectionTitle
+          icon={BarChart3}
+          title="Métriques clés"
+          subtitle="Indicateurs de performance détaillés"
+          size="md"
+        />
         <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
           {performanceMetrics.map((metric) => {
             const change = ((metric.value - metric.previousValue) / metric.previousValue) * 100;
-            const isPositive = metric.inversePositive ? change < 0 : change > 0;
             const targetProgress = (metric.value / metric.target) * 100;
 
             return (
-              <button
+              <DataCard
                 key={metric.id}
+                title={metric.label}
+                value={`${metric.value}${metric.unit}`}
+                badge={`${change > 0 ? '+' : ''}${change.toFixed(1)}%`}
+                badgeVariant={change > 0 ? 'success' : change < 0 ? 'critical' : 'default'}
                 onClick={() => openModal('kpi-drilldown', { kpiId: metric.id })}
-                className="p-4 rounded-xl border border-slate-700/50 bg-slate-800/30 hover:bg-slate-800/50 transition-all text-left"
               >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs text-slate-500">{metric.label}</span>
-                  <div className="flex items-center gap-0.5 text-xs font-medium text-slate-400">
-                    {change > 0 ? (
-                      <ArrowUp className="w-3 h-3 text-emerald-400" />
-                    ) : change < 0 ? (
-                      <ArrowDown className="w-3 h-3 text-rose-400" />
-                    ) : (
-                      <Minus className="w-3 h-3 text-slate-500" />
-                    )}
-                    {Math.abs(change).toFixed(1)}%
-                  </div>
-                </div>
-                <p className="text-2xl font-bold text-slate-200">
-                  {metric.value}
-                  <span className="text-sm font-normal text-slate-500 ml-1">{metric.unit}</span>
-                </p>
-                {/* Progress bar vers target */}
                 <div className="mt-3">
                   <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
                     <span>Objectif: {metric.target}{metric.unit}</span>
@@ -394,7 +425,7 @@ export function PerformanceView() {
                     />
                   </div>
                 </div>
-              </button>
+              </DataCard>
             );
           })}
         </div>
@@ -403,12 +434,14 @@ export function PerformanceView() {
 
       {/* Performance par bureau - Masqué pour vue validations */}
       {navigation.subCategory !== 'validation' && (
-      <section className="rounded-xl border border-slate-700/50 bg-slate-800/30 overflow-hidden">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-700/50">
-          <h2 className="text-sm font-semibold text-slate-200 flex items-center gap-2">
-            <BarChart3 className="w-4 h-4 text-blue-400" />
-            Performance par Bureau
-          </h2>
+      <section aria-label="Performance par bureau" className="rounded-xl border border-slate-700/50 bg-slate-800/30 overflow-hidden">
+        <div className="px-6 py-4 border-b border-slate-700/50">
+          <SectionTitle
+            icon={BarChart3}
+            title="Performance par Bureau"
+            subtitle="Comparaison des performances par bureau"
+            size="md"
+          />
         </div>
 
         <div className="overflow-x-auto">
@@ -490,11 +523,13 @@ export function PerformanceView() {
       {/* Graphiques réels - Masqués pour vue validations */}
       {navigation.subCategory !== 'validation' && (
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <section className="rounded-xl border border-slate-700/50 bg-slate-800/30 p-4">
-          <div className="flex items-center gap-2 mb-4">
-            <LineChart className="w-4 h-4 text-blue-400" />
-            <h3 className="text-sm font-semibold text-slate-200">Évolution mensuelle</h3>
-          </div>
+        <section aria-label="Évolution mensuelle" className="rounded-xl border border-slate-700/50 bg-slate-800/30 p-6">
+          <SectionTitle
+            icon={LineChart}
+            title="Évolution mensuelle"
+            subtitle="Tendances des demandes et validations"
+            size="sm"
+          />
           <TrendChart
             data={trendData}
             dataKeys={[
@@ -505,11 +540,13 @@ export function PerformanceView() {
           />
         </section>
 
-        <section className="rounded-xl border border-slate-700/50 bg-slate-800/30 p-4">
-          <div className="flex items-center gap-2 mb-4">
-            <PieChart className="w-4 h-4 text-purple-400" />
-            <h3 className="text-sm font-semibold text-slate-200">Répartition par type</h3>
-          </div>
+        <section aria-label="Répartition par type" className="rounded-xl border border-slate-700/50 bg-slate-800/30 p-6">
+          <SectionTitle
+            icon={PieChart}
+            title="Répartition par type"
+            subtitle="Distribution des demandes par catégorie"
+            size="sm"
+          />
           <DistributionChart
             data={[
               { name: 'BC', value: 98, color: '#3b82f6' },

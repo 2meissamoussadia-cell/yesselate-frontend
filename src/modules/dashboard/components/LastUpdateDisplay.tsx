@@ -6,10 +6,17 @@
 
 'use client';
 
-import React, { memo, useState, useEffect } from 'react';
+import React, { memo, useEffect, useState } from 'react';
+import { cn } from '@/lib/utils';
 
 interface LastUpdateDisplayProps {
   lastUpdate: Date;
+  /**
+   * Par défaut on affiche "Mise à jour :".
+   * Mettre `false` pour n'afficher que le temps relatif.
+   */
+  prefix?: string | false;
+  className?: string;
 }
 
 function formatTimeAgo(date: Date): string {
@@ -35,7 +42,9 @@ function formatTimeAgo(date: Date): string {
 }
 
 export const LastUpdateDisplay = memo(function LastUpdateDisplay({ 
-  lastUpdate 
+  lastUpdate,
+  prefix = 'Mise à jour',
+  className,
 }: LastUpdateDisplayProps) {
   const [timeAgo, setTimeAgo] = useState(() => formatTimeAgo(lastUpdate));
 
@@ -52,8 +61,9 @@ export const LastUpdateDisplay = memo(function LastUpdateDisplay({
   }, [lastUpdate]);
 
   return (
-    <span className="text-[10px] text-slate-500 normal-case">
-      Mise à jour : {timeAgo}
+    <span className={cn('text-[10px] text-slate-500 normal-case', className)}>
+      {prefix ? `${prefix} : ` : ''}
+      {timeAgo}
     </span>
   );
 });

@@ -22,25 +22,25 @@ export function ArbitragesContentRouter({
   if (mainCategory === 'overview') {
     if (subCategory === 'all' || !subCategory) {
       return (
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-slate-200 mb-4">Tous les arbitrages</h2>
-          <p className="text-slate-400">Contenu à venir</p>
+        <div className="p-6 dashboard-container">
+          <h2 className="text-2xl font-bold text-slate-200 mb-4" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Tous les arbitrages</h2>
+          <p className="text-slate-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Contenu à venir</p>
         </div>
       );
     }
     if (subCategory === 'summary') {
       return (
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-slate-200 mb-4">Résumé</h2>
-          <p className="text-slate-400">Contenu à venir</p>
+        <div className="p-6 dashboard-container">
+          <h2 className="text-2xl font-bold text-slate-200 mb-4" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Résumé</h2>
+          <p className="text-slate-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Contenu à venir</p>
         </div>
       );
     }
     if (subCategory === 'highlights') {
       return (
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-slate-200 mb-4">Points clés</h2>
-          <p className="text-slate-400">Contenu à venir</p>
+        <div className="p-6 dashboard-container">
+          <h2 className="text-2xl font-bold text-slate-200 mb-4" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Points clés</h2>
+          <p className="text-slate-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Contenu à venir</p>
         </div>
       );
     }
@@ -59,25 +59,25 @@ export function ArbitragesContentRouter({
 
     if (subCategory === 'all' || !subCategory) {
       return (
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-slate-200 mb-4">Arbitrages critiques{filterText}</h2>
-          <p className="text-slate-400">Contenu à venir</p>
+        <div className="p-6 dashboard-container">
+          <h2 className="text-2xl font-bold text-slate-200 mb-4" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Arbitrages critiques{filterText}</h2>
+          <p className="text-slate-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Contenu à venir</p>
         </div>
       );
     }
     if (subCategory === 'immediate') {
       return (
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-slate-200 mb-4">Immédiats{filterText}</h2>
-          <p className="text-slate-400">Contenu à venir</p>
+        <div className="p-6 dashboard-container">
+          <h2 className="text-2xl font-bold text-slate-200 mb-4" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Immédiats{filterText}</h2>
+          <p className="text-slate-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Contenu à venir</p>
         </div>
       );
     }
     if (subCategory === 'urgent') {
       return (
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-slate-200 mb-4">Urgents{filterText}</h2>
-          <p className="text-slate-400">Contenu à venir</p>
+        <div className="p-6 dashboard-container">
+          <h2 className="text-2xl font-bold text-slate-200 mb-4" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Urgents{filterText}</h2>
+          <p className="text-slate-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Contenu à venir</p>
         </div>
       );
     }
@@ -102,25 +102,25 @@ export function ArbitragesContentRouter({
 
     if (subCategory === 'all' || !subCategory) {
       return (
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-slate-200 mb-4">Arbitrages en attente{bureauText}</h2>
-          <p className="text-slate-400">Contenu à venir</p>
+        <div className="p-6 dashboard-container">
+          <h2 className="text-2xl font-bold text-slate-200 mb-4" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Arbitrages en attente{bureauText}</h2>
+          <p className="text-slate-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Contenu à venir</p>
         </div>
       );
     }
     if (subCategory === 'recent') {
       return (
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-slate-200 mb-4">Récents{periodeText}</h2>
-          <p className="text-slate-400">Contenu à venir</p>
+        <div className="p-6 dashboard-container">
+          <h2 className="text-2xl font-bold text-slate-200 mb-4" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Récents{periodeText}</h2>
+          <p className="text-slate-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Contenu à venir</p>
         </div>
       );
     }
     if (subCategory === 'old') {
       return (
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-slate-200 mb-4">Anciens{periodeText}</h2>
-          <p className="text-slate-400">Contenu à venir</p>
+        <div className="p-6 dashboard-container">
+          <h2 className="text-2xl font-bold text-slate-200 mb-4" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Anciens{periodeText}</h2>
+          <p className="text-slate-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Contenu à venir</p>
         </div>
       );
     }
@@ -145,33 +145,33 @@ export function ArbitragesContentRouter({
 
     if (subCategory === 'all' || !subCategory) {
       return (
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-slate-200 mb-4">Arbitrages résolus{bureauText}</h2>
-          <p className="text-slate-400">Contenu à venir</p>
+        <div className="p-6 dashboard-container">
+          <h2 className="text-2xl font-bold text-slate-200 mb-4" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Arbitrages résolus{bureauText}</h2>
+          <p className="text-slate-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Contenu à venir</p>
         </div>
       );
     }
     if (subCategory === 'this-week') {
       return (
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-slate-200 mb-4">Cette semaine{bureauText}{periodeText}</h2>
-          <p className="text-slate-400">Contenu à venir</p>
+        <div className="p-6 dashboard-container">
+          <h2 className="text-2xl font-bold text-slate-200 mb-4" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Cette semaine{bureauText}{periodeText}</h2>
+          <p className="text-slate-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Contenu à venir</p>
         </div>
       );
     }
     if (subCategory === 'this-month') {
       return (
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-slate-200 mb-4">Ce mois{bureauText}{periodeText}</h2>
-          <p className="text-slate-400">Contenu à venir</p>
+        <div className="p-6 dashboard-container">
+          <h2 className="text-2xl font-bold text-slate-200 mb-4" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Ce mois{bureauText}{periodeText}</h2>
+          <p className="text-slate-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Contenu à venir</p>
         </div>
       );
     }
     if (subCategory === 'archived') {
       return (
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-slate-200 mb-4">Archivés{periodeText}</h2>
-          <p className="text-slate-400">Contenu à venir</p>
+        <div className="p-6 dashboard-container">
+          <h2 className="text-2xl font-bold text-slate-200 mb-4" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Archivés{periodeText}</h2>
+          <p className="text-slate-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Contenu à venir</p>
         </div>
       );
     }
@@ -198,25 +198,25 @@ export function ArbitragesContentRouter({
 
     if (subCategory === 'all' || !subCategory) {
       return (
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-slate-200 mb-4">Arbitrages escaladés{bureauText}</h2>
-          <p className="text-slate-400">Contenu à venir</p>
+        <div className="p-6 dashboard-container">
+          <h2 className="text-2xl font-bold text-slate-200 mb-4" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Arbitrages escaladés{bureauText}</h2>
+          <p className="text-slate-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Contenu à venir</p>
         </div>
       );
     }
     if (subCategory === 'dg') {
       return (
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-slate-200 mb-4">Direction Générale{bureauText}{statusText}</h2>
-          <p className="text-slate-400">Contenu à venir</p>
+        <div className="p-6 dashboard-container">
+          <h2 className="text-2xl font-bold text-slate-200 mb-4" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Direction Générale{bureauText}{statusText}</h2>
+          <p className="text-slate-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Contenu à venir</p>
         </div>
       );
     }
     if (subCategory === 'comex') {
       return (
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-slate-200 mb-4">COMEX{bureauText}{statusText}</h2>
-          <p className="text-slate-400">Contenu à venir</p>
+        <div className="p-6 dashboard-container">
+          <h2 className="text-2xl font-bold text-slate-200 mb-4" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>COMEX{bureauText}{statusText}</h2>
+          <p className="text-slate-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Contenu à venir</p>
         </div>
       );
     }
@@ -241,33 +241,33 @@ export function ArbitragesContentRouter({
 
     if (subCategory === 'budget') {
       return (
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-slate-200 mb-4">Arbitrages budgétaires{categoryText}{statusText}</h2>
-          <p className="text-slate-400">Contenu à venir</p>
+        <div className="p-6 dashboard-container">
+          <h2 className="text-2xl font-bold text-slate-200 mb-4" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Arbitrages budgétaires{categoryText}{statusText}</h2>
+          <p className="text-slate-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Contenu à venir</p>
         </div>
       );
     }
     if (subCategory === 'ressources') {
       return (
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-slate-200 mb-4">Ressources{categoryText}{statusText}</h2>
-          <p className="text-slate-400">Contenu à venir</p>
+        <div className="p-6 dashboard-container">
+          <h2 className="text-2xl font-bold text-slate-200 mb-4" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Ressources{categoryText}{statusText}</h2>
+          <p className="text-slate-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Contenu à venir</p>
         </div>
       );
     }
     if (subCategory === 'planning') {
       return (
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-slate-200 mb-4">Planning{categoryText}{statusText}</h2>
-          <p className="text-slate-400">Contenu à venir</p>
+        <div className="p-6 dashboard-container">
+          <h2 className="text-2xl font-bold text-slate-200 mb-4" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Planning{categoryText}{statusText}</h2>
+          <p className="text-slate-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Contenu à venir</p>
         </div>
       );
     }
     if (subCategory === 'technique') {
       return (
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-slate-200 mb-4">Technique{categoryText}{statusText}</h2>
-          <p className="text-slate-400">Contenu à venir</p>
+        <div className="p-6 dashboard-container">
+          <h2 className="text-2xl font-bold text-slate-200 mb-4" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Technique{categoryText}{statusText}</h2>
+          <p className="text-slate-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Contenu à venir</p>
         </div>
       );
     }
@@ -294,42 +294,42 @@ export function ArbitragesContentRouter({
 
     if (subCategory === 'all' || !subCategory) {
       return (
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-slate-200 mb-4">Tous les bureaux{bureauText}</h2>
-          <p className="text-slate-400">Contenu à venir</p>
+        <div className="p-6 dashboard-container">
+          <h2 className="text-2xl font-bold text-slate-200 mb-4" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Tous les bureaux{bureauText}</h2>
+          <p className="text-slate-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Contenu à venir</p>
         </div>
       );
     }
     if (subCategory === 'daf') {
       return (
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-slate-200 mb-4">DAF{bureauText}{statusText}</h2>
-          <p className="text-slate-400">Contenu à venir</p>
+        <div className="p-6 dashboard-container">
+          <h2 className="text-2xl font-bold text-slate-200 mb-4" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>DAF{bureauText}{statusText}</h2>
+          <p className="text-slate-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Contenu à venir</p>
         </div>
       );
     }
     if (subCategory === 'drh') {
       return (
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-slate-200 mb-4">DRH{bureauText}{statusText}</h2>
-          <p className="text-slate-400">Contenu à venir</p>
+        <div className="p-6 dashboard-container">
+          <h2 className="text-2xl font-bold text-slate-200 mb-4" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>DRH{bureauText}{statusText}</h2>
+          <p className="text-slate-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Contenu à venir</p>
         </div>
       );
     }
     if (subCategory === 'dsi') {
       return (
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-slate-200 mb-4">DSI{bureauText}{statusText}</h2>
-          <p className="text-slate-400">Contenu à venir</p>
+        <div className="p-6 dashboard-container">
+          <h2 className="text-2xl font-bold text-slate-200 mb-4" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>DSI{bureauText}{statusText}</h2>
+          <p className="text-slate-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Contenu à venir</p>
         </div>
       );
     }
   }
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold text-slate-200 mb-4">Arbitrages & Goulots</h2>
-      <p className="text-slate-400">Sélectionnez une catégorie dans le menu</p>
+    <div className="p-6 dashboard-container">
+      <h2 className="text-2xl font-bold text-slate-200 mb-4" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Arbitrages & Goulots</h2>
+      <p className="text-slate-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Sélectionnez une catégorie dans le menu</p>
     </div>
   );
 }

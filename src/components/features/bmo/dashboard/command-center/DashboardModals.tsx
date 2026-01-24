@@ -38,6 +38,13 @@ import {
   RefreshCw,
   FileSpreadsheet,
   FileCode,
+  Building2,
+  MapPin,
+  Phone,
+  Mail,
+  User,
+  ArrowRight,
+  Eye,
 } from 'lucide-react';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { KPIAdvancedModal } from './KPIAdvancedModal';
@@ -45,6 +52,8 @@ import { KPIComparisonModal } from './KPIComparisonModal';
 import { getKPIMappingByLabel } from '@/lib/mappings/dashboardKPIMapping';
 import { KPIHistoryChart } from './charts/KPIHistoryChart';
 import { DistributionChart } from './charts/DistributionChart';
+import { useApiQuery } from '@/lib/api/hooks/useApiQuery';
+import { dashboardAPI } from '@/lib/api/pilotage/dashboardClient';
 
 export function DashboardModals() {
   const { modal, closeModal } = useDashboardCommandCenterStore();
@@ -97,11 +106,14 @@ export function DashboardModals() {
           onClose={closeModal}
         />
       )}
+      {(modal.type === 'risk-detail' || modal.type === 'risk-details') && <RiskDetailModal />}
+      {(modal.type === 'action-detail' || modal.type === 'action-details') && <ActionDetailModal />}
+      {(modal.type === 'decision-detail' || modal.type === 'decision-details') && <DecisionDetailModal />}
+      {modal.type === 'calendar' && <CalendarModal />}
+      {modal.type === 'agenda-details' && <AgendaDetailsModal />}
+      {modal.type === 'bureau-detail' && <BureauDetailModal />}
       {modal.type === 'stats' && <StatsModal />}
       {modal.type === 'help' && <HelpModal />}
-      {modal.type === 'risk-detail' && <RiskDetailModal />}
-      {modal.type === 'action-detail' && <ActionDetailModal />}
-      {modal.type === 'decision-detail' && <DecisionDetailModal />}
       {modal.type === 'export' && <ExportModal />}
       {modal.type === 'settings' && <SettingsModal />}
       {modal.type === 'shortcuts' && <ShortcutsModal />}
@@ -615,7 +627,22 @@ function HelpModal() {
 
 function RiskDetailModal() {
   const { modal, closeModal } = useDashboardCommandCenterStore();
-  const risk = modal.data?.risk as any;
+  const riskId = modal.data?.riskId as string | undefined;
+  const riskFromData = modal.data?.risk as any;
+
+  // Fetch risk data if only ID is provided
+  const { data: riskData } = useApiQuery(
+    async (signal: AbortSignal) => {
+      if (riskId && !riskFromData) {
+        const risks = await dashboardAPI.getRisks({ limit: 100 });
+        return (risks as any)?.risks?.find((r: any) => r.id === riskId || String(r.id) === riskId);
+      }
+      return null;
+    },
+    [riskId, riskFromData]
+  );
+
+  const risk = riskFromData || riskData || (riskId ? { id: riskId } : null);
 
   return (
     <ModalWrapper title="Détail du risque" maxWidth="max-w-2xl" onClose={closeModal}>
@@ -689,7 +716,22 @@ function RiskDetailModal() {
 
 function ActionDetailModal() {
   const { modal, closeModal } = useDashboardCommandCenterStore();
-  const action = modal.data?.action as any;
+  const actionId = modal.data?.actionId as string | undefined;
+  const actionFromData = modal.data?.action as any;
+
+  // Fetch action data if only ID is provided
+  const { data: actionData } = useApiQuery(
+    async (signal: AbortSignal) => {
+      if (actionId && !actionFromData) {
+        const actions = await dashboardAPI.getActions({ limit: 100 });
+        return (actions as any)?.actions?.find((a: any) => a.id === actionId || String(a.id) === actionId);
+      }
+      return null;
+    },
+    [actionId, actionFromData]
+  );
+
+  const action = actionFromData || actionData || (actionId ? { id: actionId } : null);
 
   return (
     <ModalWrapper title="Détail de l'action" maxWidth="max-w-2xl" onClose={closeModal}>
@@ -756,7 +798,22 @@ function ActionDetailModal() {
 
 function DecisionDetailModal() {
   const { modal, closeModal } = useDashboardCommandCenterStore();
-  const decision = modal.data?.decision as any;
+  const decisionId = modal.data?.decisionId as string | undefined;
+  const decisionFromData = modal.data?.decision as any;
+
+  // Fetch decision data if only ID is provided
+  const { data: decisionData } = useApiQuery(
+    async (signal: AbortSignal) => {
+      if (decisionId && !decisionFromData) {
+        const decisions = await dashboardAPI.getDecisions({ limit: 100 });
+        return (decisions as any)?.decisions?.find((d: any) => d.id === decisionId || String(d.id) === decisionId);
+      }
+      return null;
+    },
+    [decisionId, decisionFromData]
+  );
+
+  const decision = decisionFromData || decisionData || (decisionId ? { id: decisionId } : null);
 
   return (
     <ModalWrapper title="Détail de la décision" maxWidth="max-w-2xl" onClose={closeModal}>
@@ -1047,6 +1104,287 @@ function ShortcutsModal() {
         <Button size="sm" variant="outline" onClick={closeModal} className="flex-1 border-slate-700">
           Fermer
         </Button>
+      </div>
+    </ModalWrapper>
+  );
+}
+
+// ============================================
+// Calendar Modal - Calendrier complet
+// ============================================
+
+function CalendarModal() {
+  const { closeModal } = useDashboardCommandCenterStore();
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [viewMode, setViewMode] = useState<'month' | 'week' | 'day'>('month');
+
+  // Mock events data
+  const events = useMemo(() => [
+    { id: '1', title: 'Réunion comité de pilotage', date: new Date(), type: 'meeting' },
+    { id: '2', title: 'Échéance BC-2024-0847', date: new Date(Date.now() + 86400000), type: 'deadline' },
+    { id: '3', title: 'Validation budget Phase 3', date: new Date(Date.now() + 2 * 86400000), type: 'validation' },
+  ], []);
+
+  return (
+    <ModalWrapper title="Calendrier exécutif" maxWidth="max-w-6xl" onClose={closeModal}>
+      <div className="space-y-6">
+        {/* View mode selector */}
+        <div className="flex items-center gap-2">
+          {(['month', 'week', 'day'] as const).map((mode) => (
+            <Button
+              key={mode}
+              size="sm"
+              variant={viewMode === mode ? 'default' : 'outline'}
+              onClick={() => setViewMode(mode)}
+              className="border-slate-700"
+            >
+              {mode === 'month' ? 'Mois' : mode === 'week' ? 'Semaine' : 'Jour'}
+            </Button>
+          ))}
+        </div>
+
+        {/* Calendar view */}
+        <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
+          <div className="text-center mb-4">
+            <h3 className="text-lg font-semibold text-slate-200">
+              {selectedDate.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}
+            </h3>
+          </div>
+
+          {/* Events list */}
+          <div className="space-y-3">
+            {events.map((event) => (
+              <div
+                key={event.id}
+                className="flex items-center gap-3 p-3 rounded-lg bg-slate-800/50 border border-slate-700/50 hover:bg-slate-800/70 transition-colors cursor-pointer"
+              >
+                <div className="w-2 h-2 rounded-full bg-blue-400" />
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-slate-200">{event.title}</p>
+                  <p className="text-xs text-slate-500">
+                    {event.date.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
+                  </p>
+                </div>
+                <Badge variant="default" className="text-xs">
+                  {event.type === 'meeting' ? 'Réunion' : event.type === 'deadline' ? 'Échéance' : 'Validation'}
+                </Badge>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex gap-2 pt-4 border-t border-slate-800/50">
+          <Button size="sm" variant="outline" onClick={closeModal} className="flex-1 border-slate-700">
+            Fermer
+          </Button>
+        </div>
+      </div>
+    </ModalWrapper>
+  );
+}
+
+// ============================================
+// Agenda Details Modal - Détail d'un événement
+// ============================================
+
+function AgendaDetailsModal() {
+  const { modal, closeModal } = useDashboardCommandCenterStore();
+  const eventId = modal.data?.eventId as string | undefined;
+
+  // Mock event data
+  const event = useMemo(() => ({
+    id: eventId || '1',
+    title: 'Réunion comité de pilotage',
+    description: 'Réunion mensuelle du comité de pilotage pour revue des projets en cours et validation des décisions stratégiques.',
+    date: new Date(),
+    time: '14:00',
+    location: 'Salle de réunion principale',
+    participants: ['M. Diallo', 'Mme Martin', 'M. Koné'],
+    type: 'meeting',
+    priority: 'high',
+  }), [eventId]);
+
+  return (
+    <ModalWrapper title="Détail de l'événement" maxWidth="max-w-2xl" onClose={closeModal}>
+      <div className="space-y-4">
+        <div className="flex items-center gap-3">
+          <Badge variant={event.priority === 'high' ? 'destructive' : 'default'}>
+            {event.priority === 'high' ? 'Priorité haute' : 'Normal'}
+          </Badge>
+          <Badge variant="default" className="text-xs">
+            {event.type === 'meeting' ? 'Réunion' : event.type === 'deadline' ? 'Échéance' : 'Validation'}
+          </Badge>
+        </div>
+
+        <div>
+          <h3 className="text-xl font-semibold text-slate-200 mb-2">{event.title}</h3>
+          <p className="text-sm text-slate-400">{event.description}</p>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+            <div className="flex items-center gap-2 mb-1">
+              <Calendar className="w-4 h-4 text-blue-400" />
+              <p className="text-xs text-slate-500">Date</p>
+            </div>
+            <p className="text-sm font-medium text-slate-200">
+              {event.date.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+            </p>
+          </div>
+          <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+            <div className="flex items-center gap-2 mb-1">
+              <Clock className="w-4 h-4 text-amber-400" />
+              <p className="text-xs text-slate-500">Heure</p>
+            </div>
+            <p className="text-sm font-medium text-slate-200">{event.time}</p>
+          </div>
+        </div>
+
+        {event.location && (
+          <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+            <div className="flex items-center gap-2 mb-1">
+              <MapPin className="w-4 h-4 text-emerald-400" />
+              <p className="text-xs text-slate-500">Lieu</p>
+            </div>
+            <p className="text-sm font-medium text-slate-200">{event.location}</p>
+          </div>
+        )}
+
+        {event.participants && event.participants.length > 0 && (
+          <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+            <div className="flex items-center gap-2 mb-2">
+              <Users className="w-4 h-4 text-purple-400" />
+              <p className="text-xs text-slate-500">Participants</p>
+            </div>
+            <div className="space-y-1">
+              {event.participants.map((participant, i) => (
+                <div key={i} className="flex items-center gap-2 text-sm text-slate-300">
+                  <User className="w-3 h-3 text-slate-500" />
+                  {participant}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="flex gap-2 pt-4 border-t border-slate-800/50">
+          <Button size="sm" variant="outline" onClick={closeModal} className="flex-1 border-slate-700">
+            Fermer
+          </Button>
+          <Button size="sm" className="flex-1">
+            <Eye className="w-4 h-4 mr-2" />
+            Voir plus
+          </Button>
+        </div>
+      </div>
+    </ModalWrapper>
+  );
+}
+
+// ============================================
+// Bureau Detail Modal - Détail d'un bureau
+// ============================================
+
+function BureauDetailModal() {
+  const { modal, closeModal } = useDashboardCommandCenterStore();
+  const bureau = modal.data?.bureau as any;
+
+  const bureauData = useMemo(() => ({
+    code: bureau?.code || 'BF',
+    name: bureau?.name || 'Bureau Finances',
+    score: bureau?.score || 94,
+    trend: bureau?.trend || 'up',
+    validations: bureau?.validations || 45,
+    blocages: bureau?.blocages || 1,
+    responsable: 'M. Diallo',
+    email: 'diallo@example.com',
+    phone: '+221 77 123 45 67',
+    address: 'Dakar, Sénégal',
+  }), [bureau]);
+
+  return (
+    <ModalWrapper title={`Bureau ${bureauData.code}`} maxWidth="max-w-3xl" onClose={closeModal}>
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex items-center gap-4 p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
+          <div className="w-16 h-16 rounded-xl bg-blue-500/20 border border-blue-500/30 flex items-center justify-center">
+            <Building2 className="w-8 h-8 text-blue-400" />
+          </div>
+          <div className="flex-1">
+            <h3 className="text-xl font-semibold text-slate-200">{bureauData.name}</h3>
+            <p className="text-sm text-slate-400">Code: {bureauData.code}</p>
+          </div>
+          <div className="text-right">
+            <p className="text-3xl font-bold text-emerald-400">{bureauData.score}</p>
+            <p className="text-xs text-slate-500">Score de performance</p>
+          </div>
+        </div>
+
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-4">
+          <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
+            <div className="flex items-center gap-2 mb-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              <p className="text-xs text-slate-500">Validations</p>
+            </div>
+            <p className="text-2xl font-bold text-slate-200">{bureauData.validations}</p>
+          </div>
+          <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
+            <div className="flex items-center gap-2 mb-2">
+              <AlertTriangle className="w-4 h-4 text-amber-400" />
+              <p className="text-xs text-slate-500">Blocages</p>
+            </div>
+            <p className="text-2xl font-bold text-slate-200">{bureauData.blocages}</p>
+          </div>
+          <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
+            <div className="flex items-center gap-2 mb-2">
+              {bureauData.trend === 'up' ? (
+                <TrendingUp className="w-4 h-4 text-emerald-400" />
+              ) : bureauData.trend === 'down' ? (
+                <TrendingDown className="w-4 h-4 text-rose-400" />
+              ) : (
+                <Minus className="w-4 h-4 text-slate-500" />
+              )}
+              <p className="text-xs text-slate-500">Tendance</p>
+            </div>
+            <p className="text-sm font-medium text-slate-200">
+              {bureauData.trend === 'up' ? 'En hausse' : bureauData.trend === 'down' ? 'En baisse' : 'Stable'}
+            </p>
+          </div>
+        </div>
+
+        {/* Contact info */}
+        <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
+          <h4 className="text-sm font-semibold text-slate-200 mb-3">Informations de contact</h4>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-sm text-slate-300">
+              <User className="w-4 h-4 text-slate-500" />
+              <span>{bureauData.responsable}</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-slate-300">
+              <Mail className="w-4 h-4 text-slate-500" />
+              <span>{bureauData.email}</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-slate-300">
+              <Phone className="w-4 h-4 text-slate-500" />
+              <span>{bureauData.phone}</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-slate-300">
+              <MapPin className="w-4 h-4 text-slate-500" />
+              <span>{bureauData.address}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex gap-2 pt-4 border-t border-slate-800/50">
+          <Button size="sm" variant="outline" onClick={closeModal} className="flex-1 border-slate-700">
+            Fermer
+          </Button>
+          <Button size="sm" className="flex-1">
+            <ArrowRight className="w-4 h-4 mr-2" />
+            Voir les détails complets
+          </Button>
+        </div>
       </div>
     </ModalWrapper>
   );

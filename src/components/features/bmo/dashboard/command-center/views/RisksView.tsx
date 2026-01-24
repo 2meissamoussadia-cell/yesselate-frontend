@@ -23,8 +23,11 @@ import {
   EyeOff,
 } from 'lucide-react';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
+import { useDashboardNavigationStore } from '@/lib/stores/dashboardNavigationStore';
 import { useApiQuery } from '@/lib/api/hooks/useApiQuery';
 import { dashboardAPI } from '@/lib/api/pilotage/dashboardClient';
+import { SectionTitle, RiskScoreCard, DataCard } from '@/components/features/bmo/dashboard/components';
+import type { RiskScoreCardData } from '@/components/features/bmo/dashboard/components';
 
 // Types
 interface RiskItem {
@@ -119,7 +122,10 @@ const kindLabels = {
 };
 
 export function RisksView() {
-  const { navigation, openModal } = useDashboardCommandCenterStore();
+  const openModal = useDashboardCommandCenterStore((s) => s.openModal);
+  const subCategory = useDashboardNavigationStore((s) => s.sub);
+  const subSubCategory = useDashboardNavigationStore((s) => s.leaf);
+  const navigation = { subCategory, subSubCategory } as const;
   const [snoozedRisks, setSnoozedRisks] = useState<Set<string>>(new Set());
 
   const { data: risksData } = useApiQuery(async (_signal: AbortSignal) => dashboardAPI.getRisks({ limit: 50 }), []);
@@ -140,30 +146,52 @@ export function RisksView() {
     }));
   }, [risksData]);
 
-  // Filtrer selon le sous-onglet
+  // Filtrer selon le sous-onglet (Version 4)
   const filteredRisks = useMemo(() => {
     let risks = baseRisks.filter((r) => !snoozedRisks.has(r.id));
 
     switch (navigation.subCategory) {
-      case 'critical':
+      case 'critical': // Critiques
         risks = risks.filter((r) => r.severity === 'critical');
         break;
-      case 'warnings':
+      case 'warnings': // Avertissements
         risks = risks.filter((r) => r.severity === 'warning');
         break;
-      case 'blocages':
+      case 'type': // Par type (Version 4)
+        switch (navigation.subSubCategory) {
+          case 'paiements-retard':
+            risks = risks.filter((r) => r.kind === 'payment_due');
+            break;
+          case 'contrats-expires':
+            risks = risks.filter((r) => r.kind === 'contract_expiry');
+            break;
+          case 'blocages':
+            risks = risks.filter((r) => r.kind === 'blocked_dossier');
+            break;
+          case 'alertes-systeme':
+            risks = risks.filter((r) => r.kind === 'system_alert');
+            break;
+        }
+        break;
+      case 'analyse': // Analyse (Version 4)
+        // Pour l'analyse, on garde tous les risques pour l'analyse
+        break;
+      case 'actions-correctives': // Actions correctives (Version 4)
+        // Filtrer les risques avec actions correctives
+        break;
+      case 'blocages': // Legacy
         risks = risks.filter((r) => r.kind === 'blocked_dossier');
         break;
-      case 'payments':
+      case 'payments': // Legacy
         risks = risks.filter((r) => r.kind === 'payment_due');
         break;
-      case 'contracts':
+      case 'contracts': // Legacy
         risks = risks.filter((r) => r.kind === 'contract_expiry');
         break;
     }
 
     return risks.sort((a, b) => b.score - a.score);
-  }, [baseRisks, navigation.subCategory, snoozedRisks]);
+  }, [baseRisks, navigation.subCategory, navigation.subSubCategory, snoozedRisks]);
 
   const snoozeRisk = (id: string) => {
     setSnoozedRisks((prev) => new Set(prev).add(id));
@@ -180,141 +208,72 @@ export function RisksView() {
     };
   }, [baseRisks]);
 
+  // Convertir les risques pour RiskScoreCard
+  const risksForComponent: RiskScoreCardData[] = useMemo(() => {
+    return filteredRisks.map((risk) => ({
+      id: risk.id,
+      titre: risk.title,
+      description: risk.detail,
+      score: risk.score,
+      impact: (risk.severity === 'critical' ? 'critique' : risk.severity === 'warning' ? 'majeur' : 'moyen') as RiskScoreCardData['impact'],
+      probabilite: (risk.score >= 80 ? 'elevee' : risk.score >= 60 ? 'moyenne' : 'faible') as RiskScoreCardData['probabilite'],
+      source: risk.source,
+    }));
+  }, [filteredRisks]);
+
   return (
-    <div className="p-6 space-y-6 max-w-[1800px] mx-auto">
-      {/* Header avec stats */}
+    <div className="p-6 space-y-8 max-w-[1920px] mx-auto">
+      {/* Header harmonisé - Version 4 */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl font-bold text-slate-200">Risk Radar</h1>
-          <p className="text-sm text-slate-500 mt-0.5">
-            Surveillance et gestion des risques en temps réel
-          </p>
-        </div>
+        <SectionTitle
+          icon={AlertTriangle}
+          title={
+            navigation.subCategory === 'type' ? 'Risques par type' :
+            navigation.subCategory === 'analyse' ? 'Analyse des risques' :
+            navigation.subCategory === 'actions-correctives' ? 'Actions correctives' :
+            'Risques'
+          }
+          subtitle={
+            navigation.subCategory === 'analyse' ? 'Tendances, causes racines et prévisions' :
+            navigation.subCategory === 'actions-correctives' ? 'Suivi des actions correctives' :
+            'Surveillance et gestion des risques en temps réel'
+          }
+          size="lg"
+        />
 
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
-            <AlertCircle className="w-4 h-4 text-rose-400" />
-            <span className="text-sm font-medium text-slate-200">{stats.critical} critiques</span>
-          </div>
-          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
-            <AlertTriangle className="w-4 h-4 text-amber-400" />
-            <span className="text-sm font-medium text-slate-200">{stats.warning} warnings</span>
-          </div>
-          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
-            <span className="text-sm text-slate-400">Score moyen:</span>
-            <span className="text-sm font-bold text-slate-200">{stats.avgScore}</span>
-          </div>
+          <DataCard
+            value={stats.critical}
+            label="Critiques"
+            badgeVariant="critical"
+            icon={AlertCircle}
+          />
+          <DataCard
+            value={stats.warning}
+            label="Warnings"
+            badgeVariant="warning"
+            icon={AlertTriangle}
+          />
+          <DataCard
+            value={stats.avgScore}
+            label="Score moyen"
+            icon={Shield}
+          />
         </div>
       </div>
 
-      {/* Liste des risques */}
-      <div className="space-y-3">
-        {filteredRisks.map((risk) => {
-          const Icon = kindIcons[risk.kind];
-
-          return (
-            <div
+      {/* Liste des risques avec composant réutilisable */}
+      {risksForComponent.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {risksForComponent.map((risk) => (
+            <RiskScoreCard
               key={risk.id}
-              className={cn(
-                'p-4 rounded-xl border-l-4 transition-all',
-                'border-l-slate-600 bg-slate-800/30 hover:bg-slate-800/50'
-              )}
-            >
-              <div className="flex items-start gap-4">
-                {/* Icône */}
-                <div
-                  className={cn(
-                    'p-2 rounded-lg flex-shrink-0 border border-slate-700/50 bg-slate-800/50'
-                  )}
-                >
-                  <Icon
-                    className={cn(
-                      'w-5 h-5',
-                      risk.severity === 'critical'
-                        ? 'text-rose-400'
-                        : risk.severity === 'warning'
-                        ? 'text-amber-400'
-                        : 'text-blue-400'
-                    )}
-                  />
-                </div>
-
-                {/* Contenu */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-mono text-slate-500">{risk.id}</span>
-                    <Badge
-                      variant={
-                        risk.severity === 'critical'
-                          ? 'destructive'
-                          : risk.severity === 'warning'
-                          ? 'warning'
-                          : 'default'
-                      }
-                      className="text-xs"
-                    >
-                      {kindLabels[risk.kind]}
-                    </Badge>
-                    <Badge variant="default" className="text-xs border-slate-700 text-slate-400">
-                      {risk.source}
-                    </Badge>
-                    {risk.trend === 'up' && (
-                      <TrendingUp className="w-3.5 h-3.5 text-rose-400" />
-                    )}
-                    {risk.trend === 'down' && (
-                      <TrendingDown className="w-3.5 h-3.5 text-emerald-400" />
-                    )}
-                  </div>
-                  <p className="text-sm font-medium text-slate-200">{risk.title}</p>
-                  <p className="text-xs text-slate-400 mt-0.5">{risk.detail}</p>
-                  <p className="text-xs text-slate-500 italic mt-2">{risk.explain}</p>
-                </div>
-
-                {/* Score */}
-                <div className="text-center flex-shrink-0">
-                  <p
-                    className={cn(
-                      'text-2xl font-bold',
-                      risk.severity === 'critical'
-                        ? 'text-rose-400'
-                        : risk.severity === 'warning'
-                        ? 'text-amber-400'
-                        : 'text-blue-400'
-                    )}
-                  >
-                    {risk.score}
-                  </p>
-                  <p className="text-xs text-slate-600">score</p>
-                </div>
-
-                {/* Actions */}
-                <div className="flex items-center gap-1 flex-shrink-0">
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => openModal('risk-detail', { risk })}
-                    className="text-slate-400 hover:text-slate-200"
-                  >
-                    <ArrowRight className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => snoozeRisk(risk.id)}
-                    className="text-slate-400 hover:text-slate-200"
-                    title="Masquer 2h"
-                  >
-                    <EyeOff className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Empty state */}
-      {filteredRisks.length === 0 && (
+              risk={risk}
+              onClick={() => openModal('risk-detail', { riskId: risk.id })}
+            />
+          ))}
+        </div>
+      ) : (
         <div className="text-center py-12 rounded-xl border border-slate-700/50 bg-slate-800/30">
           <Shield className="w-12 h-12 text-emerald-500 mx-auto mb-4" />
           <p className="text-slate-200 font-medium">Aucun risque détecté</p>

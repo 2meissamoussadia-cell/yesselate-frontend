@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 
 interface SparklineChartProps {
   data: number[];
-  color?: 'emerald' | 'amber' | 'red' | 'blue' | 'purple';
+  color?: 'emerald' | 'amber' | 'red' | 'rose' | 'blue' | 'purple' | 'orange' | 'cyan' | 'slate';
   height?: number;
   width?: number;
   className?: string;
@@ -46,8 +46,12 @@ export const SparklineChart = memo(function SparklineChart({
     emerald: 'stroke-emerald-400 fill-emerald-400/20',
     amber: 'stroke-amber-400 fill-amber-400/20',
     red: 'stroke-red-400 fill-red-400/20',
+    rose: 'stroke-rose-400 fill-rose-400/20',
     blue: 'stroke-blue-400 fill-blue-400/20',
     purple: 'stroke-purple-400 fill-purple-400/20',
+    orange: 'stroke-orange-400 fill-orange-400/20',
+    cyan: 'stroke-cyan-400 fill-cyan-400/20',
+    slate: 'stroke-slate-300 fill-slate-300/20',
   };
 
   return (

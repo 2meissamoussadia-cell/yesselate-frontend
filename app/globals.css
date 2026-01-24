@@ -332,3 +332,234 @@ body {
     margin-top: 20mm;
   }
 }
+
+/* ====================================
+   RESPONSIVE ZOOM & SCALING
+   ==================================== */
+
+/* Protection contre les tailles trop petites lors du zoom */
+/* Les tailles sont gérées via clamp() dans les sélecteurs spécifiques ci-dessous */
+
+/* Tailles minimales pour les éléments interactifs */
+button,
+a,
+input,
+select,
+textarea {
+  min-height: 32px;
+  min-width: 32px;
+}
+
+/* Protection des textes lors du zoom */
+h1, h2, h3, h4, h5, h6 {
+  font-size: clamp(0.875rem, 1.5vw, 1.5rem); /* Entre 14px et 24px */
+}
+
+p, span, div, label {
+  font-size: clamp(0.75rem, 1vw, 1rem); /* Entre 12px et 16px */
+}
+
+/* Protection des badges et indicateurs */
+[class*="badge"],
+[class*="Badge"],
+.badge {
+  min-height: 20px;
+  min-width: 20px;
+  font-size: clamp(0.625rem, 0.75vw, 0.75rem); /* Entre 10px et 12px */
+  padding: clamp(0.125rem, 0.25vw, 0.25rem) clamp(0.375rem, 0.5vw, 0.5rem);
+}
+
+/* Protection des cartes KPI et dashboard */
+[class*="card"],
+[class*="Card"],
+.card {
+  min-height: 80px;
+  min-width: 200px;
+}
+
+/* Protection des grilles - éviter la compression excessive */
+.grid {
+  gap: clamp(0.5rem, 1vw, 1.5rem); /* Gap adaptatif entre 8px et 24px */
+}
+
+/* Protection des icônes */
+svg,
+[class*="icon"],
+[class*="Icon"] {
+  min-width: 16px;
+  min-height: 16px;
+  flex-shrink: 0; /* Empêcher la compression */
+}
+
+/* Amélioration de la lisibilité lors du zoom */
+@media (max-width: 1920px) {
+  /* Pour les écrans < 1920px (zoom out) */
+  body {
+    font-size: clamp(0.875rem, 1vw, 1rem); /* Entre 14px et 16px */
+  }
+  
+  /* Augmenter les espacements */
+  .p-4 { padding: clamp(0.75rem, 1.5vw, 1rem); }
+  .p-6 { padding: clamp(1rem, 2vw, 1.5rem); }
+  .p-8 { padding: clamp(1.25rem, 2.5vw, 2rem); }
+  
+  /* Augmenter les gaps */
+  .gap-2 { gap: clamp(0.375rem, 0.75vw, 0.5rem); }
+  .gap-4 { gap: clamp(0.5rem, 1vw, 1rem); }
+  .gap-6 { gap: clamp(0.75rem, 1.5vw, 1.5rem); }
+}
+
+/* Protection spécifique pour les dashboards */
+[class*="dashboard"],
+[class*="Dashboard"] {
+  /* Utiliser clamp pour les tailles de police */
+  font-size: clamp(0.875rem, 1vw, 1rem);
+}
+
+/* Protection des KPIs */
+[class*="kpi"],
+[class*="KPI"],
+[class*="Kpi"] {
+  min-height: 60px;
+  min-width: 150px;
+}
+
+[class*="kpi"] h3,
+[class*="KPI"] h3,
+[class*="Kpi"] h3 {
+  font-size: clamp(0.875rem, 1.2vw, 1.125rem);
+}
+
+[class*="kpi"] .value,
+[class*="KPI"] .value,
+[class*="Kpi"] .value {
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
+  font-weight: 700;
+}
+
+/* Protection des tableaux */
+table {
+  font-size: clamp(0.75rem, 1vw, 0.875rem);
+}
+
+th, td {
+  padding: clamp(0.5rem, 1vw, 0.75rem);
+  min-height: 32px;
+}
+
+/* Protection des sidebars */
+[class*="sidebar"],
+[class*="Sidebar"] {
+  min-width: 200px;
+}
+
+/* Protection des headers */
+header,
+[class*="header"],
+[class*="Header"] {
+  min-height: 48px;
+  font-size: clamp(0.875rem, 1vw, 1rem);
+}
+
+/* Protection des breadcrumbs */
+[class*="breadcrumb"],
+[class*="Breadcrumb"] {
+  font-size: clamp(0.75rem, 1vw, 0.875rem);
+}
+
+/* Protection des boutons */
+button {
+  font-size: clamp(0.75rem, 1vw, 0.875rem);
+  padding: clamp(0.375rem, 0.75vw, 0.5rem) clamp(0.75rem, 1.5vw, 1rem);
+  min-height: 32px;
+}
+
+/* Protection des inputs */
+input,
+select,
+textarea {
+  font-size: clamp(0.875rem, 1vw, 1rem);
+  padding: clamp(0.5rem, 1vw, 0.75rem);
+  min-height: 36px;
+}
+
+/* Amélioration de la lisibilité des textes secondaires */
+.text-slate-400,
+.text-slate-500,
+.text-slate-600 {
+  font-size: clamp(0.75rem, 1vw, 0.875rem);
+}
+
+/* Protection des modales */
+[role="dialog"],
+[class*="modal"],
+[class*="Modal"] {
+  min-width: 300px;
+  min-height: 200px;
+  font-size: clamp(0.875rem, 1vw, 1rem);
+}
+
+/* Utilisation de clamp pour les espacements dans les composants dashboard */
+.dashboard-container {
+  padding: clamp(1rem, 2vw, 1.5rem);
+  gap: clamp(1rem, 2vw, 2rem);
+}
+
+.dashboard-card {
+  padding: clamp(1rem, 2vw, 1.5rem);
+  min-height: 120px;
+  min-width: 250px;
+}
+
+.dashboard-card h3 {
+  font-size: clamp(0.875rem, 1.2vw, 1.125rem);
+  margin-bottom: clamp(0.5rem, 1vw, 0.75rem);
+}
+
+.dashboard-card .value {
+  font-size: clamp(1.5rem, 2.5vw, 2.25rem);
+  font-weight: 700;
+}
+
+.dashboard-card .subtitle {
+  font-size: clamp(0.75rem, 1vw, 0.875rem);
+}
+
+/* Protection contre le zoom excessif (< 50%) */
+@media (max-width: 960px) {
+  /* Forcer des tailles minimales plus grandes */
+  body {
+    font-size: 14px !important;
+  }
+  
+  h1 { font-size: clamp(1.25rem, 3vw, 1.5rem) !important; }
+  h2 { font-size: clamp(1.125rem, 2.5vw, 1.375rem) !important; }
+  h3 { font-size: clamp(1rem, 2vw, 1.25rem) !important; }
+  
+  button {
+    min-height: 36px;
+    font-size: 14px !important;
+  }
+  
+  [class*="card"] {
+    min-height: 100px;
+    min-width: 250px;
+  }
+}
+
+/* Amélioration de la lisibilité des graphiques */
+[class*="chart"],
+[class*="Chart"],
+canvas,
+svg.chart {
+  min-height: 200px;
+  min-width: 300px;
+}
+
+/* Protection des tooltips */
+[role="tooltip"],
+[class*="tooltip"],
+[class*="Tooltip"] {
+  font-size: clamp(0.75rem, 1vw, 0.875rem);
+  padding: clamp(0.375rem, 0.75vw, 0.5rem) clamp(0.5rem, 1vw, 0.75rem);
+}

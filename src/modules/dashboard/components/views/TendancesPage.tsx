@@ -7,11 +7,14 @@
 'use client';
 
 import React, { useState, useMemo, memo } from 'react';
-import { TrendingUp, TrendingDown, Calendar, BarChart3, LineChart, Activity, DollarSign, Users, FileCheck, AlertTriangle, ArrowUp, ArrowDown, Minus } from 'lucide-react';
+import { TrendingUp, TrendingDown, Calendar, BarChart3, LineChart, Activity, DollarSign, Users, FileCheck, AlertTriangle } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { SparklineChart } from '../shared/SparklineChart';
+import { KPICard } from '@/components/features/bmo/dashboard/components';
+import { DashboardPageShell } from '../shared/DashboardPageShell';
+import { DashboardPanel } from '../shared/DashboardPanel';
 import {
   LineChart as RechartsLineChart,
   Line,
@@ -38,7 +41,7 @@ interface TrendIndicator {
   label: string;
   currentValue: string;
   trend: TrendData;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: LucideIcon;
   color: 'blue' | 'orange' | 'red' | 'emerald' | 'purple' | 'cyan';
   category: 'activite' | 'risques' | 'budget' | 'decisions';
   sparklineData?: number[];
@@ -154,97 +157,52 @@ export const TendancesPage = memo(function TendancesPage() {
   ];
 
   const renderTrendCard = (indicator: TrendIndicator) => {
-    const Icon = indicator.icon;
-    const isPositive = indicator.trend.change > 0;
-    const isNegative = indicator.trend.change < 0;
-    const isNeutral = indicator.trend.change === 0;
+    const dir =
+      indicator.trend.change > 0 ? ('up' as const) : indicator.trend.change < 0 ? ('down' as const) : ('neutral' as const);
+
+    const goodWhenDown = new Set(['risques', 'budget']);
+    const goodWhenUp = new Set(['activite', 'decisions']);
+
+    const sentiment =
+      dir === 'neutral'
+        ? ('neutral' as const)
+        : goodWhenDown.has(indicator.category)
+          ? dir === 'down'
+            ? ('positive' as const)
+            : ('negative' as const)
+          : goodWhenUp.has(indicator.category)
+            ? dir === 'up'
+              ? ('positive' as const)
+              : ('negative' as const)
+            : ('neutral' as const);
+
+    const trendLabel =
+      dir === 'neutral'
+        ? 'Stable'
+        : `${indicator.trend.change > 0 ? '+' : ''}${indicator.trend.change} (${Math.abs(indicator.trend.changePercent)}%)`;
+
+    const color =
+      indicator.color === 'orange'
+        ? ('amber' as const)
+        : indicator.color === 'red'
+          ? ('rose' as const)
+          : (indicator.color as any);
 
     return (
-      <div
+      <KPICard
         key={indicator.id}
-        className={cn(
-          'bg-gradient-to-br rounded-xl p-6 border-2 shadow-lg',
-          indicator.color === 'blue' && 'from-blue-500/20 to-blue-600/10 border-blue-500/50',
-          indicator.color === 'orange' && 'from-orange-500/20 to-orange-600/10 border-orange-500/50',
-          indicator.color === 'red' && 'from-red-500/20 to-red-600/10 border-red-500/50',
-          indicator.color === 'emerald' && 'from-emerald-500/20 to-emerald-600/10 border-emerald-500/50',
-          indicator.color === 'purple' && 'from-purple-500/20 to-purple-600/10 border-purple-500/50',
-          indicator.color === 'cyan' && 'from-cyan-500/20 to-cyan-600/10 border-cyan-500/50'
-        )}
-      >
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <div
-              className={cn(
-                'w-12 h-12 rounded-lg flex items-center justify-center',
-                indicator.color === 'blue' && 'bg-blue-500',
-                indicator.color === 'orange' && 'bg-orange-500',
-                indicator.color === 'red' && 'bg-red-500',
-                indicator.color === 'emerald' && 'bg-emerald-500',
-                indicator.color === 'purple' && 'bg-purple-500',
-                indicator.color === 'cyan' && 'bg-cyan-500'
-              )}
-            >
-              <Icon className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <p className="text-sm text-slate-300 font-medium">{indicator.label}</p>
-              <p className="text-xs text-slate-400">{indicator.trend.period}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="mb-4">
-          <p className="text-3xl font-bold text-white mb-1">{indicator.currentValue}</p>
-          <div
-            className={cn(
-              'flex items-center gap-2 text-sm font-medium',
-              isPositive && 'text-green-400',
-              isNegative && 'text-red-400',
-              isNeutral && 'text-slate-300'
-            )}
-          >
-            {!isNeutral && (
-              <>
-                {isPositive ? (
-                  <ArrowUp className="w-4 h-4" />
-                ) : (
-                  <ArrowDown className="w-4 h-4" />
-                )}
-                <span>
-                  {Math.abs(indicator.trend.change)} ({Math.abs(indicator.trend.changePercent)}%)
-                </span>
-              </>
-            )}
-            {isNeutral && (
-              <>
-                <Minus className="w-4 h-4" />
-                <span>Stable</span>
-              </>
-            )}
-            <span className="text-slate-400">vs période précédente</span>
-          </div>
-        </div>
-
-        {/* Mini graphique sparkline */}
-        {indicator.sparklineData && indicator.sparklineData.length > 0 ? (
-          <div className="h-16 bg-slate-800/30 rounded-lg p-2 flex items-center justify-center">
-            <SparklineChart 
-              data={indicator.sparklineData} 
-              color={indicator.color === 'blue' ? 'blue' : 
-                     indicator.color === 'red' ? 'red' : 
-                     indicator.color === 'emerald' ? 'emerald' : 
-                     indicator.color === 'purple' ? 'purple' : 'blue'}
-              height={40}
-              width={200}
-            />
-          </div>
-        ) : (
-          <div className="h-16 bg-slate-800/30 rounded-lg flex items-center justify-center">
-            <LineChart className="w-8 h-8 text-slate-400" />
-          </div>
-        )}
-      </div>
+        kpi={{
+          id: indicator.id,
+          label: indicator.label,
+          value: indicator.currentValue,
+          delta: trendLabel,
+          trendType: dir,
+          icon: indicator.icon,
+          color,
+          description: `${indicator.trend.period} • vs période précédente`,
+        }}
+        size="md"
+      />
     );
   };
 
@@ -256,84 +214,84 @@ export const TendancesPage = memo(function TendancesPage() {
   };
 
   return (
-    <div className="p-4 sm:p-6 space-y-6 sm:space-y-8 animate-fadeIn min-w-0 overflow-hidden">
-      {/* En-tête */}
-      <div className="min-w-0">
-        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2 break-words">Tendances</h1>
-        <p className="text-slate-300 text-sm sm:text-lg break-words">Évolution temporelle des indicateurs clés</p>
-      </div>
-
-      {/* Contrôles */}
-      <div className="flex flex-wrap items-center gap-2 sm:gap-4 min-w-0">
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-slate-400">Période :</span>
-          <div className="flex gap-2">
-            {timeRangeOptions.map((option) => (
+    <DashboardPageShell
+      title="Tendances"
+      subtitle="Évolution temporelle des indicateurs clés"
+      rightSlot={
+        <div className="flex flex-wrap items-center gap-2 sm:gap-4 min-w-0">
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-slate-400">Période :</span>
+            <div className="flex gap-2">
+              {timeRangeOptions.map((option) => (
+                <Button
+                  key={option.value}
+                  variant={timeRange === option.value ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setTimeRange(option.value)}
+                  className={cn(
+                    timeRange === option.value && 'bg-blue-600 hover:bg-blue-700',
+                    timeRange !== option.value && 'border-slate-800/70 bg-slate-950/30 text-slate-300 hover:bg-slate-900/40'
+                  )}
+                >
+                  {option.label}
+                </Button>
+              ))}
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-slate-300">Type :</span>
+            <div className="flex gap-2">
               <Button
-                key={option.value}
-                variant={timeRange === option.value ? 'default' : 'outline'}
+                variant={trendType === 'mensuelles' ? 'default' : 'outline'}
                 size="sm"
-                onClick={() => setTimeRange(option.value)}
+                onClick={() => setTrendType('mensuelles')}
                 className={cn(
-                  timeRange === option.value && 'bg-blue-600 hover:bg-blue-700',
-                  timeRange !== option.value && 'border-slate-700 text-slate-300 hover:bg-slate-800'
+                  trendType === 'mensuelles' && 'bg-purple-600 hover:bg-purple-700',
+                  trendType !== 'mensuelles' && 'border-slate-800/70 bg-slate-950/30 text-slate-300 hover:bg-slate-900/40'
                 )}
               >
-                {option.label}
+                Mensuelles
               </Button>
-            ))}
+              <Button
+                variant={trendType === 'trimestrielles' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setTrendType('trimestrielles')}
+                className={cn(
+                  trendType === 'trimestrielles' && 'bg-purple-600 hover:bg-purple-700',
+                  trendType !== 'trimestrielles' && 'border-slate-800/70 bg-slate-950/30 text-slate-300 hover:bg-slate-900/40'
+                )}
+              >
+                Trimestrielles
+              </Button>
+            </div>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-slate-300">Type :</span>
-          <div className="flex gap-2">
-            <Button
-              variant={trendType === 'mensuelles' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setTrendType('mensuelles')}
-              className={cn(
-                trendType === 'mensuelles' && 'bg-purple-600 hover:bg-purple-700',
-                trendType !== 'mensuelles' && 'border-slate-700 text-slate-300 hover:bg-slate-800'
-              )}
-            >
-              Mensuelles
-            </Button>
-            <Button
-              variant={trendType === 'trimestrielles' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setTrendType('trimestrielles')}
-              className={cn(
-                trendType === 'trimestrielles' && 'bg-purple-600 hover:bg-purple-700',
-                trendType !== 'trimestrielles' && 'border-slate-700 text-slate-300 hover:bg-slate-800'
-              )}
-            >
-              Trimestrielles
-            </Button>
+      }
+    >
+      <DashboardPanel className="p-4 sm:p-6">
+        {/* Vue d'ensemble des tendances */}
+        <section className="space-y-4 min-w-0">
+          <h2 className="text-lg sm:text-xl font-semibold text-white flex items-center gap-2 break-words">
+            <TrendingUp className="w-5 h-5 text-blue-400 flex-shrink-0" />
+            <span className="min-w-0">Vue d'ensemble</span>
+          </h2>
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 xs:gap-3 sm:gap-4 lg:gap-6 min-w-0">
+            {trendIndicators.map(renderTrendCard)}
           </div>
-        </div>
-      </div>
+        </section>
+      </DashboardPanel>
 
-      {/* Vue d'ensemble des tendances */}
-      <section className="space-y-4 min-w-0">
-        <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2 break-words">
-          <TrendingUp className="w-5 h-5 text-blue-400 flex-shrink-0" />
-          <span className="min-w-0">Vue d'ensemble</span>
-        </h2>
-        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 xs:gap-3 sm:gap-4 lg:gap-6 min-w-0">
-          {trendIndicators.map(renderTrendCard)}
-        </div>
-      </section>
-
-      {/* Graphique principal */}
-      <section className="space-y-4 min-w-0">
-        <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2 break-words">
-          <BarChart3 className="w-5 h-5 text-purple-400 flex-shrink-0" />
-          <span className="min-w-0">Évolution temporelle</span>
-        </h2>
-        <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-4 sm:p-6 min-w-0 overflow-hidden">
-          <div className="h-64 sm:h-96 min-h-[256px] sm:min-h-[384px] w-full min-w-0 overflow-hidden">
-            <ResponsiveContainer width="100%" height="100%" minHeight={384}>
-              <AreaChart data={generateTrendData}>
+      <DashboardPanel className="p-4 sm:p-6">
+        {/* Graphique principal */}
+        <section className="space-y-4 min-w-0">
+          <h2 className="text-lg sm:text-xl font-semibold text-white flex items-center gap-2 break-words">
+            <BarChart3 className="w-5 h-5 text-purple-400 flex-shrink-0" />
+            <span className="min-w-0">Évolution temporelle</span>
+          </h2>
+          <div className="bg-slate-950/30 border border-slate-800/60 rounded-xl p-4 sm:p-6 min-w-0 overflow-hidden">
+            <div className="h-64 sm:h-96 min-h-[256px] sm:min-h-[384px] w-full min-w-0 overflow-hidden">
+              <ResponsiveContainer width="100%" height="100%" minHeight={384}>
+                <AreaChart data={generateTrendData}>
                 <defs>
                   <linearGradient id="colorValidations" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
@@ -413,6 +371,7 @@ export const TendancesPage = memo(function TendancesPage() {
           </div>
         </div>
       </section>
+      </DashboardPanel>
 
       {/* Groupes par catégorie */}
       {Object.entries(groupedIndicators).map(([category, indicators]) => {
@@ -426,43 +385,47 @@ export const TendancesPage = memo(function TendancesPage() {
         };
 
         return (
-          <section key={category} className="space-y-4">
-            <h2 className="text-xl font-bold text-white">{categoryLabels[category as keyof typeof categoryLabels]}</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 min-w-0">
-              {indicators.map(renderTrendCard)}
-            </div>
-          </section>
+          <DashboardPanel key={category} className="p-4 sm:p-6">
+            <section className="space-y-4 min-w-0">
+              <h2 className="text-lg sm:text-xl font-semibold text-white">{categoryLabels[category as keyof typeof categoryLabels]}</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 min-w-0">
+                {indicators.map(renderTrendCard)}
+              </div>
+            </section>
+          </DashboardPanel>
         );
       })}
 
       {/* Section contexte */}
-      <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-4 sm:p-6 space-y-4 min-w-0 overflow-hidden">
-        <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 break-words">
-          <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-400 flex-shrink-0" />
-          <span className="min-w-0">À propos des tendances</span>
-        </h2>
-        <p className="text-slate-300 text-sm sm:text-base break-words">
-          Cette section présente l'évolution temporelle des indicateurs clés du système.
-          Les tendances sont calculées sur différentes périodes pour permettre une analyse approfondie.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          <div className="bg-slate-800/50 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <TrendingUp className="w-5 h-5 text-green-400" />
-              <h3 className="font-semibold text-white">Tendances positives</h3>
+      <DashboardPanel className="p-4 sm:p-6">
+        <div className="space-y-4 min-w-0 overflow-hidden">
+          <h2 className="text-lg sm:text-xl font-semibold text-white flex items-center gap-2 break-words">
+            <Calendar className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+            <span className="min-w-0">À propos des tendances</span>
+          </h2>
+          <p className="text-slate-300 text-sm sm:text-base break-words">
+            Cette section présente l'évolution temporelle des indicateurs clés du système.
+            Les tendances sont calculées sur différentes périodes pour permettre une analyse approfondie.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <div className="bg-slate-950/30 border border-slate-800/60 rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <TrendingUp className="w-5 h-5 text-emerald-400" />
+                <h3 className="font-semibold text-white">Tendances positives</h3>
+              </div>
+              <p className="text-sm text-slate-400">Indicateurs en amélioration sur la période sélectionnée</p>
             </div>
-            <p className="text-sm text-slate-400">Indicateurs en amélioration sur la période sélectionnée</p>
-          </div>
-          <div className="bg-slate-800/50 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <TrendingDown className="w-5 h-5 text-red-400" />
-              <h3 className="font-semibold text-white">Tendances négatives</h3>
+            <div className="bg-slate-950/30 border border-slate-800/60 rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <TrendingDown className="w-5 h-5 text-rose-400" />
+                <h3 className="font-semibold text-white">Tendances négatives</h3>
+              </div>
+              <p className="text-sm text-slate-300">Indicateurs nécessitant une attention particulière</p>
             </div>
-            <p className="text-sm text-slate-300">Indicateurs nécessitant une attention particulière</p>
           </div>
         </div>
-      </div>
-    </div>
+      </DashboardPanel>
+    </DashboardPageShell>
   );
 });
 

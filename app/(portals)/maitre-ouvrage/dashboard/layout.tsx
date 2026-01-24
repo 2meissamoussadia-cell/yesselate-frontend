@@ -26,7 +26,7 @@ function DashboardSync() {
  */
 function DashboardLayoutFallback() {
   return (
-    <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+    <div className="h-full w-full flex items-center justify-center bg-slate-950">
       <div className="flex flex-col items-center gap-4 animate-pulse">
         <div className="relative">
           <div className="h-8 w-8 border-4 border-blue-400 border-t-transparent rounded-full animate-spin" />
@@ -42,7 +42,7 @@ function DashboardLayoutFallback() {
  */
 function DashboardLayoutError({ error }: { error: Error }) {
   return (
-    <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-4">
+    <div className="h-full w-full flex items-center justify-center bg-slate-950 p-4">
       <div className="max-w-md w-full bg-slate-900/50 border border-red-500/50 rounded-xl p-6 space-y-4">
         <h2 className="text-xl font-bold text-red-400">Erreur de chargement du dashboard</h2>
         <p className="text-slate-300 text-sm">{error.message}</p>

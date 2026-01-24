@@ -19,7 +19,7 @@ export { DashboardKPIBar } from './DashboardKPIBar';
 export type { KPIData } from './DashboardKPIBar';
 export { DashboardFooter } from './DashboardFooter';
 export { DashboardBreadcrumbs } from './DashboardBreadcrumbs';
-export { default as DashboardCommandCenterPage } from './DashboardCommandCenterPage';
+export { DashboardCommandCenterPage } from './DashboardCommandCenterPage';
 export { DashboardUrlSync } from './DashboardUrlSync';
 export { DynamicSidebar } from './DynamicSidebar';
 export { DynamicSubnav } from './DynamicSubnav';

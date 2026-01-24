@@ -22,8 +22,10 @@ import {
   Key,
 } from 'lucide-react';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
+import { useDashboardNavigationStore } from '@/lib/stores/dashboardNavigationStore';
 import { useApiQuery } from '@/lib/api/hooks/useApiQuery';
 import { dashboardAPI } from '@/lib/api/pilotage/dashboardClient';
+import { SectionTitle, DataCard } from '@/components/features/bmo/dashboard/components';
 
 // Types
 interface Decision {
@@ -116,7 +118,10 @@ const typeLabels = {
 };
 
 export function DecisionsView() {
-  const { navigation, openModal } = useDashboardCommandCenterStore();
+  const openModal = useDashboardCommandCenterStore((s) => s.openModal);
+  const subCategory = useDashboardNavigationStore((s) => s.sub);
+  const subSubCategory = useDashboardNavigationStore((s) => s.leaf);
+  const navigation = { subCategory, subSubCategory } as const;
 
   const { data: decisionsData } = useApiQuery(async (_signal: AbortSignal) => dashboardAPI.getDecisions({ limit: 50 }), []);
 
@@ -136,21 +141,79 @@ export function DecisionsView() {
     }));
   }, [decisionsData]);
 
-  // Filtrer selon le sous-onglet
+  // Filtrer selon le sous-onglet (Version 4)
   const filteredDecisions = useMemo(() => {
     let decisions = [...baseDecisions];
 
     switch (navigation.subCategory) {
-      case 'pending':
-        decisions = decisions.filter((d) => d.status === 'pending');
+      case 'pending': // En attente
+        switch (navigation.subSubCategory) {
+          case 'urgentes':
+            decisions = decisions.filter((d) => d.status === 'pending' && d.priority === 'high');
+            break;
+          case 'normales':
+            decisions = decisions.filter((d) => d.status === 'pending' && d.priority !== 'high');
+            break;
+          case 'planifiees':
+            // TODO: Implémenter logique planifiées
+            decisions = decisions.filter((d) => d.status === 'pending');
+            break;
+          default:
+            decisions = decisions.filter((d) => d.status === 'pending');
+        }
         break;
-      case 'executed':
-        decisions = decisions.filter((d) => d.status === 'executed');
+      case 'executed': // Exécutées
+        switch (navigation.subSubCategory) {
+          case 'recentes':
+            // Dernières 30 jours
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            decisions = decisions.filter((d) => {
+              if (d.status !== 'executed') return false;
+              const decisionDate = new Date(d.date.split('/').reverse().join('-'));
+              return decisionDate >= thirtyDaysAgo;
+            });
+            break;
+          case 'anciennes':
+            const thirtyDaysAgoOld = new Date();
+            thirtyDaysAgoOld.setDate(thirtyDaysAgoOld.getDate() - 30);
+            decisions = decisions.filter((d) => {
+              if (d.status !== 'executed') return false;
+              const decisionDate = new Date(d.date.split('/').reverse().join('-'));
+              return decisionDate < thirtyDaysAgoOld;
+            });
+            break;
+          case 'par-type':
+            // Grouper par type
+            break;
+          default:
+            decisions = decisions.filter((d) => d.status === 'executed');
+        }
+        break;
+      case 'timeline': // Timeline
+        // Toutes les décisions pour timeline
+        break;
+      case 'audit': // Audit
+        // Toutes les décisions pour audit
+        break;
+      case 'modeles': // Modèles (Version 4)
+        // Filtrer selon le type de modèle
+        switch (navigation.subSubCategory) {
+          case 'substitution':
+            decisions = decisions.filter((d) => d.type === 'substitution');
+            break;
+          case 'delegation':
+            decisions = decisions.filter((d) => d.type === 'delegation');
+            break;
+          case 'arbitrage':
+            decisions = decisions.filter((d) => d.type === 'arbitrage');
+            break;
+        }
         break;
     }
 
     return decisions;
-  }, [baseDecisions, navigation.subCategory]);
+  }, [baseDecisions, navigation.subCategory, navigation.subSubCategory]);
 
   // Stats
   const stats = useMemo(
@@ -163,30 +226,46 @@ export function DecisionsView() {
   );
 
   return (
-    <div className="p-6 space-y-6 max-w-[1800px] mx-auto">
-      {/* Header */}
+    <div className="p-6 space-y-8 max-w-[1920px] mx-auto">
+      {/* Header harmonisé - Version 4 */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl font-bold text-slate-200">Décisions</h1>
-          <p className="text-sm text-slate-500 mt-0.5">
-            Suivi et traçabilité des décisions de gouvernance
-          </p>
-        </div>
+        <SectionTitle
+          icon={Scale}
+          title={
+            navigation.subCategory === 'modeles' ? 'Modèles de décisions' :
+            navigation.subCategory === 'timeline' ? 'Timeline des décisions' :
+            navigation.subCategory === 'audit' ? 'Audit des décisions' :
+            'Décisions'
+          }
+          subtitle={
+            navigation.subCategory === 'modeles' ? 'Modèles réutilisables pour substitutions, délégations et arbitrages' :
+            navigation.subCategory === 'timeline' ? 'Chronologie complète des décisions' :
+            navigation.subCategory === 'audit' ? 'Traces, rapports et conformité' :
+            'Suivi et traçabilité des décisions de gouvernance'
+          }
+          size="lg"
+        />
 
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
-            <Clock className="w-4 h-4 text-amber-400" />
-            <span className="text-sm font-medium text-slate-200">{stats.pending} en attente</span>
-          </div>
-          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
-            <CheckCircle className="w-4 h-4 text-emerald-400" />
-            <span className="text-sm font-medium text-slate-200">{stats.executed} exécutées</span>
-          </div>
+          <DataCard
+            value={stats.pending}
+            label="En attente"
+            badgeVariant="warning"
+            icon={Clock}
+          />
+          <DataCard
+            value={stats.executed}
+            label="Exécutées"
+            badgeVariant="success"
+            icon={CheckCircle}
+          />
           {stats.highPriority > 0 && (
-            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
-              <AlertCircle className="w-4 h-4 text-rose-400" />
-              <span className="text-sm font-medium text-slate-200">{stats.highPriority} urgentes</span>
-            </div>
+            <DataCard
+              value={stats.highPriority}
+              label="Urgentes"
+              badgeVariant="critical"
+              icon={AlertCircle}
+            />
           )}
         </div>
       </div>
@@ -205,8 +284,8 @@ export function DecisionsView() {
                 {/* Point sur la timeline */}
                 <div
                   className={cn(
-                    'relative z-10 w-9 h-9 rounded-full border-2 flex items-center justify-center flex-shrink-0',
-                    'bg-slate-800/50 border-slate-700'
+                    'relative z-10 w-9 h-9 rounded-full border flex items-center justify-center flex-shrink-0',
+                    'bg-slate-950/30 border-slate-800/60'
                   )}
                 >
                   <Icon className={cn('w-4 h-4', typeIconColors[decision.type])} />

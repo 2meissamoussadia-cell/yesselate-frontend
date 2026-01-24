@@ -18,15 +18,17 @@ import {
   BarChart3,
   Zap,
   Globe,
-  Building2,
-  Info
+  Building2
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { SparklineChart } from '../shared/SparklineChart';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
+import { KPICard } from '@/components/features/bmo/dashboard/components';
 import { AnimatedBadge } from '../shared/AnimatedBadge';
 import { ExportButton } from '../shared/ExportButton';
+import { DashboardPageShell } from '../shared/DashboardPageShell';
+import { DashboardPanel } from '../shared/DashboardPanel';
 
 interface TopKPI {
   id: string;
@@ -35,7 +37,7 @@ interface TopKPI {
   trend: string;
   trendDirection: 'up' | 'down' | 'neutral';
   tone: 'success' | 'warning' | 'critical' | 'info';
-  icon: React.ComponentType<{ className?: string }>;
+  icon: LucideIcon;
   sparkline?: number[];
   description?: string;
 }
@@ -59,7 +61,7 @@ interface Ranking {
   }>;
 }
 
-function HighlightsKpiPage() {
+export const HighlightsKpiPage = memo(function HighlightsKpiPage() {
   const openModal = useDashboardCommandCenterStore((state) => state.openModal);
 
   const handleKPIClick = useCallback((kpi: TopKPI) => {
@@ -345,169 +347,81 @@ function HighlightsKpiPage() {
 
   return (
     <TooltipProvider delayDuration={200}>
-      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 animate-fadeIn min-w-0 overflow-hidden">
-        {/* En-tête */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 min-w-0">
-          <div className="min-w-0 flex-1">
-            <h1 className="text-xl sm:text-2xl font-bold text-white mb-2 break-words">Synthèse stratégique</h1>
-            <p className="text-slate-300 text-sm sm:text-base break-words">Vue d'ensemble des indicateurs clés et tendances principales</p>
-          </div>
-          <div className="flex-shrink-0">
-            <ExportButton
-              onExportCSV={handleExportCSV}
-              onExportJSON={handleExportJSON}
-              label="Exporter"
-            />
-          </div>
-        </div>
-
-        {/* Top KPIs */}
-        <section className="min-w-0">
-          <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center gap-2 break-words">
-            <Zap className="h-5 w-5 text-yellow-400 flex-shrink-0" />
-            <span className="min-w-0">Indicateurs clés</span>
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 min-w-0">
-            {topKPIs.map((kpi) => {
-              const Icon = kpi.icon;
-              const isPositive = kpi.trendDirection === 'down' && kpi.tone !== 'critical';
-              const isNegative = kpi.trendDirection === 'up' && (kpi.tone === 'critical' || kpi.tone === 'warning');
-              
-              return (
-                <Tooltip key={kpi.id}>
-                  <TooltipTrigger asChild>
-                    <div
-                      onClick={() => handleKPIClick(kpi)}
-                      className={cn(
-                        'rounded-xl p-5 border-2 transition-all duration-300 cursor-pointer',
-                        'hover:scale-[1.02] hover:shadow-lg hover:shadow-black/20',
-                        'focus:outline-none focus:ring-2 focus:ring-blue-500/50',
-                        kpi.tone === 'success' && 'bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 border-emerald-500/50 hover:border-emerald-400',
-                        kpi.tone === 'warning' && 'bg-gradient-to-br from-amber-500/20 to-amber-600/10 border-amber-500/50 hover:border-amber-400',
-                        kpi.tone === 'critical' && 'bg-gradient-to-br from-red-500/20 to-red-600/10 border-red-500/50 hover:border-red-400',
-                        kpi.tone === 'info' && 'bg-gradient-to-br from-blue-500/20 to-blue-600/10 border-blue-500/50 hover:border-blue-400'
-                      )}
-                      role="button"
-                      tabIndex={0}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          handleKPIClick(kpi);
-                        }
-                      }}
-                    >
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex items-center gap-3 flex-1">
-                          <div
-                            className={cn(
-                              'w-10 h-10 rounded-lg flex items-center justify-center transition-all',
-                              kpi.tone === 'success' && 'bg-emerald-500/20 text-emerald-400 group-hover:bg-emerald-500/30',
-                              kpi.tone === 'warning' && 'bg-amber-500/20 text-amber-400 group-hover:bg-amber-500/30',
-                              kpi.tone === 'critical' && 'bg-red-500/20 text-red-400 group-hover:bg-red-500/30',
-                              kpi.tone === 'info' && 'bg-blue-500/20 text-blue-400 group-hover:bg-blue-500/30'
-                            )}
-                          >
-                            <Icon className="h-5 w-5" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2">
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <p className="text-sm text-slate-300 truncate min-w-0">{kpi.label}</p>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>{kpi.label}</p>
-                                </TooltipContent>
-                              </Tooltip>
-                              <Info className="h-3 w-3 text-slate-400 flex-shrink-0" />
-                            </div>
-                            <p className="text-2xl font-bold text-white">{kpi.value}</p>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      {/* Sparkline */}
-                      {kpi.sparkline && (
-                        <div className="mb-2">
-                          <SparklineChart
-                            data={kpi.sparkline}
-                            color={kpi.tone === 'success' ? 'emerald' : kpi.tone === 'warning' ? 'amber' : kpi.tone === 'critical' ? 'red' : 'blue'}
-                            width={60}
-                            height={20}
-                          />
-                        </div>
-                      )}
-
-                      <div
-                        className={cn(
-                          'flex items-center justify-between text-xs',
-                          isPositive && 'text-emerald-400',
-                          isNegative && 'text-red-400',
-                          !isPositive && !isNegative && 'text-slate-400'
-                        )}
-                      >
-                        <div className="flex items-center gap-1 font-medium">
-                          {kpi.trendDirection !== 'neutral' && (
-                            <>
-                              {isPositive ? (
-                                <TrendingDown className="h-3 w-3" />
-                              ) : (
-                                <TrendingUp className="h-3 w-3" />
-                              )}
-                              <span>{kpi.trend}</span>
-                            </>
-                          )}
-                          {kpi.trendDirection === 'neutral' && <span>{kpi.trend}</span>}
-                        </div>
-                        <span className="text-slate-400 text-[10px]">Cliquer pour détails</span>
-                      </div>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent side="top" className="max-w-xs">
-                    <div className="space-y-1">
-                      <p className="font-semibold">{kpi.label}</p>
-                      {kpi.description && (
-                        <p className="text-xs text-slate-300">{kpi.description}</p>
-                      )}
-                      <p className="text-xs text-slate-300 pt-1 border-t border-slate-700">
-                        Cliquez pour voir les détails et l'historique
-                      </p>
-                    </div>
-                  </TooltipContent>
-                </Tooltip>
-              );
-            })}
-          </div>
-        </section>
-
-      {/* Tendances clés */}
-      <section className="min-w-0">
-        <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center gap-2 break-words">
-          <Activity className="h-5 w-5 text-blue-400 flex-shrink-0" />
-          <span className="min-w-0">Tendances principales</span>
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 min-w-0">
-          {trends.map((trend) => (
-            <div
-              key={trend.id}
-              className={cn(
-                'rounded-xl p-4 sm:p-5 border bg-slate-800/40 border-slate-700/40 min-w-0 overflow-hidden',
-                'hover:border-slate-600/60 transition-all duration-200'
-              )}
-            >
-              <div className="flex items-center justify-between mb-2 min-w-0">
-                <p className="text-sm text-slate-300 break-words min-w-0">{trend.label}</p>
-                {trend.trend === 'up' && (
-                  <TrendingUp className="h-4 w-4 text-emerald-400" />
-                )}
-              </div>
-              <p className="text-2xl font-bold text-white mb-1">{trend.value}</p>
-              <p className="text-xs text-slate-400">{trend.description}</p>
+      <DashboardPageShell
+        title="Synthèse stratégique"
+        subtitle="Vue d'ensemble des indicateurs clés et tendances principales"
+        rightSlot={
+          <ExportButton onExportCSV={handleExportCSV} onExportJSON={handleExportJSON} label="Exporter" />
+        }
+      >
+        <DashboardPanel className="p-4 sm:p-6">
+          {/* Top KPIs */}
+          <section className="min-w-0">
+            <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center gap-2 break-words">
+              <Zap className="h-5 w-5 text-yellow-400 flex-shrink-0" />
+              <span className="min-w-0">Indicateurs clés</span>
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 min-w-0">
+              {topKPIs.map((kpi) => {
+                const color =
+                  kpi.tone === 'success'
+                    ? ('emerald' as const)
+                    : kpi.tone === 'warning'
+                      ? ('amber' as const)
+                      : kpi.tone === 'critical'
+                        ? ('rose' as const)
+                        : ('blue' as const);
+                return (
+                  <KPICard
+                    key={kpi.id}
+                    kpi={{
+                      id: kpi.id,
+                      label: kpi.label,
+                      value: kpi.value,
+                      delta: kpi.trend,
+                      trendType: kpi.trendDirection,
+                      icon: kpi.icon,
+                      color,
+                      description: kpi.description,
+                      onClick: () => handleKPIClick(kpi),
+                    }}
+                    size="md"
+                  />
+                );
+              })}
             </div>
-          ))}
-        </div>
-      </section>
+          </section>
+        </DashboardPanel>
 
+        <DashboardPanel className="p-4 sm:p-6">
+          {/* Tendances clés */}
+          <section className="min-w-0">
+            <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center gap-2 break-words">
+              <Activity className="h-5 w-5 text-blue-400 flex-shrink-0" />
+              <span className="min-w-0">Tendances principales</span>
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 min-w-0">
+              {trends.map((trend) => (
+                <div
+                  key={trend.id}
+                  className={cn(
+                    'rounded-xl p-4 sm:p-5 border border-slate-800/60 bg-slate-950/30 min-w-0 overflow-hidden',
+                    'hover:bg-slate-950/45 transition-colors'
+                  )}
+                >
+                  <div className="flex items-center justify-between mb-2 min-w-0">
+                    <p className="text-sm text-slate-300 break-words min-w-0">{trend.label}</p>
+                    {trend.trend === 'up' && <TrendingUp className="h-4 w-4 text-emerald-400" />}
+                  </div>
+                  <p className="text-2xl font-bold text-white mb-1 tabular-nums">{trend.value}</p>
+                  <p className="text-xs text-slate-400">{trend.description}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        </DashboardPanel>
+
+        <DashboardPanel className="p-4 sm:p-6">
       {/* Risques et alertes */}
       <section className="min-w-0">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0 mb-3 sm:mb-4 min-w-0">
@@ -526,15 +440,23 @@ function HighlightsKpiPage() {
             <div
               key={risk.id}
               className={cn(
-                'rounded-xl p-3 sm:p-4 border-2 transition-all duration-300 hover:scale-[1.02] min-w-0 overflow-hidden',
-                'cursor-pointer hover:shadow-lg hover:shadow-black/20',
-                risk.severity === 'high' && 'bg-gradient-to-br from-red-500/10 to-red-600/5 border-red-500/30 hover:border-red-400',
-                risk.severity === 'medium' && 'bg-gradient-to-br from-amber-500/10 to-amber-600/5 border-amber-500/30 hover:border-amber-400',
-                risk.severity === 'low' && 'bg-gradient-to-br from-blue-500/10 to-blue-600/5 border-blue-500/30 hover:border-blue-400'
+                'relative rounded-2xl p-3 sm:p-4 border border-slate-800/60 bg-slate-900/30 min-w-0 overflow-hidden',
+                'cursor-pointer transition-colors hover:bg-slate-900/45 hover:border-slate-700/60',
+                risk.severity === 'high' && 'ring-1 ring-rose-500/20',
+                risk.severity === 'medium' && 'ring-1 ring-amber-500/15'
               )}
               role="button"
               tabIndex={0}
             >
+              <span
+                aria-hidden="true"
+                className={cn(
+                  'absolute inset-x-0 top-0 h-[2px]',
+                  risk.severity === 'high' && 'bg-rose-400/80',
+                  risk.severity === 'medium' && 'bg-amber-400/80',
+                  risk.severity === 'low' && 'bg-blue-400/80'
+                )}
+              />
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-2 min-w-0">
                 <div className="flex items-center gap-2 min-w-0">
                   {risk.severity === 'high' && <AlertCircle className="h-4 w-4 text-red-400 animate-pulse flex-shrink-0" />}
@@ -557,7 +479,9 @@ function HighlightsKpiPage() {
           ))}
         </div>
       </section>
+        </DashboardPanel>
 
+        <DashboardPanel className="p-4 sm:p-6">
       {/* Classements */}
       <section className="min-w-0">
         <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center gap-2 break-words">
@@ -607,10 +531,10 @@ function HighlightsKpiPage() {
           ))}
         </div>
       </section>
-      </div>
+        </DashboardPanel>
+      </DashboardPageShell>
     </TooltipProvider>
   );
-}
+});
 
-export default memo(HighlightsKpiPage);
-
+export default HighlightsKpiPage;

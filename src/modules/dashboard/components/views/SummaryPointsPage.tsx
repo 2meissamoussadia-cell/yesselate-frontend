@@ -6,10 +6,16 @@
 
 'use client';
 
-import React from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { TrendingUp, TrendingDown, AlertTriangle, CheckCircle, Clock, Zap, BarChart3, Users, Wallet, FileCheck, Activity, Shield, DollarSign } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import type { LucideIcon } from 'lucide-react';
+import { KPICard } from '@/components/features/bmo/dashboard/components';
+import { LastUpdateDisplay } from '../LastUpdateDisplay';
+import { DashboardPageShell } from '../shared/DashboardPageShell';
+import { DashboardPanel } from '../shared/DashboardPanel';
 
 // Types pour les indicateurs
 interface Indicator {
@@ -18,7 +24,7 @@ interface Indicator {
   value: string;
   trend: string;
   trendDirection: 'up' | 'down' | 'neutral';
-  icon: React.ComponentType<{ className?: string }>;
+  icon: LucideIcon;
   color: 'blue' | 'orange' | 'red' | 'purple' | 'emerald' | 'cyan';
   description: string;
   isCritical?: boolean;
@@ -28,12 +34,31 @@ interface Indicator {
 interface IndicatorGroup {
   id: string;
   title: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: LucideIcon;
   color: 'blue' | 'orange' | 'red' | 'purple' | 'emerald' | 'cyan';
   indicators: Indicator[];
 }
 
 export const SummaryPointsPage = memo(function SummaryPointsPage() {
+  const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+
+  useEffect(() => {
+    const readLast = () => {
+      if (typeof window === 'undefined') return;
+      const ts = (window as any).__lastDashboardRefresh;
+      if (typeof ts === 'number' && Number.isFinite(ts) && ts > 0) {
+        setLastUpdate(new Date(ts));
+      }
+    };
+    readLast();
+    window.addEventListener('focus', readLast);
+    document.addEventListener('visibilitychange', readLast);
+    return () => {
+      window.removeEventListener('focus', readLast);
+      document.removeEventListener('visibilitychange', readLast);
+    };
+  }, []);
+
   // Regroupement des indicateurs par thème
   const indicatorGroups: IndicatorGroup[] = [
     {
@@ -172,149 +197,123 @@ export const SummaryPointsPage = memo(function SummaryPointsPage() {
   ];
 
   const renderIndicatorCard = (indicator: Indicator) => {
-    const Icon = indicator.icon;
-    const isPositive = indicator.trendDirection === 'up';
-    const isNegative = indicator.trendDirection === 'down';
-    const isNeutral = indicator.trendDirection === 'neutral';
+    // down = bon pour temps/risques/blocages/budget consommé ; up = bon pour validations/conformité
+    const goodWhenDown = new Set(['temps', 'risques', 'blocages', 'budget-consomme']);
+    const goodWhenUp = new Set(['validation', 'conformite', 'conformite-budget']);
+
+    const sentimentFor = (id: string, dir: Indicator['trendDirection']) => {
+      if (dir === 'neutral') return 'neutral' as const;
+      if (goodWhenDown.has(id)) return dir === 'down' ? 'positive' : 'negative';
+      if (goodWhenUp.has(id)) return dir === 'up' ? 'positive' : 'negative';
+      return 'neutral' as const;
+    };
+
+    const color =
+      indicator.color === 'orange'
+        ? ('amber' as const)
+        : indicator.color === 'red'
+          ? ('rose' as const)
+          : (indicator.color as any);
 
     return (
-      <div
-        key={indicator.id}
-        className={cn(
-          'bg-gradient-to-br rounded-xl p-6 border-2 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg',
-          indicator.isCritical && 'ring-2 ring-offset-2 ring-offset-slate-900',
-          indicator.color === 'blue' && 'from-blue-500/20 to-blue-600/10 border-blue-500/50',
-          indicator.color === 'orange' && 'from-orange-500/20 to-orange-600/10 border-orange-500/50',
-          indicator.color === 'red' && 'from-red-500/20 to-red-600/10 border-red-500/50',
-          indicator.color === 'purple' && 'from-purple-500/20 to-purple-600/10 border-purple-500/50',
-          indicator.color === 'emerald' && 'from-emerald-500/20 to-emerald-600/10 border-emerald-500/50',
-          indicator.color === 'cyan' && 'from-cyan-500/20 to-cyan-600/10 border-cyan-500/50',
-          indicator.isCritical && indicator.color === 'red' && 'ring-red-500/50',
-          indicator.isCritical && indicator.color === 'orange' && 'ring-orange-500/50'
-        )}
-      >
-        {/* Header avec icône et badge critique si nécessaire */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-3 sm:mb-4 min-w-0">
-          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-            <div
-              className={cn(
-                'w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center flex-shrink-0',
-                indicator.color === 'blue' && 'bg-blue-500',
-                indicator.color === 'orange' && 'bg-orange-500',
-                indicator.color === 'red' && 'bg-red-500',
-                indicator.color === 'purple' && 'bg-purple-500',
-                indicator.color === 'emerald' && 'bg-emerald-500',
-                indicator.color === 'cyan' && 'bg-cyan-500'
-              )}
-            >
-              <Icon className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <p className="text-sm text-slate-300 font-medium">{indicator.label}</p>
-              {indicator.period && (
-                <p className="text-xs text-slate-400 mt-0.5">{indicator.period}</p>
-              )}
-            </div>
+      <div key={indicator.id} className="min-w-0">
+        <KPICard
+          kpi={{
+            id: indicator.id,
+            label: indicator.label,
+            value: indicator.value,
+            delta: indicator.trend,
+            trendType: indicator.trendDirection,
+            icon: indicator.icon as any,
+            color,
+            description: indicator.period
+              ? `${indicator.description} • ${indicator.period}`
+              : indicator.description,
+          }}
+          size="md"
+          className={cn(indicator.isCritical && 'ring-1 ring-rose-500/20')}
+        />
+        {indicator.isCritical ? (
+          <div className="mt-2">
+            <Badge className="bg-red-600/90 text-white text-xs">Critique</Badge>
           </div>
-          {indicator.isCritical && (
-            <Badge className="bg-red-600 text-white text-xs">Critique</Badge>
-          )}
-        </div>
-
-        {/* Valeur principale */}
-        <div className="mb-3">
-          <p className="text-3xl font-bold text-white">{indicator.value}</p>
-        </div>
-
-        {/* Évolution séparée */}
-        <div
-          className={cn(
-            'flex items-center gap-2 text-sm font-medium',
-            isPositive && 'text-green-400',
-            isNegative && 'text-red-400',
-            isNeutral && 'text-slate-300'
-          )}
-        >
-          {!isNeutral && (
-            <>
-              {isPositive ? (
-                <TrendingUp className="w-4 h-4" />
-              ) : (
-                <TrendingDown className="w-4 h-4" />
-              )}
-              <span className="font-semibold">{indicator.trend}</span>
-            </>
-          )}
-          {isNeutral && <span>{indicator.trend}</span>}
-          <span className="text-slate-500">• {indicator.description}</span>
-        </div>
+        ) : null}
       </div>
     );
   };
 
   return (
-    <div className="p-4 sm:p-6 space-y-6 sm:space-y-8 animate-fadeIn min-w-0 overflow-hidden">
-      {/* En-tête */}
-      <div className="min-w-0">
-        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2 break-words">Points Clés</h1>
-        <p className="text-slate-300 text-sm sm:text-lg break-words">Indicateurs stratégiques essentiels organisés par thème</p>
-      </div>
+    <TooltipProvider delayDuration={200}>
+      <DashboardPageShell
+        title="Points Clés"
+        subtitle="Indicateurs stratégiques essentiels organisés par thème"
+      >
+        {/* Groupes d'indicateurs */}
+        {indicatorGroups.map((group) => {
+          const GroupIcon = group.icon;
+          return (
+            <DashboardPanel key={group.id} className="p-4 sm:p-6">
+              <section className="space-y-3 sm:space-y-4 min-w-0">
+                {/* Titre de section */}
+                <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4 min-w-0">
+                  <div
+                    className={cn(
+                      'w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center flex-shrink-0',
+                      group.color === 'blue' && 'bg-blue-500/20 border border-blue-500/50',
+                      group.color === 'orange' && 'bg-orange-500/20 border border-orange-500/50',
+                      group.color === 'red' && 'bg-red-500/20 border border-red-500/50',
+                      group.color === 'purple' && 'bg-purple-500/20 border border-purple-500/50',
+                      group.color === 'emerald' && 'bg-emerald-500/20 border border-emerald-500/50',
+                      group.color === 'cyan' && 'bg-cyan-500/20 border border-cyan-500/50'
+                    )}
+                  >
+                    <GroupIcon
+                      className={cn(
+                        'w-5 h-5',
+                        group.color === 'blue' && 'text-blue-400',
+                        group.color === 'orange' && 'text-orange-400',
+                        group.color === 'red' && 'text-red-400',
+                        group.color === 'purple' && 'text-purple-400',
+                        group.color === 'emerald' && 'text-emerald-400',
+                        group.color === 'cyan' && 'text-cyan-400'
+                      )}
+                    />
+                  </div>
+                  <h2 className="text-lg sm:text-xl font-semibold text-white break-words min-w-0">{group.title}</h2>
+                </div>
 
-      {/* Groupes d'indicateurs */}
-      {indicatorGroups.map((group) => {
-        const GroupIcon = group.icon;
-        return (
-          <section key={group.id} className="space-y-3 sm:space-y-4 min-w-0">
-            {/* Titre de section */}
-            <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4 min-w-0">
-              <div
-                className={cn(
-                  'w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center flex-shrink-0',
-                  group.color === 'blue' && 'bg-blue-500/20 border border-blue-500/50',
-                  group.color === 'orange' && 'bg-orange-500/20 border border-orange-500/50',
-                  group.color === 'red' && 'bg-red-500/20 border border-red-500/50',
-                  group.color === 'purple' && 'bg-purple-500/20 border border-purple-500/50',
-                  group.color === 'emerald' && 'bg-emerald-500/20 border border-emerald-500/50',
-                  group.color === 'cyan' && 'bg-cyan-500/20 border border-cyan-500/50'
-                )}
-              >
-                <GroupIcon
-                  className={cn(
-                    'w-5 h-5',
-                    group.color === 'blue' && 'text-blue-400',
-                    group.color === 'orange' && 'text-orange-400',
-                    group.color === 'red' && 'text-red-400',
-                    group.color === 'purple' && 'text-purple-400',
-                    group.color === 'emerald' && 'text-emerald-400',
-                    group.color === 'cyan' && 'text-cyan-400'
-                  )}
-                />
+                {/* Grille d'indicateurs */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 min-w-0">
+                  {group.indicators.map(renderIndicatorCard)}
+                </div>
+              </section>
+            </DashboardPanel>
+          );
+        })}
+
+        <DashboardPanel className="p-4 sm:p-6">
+          {/* Section informations supplémentaires */}
+          <div className="min-w-0 overflow-hidden">
+            <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 break-words">
+              Contexte et Métadonnées
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-sm text-slate-300 min-w-0">
+              <div>
+                <p className="text-slate-400 mb-2">Dernière mise à jour</p>
+                <p className="font-medium">
+                  {lastUpdate ? <LastUpdateDisplay lastUpdate={lastUpdate} /> : <span className="text-slate-500">—</span>}
+                </p>
               </div>
-              <h2 className="text-lg sm:text-xl font-bold text-white break-words min-w-0">{group.title}</h2>
+              <div>
+                <p className="text-slate-300 mb-2">Période d'analyse</p>
+                <p className="font-medium">Mois en cours</p>
+              </div>
             </div>
-
-            {/* Grille d'indicateurs */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 min-w-0">
-              {group.indicators.map(renderIndicatorCard)}
-            </div>
-          </section>
-        );
-      })}
-
-      {/* Section informations supplémentaires */}
-      <div className="mt-6 sm:mt-8 bg-slate-900/50 border border-slate-800 rounded-xl p-4 sm:p-6 min-w-0 overflow-hidden">
-        <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 break-words">Contexte et Métadonnées</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-sm text-slate-300 min-w-0">
-          <div>
-            <p className="text-slate-400 mb-2">Dernière mise à jour</p>
-            <p className="font-medium">{new Date().toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' })}</p>
           </div>
-          <div>
-            <p className="text-slate-300 mb-2">Période d'analyse</p>
-            <p className="font-medium">Mois en cours</p>
-          </div>
-        </div>
-      </div>
-    </div>
+        </DashboardPanel>
+      </DashboardPageShell>
+    </TooltipProvider>
   );
 });
+
+export default SummaryPointsPage;

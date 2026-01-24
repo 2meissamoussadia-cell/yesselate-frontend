@@ -24,8 +24,11 @@ import {
   BarChart3,
 } from 'lucide-react';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
+import { useDashboardNavigationStore } from '@/lib/stores/dashboardNavigationStore';
 import { TrendChart } from '@/components/features/bmo/dashboard/charts';
 import { dashboardAPI } from '@/lib/api/pilotage/dashboardClient';
+import { SectionTitle, KPICard, DataCard } from '@/components/features/bmo/dashboard/components';
+import type { KPICardData } from '@/components/features/bmo/dashboard/components';
 
 // Données de démo temps réel (fallback si API indisponible)
 const fallbackLiveMetrics = [
@@ -45,6 +48,7 @@ const recentActivity = [
 
 export function RealtimeView() {
   const { liveStats, startRefresh, endRefresh } = useDashboardCommandCenterStore();
+  const subSubCategory = useDashboardNavigationStore((s) => s.leaf);
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [refreshInterval, setRefreshInterval] = useState(30);
   const [lastRefresh, setLastRefresh] = useState(new Date());
@@ -126,19 +130,27 @@ export function RealtimeView() {
     return `il y a ${Math.floor(diff / 60)} min`;
   };
 
+  // Convertir les métriques pour KPICard
+  const kpisForComponent: KPICardData[] = useMemo(() => {
+    return liveMetrics.map((metric) => ({
+      id: metric.id,
+      label: metric.label,
+      value: `${metric.value}${metric.unit}`,
+      icon: Activity,
+      color: (metric.color === 'emerald' ? 'emerald' : metric.color === 'blue' ? 'blue' : metric.color === 'amber' ? 'amber' : 'purple') as KPICardData['color'],
+    }));
+  }, [liveMetrics]);
+
   return (
-    <div className="p-6 space-y-6 max-w-[1800px] mx-auto">
-      {/* Header */}
+    <div className="p-6 space-y-8 max-w-[1920px] mx-auto">
+      {/* Header harmonisé */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl font-bold text-slate-200 flex items-center gap-2">
-            <Activity className="w-5 h-5 text-cyan-400" />
-            Temps Réel
-          </h1>
-          <p className="text-sm text-slate-500 mt-0.5">
-            Monitoring et indicateurs live
-          </p>
-        </div>
+        <SectionTitle
+          icon={Activity}
+          title="Temps Réel"
+          subtitle="Monitoring et indicateurs live"
+          size="lg"
+        />
 
         <div className="flex items-center gap-3">
           {/* Status connexion */}
@@ -214,56 +226,43 @@ export function RealtimeView() {
         </div>
       </div>
 
-      {/* Métriques live */}
-      <section>
+      {/* Métriques live avec composant réutilisable - Version 4 */}
+      <section aria-label="Monitoring">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider">
-            Indicateurs temps réel
-          </h2>
-          <span className="text-xs text-slate-500">
-            Màj: {formatLastRefresh()}
-          </span>
+          <SectionTitle
+            icon={Activity}
+            title={
+              subSubCategory === 'vue-globale' ? 'Vue globale' :
+              subSubCategory === 'metriques' ? 'Métriques' :
+              subSubCategory === 'performance' ? 'Performance' :
+              'Monitoring'
+            }
+            subtitle={`Dernière mise à jour : ${formatLastRefresh()}`}
+            size="md"
+          />
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {liveMetrics.map((metric) => {
-            const iconColorClasses = {
-              emerald: 'text-emerald-400',
-              blue: 'text-blue-400',
-              amber: 'text-amber-400',
-              purple: 'text-purple-400',
-            }[metric.color];
-
-            return (
-              <div
-                key={metric.id}
-                className={cn(
-                  'p-4 rounded-xl border border-slate-700/50 bg-slate-800/30 transition-all',
-                  liveStats.isRefreshing && 'animate-pulse'
-                )}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs text-slate-400">{metric.label}</span>
-                  <Zap className={cn('w-4 h-4', iconColorClasses)} />
-                </div>
-                <p className="text-3xl font-bold text-slate-200">
-                  {metric.value}
-                  <span className="text-lg font-normal text-slate-400 ml-1">{metric.unit}</span>
-                </p>
-              </div>
-            );
-          })}
+          {kpisForComponent.map((kpi) => (
+            <KPICard
+              key={kpi.id}
+              kpi={kpi}
+              size="md"
+              className={liveStats.isRefreshing ? 'animate-pulse' : ''}
+            />
+          ))}
         </div>
       </section>
 
       {/* Activité récente */}
-      <section className="rounded-xl border border-slate-700/50 bg-slate-800/30 overflow-hidden">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-700/50">
-          <h2 className="text-sm font-semibold text-slate-200 flex items-center gap-2">
-            <Clock className="w-4 h-4 text-cyan-400" />
-            Activité récente
-          </h2>
-          <Badge variant="default">{recentActivity.length} événements</Badge>
+      <section aria-label="Activité récente" className="rounded-xl border border-slate-700/50 bg-slate-800/30 overflow-hidden">
+        <div className="px-6 py-4 border-b border-slate-700/50">
+          <SectionTitle
+            icon={Clock}
+            title="Activité récente"
+            subtitle={`${recentActivity.length} événement${recentActivity.length > 1 ? 's' : ''}`}
+            size="md"
+          />
         </div>
 
         <div className="divide-y divide-slate-800/50 max-h-80 overflow-y-auto">
@@ -292,11 +291,13 @@ export function RealtimeView() {
       </section>
 
       {/* Graphique temps réel */}
-      <section className="rounded-xl border border-slate-700/50 bg-slate-800/30 p-4">
-        <div className="flex items-center gap-2 mb-4">
-          <BarChart3 className="w-4 h-4 text-blue-400" />
-          <h3 className="text-sm font-semibold text-slate-200">Évolution en temps réel</h3>
-        </div>
+      <section aria-label="Évolution en temps réel" className="rounded-xl border border-slate-700/50 bg-slate-800/30 p-6">
+        <SectionTitle
+          icon={BarChart3}
+          title="Évolution en temps réel"
+          subtitle="Tendances des validations et alertes"
+          size="sm"
+        />
         <TrendChart
           data={[
             { period: '08h', validations: 3, alertes: 1 },

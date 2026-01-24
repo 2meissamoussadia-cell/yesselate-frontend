@@ -6,13 +6,21 @@
 'use client';
 
 import React, { memo } from 'react';
+import { DashboardPageShell } from '../shared/DashboardPageShell';
+import { DashboardPanel } from '../shared/DashboardPanel';
 
 export const ValidationsGlobalPage = memo(function ValidationsGlobalPage() {
   return (
-    <div className="p-4 sm:p-6 text-white min-w-0 overflow-hidden">
-      <h1 className="text-xl sm:text-2xl font-bold mb-2 break-words">Vue globale</h1>
-      <p className="text-sm sm:text-base text-slate-300 break-words">Performance & KPIs - Validations - Vue globale</p>
-    </div>
+    <DashboardPageShell
+      title="Validations — Vue globale"
+      subtitle="Performance & KPIs (vue d’ensemble)"
+    >
+      <DashboardPanel className="p-4 sm:p-6">
+        <p className="text-sm text-slate-300">
+          À compléter : KPIs, suivi des validations, goulets et actions associées.
+        </p>
+      </DashboardPanel>
+    </DashboardPageShell>
   );
 });
 

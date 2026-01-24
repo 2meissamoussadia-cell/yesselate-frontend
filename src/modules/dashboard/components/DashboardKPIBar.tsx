@@ -16,19 +16,23 @@ import {
   FileText, 
   BarChart3,
   Info,
-  Zap
+  Zap,
+  ArrowUpRight,
+  ArrowDownRight,
+  Minus
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { useKPIFilter } from '@/modules/dashboard/hooks/useKPIFilter';
 import { useDashboardRefresh } from '@/modules/dashboard/hooks/useDashboardRefresh';
 import { KPIAlertsSystem } from '@/components/features/bmo/dashboard/command-center/KPIAlertsSystem';
+import type { KPIDisplayData } from '@/lib/mappings/dashboardKPIMapping';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { getKPIMappingByLabel } from '@/lib/mappings/dashboardKPIMapping';
 import { useLogger } from '@/lib/utils/logger';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { zIndexClass } from '../utils/zIndex';
-import { TrendIcon } from './shared/getTrendIcon';
+import { ArrowUpRight as ArrowUpRightIcon } from 'lucide-react';
 
 // Types
 type KPITone = 'ok' | 'warn' | 'crit' | 'info';
@@ -79,68 +83,121 @@ const KPICard = memo(function KPICard({
   isNegative,
   onClick
 }: KPICardProps) {
-  // ✅ Utiliser le composant mémorisé TrendIcon
-  const trendIcon = useMemo(() => (
-    <TrendIcon trend={kpi.trend} />
-  ), [kpi.trend]);
-
-  // ✅ Mémoriser les styles de tone pour éviter les recalculs
+  const clickable = Boolean(onClick);
   const toneStyles = useMemo(() => {
     switch (kpi.tone) {
       case 'ok':
-        return 'bg-emerald-500/10 border-emerald-500/30';
+        return {
+          accent: 'bg-emerald-400/70',
+          badge: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20',
+        };
       case 'warn':
-        return 'bg-amber-500/10 border-amber-500/30';
+        return {
+          accent: 'bg-amber-400/70',
+          badge: 'bg-amber-500/10 text-amber-300 border-amber-500/20',
+        };
       case 'crit':
-        return 'bg-red-500/10 border-red-500/30';
+        return {
+          accent: 'bg-red-400/70',
+          badge: 'bg-red-500/10 text-red-300 border-red-500/20',
+        };
       default:
-        return 'bg-slate-800/50 border-slate-700/50';
+        return {
+          accent: 'bg-slate-400/70',
+          badge: 'bg-slate-500/10 text-slate-200 border-slate-500/20',
+        };
     }
   }, [kpi.tone]);
 
-  // ✅ Mémoriser le className complet pour éviter les recalculs
-  const cardClassName = useMemo(() => cn(
-    'relative min-h-[44px] p-3 rounded-lg border transition-all duration-200',
-    'hover:scale-105 hover:shadow-lg hover:shadow-black/20',
-    'active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
-    toneStyles
-  ), [toneStyles]);
+  const trendIcon = useMemo(() => {
+    if (kpi.trend === 'up') return <ArrowUpRight className="h-3 w-3" />;
+    if (kpi.trend === 'down') return <ArrowDownRight className="h-3 w-3" />;
+    return <Minus className="h-3 w-3" />;
+  }, [kpi.trend]);
 
-  // ✅ Mémoriser l'aria-label pour éviter les recalculs
-  const ariaLabel = useMemo(() => 
-    `KPI ${kpi.label}: ${kpi.value} ${kpi.delta}`,
-    [kpi.label, kpi.value, kpi.delta]
+  const deltaClass = cn(
+    'inline-flex items-center gap-1 text-[11px] font-medium',
+    isPositive && 'text-emerald-300',
+    isNegative && 'text-red-300',
+    !isPositive && !isNegative && 'text-slate-300'
   );
 
-  return (
-    <button
-      onClick={onClick}
-      className={cardClassName}
-      aria-label={ariaLabel}
-    >
-      <div className="flex items-start justify-between mb-2">
-        <div className="flex items-center gap-2">
-          <Icon className="h-4 w-4 text-slate-400" />
-          <span className="text-[10px] text-slate-300 uppercase tracking-wide">
-            {kpi.label}
-          </span>
-        </div>
-        {trendIcon}
+  const tooltip = (
+    <div className="space-y-1">
+      <div className="font-semibold">{kpi.label}</div>
+      <div className="text-xs text-slate-300">
+        Valeur : <span className="font-medium">{String(kpi.value)}</span>
       </div>
-      <div className="flex items-baseline gap-2">
-        <span className="text-lg font-semibold text-slate-200">
-          {kpi.value}
-        </span>
-        <span className={cn(
-          'text-xs',
-          isPositive && 'text-emerald-400',
-          isNegative && 'text-red-400',
-          !isPositive && !isNegative && 'text-slate-400'
-        )}>
+      <div className="text-xs text-slate-400">
+        Variation :{' '}
+        <span className={cn(isPositive && 'text-emerald-300', isNegative && 'text-red-300')}>
           {kpi.delta}
         </span>
       </div>
-    </button>
+    </div>
+  );
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          onClick={onClick}
+          disabled={!onClick}
+          className={cn(
+            'group relative w-full',
+            'rounded-2xl border border-slate-800/60 bg-slate-900/30 p-4 text-left',
+            'shadow-[0_1px_0_rgba(255,255,255,0.03)] transition-colors transition-transform',
+            'hover:bg-slate-900/45 hover:border-slate-700/60',
+            'focus:outline-none focus:ring-2 focus:ring-slate-500/30',
+            clickable && 'cursor-pointer',
+            clickable && 'active:scale-[0.99]',
+            !clickable && 'cursor-default',
+            !clickable && 'opacity-85'
+          )}
+          style={{ animationDelay: `${index * 35}ms` }}
+          aria-label={`${kpi.label}: ${String(kpi.value)} (${kpi.delta})`}
+        >
+          <span className={cn('absolute left-0 top-0 h-full w-[3px] rounded-l-xl', toneStyles.accent)} />
+
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-slate-800/50 border border-slate-700/40">
+                  <Icon className="h-4 w-4 text-slate-200" />
+                </span>
+
+                <div className="min-w-0">
+                  <div className="text-[11px] font-medium text-slate-300/80 truncate">
+                    {kpi.label}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-2 flex items-end justify-between gap-2">
+                <div className="text-2xl font-semibold text-slate-50 leading-none truncate">
+                  {String(kpi.value)}
+                </div>
+
+                <div className={deltaClass}>
+                  {trendIcon}
+                  <span>{kpi.delta}</span>
+                </div>
+              </div>
+
+            </div>
+
+            <span className={cn('shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-medium', toneStyles.badge)}>
+              {kpi.tone === 'ok' ? 'OK' : kpi.tone === 'warn' ? 'Alerte' : kpi.tone === 'crit' ? 'Critique' : 'Info'}
+            </span>
+          </div>
+        </button>
+      </TooltipTrigger>
+
+      <TooltipContent side="top" className="max-w-xs">
+        {tooltip}
+      </TooltipContent>
+    </Tooltip>
   );
 });
 
@@ -285,12 +342,17 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
     retryCount,
     loadTime,
   } = useDashboardRefresh({
-    onRefresh: onRefresh || (async () => {
+    onRefresh: async () => {
+      // Normaliser: `useDashboardRefresh` attend une Promise
+      if (onRefresh) {
+        await Promise.resolve(onRefresh());
+        return;
+      }
       // Fallback: ne rien faire si pas de callback
       if (process.env.NODE_ENV === 'development') {
         log.warn('DashboardKPIBar: onRefresh callback not provided');
       }
-    }),
+    },
     onSuccess: (calculatedLoadTime) => {
       if (process.env.NODE_ENV === 'development') {
         log.performance('KPIs refresh', calculatedLoadTime);
@@ -379,13 +441,14 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
   );
 
   // Calculer les KPIs pour les alertes
-  const kpisForAlerts = useMemo(() => {
-    return topKpis.map(kpi => ({
-      id: kpi.label,
-      kpiLabel: kpi.label,
-      value: typeof kpi.value === 'number' ? kpi.value : 0,
+  const kpisForAlerts = useMemo<KPIDisplayData[]>(() => {
+    return topKpis.map((kpi) => ({
+      label: kpi.label,
+      value: kpi.value,
+      delta: kpi.delta,
       tone: kpi.tone,
       trend: kpi.trend,
+      icon: kpi.icon,
     }));
   }, [topKpis]);
 
@@ -415,6 +478,18 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
   // Virtualisation conditionnelle si >50 items
   const shouldVirtualize = topKpis.length > 50;
   const parentRef = useRef<HTMLDivElement>(null);
+  const stripRef = useRef<HTMLDivElement>(null);
+
+  const handleStripKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!stripRef.current) return;
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      stripRef.current.scrollBy({ left: 260, behavior: 'smooth' });
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      stripRef.current.scrollBy({ left: -260, behavior: 'smooth' });
+    }
+  }, []);
 
   // Calculer le nombre de colonnes selon la taille de l'écran
   // Pour la virtualisation, on utilise une approche par rangées
@@ -466,79 +541,65 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
 
   return (
     <div 
-      className="border-b border-slate-800/60 bg-gradient-to-b from-slate-900/60 via-slate-900/40 to-slate-900/60 backdrop-blur-xl px-2 sm:px-4 py-3 sm:py-4 shadow-lg shadow-black/20 relative overflow-hidden"
+      className="border-b border-slate-800/60 bg-slate-950/40 backdrop-blur-xl px-4 py-4"
       role="region"
       aria-label="Indicateurs de performance en temps réel"
     >
-      {/* Effet de brillance animé subtil */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-shimmer pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      
-      <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
+      <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-2">
-          <div 
-            className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" 
-            aria-hidden="true"
-          />
-          <h2 className="text-[11px] uppercase tracking-wide text-slate-400 font-medium">
+          <span className="h-2 w-2 rounded-full bg-emerald-400" aria-hidden="true" />
+          <h2 className="text-[12px] font-semibold text-slate-200">
             Indicateurs en temps réel
           </h2>
-          {topKpis.length !== kpis.length && (
+          {lastUpdate && (
+            <span className="text-[11px] text-slate-500">
+              Mise à jour <LastUpdateDisplay lastUpdate={lastUpdate} />
+            </span>
+          )}
+          {topKpis.length !== safeKpis.length && (
             <Tooltip>
               <TooltipTrigger asChild>
-                <span className="text-[10px] text-slate-500 cursor-help">
-                  ({topKpis.length}/{kpis.length})
+                <span className="text-[11px] text-slate-500 cursor-help">
+                  • {topKpis.length}/{safeKpis.length}
                 </span>
               </TooltipTrigger>
               <TooltipContent>
-                <KPICountTooltipContent 
-                  count={topKpis.length}
-                  total={kpis.length}
-                  filter={debouncedKpiFilter}
-                />
+                <KPICountTooltipContent count={topKpis.length} total={safeKpis.length} filter={debouncedKpiFilter} />
               </TooltipContent>
             </Tooltip>
           )}
-          {debouncedKpiFilter && debouncedKpiFilter !== kpiFilter && (
-            <span className="text-[10px] text-blue-400 animate-pulse" aria-label="Recherche en cours">
-              <Search className="h-3 w-3 inline" />
-            </span>
-          )}
         </div>
         
-        <div className="flex items-center gap-2 flex-1 justify-end min-w-0 sm:min-w-[200px]">
-          {/* Filtre de recherche KPI */}
-          <div className="relative hidden sm:block flex-shrink-0">
+        <div className="flex items-center gap-2">
+          {/* Recherche KPI */}
+          <div className="relative hidden sm:block">
+            <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" />
             <input
               type="text"
-              placeholder="Rechercher un indicateur..."
+              placeholder="Rechercher un indicateur…"
               value={kpiFilter}
               onChange={(e) => setKpiFilter(e.target.value)}
               className={cn(
-                'w-48 px-3 py-2 text-xs rounded-md min-h-[44px]',
-                'bg-slate-800/50 border border-slate-700/50',
-                'text-slate-300 placeholder:text-slate-400',
-                'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:border-blue-500/50',
-                'transition-all duration-200',
-                'min-w-0'
+                'w-56 pl-8 pr-8 py-2 text-xs rounded-lg',
+                'bg-slate-900/40 border border-slate-800/70',
+                'text-slate-200 placeholder:text-slate-500',
+                'focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/30'
               )}
               aria-label="Rechercher un indicateur"
             />
             {kpiFilter && (
               <button
                 onClick={handleClearKpiFilter}
-                className="absolute right-2 top-1/2 -translate-y-1/2 min-h-[44px] min-w-[44px] flex items-center justify-center text-slate-300 hover:text-slate-100 transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-200"
                 aria-label="Effacer la recherche"
               >
                 <X className="h-4 w-4" />
               </button>
             )}
-            {!kpiFilter && (
-              <Search className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-slate-400 pointer-events-none" />
-            )}
           </div>
 
-          {/* Contrôle auto-refresh */}
-          <div className="relative group">
+          {/* Contrôle auto-refresh (gardé mais moins proéminent) */}
+          <div className="relative group hidden lg:block">
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
@@ -586,33 +647,28 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
             </div>
           </div>
           
-          {/* Bouton refresh */}
+          {/* Refresh */}
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="inline-block">
-                <button
-                  type="button"
-                  onClick={refresh}
-                  disabled={refreshStatus === "loading" || refreshStatus === "retrying"}
-                  className={cn(
-                    'min-h-[44px] min-w-[44px] p-2 sm:p-2.5 rounded-md transition-all duration-200',
-                    'hover:bg-slate-800/50 active:scale-95',
-                    'disabled:opacity-50 disabled:cursor-not-allowed',
-                    'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
-                    (refreshStatus === "loading" || refreshStatus === "retrying") && 'bg-blue-500/10'
-                  )}
-                  aria-label="Actualiser les indicateurs"
-                >
-                  <RefreshCw 
-                    className={cn(
-                      'h-3.5 w-3.5 text-slate-400 transition-colors',
-                      (refreshStatus === "loading" || refreshStatus === "retrying") && 'animate-spin text-blue-400'
-                    )} 
-                  />
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={refresh}
+                disabled={refreshStatus === "loading" || refreshStatus === "retrying"}
+                className={cn(
+                  'inline-flex items-center gap-2 rounded-lg px-3 py-2',
+                  'bg-slate-900/40 border border-slate-800/70',
+                  'text-xs text-slate-200',
+                  'hover:bg-slate-900/60 transition',
+                  'disabled:opacity-50',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/30'
+                )}
+              >
+                <RefreshCw className={cn('h-4 w-4', (refreshStatus === "loading" || refreshStatus === "retrying") && 'animate-spin')} />
+                <span className="hidden sm:inline">Actualiser</span>
+              </button>
             </TooltipTrigger>
             <TooltipContent>
+              <p>Actualiser (Ctrl+R)</p>
               <RefreshTooltipContent 
                 refreshCount={refreshCount}
                 loadTime={performanceMetrics.loadTime || loadTime}
@@ -640,116 +696,40 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
             />
           </div>
 
-          {/* Menu d'export */}
-          <div className={cn("relative hidden md:block", zIndexClass('dropdown'))}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="inline-block">
-                  <button
-                    type="button"
-                    onClick={handleToggleExportMenu}
-                    className={cn(
-                      'min-h-[44px] min-w-[44px] p-2 sm:p-2.5 rounded-md transition-all duration-200',
-                      'hover:bg-slate-800/50 active:scale-95',
-                      'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
-                      showExportMenu && 'bg-blue-500/10'
-                    )}
-                    aria-label="Exporter les données"
-                    aria-expanded={showExportMenu}
-                  >
-                    <Download className="h-3.5 w-3.5 text-slate-400" />
-                  </button>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Exporter les données (Ctrl+E)</p>
-              </TooltipContent>
-            </Tooltip>
+          {/* Export */}
+          <div className="relative hidden md:block">
+            <button
+              type="button"
+              onClick={handleToggleExportMenu}
+              className={cn(
+                'inline-flex items-center gap-2 rounded-lg px-3 py-2',
+                'bg-slate-900/40 border border-slate-800/70',
+                'text-xs text-slate-200',
+                'hover:bg-slate-900/60 transition',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/30'
+              )}
+              aria-expanded={showExportMenu}
+            >
+              <Download className="h-4 w-4" />
+              <span>Exporter</span>
+            </button>
             {showExportMenu && (
-              <div className={cn("absolute right-0 top-full mt-2 w-52 bg-slate-900/95 border border-slate-700/50 rounded-lg shadow-xl backdrop-blur-xl animate-fadeIn pointer-events-auto", zIndexClass('dropdownMenu'))}>
-                <div className="p-2 space-y-1">
-                  <div className="px-2 py-1.5 text-[10px] uppercase tracking-wide text-slate-300 font-medium">
-                    Format d'export
-                  </div>
+              <div className="absolute right-0 top-full mt-2 w-56 rounded-xl border border-slate-800/70 bg-slate-950/90 backdrop-blur-xl shadow-xl z-50">
                   <button
                     type="button"
                     onClick={handleExportCSV}
-                    className="w-full min-h-[44px] flex items-center gap-2 px-3 py-2 text-xs text-slate-300 hover:bg-slate-800/50 rounded-md transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                    className="w-full text-left px-3 py-2 text-xs text-slate-200 hover:bg-slate-900/50 rounded-t-xl"
                   >
-                    <FileText className="h-3.5 w-3.5" />
                     Exporter en CSV
                   </button>
                   <button
                     type="button"
                     onClick={handleExportJSON}
-                    className="w-full min-h-[44px] flex items-center gap-2 px-3 py-2 text-xs text-slate-300 hover:bg-slate-800/50 rounded-md transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                    className="w-full text-left px-3 py-2 text-xs text-slate-200 hover:bg-slate-900/50 rounded-b-xl"
                   >
-                    <BarChart3 className="h-3.5 w-3.5" />
                     Exporter en JSON
                   </button>
-                  <button
-                    type="button"
-                    onClick={handleExportPDF}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-xs text-slate-300 hover:bg-slate-800/50 rounded-md transition-colors"
-                  >
-                    <FileText className="h-3.5 w-3.5" />
-                    Exporter en PDF
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleExportExcel}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-xs text-slate-300 hover:bg-slate-800/50 rounded-md transition-colors"
-                  >
-                    <BarChart3 className="h-3.5 w-3.5" />
-                    Exporter en Excel
-                  </button>
-                  <div className="border-t border-slate-700/50 my-1" />
-                  <button
-                    onClick={() => {
-                      openModal('stats');
-                      setShowExportMenu(false);
-                    }}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-xs text-slate-300 hover:bg-slate-800/50 rounded-md transition-colors"
-                  >
-                    <BarChart3 className="h-3.5 w-3.5" />
-                    Statistiques
-                  </button>
-                </div>
               </div>
-            )}
-          </div>
-
-          <div className="flex items-center gap-2">
-            <LastUpdateDisplay lastUpdate={lastUpdate} />
-            {(refreshStatus === "loading" || refreshStatus === "retrying") && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className="inline-flex items-center gap-1 text-[10px] text-blue-400 animate-pulse">
-                    <Zap className="h-2.5 w-2.5" />
-                    {retryCount > 0 ? `Tentative ${retryCount}/3...` : 'Actualisation...'}
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>
-                    {retryCount > 0 
-                      ? `Nouvelle tentative (${retryCount}/3)` 
-                      : 'Mise à jour des indicateurs en cours'}
-                  </p>
-                </TooltipContent>
-              </Tooltip>
-            )}
-            {kpiChangeNotifications.length > 0 && refreshStatus === "idle" && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400">
-                    <Activity className="h-2.5 w-2.5 animate-pulse" />
-                    {kpiChangeNotifications.length} changement{kpiChangeNotifications.length > 1 ? 's' : ''}
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Des indicateurs ont été mis à jour</p>
-                </TooltipContent>
-              </Tooltip>
             )}
           </div>
         </div>
@@ -782,7 +762,7 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
         // Version virtualisée pour >50 items (par rangées)
         <div
           ref={parentRef}
-          className="h-[600px] overflow-auto"
+          className="mt-4 h-[600px] overflow-auto"
           role="list"
           aria-label={`Liste des indicateurs de performance (${topKpis.length} items, virtualisé)`}
           style={{ WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
@@ -810,7 +790,7 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
                     transform: `translateY(${virtualRow.start}px)`,
                   }}
                 >
-                  <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3">
+                  <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-3">
                     {rowItems.map((item) => (
                       <div key={item.kpi.label} role="listitem">
                         <KPICard
@@ -829,13 +809,59 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
             })}
           </div>
         </div>
-      ) : (
-        // Version normale optimisée pour ≤50 items
-        // ✅ Utilise container queries pour adaptation basée sur la taille du conteneur
-        <div 
-          className="@container grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 @container/sm:grid-cols-2 @container/md:grid-cols-3 @container/lg:grid-cols-4 gap-2 sm:gap-3"
+      ) : topKpis.length <= 12 ? (
+        // Strip moderne (1 ligne + scroll horizontal)
+        <div
+          ref={stripRef}
+          tabIndex={0}
+          onKeyDown={handleStripKeyDown}
+          className={cn(
+            'mt-4 -mx-1 flex gap-3 overflow-x-auto px-1 pb-2',
+            'snap-x snap-mandatory',
+            'overscroll-x-contain',
+            '[scrollbar-width:thin] [-webkit-overflow-scrolling:touch]',
+            'focus:outline-none focus:ring-2 focus:ring-slate-500/30 rounded-xl',
+            'relative'
+          )}
           role="list"
-          aria-label={`Liste des indicateurs de performance${topKpis.length !== kpis.length ? ` (${topKpis.length} sur ${kpis.length} affichés)` : ''}`}
+          aria-label={`Indicateurs (${topKpis.length} éléments)`}
+        >
+          {/* fade edges (hint scroll) */}
+          <div
+            className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-slate-950/40 to-transparent"
+            aria-hidden="true"
+          />
+          <div
+            className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-slate-950/40 to-transparent"
+            aria-hidden="true"
+          />
+
+          {kpisWithProps.map((item) => (
+            <div
+              key={item.kpi.label}
+              className="min-w-[200px] max-w-[240px] flex-shrink-0 snap-start"
+              role="listitem"
+            >
+              <KPICard
+                kpi={item.kpi}
+                icon={item.Icon}
+                index={item.index}
+                isPositive={item.isPositive}
+                isNegative={item.isNegative}
+                onClick={kpiClickHandlers.get(item.kpi.label)}
+              />
+            </div>
+          ))}
+        </div>
+      ) : (
+        // Grid si beaucoup de KPIs
+        <div
+          className={cn(
+            'mt-4 grid gap-3',
+            'grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6'
+          )}
+          role="list"
+          aria-label={`Liste des indicateurs de performance${topKpis.length !== safeKpis.length ? ` (${topKpis.length} sur ${safeKpis.length} affichés)` : ''}`}
         >
           {kpisWithProps.map((item) => (
             <div key={item.kpi.label} role="listitem">

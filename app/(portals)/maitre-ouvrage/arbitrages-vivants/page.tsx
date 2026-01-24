@@ -6,7 +6,7 @@
  * Architecture multi-niveaux cohérente avec Analytics et Gouvernance
  */
 
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -237,7 +237,7 @@ export default function ArbitragesVivantsPage() {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Top Header Bar */}
-        <header className="flex items-center justify-between px-4 py-2 border-b border-slate-700/50 bg-slate-900/80 backdrop-blur-xl">
+        <header className="flex items-center justify-between px-4 py-2 border-b border-slate-700/50 bg-slate-900/80 backdrop-blur-xl min-h-[48px]">
           <div className="flex items-center gap-3">
             {/* Back Button */}
             {navigationHistory.length > 0 && (
@@ -377,7 +377,7 @@ export default function ArbitragesVivantsPage() {
 
         {/* Main Content */}
         <main className="flex-1 overflow-hidden">
-          <div className="h-full overflow-y-auto">
+          <div className="h-full overflow-y-auto dashboard-container">
         <ArbitragesContentRouter
           mainCategory={main}
           subCategory={sub || undefined}

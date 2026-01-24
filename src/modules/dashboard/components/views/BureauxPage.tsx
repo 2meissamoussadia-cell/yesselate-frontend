@@ -1110,8 +1110,20 @@ export const BureauxPage = memo(function BureauxPage() {
   SparklineChart.displayName = 'SparklineChart';
 
   const renderBureauCard = useCallback((bureau: Bureau) => {
-    const gradientClasses = getGradientClasses(bureau.color);
     const iconBgClasses = getIconBgClasses(bureau.color);
+    const accentBarClass =
+      ({
+        blue: 'bg-blue-400/80',
+        emerald: 'bg-emerald-400/80',
+        purple: 'bg-purple-400/80',
+        cyan: 'bg-cyan-400/80',
+        amber: 'bg-amber-400/80',
+        indigo: 'bg-indigo-400/80',
+        pink: 'bg-pink-400/80',
+        teal: 'bg-teal-400/80',
+        orange: 'bg-orange-400/80',
+        red: 'bg-red-400/80',
+      } as const)[bureau.color] ?? 'bg-blue-400/80';
     
     const hasAlerts = Object.values(bureau.alerts).some(Boolean);
     const isExpanded = expandedBureaux.has(bureau.id);
@@ -1122,8 +1134,9 @@ export const BureauxPage = memo(function BureauxPage() {
       <div
         key={bureau.id}
         className={cn(
-          'bg-gradient-to-br rounded-xl p-6 border-2 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.02]',
-          gradientClasses,
+          'relative overflow-hidden rounded-2xl bg-slate-900/40 p-6',
+          'ring-1 ring-slate-800/60 transition-all duration-200',
+          'hover:bg-slate-900/55 hover:ring-slate-700/60 hover:shadow-xl hover:shadow-black/20',
           hasAlerts && 'ring-2 ring-amber-500/30',
           isSelected && 'ring-4 ring-blue-500/50 border-blue-500',
           'group cursor-pointer'
@@ -1147,6 +1160,9 @@ export const BureauxPage = memo(function BureauxPage() {
           }
         }}
       >
+        {/* accent fin en haut */}
+        <span className={cn('absolute inset-x-0 top-0 h-[2px]', accentBarClass)} aria-hidden="true" />
+
         {/* Header */}
         <div className="flex items-start justify-between mb-6">
           <div className="flex items-center gap-3">
@@ -1155,7 +1171,7 @@ export const BureauxPage = memo(function BureauxPage() {
                 <TooltipTrigger asChild>
                   <div
                     className={cn(
-                      'w-12 h-12 rounded-lg flex items-center justify-center text-white font-bold text-lg transition-transform group-hover:scale-110',
+                      'w-12 h-12 rounded-lg flex items-center justify-center text-white font-bold text-lg',
                       iconBgClasses
                     )}
                   >

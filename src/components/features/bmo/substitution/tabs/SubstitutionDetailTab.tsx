@@ -49,7 +49,7 @@ export function SubstitutionDetailTab({ substitutionId }: SubstitutionDetailTabP
       const { getCommentsByEntity } = await import('@/lib/data/comments-mock-data');
       const commentsData = getCommentsByEntity('substitution', substitutionId);
       
-      setSubstitution(sub);
+      setSubstitution((sub ?? null) as Substitution | null);
       setTimeline(timelineData);
       setDocuments(docsData);
       setComments(commentsData);
@@ -290,9 +290,9 @@ export function SubstitutionDetailTab({ substitutionId }: SubstitutionDetailTabP
                       {/* Content */}
                       <div className="flex-1 pb-4">
                         <div className="flex items-start justify-between mb-1">
-                          <div className="font-medium text-white">{event.title}</div>
+                          <div className="font-medium text-white">{event.description ?? '—'}</div>
                           <div className="text-xs text-slate-500">
-                            {new Date(event.timestamp).toLocaleString('fr-FR')}
+                            {new Date(event.createdAt).toLocaleString('fr-FR')}
                           </div>
                         </div>
                         {event.description && (
@@ -364,14 +364,14 @@ export function SubstitutionDetailTab({ substitutionId }: SubstitutionDetailTabP
               comments.map((comment) => (
                 <div key={comment.id} className="flex gap-3">
                   <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-semibold">
-                    {comment.author.name.charAt(0)}
+                    {comment.user.name.charAt(0)}
                   </div>
                   <div className="flex-1">
                     <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="font-medium text-white">{comment.author.name}</span>
+                        <span className="font-medium text-white">{comment.user.name}</span>
                         <span className="text-xs text-slate-500">
-                          {new Date(comment.timestamp).toLocaleString('fr-FR')}
+                          {new Date(comment.createdAt).toLocaleString('fr-FR')}
                         </span>
                       </div>
                       <p className="text-slate-300 text-sm whitespace-pre-wrap">{comment.content}</p>

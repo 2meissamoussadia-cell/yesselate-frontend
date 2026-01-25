@@ -5,8 +5,6 @@
 
 import React from 'react';
 import { ArrowUpRight, ArrowDownRight, Minus } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 export type TrendType = 'up' | 'down' | 'neutral';
 

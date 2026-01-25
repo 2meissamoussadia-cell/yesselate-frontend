@@ -45,8 +45,8 @@ const getSizeStyles = (size: KpiSize) => {
       label: { fontSize: 'clamp(0.625rem, 0.75vw, 0.6875rem)' },
       value: { fontSize: 'clamp(1rem, 1.5vw, 1.25rem)' },
       desc: { fontSize: 'clamp(0.625rem, 0.75vw, 0.6875rem)' },
-      iconWrap: { width: 'clamp(2rem, 2.5vw, 2.25rem)', height: 'clamp(2rem, 2.5vw, 2.25rem)', minWidth: '2rem', minHeight: '2rem' },
-      icon: { width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' },
+      iconWrap: { width: 'clamp(2.25rem, 2.75vw, 2.5rem)', height: 'clamp(2.25rem, 2.75vw, 2.5rem)', minWidth: '2.25rem', minHeight: '2.25rem', maxWidth: '2.5rem', maxHeight: '2.5rem' },
+      icon: { width: 'clamp(1rem, 1.25vw, 1.125rem)', height: 'clamp(1rem, 1.25vw, 1.125rem)', minWidth: '1rem', minHeight: '1rem', maxWidth: '1.125rem', maxHeight: '1.125rem' },
       sparkWrap: { height: 'clamp(1rem, 1.25vw, 1.25rem)', width: 'clamp(3.5rem, 4.5vw, 4rem)' },
     },
     md: {
@@ -54,8 +54,8 @@ const getSizeStyles = (size: KpiSize) => {
       label: { fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' },
       value: { fontSize: 'clamp(1.25rem, 2vw, 1.5rem)' },
       desc: { fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' },
-      iconWrap: { width: 'clamp(2.25rem, 3vw, 2.5rem)', height: 'clamp(2.25rem, 3vw, 2.5rem)', minWidth: '2.25rem', minHeight: '2.25rem' },
-      icon: { width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' },
+      iconWrap: { width: 'clamp(2.5rem, 3vw, 2.75rem)', height: 'clamp(2.5rem, 3vw, 2.75rem)', minWidth: '2.5rem', minHeight: '2.5rem', maxWidth: '2.75rem', maxHeight: '2.75rem' },
+      icon: { width: 'clamp(1.125rem, 1.5vw, 1.25rem)', height: 'clamp(1.125rem, 1.5vw, 1.25rem)', minWidth: '1.125rem', minHeight: '1.125rem', maxWidth: '1.25rem', maxHeight: '1.25rem' },
       sparkWrap: { height: 'clamp(1.25rem, 1.5vw, 1.5rem)', width: 'clamp(4.5rem, 5.5vw, 5rem)' },
     },
     lg: {
@@ -63,8 +63,8 @@ const getSizeStyles = (size: KpiSize) => {
       label: { fontSize: 'clamp(0.875rem, 1.2vw, 0.9375rem)' },
       value: { fontSize: 'clamp(1.5rem, 2.5vw, 1.875rem)' },
       desc: { fontSize: 'clamp(0.875rem, 1.2vw, 0.9375rem)' },
-      iconWrap: { width: 'clamp(2.5rem, 3.5vw, 2.75rem)', height: 'clamp(2.5rem, 3.5vw, 2.75rem)', minWidth: '2.5rem', minHeight: '2.5rem' },
-      icon: { width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' },
+      iconWrap: { width: 'clamp(2.5rem, 3vw, 2.75rem)', height: 'clamp(2.5rem, 3vw, 2.75rem)', minWidth: '2.5rem', minHeight: '2.5rem', maxWidth: '2.75rem', maxHeight: '2.75rem' },
+      icon: { width: 'clamp(1.125rem, 1.5vw, 1.25rem)', height: 'clamp(1.125rem, 1.5vw, 1.25rem)', minWidth: '1.125rem', minHeight: '1.125rem', maxWidth: '1.25rem', maxHeight: '1.25rem' },
       sparkWrap: { height: 'clamp(1.5rem, 2vw, 1.75rem)', width: 'clamp(5.5rem, 6.5vw, 6rem)' },
     },
   };
@@ -182,8 +182,8 @@ export const KpiStatCard = memo(function KpiStatCard({
           {description ? <p className={cn('mt-2 text-slate-400', s.desc)}>{description}</p> : null}
         </div>
 
-        <div className={cn('flex shrink-0 items-center justify-center rounded-xl border border-slate-800/60', t.iconBg, s.iconWrap)}>
-          <Icon className={cn(t.icon, s.icon)} />
+        <div className={cn('flex shrink-0 items-center justify-center rounded-xl border border-slate-800/60', t.iconBg, s.iconWrap)} style={sizeStyles.iconWrap}>
+          <Icon className={cn(t.icon, s.icon)} style={sizeStyles.icon} />
         </div>
       </div>
 

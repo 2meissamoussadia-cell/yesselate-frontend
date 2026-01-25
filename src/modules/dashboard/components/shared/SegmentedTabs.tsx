@@ -31,7 +31,7 @@ export const SegmentedTabs = memo(function SegmentedTabs({
 
   return (
     <div className={cn('w-full overflow-x-auto', className)}>
-      <div className={cn('inline-flex gap-1', borderRadius.md, 'border p-1', colors.border.default, colors.bg.tertiary)}>
+      <div className={cn('inline-flex gap-1 rounded-2xl border border-slate-800/60 bg-slate-950/30 p-1')}>
         {items.map((it) => {
           const active = it.id === value;
           return (
@@ -40,21 +40,22 @@ export const SegmentedTabs = memo(function SegmentedTabs({
               type="button"
               onClick={() => onChange(it.id)}
               className={cn(
-                'inline-flex items-center gap-2',
-                spacing.paddingX.md,
-                spacing.paddingY.sm,
-                borderRadius.md,
-                typography.body.sm,
-                transitions.colorsStandard,
-                interactive.focus.combined,
+                'relative inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition-all duration-200',
                 active
-                  ? 'bg-slate-800/70 text-slate-100'
-                  : cn(colors.text.tertiary, interactive.hover.bg)
+                  ? 'bg-blue-500/20 text-blue-200 border border-blue-500/40 shadow-sm shadow-blue-500/20 font-semibold'
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/30',
+                'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60'
               )}
             >
-              <span className="truncate max-w-[16rem]">{it.label}</span>
+              {active && (
+                <span className="absolute inset-x-0 bottom-0 h-0.5 bg-blue-400 rounded-full" />
+              )}
+              <span className={cn('truncate max-w-[16rem]', active && 'relative z-10')}>{it.label}</span>
               {typeof it.badge === 'number' && it.badge > 0 ? (
-                <span className={cn('ml-1 rounded-full bg-slate-800', spacing.paddingX.md, 'py-0.5', typography.label.xs, colors.text.secondary)}>
+                <span className={cn(
+                  'ml-1 rounded-lg px-2 py-0.5 text-[11px] tabular-nums relative z-10',
+                  active ? 'bg-blue-500/30 text-blue-200 border border-blue-500/40' : 'bg-slate-900/30 text-slate-400'
+                )}>
                   {it.badge}
                 </span>
               ) : null}

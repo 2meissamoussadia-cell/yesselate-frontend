@@ -62,10 +62,10 @@ export function BatchActionsModal({
   // Statistiques des BCs sélectionnés
   const stats = useMemo(() => {
     const totalAmount = selectedBCs.reduce((sum, bc) => {
-      const amount = 'montantTTC' in bc ? bc.montantTTC : 
+      const amount = 'montantTTC' in bc ? Number(bc.montantTTC) || 0 : 
                     typeof (bc as PurchaseOrder).amount === 'string' 
                       ? parseFloat((bc as PurchaseOrder).amount.replace(/[^\d.,]/g, '').replace(',', '.')) || 0
-                      : (bc as PurchaseOrder).amount || 0;
+                      : Number((bc as PurchaseOrder).amount) || 0;
       return sum + amount;
     }, 0);
 
@@ -82,7 +82,8 @@ export function BatchActionsModal({
 
     const hasAnomalies = selectedBCs.filter(bc => {
       if ('anomalies' in bc) {
-        return (bc as EnrichedBC).anomalies && (bc as EnrichedBC).anomalies.length > 0;
+        const anomalies = (bc as EnrichedBC).anomalies;
+        return anomalies && anomalies.length > 0;
       }
       return false;
     }).length;
@@ -190,23 +191,23 @@ export function BatchActionsModal({
                 <div>
                   <h2 className="text-xl font-bold">Actions en Lot</h2>
                   <p className="text-sm text-slate-400 mt-1">
-                    {selectedBCIds.length} BC{s} sélectionné{s}
+                    {selectedBCIds.length} BC{selectedBCIds.length > 1 ? 's' : ''} sélectionné{selectedBCIds.length > 1 ? 's' : ''}
                   </p>
                 </div>
               </div>
               <div className="flex gap-2 mt-3">
                 <Badge variant="info" className="text-xs">
-                  {stats.count} BC{s}
+                  {stats.count} BC{stats.count > 1 ? 's' : ''}
                 </Badge>
                 <Badge variant="default" className="text-xs">
                   Total: {stats.totalAmount.toLocaleString('fr-FR')} FCFA
                 </Badge>
                 <Badge variant={stats.canValidate > 0 ? 'success' : 'default'} className="text-xs">
-                  {stats.canValidate} validable{s}
+                  {stats.canValidate} validable{stats.canValidate > 1 ? 's' : ''}
                 </Badge>
                 {stats.hasAnomalies > 0 && (
                   <Badge variant="urgent" className="text-xs">
-                    {stats.hasAnomalies} avec anomalie{s}
+                    {stats.hasAnomalies} avec anomalie{stats.hasAnomalies > 1 ? 's' : ''}
                   </Badge>
                 )}
               </div>
@@ -256,7 +257,7 @@ export function BatchActionsModal({
                 })}
                 {selectedBCs.length > 5 && (
                   <div className={cn('text-xs text-center py-2', darkMode ? 'text-slate-400' : 'text-gray-500')}>
-                    ... et {selectedBCs.length - 5} autre{s}
+                    ... et {selectedBCs.length - 5} autre{(selectedBCs.length - 5) > 1 ? 's' : ''}
                   </div>
                 )}
               </div>
@@ -298,7 +299,7 @@ export function BatchActionsModal({
                       Valider en lot
                     </div>
                     <div className={cn('text-xs mt-1', darkMode ? 'text-slate-400' : 'text-gray-500')}>
-                      Valider tous les BCs sélectionnés ({stats.canValidate} validable{s})
+                      Valider tous les BCs sélectionnés ({stats.canValidate} validable{stats.canValidate > 1 ? 's' : ''})
                     </div>
                   </div>
                   <Badge variant={stats.canValidate > 0 ? 'success' : 'default'} className="text-xs">
@@ -576,7 +577,7 @@ export function BatchActionsModal({
           darkMode ? 'bg-slate-800/50 border-slate-700' : 'bg-gray-50 border-gray-200'
         )}>
           <div className="text-xs text-slate-400">
-            {selectedBCIds.length} BC{s} sélectionné{s} • Total: {stats.totalAmount.toLocaleString('fr-FR')} FCFA
+            {selectedBCIds.length} BC{selectedBCIds.length > 1 ? 's' : ''} sélectionné{selectedBCIds.length > 1 ? 's' : ''} • Total: {stats.totalAmount.toLocaleString('fr-FR')} FCFA
           </div>
           <div className="flex gap-2">
             <Button variant="ghost" size="sm" onClick={onClose} disabled={isProcessing}>

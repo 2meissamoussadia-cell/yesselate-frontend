@@ -25,7 +25,6 @@ export function SystemLogsModals() {
         open={true}
         onClose={closeModal}
         logId={(modal.data?.logId as string) || null}
-        logData={modal.data?.logData}
         onNext={modal.data?.onNext}
         onPrevious={modal.data?.onPrevious}
         canNavigateNext={modal.data?.canNavigateNext}

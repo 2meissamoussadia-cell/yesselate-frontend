@@ -23,11 +23,17 @@ import {
   Search,
 } from 'lucide-react';
 
-import { KPICard, SectionTitle, DataCard } from '@/components/features/bmo/dashboard/components';
+import { SectionTitle, DataCard } from '@/components/features/bmo/dashboard/components';
 import { EnterpriseBadge } from '../shared/EnterpriseBadge';
 
-import { DashboardPageShell } from '../shared/DashboardPageShell';
-import { DashboardPanel } from '../shared/DashboardPanel';
+import { 
+  DashboardPageLayout, 
+  DashboardSection, 
+  DashboardGrid, 
+  DashboardPanel,
+  KPICard,
+  type KPICardData,
+} from '../shared';
 
 // ---------------------------
 // Helpers formatters
@@ -228,82 +234,68 @@ export function BudgetKpiPage() {
   }, [lastUpdate]);
 
   return (
-    <DashboardPageShell
-      title="KPIs Budget"
-      subtitle="Indicateurs budgétaires et financiers — lecture instantanée + drill-down"
-      rightSlot={
-        <>
+    <DashboardPageLayout maxWidth="xl" padding="md">
+      {/* Header avec recherche et export */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
+          <h1 className="text-slate-50 font-semibold text-xl sm:text-2xl">
+            KPIs Budget
+          </h1>
+          <p className="text-slate-400 text-sm mt-1">
+            Indicateurs budgétaires et financiers — lecture instantanée + drill-down
+          </p>
+        </div>
+
+        <div className="flex items-center gap-3 flex-wrap">
           <div className="relative">
             <Search 
-              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" 
-              style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }}
+              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" 
             />
             <Input
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="Rechercher un projet…"
-              className="bg-slate-950/40 border-slate-800/70"
-              style={{ paddingLeft: 'clamp(2rem, 2.5vw, 2.25rem)', width: 'clamp(200px, 16vw, 260px)' }}
+              className="bg-slate-950/40 border-slate-800/70 pl-9 w-[200px] sm:w-[260px]"
             />
           </div>
 
           <Button
             variant="outline"
+            size="sm"
             className="border-slate-800/70 bg-slate-950/30 hover:bg-slate-900/40"
-            style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)', padding: 'clamp(0.5rem, 1vw, 0.625rem) clamp(0.75rem, 1.5vw, 1rem)' }}
           >
-            <Download 
-              className="mr-2" 
-              style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }}
-            />
+            <Download className="mr-2 h-4 w-4" />
             Exporter
           </Button>
-        </>
-      }
-    >
-      {/* KPI GRID */}
-      <DashboardPanel>
-        <div style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
-          <SectionTitle
-            title="Indicateurs clés"
-            subtitle="Synthèse instantanée — clique un KPI pour ouvrir le détail"
-            size="md"
-          />
-
-          <div 
-            className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3" 
-            style={{ marginTop: 'clamp(1rem, 1.5vw, 1.25rem)', gap: 'clamp(0.75rem, 1vw, 1rem)' }}
-          >
-            {kpis.map((k) => (
-              <KPICard key={k.id} kpi={k} size="md" />
-            ))}
-          </div>
         </div>
-      </DashboardPanel>
+      </div>
+
+      {/* KPI GRID */}
+      <DashboardSection
+        title="Indicateurs clés"
+        subtitle="Synthèse instantanée — clique un KPI pour ouvrir le détail"
+        icon={DollarSign}
+      >
+        <DashboardGrid columns={3} gap="md">
+          {kpis.map((k) => (
+            <KPICard key={k.id} kpi={k} size="md" />
+          ))}
+        </DashboardGrid>
+      </DashboardSection>
 
       {/* Budget par projet */}
-      <DashboardPanel>
-        <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
-          <SectionTitle
-            title="Budget par projet"
-            subtitle="Comparatif alloué / consommé + dépassements"
-            size="md"
-          />
-
-          <div style={{ marginTop: 'clamp(1rem, 1.5vw, 1.25rem)', gap: 'clamp(0.75rem, 1vw, 1rem)' }} className="space-y-3">
+      <DashboardSection
+        title="Budget par projet"
+        subtitle="Comparatif alloué / consommé + dépassements"
+        icon={PieChart}
+      >
+        <div className="space-y-3">
           {filteredProjects.map((p) => {
             const ratio = p.alloue > 0 ? (p.consomme / p.alloue) * 100 : 0;
             const over = ratio > 100;
 
             return (
-              <div
-                key={p.id}
-                className={cn(
-                  'rounded-xl border border-slate-800/60 bg-slate-950/30',
-                  'transition-colors hover:bg-slate-950/45'
-                )}
-                style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}
-              >
+              <DashboardPanel key={p.id} padding="md">
                 <div className="flex items-start justify-between" style={{ gap: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
                   <div className="min-w-0">
                     <div className="font-semibold text-slate-50 truncate" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>
@@ -340,38 +332,26 @@ export function BudgetKpiPage() {
                 </div>
 
                 {over ? (
-                  <div className="text-red-300/90" style={{ marginTop: 'clamp(0.5rem, 0.75vw, 0.75rem)', fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>
+                  <div className="text-red-300/90 text-xs mt-2">
                     Dépassement : +{formatMoneyFCFA(p.consomme - p.alloue)} FCFA
                   </div>
                 ) : null}
-              </div>
+              </DashboardPanel>
             );
           })}
-          </div>
         </div>
-      </DashboardPanel>
+      </DashboardSection>
 
       {/* Paiements en retard + Rentabilité */}
-      <div className="grid grid-cols-1 xl:grid-cols-2" style={{ gap: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
-        <DashboardPanel>
-          <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
-            <SectionTitle
-              title="Paiements en retard"
-              subtitle="Retards de paiement par projet (SLA)"
-              size="md"
-            />
-
-            <div style={{ marginTop: 'clamp(1rem, 1.5vw, 1.25rem)', gap: 'clamp(0.75rem, 1vw, 1rem)' }} className="space-y-3">
+      <DashboardGrid columns={2} gap="md">
+        <DashboardSection
+          title="Paiements en retard"
+          subtitle="Retards de paiement par projet (SLA)"
+          icon={AlertTriangle}
+        >
+          <div className="space-y-3">
             {filteredLate.map((p) => (
-              <div
-                key={p.id}
-                className={cn(
-                  'rounded-xl border border-slate-800/60 bg-slate-950/30',
-                  'flex items-center justify-between',
-                  'transition-colors hover:bg-slate-950/45'
-                )}
-                style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)', gap: 'clamp(1rem, 1.5vw, 1.25rem)' }}
-              >
+              <DashboardPanel key={p.id} padding="md" className="flex items-center justify-between">
                 <div className="min-w-0">
                   <div className="font-semibold text-slate-50 truncate" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>{p.projet}</div>
                   <div className="text-slate-400" style={{ marginTop: 'clamp(0.25rem, 0.5vw, 0.5rem)', fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>
@@ -394,34 +374,23 @@ export function BudgetKpiPage() {
                         : 'Moyenne'}
                   </Badge>
 
-                  <div className="font-semibold text-slate-100 tabular-nums" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>
+                  <div className="font-semibold text-slate-100 tabular-nums text-sm">
                     {formatMoneyFCFA(p.montant)} FCFA
                   </div>
                 </div>
-              </div>
+              </DashboardPanel>
             ))}
-            </div>
           </div>
-        </DashboardPanel>
+        </DashboardSection>
 
-        <DashboardPanel>
-          <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
-            <SectionTitle
-              title="Rentabilité par projet"
-              subtitle="Investissement / retour attendu / retour réel"
-              size="md"
-            />
-
-            <div style={{ marginTop: 'clamp(1rem, 1.5vw, 1.25rem)', gap: 'clamp(0.75rem, 1vw, 1rem)' }} className="space-y-3">
+        <DashboardSection
+          title="Rentabilité par projet"
+          subtitle="Investissement / retour attendu / retour réel"
+          icon={TrendingUp}
+        >
+          <div className="space-y-3">
             {profitability.map((r) => (
-              <div
-                key={r.id}
-                className={cn(
-                  'rounded-xl border border-slate-800/60 bg-slate-950/30',
-                  'transition-colors hover:bg-slate-950/45'
-                )}
-                style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}
-              >
+              <DashboardPanel key={r.id} padding="md">
                 <div className="flex items-start justify-between" style={{ gap: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
                   <div className="min-w-0">
                     <div className="font-semibold text-slate-50 truncate" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>{r.projet}</div>
@@ -455,21 +424,20 @@ export function BudgetKpiPage() {
                   />
                 </div>
 
-                <div className="text-slate-400" style={{ marginTop: 'clamp(0.5rem, 0.75vw, 0.75rem)', fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>
+                <div className="text-slate-400 text-xs mt-2">
                   Réel / Attendu :{' '}
                   <span className="text-slate-200 tabular-nums">
                     {Math.round((r.retourReel / Math.max(1, r.retourAttendu)) * 100)}%
                   </span>
                 </div>
-              </div>
+              </DashboardPanel>
             ))}
-            </div>
           </div>
-        </DashboardPanel>
-      </div>
+        </DashboardSection>
+      </DashboardGrid>
 
       {/* Contexte / méta */}
-      <div className="grid grid-cols-1 lg:grid-cols-3" style={{ gap: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
+      <DashboardGrid columns={3} gap="md">
         <DataCard
           title="Dernière mise à jour"
           value={lastUpdateLabel}
@@ -485,8 +453,8 @@ export function BudgetKpiPage() {
           badge="94%"
           badgeVariant="default"
         />
-      </div>
-    </DashboardPageShell>
+      </DashboardGrid>
+    </DashboardPageLayout>
   );
 }
 

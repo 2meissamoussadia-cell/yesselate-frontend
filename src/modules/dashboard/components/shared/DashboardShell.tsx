@@ -37,13 +37,13 @@ export function DashboardShell({ header, subnav, children, className }: Dashboar
       <div className="relative z-10 flex h-full min-h-0 flex-col">
         {header ? (
           <div className={cn('shrink-0 border-b backdrop-blur', colors.border.default, 'bg-slate-950/40')}>
-            <div className={cn(spacing.paddingX.md, 'sm:px-6', spacing.paddingY.md)}>{header}</div>
+            <div className={cn(spacing.paddingX.md, 'sm:px-6', 'py-3 sm:py-3.5')}>{header}</div>
           </div>
         ) : null}
 
         {subnav ? (
           <div className={cn('shrink-0 border-b backdrop-blur', colors.border.default, 'bg-slate-950/20')}>
-            <div className={cn(spacing.paddingX.md, 'sm:px-6', spacing.paddingY.sm)}>{subnav}</div>
+            <div className={cn(spacing.paddingX.md, 'sm:px-6', 'py-2')}>{subnav}</div>
           </div>
         ) : null}
 

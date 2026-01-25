@@ -24,15 +24,20 @@ import type { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
-import { KPICard } from '@/components/features/bmo/dashboard/components';
 import { AnimatedBadge } from '../shared/AnimatedBadge';
 import { EnterpriseBadge } from '../shared/EnterpriseBadge';
 import { SearchFilter } from '../shared/SearchFilter';
 import { EmptyState } from '../shared/EmptyState';
 import { ExportButton } from '../shared/ExportButton';
-import { DashboardPageShell } from '../shared/DashboardPageShell';
-import { DashboardPanel } from '../shared/DashboardPanel';
 import { VirtualizedList } from '@/components/shared/VirtualizedList';
+import { 
+  DashboardPageLayout, 
+  DashboardSection, 
+  DashboardGrid, 
+  DashboardPanel,
+  KPICard,
+  type KPICardData,
+} from '../shared';
 
 interface ProjetKPI {
   id: string;
@@ -404,13 +409,51 @@ export const ProjetKpiPage = memo(function ProjetKpiPage() {
     { region: 'Saint-Louis', projets: 5, avancement: 68, retard: 1 },
   ];
 
+  // Helper pour mapper les couleurs de manière sûre
+  const mapColorToKPICardColor = useCallback((color: ProjetKPI['color']): KPICardData['color'] => {
+    switch (color) {
+      case 'red':
+        return 'rose';
+      case 'blue':
+      case 'emerald':
+      case 'amber':
+      case 'purple':
+        return color;
+      default:
+        return 'blue';
+    }
+  }, []);
+
+  // Convertir projetKPIs au format KPICardData
+  const projetKPIsData: KPICardData[] = useMemo(() => {
+    return projetKPIs.map((kpi) => ({
+      id: kpi.id,
+      label: kpi.label,
+      value: kpi.value,
+      trend: typeof kpi.trend === 'string' ? parseFloat(kpi.trend.replace(/[^\d.-]/g, '')) || 0 : 0,
+      trendType: kpi.trendDirection,
+      icon: kpi.icon,
+      color: mapColorToKPICardColor(kpi.color),
+      description: kpi.description,
+      sparkline: kpi.sparkline,
+      onClick: () => handleKPIClick(kpi),
+    }));
+  }, [projetKPIs, handleKPIClick, mapColorToKPICardColor]);
+
   return (
     <TooltipProvider delayDuration={200}>
-      <DashboardPageShell
-        title="KPIs Chantiers & Projets"
-        subtitle="Suivi de l'avancement, retards, litiges et performance par région"
-        rightSlot={
-          <>
+      <DashboardPageLayout maxWidth="xl" padding="md">
+        {/* Header */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
+            <h1 className="text-slate-50 font-semibold text-xl sm:text-2xl">
+              KPIs Chantiers & Projets
+            </h1>
+            <p className="text-slate-400 text-sm mt-1">
+              Suivi de l'avancement, retards, litiges et performance par région
+            </p>
+          </div>
+          <div className="flex items-center gap-3 flex-wrap">
             <div className="w-full sm:w-[360px]">
               <SearchFilter
                 placeholder="Rechercher un projet ou une région..."
@@ -421,177 +464,139 @@ export const ProjetKpiPage = memo(function ProjetKpiPage() {
               />
             </div>
             <ExportButton onExportCSV={handleExportCSV} onExportJSON={handleExportJSON} label="Exporter" />
-          </>
-        }
-      >
-        <DashboardPanel>
-          <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
-            {/* KPIs principaux */}
-            <section className="min-w-0">
-              <h2 className="font-semibold text-white flex items-center break-words" style={{ fontSize: 'clamp(0.875rem, 1.5vw, 1.125rem)', marginBottom: 'clamp(0.75rem, 1vw, 1rem)', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-                <Activity className="text-blue-400 flex-shrink-0" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
-                <span className="min-w-0">Indicateurs clés</span>
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 min-w-0" style={{ gap: 'clamp(0.75rem, 1vw, 1rem)' }}>
-              {projetKPIs.map((kpi) => (
-                <KPICard
-                  key={kpi.id}
-                  kpi={{
-                    id: kpi.id,
-                    label: kpi.label,
-                    value: kpi.value,
-                    trend: typeof kpi.trend === 'string' ? parseFloat(kpi.trend.replace(/[^\d.-]/g, '')) || 0 : 0,
-                    trendType: kpi.trendDirection,
-                    icon: kpi.icon,
-                    color: (kpi.color === 'red' ? 'rose' : kpi.color) as any,
-                    description: kpi.description,
-                    sparkline: kpi.sparkline,
-                    onClick: () => handleKPIClick(kpi),
-                  }}
-                  size="md"
-                />
-              ))}
-              </div>
-            </section>
           </div>
-        </DashboardPanel>
+        </div>
 
-      {/* Liste des projets */}
-      <DashboardPanel>
-        <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
-          <section className="min-w-0">
-            <div className="flex items-center justify-between" style={{ marginBottom: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
-              <h2 className="font-semibold text-white flex items-center" style={{ fontSize: 'clamp(1rem, 1.5vw, 1.125rem)', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-                <FileText className="text-blue-400" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
-                Détails par projet
-              </h2>
-              {searchQuery && (
-                <span className="text-slate-300" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>
-                  {filteredProjets.length} projet{filteredProjets.length > 1 ? 's' : ''} trouvé{filteredProjets.length > 1 ? 's' : ''}
-                </span>
-              )}
-            </div>
-        {filteredProjets.length === 0 ? (
-          <EmptyState
-            variant="search"
-            title={searchQuery ? "Aucun projet trouvé" : "Aucun projet disponible"}
-            description={searchQuery ? `Aucun projet ne correspond à "${searchQuery}"` : "Aucun projet n'est disponible pour le moment"}
-            action={
-              searchQuery && (
-                <button
-                  onClick={() => setSearchQuery('')}
-                  className="text-blue-400 hover:text-blue-300 transition-colors"
-                  style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}
-                >
-                  Effacer la recherche
-                </button>
-              )
-            }
-          />
-        ) : (
-          // Virtualisation conditionnelle (si >30 items pour performance)
-          filteredProjets.length > 30 ? (
-            <VirtualizedList
-              items={filteredProjets}
-              renderItem={(projet) => (
-                <div
-                  key={projet.id}
-                  className={cn(
-                    'relative rounded-2xl border border-slate-800/60 bg-slate-900/30',
-                    'transition-colors duration-200 hover:bg-slate-900/45 hover:border-slate-700/60',
-                    projet.statut === 'retard' && 'ring-1 ring-amber-500/15',
-                    projet.statut === 'critique' && 'ring-1 ring-rose-500/20'
-                  )}
-                  style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)', marginBottom: 'clamp(1rem, 1.5vw, 1.25rem)' }}
-                >
-                  {renderProjetCard(projet)}
-                </div>
-              )}
-              estimateSize={280}
-              overscan={5}
-              containerHeight="600px"
+        {/* KPIs principaux */}
+        <DashboardSection
+          title="Indicateurs clés"
+          icon={Activity}
+        >
+          <DashboardGrid columns={3} gap="md">
+            {projetKPIsData.map((kpi) => (
+              <KPICard key={kpi.id} kpi={kpi} size="md" />
+            ))}
+          </DashboardGrid>
+        </DashboardSection>
+
+        {/* Liste des projets */}
+        <DashboardSection
+          title="Détails par projet"
+          icon={FileText}
+          action={
+            searchQuery ? (
+              <span className="text-slate-300 text-sm">
+                {filteredProjets.length} projet{filteredProjets.length > 1 ? 's' : ''} trouvé{filteredProjets.length > 1 ? 's' : ''}
+              </span>
+            ) : undefined
+          }
+        >
+          {filteredProjets.length === 0 ? (
+            <EmptyState
+              variant="search"
+              title={searchQuery ? "Aucun projet trouvé" : "Aucun projet disponible"}
+              description={searchQuery ? `Aucun projet ne correspond à "${searchQuery}"` : "Aucun projet n'est disponible pour le moment"}
+              action={
+                searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="text-blue-400 hover:text-blue-300 transition-colors text-sm"
+                  >
+                    Effacer la recherche
+                  </button>
+                )
+              }
             />
           ) : (
-            <div style={{ gap: 'clamp(1rem, 1.5vw, 1.25rem)' }} className="space-y-4">
-              {filteredProjets.map((projet) => (
-                <div
-                  key={projet.id}
-                  className={cn(
-                    'relative rounded-2xl border border-slate-800/60 bg-slate-900/30',
-                    'transition-colors duration-200 hover:bg-slate-900/45 hover:border-slate-700/60',
-                    projet.statut === 'retard' && 'ring-1 ring-amber-500/15',
-                    projet.statut === 'critique' && 'ring-1 ring-rose-500/20'
-                  )}
-                  style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}
-                >
-                  {renderProjetCard(projet)}
-                </div>
-              ))}
-            </div>
-          )
-        )}
-          </section>
-        </div>
-      </DashboardPanel>
+            // Virtualisation conditionnelle (si >30 items pour performance)
+            filteredProjets.length > 30 ? (
+              <VirtualizedList
+                items={filteredProjets}
+                renderItem={(projet) => (
+                  <DashboardPanel
+                    key={projet.id}
+                    padding="md"
+                    className={cn(
+                      'hover:bg-slate-900/45 hover:border-slate-700/60 transition-colors',
+                      projet.statut === 'retard' && 'ring-1 ring-amber-500/15',
+                      projet.statut === 'critique' && 'ring-1 ring-rose-500/20'
+                    )}
+                  >
+                    {renderProjetCard(projet)}
+                  </DashboardPanel>
+                )}
+                estimateSize={280}
+                overscan={5}
+                containerHeight="600px"
+              />
+            ) : (
+              <div className="space-y-4">
+                {filteredProjets.map((projet) => (
+                  <DashboardPanel
+                    key={projet.id}
+                    padding="md"
+                    className={cn(
+                      'hover:bg-slate-900/45 hover:border-slate-700/60 transition-colors',
+                      projet.statut === 'retard' && 'ring-1 ring-amber-500/15',
+                      projet.statut === 'critique' && 'ring-1 ring-rose-500/20'
+                    )}
+                  >
+                    {renderProjetCard(projet)}
+                  </DashboardPanel>
+                ))}
+              </div>
+            )
+          )}
+        </DashboardSection>
 
-      {/* Performance par région */}
-      <DashboardPanel>
-        <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
-          <section className="min-w-0">
-            <h2 className="font-semibold text-white flex items-center" style={{ fontSize: 'clamp(1rem, 1.5vw, 1.125rem)', marginBottom: 'clamp(1rem, 1.5vw, 1.25rem)', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-              <MapPin className="text-purple-400" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
-              Performance par région
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 min-w-0" style={{ gap: 'clamp(0.75rem, 1vw, 1rem)' }}>
-              {performanceRegion.map((perf) => (
-                <div
-                  key={perf.region}
-                  className="bg-slate-950/30 border border-slate-800/60 rounded-xl"
-                  style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}
-                >
-                  <div className="flex items-center" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
-                    <MapPin className="text-purple-400" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />
-                    <h3 className="font-semibold text-white" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>{perf.region}</h3>
+        {/* Performance par région */}
+        <DashboardSection
+          title="Performance par région"
+          icon={MapPin}
+        >
+          <DashboardGrid columns={3} gap="md">
+            {performanceRegion.map((perf) => (
+              <DashboardPanel key={perf.region} padding="md">
+                <div className="flex items-center gap-2 mb-4">
+                  <MapPin className="text-purple-400 h-4 w-4 flex-shrink-0" />
+                  <h3 className="font-semibold text-white text-sm">{perf.region}</h3>
+                </div>
+                <div className="space-y-3">
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-slate-300 text-xs">Projets</span>
+                      <span className="font-semibold text-white text-sm">{perf.projets}</span>
+                    </div>
                   </div>
-                  <div style={{ gap: 'clamp(0.75rem, 1vw, 1rem)' }} className="space-y-3">
-                    <div>
-                      <div className="flex items-center justify-between" style={{ marginBottom: 'clamp(0.25rem, 0.5vw, 0.5rem)' }}>
-                        <span className="text-slate-300" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>Projets</span>
-                        <span className="font-semibold text-white" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{perf.projets}</span>
-                      </div>
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-slate-400 text-xs">Avancement moyen</span>
+                      <span className="font-semibold text-white text-sm">{perf.avancement}%</span>
                     </div>
-                    <div>
-                      <div className="flex items-center justify-between" style={{ marginBottom: 'clamp(0.25rem, 0.5vw, 0.5rem)' }}>
-                        <span className="text-slate-400" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>Avancement moyen</span>
-                        <span className="font-semibold text-white" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{perf.avancement}%</span>
-                      </div>
-                      <div className="bg-slate-700/50 rounded-full overflow-hidden" style={{ height: 'clamp(0.25rem, 0.375vw, 0.5rem)' }}>
-                        <div
-                          className="h-full bg-purple-500 transition-all duration-500"
-                          style={{ width: `${perf.avancement}%` }}
-                        />
-                      </div>
+                    <div className="bg-slate-700/50 rounded-full overflow-hidden h-1">
+                      <div
+                        className="h-full bg-purple-500 transition-all duration-500"
+                        style={{ width: `${perf.avancement}%` }}
+                      />
                     </div>
-                    <div>
-                      <div className="flex items-center justify-between" style={{ marginBottom: 'clamp(0.25rem, 0.5vw, 0.5rem)' }}>
-                        <span className="text-slate-300" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>Projets en retard</span>
-                        <span className={cn(
-                          'font-semibold',
-                          perf.retard === 0 ? 'text-emerald-400' : 'text-amber-400'
-                        )}
-                        style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>
-                          {perf.retard}
-                        </span>
-                      </div>
+                  </div>
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-slate-300 text-xs">Projets en retard</span>
+                      <span className={cn(
+                        'font-semibold text-sm',
+                        perf.retard === 0 ? 'text-emerald-400' : 'text-amber-400'
+                      )}>
+                        {perf.retard}
+                      </span>
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          </section>
-        </div>
-      </DashboardPanel>
-      </DashboardPageShell>
+              </DashboardPanel>
+            ))}
+          </DashboardGrid>
+        </DashboardSection>
+      </DashboardPageLayout>
     </TooltipProvider>
   );
 });

@@ -69,9 +69,8 @@ export function HistoriqueTab() {
     if (filter.search) {
       const q = filter.search.toLowerCase();
       filtered = filtered.filter(e =>
-        e.title.toLowerCase().includes(q) ||
         e.description?.toLowerCase().includes(q) ||
-        e.user?.name.toLowerCase().includes(q)
+        e.user?.name?.toLowerCase().includes(q)
       );
     }
 
@@ -200,7 +199,7 @@ export function HistoriqueTab() {
                         <div className="flex-1 pb-4">
                           <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
                             <div className="flex items-start justify-between mb-2">
-                              <div className="font-medium text-white">{event.title}</div>
+                              <div className="font-medium text-white">{event.description ?? '—'}</div>
                               <div className="text-xs text-slate-500">
                                 {new Date(event.createdAt).toLocaleTimeString('fr-FR', {
                                   hour: '2-digit',
@@ -208,10 +207,6 @@ export function HistoriqueTab() {
                                 })}
                               </div>
                             </div>
-
-                            {event.description && (
-                              <p className="text-sm text-slate-400 mb-2">{event.description}</p>
-                            )}
 
                             <div className="flex items-center gap-3 text-xs text-slate-500">
                               {event.user && (

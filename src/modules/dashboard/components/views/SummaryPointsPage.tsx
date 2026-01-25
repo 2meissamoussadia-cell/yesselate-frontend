@@ -12,10 +12,15 @@ import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import type { LucideIcon } from 'lucide-react';
-import { KPICard } from '@/components/features/bmo/dashboard/components';
 import { LastUpdateDisplay } from '../LastUpdateDisplay';
-import { DashboardPageShell } from '../shared/DashboardPageShell';
-import { DashboardPanel } from '../shared/DashboardPanel';
+import { 
+  DashboardPageLayout, 
+  DashboardSection, 
+  DashboardGrid, 
+  DashboardPanel,
+  KPICard,
+  type KPICardData,
+} from '../shared';
 
 // Types pour les indicateurs
 interface Indicator {
@@ -196,127 +201,105 @@ export const SummaryPointsPage = memo(function SummaryPointsPage() {
     },
   ];
 
-  const renderIndicatorCard = (indicator: Indicator) => {
-    // down = bon pour temps/risques/blocages/budget consommé ; up = bon pour validations/conformité
-    const goodWhenDown = new Set(['temps', 'risques', 'blocages', 'budget-consomme']);
-    const goodWhenUp = new Set(['validation', 'conformite', 'conformite-budget']);
-
-    const sentimentFor = (id: string, dir: Indicator['trendDirection']) => {
-      if (dir === 'neutral') return 'neutral' as const;
-      if (goodWhenDown.has(id)) return dir === 'down' ? 'positive' : 'negative';
-      if (goodWhenUp.has(id)) return dir === 'up' ? 'positive' : 'negative';
-      return 'neutral' as const;
-    };
+  const convertIndicatorToKPICardData = (indicator: Indicator): KPICardData => {
+    // Convertir trend string en nombre
+    const trendMatch = indicator.trend.match(/([+-]?\d+)/);
+    const trendValue = trendMatch ? parseFloat(trendMatch[1]) : undefined;
 
     const color =
       indicator.color === 'orange'
         ? ('amber' as const)
         : indicator.color === 'red'
           ? ('rose' as const)
-          : (indicator.color as any);
+          : indicator.color === 'emerald'
+            ? ('emerald' as const)
+            : indicator.color === 'cyan'
+              ? ('cyan' as const)
+              : indicator.color === 'purple'
+                ? ('purple' as const)
+                : ('blue' as const);
 
-    return (
-      <div key={indicator.id} className="min-w-0">
-        <KPICard
-          kpi={{
-            id: indicator.id,
-            label: indicator.label,
-            value: indicator.value,
-            delta: indicator.trend,
-            trendType: indicator.trendDirection,
-            icon: indicator.icon as any,
-            color,
-            description: indicator.period
-              ? `${indicator.description} • ${indicator.period}`
-              : indicator.description,
-          }}
-          size="md"
-          className={cn(indicator.isCritical && 'ring-1 ring-rose-500/20')}
-        />
-        {indicator.isCritical ? (
-          <div style={{ marginTop: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-            <Badge className="bg-red-600/90 text-white" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>Critique</Badge>
-          </div>
-        ) : null}
-      </div>
-    );
+    return {
+      id: indicator.id,
+      label: indicator.label,
+      value: indicator.value,
+      trend: trendValue,
+      trendType: indicator.trendDirection,
+      icon: indicator.icon,
+      color,
+      description: indicator.period
+        ? `${indicator.description} • ${indicator.period}`
+        : indicator.description,
+    };
   };
 
   return (
     <TooltipProvider delayDuration={200}>
-      <DashboardPageShell
-        title="Points Clés"
-        subtitle="Indicateurs stratégiques essentiels organisés par thème"
-      >
+      <DashboardPageLayout maxWidth="xl" padding="md">
+        {/* Header */}
+        <div className="min-w-0">
+          <h1 className="text-slate-50 font-semibold text-xl sm:text-2xl">
+            Points Clés
+          </h1>
+          <p className="text-slate-400 text-sm mt-1">
+            Indicateurs stratégiques essentiels organisés par thème
+          </p>
+        </div>
+
         {/* Groupes d'indicateurs */}
         {indicatorGroups.map((group) => {
-          const GroupIcon = group.icon;
-          return (
-            <DashboardPanel key={group.id}>
-              <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
-                <section style={{ gap: 'clamp(0.75rem, 1vw, 1rem)' }} className="space-y-3 sm:space-y-4 min-w-0">
-                  {/* Titre de section */}
-                  <div className="flex items-center min-w-0" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.75rem, 1vw, 1rem)' }}>
-                    <div
-                      className={cn(
-                        'rounded-lg flex items-center justify-center flex-shrink-0',
-                        group.color === 'blue' && 'bg-blue-500/20 border border-blue-500/50',
-                        group.color === 'orange' && 'bg-orange-500/20 border border-orange-500/50',
-                        group.color === 'red' && 'bg-red-500/20 border border-red-500/50',
-                        group.color === 'purple' && 'bg-purple-500/20 border border-purple-500/50',
-                        group.color === 'emerald' && 'bg-emerald-500/20 border border-emerald-500/50',
-                        group.color === 'cyan' && 'bg-cyan-500/20 border border-cyan-500/50'
-                      )}
-                      style={{ width: 'clamp(2rem, 2.5vw, 2.5rem)', height: 'clamp(2rem, 2.5vw, 2.5rem)' }}
-                    >
-                      <GroupIcon
-                        className={cn(
-                          group.color === 'blue' && 'text-blue-400',
-                          group.color === 'orange' && 'text-orange-400',
-                          group.color === 'red' && 'text-red-400',
-                          group.color === 'purple' && 'text-purple-400',
-                          group.color === 'emerald' && 'text-emerald-400',
-                          group.color === 'cyan' && 'text-cyan-400'
-                        )}
-                        style={{ width: 'clamp(1.25rem, 1.5vw, 1.25rem)', height: 'clamp(1.25rem, 1.5vw, 1.25rem)', minWidth: '1.25rem', minHeight: '1.25rem' }}
-                      />
-                    </div>
-                    <h2 className="font-semibold text-white break-words min-w-0" style={{ fontSize: 'clamp(1rem, 1.75vw, 1.25rem)' }}>{group.title}</h2>
-                  </div>
+          const groupColor = 
+            group.color === 'orange' ? 'amber' :
+            group.color === 'red' ? 'rose' :
+            group.color;
 
-                  {/* Grille d'indicateurs */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 min-w-0" style={{ gap: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
-                    {group.indicators.map(renderIndicatorCard)}
-                  </div>
-                </section>
-              </div>
-            </DashboardPanel>
+          return (
+            <DashboardSection
+              key={group.id}
+              title={group.title}
+              icon={group.icon}
+            >
+              <DashboardGrid columns={3} gap="md">
+                {group.indicators.map((indicator) => {
+                  const kpiData = convertIndicatorToKPICardData(indicator);
+                  return (
+                    <div key={indicator.id} className="min-w-0">
+                      <KPICard
+                        kpi={kpiData}
+                        size="md"
+                        className={cn(indicator.isCritical && 'ring-1 ring-rose-500/20')}
+                      />
+                      {indicator.isCritical ? (
+                        <div className="mt-2">
+                          <Badge className="bg-red-600/90 text-white text-xs">Critique</Badge>
+                        </div>
+                      ) : null}
+                    </div>
+                  );
+                })}
+              </DashboardGrid>
+            </DashboardSection>
           );
         })}
 
-        <DashboardPanel>
-          <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
-            {/* Section informations supplémentaires */}
-            <div className="min-w-0 overflow-hidden">
-              <h2 className="font-semibold text-white break-words" style={{ fontSize: 'clamp(0.875rem, 1.5vw, 1.125rem)', marginBottom: 'clamp(0.75rem, 1vw, 1rem)' }}>
-                Contexte et Métadonnées
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 min-w-0 text-slate-300" style={{ gap: 'clamp(0.75rem, 1vw, 1rem)', fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>
-                <div>
-                  <p className="text-slate-400" style={{ marginBottom: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>Dernière mise à jour</p>
-                  <p className="font-medium" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>
-                    {lastUpdate ? <LastUpdateDisplay lastUpdate={lastUpdate} /> : <span className="text-slate-500">—</span>}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-slate-300" style={{ marginBottom: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>Période d'analyse</p>
-                  <p className="font-medium" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>Mois en cours</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </DashboardPanel>
-      </DashboardPageShell>
+        {/* Métadonnées */}
+        <DashboardSection
+          title="Contexte et Métadonnées"
+        >
+          <DashboardGrid columns={2} gap="md">
+            <DashboardPanel padding="md">
+              <p className="text-slate-400 text-sm mb-2">Dernière mise à jour</p>
+              <p className="font-medium text-slate-200">
+                {lastUpdate ? <LastUpdateDisplay lastUpdate={lastUpdate} /> : <span className="text-slate-500">—</span>}
+              </p>
+            </DashboardPanel>
+            <DashboardPanel padding="md">
+              <p className="text-slate-400 text-sm mb-2">Période d'analyse</p>
+              <p className="font-medium text-slate-200">Mois en cours</p>
+            </DashboardPanel>
+          </DashboardGrid>
+        </DashboardSection>
+      </DashboardPageLayout>
     </TooltipProvider>
   );
 });

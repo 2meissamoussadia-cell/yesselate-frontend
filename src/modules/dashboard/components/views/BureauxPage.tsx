@@ -55,6 +55,12 @@ import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { VirtualizedGrid } from '../shared/VirtualizedGrid';
+import { 
+  DashboardPageLayout, 
+  DashboardSection, 
+  DashboardGrid, 
+  DashboardPanel,
+} from '../shared';
 
 // ============================================
 // TYPES & INTERFACES
@@ -842,7 +848,7 @@ const ALL_BUREAUX: Bureau[] = [
 // COMPOSANT PRINCIPAL
 // ============================================
 
-export const BureauxPage = memo(function BureauxPage() {
+function BureauxPageInner() {
   const leaf = useDashboardCommandCenterStore((s) => s.navigation.subSubCategory);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<FilterOption>('all');
@@ -1437,12 +1443,14 @@ export const BureauxPage = memo(function BureauxPage() {
 
   return (
     <TooltipProvider delayDuration={200}>
-      <div className="animate-fadeIn min-w-0 overflow-hidden" role="main" aria-label="Vue des bureaux métiers" style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)', display: 'flex', flexDirection: 'column', gap: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
+      <DashboardPageLayout maxWidth="full" padding="md">
         {/* En-tête */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between min-w-0" style={{ gap: 'clamp(0.75rem, 1vw, 1rem)' }}>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between min-w-0 gap-4">
           <div className="min-w-0 flex-1">
-            <h1 className="font-bold text-white break-words" style={{ fontSize: 'clamp(1.5rem, 2.5vw, 1.875rem)', marginBottom: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>Bureaux Métiers</h1>
-            <p className="text-slate-300 break-words" style={{ fontSize: 'clamp(0.75rem, 1.25vw, 1.125rem)' }}>
+            <h1 className="text-slate-50 font-semibold text-xl sm:text-2xl mb-2">
+              Bureaux Métiers
+            </h1>
+            <p className="text-slate-400 text-sm">
               Indicateurs de performance par bureau ({sortedBureaux.length} bureau{sortedBureaux.length > 1 ? 'x' : ''} affiché{sortedBureaux.length > 1 ? 's' : ''})
             </p>
           </div>
@@ -1849,6 +1857,9 @@ export const BureauxPage = memo(function BureauxPage() {
           </div>
         </div>
       </div>
+      </DashboardPageLayout>
     </TooltipProvider>
   );
-});
+}
+
+export const BureauxPage = memo(BureauxPageInner);

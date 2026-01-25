@@ -24,12 +24,17 @@ import type { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
-import { KPICard } from '@/components/features/bmo/dashboard/components';
 import { AnimatedBadge } from '../shared/AnimatedBadge';
 import { EnterpriseBadge } from '../shared/EnterpriseBadge';
 import { ExportButton } from '../shared/ExportButton';
-import { DashboardPageShell } from '../shared/DashboardPageShell';
-import { DashboardPanel } from '../shared/DashboardPanel';
+import { 
+  DashboardPageLayout, 
+  DashboardSection, 
+  DashboardGrid, 
+  DashboardPanel,
+  KPICard,
+  type KPICardData,
+} from '../shared';
 
 interface TopKPI {
   id: string;
@@ -346,212 +351,191 @@ export const HighlightsKpiPage = memo(function HighlightsKpiPage() {
     URL.revokeObjectURL(url);
   }, [topKPIs, risks, rankings, trends]);
 
+  // Convertir topKPIs au format KPICardData
+  const topKPIsData: KPICardData[] = useMemo(() => {
+    return topKPIs.map((kpi) => {
+      const color =
+        kpi.tone === 'success'
+          ? ('emerald' as const)
+          : kpi.tone === 'warning'
+            ? ('amber' as const)
+            : kpi.tone === 'critical'
+              ? ('rose' as const)
+              : ('blue' as const);
+      
+      return {
+        id: kpi.id,
+        label: kpi.label,
+        value: kpi.value,
+        trend: typeof kpi.trend === 'string' ? parseFloat(kpi.trend.replace(/[^\d.-]/g, '')) || 0 : 0,
+        trendType: kpi.trendDirection,
+        icon: kpi.icon,
+        color,
+        description: kpi.description,
+        sparkline: kpi.sparkline,
+        onClick: () => handleKPIClick(kpi),
+      };
+    });
+  }, [topKPIs, handleKPIClick]);
+
   return (
     <TooltipProvider delayDuration={200}>
-      <DashboardPageShell
-        title="Synthèse stratégique"
-        subtitle="Vue d'ensemble des indicateurs clés et tendances principales"
-        rightSlot={
-          <ExportButton onExportCSV={handleExportCSV} onExportJSON={handleExportJSON} label="Exporter" />
-        }
-      >
-        <DashboardPanel>
-          <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
-            {/* Top KPIs */}
-            <section className="min-w-0">
-              <h2 className="font-semibold text-white flex items-center break-words" style={{ fontSize: 'clamp(0.875rem, 1.5vw, 1.125rem)', marginBottom: 'clamp(0.75rem, 1vw, 1rem)', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-                <Zap className="text-yellow-400 flex-shrink-0" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
-                <span className="min-w-0">Indicateurs clés</span>
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 min-w-0" style={{ gap: 'clamp(0.75rem, 1vw, 1rem)' }}>
-              {topKPIs.map((kpi) => {
-                const color =
-                  kpi.tone === 'success'
-                    ? ('emerald' as const)
-                    : kpi.tone === 'warning'
-                      ? ('amber' as const)
-                      : kpi.tone === 'critical'
-                        ? ('rose' as const)
-                        : ('blue' as const);
-                return (
-                  <KPICard
-                    key={kpi.id}
-                    kpi={{
-                      id: kpi.id,
-                      label: kpi.label,
-                      value: kpi.value,
-                      trend: typeof kpi.trend === 'string' ? parseFloat(kpi.trend.replace(/[^\d.-]/g, '')) || 0 : 0,
-                      trendType: kpi.trendDirection,
-                      icon: kpi.icon,
-                      color,
-                      description: kpi.description,
-                      sparkline: kpi.sparkline,
-                      onClick: () => handleKPIClick(kpi),
-                    }}
-                    size="md"
-                  />
-                );
-              })}
-              </div>
-            </section>
+      <DashboardPageLayout maxWidth="xl" padding="md">
+        {/* Header */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
+            <h1 className="text-slate-50 font-semibold text-xl sm:text-2xl">
+              Synthèse stratégique
+            </h1>
+            <p className="text-slate-400 text-sm mt-1">
+              Vue d'ensemble des indicateurs clés et tendances principales
+            </p>
           </div>
-        </DashboardPanel>
+          <div className="flex items-center gap-3">
+            <ExportButton onExportCSV={handleExportCSV} onExportJSON={handleExportJSON} label="Exporter" />
+          </div>
+        </div>
 
-        <DashboardPanel>
-          <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
-            {/* Tendances clés */}
-            <section className="min-w-0">
-              <h2 className="font-semibold text-white flex items-center break-words" style={{ fontSize: 'clamp(0.875rem, 1.5vw, 1.125rem)', marginBottom: 'clamp(0.75rem, 1vw, 1rem)', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-                <Activity className="text-blue-400 flex-shrink-0" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
-                <span className="min-w-0">Tendances principales</span>
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 min-w-0" style={{ gap: 'clamp(0.75rem, 1vw, 1rem)' }}>
-              {trends.map((trend) => (
-                <div
-                  key={trend.id}
-                  className={cn(
-                    'rounded-xl p-4 sm:p-5 border border-slate-800/60 bg-slate-950/30 min-w-0 overflow-hidden',
-                    'hover:bg-slate-950/45 transition-colors'
-                  )}
-                >
-                  <div className="flex items-center justify-between mb-2 min-w-0">
-                    <p className="text-sm text-slate-300 break-words min-w-0">{trend.label}</p>
-                    {trend.trend === 'up' && <TrendingUp className="h-4 w-4 text-emerald-400" />}
-                  </div>
-                  <p className="text-2xl font-bold text-white mb-1 tabular-nums">{trend.value}</p>
-                  <p className="text-xs text-slate-400">{trend.description}</p>
+        {/* Top KPIs */}
+        <DashboardSection
+          title="Indicateurs clés"
+          icon={Zap}
+        >
+          <DashboardGrid columns={3} gap="md">
+            {topKPIsData.map((kpi) => (
+              <KPICard key={kpi.id} kpi={kpi} size="md" />
+            ))}
+          </DashboardGrid>
+        </DashboardSection>
+
+        {/* Tendances clés */}
+        <DashboardSection
+          title="Tendances principales"
+          icon={Activity}
+        >
+          <DashboardGrid columns={3} gap="md">
+            {trends.map((trend) => (
+              <DashboardPanel key={trend.id} padding="md" className="hover:bg-slate-950/45 transition-colors">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-sm text-slate-300">{trend.label}</p>
+                  {trend.trend === 'up' && <TrendingUp className="h-4 w-4 text-emerald-400" />}
                 </div>
-              ))}
-              </div>
-            </section>
-          </div>
-        </DashboardPanel>
+                <p className="text-2xl font-bold text-white mb-1 tabular-nums">{trend.value}</p>
+                <p className="text-xs text-slate-400">{trend.description}</p>
+              </DashboardPanel>
+            ))}
+          </DashboardGrid>
+        </DashboardSection>
 
-        <DashboardPanel>
-          <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
-            {/* Risques et alertes */}
-            <section className="min-w-0">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between min-w-0" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.75rem, 1vw, 1rem)' }}>
-                <h2 className="font-semibold text-white flex items-center break-words" style={{ fontSize: 'clamp(0.875rem, 1.5vw, 1.125rem)', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-                  <AlertTriangle className="text-amber-400 flex-shrink-0" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
-                  <span className="min-w-0">Risques et alertes critiques</span>
-                </h2>
-                {risks.filter(r => r.severity === 'high').length > 0 && (
-                  <EnterpriseBadge variant="critique" size="sm" className="flex-shrink-0">
-                    {risks.filter(r => r.severity === 'high').length} critique{risks.filter(r => r.severity === 'high').length > 1 ? 's' : ''}
-                  </EnterpriseBadge>
-                )}
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 min-w-0" style={{ gap: 'clamp(0.75rem, 1vw, 1rem)' }}>
-          {risks.map((risk) => (
-            <button
-              key={risk.id}
-              type="button"
-              onClick={() => {
-                // TODO: Implémenter la navigation vers le détail du risque
-              }}
-              className={cn(
-                'relative rounded-2xl border border-slate-800/60 bg-slate-900/30 min-w-0 overflow-hidden',
-                'text-left transition-colors duration-200',
-                'hover:bg-slate-900/45 hover:border-slate-700/60',
-                'focus:outline-none focus:ring-2 focus:ring-blue-500/40',
-                risk.severity === 'high' && 'ring-1 ring-rose-500/20',
-                risk.severity === 'medium' && 'ring-1 ring-amber-500/15'
-              )}
-              style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}
-              aria-label={`Risque: ${risk.label} - ${risk.count} occurrence(s)`}
-            >
-              <span
-                aria-hidden="true"
+        {/* Risques et alertes */}
+        <DashboardSection
+          title="Risques et alertes critiques"
+          icon={AlertTriangle}
+          action={
+            risks.filter(r => r.severity === 'high').length > 0 ? (
+              <EnterpriseBadge variant="critique" size="sm">
+                {risks.filter(r => r.severity === 'high').length} critique{risks.filter(r => r.severity === 'high').length > 1 ? 's' : ''}
+              </EnterpriseBadge>
+            ) : undefined
+          }
+        >
+          <DashboardGrid columns={2} gap="md">
+            {risks.map((risk) => (
+              <button
+                key={risk.id}
+                type="button"
+                onClick={() => {
+                  // TODO: Implémenter la navigation vers le détail du risque
+                }}
                 className={cn(
-                  'absolute inset-x-0 top-0',
-                  risk.severity === 'high' && 'bg-rose-400/80',
-                  risk.severity === 'medium' && 'bg-amber-400/80',
-                  risk.severity === 'low' && 'bg-blue-400/80'
+                  'relative rounded-2xl border border-slate-800/60 bg-slate-900/30',
+                  'text-left transition-colors duration-200',
+                  'hover:bg-slate-900/45 hover:border-slate-700/60',
+                  'focus:outline-none focus:ring-2 focus:ring-blue-500/40',
+                  risk.severity === 'high' && 'ring-1 ring-rose-500/20',
+                  risk.severity === 'medium' && 'ring-1 ring-amber-500/15'
                 )}
-                style={{ height: 'clamp(0.125rem, 0.25vw, 0.125rem)' }}
-              />
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between min-w-0" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-                <div className="flex items-center min-w-0" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-                  {risk.severity === 'high' && <AlertCircle className="text-red-400 animate-pulse flex-shrink-0" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />}
-                  {risk.severity === 'medium' && <AlertTriangle className="text-amber-400 flex-shrink-0" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />}
-                  {risk.severity === 'low' && <Activity className="text-blue-400 flex-shrink-0" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />}
-                  <p className="font-medium text-white break-words min-w-0" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{risk.label}</p>
-                </div>
-                <EnterpriseBadge
-                  variant={risk.severity === 'high' ? 'critique' : risk.severity === 'medium' ? 'haute' : 'moyenne'}
-                  size="sm"
-                  className="flex-shrink-0"
-                >
-                  {risk.count}
-                </EnterpriseBadge>
-              </div>
-              <p className="text-slate-400 break-words" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>
-                Évolution: {risk.trend === 'stable' ? 'Stable' : risk.trend}
-              </p>
-            </button>
-          ))}
-              </div>
-            </section>
-          </div>
-        </DashboardPanel>
-
-        <DashboardPanel>
-          <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
-            {/* Classements */}
-            <section className="min-w-0">
-              <h2 className="font-semibold text-white flex items-center break-words" style={{ fontSize: 'clamp(0.875rem, 1.5vw, 1.125rem)', marginBottom: 'clamp(0.75rem, 1vw, 1rem)', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-                <Award className="text-yellow-400 flex-shrink-0" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
-                <span className="min-w-0">Classements performance</span>
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 min-w-0" style={{ gap: 'clamp(0.75rem, 1vw, 1rem)' }}>
-                {rankings.map((ranking) => (
-                  <div
-                    key={ranking.id}
-                    className="bg-slate-800/40 border border-slate-700/40 rounded-xl min-w-0 overflow-hidden"
-                    style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}
-                  >
-                    <div className="flex items-center min-w-0" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.75rem, 1vw, 1rem)' }}>
-                      {ranking.type === 'bureau' && <Building2 className="text-blue-400 flex-shrink-0" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />}
-                      {ranking.type === 'region' && <Globe className="text-purple-400 flex-shrink-0" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />}
-                      {ranking.type === 'projet' && <Target className="text-emerald-400 flex-shrink-0" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />}
-                      <h3 className="font-semibold text-white break-words min-w-0" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{ranking.label}</h3>
-                    </div>
-                    <div style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }} className="space-y-2 sm:space-y-3 min-w-0">
-                      {ranking.items.map((item, index) => (
-                        <div
-                          key={index}
-                          className="flex flex-col sm:flex-row items-start sm:items-center justify-between rounded-lg bg-slate-700/30 hover:bg-slate-700/50 transition-colors min-w-0 overflow-hidden"
-                          style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', padding: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}
-                        >
-                          <div className="flex items-center min-w-0" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-                            <span className="font-bold text-slate-300 flex-shrink-0" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)', width: 'clamp(1rem, 1.25vw, 1.25rem)' }}>
-                              #{index + 1}
-                            </span>
-                            <span className="text-white break-words min-w-0" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{item.name}</span>
-                          </div>
-                          <div className="flex items-center flex-shrink-0" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-                            <span className="font-bold text-white" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{item.score}%</span>
-                            {item.trend === 'up' && (
-                              <TrendingUp className="text-emerald-400" style={{ width: 'clamp(0.75rem, 0.875vw, 0.875rem)', height: 'clamp(0.75rem, 0.875vw, 0.875rem)', minWidth: '0.75rem', minHeight: '0.75rem' }} />
-                            )}
-                            {item.trend === 'down' && (
-                              <TrendingDown className="text-red-400" style={{ width: 'clamp(0.75rem, 0.875vw, 0.875rem)', height: 'clamp(0.75rem, 0.875vw, 0.875rem)', minWidth: '0.75rem', minHeight: '0.75rem' }} />
-                            )}
-                            {item.trend === 'neutral' && (
-                              <div className="rounded-full bg-slate-500" style={{ width: 'clamp(0.75rem, 0.875vw, 0.875rem)', height: 'clamp(0.75rem, 0.875vw, 0.875rem)', minWidth: '0.75rem', minHeight: '0.75rem' }} />
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                style={{ padding: '1rem' }}
+                aria-label={`Risque: ${risk.label} - ${risk.count} occurrence(s)`}
+              >
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    'absolute inset-x-0 top-0 h-0.5',
+                    risk.severity === 'high' && 'bg-rose-400/80',
+                    risk.severity === 'medium' && 'bg-amber-400/80',
+                    risk.severity === 'low' && 'bg-blue-400/80'
+                  )}
+                />
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-2">
+                  <div className="flex items-center gap-2">
+                    {risk.severity === 'high' && <AlertCircle className="text-red-400 animate-pulse h-4 w-4 flex-shrink-0" />}
+                    {risk.severity === 'medium' && <AlertTriangle className="text-amber-400 h-4 w-4 flex-shrink-0" />}
+                    {risk.severity === 'low' && <Activity className="text-blue-400 h-4 w-4 flex-shrink-0" />}
+                    <p className="font-medium text-white text-sm">{risk.label}</p>
                   </div>
-                ))}
-              </div>
-            </section>
-          </div>
-        </DashboardPanel>
-      </DashboardPageShell>
+                  <EnterpriseBadge
+                    variant={risk.severity === 'high' ? 'critique' : risk.severity === 'medium' ? 'haute' : 'moyenne'}
+                    size="sm"
+                    className="flex-shrink-0"
+                  >
+                    {risk.count}
+                  </EnterpriseBadge>
+                </div>
+                <p className="text-slate-400 text-xs">
+                  Évolution: {risk.trend === 'stable' ? 'Stable' : risk.trend}
+                </p>
+              </button>
+            ))}
+          </DashboardGrid>
+        </DashboardSection>
+
+        {/* Classements */}
+        <DashboardSection
+          title="Classements performance"
+          icon={Award}
+        >
+          <DashboardGrid columns={3} gap="md">
+            {rankings.map((ranking) => {
+              const RankingIcon = ranking.type === 'bureau' ? Building2 : ranking.type === 'region' ? Globe : Target;
+              return (
+                <DashboardPanel key={ranking.id} padding="md">
+                  <div className="flex items-center gap-2 mb-4">
+                    <RankingIcon className={cn(
+                      'h-4 w-4 flex-shrink-0',
+                      ranking.type === 'bureau' && 'text-blue-400',
+                      ranking.type === 'region' && 'text-purple-400',
+                      ranking.type === 'projet' && 'text-emerald-400'
+                    )} />
+                    <h3 className="font-semibold text-white text-sm">{ranking.label}</h3>
+                  </div>
+                  <div className="space-y-2">
+                    {ranking.items.map((item, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between rounded-lg bg-slate-700/30 hover:bg-slate-700/50 transition-colors p-2"
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-slate-300 text-xs w-6">
+                            #{index + 1}
+                          </span>
+                          <span className="text-white text-sm">{item.name}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-white text-sm">{item.score}%</span>
+                          {item.trend === 'up' && <TrendingUp className="text-emerald-400 h-3 w-3" />}
+                          {item.trend === 'down' && <TrendingDown className="text-red-400 h-3 w-3" />}
+                          {item.trend === 'neutral' && <div className="rounded-full bg-slate-500 h-3 w-3" />}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </DashboardPanel>
+              );
+            })}
+          </DashboardGrid>
+        </DashboardSection>
+      </DashboardPageLayout>
     </TooltipProvider>
   );
 });

@@ -24,16 +24,20 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import {
-  KPICard,
-  SectionTitle,
   DataCard,
   RiskScoreCard,
   ActionItem,
   AgendaItem,
   CircuitValidation,
 } from '@/components/features/bmo/dashboard/components';
+import { 
+  DashboardPageLayout, 
+  DashboardSection, 
+  DashboardGrid, 
+  KPICard,
+  type KPICardData,
+} from '../shared';
 import type {
-  KPICardData,
   RiskScoreCardData,
   AgendaItemData,
   ActionItemData,
@@ -217,17 +221,14 @@ export function OverviewPage() {
   );
 
   return (
-    <div className="space-y-6 animate-fadeIn min-w-0">
+    <DashboardPageLayout maxWidth="xl" padding="md">
       {/* Section 1: KPIs Principaux */}
-      <section aria-label="Indicateurs clés">
-        <SectionTitle
-          icon={Activity}
-          title="Indicateurs en temps réel"
-          subtitle="Vue d'ensemble des KPIs principaux"
-          size="lg"
-        />
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <DashboardSection
+        title="Indicateurs en temps réel"
+        subtitle="Vue d'ensemble des KPIs principaux"
+        icon={Activity}
+      >
+        <DashboardGrid columns={4} gap="md">
           {summaryKPIs.map((kpi) => (
             <KPICard
               key={kpi.id}
@@ -238,35 +239,41 @@ export function OverviewPage() {
               size="md"
             />
           ))}
-        </div>
-      </section>
+        </DashboardGrid>
+      </DashboardSection>
 
       {/* Section 2: Circuit de validation */}
-      <section aria-label="Circuit de validation">
-        <SectionTitle
-          icon={Target}
-          title="Circuit de validation"
-          subtitle="Flux de validation avec goulots d'étranglement"
-          size="md"
-          actionLabel="Voir calendrier"
-          onAction={() => openModal('calendar')}
-        />
-
+      <DashboardSection
+        title="Circuit de validation"
+        subtitle="Flux de validation avec goulots d'étranglement"
+        icon={Target}
+        action={
+          <button
+            onClick={() => openModal('calendar')}
+            className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+          >
+            Voir calendrier
+          </button>
+        }
+      >
         <CircuitValidation stages={validationStages} />
-      </section>
+      </DashboardSection>
 
       {/* Section 3: Actions prioritaires */}
-      <section aria-label="Actions prioritaires">
-        <SectionTitle
-          icon={AlertTriangle}
-          title="Actions prioritaires"
-          subtitle="Actions à traiter en urgence"
-          size="md"
-          actionLabel="Voir tout"
-          onAction={() => openModal('action-detail')}
-        />
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <DashboardSection
+        title="Actions prioritaires"
+        subtitle="Actions à traiter en urgence"
+        icon={AlertTriangle}
+        action={
+          <button
+            onClick={() => openModal('action-detail')}
+            className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+          >
+            Voir tout
+          </button>
+        }
+      >
+        <DashboardGrid columns={3} gap="md">
           {priorityActions.map((action) => (
             <ActionItem
               key={action.id}
@@ -274,21 +281,24 @@ export function OverviewPage() {
               onClick={() => openModal('action-detail', { actionId: action.id, action })}
             />
           ))}
-        </div>
-      </section>
+        </DashboardGrid>
+      </DashboardSection>
 
       {/* Section 4: Risques critiques */}
-      <section aria-label="Risques critiques">
-        <SectionTitle
-          icon={AlertTriangle}
-          title="Risk Radar"
-          subtitle="Suivi des risques, alertes et résolution"
-          size="md"
-          actionLabel="Voir tout"
-          onAction={() => openModal('risk-detail')}
-        />
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <DashboardSection
+        title="Risk Radar"
+        subtitle="Suivi des risques, alertes et résolution"
+        icon={AlertTriangle}
+        action={
+          <button
+            onClick={() => openModal('risk-detail')}
+            className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+          >
+            Voir tout
+          </button>
+        }
+      >
+        <DashboardGrid columns={3} gap="md">
           {topRisks.map((risk) => (
             <RiskScoreCard
               key={risk.id}
@@ -296,21 +306,24 @@ export function OverviewPage() {
               onClick={() => openModal('risk-detail', { riskId: risk.id, risk })}
             />
           ))}
-        </div>
-      </section>
+        </DashboardGrid>
+      </DashboardSection>
 
       {/* Section 5: Agenda exécutif */}
-      <section aria-label="Agenda exécutif">
-        <SectionTitle
-          icon={Clock}
-          title="Agenda exécutif"
-          subtitle="Événements et échéances à venir"
-          size="md"
-          actionLabel="Voir calendrier"
-          onAction={() => openModal('calendar')}
-        />
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <DashboardSection
+        title="Agenda exécutif"
+        subtitle="Événements et échéances à venir"
+        icon={Clock}
+        action={
+          <button
+            onClick={() => openModal('calendar')}
+            className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+          >
+            Voir calendrier
+          </button>
+        }
+      >
+        <DashboardGrid columns={3} gap="md">
           <div className="md:col-span-2">
             <div className="rounded-xl border border-slate-800/60 bg-slate-900/30 p-4 min-h-[200px]">
               <h3 className="font-semibold text-slate-200 mb-3" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>
@@ -350,21 +363,24 @@ export function OverviewPage() {
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </DashboardGrid>
+      </DashboardSection>
 
       {/* Section 6: Décisions récentes */}
-      <section aria-label="Décisions récentes">
-        <SectionTitle
-          icon={CheckCircle}
-          title="Décisions récentes"
-          subtitle="Historique des décisions prises"
-          size="md"
-          actionLabel="Voir l'historique"
-          onAction={() => openModal('decision-detail')}
-        />
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <DashboardSection
+        title="Décisions récentes"
+        subtitle="Historique des décisions prises"
+        icon={CheckCircle}
+        action={
+          <button
+            onClick={() => openModal('decision-detail')}
+            className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+          >
+            Voir l'historique
+          </button>
+        }
+      >
+        <DashboardGrid columns={3} gap="md">
           <div className="rounded-xl border border-slate-800/60 bg-slate-900/30 p-4">
             <div className="flex items-center gap-2 mb-2">
               <Target className="w-4 h-4 text-blue-400" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />
@@ -415,8 +431,8 @@ export function OverviewPage() {
               Voir détails →
             </button>
           </div>
-        </div>
-      </section>
-    </div>
+        </DashboardGrid>
+      </DashboardSection>
+    </DashboardPageLayout>
   );
 }

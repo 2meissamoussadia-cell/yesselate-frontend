@@ -180,7 +180,7 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
       {/* Breadcrumb (optionnel). Par défaut on évite la double breadcrumb. */}
       {showBreadcrumbs ? (
         <div 
-          className={cn("px-2 sm:px-4 py-2 sm:py-2.5 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm border-b border-slate-800/50 relative min-w-0 overflow-x-auto", zIndexClass('breadcrumbs'))}
+          className={cn("px-2 sm:px-4 py-1.5 flex items-center gap-1.5 sm:gap-2 text-xs border-b border-slate-800/50 relative min-w-0 overflow-x-auto", zIndexClass('breadcrumbs'))}
           role="navigation"
           aria-label="Fil d'Ariane"
         >
@@ -207,7 +207,7 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
 
       {/* Level 2 Navigation - Sub Categories (Segmented Tabs) */}
       {subCategories.length > 0 && (
-        <div className={cn("px-2 sm:px-4 py-2 sm:py-2.5 border-b border-slate-800/50 relative min-w-0", zIndexClass('subNavigation'))}>
+        <div className={cn("px-2 sm:px-4 py-1.5 border-b border-slate-800/50 relative min-w-0", zIndexClass('subNavigation'))}>
           <SegmentedTabs
             items={subCategories.map((subCat) => ({
               id: subCat.id,
@@ -222,7 +222,7 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
 
       {/* Level 3 Navigation - Sub Sub Categories (Segmented Tabs) */}
       {subSubCategories.length > 0 && sub && (
-        <div className={cn("px-2 sm:px-4 py-2 sm:py-2.5 bg-slate-800/20 relative min-w-0", zIndexClass('subNavigation'))}>
+        <div className={cn("px-2 sm:px-4 py-1.5 bg-slate-800/20 relative min-w-0", zIndexClass('subNavigation'))}>
           <SegmentedTabs
             items={subSubCategories.map((subSubCat) => ({
               id: subSubCat.id,

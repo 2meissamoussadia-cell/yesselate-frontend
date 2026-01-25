@@ -26,17 +26,17 @@ const getSizeStyles = (size: 'sm' | 'md' | 'lg') => {
     sm: {
       title: { fontSize: 'clamp(0.875rem, 1vw, 1rem)' },
       subtitle: { fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' },
-      icon: { width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' },
+      icon: { width: 'clamp(1rem, 1.25vw, 1.125rem)', height: 'clamp(1rem, 1.25vw, 1.125rem)', minWidth: '1rem', minHeight: '1rem', maxWidth: '1.125rem', maxHeight: '1.125rem' },
     },
     md: {
-      title: { fontSize: 'clamp(1rem, 1.5vw, 1.25rem)' },
-      subtitle: { fontSize: 'clamp(0.875rem, 1vw, 0.9375rem)' },
-      icon: { width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' },
+      title: { fontSize: 'clamp(0.875rem, 1.25vw, 1rem)' },
+      subtitle: { fontSize: 'clamp(0.75rem, 0.875vw, 0.8125rem)' },
+      icon: { width: 'clamp(1rem, 1.25vw, 1.125rem)', height: 'clamp(1rem, 1.25vw, 1.125rem)', minWidth: '1rem', minHeight: '1rem', maxWidth: '1.125rem', maxHeight: '1.125rem' },
     },
     lg: {
-      title: { fontSize: 'clamp(1.25rem, 2vw, 1.5rem)' },
-      subtitle: { fontSize: 'clamp(0.875rem, 1vw, 1rem)' },
-      icon: { width: 'clamp(1.25rem, 1.5vw, 1.5rem)', height: 'clamp(1.25rem, 1.5vw, 1.5rem)', minWidth: '1.25rem', minHeight: '1.25rem' },
+      title: { fontSize: 'clamp(1rem, 1.75vw, 1.25rem)' },
+      subtitle: { fontSize: 'clamp(0.875rem, 1vw, 0.9375rem)' },
+      icon: { width: 'clamp(1.125rem, 1.5vw, 1.25rem)', height: 'clamp(1.125rem, 1.5vw, 1.25rem)', minWidth: '1.125rem', minHeight: '1.125rem', maxWidth: '1.25rem', maxHeight: '1.25rem' },
     },
   };
   return base[size];
@@ -80,12 +80,16 @@ export const SectionTitle = memo(function SectionTitle({
 
   return (
     <div className={cn('flex items-center justify-between mb-4', className)}>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2.5">
         {Icon && (
-          <Icon className={cn('text-slate-300 flex-shrink-0', sizes.icon)} />
+          <div className="inline-flex items-center justify-center rounded-lg border border-slate-800/60 bg-slate-900/40 p-1.5">
+            <span style={sizeStyles.icon} className="inline-flex items-center justify-center flex-shrink-0">
+              <Icon className={cn('text-slate-300 w-full h-full', sizes.icon)} />
+            </span>
+          </div>
         )}
         <div>
-          <h2 className={cn('text-slate-200', sizes.title)} style={sizeStyles.title}>
+          <h2 className={cn('text-slate-50', sizes.title)} style={sizeStyles.title}>
             {title}
           </h2>
           {subtitle && (
@@ -101,7 +105,7 @@ export const SectionTitle = memo(function SectionTitle({
           variant="ghost"
           size="sm"
           onClick={onAction}
-          className="text-slate-400 hover:text-slate-200"
+          className="text-slate-400 hover:text-slate-200 hover:bg-slate-900/30 rounded-lg"
           style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}
         >
           {actionLabel}

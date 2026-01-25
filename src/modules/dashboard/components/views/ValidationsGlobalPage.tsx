@@ -6,7 +6,7 @@
 
 'use client';
 
-import React, { memo, useMemo, useState } from 'react';
+import React, { memo, useMemo, useState, useCallback } from 'react';
 import {
   FileCheck,
   Clock,
@@ -30,10 +30,16 @@ import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { KPICard, SectionTitle, DataCard } from '@/components/features/bmo/dashboard/components';
+import { DataCard } from '@/components/features/bmo/dashboard/components';
 import { EnterpriseBadge } from '../shared/EnterpriseBadge';
-import { DashboardPageShell } from '../shared/DashboardPageShell';
-import { DashboardPanel } from '../shared/DashboardPanel';
+import { 
+  DashboardPageLayout, 
+  DashboardSection, 
+  DashboardGrid, 
+  DashboardPanel,
+  KPICard,
+  type KPICardData,
+} from '../shared';
 
 interface ValidationKPI {
   id: string;
@@ -239,199 +245,209 @@ export const ValidationsGlobalPage = memo(function ValidationsGlobalPage() {
     return `${n}`;
   };
 
+  // Helper pour mapper les couleurs de manière sûre
+  const mapColorToKPICardColor = useCallback((color: ValidationKPI['color']): KPICardData['color'] => {
+    switch (color) {
+      case 'orange':
+        return 'amber';
+      case 'red':
+        return 'rose';
+      case 'blue':
+      case 'emerald':
+      case 'purple':
+      case 'cyan':
+        return color;
+      default:
+        return 'blue';
+    }
+  }, []);
+
+  // Convertir kpis au format KPICardData
+  const kpisData: KPICardData[] = useMemo(() => {
+    return kpis.map((k) => ({
+      id: k.id,
+      label: k.label,
+      value: k.value,
+      trend: typeof k.trend === 'string' ? parseFloat(k.trend.replace(/[^\d.-]/g, '')) || 0 : 0,
+      trendType: k.trendType,
+      icon: k.icon,
+      color: mapColorToKPICardColor(k.color),
+      description: k.description,
+      onClick: k.onClick,
+    }));
+  }, [kpis, mapColorToKPICardColor]);
+
   return (
-    <DashboardPageShell
-      title="Validations — Vue globale"
-      subtitle="Performance & KPIs — suivi des validations BC, factures et avenants"
-      rightSlot={
-        <>
+    <DashboardPageLayout maxWidth="xl" padding="md">
+      {/* Header */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
+          <h1 className="text-slate-50 font-semibold text-xl sm:text-2xl">
+            Validations — Vue globale
+          </h1>
+          <p className="text-slate-400 text-sm mt-1">
+            Performance & KPIs — suivi des validations BC, factures et avenants
+          </p>
+        </div>
+        <div className="flex items-center gap-3 flex-wrap">
           <div className="relative">
             <Search 
-              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" 
-              style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }}
+              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 h-4 w-4" 
             />
             <Input
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Rechercher un bureau…"
-              className="bg-slate-950/40 border-slate-800/70"
-              style={{ paddingLeft: 'clamp(2rem, 2.5vw, 2.25rem)', width: 'clamp(200px, 16vw, 260px)' }}
+              className="bg-slate-950/40 border-slate-800/70 pl-9 w-[200px] sm:w-[260px]"
             />
           </div>
-
           <Button
             variant="outline"
             className="border-slate-800/70 bg-slate-950/30 hover:bg-slate-900/40"
-            style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)', padding: 'clamp(0.5rem, 1vw, 0.625rem) clamp(0.75rem, 1.5vw, 1rem)' }}
           >
-            <Download 
-              className="mr-2" 
-              style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }}
-            />
+            <Download className="mr-2 h-4 w-4" />
             Exporter
           </Button>
-        </>
-      }
-    >
-      {/* KPI GRID */}
-      <DashboardPanel>
-        <div style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
-          <SectionTitle
-            title="Indicateurs clés"
-            subtitle="Synthèse instantanée — clique un KPI pour ouvrir le détail"
-            size="md"
-          />
-
-          <div 
-            className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3" 
-            style={{ marginTop: 'clamp(1rem, 1.5vw, 1.25rem)', gap: 'clamp(0.75rem, 1vw, 1rem)' }}
-          >
-            {kpis.map((k) => (
-              <KPICard key={k.id} kpi={k} size="md" />
-            ))}
-          </div>
         </div>
-      </DashboardPanel>
+      </div>
+
+      {/* KPI GRID */}
+      <DashboardSection
+        title="Indicateurs clés"
+        subtitle="Synthèse instantanée — clique un KPI pour ouvrir le détail"
+        icon={FileCheck}
+      >
+        <DashboardGrid columns={3} gap="md">
+          {kpisData.map((k) => (
+            <KPICard key={k.id} kpi={k} size="md" />
+          ))}
+        </DashboardGrid>
+      </DashboardSection>
 
       {/* Statistiques par bureau */}
-      <DashboardPanel>
-        <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
-          <SectionTitle
-            title="Performance par bureau"
-            subtitle="Statistiques détaillées par bureau métier"
-            size="md"
-          />
+      <DashboardSection
+        title="Performance par bureau"
+        subtitle="Statistiques détaillées par bureau métier"
+        icon={Building2}
+      >
+        <div className="space-y-3">
+          {filteredBureaux.map((b) => {
+            const total = b.enAttente + b.validees + b.rejetees;
+            const tauxValidation = total > 0 ? (b.validees / total) * 100 : 0;
 
-          <div style={{ marginTop: 'clamp(1rem, 1.5vw, 1.25rem)', gap: 'clamp(0.75rem, 1vw, 1rem)' }} className="space-y-3">
-            {filteredBureaux.map((b) => {
-              const total = b.enAttente + b.validees + b.rejetees;
-              const tauxValidation = total > 0 ? (b.validees / total) * 100 : 0;
-
-              return (
-                <div
-                  key={b.id}
-                  className={cn(
-                    'rounded-xl border border-slate-800/60 bg-slate-950/30',
-                    'transition-colors hover:bg-slate-950/45'
-                  )}
-                  style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}
-                >
-                  <div className="flex items-start justify-between" style={{ gap: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-                        <Building2 className="text-blue-400" style={{ width: 'clamp(1rem, 1.25vw, 1rem)', height: 'clamp(1rem, 1.25vw, 1rem)' }} />
-                        <div className="font-semibold text-slate-50" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>
-                          {b.code} — {b.bureau}
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-2 sm:grid-cols-4" style={{ gap: 'clamp(0.75rem, 1vw, 1rem)' }}>
-                        <div>
-                          <div className="text-slate-400" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>En attente</div>
-                          <div className="font-semibold text-amber-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>{b.enAttente}</div>
-                        </div>
-                        <div>
-                          <div className="text-slate-400" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>Validées</div>
-                          <div className="font-semibold text-emerald-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>{b.validees}</div>
-                        </div>
-                        <div>
-                          <div className="text-slate-400" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>Temps moyen</div>
-                          <div className="font-semibold text-slate-100" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>{b.tempsMoyen}h</div>
-                        </div>
-                        <div>
-                          <div className="text-slate-400" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>SLA</div>
-                          <div className="font-semibold text-cyan-400" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>{b.slaCompliance}%</div>
-                        </div>
+            return (
+              <DashboardPanel
+                key={b.id}
+                padding="md"
+                className="hover:bg-slate-950/45 transition-colors"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Building2 className="text-blue-400 h-4 w-4" />
+                      <div className="font-semibold text-slate-50 text-sm">
+                        {b.code} — {b.bureau}
                       </div>
                     </div>
-
-                    <div className="flex flex-col items-end" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-                      <EnterpriseBadge
-                        variant={tauxValidation >= 85 ? 'success' : tauxValidation >= 70 ? 'haute' : 'critique'}
-                        size="sm"
-                      >
-                        {Math.round(tauxValidation)}%
-                      </EnterpriseBadge>
-                      <div className={cn(
-                        'flex items-center',
-                        b.evolution >= 0 ? 'text-emerald-400' : 'text-red-400'
-                      )} style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)', gap: 'clamp(0.25rem, 0.5vw, 0.375rem)' }}>
-                        {b.evolution >= 0 ? (
-                          <TrendingUp style={{ width: 'clamp(0.75rem, 1vw, 0.875rem)', height: 'clamp(0.75rem, 1vw, 0.875rem)' }} />
-                        ) : (
-                          <TrendingDown style={{ width: 'clamp(0.75rem, 1vw, 0.875rem)', height: 'clamp(0.75rem, 1vw, 0.875rem)' }} />
-                        )}
-                        {Math.abs(b.evolution)}%
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                      <div>
+                        <div className="text-slate-400 text-xs">En attente</div>
+                        <div className="font-semibold text-amber-400 text-sm">{b.enAttente}</div>
+                      </div>
+                      <div>
+                        <div className="text-slate-400 text-xs">Validées</div>
+                        <div className="font-semibold text-emerald-400 text-sm">{b.validees}</div>
+                      </div>
+                      <div>
+                        <div className="text-slate-400 text-xs">Temps moyen</div>
+                        <div className="font-semibold text-slate-100 text-sm">{b.tempsMoyen}h</div>
+                      </div>
+                      <div>
+                        <div className="text-slate-400 text-xs">SLA</div>
+                        <div className="font-semibold text-cyan-400 text-sm">{b.slaCompliance}%</div>
                       </div>
                     </div>
                   </div>
+
+                  <div className="flex flex-col items-end gap-2">
+                    <EnterpriseBadge
+                      variant={tauxValidation >= 85 ? 'success' : tauxValidation >= 70 ? 'haute' : 'critique'}
+                      size="sm"
+                    >
+                      {Math.round(tauxValidation)}%
+                    </EnterpriseBadge>
+                    <div className={cn(
+                      'flex items-center text-xs gap-1',
+                      b.evolution >= 0 ? 'text-emerald-400' : 'text-red-400'
+                    )}>
+                      {b.evolution >= 0 ? (
+                        <TrendingUp className="h-3 w-3" />
+                      ) : (
+                        <TrendingDown className="h-3 w-3" />
+                      )}
+                      {Math.abs(b.evolution)}%
+                    </div>
+                  </div>
                 </div>
-              );
-            })}
-          </div>
+              </DashboardPanel>
+            );
+          })}
         </div>
-      </DashboardPanel>
+      </DashboardSection>
 
       {/* Validations récentes */}
-      <DashboardPanel>
-        <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
-          <SectionTitle
-            title="Validations récentes"
-            subtitle="Dernières validations traitées"
-            size="md"
-          />
-
-          <div style={{ marginTop: 'clamp(1rem, 1.5vw, 1.25rem)', gap: 'clamp(0.75rem, 1vw, 1rem)' }} className="space-y-3">
-            {recentValidations.map((v) => (
-              <div
-                key={v.id}
-                className={cn(
-                  'rounded-xl border border-slate-800/60 bg-slate-950/30',
-                  'flex items-center justify-between',
-                  'transition-colors hover:bg-slate-950/45'
-                )}
-                style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)', gap: 'clamp(1rem, 1.5vw, 1.25rem)' }}
-              >
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.25rem, 0.5vw, 0.5rem)' }}>
-                    <FileCheck className="text-blue-400" style={{ width: 'clamp(1rem, 1.25vw, 1rem)', height: 'clamp(1rem, 1.25vw, 1rem)' }} />
-                    <div className="font-semibold text-slate-50" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>{v.reference}</div>
-                    <Badge
-                      className={cn(
-                        v.type === 'bc' && 'bg-blue-500/15 text-blue-300 border border-blue-500/30',
-                        v.type === 'facture' && 'bg-purple-500/15 text-purple-300 border border-purple-500/30',
-                        v.type === 'avenant' && 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/30'
-                      )}
-                      style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}
-                    >
-                      {v.type === 'bc' ? 'BC' : v.type === 'facture' ? 'Facture' : 'Avenant'}
-                    </Badge>
-                  </div>
-                  <div className="text-slate-400" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>
-                    {v.bureau} · {formatMoney(v.montant)} FCFA · {v.dateCreation}
-                  </div>
-                </div>
-
-                <div className="flex items-center shrink-0" style={{ gap: 'clamp(0.75rem, 1vw, 1rem)' }}>
-                  <EnterpriseBadge
-                    variant={v.statut === 'validee' ? 'success' : v.statut === 'rejetee' ? 'critique' : 'haute'}
-                    size="sm"
+      <DashboardSection
+        title="Validations récentes"
+        subtitle="Dernières validations traitées"
+        icon={FileCheck}
+      >
+        <div className="space-y-3">
+          {recentValidations.map((v) => (
+            <DashboardPanel
+              key={v.id}
+              padding="md"
+              className="flex items-center justify-between hover:bg-slate-950/45 transition-colors"
+            >
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <FileCheck className="text-blue-400 h-4 w-4" />
+                  <div className="font-semibold text-slate-50 text-sm">{v.reference}</div>
+                  <Badge
+                    className={cn(
+                      'text-xs',
+                      v.type === 'bc' && 'bg-blue-500/15 text-blue-300 border border-blue-500/30',
+                      v.type === 'facture' && 'bg-purple-500/15 text-purple-300 border border-purple-500/30',
+                      v.type === 'avenant' && 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/30'
+                    )}
                   >
-                    {v.statut === 'validee' ? 'Validée' : v.statut === 'rejetee' ? 'Rejetée' : 'En attente'}
-                  </EnterpriseBadge>
-                  {v.delai < 0 && (
-                    <Badge className="bg-red-500/15 text-red-300 border border-red-500/30" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>
-                      Retard: {Math.abs(v.delai)}j
-                    </Badge>
-                  )}
+                    {v.type === 'bc' ? 'BC' : v.type === 'facture' ? 'Facture' : 'Avenant'}
+                  </Badge>
+                </div>
+                <div className="text-slate-400 text-xs">
+                  {v.bureau} · {formatMoney(v.montant)} FCFA · {v.dateCreation}
                 </div>
               </div>
-            ))}
-          </div>
+
+              <div className="flex items-center shrink-0 gap-3">
+                <EnterpriseBadge
+                  variant={v.statut === 'validee' ? 'success' : v.statut === 'rejetee' ? 'critique' : 'haute'}
+                  size="sm"
+                >
+                  {v.statut === 'validee' ? 'Validée' : v.statut === 'rejetee' ? 'Rejetée' : 'En attente'}
+                </EnterpriseBadge>
+                {v.delai < 0 && (
+                  <Badge className="bg-red-500/15 text-red-300 border border-red-500/30 text-xs">
+                    Retard: {Math.abs(v.delai)}j
+                  </Badge>
+                )}
+              </div>
+            </DashboardPanel>
+          ))}
         </div>
-      </DashboardPanel>
+      </DashboardSection>
 
       {/* Contexte / méta */}
-      <div className="grid grid-cols-1 lg:grid-cols-3" style={{ gap: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
+      <DashboardGrid columns={3} gap="md">
         <DataCard
           title="Période d'analyse"
           value="Mois en cours"
@@ -451,8 +467,8 @@ export const ValidationsGlobalPage = memo(function ValidationsGlobalPage() {
           badge="Live"
           badgeVariant="success"
         />
-      </div>
-    </DashboardPageShell>
+      </DashboardGrid>
+    </DashboardPageLayout>
   );
 });
 

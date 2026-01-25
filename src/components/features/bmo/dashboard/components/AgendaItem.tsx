@@ -66,35 +66,33 @@ export const AgendaItem = memo(function AgendaItem({
   return (
     <div
       className={cn(
-        'rounded-lg border p-4 transition-all duration-200',
-        'bg-slate-800/50 border-slate-700/50',
-        onClick && 'cursor-pointer hover:bg-slate-800/70 hover:border-slate-600/50',
+        'group relative rounded-xl border border-slate-800/60 bg-slate-900/30 backdrop-blur-sm',
+        'transition-all duration-200',
+        onClick && 'cursor-pointer hover:border-slate-700/80 hover:bg-slate-900/50 hover:shadow-md',
         className
       )}
       onClick={onClick}
-      style={{ padding: 'clamp(0.75rem, 1.5vw, 1rem)', minHeight: '140px' }}
+      style={{ padding: 'clamp(0.875rem, 1.25vw, 1rem)' }}
     >
       {/* Header: Date + Type */}
       <div className="flex items-start justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <div className="flex flex-col items-center" style={{ minWidth: 'clamp(3rem, 4vw, 3.125rem)' }}>
-            <span className="text-slate-400 uppercase" style={{ fontSize: 'clamp(0.5625rem, 0.7vw, 0.625rem)' }}>{dayName}</span>
-            <span className="font-bold text-slate-200" style={{ fontSize: 'clamp(1rem, 1.5vw, 1.125rem)' }}>{dayNumber}</span>
-            <span className="text-slate-400" style={{ fontSize: 'clamp(0.5625rem, 0.7vw, 0.625rem)' }}>{month}</span>
+        <div className="flex items-center gap-2.5">
+          <div className="flex flex-col items-center justify-center rounded-lg bg-slate-800/60 border border-slate-700/50 px-2 py-1.5 min-w-[2.5rem]">
+            <span className="text-slate-400 uppercase text-[10px] font-medium tracking-wider">{dayName}</span>
+            <span className="font-bold text-slate-200 text-sm leading-none my-0.5">{dayNumber}</span>
+            <span className="text-slate-500 text-[10px]">{month}</span>
           </div>
-          <div className="flex-1">
+          <div className="flex flex-wrap items-center gap-1.5">
             <Badge
-              variant="default"
-              className={cn('mb-1 border', type.bg, type.border, type.color)}
-              style={{ fontSize: 'clamp(0.5625rem, 0.7vw, 0.625rem)' }}
+              variant="outline"
+              className={cn('border-0 px-2 py-0.5 rounded-md text-[10px] font-medium', type.bg, type.color, 'bg-opacity-20')}
             >
               {type.label}
             </Badge>
             {event.priorite !== 'normal' && (
               <Badge
-                variant="default"
-                className={cn('ml-1 border', priority.bg, priority.color)}
-                style={{ fontSize: 'clamp(0.5625rem, 0.7vw, 0.625rem)' }}
+                variant="outline"
+                className={cn('border-0 px-2 py-0.5 rounded-md text-[10px] font-medium', priority.bg, priority.color, 'bg-opacity-20')}
               >
                 {priority.label}
               </Badge>
@@ -104,37 +102,39 @@ export const AgendaItem = memo(function AgendaItem({
       </div>
 
       {/* Time */}
-      <div className="flex items-center gap-2 mb-2 text-slate-400" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>
-        <Clock style={{ width: 'clamp(0.75rem, 0.875vw, 0.875rem)', height: 'clamp(0.75rem, 0.875vw, 0.875rem)', minWidth: '0.75rem', minHeight: '0.75rem' }} />
-        <span>{event.time}</span>
+      <div className="flex items-center gap-1.5 mb-2.5 text-slate-400">
+        <Clock className="w-3.5 h-3.5 flex-shrink-0" style={{ width: '0.875rem', height: '0.875rem', minWidth: '0.875rem', minHeight: '0.875rem' }} />
+        <span className="text-xs font-medium">{event.time}</span>
       </div>
 
       {/* Titre */}
-      <h3 className="font-semibold text-slate-200 mb-1 line-clamp-2" style={{ fontSize: 'clamp(0.875rem, 1vw, 0.9375rem)' }}>
+      <h3 className="font-semibold text-slate-200 mb-1.5 line-clamp-2 text-sm leading-snug">
         {event.titre}
       </h3>
 
       {/* Description */}
-      <p className="text-slate-400 mb-3 line-clamp-2" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>
+      <p className="text-slate-400 mb-3 line-clamp-2 text-xs leading-relaxed">
         {event.description}
       </p>
 
       {/* Footer: Projet + Participants */}
-      <div className="flex items-center justify-between pt-2 border-t border-slate-700/50">
-        {event.projet && (
-          <span className="text-slate-500 truncate" style={{ fontSize: 'clamp(0.5625rem, 0.7vw, 0.625rem)' }}>
-            {event.projet}
-          </span>
-        )}
-        {event.participants && event.participants.length > 0 && (
-          <div className="flex items-center gap-1">
-            <Users className="text-slate-500" style={{ width: 'clamp(0.75rem, 0.875vw, 0.875rem)', height: 'clamp(0.75rem, 0.875vw, 0.875rem)', minWidth: '0.75rem', minHeight: '0.75rem' }} />
-            <span className="text-slate-500" style={{ fontSize: 'clamp(0.5625rem, 0.7vw, 0.625rem)' }}>
-              {event.participants.length}
+      {(event.projet || (event.participants && event.participants.length > 0)) && (
+        <div className="flex items-center justify-between pt-2.5 border-t border-slate-800/50">
+          {event.projet && (
+            <span className="text-slate-500 truncate text-[10px] font-medium">
+              {event.projet}
             </span>
-          </div>
-        )}
-      </div>
+          )}
+          {event.participants && event.participants.length > 0 && (
+            <div className="flex items-center gap-1">
+              <Users className="text-slate-500 w-3.5 h-3.5 flex-shrink-0" style={{ width: '0.875rem', height: '0.875rem', minWidth: '0.875rem', minHeight: '0.875rem' }} />
+              <span className="text-slate-500 text-[10px] font-medium">
+                {event.participants.length}
+              </span>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 });

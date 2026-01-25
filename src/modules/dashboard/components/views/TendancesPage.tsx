@@ -12,9 +12,14 @@ import type { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { KPICard } from '@/components/features/bmo/dashboard/components';
-import { DashboardPageShell } from '../shared/DashboardPageShell';
-import { DashboardPanel } from '../shared/DashboardPanel';
+import { 
+  DashboardPageLayout, 
+  DashboardSection, 
+  DashboardGrid, 
+  DashboardPanel,
+  KPICard,
+  type KPICardData,
+} from '../shared';
 import {
   LineChart as RechartsLineChart,
   Line,
@@ -181,12 +186,24 @@ export const TendancesPage = memo(function TendancesPage() {
         ? 'Stable'
         : `${indicator.trend.change > 0 ? '+' : ''}${indicator.trend.change} (${Math.abs(indicator.trend.changePercent)}%)`;
 
-    const color =
-      indicator.color === 'orange'
-        ? ('amber' as const)
-        : indicator.color === 'red'
-          ? ('rose' as const)
-          : (indicator.color as any);
+    // Helper pour mapper les couleurs de manière sûre
+    const mapColorToKPICardColor = (color: TrendIndicator['color']): KPICardData['color'] => {
+      switch (color) {
+        case 'orange':
+          return 'amber';
+        case 'red':
+          return 'rose';
+        case 'blue':
+        case 'emerald':
+        case 'purple':
+        case 'cyan':
+          return color;
+        default:
+          return 'blue';
+      }
+    };
+    
+    const color = mapColorToKPICardColor(indicator.color);
 
     return (
       <KPICard
@@ -195,7 +212,7 @@ export const TendancesPage = memo(function TendancesPage() {
           id: indicator.id,
           label: indicator.label,
           value: indicator.currentValue,
-          delta: trendLabel,
+          trend: indicator.trend.changePercent,
           trendType: dir,
           icon: indicator.icon,
           color,
@@ -214,14 +231,21 @@ export const TendancesPage = memo(function TendancesPage() {
   };
 
   return (
-    <DashboardPageShell
-      title="Tendances"
-      subtitle="Évolution temporelle des indicateurs clés"
-      rightSlot={
-        <div className="flex flex-wrap items-center min-w-0" style={{ gap: 'clamp(0.5rem, 0.75vw, 1rem)' }}>
-          <div className="flex items-center" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-            <span className="text-slate-400" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>Période :</span>
-            <div className="flex" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+    <DashboardPageLayout maxWidth="xl" padding="md">
+      {/* Header */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
+          <h1 className="text-slate-50 font-semibold text-xl sm:text-2xl">
+            Tendances
+          </h1>
+          <p className="text-slate-400 text-sm mt-1">
+            Évolution temporelle des indicateurs clés
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-2">
+            <span className="text-slate-400 text-sm">Période :</span>
+            <div className="flex gap-2">
               {timeRangeOptions.map((option) => (
                 <Button
                   key={option.value}
@@ -232,16 +256,15 @@ export const TendancesPage = memo(function TendancesPage() {
                     timeRange === option.value && 'bg-blue-600 hover:bg-blue-700',
                     timeRange !== option.value && 'border-slate-800/70 bg-slate-950/30 text-slate-300 hover:bg-slate-900/40'
                   )}
-                  style={{ fontSize: 'clamp(0.625rem, 0.875vw, 0.75rem)', padding: 'clamp(0.375rem, 0.75vw, 0.5rem) clamp(0.625rem, 1vw, 0.75rem)' }}
                 >
                   {option.label}
                 </Button>
               ))}
             </div>
           </div>
-          <div className="flex items-center" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-            <span className="text-slate-300" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>Type :</span>
-            <div className="flex" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
+          <div className="flex items-center gap-2">
+            <span className="text-slate-300 text-sm">Type :</span>
+            <div className="flex gap-2">
               <Button
                 variant={trendType === 'mensuelles' ? 'default' : 'outline'}
                 size="sm"
@@ -250,7 +273,6 @@ export const TendancesPage = memo(function TendancesPage() {
                   trendType === 'mensuelles' && 'bg-purple-600 hover:bg-purple-700',
                   trendType !== 'mensuelles' && 'border-slate-800/70 bg-slate-950/30 text-slate-300 hover:bg-slate-900/40'
                 )}
-                style={{ fontSize: 'clamp(0.625rem, 0.875vw, 0.75rem)', padding: 'clamp(0.375rem, 0.75vw, 0.5rem) clamp(0.625rem, 1vw, 0.75rem)' }}
               >
                 Mensuelles
               </Button>
@@ -262,38 +284,36 @@ export const TendancesPage = memo(function TendancesPage() {
                   trendType === 'trimestrielles' && 'bg-purple-600 hover:bg-purple-700',
                   trendType !== 'trimestrielles' && 'border-slate-800/70 bg-slate-950/30 text-slate-300 hover:bg-slate-900/40'
                 )}
-                style={{ fontSize: 'clamp(0.625rem, 0.875vw, 0.75rem)', padding: 'clamp(0.375rem, 0.75vw, 0.5rem) clamp(0.625rem, 1vw, 0.75rem)' }}
               >
                 Trimestrielles
               </Button>
             </div>
           </div>
         </div>
-      }
-    >
-      <DashboardPanel>
-        <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
-          {/* Vue d'ensemble des tendances */}
-          <section style={{ gap: 'clamp(1rem, 1.5vw, 1.25rem)' }} className="space-y-4 min-w-0">
-            <h2 className="font-semibold text-white flex items-center break-words" style={{ fontSize: 'clamp(1rem, 1.75vw, 1.25rem)', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-              <TrendingUp className="text-blue-400 flex-shrink-0" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
-              <span className="min-w-0">Vue d'ensemble</span>
-            </h2>
-            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 min-w-0" style={{ gap: 'clamp(0.5rem, 1vw, 1.5rem)' }}>
-            {trendIndicators.map(renderTrendCard)}
-          </div>
-        </section>
-      </DashboardPanel>
+      </div>
 
-      <DashboardPanel className="p-4 sm:p-6">
-        {/* Graphique principal */}
-        <section className="space-y-4 min-w-0">
-          <h2 className="text-lg sm:text-xl font-semibold text-white flex items-center gap-2 break-words">
-            <BarChart3 className="w-5 h-5 text-purple-400 flex-shrink-0" />
-            <span className="min-w-0">Évolution temporelle</span>
-          </h2>
-          <div className="bg-slate-950/30 border border-slate-800/60 rounded-xl p-4 sm:p-6 min-w-0 overflow-hidden">
-            <div className="h-64 sm:h-96 min-h-[256px] sm:min-h-[384px] w-full min-w-0 overflow-hidden">
+      {/* Vue d'ensemble des tendances */}
+      <DashboardSection
+        title="Vue d'ensemble"
+        icon={TrendingUp}
+      >
+        <DashboardGrid columns={4} gap="md">
+          {trendIndicators.map(renderTrendCard)}
+        </DashboardGrid>
+      </DashboardSection>
+
+      {/* Graphique principal */}
+      <DashboardSection
+        title="Évolution temporelle"
+        icon={BarChart3}
+      >
+        <DashboardPanel padding="lg" className="min-w-0 overflow-hidden">
+          <div className="h-64 sm:h-96 min-h-[256px] sm:min-h-[384px] w-full min-w-0 overflow-hidden">
+              {!generateTrendData?.length ? (
+                <div className="flex items-center justify-center h-full text-slate-500 text-sm">
+                  Aucune donnée pour la période sélectionnée
+                </div>
+              ) : (
               <ResponsiveContainer width="100%" height="100%" minHeight={384}>
                 <AreaChart data={generateTrendData}>
                 <defs>
@@ -372,10 +392,10 @@ export const TendancesPage = memo(function TendancesPage() {
                 />
               </AreaChart>
             </ResponsiveContainer>
-            </div>
-          </section>
-        </div>
-      </DashboardPanel>
+              )}
+          </div>
+        </DashboardPanel>
+      </DashboardSection>
 
       {/* Groupes par catégorie */}
       {Object.entries(groupedIndicators).map(([category, indicators]) => {
@@ -388,52 +408,55 @@ export const TendancesPage = memo(function TendancesPage() {
           decisions: 'Décisions',
         };
 
+        const categoryIcons: Record<string, LucideIcon> = {
+          activite: Activity,
+          risques: AlertTriangle,
+          budget: DollarSign,
+          decisions: FileCheck,
+        };
+
+        const Icon = categoryIcons[category];
+
         return (
-          <DashboardPanel key={category}>
-            <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
-              <section style={{ gap: 'clamp(1rem, 1.5vw, 1.25rem)' }} className="space-y-4 min-w-0">
-                <h2 className="font-semibold text-white" style={{ fontSize: 'clamp(1rem, 1.75vw, 1.25rem)' }}>{categoryLabels[category as keyof typeof categoryLabels]}</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 min-w-0" style={{ gap: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
-                  {indicators.map(renderTrendCard)}
-                </div>
-              </section>
-            </div>
-          </DashboardPanel>
+          <DashboardSection
+            key={category}
+            title={categoryLabels[category as keyof typeof categoryLabels]}
+            icon={Icon}
+          >
+            <DashboardGrid columns={2} gap="md">
+              {indicators.map(renderTrendCard)}
+            </DashboardGrid>
+          </DashboardSection>
         );
       })}
 
       {/* Section contexte */}
-      <DashboardPanel>
-        <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
-          <div style={{ gap: 'clamp(1rem, 1.5vw, 1.25rem)' }} className="space-y-4 min-w-0 overflow-hidden">
-            <h2 className="font-semibold text-white flex items-center break-words" style={{ fontSize: 'clamp(1rem, 1.75vw, 1.25rem)', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-              <Calendar className="text-emerald-400 flex-shrink-0" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
-              <span className="min-w-0">À propos des tendances</span>
-            </h2>
-            <p className="text-slate-300 break-words" style={{ fontSize: 'clamp(0.75rem, 1vw, 1rem)' }}>
-              Cette section présente l'évolution temporelle des indicateurs clés du système.
-              Les tendances sont calculées sur différentes périodes pour permettre une analyse approfondie.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 'clamp(1rem, 1.5vw, 1.25rem)', marginTop: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
-              <div className="bg-slate-950/30 border border-slate-800/60 rounded-xl" style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
-                <div className="flex items-center" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-                  <TrendingUp className="text-emerald-400" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
-                  <h3 className="font-semibold text-white" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Tendances positives</h3>
-                </div>
-                <p className="text-slate-400" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>Indicateurs en amélioration sur la période sélectionnée</p>
-              </div>
-              <div className="bg-slate-950/30 border border-slate-800/60 rounded-xl" style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
-                <div className="flex items-center" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-                  <TrendingDown className="text-rose-400" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
-                  <h3 className="font-semibold text-white" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Tendances négatives</h3>
-                </div>
-                <p className="text-slate-300" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>Indicateurs nécessitant une attention particulière</p>
-              </div>
+      <DashboardSection
+        title="À propos des tendances"
+        icon={Calendar}
+      >
+        <p className="text-slate-300 text-sm">
+          Cette section présente l'évolution temporelle des indicateurs clés du système.
+          Les tendances sont calculées sur différentes périodes pour permettre une analyse approfondie.
+        </p>
+        <DashboardGrid columns={2} gap="md" className="mt-4">
+          <DashboardPanel padding="md">
+            <div className="flex items-center gap-2 mb-2">
+              <TrendingUp className="text-emerald-400 h-4 w-4" />
+              <h3 className="font-semibold text-white text-sm">Tendances positives</h3>
             </div>
-          </div>
-        </div>
-      </DashboardPanel>
-    </DashboardPageShell>
+            <p className="text-slate-400 text-xs">Indicateurs en amélioration sur la période sélectionnée</p>
+          </DashboardPanel>
+          <DashboardPanel padding="md">
+            <div className="flex items-center gap-2 mb-2">
+              <TrendingDown className="text-rose-400 h-4 w-4" />
+              <h3 className="font-semibold text-white text-sm">Tendances négatives</h3>
+            </div>
+            <p className="text-slate-300 text-xs">Indicateurs nécessitant une attention particulière</p>
+          </DashboardPanel>
+        </DashboardGrid>
+      </DashboardSection>
+    </DashboardPageLayout>
   );
 });
 

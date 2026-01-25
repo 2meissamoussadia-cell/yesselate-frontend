@@ -102,55 +102,63 @@ export const RiskScoreCard = memo(function RiskScoreCard({
   return (
     <div
       className={cn(
-        'rounded-xl border p-4 transition-all duration-200',
-        impact.bg,
-        impact.border,
-        onClick && 'cursor-pointer hover:shadow-lg',
+        'group relative rounded-2xl border border-slate-800/60 bg-slate-900/40 backdrop-blur-sm',
+        'transition-all duration-300',
+        onClick && 'cursor-pointer hover:border-slate-700/80 hover:bg-slate-900/60 hover:shadow-xl hover:shadow-slate-900/50',
         className
       )}
       onClick={onClick}
-      style={{ padding: 'clamp(0.75rem, 1.5vw, 1rem)', minHeight: '120px' }}
+      style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)', minHeight: '140px' }}
     >
+      {/* Accent bar en haut */}
+      <div className={cn('absolute inset-x-0 top-0 h-1 rounded-t-2xl', impact.bg)} />
+      
       {/* Header: Score + Impact */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">
-          <ImpactIcon className={cn(impact.color)} style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
+          <div className={cn('p-1.5 rounded-lg', impact.bg, 'bg-opacity-20')}>
+            <ImpactIcon className={cn(impact.color)} style={{ width: '0.875rem', height: '0.875rem', minWidth: '0.875rem', minHeight: '0.875rem' }} />
+          </div>
           <Badge
-            variant="default"
-            className={cn('border', impact.bg, impact.border, impact.color)}
-            style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}
+            variant="outline"
+            className={cn(
+              'border-0 px-2 py-0.5 rounded-md text-xs font-medium',
+              impact.bg,
+              impact.color,
+              'bg-opacity-20'
+            )}
           >
             {impact.label}
           </Badge>
         </div>
         <div className="text-right">
-          <p className={cn('font-bold', scoreColor)} style={{ fontSize: 'clamp(1.25rem, 2vw, 1.5rem)' }}>
+          <p className={cn('font-bold leading-none', scoreColor)} style={{ fontSize: 'clamp(1.5rem, 2.5vw, 1.875rem)' }}>
             {risk.score}
           </p>
-          <p className="text-slate-400" style={{ fontSize: 'clamp(0.5625rem, 0.7vw, 0.625rem)' }}>Score</p>
+          <p className="text-slate-500 text-[10px] uppercase tracking-wider mt-0.5">Score</p>
         </div>
       </div>
 
-      {/* Titre */}
-      <h3 className="text-sm font-semibold text-slate-200 mb-2 line-clamp-2">
+      {/* Titre - Réduit pour être proportionnel */}
+      <h3 className="text-xs font-medium text-slate-300 mb-2 line-clamp-2 leading-snug">
         {risk.titre}
       </h3>
 
       {/* Description */}
-      <p className="text-xs text-slate-400 mb-3 line-clamp-2">
+      <p className="text-[11px] text-slate-500 mb-4 line-clamp-2 leading-relaxed">
         {risk.description}
       </p>
 
       {/* Footer: Probabilité + Age */}
-      <div className="flex items-center justify-between pt-3 border-t border-slate-700/50">
-        <div className="flex items-center gap-2">
-          <span className="text-slate-500" style={{ fontSize: 'clamp(0.5625rem, 0.7vw, 0.625rem)' }}>Probabilité:</span>
-          <span className={cn('font-medium', probability.color)} style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>
+      <div className="flex items-center justify-between pt-3 border-t border-slate-800/50 mt-auto">
+        <div className="flex items-center gap-1.5">
+          <span className="text-slate-500 text-[10px]">Probabilité:</span>
+          <span className={cn('font-semibold text-xs', probability.color)}>
             {probability.label}
           </span>
         </div>
         {risk.age !== undefined && (
-          <span className="text-slate-500" style={{ fontSize: 'clamp(0.5625rem, 0.7vw, 0.625rem)' }}>
+          <span className="text-slate-500 text-[10px] font-medium">
             {risk.age}j
           </span>
         )}

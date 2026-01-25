@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { ChevronDown, ChevronRight, ChevronLeft, Search } from 'lucide-react';
+import { ChevronDown, ChevronRight, ChevronLeft } from 'lucide-react';
 import { dashboardNavigationConfig, type NavNode } from './dashboardNavigationConfig';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { useLogger } from '@/lib/utils/logger';
@@ -48,7 +48,6 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
   const navigate = useDashboardCommandCenterStore((state) => state.navigate);
   
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set([main || 'overview']));
-  const [searchQuery, setSearchQuery] = useState('');
   
   // Ref pour suivre la dernière valeur de main et éviter les mises à jour inutiles
   const lastMainRef = useRef<string | null>(main || null);
@@ -314,19 +313,18 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
                 type="button"
                 onClick={handleClick}
                 className={cn(
-                  'w-full flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg transition-colors duration-200 text-left min-w-0',
-                  'group relative cursor-pointer border',
-                  'hover:bg-slate-800/40',
+                  'relative w-full min-h-[44px] px-3 py-2 rounded-xl text-left transition-colors',
+                  'flex items-center gap-3',
                   isActive
-                    ? 'bg-slate-800/55 border-slate-600/50 text-slate-100'
-                    : 'border-transparent text-slate-300',
-                  'focus:outline-none focus:ring-2 focus:ring-blue-500/40'
+                    ? 'bg-slate-900/55 text-slate-50 border border-slate-700/60'
+                    : 'text-slate-300 hover:text-slate-50 hover:bg-slate-900/30',
+                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60'
                 )}
                 aria-label={`${node.label}${badge ? `, ${badge} éléments` : ''}`}
                 aria-current={isActive ? 'page' : undefined}
               >
                 {isActive && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-500 rounded-r-full animate-fadeIn" />
+                  <span className="absolute left-1 top-2 bottom-2 w-[3px] rounded-full bg-blue-500/90" />
                 )}
                 {hasChildren && (
                   <div className="flex-shrink-0">
@@ -377,47 +375,6 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
     );
   });
 
-  // ✅ Filtrer les nœuds selon la recherche avec debounce
-  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
-  
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearchQuery(searchQuery);
-    }, 300); // Debounce de 300ms
-    
-    return () => clearTimeout(timer);
-  }, [searchQuery]);
-
-  const filteredNodes = useMemo(() => {
-    if (!debouncedSearchQuery.trim()) {
-      return dashboardNavigationConfig;
-    }
-    
-    const query = debouncedSearchQuery.toLowerCase();
-    const filtered: Record<string, NavNode> = {};
-    
-    // ✅ Recherche récursive dans les nœuds
-    const searchInNode = (node: NavNode): boolean => {
-      const matchesLabel = node.label.toLowerCase().includes(query);
-      
-      if (node.children) {
-        const matchingChildren = node.children.filter(child => searchInNode(child));
-        if (matchingChildren.length > 0 || matchesLabel) {
-          return true;
-        }
-      }
-      
-      return matchesLabel;
-    };
-    
-    Object.entries(dashboardNavigationConfig).forEach(([key, node]) => {
-      if (searchInNode(node)) {
-        filtered[key as keyof typeof dashboardNavigationConfig] = node;
-      }
-    });
-    
-    return filtered;
-  }, [debouncedSearchQuery]);
 
   if (collapsed) {
     return (
@@ -435,7 +392,7 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
   }
 
   return (
-    <aside className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col h-full min-w-0 overflow-hidden">
+    <aside className="w-64 bg-slate-950/50 backdrop-blur border-r border-slate-800/70 flex flex-col h-full min-w-0 overflow-hidden">
       <div className="p-3 sm:p-4 border-b border-slate-800 min-w-0">
         <div className="flex items-center justify-between mb-3 sm:mb-4 min-w-0">
           <h2 className="text-base sm:text-lg font-semibold text-white break-words min-w-0">Navigation</h2>
@@ -448,23 +405,13 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
             <ChevronLeft className="h-4 w-4" />
           </Button>
         </div>
-        <div className="relative min-w-0">
-          <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-400 flex-shrink-0" />
-          <input
-            type="text"
-            placeholder="Rechercher..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-7 sm:pl-8 pr-2 sm:pr-3 py-1.5 sm:py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 min-w-0"
-          />
-        </div>
       </div>
       
       <div 
         className="flex-1 overflow-y-auto p-1.5 sm:p-2 space-y-0.5 sm:space-y-1 min-w-0"
         style={{ WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
       >
-        {Object.values(filteredNodes).map((node) => (
+        {Object.values(dashboardNavigationConfig).map((node) => (
           <NavNodeComponent key={node.id} node={node} level={0} parentMain={undefined} parentSub={undefined} />
         ))}
       </div>

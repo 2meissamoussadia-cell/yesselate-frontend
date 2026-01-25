@@ -57,6 +57,41 @@ interface KPIAdvancedModalProps {
   onClose: () => void;
 }
 
+// Types pour les données mappées
+interface HistoricalDataPoint {
+  date: string;
+  value: number;
+  target?: number;
+}
+
+interface BreakdownItem {
+  bureau?: string;
+  type?: string;
+  status?: string;
+  value: number;
+  percentage?: number;
+}
+
+interface RelatedMetric {
+  id: string;
+  label: string;
+  value: string | number;
+}
+
+interface Bureau {
+  code: string;
+  name?: string;
+  score?: number;
+  charge?: number;
+  blocages?: number;
+}
+
+interface Prediction {
+  period: string;
+  predicted: number;
+  confidence: number;
+}
+
 export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
   const [activeTab, setActiveTab] = useState<'overview' | 'history' | 'breakdown' | 'comparison' | 'predictions' | 'actions'>('overview');
   const [period, setPeriod] = useState<'month' | 'quarter' | 'year'>('year');
@@ -87,30 +122,47 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
   );
 
   // Données historiques depuis le détail
-  const historicalData = useMemo(() => {
-    if (!detail?.history) return [];
-    return detail.history.map((item: any) => ({
-      date: item.period,
-      value: item.value,
-      target: item.target,
-    }));
+  const historicalData = useMemo<HistoricalDataPoint[]>(() => {
+    if (!detail?.history || !Array.isArray(detail.history)) return [];
+    return detail.history.map((item: any): HistoricalDataPoint => {
+      // Gérer différents formats possibles
+      const period = item.period || item.date || item.month || '';
+      const value = typeof item.value === 'number' ? item.value : parseFloat(String(item.value || 0)) || 0;
+      const target = item.target !== undefined 
+        ? (typeof item.target === 'number' ? item.target : parseFloat(String(item.target)) || undefined)
+        : undefined;
+      
+      return {
+        date: period,
+        value,
+        target,
+      };
+    }).filter((point: HistoricalDataPoint): point is HistoricalDataPoint => point.date !== '');
   }, [detail]);
 
   // Breakdown par bureau
-  const breakdownByBureau = useMemo(() => {
-    if (!detail?.breakdown?.byBureau) return [];
-    return detail.breakdown.byBureau;
+  const breakdownByBureau = useMemo<BreakdownItem[]>(() => {
+    if (!detail?.breakdown?.byBureau || !Array.isArray(detail.breakdown.byBureau)) return [];
+    const mapped: BreakdownItem[] = detail.breakdown.byBureau.map((item: any): BreakdownItem => ({
+      bureau: item.bureau || item.code || '',
+      value: typeof item.value === 'number' ? item.value : parseFloat(String(item.value || 0)) || 0,
+      percentage: item.percentage !== undefined
+        ? (typeof item.percentage === 'number' ? item.percentage : parseFloat(String(item.percentage)) || undefined)
+        : undefined,
+    }));
+    return mapped.filter((item: BreakdownItem) => Boolean(item.bureau));
   }, [detail]);
 
   // Prédictions basées sur les trends
-  const predictions = useMemo(() => {
+  const predictions = useMemo<Prediction[]>(() => {
     if (!historicalData.length) return [];
     const lastValue = historicalData[historicalData.length - 1]?.value || 0;
+    const firstValue = historicalData[0]?.value || 0;
     const avgGrowth = historicalData.length > 1
-      ? (historicalData[historicalData.length - 1].value - historicalData[0].value) / historicalData.length
+      ? (lastValue - firstValue) / historicalData.length
       : 0;
 
-    return Array.from({ length: 3 }, (_, i) => {
+    return Array.from({ length: 3 }, (_, i): Prediction => {
       const date = new Date();
       date.setMonth(date.getMonth() + (i + 1));
       return {
@@ -121,13 +173,22 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
     });
   }, [historicalData]);
 
-  const maxValue = Math.max(...historicalData.map((d: { value: number }) => d.value), detail?.currentValue || 0, 1);
-  const minValue = Math.min(...historicalData.map((d: { value: number }) => d.value), detail?.currentValue || 0, 0);
+  const maxValue = Math.max(
+    ...historicalData.map((d) => d.value),
+    typeof detail?.currentValue === 'number' ? detail.currentValue : parseFloat(String(detail?.currentValue || 0)) || 0,
+    1
+  );
+  const minValue = Math.min(
+    ...historicalData.map((d) => d.value),
+    typeof detail?.currentValue === 'number' ? detail.currentValue : parseFloat(String(detail?.currentValue || 0)) || 0,
+    0
+  );
 
   if (isLoading) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div className="bg-slate-900 rounded-xl border border-slate-700/50 shadow-2xl p-8">
+        <div className="fixed inset-0 z-0 bg-black/60 backdrop-blur-sm" aria-hidden="true" />
+        <div className="relative z-10 bg-slate-900 rounded-xl border border-slate-700/50 shadow-2xl p-8">
           <div className="flex items-center gap-3">
             <RefreshCw className="w-5 h-5 animate-spin text-blue-400" />
             <span className="text-slate-300">Chargement des données...</span>
@@ -139,10 +200,10 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="fixed inset-0 z-0 bg-black/60 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
       <div
         className={cn(
-          'w-full max-w-6xl bg-slate-900 rounded-xl border border-slate-700/50 shadow-2xl overflow-hidden max-h-[90vh] flex flex-col',
+          'relative z-10 w-full max-w-6xl bg-slate-900 rounded-xl border border-slate-700/50 shadow-2xl overflow-hidden max-h-[90vh] flex flex-col',
         )}
         onClick={(e) => e.stopPropagation()}
       >
@@ -226,7 +287,7 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
         )}
 
         {/* Tabs */}
-        <div className="flex gap-1 px-6 border-b border-slate-800/50 overflow-x-auto">
+        <div className="flex gap-1 px-6 border-b border-slate-800/50 overflow-x-auto overflow-y-hidden items-center">
           {([
             { id: 'overview', label: 'Vue d\'ensemble', icon: BarChart3 },
             { id: 'history', label: 'Historique', icon: LineChart },
@@ -241,14 +302,14 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
                 className={cn(
-                  'px-4 py-3 text-sm font-medium transition-colors border-b-2 -mb-px flex items-center gap-2',
+                  'px-3 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px flex items-center gap-1.5 flex-shrink-0 h-full',
                   activeTab === tab.id
                     ? 'text-blue-400 border-blue-400'
                     : 'text-slate-400 border-transparent hover:text-slate-300'
                 )}
               >
-                <Icon className="w-4 h-4" />
-                {tab.label}
+                <Icon className="flex-shrink-0 !w-2 !h-2" style={{ width: '0.5rem', height: '0.5rem', minWidth: '0.5rem', minHeight: '0.5rem', maxWidth: '0.5rem', maxHeight: '0.5rem' }} />
+                <span className="whitespace-nowrap">{tab.label}</span>
               </button>
             );
           })}
@@ -294,7 +355,7 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
               <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
                 <p className="text-xs text-slate-500 mb-3">Évolution sur {period === 'month' ? '1 mois' : period === 'quarter' ? '3 mois' : '12 mois'}</p>
                 <div className="h-32 flex items-end gap-1">
-                  {historicalData.map((point: { value: number; date: string; target?: number }, i: number) => {
+                  {historicalData.map((point: HistoricalDataPoint, i: number) => {
                     const height = ((point.value - minValue) / (maxValue - minValue || 1)) * 100;
                     const isLatest = i === historicalData.length - 1;
                     return (
@@ -341,7 +402,7 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
               <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
                 <p className="text-xs text-slate-500 mb-4">Historique détaillé</p>
                 <div className="h-64 flex items-end gap-1 mb-4">
-                  {historicalData.map((point: { value: number; date: string; target?: number }, i: number) => {
+                  {historicalData.map((point: HistoricalDataPoint, i: number) => {
                     const height = ((point.value - minValue) / (maxValue - minValue || 1)) * 100;
                     const isLatest = i === historicalData.length - 1;
                     return (
@@ -387,11 +448,14 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
                   <p className="text-xs text-slate-500 mb-4">Répartition par bureau</p>
                   <div className="space-y-3">
-                    {breakdownByBureau.map((item: any, i: number) => (
-                      <div key={i} className="space-y-1">
+                    {breakdownByBureau.map((item: BreakdownItem, i: number) => (
+                      <div key={`${item.bureau}-${i}`} className="space-y-1">
                         <div className="flex items-center justify-between text-xs">
-                          <span className="text-slate-400">{item.bureau}</span>
-                          <span className="text-slate-300 font-medium">{item.value} {item.percentage !== undefined && `(${item.percentage}%)`}</span>
+                          <span className="text-slate-400">{item.bureau || 'N/A'}</span>
+                          <span className="text-slate-300 font-medium">
+                            {item.value}
+                            {item.percentage !== undefined && ` (${item.percentage}%)`}
+                          </span>
                         </div>
                         <div className="h-2 bg-slate-700/50 rounded-full overflow-hidden">
                           <div
@@ -412,20 +476,27 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
                   <p className="text-xs text-slate-500 mb-4">Répartition par type</p>
                   <div className="space-y-3">
-                    {detail.breakdown.byType.map((item: any, i: number) => (
-                      <div key={i} className="space-y-1">
-                        <div className="flex items-center justify-between text-xs">
-                          <span className="text-slate-400">{item.type}</span>
-                          <span className="text-slate-300 font-medium">{item.value} ({item.percentage}%)</span>
+                    {Array.isArray(detail.breakdown.byType) && detail.breakdown.byType.map((item: BreakdownItem, i: number) => {
+                      const percentage = item.percentage !== undefined 
+                        ? (typeof item.percentage === 'number' ? item.percentage : parseFloat(String(item.percentage)) || 0)
+                        : 0;
+                      return (
+                        <div key={`${item.type}-${i}`} className="space-y-1">
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="text-slate-400">{item.type || 'N/A'}</span>
+                            <span className="text-slate-300 font-medium">
+                              {item.value} ({percentage}%)
+                            </span>
+                          </div>
+                          <div className="h-2 bg-slate-700/50 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-blue-500 rounded-full transition-all"
+                              style={{ width: `${Math.max(0, Math.min(100, percentage))}%` }}
+                            />
+                          </div>
                         </div>
-                        <div className="h-2 bg-slate-700/50 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-blue-500 rounded-full transition-all"
-                            style={{ width: `${item.percentage}%` }}
-                          />
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               )}
@@ -489,15 +560,17 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
               <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
                 <p className="text-xs text-slate-500 mb-4">Prédictions basées sur les tendances</p>
                 <div className="space-y-3">
-                  {predictions.map((pred, i) => (
-                    <div key={i} className="p-3 rounded bg-slate-900/50">
+                  {predictions.map((pred: Prediction, i: number) => (
+                    <div key={`${pred.period}-${i}`} className="p-3 rounded bg-slate-900/50">
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-sm text-slate-300">{pred.period}</span>
                         <Badge variant="default" className="text-xs">
                           Confiance: {pred.confidence}%
                         </Badge>
                       </div>
-                      <p className="text-lg font-bold text-slate-200">{pred.predicted.toFixed(1)} {metadata?.unit || ''}</p>
+                      <p className="text-lg font-bold text-slate-200">
+                        {pred.predicted.toFixed(1)} {metadata?.unit || ''}
+                      </p>
                     </div>
                   ))}
                 </div>

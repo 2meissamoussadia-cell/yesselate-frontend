@@ -37,6 +37,7 @@ import { KpiTile, type KpiTileColor, type KpiTileTrendSentiment } from './KpiTil
 // Import avec alias pour éviter le conflit de nom avec LegacyKPICard
 // Note: On utilise un alias car on a aussi un composant LegacyKPICard local
 import { KPICard as ModernKPICard } from '@/components/features/bmo/dashboard/components/KPICard';
+import { KPICard as SharedKPICard, type KPICardData } from './shared/KPICard';
 
 // Types
 type KPITone = 'ok' | 'warn' | 'crit' | 'info';
@@ -848,7 +849,7 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
         </div>
       </div>
 
-      {/* Grille de KPIs */}
+      {/* KPI Rail (scan line) */}
       {topKpis.length === 0 ? (
         <div className="py-8 text-center" role="status" aria-live="polite" aria-atomic="true">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-slate-800/50 mb-3">
@@ -871,108 +872,76 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
             </button>
           )}
         </div>
-      ) : shouldVirtualize ? (
-        // Version virtualisée pour >50 items (par rangées)
-        <div
-          ref={parentRef}
-          className="h-[600px] overflow-auto"
-          role="list"
-          aria-label={`Liste des indicateurs de performance (${topKpis.length} items, virtualisé)`}
-          style={{ WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
-        >
-          <div
-            style={{
-              height: `${virtualizer.getTotalSize()}px`,
-              width: '100%',
-              position: 'relative',
-            }}
-          >
-            {virtualizer.getVirtualItems().map((virtualRow) => {
-              const rowStart = virtualRow.index * colsPerRow;
-              const rowItems = kpisWithProps.slice(rowStart, rowStart + colsPerRow);
-              
-              return (
-                <div
-                  key={virtualRow.index}
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: `${virtualRow.size}px`,
-                    transform: `translateY(${virtualRow.start}px)`,
-                  }}
-                >
-                  <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-3">
-                    {rowItems.map((item) => (
-                      <div key={item.kpi.label} role="listitem">
-                        <LegacyKPICard
-                          kpi={item.kpi}
-                          icon={item.Icon}
-                          index={item.index}
-                          isPositive={item.isPositive}
-                          isNegative={item.isNegative}
-                          onClick={kpiClickHandlers.get(item.kpi.label)}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      ) : compact ? (
-        <div
-          className="grid gap-3"
-          style={gridStyle}
-          role="list"
-          aria-label={`Indicateurs de performance (${topKpis.length} éléments)`}
-        >
-          {kpisWithProps.map((item) => (
-            <div key={item.kpi.label} role="listitem">
-              <KpiTile
-                label={item.kpi.label}
-                value={String(item.kpi.value)}
-                color={toneToTileColor(item.kpi.tone)}
-                Icon={item.Icon as unknown as LucideIcon}
-                size="sm"
-                trendLabel={item.kpi.delta}
-                trendDir={(item.kpi.trend === 'neutral' ? 'flat' : item.kpi.trend) as 'up' | 'down' | 'flat'}
-                trendSentiment={deltaToSentiment(item.kpi.delta)}
-                onClick={kpiClickHandlers.get(item.kpi.label)}
-              />
-            </div>
-          ))}
-        </div>
       ) : (
-        // KPI strip (scroll horizontal, pro)
         <div className="mt-3">
-          <div className="flex gap-3 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="flex items-center justify-between gap-3">
+            <div className="text-xs text-slate-400">
+              <span className="font-medium text-slate-200">{safeKpis.length}</span> indicateurs • scan rapide
+            </div>
+
+            <div className="hidden md:flex items-center gap-2">
+              {/* petit rappel (optionnel) */}
+              <div className="text-[11px] text-slate-500">Astuce : molette + shift</div>
+            </div>
+          </div>
+
+          <div
+            className={cn(
+              "mt-3 -mx-1 px-1",
+              "flex gap-3 overflow-x-auto pb-3",
+              "snap-x snap-mandatory",
+              "scrollbar-thin scrollbar-thumb-slate-700/50 scrollbar-track-transparent"
+            )}
+          >
             {topKpis.map((kpi) => {
               const Icon = kpi.icon;
-              const trendType = kpi.trend === 'up' ? 'up' : kpi.trend === 'down' ? 'down' : 'neutral';
-              // Convertir delta en nombre pour trend
-              const trendValue = typeof kpi.delta === 'string' 
-                ? parseFloat(kpi.delta.replace(/[^0-9.-]/g, '')) || 0
-                : 0;
+              // Utiliser directement kpi.trend qui est déjà de type 'up' | 'down' | 'neutral'
+              const trendType: 'up' | 'down' | 'neutral' = kpi.trend;
+              
+              // Convertir delta (string formatée comme "+5%" ou "-10%") en nombre pour trend
+              // Extraire la valeur numérique du delta
+              const trendValue = (() => {
+                if (!kpi.delta || typeof kpi.delta !== 'string') return 0;
+                // Extraire le nombre du delta (supprime tout sauf chiffres, points et signes)
+                const numericValue = parseFloat(kpi.delta.replace(/[^0-9.-]/g, ''));
+                // Si on ne peut pas parser, utiliser le signe du delta pour déterminer la valeur
+                if (isNaN(numericValue)) {
+                  if (kpi.delta.trim().startsWith('+')) return 1;
+                  if (kpi.delta.trim().startsWith('-')) return -1;
+                  return 0;
+                }
+                return numericValue;
+              })();
+              
+              // Mapper tone vers color avec tous les cas
+              const color: KPICardData['color'] = (() => {
+                switch (kpi.tone) {
+                  case 'ok':
+                    return 'emerald';
+                  case 'warn':
+                    return 'amber';
+                  case 'crit':
+                    return 'rose';
+                  case 'info':
+                  default:
+                    return 'blue';
+                }
+              })();
+              
+              const kpiCardData: KPICardData = {
+                id: kpi.label,
+                label: kpi.label,
+                value: kpi.value,
+                trend: trendValue,
+                trendType,
+                icon: Icon,
+                color,
+                onClick: kpiClickHandlers.get(kpi.label),
+              };
               
               return (
-                <div key={kpi.label} className="flex-1" style={{ minWidth: 'clamp(200px, 15vw, 220px)', maxWidth: 'clamp(240px, 18vw, 260px)' }}>
-                  <ModernKPICard
-                    kpi={{
-                      id: kpi.label,
-                      label: kpi.label,
-                      value: kpi.value,
-                      trend: trendValue,
-                      trendType,
-                      // @ts-expect-error - Icon type is compatible at runtime
-                      icon: Icon,
-                      color: kpi.tone === 'ok' ? 'emerald' : kpi.tone === 'warn' ? 'amber' : kpi.tone === 'crit' ? 'rose' : 'blue',
-                      onClick: kpiClickHandlers.get(kpi.label),
-                    }}
-                    size="sm"
-                  />
+                <div key={kpi.label} className="snap-start min-w-[260px] max-w-[320px] w-[280px] flex-shrink-0">
+                  <SharedKPICard kpi={kpiCardData} size="md" />
                 </div>
               );
             })}

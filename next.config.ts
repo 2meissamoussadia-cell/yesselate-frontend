@@ -76,8 +76,8 @@ const nextConfig: NextConfig = {
       '@tanstack/react-query',
       '@tanstack/react-virtual',
     ],
-    // Réduire la taille des chunks
-    optimizeCss: true,
+    // Désactivé : nécessite le module 'critters'. Réactiver après `npm i critters`.
+    // optimizeCss: true,
   },
 
   // ✅ Compiler optimisé

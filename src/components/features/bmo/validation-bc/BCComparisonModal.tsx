@@ -41,12 +41,16 @@ export function BCComparisonModal({
     return selectedBCs.map(bc => {
       if ('montantTTC' in bc) {
         // C'est un EnrichedBC
+        const amountValue = (bc as EnrichedBC).montantTTC || (bc as EnrichedBC).montantHT || 0;
+        const amount = typeof amountValue === 'string'
+          ? parseFloat(amountValue.replace(/[^\d.,]/g, '').replace(',', '.')) || 0
+          : Number(amountValue) || 0;
         return {
           id: bc.id,
           subject: (bc as EnrichedBC).objet || 'BC sans objet',
           supplier: (bc as EnrichedBC).fournisseur || 'N/A',
           project: (bc as EnrichedBC).projet || 'N/A',
-          amount: (bc as EnrichedBC).montantTTC || (bc as EnrichedBC).montantHT || 0,
+          amount,
           date: (bc as EnrichedBC).dateEmission || '',
           status: (bc as EnrichedBC).status || 'pending',
           priority: 'normal' as const,

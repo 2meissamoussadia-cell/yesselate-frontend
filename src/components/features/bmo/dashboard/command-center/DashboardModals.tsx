@@ -5,7 +5,8 @@
 
 'use client';
 
-import React, { useState, useMemo, Suspense, lazy } from 'react';
+import React, { useState, useMemo, Suspense, lazy, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -65,74 +66,98 @@ const KPIComparisonModal = lazy(() =>
 export function DashboardModals() {
   const { modal, closeModal } = useDashboardCommandCenterStore();
 
+  // Verrouiller le scroll du body à l'ouverture, restaurer à la fermeture (évite flou résiduel)
+  useEffect(() => {
+    if (!modal.isOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev || '';
+    };
+  }, [modal.isOpen]);
+
   if (!modal.isOpen || !modal.type) return null;
+
+  let content: React.ReactNode;
 
   // Pour le modal KPI, utiliser le modal avancé si on a un kpiId, sinon l'ancien
   if (modal.type === 'kpi-drilldown') {
     const kpiData = modal.data?.kpi;
-    // Si on a un objet kpi avec label, chercher le mapping
     if (kpiData?.label) {
       const mapping = getKPIMappingByLabel(kpiData.label);
       if (mapping) {
-        return (
+        content = (
           <TooltipProvider>
             <KPIAdvancedModal kpiId={mapping.metadata.id} onClose={closeModal} />
           </TooltipProvider>
         );
+      } else if (modal.data?.kpiId) {
+        content = (
+          <TooltipProvider>
+            <KPIAdvancedModal kpiId={modal.data.kpiId} onClose={closeModal} />
+          </TooltipProvider>
+        );
+      } else {
+        content = (
+          <TooltipProvider>
+            <KPIDrillDownModalLocal />
+          </TooltipProvider>
+        );
       }
-    }
-    // Si on a directement un kpiId
-    if (modal.data?.kpiId) {
-      return (
+    } else if (modal.data?.kpiId) {
+      content = (
         <TooltipProvider>
           <KPIAdvancedModal kpiId={modal.data.kpiId} onClose={closeModal} />
         </TooltipProvider>
       );
+    } else {
+      content = (
+        <TooltipProvider>
+          <KPIDrillDownModalLocal />
+        </TooltipProvider>
+      );
     }
-    // Sinon utiliser l'ancien modal local
-    return (
+  } else {
+    content = (
       <TooltipProvider>
-        <KPIDrillDownModalLocal />
+        {/* Overlay : clic ferme le modal, backdrop supprimé avec le portail */}
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+          onClick={closeModal}
+          aria-hidden="true"
+        />
+
+        {/* Modal content based on type */}
+        {modal.type === 'kpi-comparison' && (
+          <Suspense fallback={
+            <div className="fixed inset-0 z-50 flex items-center justify-center">
+              <div className="bg-slate-900 rounded-xl p-8 border border-slate-800">
+                <div className="animate-pulse text-slate-400">Chargement de la comparaison...</div>
+              </div>
+            </div>
+          }>
+            <KPIComparisonModal
+              kpiIds={modal.data?.kpiIds || []}
+              onClose={closeModal}
+            />
+          </Suspense>
+        )}
+        {(modal.type === 'risk-detail' || modal.type === 'risk-details') && <RiskDetailModal />}
+        {(modal.type === 'action-detail' || modal.type === 'action-details') && <ActionDetailModal />}
+        {(modal.type === 'decision-detail' || modal.type === 'decision-details') && <DecisionDetailModal />}
+        {modal.type === 'calendar' && <CalendarModal />}
+        {modal.type === 'agenda-details' && <AgendaDetailsModal />}
+        {modal.type === 'bureau-detail' && <BureauDetailModal />}
+        {modal.type === 'stats' && <StatsModal />}
+        {modal.type === 'help' && <HelpModal />}
+        {modal.type === 'export' && <ExportModal />}
+        {modal.type === 'settings' && <SettingsModal />}
+        {modal.type === 'shortcuts' && <ShortcutsModal />}
       </TooltipProvider>
     );
   }
 
-  return (
-    <TooltipProvider>
-      {/* Overlay */}
-      <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
-        onClick={closeModal}
-      />
-
-      {/* Modal content based on type */}
-      {modal.type === 'kpi-comparison' && (
-        <Suspense fallback={
-          <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="bg-slate-900 rounded-xl p-8 border border-slate-800">
-              <div className="animate-pulse text-slate-400">Chargement de la comparaison...</div>
-            </div>
-          </div>
-        }>
-          <KPIComparisonModal
-            kpiIds={modal.data?.kpiIds || []}
-            onClose={closeModal}
-          />
-        </Suspense>
-      )}
-      {(modal.type === 'risk-detail' || modal.type === 'risk-details') && <RiskDetailModal />}
-      {(modal.type === 'action-detail' || modal.type === 'action-details') && <ActionDetailModal />}
-      {(modal.type === 'decision-detail' || modal.type === 'decision-details') && <DecisionDetailModal />}
-      {modal.type === 'calendar' && <CalendarModal />}
-      {modal.type === 'agenda-details' && <AgendaDetailsModal />}
-      {modal.type === 'bureau-detail' && <BureauDetailModal />}
-      {modal.type === 'stats' && <StatsModal />}
-      {modal.type === 'help' && <HelpModal />}
-      {modal.type === 'export' && <ExportModal />}
-      {modal.type === 'settings' && <SettingsModal />}
-      {modal.type === 'shortcuts' && <ShortcutsModal />}
-    </TooltipProvider>
-  );
+  return createPortal(content, document.body);
 }
 
 // Base modal wrapper

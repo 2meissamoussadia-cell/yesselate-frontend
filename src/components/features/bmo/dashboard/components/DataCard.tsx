@@ -61,7 +61,19 @@ export const DataCard = memo(function DataCard({
             <h3 className="font-semibold text-slate-300" style={{ fontSize: 'clamp(0.875rem, 1vw, 0.9375rem)' }}>{title}</h3>
           )}
           {Icon && (
-            <Icon className="text-slate-400 w-[clamp(0.875rem,1vw,1rem)] h-[clamp(0.875rem,1vw,1rem)] min-w-[0.875rem] min-h-[0.875rem]" />
+            <span 
+              className="inline-flex items-center justify-center flex-shrink-0" 
+              style={{ 
+                width: 'clamp(1.125rem, 1.5vw, 1.25rem)', 
+                height: 'clamp(1.125rem, 1.5vw, 1.25rem)', 
+                minWidth: '1.125rem', 
+                minHeight: '1.125rem',
+                maxWidth: '1.25rem',
+                maxHeight: '1.25rem'
+              }} 
+            >
+              <Icon className="text-slate-400 w-full h-full" />
+            </span>
           )}
         </div>
       )}

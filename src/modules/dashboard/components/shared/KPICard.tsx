@@ -35,9 +35,9 @@ const accentByColor: Record<NonNullable<KPICardData['color']>, string> = {
 };
 
 const sizeTokens = {
-  sm: { root: 'p-3', label: 'text-[11px]', value: 'text-lg', icon: 'h-4 w-4' },
-  md: { root: 'p-4', label: 'text-xs', value: 'text-xl', icon: 'h-5 w-5' },
-  lg: { root: 'p-5', label: 'text-sm', value: 'text-2xl', icon: 'h-5 w-5' },
+  sm: { root: 'p-3', label: 'text-[11px]', value: 'text-lg', icon: 'h-3 w-3' },
+  md: { root: 'p-4', label: 'text-xs', value: 'text-xl', icon: 'h-3.5 w-3.5' },
+  lg: { root: 'p-5', label: 'text-sm', value: 'text-2xl', icon: 'h-3.5 w-3.5' },
 } as const;
 
 export const KPICard = memo(function KPICard({ kpi, size = 'md', className }: KPICardProps) {
@@ -97,12 +97,15 @@ export const KPICard = memo(function KPICard({ kpi, size = 'md', className }: KP
 
         <div className="flex flex-col items-end gap-2">
           <div className={cn('inline-flex items-center justify-center rounded-xl border border-slate-800/60 bg-slate-900/40 p-2')}>
-            <Icon className={cn(tokens.icon, 'text-slate-200')} />
+            <Icon className={cn(tokens.icon, 'text-slate-200 flex-shrink-0')} style={{ width: '0.875rem', height: '0.875rem', minWidth: '0.875rem', minHeight: '0.875rem', maxWidth: '0.875rem', maxHeight: '0.875rem' }} />
           </div>
 
           {kpi.sparkline?.length ? (
             <div className="w-[92px] opacity-90">
-              <SparklineChart data={kpi.sparkline} />
+              <SparklineChart 
+                data={kpi.sparkline} 
+                color={color === 'rose' ? 'rose' : color}
+              />
             </div>
           ) : null}
         </div>

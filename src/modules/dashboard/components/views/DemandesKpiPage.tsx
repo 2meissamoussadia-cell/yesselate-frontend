@@ -25,14 +25,19 @@ import type { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
-import { KPICard } from '@/components/features/bmo/dashboard/components';
 import { AnimatedBadge } from '../shared/AnimatedBadge';
 import { EnterpriseBadge } from '../shared/EnterpriseBadge';
 import { SearchFilter } from '../shared/SearchFilter';
 import { EmptyState } from '../shared/EmptyState';
 import { ExportButton } from '../shared/ExportButton';
-import { DashboardPageShell } from '../shared/DashboardPageShell';
-import { DashboardPanel } from '../shared/DashboardPanel';
+import { 
+  DashboardPageLayout, 
+  DashboardSection, 
+  DashboardGrid, 
+  DashboardPanel,
+  KPICard,
+  type KPICardData,
+} from '../shared';
 
 interface DemandeKPI {
   id: string;
@@ -276,13 +281,51 @@ export const DemandesKpiPage = memo(function DemandesKpiPage() {
     { bureau: 'BJ', volume: 74, validation: 89, tempsMoyen: 2.5 },
   ];
 
+  // Helper pour mapper les couleurs de manière sûre
+  const mapColorToKPICardColor = useCallback((color: DemandeKPI['color']): KPICardData['color'] => {
+    switch (color) {
+      case 'red':
+        return 'rose';
+      case 'blue':
+      case 'emerald':
+      case 'amber':
+      case 'purple':
+        return color;
+      default:
+        return 'blue';
+    }
+  }, []);
+
+  // Convertir demandeKPIs au format KPICardData
+  const demandeKPIsData: KPICardData[] = useMemo(() => {
+    return demandeKPIs.map((kpi) => ({
+      id: kpi.id,
+      label: kpi.label,
+      value: kpi.value,
+      trend: typeof kpi.trend === 'string' ? parseFloat(kpi.trend.replace(/[^\d.-]/g, '')) || 0 : 0,
+      trendType: kpi.trendDirection,
+      icon: kpi.icon,
+      color: mapColorToKPICardColor(kpi.color),
+      description: kpi.description,
+      sparkline: kpi.sparkline,
+      onClick: () => handleKPIClick(kpi),
+    }));
+  }, [demandeKPIs, handleKPIClick, mapColorToKPICardColor]);
+
   return (
     <TooltipProvider delayDuration={200}>
-      <DashboardPageShell
-        title="KPIs Flux & Demandes"
-        subtitle="Suivi du volume, validation, temps moyen, goulets et blocages"
-        rightSlot={
-          <>
+      <DashboardPageLayout maxWidth="xl" padding="md">
+        {/* Header */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
+            <h1 className="text-slate-50 font-semibold text-xl sm:text-2xl">
+              KPIs Flux & Demandes
+            </h1>
+            <p className="text-slate-400 text-sm mt-1">
+              Suivi du volume, validation, temps moyen, goulets et blocages
+            </p>
+          </div>
+          <div className="flex items-center gap-3 flex-wrap">
             <div className="w-full sm:w-[360px]">
               <SearchFilter
                 placeholder="Rechercher un blocage ou bureau..."
@@ -293,288 +336,233 @@ export const DemandesKpiPage = memo(function DemandesKpiPage() {
               />
             </div>
             <ExportButton onExportCSV={handleExportCSV} onExportJSON={handleExportJSON} label="Exporter" />
-          </>
-        }
-      >
-        <DashboardPanel>
-          <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
-            {/* KPIs principaux */}
-            <section className="min-w-0">
-              <h2 className="font-semibold text-white flex items-center break-words" style={{ fontSize: 'clamp(0.875rem, 1.5vw, 1.125rem)', marginBottom: 'clamp(0.75rem, 1vw, 1rem)', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-                <Activity className="text-blue-400 flex-shrink-0" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
-                <span className="min-w-0">Indicateurs clés</span>
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 min-w-0" style={{ gap: 'clamp(0.75rem, 1vw, 1rem)' }}>
-              {demandeKPIs.map((kpi) => (
-                <KPICard
-                  key={kpi.id}
-                  kpi={{
-                    id: kpi.id,
-                    label: kpi.label,
-                    value: kpi.value,
-                    trend: typeof kpi.trend === 'string' ? parseFloat(kpi.trend.replace(/[^\d.-]/g, '')) || 0 : 0,
-                    trendType: kpi.trendDirection,
-                    icon: kpi.icon,
-                    color: (kpi.color === 'red' ? 'rose' : kpi.color) as any,
-                    description: kpi.description,
-                    sparkline: kpi.sparkline,
-                    onClick: () => handleKPIClick(kpi),
-                  }}
-                  size="md"
-                />
-              ))}
-              </div>
-            </section>
           </div>
-        </DashboardPanel>
+        </div>
 
-        <DashboardPanel>
-          <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
-            {/* Distribution par type */}
-            <section className="min-w-0">
-              <h2 className="font-semibold text-white flex items-center break-words" style={{ fontSize: 'clamp(0.875rem, 1.5vw, 1.125rem)', marginBottom: 'clamp(0.75rem, 1vw, 1rem)', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-                <BarChart3 className="text-purple-400 flex-shrink-0" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
-                <span className="min-w-0">Distribution par type</span>
-              </h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 min-w-0" style={{ gap: 'clamp(0.75rem, 1vw, 1rem)' }}>
-              {distributionParType.map((item) => (
-                <div
-                  key={item.type}
-                  className="bg-slate-950/30 border border-slate-800/60 rounded-xl"
-                  style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}
-                >
-                  <p className="text-slate-300" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>{item.type}</p>
-                  <p className="font-bold text-white tabular-nums" style={{ fontSize: 'clamp(1.25rem, 2vw, 1.5rem)', marginBottom: 'clamp(0.25rem, 0.5vw, 0.5rem)' }}>{item.count}</p>
-                  <div className="flex items-center justify-between" style={{ marginBottom: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-                    <span className="text-slate-300 tabular-nums" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>{item.percentage}%</span>
-                  </div>
-                  <div className="bg-slate-800/60 rounded-full overflow-hidden" style={{ height: 'clamp(0.25rem, 0.375vw, 0.5rem)' }}>
-                    <div
-                      className={cn(
-                        'h-full transition-all duration-500',
-                        item.color === 'blue' && 'bg-blue-500',
-                        item.color === 'purple' && 'bg-purple-500',
-                        item.color === 'emerald' && 'bg-emerald-500',
-                        item.color === 'amber' && 'bg-amber-500',
-                        item.color === 'slate' && 'bg-slate-500'
-                      )}
-                      style={{ width: `${item.percentage}%` }}
-                    />
-                  </div>
+        {/* KPIs principaux */}
+        <DashboardSection
+          title="Indicateurs clés"
+          icon={Activity}
+        >
+          <DashboardGrid columns={3} gap="md">
+            {demandeKPIsData.map((kpi) => (
+              <KPICard key={kpi.id} kpi={kpi} size="md" />
+            ))}
+          </DashboardGrid>
+        </DashboardSection>
+
+        {/* Distribution par type */}
+        <DashboardSection
+          title="Distribution par type"
+          icon={BarChart3}
+        >
+          <DashboardGrid columns={5} gap="md">
+            {distributionParType.map((item) => (
+              <DashboardPanel key={item.type} padding="md">
+                <p className="text-slate-300 text-xs mb-2">{item.type}</p>
+                <p className="font-bold text-white tabular-nums text-xl mb-2">{item.count}</p>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-slate-300 tabular-nums text-xs">{item.percentage}%</span>
                 </div>
-              ))}
-              </div>
-            </section>
-          </div>
-        </DashboardPanel>
+                <div className="bg-slate-800/60 rounded-full overflow-hidden h-1">
+                  <div
+                    className={cn(
+                      'h-full transition-all duration-500',
+                      item.color === 'blue' && 'bg-blue-500',
+                      item.color === 'purple' && 'bg-purple-500',
+                      item.color === 'emerald' && 'bg-emerald-500',
+                      item.color === 'amber' && 'bg-amber-500',
+                      item.color === 'slate' && 'bg-slate-500'
+                    )}
+                    style={{ width: `${item.percentage}%` }}
+                  />
+                </div>
+              </DashboardPanel>
+            ))}
+          </DashboardGrid>
+        </DashboardSection>
 
-        <DashboardPanel>
-          <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
-            {/* Goulets d'étranglement */}
-            <section className="min-w-0">
-              <h2 className="font-semibold text-white flex items-center break-words" style={{ fontSize: 'clamp(0.875rem, 1.5vw, 1.125rem)', marginBottom: 'clamp(0.75rem, 1vw, 1rem)', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-                <Zap className="text-amber-400 flex-shrink-0" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
-                <span className="min-w-0">Goulets d'étranglement</span>
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 min-w-0" style={{ gap: 'clamp(0.75rem, 1vw, 1rem)' }}>
-              {goulets.map((goulet) => (
-                <div
-                  key={goulet.id}
+        {/* Goulets d'étranglement */}
+        <DashboardSection
+          title="Goulets d'étranglement"
+          icon={Zap}
+        >
+          <DashboardGrid columns={2} gap="md">
+            {goulets.map((goulet) => (
+              <DashboardPanel
+                key={goulet.id}
+                padding="md"
+                className="relative hover:bg-slate-900/40 hover:border-slate-700/60 transition-colors"
+              >
+                <span
+                  aria-hidden="true"
                   className={cn(
-                    'relative rounded-2xl border border-slate-800/60 bg-slate-950/30 min-w-0 overflow-hidden',
-                    'transition-colors hover:bg-slate-900/40 hover:border-slate-700/60'
+                    'absolute inset-x-0 top-0 h-0.5',
+                    goulet.impact === 'high' && 'bg-rose-400/80',
+                    goulet.impact === 'medium' && 'bg-amber-400/80',
+                    goulet.impact === 'low' && 'bg-blue-400/80'
                   )}
-                  style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}
+                />
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-3">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-white text-sm mb-1">{goulet.processus}</h3>
+                    <div className="flex items-center text-slate-300 text-xs">
+                      <span>{goulet.volume} demandes</span>
+                    </div>
+                  </div>
+                  <span
+                    className={cn(
+                      'rounded-full font-medium text-xs px-2 py-1',
+                      goulet.impact === 'high' && 'bg-red-500/20 text-red-300 border border-red-500/30',
+                      goulet.impact === 'medium' && 'bg-amber-500/20 text-amber-300 border border-amber-500/30',
+                      goulet.impact === 'low' && 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                    )}
+                  >
+                    Impact {goulet.impact === 'high' ? 'Élevé' : goulet.impact === 'medium' ? 'Moyen' : 'Faible'}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="text-amber-400 h-4 w-4" />
+                  <span className="text-white font-medium text-sm">Temps moyen: {goulet.tempsMoyen} jours</span>
+                </div>
+              </DashboardPanel>
+            ))}
+          </DashboardGrid>
+        </DashboardSection>
+
+        {/* Blocages critiques */}
+        <DashboardSection
+          title="Blocages actifs"
+          icon={AlertTriangle}
+          action={
+            <div className="flex items-center gap-2 flex-wrap">
+              {filteredBlocages.filter((b) => b.priorite === 'critique').length > 0 && (
+                <AnimatedBadge variant="critical" pulse>
+                  {filteredBlocages.filter((b) => b.priorite === 'critique').length} critique
+                  {filteredBlocages.filter((b) => b.priorite === 'critique').length > 1 ? 's' : ''}
+                </AnimatedBadge>
+              )}
+              {searchQuery && (
+                <span className="text-slate-300 text-sm">
+                  {filteredBlocages.length} résultat{filteredBlocages.length > 1 ? 's' : ''}
+                </span>
+              )}
+            </div>
+          }
+        >
+          {filteredBlocages.length === 0 ? (
+            <EmptyState
+              variant="search"
+              title={searchQuery ? 'Aucun blocage trouvé' : 'Aucun blocage actif'}
+              description={
+                searchQuery
+                  ? `Aucun blocage ne correspond à "${searchQuery}"`
+                  : "Aucun blocage n'est actuellement actif"
+              }
+              action={
+                searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="text-blue-400 hover:text-blue-300 transition-colors text-sm"
+                  >
+                    Effacer la recherche
+                  </button>
+                )
+              }
+            />
+          ) : (
+            <DashboardGrid columns={2} gap="md">
+              {filteredBlocages.map((blocage) => (
+                <button
+                  key={blocage.id}
+                  type="button"
+                  onClick={() => {
+                    // TODO: Implémenter la navigation vers le détail du blocage
+                  }}
+                  className={cn(
+                    'relative rounded-2xl border border-slate-800/60 bg-slate-900/30',
+                    'text-left transition-colors duration-200',
+                    'hover:bg-slate-900/45 hover:border-slate-700/60',
+                    'focus:outline-none focus:ring-2 focus:ring-blue-500/40',
+                    blocage.priorite === 'critique' && 'ring-1 ring-rose-500/20',
+                    blocage.priorite === 'haute' && 'ring-1 ring-amber-500/15'
+                  )}
+                  style={{ padding: '1rem' }}
+                  aria-label={`Blocage: ${blocage.type} - ${blocage.count} occurrence(s) - Priorité ${blocage.priorite}`}
                 >
                   <span
                     aria-hidden="true"
                     className={cn(
-                      'absolute inset-x-0 top-0',
-                      goulet.impact === 'high' && 'bg-rose-400/80',
-                      goulet.impact === 'medium' && 'bg-amber-400/80',
-                      goulet.impact === 'low' && 'bg-blue-400/80'
+                      'absolute inset-x-0 top-0 h-0.5',
+                      blocage.priorite === 'critique' && 'bg-rose-400/80',
+                      blocage.priorite === 'haute' && 'bg-amber-400/80',
+                      blocage.priorite === 'moyenne' && 'bg-slate-300/50'
                     )}
-                    style={{ height: 'clamp(0.125rem, 0.25vw, 0.125rem)' }}
                   />
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between min-w-0" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.75rem, 1vw, 1rem)' }}>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-white break-words" style={{ fontSize: 'clamp(0.75rem, 1vw, 1rem)', marginBottom: 'clamp(0.25rem, 0.5vw, 0.5rem)' }}>{goulet.processus}</h3>
-                      <div className="flex items-center text-slate-300 min-w-0" style={{ gap: 'clamp(0.5rem, 0.75vw, 1rem)', fontSize: 'clamp(0.625rem, 0.875vw, 0.875rem)' }}>
-                        <span className="break-words">{goulet.volume} demandes</span>
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-white text-sm mb-1">{blocage.type}</h3>
+                      <div className="flex items-center text-slate-300 text-sm gap-2">
+                        <Building2 className="h-3 w-3" />
+                        <span>{blocage.bureau}</span>
                       </div>
                     </div>
-                    <span
-                      className={cn(
-                        'rounded-full font-medium',
-                        goulet.impact === 'high' && 'bg-red-500/20 text-red-300 border border-red-500/30',
-                        goulet.impact === 'medium' && 'bg-amber-500/20 text-amber-300 border border-amber-500/30',
-                        goulet.impact === 'low' && 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
-                      )}
-                      style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)', padding: 'clamp(0.25rem, 0.5vw, 0.5rem) clamp(0.5rem, 0.75vw, 0.75rem)' }}
-                    >
-                      Impact {goulet.impact === 'high' ? 'Élevé' : goulet.impact === 'medium' ? 'Moyen' : 'Faible'}
-                    </span>
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="font-bold text-white tabular-nums text-xl">{blocage.count}</span>
+                      <EnterpriseBadge
+                        variant={blocage.priorite === 'critique' ? 'critique' : blocage.priorite === 'haute' ? 'haute' : 'moyenne'}
+                        size="sm"
+                      >
+                        {blocage.priorite === 'critique' ? 'Critique' : blocage.priorite === 'haute' ? 'Haute' : 'Moyenne'}
+                      </EnterpriseBadge>
+                    </div>
                   </div>
-                  <div className="flex items-center" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-                    <Clock className="text-amber-400" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />
-                    <span className="text-white font-medium" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>Temps moyen: {goulet.tempsMoyen} jours</span>
-                  </div>
-                </div>
+                </button>
               ))}
-              </div>
-            </section>
-          </div>
-        </DashboardPanel>
+            </DashboardGrid>
+          )}
+        </DashboardSection>
 
-        <DashboardPanel>
-          <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
-            {/* Blocages critiques */}
-            <section className="min-w-0">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between min-w-0" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.75rem, 1vw, 1rem)' }}>
-                <h2 className="font-semibold text-white flex items-center break-words" style={{ fontSize: 'clamp(0.875rem, 1.5vw, 1.125rem)', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-                  <AlertTriangle className="text-red-400 flex-shrink-0" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
-                  <span className="min-w-0">Blocages actifs</span>
-                </h2>
-                <div className="flex items-center flex-shrink-0 flex-wrap" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-                  {filteredBlocages.filter((b) => b.priorite === 'critique').length > 0 && (
-                    <AnimatedBadge variant="critical" pulse>
-                      {filteredBlocages.filter((b) => b.priorite === 'critique').length} critique
-                      {filteredBlocages.filter((b) => b.priorite === 'critique').length > 1 ? 's' : ''}
-                    </AnimatedBadge>
-                  )}
-                  {searchQuery && (
-                    <span className="text-slate-300" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>
-                      {filteredBlocages.length} résultat{filteredBlocages.length > 1 ? 's' : ''}
-                    </span>
-                  )}
+        {/* Performance par bureau */}
+        <DashboardSection
+          title="Performance par bureau"
+          icon={Users}
+        >
+          <DashboardGrid columns={3} gap="md">
+            {performanceBureau.map((perf) => (
+              <DashboardPanel key={perf.bureau} padding="md">
+                <div className="flex items-center gap-2 mb-4">
+                  <Building2 className="text-purple-400 h-4 w-4 flex-shrink-0" />
+                  <h3 className="font-semibold text-white text-sm">{perf.bureau}</h3>
                 </div>
-              </div>
-            {filteredBlocages.length === 0 ? (
-              <EmptyState
-                variant="search"
-                title={searchQuery ? 'Aucun blocage trouvé' : 'Aucun blocage actif'}
-                description={
-                  searchQuery
-                    ? `Aucun blocage ne correspond à "${searchQuery}"`
-                    : "Aucun blocage n'est actuellement actif"
-                }
-                action={
-                  searchQuery && (
-                    <button
-                      onClick={() => setSearchQuery('')}
-                      className="text-blue-400 hover:text-blue-300 transition-colors"
-                      style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}
-                    >
-                      Effacer la recherche
-                    </button>
-                  )
-                }
-              />
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 min-w-0" style={{ gap: 'clamp(0.75rem, 1vw, 1rem)' }}>
-                {filteredBlocages.map((blocage) => (
-                  <button
-                    key={blocage.id}
-                    type="button"
-                    onClick={() => {
-                      // TODO: Implémenter la navigation vers le détail du blocage
-                    }}
-                    className={cn(
-                      'relative rounded-2xl border border-slate-800/60 bg-slate-900/30',
-                      'text-left transition-colors duration-200',
-                      'hover:bg-slate-900/45 hover:border-slate-700/60',
-                      'focus:outline-none focus:ring-2 focus:ring-blue-500/40',
-                      blocage.priorite === 'critique' && 'ring-1 ring-rose-500/20',
-                      blocage.priorite === 'haute' && 'ring-1 ring-amber-500/15'
-                    )}
-                    style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}
-                    aria-label={`Blocage: ${blocage.type} - ${blocage.count} occurrence(s) - Priorité ${blocage.priorite}`}
-                  >
-                    <span
-                      aria-hidden="true"
-                      className={cn(
-                        'absolute inset-x-0 top-0',
-                        blocage.priorite === 'critique' && 'bg-rose-400/80',
-                        blocage.priorite === 'haute' && 'bg-amber-400/80',
-                        blocage.priorite === 'moyenne' && 'bg-slate-300/50'
-                      )}
-                      style={{ height: 'clamp(0.125rem, 0.25vw, 0.125rem)' }}
-                    />
-                    <div className="flex items-start justify-between" style={{ marginBottom: 'clamp(0.75rem, 1vw, 1rem)' }}>
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-white" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)', marginBottom: 'clamp(0.25rem, 0.5vw, 0.5rem)' }}>{blocage.type}</h3>
-                        <div className="flex items-center text-slate-300" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>
-                          <Building2 style={{ width: 'clamp(0.75rem, 0.875vw, 0.875rem)', height: 'clamp(0.75rem, 0.875vw, 0.875rem)', minWidth: '0.75rem', minHeight: '0.75rem' }} />
-                          <span>{blocage.bureau}</span>
-                        </div>
-                      </div>
-                      <div className="flex flex-col items-end" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-                        <span className="font-bold text-white tabular-nums" style={{ fontSize: 'clamp(1.25rem, 2vw, 1.5rem)' }}>{blocage.count}</span>
-                        <EnterpriseBadge
-                          variant={blocage.priorite === 'critique' ? 'critique' : blocage.priorite === 'haute' ? 'haute' : 'moyenne'}
-                          size="sm"
-                        >
-                          {blocage.priorite === 'critique' ? 'Critique' : blocage.priorite === 'haute' ? 'Haute' : 'Moyenne'}
-                        </EnterpriseBadge>
-                      </div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
-            </section>
-          </div>
-        </DashboardPanel>
-
-        <DashboardPanel>
-          <div style={{ padding: 'clamp(1rem, 1.5vw, 1.5rem)' }}>
-            {/* Performance par bureau */}
-            <section className="min-w-0">
-              <h2 className="font-semibold text-white flex items-center break-words" style={{ fontSize: 'clamp(0.875rem, 1.5vw, 1.125rem)', marginBottom: 'clamp(0.75rem, 1vw, 1rem)', gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-                <Users className="text-purple-400 flex-shrink-0" style={{ width: 'clamp(1rem, 1.25vw, 1.25rem)', height: 'clamp(1rem, 1.25vw, 1.25rem)', minWidth: '1rem', minHeight: '1rem' }} />
-                <span className="min-w-0">Performance par bureau</span>
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 min-w-0" style={{ gap: 'clamp(0.75rem, 1vw, 1rem)' }}>
-                {performanceBureau.map((perf) => (
-                  <div
-                    key={perf.bureau}
-                    className="bg-slate-950/30 border border-slate-800/60 rounded-xl min-w-0 overflow-hidden"
-                    style={{ padding: 'clamp(1rem, 1.5vw, 1.25rem)' }}
-                  >
-                    <div className="flex items-center min-w-0" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)', marginBottom: 'clamp(0.75rem, 1vw, 1rem)' }}>
-                      <Building2 className="text-purple-400 flex-shrink-0" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />
-                      <h3 className="font-semibold text-white break-words min-w-0" style={{ fontSize: 'clamp(0.75rem, 1vw, 1rem)' }}>{perf.bureau}</h3>
-                    </div>
-                    <div style={{ gap: 'clamp(0.75rem, 1vw, 1rem)' }} className="space-y-3">
-                      <div>
-                        <div className="flex items-center justify-between" style={{ marginBottom: 'clamp(0.25rem, 0.5vw, 0.5rem)' }}>
-                          <span className="text-slate-300" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>Volume</span>
-                          <span className="font-semibold text-white tabular-nums" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{perf.volume}</span>
-                        </div>
-                      </div>
-                      <div>
-                        <div className="flex items-center justify-between" style={{ marginBottom: 'clamp(0.25rem, 0.5vw, 0.5rem)' }}>
-                          <span className="text-slate-300" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>Taux de validation</span>
-                          <span className="font-semibold text-emerald-300 tabular-nums" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{perf.validation}%</span>
-                        </div>
-                        <div className="bg-slate-800/60 rounded-full overflow-hidden" style={{ height: 'clamp(0.25rem, 0.375vw, 0.5rem)' }}>
-                          <div className="h-full bg-emerald-500 transition-all duration-500" style={{ width: `${perf.validation}%` }} />
-                        </div>
-                      </div>
-                      <div>
-                        <div className="flex items-center justify-between" style={{ marginBottom: 'clamp(0.25rem, 0.5vw, 0.5rem)' }}>
-                          <span className="text-slate-300" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>Temps moyen</span>
-                          <span className="font-semibold text-white tabular-nums" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{perf.tempsMoyen}j</span>
-                        </div>
-                      </div>
+                <div className="space-y-3">
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-slate-300 text-xs">Volume</span>
+                      <span className="font-semibold text-white tabular-nums text-sm">{perf.volume}</span>
                     </div>
                   </div>
-                ))}
-              </div>
-            </section>
-          </div>
-        </DashboardPanel>
-      </DashboardPageShell>
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-slate-300 text-xs">Taux de validation</span>
+                      <span className="font-semibold text-emerald-300 tabular-nums text-sm">{perf.validation}%</span>
+                    </div>
+                    <div className="bg-slate-800/60 rounded-full overflow-hidden h-1">
+                      <div className="h-full bg-emerald-500 transition-all duration-500" style={{ width: `${perf.validation}%` }} />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-slate-300 text-xs">Temps moyen</span>
+                      <span className="font-semibold text-white tabular-nums text-sm">{perf.tempsMoyen}j</span>
+                    </div>
+                  </div>
+                </div>
+              </DashboardPanel>
+            ))}
+          </DashboardGrid>
+        </DashboardSection>
+      </DashboardPageLayout>
     </TooltipProvider>
   );
 });

@@ -6,7 +6,7 @@
 
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -32,7 +32,6 @@ import {
   Eye,
   Calendar,
   GitBranch,
-  Search,
   Activity,
   Shield,
   Target,
@@ -81,6 +80,91 @@ interface Decision {
   impact: string;
   dateCreation: string;
   dateExecution?: string;
+}
+
+// Types pour les données API
+interface ApiAction {
+  id: string;
+  titre?: string;
+  type?: string;
+  bureau?: string;
+  code?: string;
+  priorite?: string;
+  projet?: {
+    id?: string;
+    nom?: string;
+  };
+  montant?: number | string;
+  deadline?: string;
+  responsable?: {
+    nom?: string;
+    id?: string;
+  };
+  contexte?: string;
+  impact?: string;
+}
+
+interface ApiRisk {
+  id: string;
+  titre?: string;
+  description?: string;
+  source?: string;
+  score?: number | string;
+  impact?: string;
+  probabilite?: string;
+  age?: number | string;
+  projet?: {
+    id?: string;
+    nom?: string;
+  };
+}
+
+interface ApiDecision {
+  id: string;
+  code?: string;
+  type?: string;
+  titre?: string;
+  description?: string;
+  status?: string;
+  demandeur?: {
+    nom?: string;
+    bureau?: string;
+  };
+  impact?: string;
+  dateCreation?: string;
+  dateExecution?: string;
+}
+
+interface ApiStatsData {
+  kpis?: {
+    demandes?: {
+      value?: number | string;
+      trend?: number | string;
+    };
+    validations?: {
+      value?: number | string;
+      trend?: number | string;
+      unit?: string;
+    };
+    budget?: {
+      value?: number | string;
+      trend?: number | string;
+      unit?: string;
+    };
+  };
+  bureaux?: Array<{ id?: string; code?: string }>;
+}
+
+interface ApiActionsResponse {
+  actions?: ApiAction[];
+}
+
+interface ApiRisksResponse {
+  risks?: ApiRisk[];
+}
+
+interface ApiDecisionsResponse {
+  decisions?: ApiDecision[];
 }
 
 // ============================================
@@ -435,59 +519,156 @@ export function OverviewView() {
 
   // Données avec fallback sur mock et normalisation
   const actions: ActionItemData[] = useMemo(() => {
-    const rawActions = Array.isArray((actionsData as any)?.actions) && (actionsData as any).actions.length > 0
-      ? (actionsData as any).actions
-      : actionsPrioritaires;
+    const apiResponse = actionsData as ApiActionsResponse | undefined;
+    const rawActions: ApiAction[] = Array.isArray(apiResponse?.actions) && apiResponse.actions.length > 0
+      ? apiResponse.actions
+      : actionsPrioritaires as unknown as ApiAction[];
     
     // Normaliser les actions pour garantir la cohérence des types
-    return rawActions.map((action: any) => ({
-      ...action,
-      type: (['contrat', 'bc', 'paiement', 'arbitrage'].includes(action.type))
-        ? action.type
-        : 'contrat' as ActionItemData['type'],
-      priorite: (['critique', 'haute', 'moyenne'].includes(action.priorite))
-        ? action.priorite
-        : 'moyenne' as ActionItemData['priorite'],
-    }));
+    return rawActions.map((action: ApiAction): ActionItemData => {
+      const validTypes: ActionItemData['type'][] = ['contrat', 'bc', 'paiement', 'arbitrage'];
+      const validPriorites: ActionItemData['priorite'][] = ['critique', 'haute', 'moyenne'];
+      
+      const type = (action.type && validTypes.includes(action.type as ActionItemData['type']))
+        ? (action.type as ActionItemData['type'])
+        : 'contrat' as ActionItemData['type'];
+      
+      const priorite = (action.priorite && validPriorites.includes(action.priorite as ActionItemData['priorite']))
+        ? (action.priorite as ActionItemData['priorite'])
+        : 'moyenne' as ActionItemData['priorite'];
+      
+      const montant = typeof action.montant === 'number' 
+        ? action.montant 
+        : (typeof action.montant === 'string' ? parseFloat(action.montant) || undefined : undefined);
+      
+      return {
+        id: action.id || '',
+        titre: action.titre || '',
+        type,
+        bureau: (action.bureau as BureauCode) || 'BMO',
+        code: action.code || '',
+        priorite,
+        projet: action.projet ? {
+          id: action.projet.id || '',
+          nom: action.projet.nom || '',
+        } : undefined,
+        montant,
+        deadline: action.deadline || '',
+        responsable: action.responsable ? {
+          nom: action.responsable.nom || '',
+          id: action.responsable.id || '',
+        } : undefined,
+        contexte: action.contexte,
+        impact: action.impact,
+      } as ActionItemData;
+    });
   }, [actionsData]);
+  // Helper pour mapper ApiRisk vers RiskScoreCardData de manière sûre
+  const mapApiRiskToRiskScoreCard = useCallback((risk: ApiRisk | RiskScoreCardData): RiskScoreCardData => {
+    // Si c'est déjà un RiskScoreCardData, le retourner tel quel
+    if ('titre' in risk && typeof risk.titre === 'string' && 'impact' in risk && typeof risk.impact === 'string') {
+      const validImpact: RiskScoreCardData['impact'] = 
+        (['mineur', 'moyen', 'majeur', 'critique'].includes(risk.impact))
+          ? (risk.impact as RiskScoreCardData['impact'])
+          : 'moyen';
+      const validProbabilite: RiskScoreCardData['probabilite'] = 
+        (['faible', 'moyenne', 'elevee', 'certaine'].includes(risk.probabilite || ''))
+          ? (risk.probabilite as RiskScoreCardData['probabilite'])
+          : 'moyenne';
+      
+      return {
+        id: risk.id,
+        titre: risk.titre,
+        description: risk.description || '',
+        score: typeof risk.score === 'number' ? risk.score : parseFloat(String(risk.score || 0)) || 0,
+        impact: validImpact,
+        probabilite: validProbabilite,
+        age: typeof risk.age === 'number' ? risk.age : (risk.age ? parseFloat(String(risk.age)) : undefined),
+        source: risk.source,
+        projet: risk.projet?.id && risk.projet?.nom ? {
+          id: risk.projet.id,
+          nom: risk.projet.nom,
+        } : undefined,
+      };
+    }
+    
+    // Sinon, mapper depuis ApiRisk
+    const validImpact: RiskScoreCardData['impact'] = 
+      (risk.impact && ['mineur', 'moyen', 'majeur', 'critique'].includes(risk.impact))
+        ? (risk.impact as RiskScoreCardData['impact'])
+        : 'moyen';
+    const validProbabilite: RiskScoreCardData['probabilite'] = 
+      (risk.probabilite && ['faible', 'moyenne', 'elevee', 'certaine'].includes(risk.probabilite))
+        ? (risk.probabilite as RiskScoreCardData['probabilite'])
+        : 'moyenne';
+    
+    return {
+      id: risk.id,
+      titre: risk.titre || 'Risque non nommé',
+      description: risk.description || '',
+      score: typeof risk.score === 'number' ? risk.score : parseFloat(String(risk.score || 0)) || 0,
+      impact: validImpact,
+      probabilite: validProbabilite,
+      age: typeof risk.age === 'number' ? risk.age : (risk.age ? parseFloat(String(risk.age)) : undefined),
+      source: risk.source,
+      projet: risk.projet?.id && risk.projet?.nom ? {
+        id: risk.projet.id,
+        nom: risk.projet.nom,
+      } : undefined,
+    };
+  }, []);
+
   // Normaliser les risques pour garantir la cohérence des types
   const risks: RiskScoreCardData[] = useMemo(() => {
-    const rawRisks = Array.isArray((risksData as any)?.risks) && (risksData as any).risks.length > 0
-      ? (risksData as any).risks
+    const apiResponse = risksData as ApiRisksResponse | undefined;
+    const rawRisks: (ApiRisk | RiskScoreCardData)[] = Array.isArray(apiResponse?.risks) && apiResponse.risks.length > 0
+      ? apiResponse.risks
       : risksRadar;
     
     // Normaliser les risques pour garantir la cohérence des types
-    return rawRisks.map((risk: any) => ({
-      ...risk,
-      impact: (['mineur', 'moyen', 'majeur', 'critique'].includes(risk.impact))
-        ? risk.impact
-        : 'moyen' as RiskScoreCardData['impact'],
-      probabilite: (['faible', 'moyenne', 'elevee', 'certaine'].includes(risk.probabilite))
-        ? risk.probabilite
-        : 'moyenne' as RiskScoreCardData['probabilite'],
-    }));
-  }, [risksData]);
+    return rawRisks.map(mapApiRiskToRiskScoreCard);
+  }, [risksData, mapApiRiskToRiskScoreCard]);
   // Normaliser les décisions pour garantir la cohérence des types
   const decisionsList: Decision[] = useMemo(() => {
-    const rawDecisions = Array.isArray((decisionsData as any)?.decisions) && (decisionsData as any).decisions.length > 0
-      ? (decisionsData as any).decisions
-      : decisions;
+    const apiResponse = decisionsData as ApiDecisionsResponse | undefined;
+    const rawDecisions: ApiDecision[] = Array.isArray(apiResponse?.decisions) && apiResponse.decisions.length > 0
+      ? apiResponse.decisions
+      : decisions as unknown as ApiDecision[];
     
     // Normaliser les décisions pour garantir la cohérence des types
-    return rawDecisions.map((decision: any) => ({
-      ...decision,
-      type: (['substitution', 'delegation', 'arbitrage', 'validation'].includes(decision.type))
-        ? decision.type
-        : 'validation' as Decision['type'],
-      status: (['en_attente', 'executee', 'rejetee'].includes(decision.status))
-        ? decision.status
-        : 'en_attente' as Decision['status'],
-      // S'assurer que demandeur existe avec des valeurs par défaut
-      demandeur: decision.demandeur || {
-        nom: 'Non spécifié',
-        bureau: 'BMO' as BureauCode,
-      },
-    }));
+    return rawDecisions.map((decision: ApiDecision): Decision => {
+      const validTypes: Decision['type'][] = ['substitution', 'delegation', 'arbitrage', 'validation'];
+      const validStatuses: Decision['status'][] = ['en_attente', 'executee', 'rejetee'];
+      const validBureaux: BureauCode[] = ['BF', 'BCG', 'BJA', 'BOP', 'BCT', 'BJ', 'BMO'];
+      
+      const type = (decision.type && validTypes.includes(decision.type as Decision['type']))
+        ? (decision.type as Decision['type'])
+        : 'validation' as Decision['type'];
+      
+      const status = (decision.status && validStatuses.includes(decision.status as Decision['status']))
+        ? (decision.status as Decision['status'])
+        : 'en_attente' as Decision['status'];
+      
+      const bureau = (decision.demandeur?.bureau && validBureaux.includes(decision.demandeur.bureau as BureauCode))
+        ? (decision.demandeur.bureau as BureauCode)
+        : 'BMO' as BureauCode;
+      
+      return {
+        id: decision.id || '',
+        code: decision.code || '',
+        type,
+        titre: decision.titre || '',
+        description: decision.description || '',
+        status,
+        demandeur: {
+          nom: decision.demandeur?.nom || 'Non spécifié',
+          bureau,
+        },
+        impact: decision.impact || '',
+        dateCreation: decision.dateCreation || new Date().toISOString(),
+        dateExecution: decision.dateExecution,
+      };
+    });
   }, [decisionsData]);
 
   // Grouper les actions par type
@@ -525,17 +706,6 @@ export function OverviewView() {
     .slice(0, 3)
     .map(([date, events]) => ({ date, events }));
 
-  // Recherche KPI
-  const [kpiSearch, setKpiSearch] = React.useState('');
-
-  const filteredKPIs = useMemo(() => {
-    if (!kpiSearch.trim()) return kpis;
-    const searchLower = kpiSearch.toLowerCase();
-    return kpis.filter((kpi) =>
-      kpi.label.toLowerCase().includes(searchLower) ||
-      kpi.description?.toLowerCase().includes(searchLower)
-    );
-  }, [kpis, kpiSearch]);
 
   // Afficher le dashboard principal uniquement
   const showDashboard = activeMainMenu === 'overview' &&
@@ -559,23 +729,9 @@ export function OverviewView() {
           size="lg"
         />
 
-        {/* Recherche KPI */}
-        <div className="mb-6">
-          <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <Input
-              type="text"
-              placeholder="Rechercher un indicateur..."
-              value={kpiSearch}
-              onChange={(e) => setKpiSearch(e.target.value)}
-              className="pl-10 bg-slate-800/50 border-slate-700 text-slate-200 placeholder:text-slate-500"
-            />
-          </div>
-        </div>
-
         {/* Grid KPIs harmonisés */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {filteredKPIs.map((kpi) => (
+          {kpis.map((kpi) => (
             <KPICard
               key={kpi.id}
               kpi={{
@@ -742,73 +898,103 @@ export function OverviewView() {
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {/* Aujourd'hui */}
-          <div className="bg-slate-950/30 rounded-xl border border-slate-800/60 p-4 ring-1 ring-orange-500/15">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center">
-                <span className="text-lg font-bold text-orange-400">
+          {/* Aujourd'hui - État actif avec design moderne */}
+          <div className="group relative rounded-2xl border-2 border-blue-500/40 bg-gradient-to-br from-blue-500/10 to-slate-900/50 backdrop-blur-sm p-4 shadow-lg shadow-blue-500/10">
+            {/* Accent bar en haut */}
+            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-500 to-blue-400 rounded-t-2xl" />
+            
+            <div className="flex items-center gap-2.5 mb-4">
+              <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/30 to-blue-600/20 border border-blue-500/40 flex items-center justify-center shadow-sm">
+                <span className="text-base font-bold text-blue-200">
                   {new Date().getDate()}
                 </span>
+                {/* Indicateur actif */}
+                <span className="absolute -top-1 -right-1 w-3 h-3 bg-blue-400 rounded-full border-2 border-slate-900 shadow-sm" />
               </div>
               <div>
-                <div className="text-sm font-bold text-white">Aujourd'hui</div>
-                <div className="text-xs text-slate-400">
+                <div className="text-xs font-semibold text-blue-200 uppercase tracking-wider">Aujourd'hui</div>
+                <div className="text-[11px] text-slate-400 mt-0.5">
                   {new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
                 </div>
               </div>
             </div>
-            <div className="space-y-2">
-              {todayEvents.map((event) => (
-                <AgendaItem
-                  key={event.id}
-                  event={event}
-                  onClick={() => openModal('agenda-details', { eventId: event.id })}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Demain */}
-          <div className="bg-slate-800 rounded-xl border border-slate-700 p-4">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-slate-700 flex items-center justify-center">
-                <span className="text-lg font-bold text-slate-300">
-                  {new Date(Date.now() + 86400000).getDate()}
-                </span>
-              </div>
-              <div>
-                <div className="text-sm font-bold text-white">Demain</div>
-                <div className="text-xs text-slate-400">
-                  {new Date(Date.now() + 86400000).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
-                </div>
-              </div>
-            </div>
-            <div className="space-y-2">
-              {tomorrowEvents.map((event) => (
-                <AgendaItem
-                  key={event.id}
-                  event={event}
-                  onClick={() => openModal('agenda-details', { eventId: event.id })}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Semaine prochaine */}
-          <div className="bg-slate-800 rounded-xl border border-slate-700 p-4">
-            <div className="flex items-center gap-2 mb-4">
-              <Calendar className="w-5 h-5 text-slate-400" />
-              <div className="text-sm font-bold text-white">Semaine prochaine</div>
-            </div>
-            <div className="space-y-3">
-              {weekEvents.map(({ date, events }) =>
-                events.map((event) => (
+            <div className="space-y-2.5">
+              {todayEvents.length > 0 ? (
+                todayEvents.map((event) => (
                   <AgendaItem
                     key={event.id}
                     event={event}
                     onClick={() => openModal('agenda-details', { eventId: event.id })}
                   />
                 ))
+              ) : (
+                <div className="text-center py-6 text-slate-500 text-xs">
+                  Aucun événement prévu
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Demain - Design cohérent mais inactif */}
+          <div className="group relative rounded-2xl border border-slate-800/60 bg-slate-900/40 backdrop-blur-sm p-4 transition-all duration-200 hover:border-slate-700/80 hover:bg-slate-900/60">
+            <div className="flex items-center gap-2.5 mb-4">
+              <div className="w-12 h-12 rounded-xl bg-slate-800/60 border border-slate-700/50 flex items-center justify-center">
+                <span className="text-base font-bold text-slate-300">
+                  {new Date(Date.now() + 86400000).getDate()}
+                </span>
+              </div>
+              <div>
+                <div className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Demain</div>
+                <div className="text-[11px] text-slate-500 mt-0.5">
+                  {new Date(Date.now() + 86400000).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
+                </div>
+              </div>
+            </div>
+            <div className="space-y-2.5">
+              {tomorrowEvents.length > 0 ? (
+                tomorrowEvents.map((event) => (
+                  <AgendaItem
+                    key={event.id}
+                    event={event}
+                    onClick={() => openModal('agenda-details', { eventId: event.id })}
+                  />
+                ))
+              ) : (
+                <div className="text-center py-6 text-slate-500 text-xs">
+                  Aucun événement prévu
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Semaine prochaine - Design cohérent */}
+          <div className="group relative rounded-2xl border border-slate-800/60 bg-slate-900/40 backdrop-blur-sm p-4 transition-all duration-200 hover:border-slate-700/80 hover:bg-slate-900/60">
+            <div className="flex items-center gap-2.5 mb-4">
+              <div className="w-10 h-10 rounded-lg bg-slate-800/60 border border-slate-700/50 flex items-center justify-center">
+                <Calendar className="w-4 h-4 text-slate-400" />
+              </div>
+              <div>
+                <div className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Semaine prochaine</div>
+                <div className="text-[11px] text-slate-500 mt-0.5">
+                  Prochains événements
+                </div>
+              </div>
+            </div>
+            <div className="space-y-3">
+              {weekEvents.length > 0 ? (
+                weekEvents.map(({ date, events }) =>
+                  events.map((event) => (
+                    <AgendaItem
+                      key={event.id}
+                      event={event}
+                      onClick={() => openModal('agenda-details', { eventId: event.id })}
+                    />
+                  ))
+                )
+              ) : (
+                <div className="text-center py-6 text-slate-500 text-xs">
+                  Aucun événement prévu
+                </div>
               )}
             </div>
           </div>
@@ -827,8 +1013,8 @@ export function OverviewView() {
           actionLabel="Voir tout"
         />
 
-        {/* Regroupement par type */}
-        <div className="space-y-6">
+        {/* Layout optimisé : 2 colonnes avec meilleure utilisation de l'espace */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {Object.entries(actionsByType).map(([type, typeActions]) => {
             const typeLabels: Record<string, string> = {
               contrat: 'Contrats',
@@ -838,16 +1024,16 @@ export function OverviewView() {
             };
 
             return (
-              <div key={type}>
-                <div className="flex items-center gap-2 mb-3">
-                  <h3 className="text-lg font-semibold text-slate-200">
+              <div key={type} className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-base font-semibold text-slate-200">
                     {typeLabels[type] || type}
                   </h3>
-                  <Badge variant="default" className="text-xs">
+                  <Badge variant="default" className="text-xs px-1.5 py-0.5">
                     {typeActions.length}
                   </Badge>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 gap-3">
                   {typeActions.slice(0, 3).map((action) => (
                     <ActionItem
                       key={action.id}

@@ -126,27 +126,24 @@ export function TemporalComparison({
             <div className="space-y-2">
               <ComparisonWidget
                 label="Demandes"
-                currentValue={currentData.demandes}
-                previousValue={comparisonData.demandes}
-                unit=""
+                current={currentData.demandes}
+                previous={comparisonData.demandes}
               />
               <ComparisonWidget
                 label="Validations"
-                currentValue={currentData.validations}
-                previousValue={comparisonData.validations}
-                unit=""
+                current={currentData.validations}
+                previous={comparisonData.validations}
               />
               <ComparisonWidget
                 label="Rejets"
-                currentValue={currentData.rejets}
-                previousValue={comparisonData.rejets}
-                unit=""
+                current={currentData.rejets}
+                previous={comparisonData.rejets}
               />
               <ComparisonWidget
                 label="Budget"
-                currentValue={currentData.budget}
-                previousValue={comparisonData.budget}
-                unit="Mds FCFA"
+                current={currentData.budget}
+                previous={comparisonData.budget}
+                format={(v) => `${(v / 1000000).toFixed(1)} Mds FCFA`}
               />
             </div>
 

@@ -10,8 +10,6 @@ import { cn } from '@/lib/utils';
 import {
   Loader2,
   RefreshCw,
-  Search,
-  X,
   Download,
   Zap,
   Activity,
@@ -112,10 +110,6 @@ function DashboardContent() {
   }, [mainCategory, subCategory, subSubCategory]);
 
   // UI state
-  const [kpiFilter, setKpiFilter] = useState<string>(() => {
-    if (typeof window !== 'undefined') return localStorage.getItem('dashboard-kpi-filter') || '';
-    return '';
-  });
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [refreshCount, setRefreshCount] = useState(0);
@@ -143,13 +137,6 @@ function DashboardContent() {
     window.addEventListener('mousedown', onDown, { capture: true });
     return () => window.removeEventListener('mousedown', onDown, { capture: true } as any);
   }, [showExportMenu]);
-
-  // Persist filtre
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    if (kpiFilter) localStorage.setItem('dashboard-kpi-filter', kpiFilter);
-    else localStorage.removeItem('dashboard-kpi-filter');
-  }, [kpiFilter]);
 
   // Note: Les handlers de navigation ne sont plus nécessaires car DashboardSidebar et DashboardSubNavigation
   // utilisent directement le store via useDashboardCommandCenterStore
@@ -201,11 +188,7 @@ function DashboardContent() {
     if (apiLastUpdate) setLastUpdate(new Date(apiLastUpdate));
   }, [apiLastUpdate]);
 
-  const topKpis = useMemo(() => {
-    const q = kpiFilter.trim().toLowerCase();
-    if (!q) return allKpis;
-    return allKpis.filter((k) => k.label.toLowerCase().includes(q));
-  }, [allKpis, kpiFilter]);
+  const topKpis = allKpis;
 
   // stats sidebar
   const stats = useMemo(
@@ -298,41 +281,44 @@ function DashboardContent() {
         {/* MAIN */}
         <DashboardShell
           header={
-            <div className="flex items-center justify-between gap-3">
-              <div className="min-w-0 flex-1">
-                <DashboardBreadcrumbs />
-                <div className="mt-2 flex items-center gap-3">
-                  <div className="text-[11px] text-slate-400">Maître d'ouvrage</div>
-                  <h1 className="text-base sm:text-lg font-semibold truncate">{pageTitle}</h1>
+            <div className="flex items-center justify-between gap-4">
+              <div className="min-w-0 flex-1 flex items-center gap-3">
+                <DashboardBreadcrumbs className="text-xs" />
+                <div className="h-4 w-px bg-slate-800/60" />
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="text-[10px] uppercase tracking-wider text-slate-500 font-medium whitespace-nowrap">Maître d'ouvrage</span>
+                  <h1 className="text-xs font-medium text-slate-400 truncate">{pageTitle}</h1>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="flex items-center gap-1.5 shrink-0">
                 <button
                   type="button"
                   className={cn(
-                    'inline-flex items-center gap-2 rounded-lg border border-slate-800/70',
-                    'bg-slate-900/40 px-3 py-2 text-xs text-slate-200',
+                    'inline-flex items-center gap-1.5 rounded-md border border-slate-800/70',
+                    'bg-slate-900/40 px-2.5 py-1.5 text-xs text-slate-200',
                     'hover:bg-slate-900/70 transition-colors duration-200',
                     'focus:outline-none focus:ring-2 focus:ring-blue-500/40'
                   )}
                   onClick={() => openModal('stats')}
+                  title="Pilotage"
                 >
-                  <BarChart3 className="h-4 w-4 text-slate-300" />
+                  <BarChart3 className="!h-3 !w-3 text-slate-300 flex-shrink-0" style={{ width: '0.75rem', height: '0.75rem', minWidth: '0.75rem', minHeight: '0.75rem', maxWidth: '0.75rem', maxHeight: '0.75rem' }} />
                   <span className="hidden sm:inline">Pilotage</span>
                 </button>
 
                 <button
                   type="button"
                   className={cn(
-                    'inline-flex items-center gap-2 rounded-lg border border-slate-800/70',
-                    'bg-slate-900/40 px-3 py-2 text-xs text-slate-200',
+                    'inline-flex items-center gap-1.5 rounded-md border border-slate-800/70',
+                    'bg-slate-900/40 px-2.5 py-1.5 text-xs text-slate-200',
                     'hover:bg-slate-900/70 transition-colors duration-200',
                     'focus:outline-none focus:ring-2 focus:ring-blue-500/40'
                   )}
                   onClick={() => openModal('settings')}
+                  title="Paramètres"
                 >
-                  <Settings className="h-4 w-4 text-slate-300" />
+                  <Settings className="!h-3 !w-3 text-slate-300 flex-shrink-0" style={{ width: '0.75rem', height: '0.75rem', minWidth: '0.75rem', minHeight: '0.75rem', maxWidth: '0.75rem', maxHeight: '0.75rem' }} />
                   <span className="hidden sm:inline">Paramètres</span>
                 </button>
               </div>
@@ -346,50 +332,23 @@ function DashboardContent() {
             className={cn(
               'border-b border-slate-800/60',
               'bg-slate-950/40 backdrop-blur',
-              'px-4 sm:px-6 py-4'
+              'px-4 sm:px-6 py-3'
             )}
             role="region"
             aria-label="Indicateurs clés"
           >
-            <div className="flex items-center justify-between gap-3 mb-3">
+            <div className="flex items-center justify-between gap-3 mb-2.5">
               <div className="flex items-center gap-2 min-w-0">
-                <span className="inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-                <div className="text-[11px] uppercase tracking-wide text-slate-400 font-medium">
+                <span className="inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                <div className="text-[10px] uppercase tracking-wide text-slate-400 font-medium">
                   Indicateurs clés
                 </div>
-                <div className="text-[11px] text-slate-500">
+                <div className="text-[10px] text-slate-500">
                   ({topKpis.length}/{allKpis.length})
                 </div>
               </div>
 
               <div className="flex items-center gap-2">
-                {/* Search KPI */}
-                <div className="relative">
-                  <input
-                    value={kpiFilter}
-                    onChange={(e) => setKpiFilter(e.target.value)}
-                    placeholder="Rechercher…"
-                    className={cn(
-                      'w-40 sm:w-56 px-3 py-2 text-xs rounded-lg',
-                      'bg-slate-900/40 border border-slate-800/70',
-                      'text-slate-200 placeholder:text-slate-500',
-                      'focus:outline-none focus:ring-2 focus:ring-blue-500/40'
-                    )}
-                  />
-                  {kpiFilter ? (
-                    <button
-                      type="button"
-                      onClick={() => setKpiFilter('')}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-200"
-                      aria-label="Effacer"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  ) : (
-                    <Search className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-600" />
-                  )}
-                </div>
-
                 {/* Refresh */}
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -405,7 +364,7 @@ function DashboardContent() {
                       )}
                       aria-label="Actualiser"
                     >
-                      <RefreshCw className={cn('h-4 w-4', isRefreshing ? 'animate-spin text-blue-400' : 'text-slate-300')} />
+                      <RefreshCw className={cn('h-5 w-5', isRefreshing ? 'animate-spin text-blue-400' : 'text-slate-300')} />
                     </button>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -433,7 +392,7 @@ function DashboardContent() {
                         aria-label="Exporter"
                         aria-expanded={showExportMenu}
                       >
-                        <Download className="h-4 w-4 text-slate-300" />
+                        <Download className="h-5 w-5 text-slate-300" />
                       </button>
                     </TooltipTrigger>
                     <TooltipContent>Exporter</TooltipContent>
@@ -449,7 +408,7 @@ function DashboardContent() {
                         }}
                         className="w-full px-3 py-2.5 text-left text-xs text-slate-200 hover:bg-slate-900/60 flex items-center gap-2"
                       >
-                        <FileText className="h-4 w-4" />
+                        <FileText className="h-3 w-3" />
                         Export CSV
                       </button>
                       <button
@@ -460,7 +419,7 @@ function DashboardContent() {
                         }}
                         className="w-full px-3 py-2.5 text-left text-xs text-slate-200 hover:bg-slate-900/60 flex items-center gap-2"
                       >
-                        <BarChart3 className="h-4 w-4" />
+                        <BarChart3 className="h-3 w-3" />
                         Export JSON
                       </button>
                       <div className="h-px bg-slate-800/70" />
@@ -472,7 +431,7 @@ function DashboardContent() {
                         }}
                         className="w-full px-3 py-2.5 text-left text-xs text-slate-200 hover:bg-slate-900/60 flex items-center gap-2"
                       >
-                        <BarChart3 className="h-4 w-4" />
+                        <BarChart3 className="h-3 w-3" />
                         Statistiques
                       </button>
                     </div>
@@ -483,7 +442,7 @@ function DashboardContent() {
                   <span>Mise à jour : {formatTimeAgo(lastUpdate)}</span>
                   {isRefreshing && (
                     <span className="inline-flex items-center gap-1 text-blue-400">
-                      <Zap className="h-3 w-3" />
+                      <Zap className="h-5 w-5" />
                       sync…
                     </span>
                   )}
@@ -593,7 +552,7 @@ const KPICardPro = memo(function KPICardPro({
               <div className="text-2xl font-semibold text-slate-100 truncate">{String(kpi.value)}</div>
               <div className="text-xs text-slate-400 mt-1">
                 <span className="inline-flex items-center gap-1">
-                  <Activity className="h-3 w-3 text-slate-500" />
+                  <Activity className="h-5 w-5 text-slate-500" />
                   {kpi.delta}
                 </span>
               </div>

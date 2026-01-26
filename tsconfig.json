@@ -27,7 +27,8 @@
       "@/domain/*": ["./src/domain/*"],
       "@/hooks/*": ["./src/hooks/*"],
       "@/types/*": ["./src/lib/types/*"],
-      "@/app/*": ["./app/*"]
+      "@/app/*": ["./app/*"],
+      "@lib-root/*": ["./lib/*"]
     }
   },
   "include": [

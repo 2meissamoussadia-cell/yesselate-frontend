@@ -12,6 +12,7 @@ import type { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { mapColorToTone } from '../../utils/colorMapping';
 import { 
   DashboardPageLayout, 
   DashboardSection, 
@@ -186,24 +187,8 @@ export const TendancesPage = memo(function TendancesPage() {
         ? 'Stable'
         : `${indicator.trend.change > 0 ? '+' : ''}${indicator.trend.change} (${Math.abs(indicator.trend.changePercent)}%)`;
 
-    // Helper pour mapper les couleurs de manière sûre
-    const mapColorToKPICardColor = (color: TrendIndicator['color']): KPICardData['color'] => {
-      switch (color) {
-        case 'orange':
-          return 'amber';
-        case 'red':
-          return 'rose';
-        case 'blue':
-        case 'emerald':
-        case 'purple':
-        case 'cyan':
-          return color;
-        default:
-          return 'blue';
-      }
-    };
-    
-    const color = mapColorToKPICardColor(indicator.color);
+    // Mapper la couleur de manière sûre avec l'utilitaire partagé
+    const color = mapColorToTone(indicator.color) as KPICardData['color'];
 
     return (
       <KPICard

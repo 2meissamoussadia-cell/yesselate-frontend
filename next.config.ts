@@ -78,6 +78,8 @@ const nextConfig: NextConfig = {
     ],
     // Désactivé : nécessite le module 'critters'. Réactiver après `npm i critters`.
     // optimizeCss: true,
+    // Phase P4: Activer l'instrumentation pour OpenTelemetry
+    instrumentationHook: true,
   },
 
   // ✅ Compiler optimisé

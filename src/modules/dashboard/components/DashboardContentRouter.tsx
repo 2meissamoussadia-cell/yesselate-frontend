@@ -1,7 +1,17 @@
 /**
  * Router de contenu pour le module Dashboard
  * Route vers les bonnes pages selon la navigation (niveaux 1, 2 et 3)
- * VERSION OPTIMISÉE avec mapping cleaner et meilleur logging
+ * 
+ * @deprecated Utiliser DashboardViewRouter à la place
+ * DashboardViewRouter offre :
+ * - Lazy loading des composants
+ * - Cache des composants chargés
+ * - Transitions animées
+ * - Meilleure gestion des routes via navigation.config.json
+ * 
+ * Migration:
+ * - Remplacer <DashboardContentRouter /> par <DashboardViewRouter />
+ * - DashboardViewRouter lit automatiquement la navigation depuis le store
  */
 
 'use client';

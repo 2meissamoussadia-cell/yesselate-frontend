@@ -13,6 +13,8 @@ import { Badge } from '@/components/ui/badge';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import type { LucideIcon } from 'lucide-react';
 import { LastUpdateDisplay } from '../LastUpdateDisplay';
+import { mapColorToTone } from '../../utils/colorMapping';
+import { parseTrendPercent } from '@lib-root/dashboard/kpi';
 import { 
   DashboardPageLayout, 
   DashboardSection, 
@@ -203,21 +205,10 @@ export const SummaryPointsPage = memo(function SummaryPointsPage() {
 
   const convertIndicatorToKPICardData = (indicator: Indicator): KPICardData => {
     // Convertir trend string en nombre
-    const trendMatch = indicator.trend.match(/([+-]?\d+)/);
-    const trendValue = trendMatch ? parseFloat(trendMatch[1]) : undefined;
+    const trendValue = parseTrendPercent(indicator.trend);
 
-    const color =
-      indicator.color === 'orange'
-        ? ('amber' as const)
-        : indicator.color === 'red'
-          ? ('rose' as const)
-          : indicator.color === 'emerald'
-            ? ('emerald' as const)
-            : indicator.color === 'cyan'
-              ? ('cyan' as const)
-              : indicator.color === 'purple'
-                ? ('purple' as const)
-                : ('blue' as const);
+    // Mapper la couleur de manière sûre
+    const color = mapColorToTone(indicator.color) as KPICardData['color'];
 
     return {
       id: indicator.id,
@@ -248,10 +239,7 @@ export const SummaryPointsPage = memo(function SummaryPointsPage() {
 
         {/* Groupes d'indicateurs */}
         {indicatorGroups.map((group) => {
-          const groupColor = 
-            group.color === 'orange' ? 'amber' :
-            group.color === 'red' ? 'rose' :
-            group.color;
+          const groupColor = mapColorToTone(group.color);
 
           return (
             <DashboardSection

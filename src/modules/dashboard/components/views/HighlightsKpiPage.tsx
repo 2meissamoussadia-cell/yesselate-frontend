@@ -5,7 +5,7 @@
 
 'use client';
 
-import React, { useCallback, memo, useMemo, useState } from 'react';
+import React, { useCallback, memo, useMemo } from 'react';
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -27,6 +27,7 @@ import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCen
 import { AnimatedBadge } from '../shared/AnimatedBadge';
 import { EnterpriseBadge } from '../shared/EnterpriseBadge';
 import { ExportButton } from '../shared/ExportButton';
+import { toneToColor, parseTrendPercent } from '@lib-root/dashboard/kpi';
 import { 
   DashboardPageLayout, 
   DashboardSection, 
@@ -75,7 +76,7 @@ export const HighlightsKpiPage = memo(function HighlightsKpiPage() {
       kpi: {
         label: kpi.label,
         value: kpi.value,
-        trend: typeof kpi.trend === 'string' ? parseFloat(kpi.trend.replace(/[^\d.-]/g, '')) || 0 : 0,
+        trend: parseTrendPercent(kpi.trend),
         trendType: kpi.trendDirection,
         tone: kpi.tone === 'success' ? 'ok' : kpi.tone === 'warning' ? 'warn' : 'crit',
         icon: kpi.icon,
@@ -354,20 +355,18 @@ export const HighlightsKpiPage = memo(function HighlightsKpiPage() {
   // Convertir topKPIs au format KPICardData
   const topKPIsData: KPICardData[] = useMemo(() => {
     return topKPIs.map((kpi) => {
-      const color =
-        kpi.tone === 'success'
-          ? ('emerald' as const)
-          : kpi.tone === 'warning'
-            ? ('amber' as const)
-            : kpi.tone === 'critical'
-              ? ('rose' as const)
-              : ('blue' as const);
+      // Conversion de 'success' -> 'ok' pour compatibilité avec Tone
+      const kpiTone: 'ok' | 'warn' | 'crit' | 'info' = 
+        kpi.tone === 'success' ? 'ok' :
+        kpi.tone === 'warning' ? 'warn' :
+        kpi.tone === 'critical' ? 'crit' : 'info';
+      const color = toneToColor(kpiTone);
       
       return {
         id: kpi.id,
         label: kpi.label,
         value: kpi.value,
-        trend: typeof kpi.trend === 'string' ? parseFloat(kpi.trend.replace(/[^\d.-]/g, '')) || 0 : 0,
+        trend: parseTrendPercent(kpi.trend),
         trendType: kpi.trendDirection,
         icon: kpi.icon,
         color,

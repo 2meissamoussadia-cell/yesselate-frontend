@@ -114,8 +114,6 @@ export const CircuitValidation = memo(function CircuitValidation({
                       <div className="relative px-2.5 py-1 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-[10px] font-bold rounded-lg shadow-lg shadow-orange-500/40 flex items-center gap-1.5 border border-orange-400/50">
                         <AlertTriangle className="w-3 h-3 flex-shrink-0" style={{ width: '0.75rem', height: '0.75rem', minWidth: '0.75rem', minHeight: '0.75rem' }} />
                         <span>Goulot</span>
-                        {/* Pulse animation */}
-                        <span className="absolute inset-0 rounded-lg bg-orange-400/30 animate-ping" />
                       </div>
                     </div>
                   )}

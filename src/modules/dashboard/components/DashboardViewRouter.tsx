@@ -9,9 +9,9 @@
 
 'use client';
 
-import { Suspense, useEffect, useState, useMemo, memo } from 'react';
+import { Suspense, useEffect, useState, useMemo, memo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BarChart3 } from 'lucide-react';
+import { BarChart3, ShieldX } from 'lucide-react';
 import { EmptyState } from './views/EmptyState';
 import { loadComponent } from '../utils/loadComponent';
 import {
@@ -19,12 +19,22 @@ import {
   isValidRoute,
   getAvailableRoutes,
   normalizeRoute,
+  getFallbackComponent,
 } from '../utils/routeValidation';
 import { useLogger } from '@/lib/utils/logger';
 import { cn } from '@/lib/utils';
 import type { ComponentType } from 'react';
 import { useTouchGestures } from '../hooks/useTouchGestures';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
+import { dashboardRegistry } from '../registry';
+import { navToKey, type NavKey } from '../types/dashboard';
+import { hasViewAccess } from '../utils/securityGuards';
+import { useAuthOptional } from '../hooks/useAuthOptional';
+import { useDashboardPermissions } from '../hooks/useDashboardPermissions';
+import { filterNavigationConfig, findFirstAuthorizedRoute } from '../utils/navigationFilter';
+import { dashboardNavigationConfig } from '../navigation/dashboardNavigationConfig';
+import { nodeAllowed } from '../navigation/permissions';
+import { useDashboardPermissionsStore } from '@/lib/stores/dashboardPermissionsStore';
 
 // ✅ Cache des composants chargés pour éviter les rechargements inutiles
 const componentCache = new Map<string, ComponentType>();
@@ -43,9 +53,18 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
 }: DashboardViewRouterProps) {
   // ✅ Initialiser le logger
   const log = useLogger('DashboardViewRouter');
+  
+  // ✅ Auth pour les guards de sécurité (optionnel)
+  const authContext = useAuthOptional();
+  const user = authContext?.user || null;
+
+  // Phase P10: Charger les permissions depuis le store Zustand
+  useDashboardPermissions(); // Charge les permissions si nécessaire
+  const permissions = useDashboardPermissionsStore((state) => state.permissions);
 
   // ✅ Source de vérité: Command Center store (évite "je clique et rien")
   const nav = useDashboardCommandCenterStore((s) => s.navigation);
+  const navigate = useDashboardCommandCenterStore((s) => s.navigate);
 
   const normalized = useMemo(() => {
     return normalizeRoute(nav.mainCategory, nav.subCategory, nav.subSubCategory);
@@ -54,6 +73,113 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
   const main = normalized.main;
   const sub = normalized.sub;
   const leaf = normalized.leaf;
+  
+  // ✅ Convertir en NavKey pour le registry
+  const navKey: NavKey = useMemo(() => ({
+    main: main as NavKey['main'],
+    sub: sub || null,
+    leaf: leaf || null,
+  }), [main, sub, leaf]);
+  
+  // ✅ Vérifier l'accès via le registry (vérification locale)
+  const registryKey = navToKey(navKey);
+  const registryEntry = dashboardRegistry[registryKey];
+  const hasAccessLocal = useMemo(() => {
+    return hasViewAccess(registryEntry, user);
+  }, [registryEntry, user]);
+
+  // Phase P10: Navigation filtrée pour trouver la première route autorisée
+  const filteredNav = useMemo(
+    () => filterNavigationConfig(
+      dashboardNavigationConfig,
+      permissions.permissions,
+      permissions.roles,
+      permissions.featureFlags
+    ),
+    [permissions.permissions, permissions.roles, permissions.featureFlags]
+  );
+
+  // Phase P10: Vérifier l'accès via /api/me/policy (check asynchrone)
+  const [hasAccessPolicy, setHasAccessPolicy] = useState<boolean | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    
+    async function checkPolicy() {
+      try {
+        const res = await fetch('/api/me/policy', {
+          headers: {
+            'x-tenant-id': 'default', // TODO: récupérer depuis le contexte auth
+            'x-user-id': 'anonymous', // TODO: récupérer depuis le contexte auth
+          },
+        });
+        if (cancelled) return;
+        
+        if (!res.ok) {
+          setHasAccessPolicy(false);
+          return;
+        }
+        
+        const policy = await res.json();
+        const { perms, flags } = policy;
+        
+        // Vérifier si la route actuelle est autorisée selon la policy avec nodeAllowed
+        const mainNode = filteredNav[main];
+        if (!mainNode) {
+          setHasAccessPolicy(false);
+          return;
+        }
+        
+        // Contexte utilisateur pour nodeAllowed
+        const userContext = {
+          perms,
+          flags,
+          roles: permissions.roles,
+        };
+        
+        // Vérifier l'accès au nœud principal avec nodeAllowed
+        const mainAllowed = nodeAllowed(userContext, mainNode.requires);
+        if (!mainAllowed) {
+          setHasAccessPolicy(false);
+          return;
+        }
+        
+        // Si sub, vérifier l'accès au sous-nœud avec nodeAllowed
+        if (sub) {
+          const subNode = mainNode.children?.find((c) => c.id === sub);
+          if (subNode) {
+            const subAllowed = nodeAllowed(userContext, subNode.requires);
+            if (!subAllowed) {
+              setHasAccessPolicy(false);
+              return;
+            }
+          }
+        }
+        
+        setHasAccessPolicy(true);
+      } catch (error) {
+        console.warn('[DashboardViewRouter] Failed to check policy', error);
+        setHasAccessPolicy(null); // Indéterminé, on garde l'accès local
+      }
+    }
+    
+    checkPolicy();
+    return () => { cancelled = true; };
+  }, [main, sub, leaf, filteredNav]);
+
+  // Phase P10: Rediriger vers la première route autorisée si la route actuelle est interdite
+  useEffect(() => {
+    // Si le check policy indique un accès refusé, rediriger
+    if (hasAccessPolicy === false) {
+      const firstRoute = findFirstAuthorizedRoute(filteredNav);
+      if (firstRoute) {
+        log.debug('Route interdite (policy), redirection vers première route autorisée', {
+          from: { main, sub, leaf },
+          to: firstRoute,
+        });
+        navigate(firstRoute.main as any, firstRoute.sub, firstRoute.leaf);
+      }
+    }
+  }, [hasAccessPolicy, filteredNav, main, sub, leaf, navigate, log]);
 
   const [Component, setComponent] = useState<ComponentType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -134,20 +260,42 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
           isValid: isValidRoute(routeMain, routeSub, routeLeaf),
         });
 
-        // Si toujours pas de componentName, utiliser fallback
+        // Phase 1 : Fallback automatique simplifié vers route sûre
+        // Si la triplette n'est pas configurée, viser "dashboard" du main
         if (!componentName) {
-          // Aucune route valide trouvée - afficher erreur
+          const fallback = getRouteComponent(routeMain, null, 'dashboard');
+          
+          if (fallback) {
+            log.debug('Fallback automatique activé', {
+              main: routeMain,
+              sub: routeSub,
+              leaf: routeLeaf,
+              fallbackComponent: fallback,
+              strategy: 'main->null->dashboard',
+            });
+            
+            const Loaded = await loadComponent(fallback);
+            if (cancelled) return;
+            
+            componentCache.set(routeKey, Loaded);
+            setComponent(() => Loaded);
+            setIsLoading(false);
+            return;
+          }
+          
+          // Si le fallback n'a pas fonctionné, afficher erreur
           const routeString = `${routeMain}/${routeSub || ''}/${routeLeaf || ''}`;
           
           // ✅ Ne logger un warning qu'une seule fois par route unique pour éviter le spam
           // Utiliser un Set statique pour tracker les routes déjà loggées
           if (!warnedRoutes.has(routeKey)) {
             warnedRoutes.add(routeKey);
-            log.warn(`Route non trouvée: ${routeString}`, {
+            log.warn(`Route non trouvée et fallback échoué: ${routeString}`, {
               main: routeMain,
               sub: routeSub,
               leaf: routeLeaf,
               routeKey,
+              fallbackAttempted: true,
             });
           }
           
@@ -211,7 +359,7 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
     return () => {
       cancelled = true;
     };
-  }, [currentRoute]); // ✅ Utiliser currentRoute mémorisé (navigationConfig est stable, pas besoin dans dépendances)
+  }, [currentRoute, hasAccess, registryEntry, navKey]); // ✅ Ajouter hasAccess et registryEntry dans les dépendances
 
   if (isLoading) {
     return (

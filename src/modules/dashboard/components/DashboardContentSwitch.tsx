@@ -7,9 +7,14 @@ import { Loader2, AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
-import { dashboardRegistry, navToKey, type NavKey } from '../registry/dashboardRegistry';
+import { dashboardRegistry, navToKey, type NavKey } from '../registry';
+import type { DashboardViewData } from '../types/dashboardDataTypes';
+import type { LoaderResult } from '../types/dashboard';
+import { createLogger } from '../utils/logger';
 
-type LoaderResult = { data: unknown; fetchedAt: number };
+const logger = createLogger('DashboardContentSwitch');
+
+type LoaderResultType = LoaderResult<DashboardViewData>;
 
 function isLoaderResult(value: unknown): value is LoaderResult {
   if (!value || typeof value !== 'object') return false;
@@ -42,7 +47,7 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
   const view = dashboardRegistry[viewKey];
 
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<unknown>(null);
+  const [data, setData] = useState<DashboardViewData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -132,7 +137,9 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
           return;
         }
 
-        setError(e instanceof Error ? e.message : 'Erreur de chargement');
+        const error = e instanceof Error ? e : new Error(String(e));
+        logger.error('Failed to load view', { key: viewKey, nav, retryAttempt, action: 'loadData' }, error);
+        setError(error.message);
         setRetryCount(0);
         setIsTransitioning(false);
       } finally {

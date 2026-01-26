@@ -26,6 +26,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { cn } from '@/lib/utils';
 import { useKPIFilter } from '@/modules/dashboard/hooks/useKPIFilter';
 import { useDashboardRefresh } from '@/modules/dashboard/hooks/useDashboardRefresh';
+import { useDashboardPermissions } from '@/modules/dashboard/hooks/useDashboardPermissions';
 import { KPIAlertsSystem } from '@/components/features/bmo/dashboard/command-center/KPIAlertsSystem';
 import type { KPIDisplayData } from '@/lib/mappings/dashboardKPIMapping';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
@@ -38,6 +39,7 @@ import { KpiTile, type KpiTileColor, type KpiTileTrendSentiment } from './KpiTil
 // Note: On utilise un alias car on a aussi un composant LegacyKPICard local
 import { KPICard as ModernKPICard } from '@/components/features/bmo/dashboard/components/KPICard';
 import { KPICard as SharedKPICard, type KPICardData } from './shared/KPICard';
+import { parseTrendPercent, toneToColor } from '@lib-root/dashboard/kpi';
 
 // Types
 type KPITone = 'ok' | 'warn' | 'crit' | 'info';
@@ -418,34 +420,37 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
     }
   }, [onKPIClick, openModal]);
 
+  // Phase P10: Vérifier permission export
+  const { canExport } = useDashboardPermissions();
+
   // Handlers d'export
   const handleExportCSV = useCallback(async () => {
-    if (onExport) {
+    if (onExport && canExport) {
       await onExport('csv');
     }
     setShowExportMenu(false);
-  }, [onExport]);
+  }, [onExport, canExport]);
 
   const handleExportJSON = useCallback(async () => {
-    if (onExport) {
+    if (onExport && canExport) {
       await onExport('json');
     }
     setShowExportMenu(false);
-  }, [onExport]);
+  }, [onExport, canExport]);
 
   const handleExportPDF = useCallback(async () => {
-    if (onExport) {
+    if (onExport && canExport) {
       await onExport('pdf');
     }
     setShowExportMenu(false);
-  }, [onExport]);
+  }, [onExport, canExport]);
 
   const handleExportExcel = useCallback(async () => {
-    if (onExport) {
+    if (onExport && canExport) {
       await onExport('excel');
     }
     setShowExportMenu(false);
-  }, [onExport]);
+  }, [onExport, canExport]);
 
   const handleToggleExportMenu = useCallback(() => {
     setShowExportMenu(prev => !prev);
@@ -786,25 +791,28 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
 
           {/* Export - Menu déroulant propre */}
           <div className="relative hidden md:block" data-export-menu>
-            <button
-              type="button"
-              onClick={handleToggleExportMenu}
-              className={cn(
-                'inline-flex items-center gap-2 rounded-lg px-3 py-2',
-                'bg-slate-900/40 border border-slate-800/70',
-                'text-slate-200',
-                'hover:bg-slate-900/60 hover:border-slate-700/70 transition-colors',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40',
-                'min-h-[32px]'
-              )}
-              style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}
-              aria-expanded={showExportMenu}
-              aria-haspopup="true"
-            >
-              <Download className="h-4 w-4" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />
-              <span>Exporter</span>
-            </button>
-            {showExportMenu && (
+            {/* Phase P10: Masquer le bouton Export si pas de permission */}
+            {canExport && (
+              <button
+                type="button"
+                onClick={handleToggleExportMenu}
+                className={cn(
+                  'inline-flex items-center gap-2 rounded-lg px-3 py-2',
+                  'bg-slate-900/40 border border-slate-800/70',
+                  'text-slate-200',
+                  'hover:bg-slate-900/60 hover:border-slate-700/70 transition-colors',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40',
+                  'min-h-[32px]'
+                )}
+                style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}
+                aria-expanded={showExportMenu}
+                aria-haspopup="true"
+              >
+                <Download className="h-4 w-4" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />
+                <span>Exporter</span>
+              </button>
+            )}
+            {showExportMenu && canExport && (
               <>
                 {/* Overlay pour fermer au clic extérieur - ne bloque pas les clics sur le menu */}
                 <div 
@@ -899,34 +907,10 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
               const trendType: 'up' | 'down' | 'neutral' = kpi.trend;
               
               // Convertir delta (string formatée comme "+5%" ou "-10%") en nombre pour trend
-              // Extraire la valeur numérique du delta
-              const trendValue = (() => {
-                if (!kpi.delta || typeof kpi.delta !== 'string') return 0;
-                // Extraire le nombre du delta (supprime tout sauf chiffres, points et signes)
-                const numericValue = parseFloat(kpi.delta.replace(/[^0-9.-]/g, ''));
-                // Si on ne peut pas parser, utiliser le signe du delta pour déterminer la valeur
-                if (isNaN(numericValue)) {
-                  if (kpi.delta.trim().startsWith('+')) return 1;
-                  if (kpi.delta.trim().startsWith('-')) return -1;
-                  return 0;
-                }
-                return numericValue;
-              })();
+              const trendValue = parseTrendPercent(kpi.delta);
               
               // Mapper tone vers color avec tous les cas
-              const color: KPICardData['color'] = (() => {
-                switch (kpi.tone) {
-                  case 'ok':
-                    return 'emerald';
-                  case 'warn':
-                    return 'amber';
-                  case 'crit':
-                    return 'rose';
-                  case 'info':
-                  default:
-                    return 'blue';
-                }
-              })();
+              const color: KPICardData['color'] = toneToColor(kpi.tone);
               
               const kpiCardData: KPICardData = {
                 id: kpi.label,

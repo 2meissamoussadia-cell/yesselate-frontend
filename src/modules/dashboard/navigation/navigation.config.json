@@ -1,6 +1,9 @@
 {
   "overview": {
     "label": "Vue d'ensemble",
+    "requires": {
+      "perm": "dashboard:read"
+    },
     "sub": {
       "summary": {
         "label": "Synthèse",
@@ -8,10 +11,6 @@
           "dashboard": {
             "label": "Dashboard principal",
             "component": "SummaryDashboardPage"
-          },
-          "points": {
-            "label": "Points clés",
-            "component": "SummaryPointsPage"
           },
           "highlights": {
             "label": "Points clés",
@@ -37,10 +36,6 @@
           "highlights": {
             "label": "Synthèse stratégique",
             "component": "HighlightsKpiPage"
-          },
-          "projet": {
-            "label": "KPIs Projet",
-            "component": "ProjetKpiPage"
           },
           "projets": {
             "label": "KPIs Projets",
@@ -122,17 +117,11 @@
   },
   "performance": {
     "label": "Performance & KPIs",
+    "requires": {
+      "perm": "dashboard:read"
+    },
     "sub": {
       "validations": {
-        "label": "Validations",
-        "leaf": {
-          "global": {
-            "label": "Vue globale",
-            "component": "ValidationsGlobalPage"
-          }
-        }
-      },
-      "validation": {
         "label": "Validations",
         "leaf": {
           "global": {
@@ -203,6 +192,103 @@
             "component": "ProjetKpiPage"
           }
         }
+      },
+      "achats": {
+        "label": "Achats & Contrats",
+        "requires": {
+          "perm": "achats:view",
+          "flag": "module.achats"
+        },
+        "leaf": {
+          "dashboard": {
+            "label": "Vue d'ensemble",
+            "component": "AchatsOverviewPage"
+          },
+          "trends": {
+            "label": "Tendances",
+            "component": "TendancesPage"
+          },
+          "fournisseurs": {
+            "label": "Fournisseurs",
+            "component": "AchatsFournisseursPage"
+          },
+          "open-orders": {
+            "label": "Commandes ouvertes",
+            "component": "AchatsOpenOrdersPage"
+          }
+        }
+      },
+      "stocks": {
+        "label": "Stocks",
+        "requires": {
+          "perm": "stocks:view",
+          "flag": "module.stocks"
+        },
+        "leaf": {
+          "overview": {
+            "label": "Vue d'ensemble",
+            "component": "StocksOverviewPage"
+          },
+          "trends": {
+            "label": "Tendances",
+            "component": "StocksTrendsPage"
+          }
+        }
+      },
+      "materiel": {
+        "label": "Matériel",
+        "leaf": {
+          "overview": {
+            "label": "Parc matériel",
+            "component": "MaterielOverviewPage"
+          }
+        }
+      },
+      "compliance": {
+        "label": "Conformité",
+        "requires": {
+          "perm": "compliance:view",
+          "flag": "module.compliance"
+        },
+        "leaf": {
+          "dashboard": {
+            "label": "Synthèse",
+            "component": "ComplianceOverviewPage"
+          },
+          "documents": {
+            "label": "Pièces manquantes",
+            "component": "ComplianceDocumentsPage"
+          },
+          "backlog": {
+            "label": "Backlog de visas",
+            "component": "ComplianceWorkflowsPage"
+          },
+          "lots": {
+            "label": "Lots non attribués",
+            "component": "ComplianceLotsPage"
+          }
+        }
+      },
+      "reporting": {
+        "label": "Reporting Direction",
+        "leaf": {
+          "dashboard": {
+            "label": "Synthèse",
+            "component": "ReportingOverviewPage"
+          },
+          "tendances": {
+            "label": "Tendances",
+            "component": "ReportingTrendsPage"
+          },
+          "bureaux": {
+            "label": "Par bureaux",
+            "component": "ReportingByBureauPage"
+          },
+          "chantiers": {
+            "label": "Par chantiers",
+            "component": "ReportingByChantierPage"
+          }
+        }
       }
     }
   },
@@ -243,15 +329,15 @@
           }
         }
       },
-      "blocked": {
+      "blocages": {
         "label": "Bloquées",
         "leaf": {
           "dashboard": {
             "label": "Dashboard Bloquées",
             "component": "SummaryDashboardPage"
           },
-          "blocages": {
-            "label": "Blocages",
+          "actifs": {
+            "label": "Blocages actifs",
             "component": "SummaryDashboardPage"
           },
           "escalades": {
@@ -298,6 +384,9 @@
   },
   "risks": {
     "label": "Risques & Santé",
+    "requires": {
+      "perm": "dashboard:read"
+    },
     "sub": {
       "critical": {
         "label": "Critiques",
@@ -346,19 +435,6 @@
           },
           "resolus": {
             "label": "Résolus",
-            "component": "SummaryDashboardPage"
-          }
-        }
-      },
-      "blocked": {
-        "label": "Bloqués",
-        "leaf": {
-          "dashboard": {
-            "label": "Dashboard Bloqués",
-            "component": "SummaryDashboardPage"
-          },
-          "blocages": {
-            "label": "Blocages",
             "component": "SummaryDashboardPage"
           },
           "escalades": {
@@ -462,6 +538,9 @@
   },
   "realtime": {
     "label": "Temps réel",
+    "requires": {
+      "perm": "dashboard:read"
+    },
     "sub": {
       "live": {
         "label": "Live",

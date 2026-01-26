@@ -30,6 +30,8 @@ import { EnterpriseBadge } from '../shared/EnterpriseBadge';
 import { SearchFilter } from '../shared/SearchFilter';
 import { EmptyState } from '../shared/EmptyState';
 import { ExportButton } from '../shared/ExportButton';
+import { parseTrendPercent, normalizeKPIColor } from '@lib-root/dashboard/kpi';
+import { formatKPICurrency, formatKPIPercentage, formatKPIValue, calculateDSO } from '../../utils/kpi';
 import { 
   DashboardPageLayout, 
   DashboardSection, 
@@ -37,6 +39,7 @@ import {
   DashboardPanel,
   KPICard,
   type KPICardData,
+  MockDataIndicator,
 } from '../shared';
 
 interface DemandeKPI {
@@ -67,7 +70,11 @@ interface Blocage {
   bureau: string;
 }
 
-export const DemandesKpiPage = memo(function DemandesKpiPage() {
+interface DemandesKpiPageProps {
+  data?: import('../../types/dashboard.readmodels').KpisDemandesData;
+}
+
+export const DemandesKpiPage = memo(function DemandesKpiPage({ data: apiData }: DemandesKpiPageProps = {}) {
   const openModal = useDashboardCommandCenterStore((state) => state.openModal);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -76,7 +83,7 @@ export const DemandesKpiPage = memo(function DemandesKpiPage() {
       kpi: {
         label: kpi.label,
         value: kpi.value,
-        trend: typeof kpi.trend === 'string' ? parseFloat(kpi.trend.replace(/[^\d.-]/g, '')) || 0 : 0,
+        trend: parseTrendPercent(kpi.trend),
         trendType: kpi.trendDirection,
         tone: kpi.color === 'emerald' ? 'ok' : kpi.color === 'amber' || kpi.color === 'red' ? 'warn' : 'info',
         icon: kpi.icon,
@@ -84,12 +91,38 @@ export const DemandesKpiPage = memo(function DemandesKpiPage() {
     });
   }, [openModal]);
 
-  // KPIs principaux avec sparklines
-  const demandeKPIs: DemandeKPI[] = [
+  // Calculs des KPIs métier BTP (Achats/Contrats et Finance)
+  const kpiCalculations = useMemo(() => {
+    // Lead time fournisseur moyen (estimation basée sur les goulets)
+    const leadTimeFournisseur = goulets.length > 0 
+      ? goulets.reduce((sum, g) => sum + g.tempsMoyen, 0) / goulets.length 
+      : 0;
+    
+    // Taux contrats en conformité (estimation: 85% si pas de litiges majeurs)
+    const tauxConformite = blocages.filter(b => b.priorite === 'critique').length === 0 ? 92 : 85;
+    
+    // DSO (Days Sales Outstanding) - estimation
+    const creances = 12500000; // Estimation
+    const chiffreAffaires = 45000000; // Estimation mensuel
+    const dso = calculateDSO(creances, chiffreAffaires, 30);
+    
+    // Reste à facturer (estimation)
+    const resteAFacturer = 8500000;
+    
+    return {
+      leadTimeFournisseur,
+      tauxConformite,
+      dso,
+      resteAFacturer,
+    };
+  }, [goulets, blocages]);
+
+  // KPIs principaux avec sparklines (enrichis avec KPIs métier BTP Achats/Contrats et Finance)
+  const demandeKPIs: DemandeKPI[] = useMemo(() => [
     {
       id: '1',
       label: 'Volume total',
-      value: 247,
+      value: apiData?.total ?? 247,
       trend: '+12',
       trendDirection: 'up',
       icon: FileText,
@@ -110,49 +143,57 @@ export const DemandesKpiPage = memo(function DemandesKpiPage() {
     },
     {
       id: '3',
-      label: 'Temps moyen de traitement',
-      value: '2.4j',
-      trend: '-0.3j',
+      label: 'Lead time fournisseur',
+      value: formatKPIValue(kpiCalculations.leadTimeFournisseur, 'j', 1),
+      trend: '-0.5j',
       trendDirection: 'down',
       icon: Clock,
-      color: 'emerald',
-      sparkline: [3.2, 3.0, 2.9, 2.8, 2.7, 2.6, 2.4],
-      description: 'Délai moyen de traitement en jours',
+      color: kpiCalculations.leadTimeFournisseur < 4 ? 'emerald' : 'amber',
+      sparkline: [5.0, 4.8, 4.6, 4.4, 4.2, 4.0, kpiCalculations.leadTimeFournisseur],
+      description: 'Délai moyen de livraison fournisseur',
     },
     {
       id: '4',
+      label: 'Taux contrats conformité',
+      value: formatKPIPercentage(kpiCalculations.tauxConformite),
+      trend: '+2%',
+      trendDirection: 'up',
+      icon: Shield,
+      color: kpiCalculations.tauxConformite >= 90 ? 'emerald' : kpiCalculations.tauxConformite >= 80 ? 'amber' : 'red',
+      description: 'CCAP/CCAG en conformité',
+    },
+    {
+      id: '5',
       label: 'Blocages actifs',
-      value: 5,
+      value: blocages.reduce((sum, b) => sum + b.count, 0),
       trend: '-2',
       trendDirection: 'down',
       icon: AlertTriangle,
       color: 'amber',
-      sparkline: [9, 8, 7, 7, 6, 6, 5],
+      sparkline: [9, 8, 7, 7, 6, 6, blocages.reduce((sum, b) => sum + b.count, 0)],
       description: 'Demandes bloquées nécessitant intervention',
     },
     {
-      id: '5',
-      label: 'En attente de validation',
-      value: 28,
-      trend: '-5',
+      id: '6',
+      label: 'DSO (Délai paiement)',
+      value: formatKPIValue(kpiCalculations.dso, 'j', 1),
+      trend: '-2j',
       trendDirection: 'down',
-      icon: Hourglass,
-      color: 'amber',
-      sparkline: [38, 36, 34, 32, 31, 29, 28],
-      description: 'Demandes en attente de validation',
+      icon: DollarSign,
+      color: kpiCalculations.dso < 30 ? 'emerald' : kpiCalculations.dso < 45 ? 'amber' : 'red',
+      description: 'Délai moyen de paiement',
     },
     {
-      id: '6',
-      label: 'Taux de rejet',
-      value: '8%',
-      trend: '-1%',
+      id: '7',
+      label: 'Reste à facturer',
+      value: formatKPICurrency(kpiCalculations.resteAFacturer, 'FCFA'),
+      trend: '-5%',
       trendDirection: 'down',
-      icon: XCircle,
-      color: 'emerald',
-      sparkline: [12, 11, 10, 10, 9, 9, 8],
-      description: 'Pourcentage de demandes rejetées',
+      icon: FileText,
+      color: 'blue',
+      description: 'Montant restant à facturer',
     },
-  ];
+  ], [goulets, blocages, kpiCalculations]);
 
   // Goulets d'étranglement
   const goulets: Goulet[] = [
@@ -281,40 +322,27 @@ export const DemandesKpiPage = memo(function DemandesKpiPage() {
     { bureau: 'BJ', volume: 74, validation: 89, tempsMoyen: 2.5 },
   ];
 
-  // Helper pour mapper les couleurs de manière sûre
-  const mapColorToKPICardColor = useCallback((color: DemandeKPI['color']): KPICardData['color'] => {
-    switch (color) {
-      case 'red':
-        return 'rose';
-      case 'blue':
-      case 'emerald':
-      case 'amber':
-      case 'purple':
-        return color;
-      default:
-        return 'blue';
-    }
-  }, []);
-
   // Convertir demandeKPIs au format KPICardData
   const demandeKPIsData: KPICardData[] = useMemo(() => {
     return demandeKPIs.map((kpi) => ({
       id: kpi.id,
       label: kpi.label,
       value: kpi.value,
-      trend: typeof kpi.trend === 'string' ? parseFloat(kpi.trend.replace(/[^\d.-]/g, '')) || 0 : 0,
+      trend: parseTrendPercent(kpi.trend),
       trendType: kpi.trendDirection,
       icon: kpi.icon,
-      color: mapColorToKPICardColor(kpi.color),
+      color: normalizeKPIColor(kpi.color),
       description: kpi.description,
       sparkline: kpi.sparkline,
       onClick: () => handleKPIClick(kpi),
     }));
-  }, [demandeKPIs, handleKPIClick, mapColorToKPICardColor]);
+  }, [demandeKPIs, handleKPIClick]);
 
   return (
-    <TooltipProvider delayDuration={200}>
-      <DashboardPageLayout maxWidth="xl" padding="md">
+    <div className="relative">
+      <MockDataIndicator message="Données mockées - Phase 1 (Backend en attente)" />
+      <TooltipProvider delayDuration={200}>
+        <DashboardPageLayout maxWidth="xl" padding="md">
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
@@ -562,8 +590,9 @@ export const DemandesKpiPage = memo(function DemandesKpiPage() {
             ))}
           </DashboardGrid>
         </DashboardSection>
-      </DashboardPageLayout>
-    </TooltipProvider>
+        </DashboardPageLayout>
+      </TooltipProvider>
+    </div>
   );
 });
 

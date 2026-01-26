@@ -60,7 +60,7 @@ export const DashboardFooter = memo(function DashboardFooter({
 
   return (
     <div className={cn(
-      "border-t border-slate-800/60 bg-gradient-to-r from-slate-900/60 via-slate-900/40 to-slate-900/60 backdrop-blur-xl px-2 sm:px-4 py-2 sm:py-3 text-xs text-slate-300 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-0 shadow-lg shadow-black/10 min-w-0 overflow-hidden",
+      "border-t border-slate-800/60 bg-slate-950/40 backdrop-blur-xl px-2 sm:px-4 py-2 sm:py-3 text-xs text-slate-300 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-0 min-w-0 overflow-hidden",
       safeArea.pbFallback()
     )}>
       <div className="flex items-center gap-2 sm:gap-3 flex-wrap min-w-0 flex-1">

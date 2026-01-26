@@ -14,12 +14,26 @@ import {
   Settings,
 } from 'lucide-react';
 
+/**
+ * Exigences d'accès pour un nœud de navigation (Phase P10)
+ */
+export interface NavRequires {
+  /** Permission requise (ex: 'dashboard:read', 'achats:view') */
+  perm?: string;
+  /** Feature flag requis (ex: 'module.achats', 'module.stocks') */
+  flag?: string;
+  /** Rôles requis (ex: ['admin', 'manager']) - si non spécifié, vérifie seulement perm/flag */
+  roles?: string[];
+}
+
 export interface NavNode {
   id: string;
   label: string;
   icon?: React.ComponentType<{ className?: string }>;
   badge?: number | string;
   badgeType?: 'default' | 'warning' | 'critical' | 'success';
+  /** Phase P10: Exigences d'accès (permission + feature flag) */
+  requires?: NavRequires;
   children?: NavNode[];
 }
 
@@ -28,6 +42,7 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
     id: 'overview',
     label: 'Accueil',
     icon: Home,
+    requires: { perm: 'dashboard:read' },
     children: [
       {
         id: 'summary',
@@ -72,6 +87,7 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
     id: 'performance',
     label: 'Performance',
     icon: TrendingUp,
+    requires: { perm: 'dashboard:read' },
     children: [
       {
         id: 'indicators',
@@ -126,6 +142,56 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
           { id: 'projets', label: 'Par projets' },
           { id: 'periode', label: 'Par période' },
           { id: 'benchmarking', label: 'Benchmarking' },
+        ],
+      },
+      {
+        id: 'achats',
+        label: 'Achats & Contrats',
+        requires: { perm: 'achats:view', flag: 'module.achats' },
+        children: [
+          { id: 'dashboard', label: 'Vue d\'ensemble' },
+          { id: 'trends', label: 'Tendances' },
+          { id: 'fournisseurs', label: 'Fournisseurs' },
+          { id: 'open-orders', label: 'Commandes ouvertes' },
+        ],
+      },
+      {
+        id: 'stocks',
+        label: 'Stocks',
+        requires: { perm: 'stocks:view', flag: 'module.stocks' },
+        children: [
+          { id: 'overview', label: 'Vue d\'ensemble' },
+          { id: 'trends', label: 'Tendances' },
+        ],
+      },
+      {
+        id: 'materiel',
+        label: 'Matériel',
+        requires: { perm: 'materiel:view', flag: 'module.materiel' },
+        children: [
+          { id: 'overview', label: 'Parc matériel' },
+        ],
+      },
+      {
+        id: 'compliance',
+        label: 'Conformité',
+        requires: { perm: 'compliance:view', flag: 'module.compliance' },
+        children: [
+          { id: 'dashboard', label: 'Synthèse' },
+          { id: 'documents', label: 'Pièces manquantes' },
+          { id: 'backlog', label: 'Backlog de visas' },
+          { id: 'lots', label: 'Lots non attribués' },
+        ],
+      },
+      {
+        id: 'reporting',
+        label: 'Reporting Direction',
+        requires: { perm: 'reporting:view', flag: 'module.reporting' },
+        children: [
+          { id: 'dashboard', label: 'Synthèse' },
+          { id: 'tendances', label: 'Tendances' },
+          { id: 'bureaux', label: 'Par bureaux' },
+          { id: 'chantiers', label: 'Par chantiers' },
         ],
       },
       {
@@ -233,6 +299,7 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
     icon: AlertTriangle,
     badge: 0,
     badgeType: 'critical',
+    requires: { perm: 'dashboard:read' },
     children: [
       {
         id: 'critical',
@@ -289,6 +356,7 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
     icon: Scale,
     badge: 0,
     badgeType: 'warning',
+    requires: { perm: 'dashboard:read' },
     children: [
       {
         id: 'pending',
@@ -343,6 +411,7 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
     id: 'realtime',
     label: 'Temps réel',
     icon: Activity,
+    requires: { perm: 'dashboard:read' },
     children: [
       {
         id: 'monitoring',

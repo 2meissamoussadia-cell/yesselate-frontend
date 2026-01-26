@@ -32,6 +32,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { DataCard } from '@/components/features/bmo/dashboard/components';
 import { EnterpriseBadge } from '../shared/EnterpriseBadge';
+import { mapColorToTone } from '../../utils/colorMapping';
+import { 
+  parseTrendPercent, 
+  normalizeKPIColor, 
+  formatMoneyCompact, 
+  formatKPIValue, 
+  formatKPIPercentage 
+} from '@lib-root/dashboard/kpi';
 import { 
   DashboardPageLayout, 
   DashboardSection, 
@@ -39,6 +47,7 @@ import {
   DashboardPanel,
   KPICard,
   type KPICardData,
+  MockDataIndicator,
 } from '../shared';
 
 interface ValidationKPI {
@@ -80,7 +89,32 @@ interface ValidationRecent {
 export const ValidationsGlobalPage = memo(function ValidationsGlobalPage() {
   const [searchQuery, setSearchQuery] = useState('');
 
-  // KPIs principaux
+  // Calculs des KPIs métier BTP (Opérations/Conduite de travaux)
+  const kpiCalculations = useMemo(() => {
+    // Cycle visa moyen (délai moyen BC/avenants/factures)
+    const cycleVisaMoyen = bureauStats.reduce((sum, b) => sum + b.tempsMoyen, 0) / bureauStats.length;
+    
+    // Blocages actifs par bureau
+    const blocagesParBureau = bureauStats.map(b => ({
+      bureau: b.code,
+      blocages: b.enAttente, // Estimation: en attente = blocages
+    }));
+    const totalBlocages = blocagesParBureau.reduce((sum, b) => sum + b.blocages, 0);
+    
+    // Taux de situations validées (mois en cours)
+    const totalValidations = bureauStats.reduce((sum, b) => sum + b.validees + b.enAttente + b.rejetees, 0);
+    const totalValidees = bureauStats.reduce((sum, b) => sum + b.validees, 0);
+    const tauxSituationsValidees = totalValidations > 0 ? (totalValidees / totalValidations) * 100 : 0;
+    
+    return {
+      cycleVisaMoyen,
+      blocagesParBureau,
+      totalBlocages,
+      tauxSituationsValidees,
+    };
+  }, [bureauStats]);
+
+  // KPIs principaux (enrichis avec KPIs métier BTP Opérations)
   const kpis: ValidationKPI[] = useMemo(() => [
     {
       id: 'total',
@@ -93,14 +127,34 @@ export const ValidationsGlobalPage = memo(function ValidationsGlobalPage() {
       description: 'Ce mois (vs mois précédent)',
     },
     {
-      id: 'en_attente',
-      label: 'En attente',
-      value: '28',
-      trend: '-5',
+      id: 'taux_situations_validees',
+      label: 'Taux situations validées',
+      value: formatKPIPercentage(kpiCalculations.tauxSituationsValidees),
+      trend: '+2%',
+      trendType: 'up',
+      icon: CheckCircle,
+      color: 'emerald',
+      description: 'Mois en cours',
+    },
+    {
+      id: 'cycle_visa',
+      label: 'Cycle visa moyen',
+      value: formatKPIValue(kpiCalculations.cycleVisaMoyen, 'h', 1),
+      trend: '-0.3h',
       trendType: 'down',
       icon: Clock,
-      color: 'amber',
-      description: 'En cours de traitement',
+      color: kpiCalculations.cycleVisaMoyen < 3 ? 'emerald' : kpiCalculations.cycleVisaMoyen < 5 ? 'amber' : 'red',
+      description: 'Délai moyen BC/avenants/factures',
+    },
+    {
+      id: 'blocages_actifs',
+      label: 'Blocages actifs',
+      value: kpiCalculations.totalBlocages.toString(),
+      trend: '-5',
+      trendType: 'down',
+      icon: AlertTriangle,
+      color: kpiCalculations.totalBlocages < 10 ? 'emerald' : kpiCalculations.totalBlocages < 20 ? 'amber' : 'red',
+      description: `Par bureau: ${kpiCalculations.blocagesParBureau.map(b => `${b.bureau}:${b.blocages}`).join(', ')}`,
     },
     {
       id: 'validees',
@@ -113,26 +167,6 @@ export const ValidationsGlobalPage = memo(function ValidationsGlobalPage() {
       description: 'Taux de validation: 87%',
     },
     {
-      id: 'rejetees',
-      label: 'Rejetées',
-      value: '16',
-      trend: '+1',
-      trendType: 'up',
-      icon: XCircle,
-      color: 'red',
-      description: 'Taux de rejet: 5%',
-    },
-    {
-      id: 'temps_moyen',
-      label: 'Temps moyen',
-      value: '2.4h',
-      trend: '-0.3h',
-      trendType: 'down',
-      icon: Zap,
-      color: 'cyan',
-      description: 'Traitement moyen',
-    },
-    {
       id: 'sla_compliance',
       label: 'Conformité SLA',
       value: '94%',
@@ -142,7 +176,7 @@ export const ValidationsGlobalPage = memo(function ValidationsGlobalPage() {
       color: 'purple',
       description: 'Respect des délais',
     },
-  ], []);
+  ], [kpiCalculations]);
 
   // Statistiques par bureau
   const bureauStats: BureauValidation[] = useMemo(() => [
@@ -238,29 +272,7 @@ export const ValidationsGlobalPage = memo(function ValidationsGlobalPage() {
     );
   }, [searchQuery, bureauStats]);
 
-  const formatMoney = (n: number): string => {
-    if (!Number.isFinite(n)) return '—';
-    if (Math.abs(n) >= 1_000_000) return `${(n / 1_000_000).toFixed(1)} M`;
-    if (Math.abs(n) >= 1_000) return `${Math.round(n / 1_000)} K`;
-    return `${n}`;
-  };
-
-  // Helper pour mapper les couleurs de manière sûre
-  const mapColorToKPICardColor = useCallback((color: ValidationKPI['color']): KPICardData['color'] => {
-    switch (color) {
-      case 'orange':
-        return 'amber';
-      case 'red':
-        return 'rose';
-      case 'blue':
-      case 'emerald':
-      case 'purple':
-      case 'cyan':
-        return color;
-      default:
-        return 'blue';
-    }
-  }, []);
+  // Utilise formatMoneyCompact centralisé depuis @/lib/dashboard/kpi
 
   // Convertir kpis au format KPICardData
   const kpisData: KPICardData[] = useMemo(() => {
@@ -268,19 +280,39 @@ export const ValidationsGlobalPage = memo(function ValidationsGlobalPage() {
       id: k.id,
       label: k.label,
       value: k.value,
-      trend: typeof k.trend === 'string' ? parseFloat(k.trend.replace(/[^\d.-]/g, '')) || 0 : 0,
+      trend: parseTrendPercent(k.trend),
       trendType: k.trendType,
       icon: k.icon,
-      color: mapColorToKPICardColor(k.color),
+      color: normalizeKPIColor(k.color),
       description: k.description,
       onClick: k.onClick,
     }));
-  }, [kpis, mapColorToKPICardColor]);
+  }, [kpis]);
+
+  // Charge consolidée par bureau (pour Achats/Bureau des Marchés)
+  const chargeConsolidee = useMemo(() => {
+    return bureauStats.map(bureau => ({
+      ...bureau,
+      chargeTotale: bureau.enAttente + bureau.validees + bureau.rejetees,
+      chargeEnAttente: bureau.enAttente,
+      chargeValidees: bureau.validees,
+      chargeRejetees: bureau.rejetees,
+      delaiMoyenJours: bureau.tempsMoyen * 24, // Conversion heures -> jours
+      conformite: bureau.slaCompliance,
+    }));
+  }, [bureauStats]);
+
+  const chargeTotale = useMemo(() => {
+    return chargeConsolidee.reduce((sum, b) => sum + b.chargeTotale, 0);
+  }, [chargeConsolidee]);
 
   return (
-    <DashboardPageLayout maxWidth="xl" padding="md">
-      {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+    <div className="relative">
+      <MockDataIndicator message="Données mockées - Phase 1 (Backend en attente)" />
+      
+      <DashboardPageLayout maxWidth="xl" padding="md">
+        {/* Header */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
           <h1 className="text-slate-50 font-semibold text-xl sm:text-2xl">
             Validations — Vue globale
@@ -424,7 +456,7 @@ export const ValidationsGlobalPage = memo(function ValidationsGlobalPage() {
                   </Badge>
                 </div>
                 <div className="text-slate-400 text-xs">
-                  {v.bureau} · {formatMoney(v.montant)} FCFA · {v.dateCreation}
+                  {v.bureau} · {formatMoneyCompact(v.montant)} · {v.dateCreation}
                 </div>
               </div>
 
@@ -444,6 +476,74 @@ export const ValidationsGlobalPage = memo(function ValidationsGlobalPage() {
             </DashboardPanel>
           ))}
         </div>
+      </DashboardSection>
+
+      {/* Charge consolidée (Achats / Bureau des Marchés) */}
+      <DashboardSection>
+        <DashboardPanel 
+          title="Charge consolidée par bureau" 
+          description="Délais, conformité, volumétrie — Vue Achats/Bureau des Marchés"
+          className="bg-slate-900/40"
+        >
+          <div className="mb-4 p-3 rounded-lg bg-slate-950/35 border border-slate-800/60">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm text-slate-400">Charge totale</div>
+                <div className="text-2xl font-bold text-white">{chargeTotale} validations</div>
+              </div>
+              <div className="text-right">
+                <div className="text-sm text-slate-400">Délai moyen</div>
+                <div className="text-2xl font-bold text-blue-400">
+                  {formatKPIValue(chargeConsolidee.reduce((sum, b) => sum + b.delaiMoyenJours, 0) / chargeConsolidee.length, 'j', 1)}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            {chargeConsolidee.map((bureau) => (
+              <div
+                key={bureau.id}
+                className="flex items-center justify-between p-4 rounded-lg border border-slate-800/60 bg-slate-950/35 hover:bg-slate-900/50 transition-colors"
+              >
+                <div className="flex items-center gap-4 flex-1">
+                  <div className="h-12 w-12 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                    <Building2 className="h-6 w-6 text-blue-400" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold text-slate-200">{bureau.bureau}</div>
+                    <div className="text-xs text-slate-400 mt-1">
+                      {bureau.chargeTotale} validations • {bureau.chargeEnAttente} en attente
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-6">
+                  <div className="text-right">
+                    <div className="text-sm font-semibold text-slate-200">
+                      {formatKPIValue(bureau.delaiMoyenJours, 'j', 1)}
+                    </div>
+                    <div className="text-xs text-slate-400">Délai moyen</div>
+                  </div>
+                  <div className="text-right">
+                    <div className={cn(
+                      'text-sm font-semibold',
+                      bureau.conformite >= 95 ? 'text-emerald-400' : bureau.conformite >= 90 ? 'text-amber-400' : 'text-rose-400'
+                    )}>
+                      {bureau.conformite}%
+                    </div>
+                    <div className="text-xs text-slate-400">Conformité SLA</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm font-semibold text-slate-200">
+                      {bureau.chargeValidees}
+                    </div>
+                    <div className="text-xs text-slate-400">Validées</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </DashboardPanel>
       </DashboardSection>
 
       {/* Contexte / méta */}
@@ -468,7 +568,8 @@ export const ValidationsGlobalPage = memo(function ValidationsGlobalPage() {
           badgeVariant="success"
         />
       </DashboardGrid>
-    </DashboardPageLayout>
+      </DashboardPageLayout>
+    </div>
   );
 });
 

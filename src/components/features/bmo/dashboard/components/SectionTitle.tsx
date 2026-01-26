@@ -82,9 +82,22 @@ export const SectionTitle = memo(function SectionTitle({
     <div className={cn('flex items-center justify-between mb-4', className)}>
       <div className="flex items-center gap-2.5">
         {Icon && (
-          <div className="inline-flex items-center justify-center rounded-lg border border-slate-800/60 bg-slate-900/40 p-1.5">
-            <span style={sizeStyles.icon} className="inline-flex items-center justify-center flex-shrink-0">
-              <Icon className={cn('text-slate-300 w-full h-full', sizes.icon)} />
+          <div className="inline-flex items-center justify-center rounded-lg border border-slate-800/60 bg-slate-900/40 p-1.5 overflow-hidden relative [&_svg]:max-w-full [&_svg]:max-h-full [&_svg]:w-full [&_svg]:h-full">
+            <span 
+              style={sizeStyles.icon} 
+              className="inline-flex items-center justify-center flex-shrink-0 relative z-10 overflow-hidden"
+            >
+              <Icon 
+                className={cn('text-slate-300 flex-shrink-0', sizes.icon)} 
+                style={{ 
+                  width: sizeStyles.icon.width,
+                  height: sizeStyles.icon.height,
+                  maxWidth: sizeStyles.icon.maxWidth,
+                  maxHeight: sizeStyles.icon.maxHeight,
+                  minWidth: sizeStyles.icon.minWidth,
+                  minHeight: sizeStyles.icon.minHeight,
+                }} 
+              />
             </span>
           </div>
         )}

@@ -120,24 +120,24 @@ export function DashboardKPIBar({
   };
 
   return (
-    <div className="bg-slate-900/40 border-b border-slate-700/40">
+    <div className="bg-slate-900/40 border-b border-slate-700/40 min-w-0 overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-1.5 border-b border-slate-800/50">
-        <div className="flex items-center gap-3">
-          <span className="text-xs font-medium text-slate-400 uppercase tracking-wide">
+      <div className="flex items-center justify-between px-4 py-1.5 border-b border-slate-800/50 min-w-0">
+        <div className="flex items-center gap-3 min-w-0 flex-1">
+          <span className="text-xs font-medium text-slate-400 uppercase tracking-wide truncate">
             Indicateurs en temps réel
           </span>
-          <span className="text-xs text-slate-600">
+          <span className="text-xs text-slate-600 whitespace-nowrap flex-shrink-0">
             Mise à jour: il y a 2 min
           </span>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 flex-shrink-0">
           <Button
             variant="ghost"
             size="sm"
             onClick={typeof onRefresh === 'function' ? onRefresh : undefined}
             disabled={typeof onRefresh !== 'function'}
-            className="h-6 w-6 p-0 text-slate-500 hover:text-slate-300 disabled:opacity-50"
+            className="h-6 w-6 p-0 text-slate-500 hover:text-slate-300 disabled:opacity-50 flex-shrink-0"
           >
             <RefreshCw className={cn('h-3 w-3', isRefreshing && 'animate-spin')} />
           </Button>
@@ -145,7 +145,7 @@ export function DashboardKPIBar({
             variant="ghost"
             size="sm"
             onClick={() => setKPIConfig({ collapsed: !kpiConfig.collapsed })}
-            className="h-6 w-6 p-0 text-slate-500 hover:text-slate-300"
+            className="h-6 w-6 p-0 text-slate-500 hover:text-slate-300 flex-shrink-0"
           >
             {kpiConfig.collapsed ? (
               <ChevronDown className="h-3 w-3" />
@@ -158,7 +158,7 @@ export function DashboardKPIBar({
 
       {/* KPIs Grid */}
       {!kpiConfig.collapsed && (
-        <div className="grid grid-cols-4 lg:grid-cols-8 gap-px bg-slate-800/30 p-px">
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-px bg-slate-800/30 p-px min-w-0">
           {safeKPIs.map((kpi) => (
             <KPICard key={kpi.id} kpi={kpi} onClick={() => handleKPIClick(kpi)} />
           ))}
@@ -188,7 +188,7 @@ function KPICard({ kpi, onClick }: { kpi: KPIItem; onClick?: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="bg-slate-900/60 px-3 py-2 hover:bg-slate-800/40 transition-colors cursor-pointer group text-left"
+      className="bg-slate-900/60 px-3 py-2 hover:bg-slate-800/40 transition-colors cursor-pointer group text-left min-w-0 overflow-hidden"
     >
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0 flex-1">

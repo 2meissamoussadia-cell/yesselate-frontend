@@ -43,7 +43,23 @@ interface TendancesChartProps {
 export function TendancesChart({ className, type = 'line' }: TendancesChartProps) {
   const { data, isLoading } = useGouvernanceData('tendances');
 
-  const tendances = (data as TendanceMensuelle[]) || [];
+  // Normaliser les données pour garantir que tendances est toujours un tableau
+  const tendances: TendanceMensuelle[] = (() => {
+    if (!data) return [];
+    
+    // Si data est déjà un tableau, le retourner
+    if (Array.isArray(data)) {
+      return data as TendanceMensuelle[];
+    }
+    
+    // Si data est un objet avec une propriété tendances, l'extraire
+    if (typeof data === 'object' && 'tendances' in data && Array.isArray(data.tendances)) {
+      return data.tendances as TendanceMensuelle[];
+    }
+    
+    // Sinon, retourner un tableau vide
+    return [];
+  })();
 
   if (isLoading) {
     return (
@@ -66,15 +82,20 @@ export function TendancesChart({ className, type = 'line' }: TendancesChartProps
     datasets: [
       {
         label: 'Projets actifs',
-        data: tendances.map((t) => t.projets_actifs),
+        data: tendances.map((t) => {
+          return typeof t.projets_actifs === 'number' ? t.projets_actifs : parseFloat(String(t.projets_actifs || 0));
+        }),
         borderColor: 'rgb(59, 130, 246)',
         backgroundColor: 'rgba(59, 130, 246, 0.1)',
         fill: true,
         tension: 0.4,
       },
       {
-        label: 'Budget consommé (%)',
-        data: tendances.map((t) => (t.budget_consomme / 1000000).toFixed(1)),
+        label: 'Budget consommé (M)',
+        data: tendances.map((t) => {
+          const value = typeof t.budget_consomme === 'number' ? t.budget_consomme : parseFloat(String(t.budget_consomme || 0));
+          return parseFloat((value / 1000000).toFixed(1));
+        }),
         borderColor: 'rgb(34, 197, 94)',
         backgroundColor: 'rgba(34, 197, 94, 0.1)',
         fill: true,
@@ -82,7 +103,9 @@ export function TendancesChart({ className, type = 'line' }: TendancesChartProps
       },
       {
         label: 'Jalons validés',
-        data: tendances.map((t) => t.jalons_valides),
+        data: tendances.map((t) => {
+          return typeof t.jalons_valides === 'number' ? t.jalons_valides : parseFloat(String(t.jalons_valides || 0));
+        }),
         borderColor: 'rgb(251, 191, 36)',
         backgroundColor: 'rgba(251, 191, 36, 0.1)',
         fill: true,
@@ -90,7 +113,9 @@ export function TendancesChart({ className, type = 'line' }: TendancesChartProps
       },
       {
         label: 'Risques critiques',
-        data: tendances.map((t) => t.risques_critiques),
+        data: tendances.map((t) => {
+          return typeof t.risques_critiques === 'number' ? t.risques_critiques : parseFloat(String(t.risques_critiques || 0));
+        }),
         borderColor: 'rgb(239, 68, 68)',
         backgroundColor: 'rgba(239, 68, 68, 0.1)',
         fill: true,

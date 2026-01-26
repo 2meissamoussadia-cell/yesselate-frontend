@@ -36,6 +36,7 @@ import {
   DashboardGrid, 
   KPICard,
   type KPICardData,
+  MockDataIndicator,
 } from '../shared';
 import type {
   RiskScoreCardData,
@@ -132,7 +133,7 @@ export function OverviewPage() {
         priorite: 'critique',
         code: 'BC-2026-0847',
         montant: 2500000,
-        deadline: 'Aujourd\'hui',
+        deadline: "Aujourd'hui",
         responsable: { nom: 'M. Diallo', id: '1' },
       },
       {
@@ -221,7 +222,9 @@ export function OverviewPage() {
   );
 
   return (
-    <DashboardPageLayout maxWidth="xl" padding="md">
+    <div className="relative">
+      <MockDataIndicator message="Données mockées - Phase 1 (Backend en attente)" />
+      <DashboardPageLayout maxWidth="xl" padding="md">
       {/* Section 1: KPIs Principaux */}
       <DashboardSection
         title="Indicateurs en temps réel"
@@ -394,7 +397,7 @@ export function OverviewPage() {
               className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
               style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}
             >
-              Voir détails →
+              Voir détails <ArrowRight className="inline h-3 w-3 ml-1" />
             </button>
           </div>
 
@@ -411,7 +414,7 @@ export function OverviewPage() {
               className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
               style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}
             >
-              Voir détails →
+              Voir détails <ArrowRight className="inline h-3 w-3 ml-1" />
             </button>
           </div>
 
@@ -428,11 +431,12 @@ export function OverviewPage() {
               className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
               style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}
             >
-              Voir détails →
+              Voir détails <ArrowRight className="inline h-3 w-3 ml-1" />
             </button>
           </div>
         </DashboardGrid>
       </DashboardSection>
-    </DashboardPageLayout>
+      </DashboardPageLayout>
+    </div>
   );
 }

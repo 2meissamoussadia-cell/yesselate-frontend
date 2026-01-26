@@ -23,7 +23,7 @@ export interface KPICardData {
   sparkline?: number[];
 }
 
-const mapTone = (c?: KPICardData['color']): 'blue' | 'emerald' | 'amber' | 'red' | 'purple' | 'slate' => {
+const mapTone = (c?: KPICardData['color']): 'slate' | 'blue' | 'emerald' | 'amber' | 'rose' | 'violet' | 'cyan' => {
   switch (c) {
     case 'blue':
       return 'blue';
@@ -32,37 +32,44 @@ const mapTone = (c?: KPICardData['color']): 'blue' | 'emerald' | 'amber' | 'red'
     case 'amber':
       return 'amber';
     case 'purple':
-      return 'purple';
+      return 'violet';
     case 'rose':
-      return 'red';
+      return 'rose';
     case 'cyan':
-      return 'blue';
+      return 'cyan';
     default:
       return 'slate';
   }
 };
 
 export const KPICard = memo(function KPICard({ kpi, size = 'md', className }: KPICardProps) {
-  const trendLabel =
-    typeof kpi.trend === 'number'
-      ? `${kpi.trend > 0 ? '+' : kpi.trend < 0 ? '-' : ''}${Math.abs(kpi.trend)}%`
-      : undefined;
+  // Convertir trend en nombre pour KpiStatCard
+  const trend = typeof kpi.trend === 'number' ? kpi.trend : 0;
+  
+  // Calculer trendDirection : utiliser trendType si fourni, sinon déduire du trend
+  const trendDirection: 'up' | 'down' | 'neutral' = (() => {
+    if (kpi.trendType) {
+      return kpi.trendType === 'up' ? 'up' : kpi.trendType === 'down' ? 'down' : 'neutral';
+    }
+    // Déduire du trend si trendType n'est pas fourni
+    if (trend > 0) return 'up';
+    if (trend < 0) return 'down';
+    return 'neutral';
+  })();
 
-  const dir = kpi.trendType === 'up' ? 'up' : kpi.trendType === 'down' ? 'down' : 'flat';
-  const sentiment = kpi.trendType === 'up' ? 'good' : kpi.trendType === 'down' ? 'bad' : 'neutral';
+  // S'assurer que tone est valide
+  const tone = mapTone(kpi.color);
 
   return (
     <KpiStatCard
-      label={kpi.label}
+      title={kpi.label}
       value={kpi.value}
+      subtitle={kpi.description}
       icon={kpi.icon}
-      tone={mapTone(kpi.color)}
-      description={kpi.description}
-      trendLabel={trendLabel}
-      trendDirection={dir}
-      trendSentiment={sentiment}
-      sparkline={kpi.sparkline}
-      size={size}
+      tone={tone}
+      trend={trend}
+      trendDirection={trendDirection}
+      tooltip={kpi.description}
       onClick={kpi.onClick}
       className={className}
     />

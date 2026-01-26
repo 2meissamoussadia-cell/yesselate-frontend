@@ -30,6 +30,15 @@ import { SearchFilter } from '../shared/SearchFilter';
 import { EmptyState } from '../shared/EmptyState';
 import { ExportButton } from '../shared/ExportButton';
 import { VirtualizedList } from '@/components/shared/VirtualizedList';
+import { parseTrendPercent, formatCurrency, normalizeKPIColor } from '@lib-root/dashboard/kpi';
+import {
+  calculateAvancementMoyen,
+  calculateBudgetConsomme,
+  calculateResteAEngager,
+  calculateMargePrevisionnelle,
+  formatKPICurrency,
+  formatKPIPercentage,
+} from '../../utils/kpi';
 import { 
   DashboardPageLayout, 
   DashboardSection, 
@@ -37,6 +46,7 @@ import {
   DashboardPanel,
   KPICard,
   type KPICardData,
+  MockDataIndicator,
 } from '../shared';
 
 interface ProjetKPI {
@@ -67,7 +77,11 @@ interface Projet {
   risque: 'low' | 'medium' | 'high';
 }
 
-export const ProjetKpiPage = memo(function ProjetKpiPage() {
+interface ProjetKpiPageProps {
+  data?: import('../../types/dashboard.readmodels').KpisProjetsData;
+}
+
+export const ProjetKpiPage = memo(function ProjetKpiPage({ data: apiData }: ProjetKpiPageProps = {}) {
   const openModal = useDashboardCommandCenterStore((state) => state.openModal);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -76,7 +90,7 @@ export const ProjetKpiPage = memo(function ProjetKpiPage() {
       kpi: {
         label: kpi.label,
         value: kpi.value,
-        trend: typeof kpi.trend === 'string' ? parseFloat(kpi.trend.replace(/[^\d.-]/g, '')) || 0 : 0,
+        trend: parseTrendPercent(kpi.trend),
         trendType: kpi.trendDirection,
         tone: kpi.color === 'emerald' ? 'ok' : kpi.color === 'amber' || kpi.color === 'red' ? 'warn' : 'info',
         icon: kpi.icon,
@@ -84,134 +98,207 @@ export const ProjetKpiPage = memo(function ProjetKpiPage() {
     });
   }, [openModal]);
 
-  // KPIs principaux avec sparklines
-  const projetKPIs: ProjetKPI[] = [
+  // Projets avec détails : utiliser les données API si disponibles, sinon fallback sur mock
+  const projets: Projet[] = useMemo(() => {
+    // Si on a des données API, les transformer vers le format Projet
+    if (apiData?.projets && apiData.projets.length > 0) {
+      return apiData.projets.map((p) => {
+        const budgetRatio = p.budget > 0 ? (p.consomme / p.budget) * 100 : 0;
+        // Déterminer le statut basé sur la progression et le budget
+        let statut: 'normal' | 'retard' | 'critique' = 'normal';
+        if (p.progression < 50 && budgetRatio > 100) statut = 'critique';
+        else if (p.progression < 70 || budgetRatio > 90) statut = 'retard';
+        
+        // Déterminer le risque basé sur la progression et le budget
+        let risque: 'low' | 'medium' | 'high' = 'low';
+        if (p.progression < 50 || budgetRatio > 100) risque = 'high';
+        else if (p.progression < 70 || budgetRatio > 80) risque = 'medium';
+        
+        return {
+          id: p.id,
+          nom: p.nom,
+          region: 'Non spécifié', // L'API ne fournit pas la région pour l'instant
+          avancement: p.progression,
+          retard: 0, // L'API ne fournit pas le retard pour l'instant
+          budget: {
+            alloue: p.budget,
+            consomme: p.consomme,
+            pourcentage: Math.round(budgetRatio),
+          },
+          statut,
+          litiges: 0, // L'API ne fournit pas les litiges pour l'instant
+          risque,
+        };
+      });
+    }
+    
+    // Fallback sur données mockées
+    return [
+      {
+        id: 'P001',
+        nom: 'Villa Diamniadio',
+        region: 'Dakar',
+        avancement: 85,
+        retard: 0,
+        budget: { alloue: 36400000, consomme: 24500000, pourcentage: 67 },
+        statut: 'normal',
+        litiges: 0,
+        risque: 'low',
+      },
+      {
+        id: 'P002',
+        nom: 'Complexe Résidentiel',
+        region: 'Thiès',
+        avancement: 65,
+        retard: 8,
+        budget: { alloue: 28200000, consomme: 22100000, pourcentage: 78 },
+        statut: 'retard',
+        litiges: 1,
+        risque: 'medium',
+      },
+      {
+        id: 'P003',
+        nom: 'Infrastructure Route',
+        region: 'Saint-Louis',
+        avancement: 72,
+        retard: 15,
+        budget: { alloue: 45800000, consomme: 48200000, pourcentage: 105 },
+        statut: 'critique',
+        litiges: 2,
+        risque: 'high',
+      },
+      {
+        id: 'P004',
+        nom: 'École Primaire',
+        region: 'Dakar',
+        avancement: 55,
+        retard: 3,
+        budget: { alloue: 18500000, consomme: 9900000, pourcentage: 53 },
+        statut: 'normal',
+        litiges: 0,
+        risque: 'low',
+      },
+      {
+        id: 'P005',
+        nom: 'Centre de Santé',
+        region: 'Thiès',
+        avancement: 92,
+        retard: 0,
+        budget: { alloue: 12500000, consomme: 11400000, pourcentage: 91 },
+        statut: 'normal',
+        litiges: 1,
+        risque: 'medium',
+      },
+    ];
+  }, [apiData]);
+
+  // Calculs des KPIs métier BTP (Direction/CODIR)
+  const kpiCalculations = useMemo(() => {
+    const avancementMoyen = calculateAvancementMoyen(projets);
+    const totalBudgetAlloue = projets.reduce((sum, p) => sum + p.budget.alloue, 0);
+    const totalBudgetConsomme = projets.reduce((sum, p) => sum + p.budget.consomme, 0);
+    const budgetConsommePct = calculateBudgetConsomme(totalBudgetConsomme, totalBudgetAlloue);
+    const totalEngage = totalBudgetConsomme * 0.85; // Estimation: 85% du consommé est engagé
+    const resteAEngager = calculateResteAEngager(totalBudgetAlloue, totalBudgetConsomme, totalEngage);
+    const coutPrevu = totalBudgetAlloue * 0.95; // Estimation: 95% du budget alloué
+    const margePrevisionnelle = calculateMargePrevisionnelle(totalBudgetAlloue, coutPrevu);
+    const retardsMajeurs = projets.filter(p => p.retard >= 7).length;
+    const retardsMajeursJours = projets
+      .filter(p => p.retard >= 7)
+      .reduce((sum, p) => sum + p.retard, 0);
+    const risquesCritiques = projets.filter(p => p.risque === 'high').length;
+    const risquesCritiquesImpact = projets
+      .filter(p => p.risque === 'high')
+      .reduce((sum, p) => sum + p.budget.alloue, 0);
+
+    return {
+      avancementMoyen,
+      budgetConsommePct,
+      resteAEngager,
+      margePrevisionnelle,
+      retardsMajeurs,
+      retardsMajeursJours,
+      risquesCritiques,
+      risquesCritiquesImpact,
+    };
+  }, [projets]);
+
+  // KPIs principaux avec sparklines (enrichis avec KPIs métier BTP)
+  const projetKPIs: ProjetKPI[] = useMemo(() => [
     {
       id: '1',
       label: 'Projets actifs',
-      value: 24,
+      value: apiData?.total ?? projets.length,
       trend: '+2',
       trendDirection: 'up',
       icon: Target,
       color: 'blue',
-      sparkline: [20, 21, 22, 22, 23, 23, 24],
+      sparkline: [20, 21, 22, 22, 23, 23, projets.length],
       description: 'Nombre total de projets en cours',
     },
     {
       id: '2',
       label: 'Avancement moyen',
-      value: '78%',
+      value: formatKPIPercentage(kpiCalculations.avancementMoyen),
       trend: '+3%',
       trendDirection: 'up',
       icon: Activity,
       color: 'emerald',
-      sparkline: [72, 73, 74, 75, 76, 77, 78],
-      description: 'Pourcentage moyen d\'avancement des projets',
+      sparkline: [72, 73, 74, 75, 76, 77, kpiCalculations.avancementMoyen],
+      description: 'Pourcentage moyen d\'avancement des chantiers',
     },
     {
       id: '3',
-      label: 'Projets en retard',
-      value: 3,
-      trend: '-2',
-      trendDirection: 'down',
-      icon: Clock,
-      color: 'amber',
-      sparkline: [7, 6, 5, 4, 4, 3, 3],
-      description: 'Projets avec retard de planning',
-    },
-    {
-      id: '4',
-      label: 'Retard moyen',
-      value: '5.2j',
-      trend: '-1.3j',
-      trendDirection: 'down',
-      icon: Calendar,
-      color: 'amber',
-      sparkline: [8.5, 8.0, 7.5, 7.0, 6.5, 6.0, 5.2],
-      description: 'Délai moyen de retard en jours',
-    },
-    {
-      id: '5',
-      label: 'Litiges actifs',
-      value: 4,
-      trend: '-1',
-      trendDirection: 'down',
-      icon: Gavel,
-      color: 'red',
-      sparkline: [7, 6, 6, 5, 5, 4, 4],
-      description: 'Litiges en cours nécessitant résolution',
-    },
-    {
-      id: '6',
-      label: 'Budget consommé',
-      value: '67%',
+      label: '% Budget consommé',
+      value: formatKPIPercentage(kpiCalculations.budgetConsommePct),
       trend: '+2%',
       trendDirection: 'up',
       icon: DollarSign,
-      color: 'purple',
-      sparkline: [60, 62, 63, 64, 65, 66, 67],
+      color: kpiCalculations.budgetConsommePct > 80 ? 'amber' : 'emerald',
+      sparkline: [60, 62, 63, 64, 65, 66, kpiCalculations.budgetConsommePct],
       description: 'Pourcentage du budget total consommé',
     },
-  ];
-
-  // Projets avec détails
-  const projets: Projet[] = useMemo(() => [
     {
-      id: 'P001',
-      nom: 'Villa Diamniadio',
-      region: 'Dakar',
-      avancement: 85,
-      retard: 0,
-      budget: { alloue: 36400000, consomme: 24500000, pourcentage: 67 },
-      statut: 'normal',
-      litiges: 0,
-      risque: 'low',
+      id: '4',
+      label: 'Reste à engager',
+      value: formatKPICurrency(kpiCalculations.resteAEngager, 'FCFA'),
+      trend: '-5%',
+      trendDirection: 'down',
+      icon: FileText,
+      color: 'blue',
+      description: 'Montant restant à engager',
     },
     {
-      id: 'P002',
-      nom: 'Complexe Résidentiel',
-      region: 'Thiès',
-      avancement: 65,
-      retard: 8,
-      budget: { alloue: 28200000, consomme: 22100000, pourcentage: 78 },
-      statut: 'retard',
-      litiges: 1,
-      risque: 'medium',
+      id: '5',
+      label: 'Marge prévisionnelle',
+      value: formatKPIPercentage(kpiCalculations.margePrevisionnelle),
+      trend: '+1%',
+      trendDirection: 'up',
+      icon: Target,
+      color: kpiCalculations.margePrevisionnelle > 10 ? 'emerald' : 'amber',
+      description: 'Marge prévisionnelle sur budget',
     },
     {
-      id: 'P003',
-      nom: 'Infrastructure Route',
-      region: 'Saint-Louis',
-      avancement: 72,
-      retard: 15,
-      budget: { alloue: 45800000, consomme: 48200000, pourcentage: 105 },
-      statut: 'critique',
-      litiges: 2,
-      risque: 'high',
+      id: '6',
+      label: 'Risques critiques',
+      value: `${kpiCalculations.risquesCritiques} (${formatKPICurrency(kpiCalculations.risquesCritiquesImpact, 'FCFA')})`,
+      trend: '+1',
+      trendDirection: 'up',
+      icon: AlertTriangle,
+      color: kpiCalculations.risquesCritiques > 0 ? 'red' : 'emerald',
+      description: `Nombre de risques critiques et impact budgétaire`,
     },
     {
-      id: 'P004',
-      nom: 'École Primaire',
-      region: 'Dakar',
-      avancement: 55,
-      retard: 3,
-      budget: { alloue: 18500000, consomme: 9900000, pourcentage: 53 },
-      statut: 'normal',
-      litiges: 0,
-      risque: 'low',
+      id: '7',
+      label: 'Retards majeurs',
+      value: `${kpiCalculations.retardsMajeurs} (${kpiCalculations.retardsMajeursJours}j)`,
+      trend: '-1',
+      trendDirection: 'down',
+      icon: Clock,
+      color: kpiCalculations.retardsMajeurs > 0 ? 'amber' : 'emerald',
+      description: 'Projets avec retard ≥ 7 jours et total jours de retard',
     },
-    {
-      id: 'P005',
-      nom: 'Centre de Santé',
-      region: 'Thiès',
-      avancement: 92,
-      retard: 0,
-      budget: { alloue: 12500000, consomme: 11400000, pourcentage: 91 },
-      statut: 'normal',
-      litiges: 1,
-      risque: 'medium',
-    },
-  ], []);
+  ], [projets, kpiCalculations, apiData]);
 
   // Filtrer les projets selon la recherche
   const filteredProjets = useMemo(() => {
@@ -224,14 +311,7 @@ export const ProjetKpiPage = memo(function ProjetKpiPage() {
     );
   }, [searchQuery, projets]);
 
-  // Fonction utilitaire pour formater les montants
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('fr-FR', {
-      style: 'currency',
-      currency: 'XOF',
-      minimumFractionDigits: 0,
-    }).format(value).replace('XOF', 'FCFA');
-  };
+  // Utilise formatMoneyXOF centralisé depuis colorMapping.ts
 
   // Fonction de rendu pour une carte projet (réutilisable pour virtualisation)
   const renderProjetCard = useCallback((projet: Projet) => (
@@ -322,7 +402,7 @@ export const ProjetKpiPage = memo(function ProjetKpiPage() {
             />
           </div>
           <div className="text-slate-400" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)', marginTop: 'clamp(0.25rem, 0.5vw, 0.5rem)' }}>
-            {formatCurrency(projet.budget.consomme)} / {formatCurrency(projet.budget.alloue)}
+            {formatCurrency(projet.budget.consomme, 'XOF')} / {formatCurrency(projet.budget.alloue, 'XOF')}
           </div>
         </div>
 
@@ -350,7 +430,7 @@ export const ProjetKpiPage = memo(function ProjetKpiPage() {
         </div>
       </div>
     </>
-  ), [formatCurrency]);
+  ), []);
 
   // Fonctions d'export
   const handleExportCSV = useCallback(() => {
@@ -360,8 +440,8 @@ export const ProjetKpiPage = memo(function ProjetKpiPage() {
       p.region,
       p.avancement.toString(),
       p.retard.toString(),
-      formatCurrency(p.budget.alloue),
-      formatCurrency(p.budget.consomme),
+      formatKPICurrency(p.budget.alloue, 'FCFA'),
+      formatKPICurrency(p.budget.consomme, 'FCFA'),
       p.budget.pourcentage.toString(),
       p.statut,
       p.litiges.toString(),
@@ -409,40 +489,27 @@ export const ProjetKpiPage = memo(function ProjetKpiPage() {
     { region: 'Saint-Louis', projets: 5, avancement: 68, retard: 1 },
   ];
 
-  // Helper pour mapper les couleurs de manière sûre
-  const mapColorToKPICardColor = useCallback((color: ProjetKPI['color']): KPICardData['color'] => {
-    switch (color) {
-      case 'red':
-        return 'rose';
-      case 'blue':
-      case 'emerald':
-      case 'amber':
-      case 'purple':
-        return color;
-      default:
-        return 'blue';
-    }
-  }, []);
-
   // Convertir projetKPIs au format KPICardData
   const projetKPIsData: KPICardData[] = useMemo(() => {
     return projetKPIs.map((kpi) => ({
       id: kpi.id,
       label: kpi.label,
       value: kpi.value,
-      trend: typeof kpi.trend === 'string' ? parseFloat(kpi.trend.replace(/[^\d.-]/g, '')) || 0 : 0,
+      trend: parseTrendPercent(kpi.trend),
       trendType: kpi.trendDirection,
       icon: kpi.icon,
-      color: mapColorToKPICardColor(kpi.color),
+      color: normalizeKPIColor(kpi.color),
       description: kpi.description,
       sparkline: kpi.sparkline,
       onClick: () => handleKPIClick(kpi),
     }));
-  }, [projetKPIs, handleKPIClick, mapColorToKPICardColor]);
+  }, [projetKPIs, handleKPIClick]);
 
   return (
-    <TooltipProvider delayDuration={200}>
-      <DashboardPageLayout maxWidth="xl" padding="md">
+    <div className="relative">
+      <MockDataIndicator message="Données mockées - Phase 1 (Backend en attente)" />
+      <TooltipProvider delayDuration={200}>
+        <DashboardPageLayout maxWidth="xl" padding="md">
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
@@ -596,8 +663,9 @@ export const ProjetKpiPage = memo(function ProjetKpiPage() {
             ))}
           </DashboardGrid>
         </DashboardSection>
-      </DashboardPageLayout>
-    </TooltipProvider>
+        </DashboardPageLayout>
+      </TooltipProvider>
+    </div>
   );
 });
 

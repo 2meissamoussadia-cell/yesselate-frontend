@@ -717,11 +717,11 @@ export function OverviewView() {
   }
 
   return (
-    <div className="p-6 space-y-8 max-w-[1920px] mx-auto">
+    <div className="w-full min-w-0 space-y-8">
       {/* ════════════════════════════════════════════════ */}
       {/* SECTION 1 : INDICATEURS EN TEMPS RÉEL (KPI PRINCIPAUX) */}
       {/* ════════════════════════════════════════════════ */}
-      <section aria-label="Indicateurs en temps réel">
+      <section aria-label="Indicateurs en temps réel" className="min-w-0">
         <SectionTitle
           icon={Activity}
           title="Indicateurs en temps réel"
@@ -747,7 +747,7 @@ export function OverviewView() {
       {/* ════════════════════════════════════════════════ */}
       {/* SECTION 2 : ACTIVITÉ (Demandes, Validations) */}
       {/* ════════════════════════════════════════════════ */}
-      <section aria-label="Activité">
+      <section aria-label="Activité" className="min-w-0">
         <SectionTitle
           icon={FileCheck}
           title="Activité"
@@ -790,7 +790,7 @@ export function OverviewView() {
       {/* ════════════════════════════════════════════════ */}
       {/* SECTION 3 : FINANCES (Budget traité) */}
       {/* ════════════════════════════════════════════════ */}
-      <section aria-label="Finances">
+      <section aria-label="Finances" className="min-w-0">
         <SectionTitle
           icon={Wallet}
           title="Finances"
@@ -826,7 +826,7 @@ export function OverviewView() {
       {/* ════════════════════════════════════════════════ */}
       {/* SECTION 4 : RISQUES (Risques critiques, juridique) */}
       {/* ════════════════════════════════════════════════ */}
-      <section aria-label="Risques">
+      <section aria-label="Risques" className="min-w-0">
         <SectionTitle
           icon={Shield}
           title="Risques"
@@ -849,7 +849,7 @@ export function OverviewView() {
       {/* ════════════════════════════════════════════════ */}
       {/* SECTION 5 : PERFORMANCE GLOBALE */}
       {/* ════════════════════════════════════════════════ */}
-      <section aria-label="Performance globale">
+      <section aria-label="Performance globale" className="min-w-0">
         <SectionTitle
           icon={BarChart3}
           title="Performance globale"
@@ -858,7 +858,7 @@ export function OverviewView() {
           actionLabel="Voir tout"
         />
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {kpis.map((kpi) => (
             <KPICard
               key={kpi.id}
@@ -875,7 +875,7 @@ export function OverviewView() {
       {/* ════════════════════════════════════════════════ */}
       {/* SECTION 6 : CIRCUIT DE VALIDATION */}
       {/* ════════════════════════════════════════════════ */}
-      <section aria-label="Circuit de validation">
+      <section aria-label="Circuit de validation" className="min-w-0">
         <SectionTitle
           icon={GitBranch}
           title="Circuit de validation"
@@ -888,7 +888,7 @@ export function OverviewView() {
       {/* ════════════════════════════════════════════════ */}
       {/* SECTION 7 : AGENDA EXÉCUTIF */}
       {/* ════════════════════════════════════════════════ */}
-      <section aria-label="Agenda exécutif">
+      <section aria-label="Agenda exécutif" className="min-w-0">
         <SectionTitle
           icon={Calendar}
           title="Agenda exécutif"
@@ -898,21 +898,21 @@ export function OverviewView() {
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {/* Aujourd'hui - État actif avec design moderne */}
-          <div className="group relative rounded-2xl border-2 border-blue-500/40 bg-gradient-to-br from-blue-500/10 to-slate-900/50 backdrop-blur-sm p-4 shadow-lg shadow-blue-500/10">
-            {/* Accent bar en haut */}
-            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-500 to-blue-400 rounded-t-2xl" />
+          {/* Aujourd'hui - État actif avec design sobre */}
+          <div className="group relative rounded-2xl border border-slate-800/60 bg-slate-950/35 backdrop-blur p-4 ring-1 ring-slate-800/60">
+            {/* Accent bar minimal */}
+            <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-blue-500/70 opacity-80 rounded-l-2xl" />
             
             <div className="flex items-center gap-2.5 mb-4">
-              <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/30 to-blue-600/20 border border-blue-500/40 flex items-center justify-center shadow-sm">
-                <span className="text-base font-bold text-blue-200">
+              <div className="relative w-12 h-12 rounded-xl bg-blue-500/10 border border-slate-800/60 flex items-center justify-center">
+                <span className="text-base font-bold text-blue-300">
                   {new Date().getDate()}
                 </span>
-                {/* Indicateur actif */}
-                <span className="absolute -top-1 -right-1 w-3 h-3 bg-blue-400 rounded-full border-2 border-slate-900 shadow-sm" />
+                {/* Indicateur actif sobre */}
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-blue-400 rounded-full border border-slate-900" />
               </div>
               <div>
-                <div className="text-xs font-semibold text-blue-200 uppercase tracking-wider">Aujourd'hui</div>
+                <div className="text-xs font-semibold text-slate-200 uppercase tracking-wider">Aujourd'hui</div>
                 <div className="text-[11px] text-slate-400 mt-0.5">
                   {new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
                 </div>
@@ -1024,16 +1024,16 @@ export function OverviewView() {
             };
 
             return (
-              <div key={type} className="space-y-3">
+              <div key={type} className="space-y-3 min-w-0">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-base font-semibold text-slate-200">
+                  <h3 className="text-base font-semibold text-slate-200 truncate">
                     {typeLabels[type] || type}
                   </h3>
-                  <Badge variant="default" className="text-xs px-1.5 py-0.5">
+                  <Badge variant="default" className="text-xs px-1.5 py-0.5 flex-shrink-0">
                     {typeActions.length}
                   </Badge>
                 </div>
-                <div className="grid grid-cols-1 gap-3">
+                <div className="grid grid-cols-1 gap-3 min-w-0">
                   {typeActions.slice(0, 3).map((action) => (
                     <ActionItem
                       key={action.id}
@@ -1051,7 +1051,7 @@ export function OverviewView() {
       {/* ════════════════════════════════════════════════ */}
       {/* SECTION 9 : RISK RADAR */}
       {/* ════════════════════════════════════════════════ */}
-      <section aria-label="Risk Radar">
+      <section aria-label="Risk Radar" className="min-w-0">
         <SectionTitle
           icon={AlertTriangle}
           title="Risk Radar"
@@ -1074,7 +1074,7 @@ export function OverviewView() {
       {/* ════════════════════════════════════════════════ */}
       {/* SECTION 10 : DÉCISIONS RÉCENTES */}
       {/* ════════════════════════════════════════════════ */}
-      <section aria-label="Décisions récentes">
+      <section aria-label="Décisions récentes" className="min-w-0">
         <SectionTitle
           icon={Scale}
           title="Décisions récentes"

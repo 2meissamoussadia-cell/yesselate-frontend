@@ -16,6 +16,14 @@ import { dashboardNavigationConfig, type NavNode } from './dashboardNavigationCo
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { useLogger } from '@/lib/utils/logger';
 import { getDefaultLeafForSub, isValidRoute, normalizeRoute } from '../utils/routeValidation';
+import { dashboardRegistry } from '../registry';
+import { navToKey, type NavKey } from '../types/dashboard';
+import { hasViewAccess } from '../utils/securityGuards';
+import { useAuthOptional } from '../hooks/useAuthOptional';
+import { useDashboardPermissions } from '../hooks/useDashboardPermissions';
+import { filterNavigationConfig } from '../utils/navigationFilter';
+import { nodeAllowed } from './permissions';
+import { useDashboardPermissionsStore } from '@/lib/stores/dashboardPermissionsStore';
 
 interface DashboardSidebarProps {
   collapsed?: boolean;
@@ -41,13 +49,43 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
   const router = useRouter();
   const params = useSearchParams();
   
+  // ✅ Auth pour les guards de sécurité (optionnel)
+  const authContext = useAuthOptional();
+  const user = authContext?.user || null;
+  
   // ✅ Store Command Center = source de vérité
   const main = useDashboardCommandCenterStore((state) => state.navigation.mainCategory);
   const sub = useDashboardCommandCenterStore((state) => state.navigation.subCategory);
   const leaf = useDashboardCommandCenterStore((state) => state.navigation.subSubCategory);
   const navigate = useDashboardCommandCenterStore((state) => state.navigate);
   
+  // ✅ Helper pour vérifier l'accès à une route
+  const checkRouteAccess = useCallback((mainId: string, subId?: string | null, leafId?: string | null): boolean => {
+    const nav: NavKey = {
+      main: mainId as NavKey['main'],
+      sub: subId || null,
+      leaf: leafId || null,
+    };
+    const key = navToKey(nav);
+    const entry = dashboardRegistry[key];
+    return hasViewAccess(entry, user);
+  }, [user]);
+  
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set([main || 'overview']));
+  
+  // Phase P10: Charger les permissions pour filtrer la navigation
+  const { permissions: userPerms } = useDashboardPermissions();
+  
+  // Phase P10: Filtrer la navigation selon permissions et feature flags
+  const filteredNavConfig = useMemo(
+    () => filterNavigationConfig(
+      dashboardNavigationConfig,
+      userPerms.permissions,
+      userPerms.roles,
+      userPerms.featureFlags
+    ),
+    [userPerms.permissions, userPerms.roles, userPerms.featureFlags]
+  );
   
   // Ref pour suivre la dernière valeur de main et éviter les mises à jour inutiles
   const lastMainRef = useRef<string | null>(main || null);
@@ -166,17 +204,29 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
     }
   }, [main, sub, leaf, navigate, log, router, params]);
 
+  // Phase P10: Contexte utilisateur pour nodeAllowed (au niveau parent)
+  const userContext = useMemo(
+    () => ({
+      perms: userPerms.permissions,
+      flags: userPerms.featureFlags,
+      roles: userPerms.roles,
+    }),
+    [userPerms.permissions, userPerms.featureFlags, userPerms.roles]
+  );
+
   // Composant interne pour les nœuds
   const NavNodeComponent = React.memo(function NavNodeComponent({
     node,
     level = 0,
     parentMain,
     parentSub,
+    userContext: ctx,
   }: {
     node: NavNode;
     level?: number;
     parentMain?: string;
     parentSub?: string;
+    userContext: { perms: string[]; flags: Record<string, boolean>; roles: string[] };
   }) {
     const hasChildren = node.children && node.children.length > 0;
     const isExpanded = expandedNodes.has(node.id);
@@ -186,15 +236,43 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
     // Déterminer le parent pour les enfants
     const currentMain = level === 0 ? node.id : parentMain;
     const currentSub = level === 1 ? node.id : parentSub;
+    
+    // ✅ Filtrer les enfants selon les permissions (utilise nodeAllowed)
+    const accessibleChildren = useMemo(() => {
+      if (!hasChildren || !node.children) return [];
+      
+      return node.children.filter((child) => {
+        // Phase P10: Utiliser nodeAllowed pour vérifier l'accès selon requires
+        if (!nodeAllowed(ctx, child.requires)) {
+          return false;
+        }
+        
+        // Vérification supplémentaire via checkRouteAccess pour compatibilité
+        if (level === 0) {
+          // Niveau 1 (sub) : vérifier l'accès avec main + sub
+          return checkRouteAccess(node.id, child.id, null);
+        } else if (level === 1) {
+          // Niveau 2 (leaf) : vérifier l'accès avec main + sub + leaf
+          const mainId = parentMain || main || 'overview';
+          return checkRouteAccess(mainId, node.id, child.id);
+        }
+        return true; // Niveau 0, toujours accessible
+      });
+    }, [node.children, level, node.id, parentMain, main, checkRouteAccess, ctx]);
+    
+    // ✅ Masquer le nœud si aucun enfant accessible (pour les niveaux 1 et 2)
+    if (level > 0 && hasChildren && accessibleChildren.length === 0) {
+      return null;
+    }
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
       e.stopPropagation();
 
       if (hasChildren) {
-        // ✅ TOUJOURS naviguer vers le premier enfant, même si déjà expandé
-        if (node.children && node.children.length > 0) {
-          const firstChild = node.children[0];
+        // ✅ TOUJOURS naviguer vers le premier enfant accessible, même si déjà expandé
+        if (accessibleChildren.length > 0) {
+          const firstChild = accessibleChildren[0];
           
           // Expand le nœud s'il n'est pas déjà expandé
           if (!isExpanded) {
@@ -360,13 +438,14 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
         
         {hasChildren && isExpanded && (
           <div className="ml-4 mt-1 space-y-1">
-            {node.children?.map((child) => (
-              <NavNodeComponent 
-                key={child.id} 
-                node={child} 
+            {accessibleChildren.map((child) => (
+              <NavNodeComponent
+                key={child.id}
+                node={child}
                 level={level + 1}
                 parentMain={currentMain}
                 parentSub={currentSub}
+                userContext={ctx}
               />
             ))}
           </div>
@@ -411,8 +490,8 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
         className="flex-1 overflow-y-auto p-1.5 sm:p-2 space-y-0.5 sm:space-y-1 min-w-0"
         style={{ WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
       >
-        {Object.values(dashboardNavigationConfig).map((node) => (
-          <NavNodeComponent key={node.id} node={node} level={0} parentMain={undefined} parentSub={undefined} />
+        {Object.values(filteredNavConfig).map((node) => (
+          <NavNodeComponent key={node.id} node={node} level={0} parentMain={undefined} parentSub={undefined} userContext={userContext} />
         ))}
       </div>
     </aside>

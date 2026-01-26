@@ -103,7 +103,7 @@ export const RiskScoreCard = memo(function RiskScoreCard({
     <div
       className={cn(
         'group relative rounded-2xl border border-slate-800/60 bg-slate-900/40 backdrop-blur-sm',
-        'transition-all duration-300',
+        'transition-all duration-300 min-w-0 overflow-hidden',
         onClick && 'cursor-pointer hover:border-slate-700/80 hover:bg-slate-900/60 hover:shadow-xl hover:shadow-slate-900/50',
         className
       )}
@@ -114,8 +114,8 @@ export const RiskScoreCard = memo(function RiskScoreCard({
       <div className={cn('absolute inset-x-0 top-0 h-1 rounded-t-2xl', impact.bg)} />
       
       {/* Header: Score + Impact */}
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex items-center gap-2">
+      <div className="flex items-start justify-between mb-3 min-w-0">
+        <div className="flex items-center gap-2 min-w-0 flex-1">
           <div className={cn('p-1.5 rounded-lg', impact.bg, 'bg-opacity-20')}>
             <ImpactIcon className={cn(impact.color)} style={{ width: '0.875rem', height: '0.875rem', minWidth: '0.875rem', minHeight: '0.875rem' }} />
           </div>
@@ -140,12 +140,12 @@ export const RiskScoreCard = memo(function RiskScoreCard({
       </div>
 
       {/* Titre - Réduit pour être proportionnel */}
-      <h3 className="text-xs font-medium text-slate-300 mb-2 line-clamp-2 leading-snug">
+      <h3 className="text-xs font-medium text-slate-300 mb-2 line-clamp-2 leading-snug min-w-0">
         {risk.titre}
       </h3>
 
       {/* Description */}
-      <p className="text-[11px] text-slate-500 mb-4 line-clamp-2 leading-relaxed">
+      <p className="text-[11px] text-slate-500 mb-4 line-clamp-2 leading-relaxed min-w-0">
         {risk.description}
       </p>
 

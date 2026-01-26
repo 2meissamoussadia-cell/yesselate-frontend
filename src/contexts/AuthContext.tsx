@@ -47,7 +47,7 @@ interface AuthContextType extends AuthState {
 // CONTEXT
 // ============================================
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // ============================================
 // PROVIDER

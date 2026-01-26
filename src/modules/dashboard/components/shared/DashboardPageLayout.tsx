@@ -42,8 +42,8 @@ export function DashboardPageLayout({
   padding = 'md',
 }: DashboardPageLayoutProps) {
   return (
-    <div className={cn('w-full mx-auto', maxWidthClasses[maxWidth], paddingClasses[padding], className)}>
-      <div className="space-y-4 sm:space-y-6">
+    <div className={cn('w-full min-w-0 mx-auto', maxWidthClasses[maxWidth], paddingClasses[padding], className)}>
+      <div className="space-y-4 sm:space-y-6 min-w-0">
         {children}
       </div>
     </div>
@@ -139,7 +139,7 @@ export function DashboardGrid({
   className,
 }: DashboardGridProps) {
   return (
-    <div className={cn('grid', gridColumnsClasses[columns], gridGapClasses[gap], className)}>
+    <div className={cn('grid min-w-0', gridColumnsClasses[columns], gridGapClasses[gap], className)}>
       {children}
     </div>
   );

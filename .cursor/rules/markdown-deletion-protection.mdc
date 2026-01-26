@@ -1,0 +1,45 @@
+﻿---
+description: Protect markdown files from deletion without explicit confirmation
+alwaysApply: true
+---
+
+# Markdown File Deletion Protection
+
+## Rules
+
+1. **Never delete .md files without explicit confirmation**
+   - Before deleting any `.md` file, Cursor MUST first list all `.md` files that would be deleted
+   - Cursor MUST wait for explicit user confirmation before proceeding with deletion
+   - This applies to all markdown files regardless of location (e.g., `*.md`, `**/*.md`, `docs/**/*.md`)
+
+2. **No collateral deletion**
+   - When a user requests deletion of `.md` files, Cursor MUST NOT delete any other file types
+   - Only the explicitly listed and confirmed `.md` files should be deleted
+   - If other file types need deletion, they must be handled in a separate, explicit request
+
+## Implementation
+
+When deletion of markdown files is requested:
+
+1. **List first**: Use `glob_file_search` or `list_dir` to find all matching `.md` files
+2. **Show list**: Display the complete list of files that would be deleted
+3. **Wait for confirmation**: Do not proceed until the user explicitly confirms
+4. **Delete only confirmed files**: Only delete the files that were explicitly confirmed
+
+## Example Workflow
+
+```
+User: "Delete all .md files in the docs folder"
+
+Cursor: 
+  Found the following .md files:
+  - docs/README.md
+  - docs/ARCHITECTURE.md
+  - docs/API.md
+  
+  Please confirm deletion of these files.
+
+User: "Yes, delete them"
+
+Cursor: [Proceeds with deletion of only these 3 files]
+```

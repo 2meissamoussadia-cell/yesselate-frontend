@@ -21,6 +21,10 @@ import { getDefaultLeafForSub, isValidRoute } from '../utils/routeValidation';
 import { zIndexClass } from '../utils/zIndex';
 import type { DashboardMainCategory } from '../types/dashboardNavigationTypes';
 import { SegmentedTabs } from '../components/shared/SegmentedTabs';
+import { useDashboardPermissions } from '../hooks/useDashboardPermissions';
+import { nodeAllowed } from './permissions';
+import { useDashboardPermissionsStore } from '@/lib/stores/dashboardPermissionsStore';
+import { useMemo } from 'react';
 
 interface DashboardSubNavigationProps {
   stats?: {
@@ -61,15 +65,37 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
     [router, params]
   );
 
+  // Phase P10: Charger les permissions depuis le store Zustand
+  useDashboardPermissions(); // Charge les permissions si nécessaire
+  const permissions = useDashboardPermissionsStore((state) => state.permissions);
+
+  // Contexte utilisateur pour nodeAllowed (depuis le store)
+  const userContext = useMemo(
+    () => ({
+      perms: permissions.permissions,
+      flags: permissions.featureFlags,
+      roles: permissions.roles,
+    }),
+    [permissions.permissions, permissions.featureFlags, permissions.roles]
+  );
+
   const currentMainCategory = (main || 'overview') as DashboardMainCategory;
 
-  // Récupérer les sous-catégories (niveau 2)
-  const subCategories = getSubCategories(currentMainCategory) || [];
+  // Récupérer les sous-catégories (niveau 2) et filtrer selon permissions
+  const allSubCategories = getSubCategories(currentMainCategory) || [];
+  const subCategories = useMemo(
+    () => allSubCategories.filter((subCat) => nodeAllowed(userContext, subCat.requires)),
+    [allSubCategories, userContext]
+  );
 
-  // Récupérer les sous-sous-catégories (niveau 3)
-  const subSubCategories = (sub
+  // Récupérer les sous-sous-catégories (niveau 3) et filtrer selon permissions
+  const allSubSubCategories = (sub
     ? getSubSubCategories(currentMainCategory, sub)
     : []) || [];
+  const subSubCategories = useMemo(
+    () => allSubSubCategories.filter((subSubCat) => nodeAllowed(userContext, subSubCat.requires)),
+    [allSubSubCategories, userContext]
+  );
 
   // Labels pour le breadcrumb
   const mainConfig = dashboardNavigationConfig[main as keyof typeof dashboardNavigationConfig];

@@ -67,7 +67,7 @@ export const AgendaItem = memo(function AgendaItem({
     <div
       className={cn(
         'group relative rounded-xl border border-slate-800/60 bg-slate-900/30 backdrop-blur-sm',
-        'transition-all duration-200',
+        'transition-all duration-200 min-w-0 overflow-hidden',
         onClick && 'cursor-pointer hover:border-slate-700/80 hover:bg-slate-900/50 hover:shadow-md',
         className
       )}
@@ -75,8 +75,8 @@ export const AgendaItem = memo(function AgendaItem({
       style={{ padding: 'clamp(0.875rem, 1.25vw, 1rem)' }}
     >
       {/* Header: Date + Type */}
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex items-center gap-2.5">
+      <div className="flex items-start justify-between mb-3 min-w-0">
+        <div className="flex items-center gap-2.5 min-w-0 flex-1">
           <div className="flex flex-col items-center justify-center rounded-lg bg-slate-800/60 border border-slate-700/50 px-2 py-1.5 min-w-[2.5rem]">
             <span className="text-slate-400 uppercase text-[10px] font-medium tracking-wider">{dayName}</span>
             <span className="font-bold text-slate-200 text-sm leading-none my-0.5">{dayNumber}</span>
@@ -108,12 +108,12 @@ export const AgendaItem = memo(function AgendaItem({
       </div>
 
       {/* Titre */}
-      <h3 className="font-semibold text-slate-200 mb-1.5 line-clamp-2 text-sm leading-snug">
+      <h3 className="font-semibold text-slate-200 mb-1.5 line-clamp-2 text-sm leading-snug min-w-0">
         {event.titre}
       </h3>
 
       {/* Description */}
-      <p className="text-slate-400 mb-3 line-clamp-2 text-xs leading-relaxed">
+      <p className="text-slate-400 mb-3 line-clamp-2 text-xs leading-relaxed min-w-0">
         {event.description}
       </p>
 

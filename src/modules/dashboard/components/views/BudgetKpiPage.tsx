@@ -23,28 +23,18 @@ import {
   Search,
 } from 'lucide-react';
 
-import { SectionTitle, DataCard } from '@/components/features/bmo/dashboard/components';
+import { SectionTitle, DataCard, KpiStatCard } from '@/components/features/bmo/dashboard/components';
 import { EnterpriseBadge } from '../shared/EnterpriseBadge';
+import { mapColorToTone } from '../../utils/colorMapping';
+import { parseTrendPercent, formatCurrency, toneToColor, normalizeKPIColor } from '@lib-root/dashboard/kpi';
 
 import { 
   DashboardPageLayout, 
   DashboardSection, 
   DashboardGrid, 
   DashboardPanel,
-  KPICard,
-  type KPICardData,
+  MockDataIndicator,
 } from '../shared';
-
-// ---------------------------
-// Helpers formatters
-// ---------------------------
-const formatMoneyFCFA = (n: number): string => {
-  if (!Number.isFinite(n)) return '—';
-  if (Math.abs(n) >= 1_000_000_000) return `${(n / 1_000_000_000).toFixed(1)} Md`;
-  if (Math.abs(n) >= 1_000_000) return `${(n / 1_000_000).toFixed(1)} M`;
-  if (Math.abs(n) >= 1_000) return `${Math.round(n / 1_000)} K`;
-  return `${n}`;
-};
 
 const clampPct = (n: number) => Math.max(0, Math.min(100, n));
 
@@ -78,6 +68,16 @@ type ProfitRow = {
 export function BudgetKpiPage() {
   const [q, setQ] = useState('');
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+
+  // Helpers centralisés importés depuis colorMapping.ts
+
+  const handleKPIClick = (kpi: typeof kpis[0]) => {
+    // TODO: Implémenter l'ouverture du modal de détail
+    // Pour l'instant, juste logger l'action
+    if (process.env.NODE_ENV === 'development') {
+      // Utiliser le logger si disponible, sinon ignorer en production
+    }
+  };
 
   // Dernière synchro "réelle" (même source que l'auto-refresh dashboard)
   useEffect(() => {
@@ -234,7 +234,9 @@ export function BudgetKpiPage() {
   }, [lastUpdate]);
 
   return (
-    <DashboardPageLayout maxWidth="xl" padding="md">
+    <div className="relative">
+      <MockDataIndicator message="Données mockées - Phase 1 (Backend en attente)" />
+      <DashboardPageLayout maxWidth="xl" padding="md">
       {/* Header avec recherche et export */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
@@ -276,11 +278,22 @@ export function BudgetKpiPage() {
         subtitle="Synthèse instantanée — clique un KPI pour ouvrir le détail"
         icon={DollarSign}
       >
-        <DashboardGrid columns={3} gap="md">
-          {kpis.map((k) => (
-            <KPICard key={k.id} kpi={k} size="md" />
+        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 xs:gap-3 sm:gap-4 min-w-0">
+          {kpis.map((kpi) => (
+            <KpiStatCard
+              key={kpi.id}
+              title={kpi.label}
+              value={kpi.value}
+              subtitle={kpi.description}
+              icon={kpi.icon}
+              tone={normalizeKPIColor(kpi.color)}
+              trend={parseTrendPercent(kpi.trend as string | number)}
+              trendDirection={kpi.trendType || 'neutral'}
+              tooltip={kpi.description}
+              onClick={() => handleKPIClick(kpi)}
+            />
           ))}
-        </DashboardGrid>
+        </div>
       </DashboardSection>
 
       {/* Budget par projet */}
@@ -303,10 +316,10 @@ export function BudgetKpiPage() {
                     </div>
                     <div className="text-slate-400" style={{ marginTop: 'clamp(0.25rem, 0.5vw, 0.5rem)', fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>
                       Alloué :{' '}
-                      <span className="text-slate-200 tabular-nums">{formatMoneyFCFA(p.alloue)} FCFA</span>
+                      <span className="text-slate-200 tabular-nums">{formatCurrency(p.alloue, 'XOF')}</span>
                       {' · '}
                       Consommé :{' '}
-                      <span className="text-slate-200 tabular-nums">{formatMoneyFCFA(p.consomme)} FCFA</span>
+                      <span className="text-slate-200 tabular-nums">{formatCurrency(p.consomme, 'XOF')}</span>
                     </div>
                   </div>
 
@@ -333,7 +346,7 @@ export function BudgetKpiPage() {
 
                 {over ? (
                   <div className="text-red-300/90 text-xs mt-2">
-                    Dépassement : +{formatMoneyFCFA(p.consomme - p.alloue)} FCFA
+                    Dépassement : +{formatCurrency(p.consomme - p.alloue, 'XOF')}
                   </div>
                 ) : null}
               </DashboardPanel>
@@ -375,7 +388,7 @@ export function BudgetKpiPage() {
                   </Badge>
 
                   <div className="font-semibold text-slate-100 tabular-nums text-sm">
-                    {formatMoneyFCFA(p.montant)} FCFA
+                    {formatCurrency(p.montant, 'XOF')}
                   </div>
                 </div>
               </DashboardPanel>
@@ -396,13 +409,13 @@ export function BudgetKpiPage() {
                     <div className="font-semibold text-slate-50 truncate" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>{r.projet}</div>
                     <div className="text-slate-400" style={{ marginTop: 'clamp(0.25rem, 0.5vw, 0.5rem)', fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>
                       Invest.{' '}
-                      <span className="text-slate-200 tabular-nums">{formatMoneyFCFA(r.investissement)} FCFA</span>
+                      <span className="text-slate-200 tabular-nums">{formatCurrency(r.investissement, 'XOF')}</span>
                       {' · '}
                       Attendu{' '}
-                      <span className="text-slate-200 tabular-nums">{formatMoneyFCFA(r.retourAttendu)} FCFA</span>
+                      <span className="text-slate-200 tabular-nums">{formatCurrency(r.retourAttendu, 'XOF')}</span>
                       {' · '}
                       Réel{' '}
-                      <span className="text-slate-200 tabular-nums">{formatMoneyFCFA(r.retourReel)} FCFA</span>
+                      <span className="text-slate-200 tabular-nums">{formatCurrency(r.retourReel, 'XOF')}</span>
                     </div>
                   </div>
 
@@ -454,7 +467,8 @@ export function BudgetKpiPage() {
           badgeVariant="default"
         />
       </DashboardGrid>
-    </DashboardPageLayout>
+      </DashboardPageLayout>
+    </div>
   );
 }
 

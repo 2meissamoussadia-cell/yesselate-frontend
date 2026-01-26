@@ -41,10 +41,7 @@ export function BCComparisonModal({
     return selectedBCs.map(bc => {
       if ('montantTTC' in bc) {
         // C'est un EnrichedBC
-        const amountValue = (bc as EnrichedBC).montantTTC || (bc as EnrichedBC).montantHT || 0;
-        const amount = typeof amountValue === 'string'
-          ? parseFloat(amountValue.replace(/[^\d.,]/g, '').replace(',', '.')) || 0
-          : Number(amountValue) || 0;
+        const amount = (bc as EnrichedBC).montantTTC || (bc as EnrichedBC).montantHT || 0;
         return {
           id: bc.id,
           subject: (bc as EnrichedBC).objet || 'BC sans objet',

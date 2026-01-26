@@ -6,6 +6,7 @@
 
 import config from '../navigation/navigation.config.json';
 import { logger } from '@/lib/utils/logger';
+import { normalizeRouteWithAliases } from './routeAliases';
 
 // Logger pour ce module utilitaire (utilise l'instance singleton)
 const log = {
@@ -90,6 +91,7 @@ export function getNavigationConfig(): NavigationConfig {
 /**
  * Vérifie si une route est valide dans la configuration
  * ✅ Utilise un cache pour améliorer les performances
+ * ✅ Validation avancée avec vérification de la présence du composant
  */
 export function isValidRoute(
   main: string,
@@ -116,10 +118,11 @@ export function isValidRoute(
       return false;
     }
 
-    // Si pas de sub, la route est valide (main seul)
+    // Si pas de sub, la route est valide (main seul) - mais vérifier qu'il y a au moins un sub disponible
     if (!sub) {
-      routeValidationCache.set(cacheKey, true);
-      return true;
+      const hasSubs = navConfig[main]?.sub && Object.keys(navConfig[main].sub).length > 0;
+      routeValidationCache.set(cacheKey, hasSubs);
+      return hasSubs;
     }
 
     // Vérifier sub
@@ -128,14 +131,16 @@ export function isValidRoute(
       return false;
     }
 
-    // Si pas de leaf, la route est valide (main + sub)
+    // Si pas de leaf, la route est valide (main + sub) - mais vérifier qu'il y a au moins un leaf disponible
     if (!leaf) {
-      routeValidationCache.set(cacheKey, true);
-      return true;
+      const hasLeaves = navConfig[main]?.sub?.[sub]?.leaf && Object.keys(navConfig[main].sub[sub].leaf || {}).length > 0;
+      routeValidationCache.set(cacheKey, hasLeaves);
+      return hasLeaves;
     }
 
-    // Vérifier leaf
-    const isValid = !!navConfig[main]?.sub?.[sub]?.leaf?.[leaf];
+    // Vérifier leaf et que le composant existe
+    const leafConfig = navConfig[main]?.sub?.[sub]?.leaf?.[leaf];
+    const isValid = !!leafConfig && !!leafConfig.component;
     routeValidationCache.set(cacheKey, isValid);
     return isValid;
   } catch (error) {
@@ -152,6 +157,7 @@ export function isValidRoute(
 /**
  * Obtient le composant associé à une route
  * ✅ Utilise un cache pour améliorer les performances
+ * ✅ Validation avancée avec fallback automatique
  */
 export function getRouteComponent(
   main: string,
@@ -197,6 +203,7 @@ export function getRouteComponent(
     }
     // Cas 3: main seul - utiliser route par défaut
     else if (main && !sub && !leaf) {
+      // ✅ Prioriser "dashboard" dans "summary", puis premier disponible
       component =
         navConfig[main]?.sub?.summary?.leaf?.dashboard?.component ||
         navConfig[main]?.sub?.summary?.leaf?.[
@@ -290,6 +297,7 @@ export function getDefaultRoute(): RouteConfig {
 
 /**
  * Normalise une route (ajoute les valeurs par défaut si manquantes)
+ * Applique également les alias pour compatibilité ascendante
  */
 export function normalizeRoute(
   main?: string | null,
@@ -298,10 +306,17 @@ export function normalizeRoute(
 ): RouteConfig {
   const defaultRoute = getDefaultRoute();
 
+  // Appliquer les alias AVANT la normalisation
+  const withAliases = normalizeRouteWithAliases(
+    main || defaultRoute.main,
+    sub || defaultRoute.sub,
+    leaf || defaultRoute.leaf
+  );
+
   const normalized: RouteConfig = {
-    main: main || defaultRoute.main,
-    sub: sub || defaultRoute.sub,
-    leaf: leaf || defaultRoute.leaf,
+    main: withAliases.main || defaultRoute.main,
+    sub: withAliases.sub || defaultRoute.sub,
+    leaf: withAliases.leaf || defaultRoute.leaf,
   };
 
   // Si la route normalisée n'est pas valide, utiliser la route par défaut
@@ -353,4 +368,65 @@ export function getAvailableRoutes(main: string): {
   });
 
   return { subs, leaves };
+}
+
+/**
+ * Obtient le composant de fallback pour une catégorie principale
+ * Essaie plusieurs stratégies de fallback dans l'ordre :
+ * 1. main -> summary -> dashboard
+ * 2. main -> summary -> premier leaf disponible
+ * 3. main -> premier sub -> dashboard
+ * 4. main -> premier sub -> premier leaf disponible
+ * 
+ * @param main - Catégorie principale
+ * @returns Nom du composant de fallback ou null
+ */
+export function getFallbackComponent(main: string): string | null {
+  if (!main || typeof main !== 'string') {
+    return null;
+  }
+
+  const navConfig = getNavigationConfig();
+  const mainConfig = navConfig[main];
+
+  if (!mainConfig?.sub) {
+    return null;
+  }
+
+  // Stratégie 1: main -> summary -> dashboard
+  const summaryDashboard = mainConfig.sub?.summary?.leaf?.dashboard?.component;
+  if (summaryDashboard) {
+    return summaryDashboard;
+  }
+
+  // Stratégie 2: main -> summary -> premier leaf disponible
+  const summaryLeaves = mainConfig.sub?.summary?.leaf;
+  if (summaryLeaves) {
+    const firstSummaryLeaf = Object.keys(summaryLeaves)[0];
+    if (firstSummaryLeaf && summaryLeaves[firstSummaryLeaf]?.component) {
+      return summaryLeaves[firstSummaryLeaf].component;
+    }
+  }
+
+  // Stratégie 3: main -> premier sub -> dashboard
+  const subs = Object.keys(mainConfig.sub);
+  for (const sub of subs) {
+    const dashboardComponent = mainConfig.sub[sub]?.leaf?.dashboard?.component;
+    if (dashboardComponent) {
+      return dashboardComponent;
+    }
+  }
+
+  // Stratégie 4: main -> premier sub -> premier leaf disponible
+  for (const sub of subs) {
+    const subConfig = mainConfig.sub[sub];
+    if (subConfig?.leaf) {
+      const firstLeaf = Object.keys(subConfig.leaf)[0];
+      if (firstLeaf && subConfig.leaf[firstLeaf]?.component) {
+        return subConfig.leaf[firstLeaf].component;
+      }
+    }
+  }
+
+  return null;
 }

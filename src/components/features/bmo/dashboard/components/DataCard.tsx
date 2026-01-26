@@ -48,7 +48,7 @@ export const DataCard = memo(function DataCard({
         // Surface premium (pas de hover:scale, pas de border-2)
         'rounded-2xl border border-slate-800/60 bg-slate-900/25',
         'shadow-[0_0_0_1px_rgba(255,255,255,0.03)] backdrop-blur-sm',
-        'transition-colors',
+        'transition-colors min-w-0 overflow-hidden',
         onClick && 'cursor-pointer hover:bg-slate-900/40 hover:border-slate-700/60',
         className
       )}

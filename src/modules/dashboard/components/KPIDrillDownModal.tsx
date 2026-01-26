@@ -8,31 +8,16 @@ import React, { useMemo } from 'react';
 import { X, TrendingUp, TrendingDown, Calendar, BarChart3 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { zIndexClass } from '../utils/zIndex';
-import { Line, Bar } from 'react-chartjs-2';
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
   Tooltip,
   Legend,
-  Filler,
-} from 'chart.js';
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
-);
+  ResponsiveContainer,
+} from 'recharts';
 
 interface KPIDrillDownModalProps {
   kpi: {
@@ -72,27 +57,17 @@ export function KPIDrillDownModal({ kpi, isOpen, onClose, historicalData }: KPID
     });
   }, [isOpen, historicalData, kpi.label, kpi.value]);
 
-  // Générer chart.js data
+  // Préparer les données pour Recharts
   const chartData = useMemo(() => {
-    const labels = history.map((d) => {
+    return history.map((d) => {
       const date = new Date(d.date);
-      return `${date.getDate()}/${date.getMonth() + 1}`;
+      return {
+        date: `${date.getDate()}/${date.getMonth() + 1}`,
+        value: d.value,
+        fullDate: d.date,
+      };
     });
-
-    return {
-      labels,
-      datasets: [
-        {
-          label: kpi.label,
-          data: history.map((d) => d.value),
-          borderColor: 'rgb(59, 130, 246)',
-          backgroundColor: 'rgba(59, 130, 246, 0.1)',
-          fill: true,
-          tension: 0.4,
-        },
-      ],
-    };
-  }, [history, kpi.label]);
+  }, [history]);
 
   const stats = useMemo(() => {
     if (!isOpen) return null;
@@ -188,33 +163,44 @@ export function KPIDrillDownModal({ kpi, isOpen, onClose, historicalData }: KPID
           <div className="bg-slate-800/30 rounded-xl p-6 border border-slate-700/50">
             <h3 className="text-lg font-semibold text-slate-200 mb-4">Évolution historique</h3>
             <div className="h-64">
-              <Line
-                data={chartData}
-                options={{
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  plugins: {
-                    legend: {
-                      labels: { color: '#cbd5e1' },
-                    },
-                    tooltip: {
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.1)" />
+                  <XAxis 
+                    dataKey="date" 
+                    stroke="#94a3b8"
+                    tick={{ fill: '#94a3b8', fontSize: 11 }}
+                  />
+                  <YAxis 
+                    stroke="#94a3b8"
+                    tick={{ fill: '#94a3b8', fontSize: 11 }}
+                  />
+                  <Tooltip
+                    contentStyle={{
                       backgroundColor: 'rgba(15, 23, 42, 0.95)',
-                      titleColor: '#f1f5f9',
-                      bodyColor: '#cbd5e1',
-                    },
-                  },
-                  scales: {
-                    x: {
-                      grid: { color: 'rgba(148, 163, 184, 0.1)' },
-                      ticks: { color: '#94a3b8' },
-                    },
-                    y: {
-                      grid: { color: 'rgba(148, 163, 184, 0.1)' },
-                      ticks: { color: '#94a3b8' },
-                    },
-                  },
-                }}
-              />
+                      border: '1px solid rgba(148, 163, 184, 0.2)',
+                      borderRadius: '8px',
+                      padding: '8px 12px',
+                    }}
+                    labelStyle={{ color: '#f1f5f9' }}
+                    itemStyle={{ color: '#cbd5e1' }}
+                  />
+                  <Legend 
+                    wrapperStyle={{ color: '#cbd5e1', fontSize: 12 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="value"
+                    stroke="#3b82f6"
+                    strokeWidth={2}
+                    fill="#3b82f6"
+                    fillOpacity={0.1}
+                    name={kpi.label}
+                    dot={{ r: 3 }}
+                    activeDot={{ r: 5 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
           </div>
 

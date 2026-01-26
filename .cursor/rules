@@ -1,8 +1,0 @@
-name: No Documentation Files Without Explicit Request
-description: Prevent Cursor from creating any documentation files unless explicitly asked.
-priority: high
-rules:
-  - Cursor must never create, modify, or suggest documentation files (e.g., README.md, docs/*.md, ADRs, architecture notes, comments-only files) unless I explicitly request it.
-  - Cursor must not generate documentation content inside code files unless I explicitly ask for it.
-  - Cursor must not propose adding documentation as part of a refactor or feature implementation.
-  - If a task appears to require documentation, Cursor must ask for confirmation before generating any documentation content.

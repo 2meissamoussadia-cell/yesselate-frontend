@@ -4,7 +4,6 @@ import React, { memo, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { getTrendIcon, getTrendColor } from './getTrendIcon';
-import { SparklineChart } from './SparklineChart';
 
 export interface KPICardData {
   id: string;
@@ -61,6 +60,7 @@ export const KPICard = memo(function KPICard({ kpi, size = 'md', className }: KP
         'border-slate-800/70 hover:border-slate-700/80',
         'shadow-[0_10px_30px_-20px_rgba(0,0,0,0.8)]',
         'transition-colors',
+        'overflow-hidden', // Empêcher le débordement
         clickable ? 'cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60' : 'cursor-default',
         tokens.root,
         className
@@ -69,10 +69,10 @@ export const KPICard = memo(function KPICard({ kpi, size = 'md', className }: KP
       disabled={!clickable}
     >
       {/* Accent bar */}
-      <span className={cn('absolute left-0 top-3 bottom-3 w-[3px] rounded-full opacity-90', accent)} />
+      <span className={cn('absolute left-0 top-0 bottom-0 w-[3px] opacity-80', accent)} />
 
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
+      <div className="flex items-start justify-between gap-3 relative z-10">
+        <div className="min-w-0 flex-1">
           <div className={cn('text-slate-300/90 font-medium tracking-wide truncate', tokens.label)}>
             {kpi.label}
           </div>
@@ -80,10 +80,10 @@ export const KPICard = memo(function KPICard({ kpi, size = 'md', className }: KP
             {kpi.value}
           </div>
 
-          <div className="mt-2 flex items-center gap-2">
-            {TrendIcon ? <TrendIcon className={cn('h-3.5 w-3.5', trendColor)} /> : null}
+          <div className="mt-2 flex items-center gap-2 flex-wrap">
+            {TrendIcon ? <TrendIcon className={cn('h-3.5 w-3.5 flex-shrink-0', trendColor)} /> : null}
             {typeof kpi.trend === 'number' ? (
-              <span className={cn('text-xs font-medium tabular-nums', trendColor)}>
+              <span className={cn('text-xs font-medium tabular-nums whitespace-nowrap', trendColor)}>
                 {kpi.trend > 0 ? `+${kpi.trend}%` : `${kpi.trend}%`}
               </span>
             ) : (
@@ -95,19 +95,10 @@ export const KPICard = memo(function KPICard({ kpi, size = 'md', className }: KP
           </div>
         </div>
 
-        <div className="flex flex-col items-end gap-2">
+        <div className="flex-shrink-0">
           <div className={cn('inline-flex items-center justify-center rounded-xl border border-slate-800/60 bg-slate-900/40 p-2')}>
-            <Icon className={cn(tokens.icon, 'text-slate-200 flex-shrink-0')} style={{ width: '0.875rem', height: '0.875rem', minWidth: '0.875rem', minHeight: '0.875rem', maxWidth: '0.875rem', maxHeight: '0.875rem' }} />
+            <Icon className={cn(tokens.icon, 'text-slate-200')} style={{ width: '0.875rem', height: '0.875rem', minWidth: '0.875rem', minHeight: '0.875rem', maxWidth: '0.875rem', maxHeight: '0.875rem' }} />
           </div>
-
-          {kpi.sparkline?.length ? (
-            <div className="w-[92px] opacity-90">
-              <SparklineChart 
-                data={kpi.sparkline} 
-                color={color === 'rose' ? 'rose' : color}
-              />
-            </div>
-          ) : null}
         </div>
       </div>
     </button>

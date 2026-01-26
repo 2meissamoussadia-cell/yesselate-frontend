@@ -105,7 +105,7 @@ export const ActionItem = memo(function ActionItem({
   return (
     <div
       className={cn(
-        'rounded-xl border p-4 transition-colors',
+        'rounded-xl border p-4 transition-colors min-w-0 overflow-hidden',
         'bg-slate-800/50 border-slate-700/50',
         onClick && 'cursor-pointer hover:bg-slate-800/70 hover:border-slate-600/50',
         className
@@ -114,8 +114,8 @@ export const ActionItem = memo(function ActionItem({
       style={{ padding: 'clamp(0.75rem, 1.5vw, 1rem)', minHeight: '120px' }}
     >
       {/* Header: Type + Priority */}
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex items-center gap-2">
+      <div className="flex items-start justify-between mb-3 min-w-0">
+        <div className="flex items-center gap-2 min-w-0 flex-1">
           <div className={cn('rounded border', type.bg, type.border)} style={{ padding: 'clamp(0.25rem, 0.5vw, 0.375rem)' }}>
             <TypeIcon className={cn(type.color)} style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />
           </div>
@@ -142,7 +142,7 @@ export const ActionItem = memo(function ActionItem({
       </div>
 
       {/* Titre */}
-      <h3 className="font-semibold text-slate-200 mb-2 line-clamp-2" style={{ fontSize: 'clamp(0.875rem, 1vw, 0.9375rem)' }}>
+      <h3 className="font-semibold text-slate-200 mb-2 line-clamp-2 min-w-0" style={{ fontSize: 'clamp(0.875rem, 1vw, 0.9375rem)' }}>
         {action.titre}
       </h3>
 
@@ -161,15 +161,15 @@ export const ActionItem = memo(function ActionItem({
       )}
 
       {/* Footer: Deadline + Responsable */}
-      <div className="flex items-center justify-between pt-3 border-t border-slate-700/50">
-        <div className="flex items-center gap-2">
-          <Clock className="text-slate-500" style={{ width: 'clamp(0.75rem, 0.875vw, 0.875rem)', height: 'clamp(0.75rem, 0.875vw, 0.875rem)', minWidth: '0.75rem', minHeight: '0.75rem' }} />
-          <span className="text-slate-400" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{action.deadline}</span>
+      <div className="flex items-center justify-between pt-3 border-t border-slate-700/50 min-w-0">
+        <div className="flex items-center gap-2 min-w-0 flex-1">
+          <Clock className="text-slate-500 flex-shrink-0" style={{ width: 'clamp(0.75rem, 0.875vw, 0.875rem)', height: 'clamp(0.75rem, 0.875vw, 0.875rem)', minWidth: '0.75rem', minHeight: '0.75rem' }} />
+          <span className="text-slate-400 truncate" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{action.deadline}</span>
         </div>
         {action.responsable && (
-          <div className="flex items-center gap-1">
-            <User className="text-slate-500" style={{ width: 'clamp(0.75rem, 0.875vw, 0.875rem)', height: 'clamp(0.75rem, 0.875vw, 0.875rem)', minWidth: '0.75rem', minHeight: '0.75rem' }} />
-            <span className="text-slate-400" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{action.responsable.nom}</span>
+          <div className="flex items-center gap-1 flex-shrink-0 ml-2">
+            <User className="text-slate-500 flex-shrink-0" style={{ width: 'clamp(0.75rem, 0.875vw, 0.875rem)', height: 'clamp(0.75rem, 0.875vw, 0.875rem)', minWidth: '0.75rem', minHeight: '0.75rem' }} />
+            <span className="text-slate-400 truncate" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{action.responsable.nom}</span>
           </div>
         )}
       </div>

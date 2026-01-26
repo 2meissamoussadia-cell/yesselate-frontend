@@ -23,3 +23,6 @@ export type { ActionItemData, ActionType, ActionPriority } from './ActionItem';
 
 export { CircuitValidation } from './CircuitValidation';
 export type { WorkflowStage } from './CircuitValidation';
+
+export { KpiStatCard } from './KpiStatCard';
+export type { KpiStatCardProps, KpiTrendDirection } from './KpiStatCard';

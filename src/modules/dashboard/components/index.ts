@@ -16,6 +16,7 @@ export { DashboardRegistryView } from './DashboardRegistryView';
 export { DashboardContentSwitch } from './DashboardContentSwitch';
 export { DashboardViewRouter } from './DashboardViewRouter';
 export { DashboardKPIBar } from './DashboardKPIBar';
+export { DashboardKPIBarWithExport } from './DashboardKPIBarWithExport';
 export type { KPIData } from './DashboardKPIBar';
 export { DashboardFooter } from './DashboardFooter';
 export { DashboardBreadcrumbs } from './DashboardBreadcrumbs';

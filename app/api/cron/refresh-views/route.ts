@@ -6,7 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { executeRefreshCronJob } from '@/lib/server/dashboard/workers/refreshMViewsCron';
+import { executeRefreshCronJob } from '@lib-root/server/dashboard/workers/refreshMViewsCron';
 
 /**
  * Secret pour protéger l'endpoint (à définir dans .env)

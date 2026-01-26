@@ -2,17 +2,17 @@
 // Phase P11: Cache serveur - par défaut "no-store", override pour reporting
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { extractContextFromHeaders } from '@/lib/server/dashboard/context';
-import { hydrateContext } from '@/lib/server/dashboard/context_ext';
+import { extractContextFromHeaders } from '@lib-root/server/dashboard/context';
+import { hydrateContext } from '@lib-root/server/dashboard/context_ext';
 import { can } from '@/lib/server/security/policy';
-import { InMemoryReadModelsRepo } from '@/lib/server/dashboard/repositories/InMemoryReadModelsRepo';
-import { SqlReadModelsRepo } from '@/lib/server/dashboard/repositories/SqlReadModelsRepo';
-import { DashboardReadService } from '@/lib/server/dashboard/services/dashboardReadService';
+import { InMemoryReadModelsRepo } from '@lib-root/server/dashboard/repositories/InMemoryReadModelsRepo';
+import { SqlReadModelsRepo } from '@lib-root/server/dashboard/repositories/SqlReadModelsRepo';
+import { DashboardReadService } from '@lib-root/server/dashboard/services/dashboardReadService';
 import { observeHttp } from '@/app/api/internal/metrics/route';
 import { withReq } from '@/lib/server/logging';
 import { rateLimitRedis } from '@/lib/server/observability/rateLimitRedis';
-import { recordTTFB } from '@/lib/server/dashboard/cache';
-import { parsePaginationParams } from '@/lib/server/dashboard/types';
+import { recordTTFB } from '@lib-root/server/dashboard/cache';
+import { parsePaginationParams } from '@lib-root/server/dashboard/types';
 import { getBudgetForRoute, exceedsBudget } from '@/app/api/internal/metrics/budgets';
 import { sloBudgetExceededCounter } from '@/lib/server/observability/metrics';
 

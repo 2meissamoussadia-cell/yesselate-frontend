@@ -11,7 +11,7 @@ import { ErrorBoundary } from '@/components/shared/ErrorBoundary';
 import { I18nProvider } from '@/src/lib/i18n/I18nProvider';
 import { resolveLocaleContext } from '@/lib/server/i18n';
 import { loadMessages } from '@/lib/server/i18n/loadMessages';
-import { extractContextFromHeaders } from '@/lib/server/dashboard/context';
+import { extractContextFromHeaders } from '@lib-root/server/dashboard/context';
 import {
   DashboardLayoutFallback,
   DashboardLayoutError,

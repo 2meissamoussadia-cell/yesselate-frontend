@@ -1,7 +1,7 @@
 // modules/dashboard/components/compliance/ComplianceOverviewPage.tsx
 'use client';
 import { KPICard } from '../shared';
-import { toneToColor } from '@/lib/dashboard/kpi';
+import { toneToColor } from '@lib-root/dashboard/kpi';
 
 export function ComplianceOverviewPage({ data }: { data: {
   ratio_completude_procedure: number; delai_visa_moy_j: number;

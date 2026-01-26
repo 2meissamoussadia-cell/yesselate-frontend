@@ -9,18 +9,29 @@ import { DashboardViewRouter } from './DashboardViewRouter';
 import { DashboardFooter } from './DashboardFooter';
 import { DashboardNotifications } from './DashboardNotifications';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
+import { useI18n } from '@/src/lib/i18n';
 import { cn } from '@/lib/utils';
 
 export function DashboardCommandCenterPage() {
   const nav = useDashboardCommandCenterStore((s) => s.navigation);
+  const { locale, currency } = useI18n();
 
   const onExport = useCallback(async (format: 'csv' | 'json' | 'pdf' | 'excel') => {
+    // Phase P12.b: Mapper 'excel' vers 'xlsx' pour le format natif
+    const apiFormat = format === 'excel' ? 'xlsx' : format;
+    
     const params = new URLSearchParams({
       main: nav.mainCategory || 'overview',
-      format,
+      format: apiFormat,
     });
     if (nav.subCategory) params.set('sub', nav.subCategory);
     if (nav.subSubCategory) params.set('leaf', nav.subSubCategory);
+
+    // Phase P12.b: Ajouter locale/currency pour formats XLSX/PDF (formatage localisé)
+    if (apiFormat === 'xlsx' || apiFormat === 'pdf') {
+      params.set('locale', locale);
+      params.set('currency', currency);
+    }
 
     const res = await fetch(`/api/export/dashboard?${params.toString()}`, {
       headers: {
@@ -35,10 +46,10 @@ export function DashboardCommandCenterPage() {
     const cd = res.headers.get('Content-Disposition') ?? '';
     const match = /filename="([^"]+)"/.exec(cd);
     a.href = url;
-    a.download = match?.[1] ?? `export.${format === 'excel' ? 'xls' : format}`;
+    a.download = match?.[1] ?? `export.${format === 'excel' ? 'xlsx' : format}`;
     a.click();
     URL.revokeObjectURL(url);
-  }, [nav]);
+  }, [nav, locale, currency]);
 
   return (
     <div

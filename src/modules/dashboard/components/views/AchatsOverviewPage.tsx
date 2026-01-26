@@ -8,7 +8,7 @@
 import React from 'react';
 import { ChartContainer, AreaChart } from '@/modules/dashboard/charts/ChartKit';
 import { KPICard } from '../shared';
-import { parseTrendPercent, toneToColor } from '@/lib/dashboard/kpi';
+import { parseTrendPercent, toneToColor } from '@lib-root/dashboard/kpi';
 import type { KpisAchatsData } from '../../types/dashboard.readmodels';
 
 interface AchatsOverviewPageProps {

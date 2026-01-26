@@ -2,7 +2,7 @@
 // Phase P10: API Admin - Gestion des permissions
 
 import { NextRequest, NextResponse } from 'next/server';
-import { extractContextFromHeaders } from '@/lib/server/dashboard/context';
+import { extractContextFromHeaders } from '@lib-root/server/dashboard/context';
 import { pgPool } from '@/lib/server/db/pool';
 
 export async function GET(req: NextRequest) {

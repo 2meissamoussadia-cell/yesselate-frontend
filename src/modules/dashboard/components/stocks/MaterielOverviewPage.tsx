@@ -7,7 +7,7 @@
 
 import { Wrench, AlertCircle, Wrench as BacklogIcon, CheckCircle2 } from 'lucide-react';
 import { KPICard } from '../shared';
-import { toneToColor } from '@/lib/dashboard/kpi';
+import { toneToColor } from '@lib-root/dashboard/kpi';
 
 export function MaterielOverviewPage({ data }: any) {
   const kpis = [

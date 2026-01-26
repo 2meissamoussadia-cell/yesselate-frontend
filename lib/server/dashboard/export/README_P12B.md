@@ -246,4 +246,116 @@ const EXPORT_TIMEOUT_MS = 60_000; // Timeout 60s
 
 ---
 
-**Status** : ✅ XLSX natif implémenté — PDF riche en préparation
+**Status** : ✅ XLSX natif implémenté — ✅ PDF riche implémenté (playwright)
+
+---
+
+## 📄 PDF Riche (Implémenté)
+
+### Template HTML
+
+**Fichier** : `lib/server/dashboard/export/pdfTemplate.ts`
+
+**Fonctionnalités** :
+- Template HTML avec CSS imprimable (A4 portrait/paysage)
+- Support RTL : `dir="rtl"`, polices NotoSansArabic
+- Support CJK : NotoSansCJK (si nécessaire)
+- Formatage localisé : monnaie, dates, pourcentages selon locale
+- Filigrane optionnel (ex: "CONFIDENTIEL")
+- En-tête/pied de page personnalisables
+
+### Génération PDF
+
+**Fichier** : `lib/server/dashboard/export/pdfFormatter.ts`
+
+**Fonctionnalités** :
+- HTML→PDF via Chromium headless (playwright)
+- Timeout 30s pour le chargement
+- Marges A4 (14mm)
+- Support RTL/CJK avec polices Google Fonts
+
+### Audit Logging
+
+**Fichier** : `lib/server/dashboard/export/auditExport.ts`
+
+**Enregistre** :
+- Tenant, utilisateur, route
+- Format, nom de fichier, taille, nombre de lignes
+- Hash SHA-256, durée
+- IP, User-Agent
+- Succès/échec avec message d'erreur
+
+**Table** : `audit_traces` (si existe, sinon log console)
+
+---
+
+## 🛡️ Sécurité & Robustesse
+
+### Limites Implémentées
+
+- **Taille max** : 50 MB par fichier
+- **Lignes max** : 100 000
+- **Timeout** : 60s pour récupération données, 30s pour génération PDF
+- **Rate limiting** : 20 exports/IP, refill 1/s (Redis)
+
+### Sanitization
+
+- **Noms de fichiers** : `sanitizeFilename()` (caractères dangereux supprimés, max 120 chars)
+- **CSV injection** : Protection contre `=`, `-`, `+`, `@` en début de cellule
+- **HTML injection** : Échappement HTML dans le template PDF
+
+### Hash SHA-256
+
+- **Scellement** : Tous les fichiers exportés ont un hash SHA-256 dans `X-Content-Hash`
+- **Intégrité** : Permet de vérifier que le fichier n'a pas été modifié
+- **Audit** : Hash enregistré dans l'audit trail
+
+### Audit Trail
+
+- **Journalisation** : Tous les exports sont enregistrés (tenant, user, route, format, taille, hash, durée)
+- **Conformité RGPD** : Traçabilité complète des exports
+- **Non-bloquant** : Si l'audit échoue, l'export continue (log console en fallback)
+
+---
+
+## 📝 Notes d'Implémentation
+
+### Dépendances Requises
+
+```bash
+npm install exceljs playwright
+```
+
+### Variables d'Environnement
+
+```env
+# Redis (pour rate limiting)
+REDIS_URL=redis://localhost:6379
+
+# Playwright (optionnel - télécharge automatiquement Chromium)
+PLAYWRIGHT_BROWSERS_PATH=/path/to/browsers
+```
+
+### Pool de Navigateurs (Futur)
+
+Pour optimiser les performances PDF, on peut créer un pool de navigateurs :
+
+```typescript
+// lib/server/dashboard/export/browserPool.ts
+let browserPool: Browser[] = [];
+
+async function getBrowser(): Promise<Browser> {
+  if (browserPool.length === 0) {
+    return await chromium.launch({ args: ['--no-sandbox'] });
+  }
+  return browserPool.pop()!;
+}
+
+async function releaseBrowser(browser: Browser): Promise<void> {
+  browserPool.push(browser);
+}
+```
+
+---
+
+**Status** : ✅ XLSX natif implémenté — ✅ PDF riche implémenté (playwright)

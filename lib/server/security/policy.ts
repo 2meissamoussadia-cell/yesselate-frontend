@@ -1,8 +1,8 @@
 // lib/server/security/policy.ts
 // Phase P10: Helpers de vérification de permissions et feature flags
 
-import type { RequestContext as RequestContextExt } from '@/lib/server/dashboard/context_ext';
-import type { RequestContext } from '@/lib/server/dashboard/context';
+import type { RequestContext as RequestContextExt } from '@lib-root/server/dashboard/context_ext';
+import type { RequestContext } from '@lib-root/server/dashboard/context';
 
 // Type union pour accepter les deux formats de RequestContext
 type ContextUnion = RequestContext | RequestContextExt;

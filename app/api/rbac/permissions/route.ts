@@ -2,8 +2,8 @@
 // Phase P10: API pour charger les permissions utilisateur côté frontend
 
 import { NextRequest, NextResponse } from 'next/server';
-import { extractContextFromHeaders, enrichContextWithRbac } from '@/lib/server/dashboard/context';
-import { hydrateContext } from '@/lib/server/dashboard/context_ext';
+import { extractContextFromHeaders, enrichContextWithRbac } from '@lib-root/server/dashboard/context';
+import { hydrateContext } from '@lib-root/server/dashboard/context_ext';
 
 export async function GET(req: NextRequest) {
   try {

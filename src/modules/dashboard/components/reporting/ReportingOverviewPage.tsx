@@ -2,7 +2,7 @@
 import { KPICard } from '../shared';
 import { ChartContainer } from '@/modules/dashboard/charts/ChartKit/ChartContainer';
 import { AreaChartLazy } from '@/modules/dashboard/charts/ChartKit/AreaChart';
-import { toneToColor } from '@/lib/dashboard/kpi';
+import { toneToColor } from '@lib-root/dashboard/kpi';
 
 export function ReportingOverviewPage({ data }: { data: { monthly: Array<{ mois: string; production_ht: number; facture_ht: number; encaisse_ht: number; rap_ht: number; raf_ht: number }>, dso?: Array<{ mois: string; dso_jours: number }> }}) {
   const last = data.monthly?.[data.monthly.length - 1];

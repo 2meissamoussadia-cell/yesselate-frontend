@@ -167,8 +167,193 @@ async function refreshViews(client: Client, views: string[], trigger: 'event-dri
 }
 
 /**
+ * Configure le handler de notifications sur un client
+ * Phase P13: Extraction pour réutilisation après reconnexion
+ */
+function setupNotificationHandler(client: Client): void {
+  // Écouter les notifications
+  client.on('notification', async (msg: any) => {
+    if (msg.channel !== 'dashboard_refresh' || !msg.payload) {
+      return;
+    }
+
+    const notificationStart = Date.now();
+    const log = withReq();
+
+    try {
+      const evt = JSON.parse(msg.payload);
+      const domain = String(evt.domain || evt.table); // Support ancien format
+      const tenant = String(evt.tenant_id ?? '');
+
+      // Phase P4: Métriques
+      workerNotificationsReceived.inc({ domain });
+
+      // Phase P4: Tracing
+      await withSpan(`worker.process_notification.${domain}`, async (span) => {
+        const views = MVIEWS_BY_DOMAIN[domain] ?? [];
+
+        if (!views.length) {
+          log.warn({ type: 'worker_domain_unmapped', domain }, `[WORKER] Domain ${domain} non mappé, ignoré`);
+          return;
+        }
+
+        // Lock global pour éviter les conflits entre workers/CRON
+        const lockKey = 0xD45H000000000001n;
+
+        const result = await withAdvisoryLock(client, lockKey, async () => {
+          await refreshViews(client, views, 'event-driven');
+          
+          // Phase P4: Mettre à jour le heartbeat
+          try {
+            await client.query('SELECT update_worker_heartbeat($1, NULL)', [domain]);
+          } catch (error) {
+            // Ne pas faire échouer le refresh si le heartbeat échoue
+            log.warn({ err: error, type: 'heartbeat_update_failed' }, '[WORKER] ⚠️ Échec mise à jour heartbeat');
+          }
+          
+          log.info({ type: 'mview_refresh_complete', domain, tenant, views }, '[MVIEW] ✅ Rafraîchi');
+        });
+
+        if (result === undefined) {
+          log.warn({ type: 'worker_lock_failed', domain }, '[MVIEW] ⚠️ Lock non acquis, refresh en cours ailleurs');
+        }
+
+        // Phase P4: Métriques de durée
+        const processingDuration = (Date.now() - notificationStart) / 1000;
+        workerProcessingDuration.observe({ domain }, processingDuration);
+
+        if (span) {
+          span.setAttributes({
+            'worker.domain': domain,
+            'worker.tenant': tenant,
+            'worker.views_count': views.length,
+            'worker.processing_duration': processingDuration,
+          });
+        }
+      });
+    } catch (error) {
+      const processingDuration = (Date.now() - notificationStart) / 1000;
+      log.error(
+        {
+          err: error,
+          type: 'worker_notification_error',
+          duration: processingDuration,
+        },
+        '[WORKER] ❌ Erreur lors du traitement de la notification'
+      );
+    }
+  });
+}
+
+/**
+ * Reconnexion avec backoff exponentiel et jitter
+ * Phase P13: Résilience & DR
+ */
+async function retryConnect(): Promise<Client> {
+  let delay = 1000;
+  const maxDelay = 30000;
+  const log = withReq();
+  
+  while (true) {
+    try {
+      await new Promise((resolve) => setTimeout(resolve, delay));
+      const client = await pool.connect();
+      await client.query('LISTEN dashboard_refresh');
+      log.info({ type: 'worker_reconnected', delay }, '[WORKER] ✅ Reconnecté à Postgres');
+      return client;
+    } catch (e) {
+      log.error({ err: e, delay, type: 'worker_reconnect_failed' }, '[WORKER] ❌ Échec reconnexion, nouvelle tentative…');
+      // Backoff exponentiel avec jitter
+      delay = Math.min(maxDelay, Math.round(delay * 1.5 + Math.random() * 500));
+    }
+  }
+}
+
+/**
+ * Démarre le listener avec gestion des erreurs
+ * Phase P13: Résilience & DR
+ */
+async function startListener(): Promise<void> {
+  const log = withReq();
+  let client: Client | null = null;
+  
+  try {
+    client = await pool.connect();
+    await client.query('LISTEN dashboard_refresh');
+    log.info({ type: 'worker_started' }, '[WORKER] 🚀 Écoute du canal "dashboard_refresh"…');
+    
+    setupNotificationHandler(client);
+
+    // Phase P13: Gestion des erreurs de connexion avec reconnexion automatique
+    client.on('error', async (err) => {
+      const log = withReq();
+      log.error({ err, type: 'worker_connection_error' }, '[WORKER] ❌ Erreur de connexion PostgreSQL');
+      
+      // Libérer la connexion défaillante
+      try {
+        client?.release(true); // true = force release même si erreur
+      } catch {
+        // Ignorer les erreurs de release
+      }
+      
+      // Reconnexion avec backoff
+      try {
+        client = await retryConnect();
+        setupNotificationHandler(client);
+      } catch (reconnectError) {
+        log.error({ err: reconnectError, type: 'worker_reconnect_fatal' }, '[WORKER] ❌ Échec reconnexion fatale');
+        // Relancer le listener depuis le début après un délai
+        setTimeout(() => startListener().catch(console.error), 5000);
+      }
+    });
+
+    // Phase P13: Garder le processus actif avec arrêt gracieux
+    process.on('SIGTERM', async () => {
+      const log = withReq();
+      log.info({ type: 'worker_shutdown' }, '[WORKER] 🛑 Arrêt demandé (SIGTERM)');
+      try {
+        if (client) {
+          await client.query('UNLISTEN dashboard_refresh');
+          client.release();
+        }
+      } catch (e) {
+        // Ignorer les erreurs lors de l'arrêt
+      }
+      await pool.end().finally(() => process.exit(0));
+    });
+
+    process.on('SIGINT', async () => {
+      const log = withReq();
+      log.info({ type: 'worker_shutdown' }, '[WORKER] 🛑 Arrêt demandé (SIGINT)');
+      try {
+        if (client) {
+          await client.query('UNLISTEN dashboard_refresh');
+          client.release();
+        }
+      } catch (e) {
+        // Ignorer les erreurs lors de l'arrêt
+      }
+      await pool.end().finally(() => process.exit(0));
+    });
+  } catch (error) {
+    const log = withReq();
+    log.error({ err: error, type: 'worker_startup_error' }, '[WORKER] ❌ Erreur lors du démarrage');
+    try {
+      if (client) {
+        client.release();
+      }
+    } catch {
+      // Ignorer
+    }
+    // Phase P13: Relancer après un délai au lieu de quitter
+    setTimeout(() => startListener().catch(console.error), 5000);
+  }
+}
+
+/**
  * Fonction principale : démarre le worker
  * Phase P3: Event-Driven Refresh
+ * Phase P13: Robustifié avec reconnexion automatique
  */
 async function main(): Promise<void> {
   const log = withReq();
@@ -178,119 +363,7 @@ async function main(): Promise<void> {
     return;
   }
 
-  const client = await pool.connect();
-  
-  try {
-    // S'abonner au canal
-    await client.query('LISTEN dashboard_refresh');
-    const log = withReq();
-    log.info({ type: 'worker_started' }, '[WORKER] 🚀 Écoute du canal "dashboard_refresh"…');
-
-    // Écouter les notifications
-    client.on('notification', async (msg: any) => {
-      if (msg.channel !== 'dashboard_refresh' || !msg.payload) {
-        return;
-      }
-
-      const notificationStart = Date.now();
-      const log = withReq();
-
-      try {
-        const evt = JSON.parse(msg.payload);
-        const domain = String(evt.domain || evt.table); // Support ancien format
-        const tenant = String(evt.tenant_id ?? '');
-
-        // Phase P4: Métriques
-        workerNotificationsReceived.inc({ domain });
-
-        // Phase P4: Tracing
-        await withSpan(`worker.process_notification.${domain}`, async (span) => {
-          const views = MVIEWS_BY_DOMAIN[domain] ?? [];
-
-          if (!views.length) {
-            log.warn({ type: 'worker_domain_unmapped', domain }, `[WORKER] Domain ${domain} non mappé, ignoré`);
-            return;
-          }
-
-          // Lock global pour éviter les conflits entre workers/CRON
-          const lockKey = 0xD45H000000000001n;
-
-          const result = await withAdvisoryLock(client, lockKey, async () => {
-            await refreshViews(client, views, 'event-driven');
-            
-            // Phase P4: Mettre à jour le heartbeat
-            try {
-              await client.query('SELECT update_worker_heartbeat($1, NULL)', [domain]);
-            } catch (error) {
-              // Ne pas faire échouer le refresh si le heartbeat échoue
-              log.warn({ err: error, type: 'heartbeat_update_failed' }, '[WORKER] ⚠️ Échec mise à jour heartbeat');
-            }
-            
-            log.info({ type: 'mview_refresh_complete', domain, tenant, views }, '[MVIEW] ✅ Rafraîchi');
-          });
-
-          if (result === undefined) {
-            log.warn({ type: 'worker_lock_failed', domain }, '[MVIEW] ⚠️ Lock non acquis, refresh en cours ailleurs');
-          }
-
-          // Phase P4: Métriques de durée
-          const processingDuration = (Date.now() - notificationStart) / 1000;
-          workerProcessingDuration.observe({ domain }, processingDuration);
-
-          if (span) {
-            span.setAttributes({
-              'worker.domain': domain,
-              'worker.tenant': tenant,
-              'worker.views_count': views.length,
-              'worker.processing_duration': processingDuration,
-            });
-          }
-        });
-      } catch (error) {
-        const processingDuration = (Date.now() - notificationStart) / 1000;
-        log.error(
-          {
-            err: error,
-            type: 'worker_notification_error',
-            duration: processingDuration,
-          },
-          '[WORKER] ❌ Erreur lors du traitement de la notification'
-        );
-      }
-    });
-
-    // Gestion des erreurs de connexion
-    client.on('error', (err) => {
-      const log = withReq();
-      log.error({ err, type: 'worker_connection_error' }, '[WORKER] ❌ Erreur de connexion PostgreSQL');
-      // Le pool gère la reconnexion automatiquement
-    });
-
-    // Garder le processus actif
-    process.on('SIGTERM', async () => {
-      const log = withReq();
-      log.info({ type: 'worker_shutdown' }, '[WORKER] 🛑 Arrêt demandé (SIGTERM)');
-      await client.query('UNLISTEN dashboard_refresh');
-      await client.release();
-      await pool.end();
-      process.exit(0);
-    });
-
-    process.on('SIGINT', async () => {
-      const log = withReq();
-      log.info({ type: 'worker_shutdown' }, '[WORKER] 🛑 Arrêt demandé (SIGINT)');
-      await client.query('UNLISTEN dashboard_refresh');
-      await client.release();
-      await pool.end();
-      process.exit(0);
-    });
-  } catch (error) {
-    const log = withReq();
-    log.error({ err: error, type: 'worker_startup_error' }, '[WORKER] ❌ Erreur lors du démarrage');
-    await client.release();
-    await pool.end();
-    process.exit(1);
-  }
+  await startListener();
 }
 
 // Démarrer le worker si exécuté directement

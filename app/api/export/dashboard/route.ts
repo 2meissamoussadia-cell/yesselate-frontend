@@ -4,14 +4,16 @@
 // Phase P12.b: XLSX natif et PDF riche
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { extractContextFromHeaders } from '@/lib/server/dashboard/context';
-import { hydrateContext } from '@/lib/server/dashboard/context_ext';
+import { extractContextFromHeaders } from '@lib-root/server/dashboard/context';
+import { hydrateContext } from '@lib-root/server/dashboard/context_ext';
 import { can } from '@/lib/server/security/policy';
-import { DashboardReadService } from '@/lib/server/dashboard/services/dashboardReadService';
-import { InMemoryReadModelsRepo } from '@/lib/server/dashboard/repositories/InMemoryReadModelsRepo';
-import { SqlReadModelsRepo } from '@/lib/server/dashboard/repositories/SqlReadModelsRepo';
+import { DashboardReadService } from '@lib-root/server/dashboard/services/dashboardReadService';
+import { InMemoryReadModelsRepo } from '@lib-root/server/dashboard/repositories/InMemoryReadModelsRepo';
+import { SqlReadModelsRepo } from '@lib-root/server/dashboard/repositories/SqlReadModelsRepo';
 import { resolveLocaleContext } from '@/lib/server/i18n';
-import { formatAsXLSX } from '@/lib/server/dashboard/export/xlsxFormatter';
+import { formatAsXLSX } from '@lib-root/server/dashboard/export/xlsxFormatter';
+import { formatAsPDF } from '@lib-root/server/dashboard/export/pdfFormatter';
+import { auditExport } from '@lib-root/server/dashboard/export/auditExport';
 import { rateLimitRedis } from '@/lib/server/observability/rateLimitRedis';
 import crypto from 'node:crypto';
 
@@ -70,6 +72,7 @@ function toCsv(rows: any[], separator: string = ','): string {
 }
 
 export async function GET(req: NextRequest) {
+  const t0 = performance.now();
   const url = new URL(req.url);
   const parsed = Query.safeParse({
     main: url.searchParams.get('main') ?? undefined,
@@ -84,6 +87,7 @@ export async function GET(req: NextRequest) {
 
   // Phase P12.b: Rate limiting pour exports (plus restrictif que dashboard read)
   const ip = req.headers.get('x-forwarded-for') ?? '127.0.0.1';
+  const userAgent = req.headers.get('user-agent') ?? undefined;
   const rl = await rateLimitRedis(`export:${ip}`, 20, 1); // 20 exports, refill 1/s
   if (!rl.allowed) {
     return NextResponse.json(
@@ -107,11 +111,25 @@ export async function GET(req: NextRequest) {
   }
 
   // Phase P12: Résoudre la locale pour les séparateurs CSV
-  const localeBundle = await resolveLocaleContext(
+  // Phase P12.b: Priorité query params (si fournis) > resolveLocaleContext
+  const queryLocale = url.searchParams.get('locale');
+  const queryCurrency = url.searchParams.get('currency');
+  let localeBundle = await resolveLocaleContext(
     req.headers,
     baseCtx.tenantId,
     baseCtx.userId
   );
+  
+  // Override avec query params si fournis (pour XLSX/PDF avec formatage localisé explicite)
+  if (queryLocale || queryCurrency) {
+    localeBundle = {
+      ...localeBundle,
+      locale: queryLocale || localeBundle.locale,
+      currency: queryCurrency || localeBundle.currency,
+      // Direction recalculée depuis locale
+      direction: (queryLocale || localeBundle.locale).startsWith('ar') ? 'rtl' : 'ltr',
+    };
+  }
 
   // Même service/DI que /api/dashboard (garantie d'alignement des données)
   const repo = process.env.DATABASE_URL ? new SqlReadModelsRepo() : new InMemoryReadModelsRepo();
@@ -136,11 +154,39 @@ export async function GET(req: NextRequest) {
 
   const baseName = sanitizeFilename(filename ?? `${main}_${sub ?? 'all'}_${leaf ?? 'view'}`);
   const now = new Date().toISOString().replace(/[:T]/g, '-').slice(0, 19);
+  const route = `${main}${sub ? `/${sub}` : ''}${leaf ? `/${leaf}` : ''}`;
+
+  // Phase P12.b: Helper pour audit (appelé après chaque export)
+  const logExport = async (sizeBytes: number, hash: string, success: boolean, errorMessage?: string) => {
+    const durationMs = Math.round(performance.now() - t0);
+    await auditExport({
+      tenantId: baseCtx.tenantId,
+      userId: baseCtx.userId || 'anonymous',
+      route,
+      format,
+      filename: `${baseName}_${now}.${format === 'excel' ? 'xls' : format === 'xlsx' ? 'xlsx' : format}`,
+      sizeBytes,
+      rows: rows.length,
+      hash,
+      durationMs,
+      ipAddress: ip,
+      userAgent,
+      success,
+      errorMessage,
+    }).catch((err) => {
+      // Non-bloquant
+      console.warn('[Export] Audit logging failed', err);
+    });
+  };
 
   // JSON
   if (format === 'json') {
     const buf = Buffer.from(JSON.stringify(data, null, 2));
     const hash = crypto.createHash('sha256').update(buf).digest('hex');
+    
+    // Audit
+    await logExport(buf.length, hash, true);
+    
     return new NextResponse(buf, {
       status: 200,
       headers: {
@@ -158,6 +204,10 @@ export async function GET(req: NextRequest) {
     const csv = toCsv(inferRows(data), separator);
     const buf = Buffer.from(csv, 'utf8');
     const hash = crypto.createHash('sha256').update(buf).digest('hex');
+    
+    // Audit
+    await logExport(buf.length, hash, true);
+    
     return new NextResponse(buf, {
       status: 200,
       headers: {
@@ -175,6 +225,10 @@ export async function GET(req: NextRequest) {
     const csv = toCsv(inferRows(data), separator);
     const buf = Buffer.from(csv, 'utf8');
     const hash = crypto.createHash('sha256').update(buf).digest('hex');
+    
+    // Audit
+    await logExport(buf.length, hash, true);
+    
     return new NextResponse(buf, {
       status: 200,
       headers: {
@@ -198,14 +252,19 @@ export async function GET(req: NextRequest) {
       // Phase P12.b: Vérifier la taille du fichier
       const sizeMB = buffer.length / (1024 * 1024);
       if (sizeMB > MAX_EXPORT_SIZE_MB) {
+        const errorMsg = `File too large (max ${MAX_EXPORT_SIZE_MB}MB)`;
+        await logExport(buffer.length, '', false, errorMsg);
         return NextResponse.json(
-          { error: `File too large (max ${MAX_EXPORT_SIZE_MB}MB)`, sizeMB: sizeMB.toFixed(2) },
+          { error: errorMsg, sizeMB: sizeMB.toFixed(2) },
           { status: 400 }
         );
       }
       
       // Hash (scellement)
       const hash = crypto.createHash('sha256').update(buffer).digest('hex');
+      
+      // Audit
+      await logExport(buffer.length, hash, true);
       
       return new NextResponse(buffer, {
         status: 200,
@@ -218,32 +277,74 @@ export async function GET(req: NextRequest) {
         },
       });
     } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
       console.error('[Export XLSX] Error:', error);
+      await logExport(0, '', false, errorMsg);
       return NextResponse.json(
-        { error: 'Failed to generate XLSX', details: error instanceof Error ? error.message : 'Unknown error' },
+        { error: 'Failed to generate XLSX', details: errorMsg },
         { status: 500 }
       );
     }
   }
 
   // Phase P12.b: PDF riche (HTML→PDF via Chromium headless)
-  // TODO: Implémenter avec puppeteer/playwright pour PDF stylé avec RTL/CJK
-  // Pour l'instant, placeholder JSON (sera remplacé par HTML→PDF)
   if (format === 'pdf') {
-    // Phase P12.b: Placeholder - sera remplacé par formatAsPDF() avec template HTML
-    // Voir lib/server/dashboard/export/pdfFormatter.ts pour notes d'implémentation
-    const plain = JSON.stringify(data, null, 2);
-    const buf = Buffer.from(plain, 'utf8');
-    const hash = crypto.createHash('sha256').update(buf).digest('hex');
-    return new NextResponse(buf, {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="${baseName}_${now}.pdf"`,
-        'X-Content-Hash': `sha256:${hash}`,
-        'X-PDF-Status': 'placeholder', // Indique que c'est un placeholder
-      },
-    });
+    try {
+      const buffer = await formatAsPDF(data, { main, sub, leaf }, {
+        locale: localeBundle.locale,
+        currency: localeBundle.currency,
+        timezone: localeBundle.timezone,
+        direction: localeBundle.direction,
+        orientation: 'portrait', // Peut être paramétrable
+      });
+      
+      // Phase P12.b: Vérifier la taille du fichier
+      const sizeMB = buffer.length / (1024 * 1024);
+      if (sizeMB > MAX_EXPORT_SIZE_MB) {
+        const errorMsg = `File too large (max ${MAX_EXPORT_SIZE_MB}MB)`;
+        await logExport(buffer.length, '', false, errorMsg);
+        return NextResponse.json(
+          { error: errorMsg, sizeMB: sizeMB.toFixed(2) },
+          { status: 400 }
+        );
+      }
+      
+      // Hash (scellement)
+      const hash = crypto.createHash('sha256').update(buffer).digest('hex');
+      
+      // Audit
+      await logExport(buffer.length, hash, true);
+      
+      return new NextResponse(buffer, {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': `attachment; filename="${baseName}_${now}.pdf"`,
+          'X-Content-Hash': `sha256:${hash}`,
+          'X-Export-Rows': String(rows.length),
+          'X-Export-Size-MB': sizeMB.toFixed(2),
+          'X-PDF-Status': 'rendered',
+        },
+      });
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+      console.error('[Export PDF] Error:', error);
+      await logExport(0, '', false, errorMsg);
+      
+      // Fallback : retourner un PDF minimal en cas d'erreur
+      const plain = JSON.stringify({ error: 'PDF generation failed', data }, null, 2);
+      const buf = Buffer.from(plain, 'utf8');
+      const hash = crypto.createHash('sha256').update(buf).digest('hex');
+      return new NextResponse(buf, {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': `attachment; filename="${baseName}_${now}.pdf"`,
+          'X-Content-Hash': `sha256:${hash}`,
+          'X-PDF-Status': 'error-fallback',
+        },
+      });
+    }
   }
 
   return NextResponse.json({ error: 'Unsupported format' }, { status: 400 });

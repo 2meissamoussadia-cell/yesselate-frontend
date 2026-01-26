@@ -149,7 +149,7 @@ export function renderPdfHtml(options: PdfTemplateOptions): string {
       const cells = columns.map((col) => {
         const value = row[col];
         const cellType = inferCellType(col, value);
-        return `<td data-type="${cellType}">${formatCellValue(value, cellType)}</td>`;
+        return `<td data-type="${cellType}">${formatCellValue(value, cellType, options.locale, options.currency, options.timezone)}</td>`;
       }).join('');
       return `<tr>${cells}</tr>`;
     }).join('');
@@ -204,36 +204,56 @@ function inferCellType(columnName: string, value: any): 'text' | 'number' | 'cur
 }
 
 /**
- * Formate la valeur d'une cellule selon son type
+ * Formate la valeur d'une cellule selon son type et la locale
  */
-function formatCellValue(value: any, type: 'text' | 'number' | 'currency' | 'date' | 'percent'): string {
+function formatCellValue(
+  value: any,
+  type: 'text' | 'number' | 'currency' | 'date' | 'percent',
+  locale: string,
+  currency: string,
+  timezone: string
+): string {
   if (value === null || value === undefined) return '';
   
   switch (type) {
     case 'date':
       if (value instanceof Date) {
-        return value.toLocaleDateString('fr-FR');
+        return new Intl.DateTimeFormat(locale, { timeZone: timezone, dateStyle: 'short' }).format(value);
       }
       if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}/.test(value)) {
-        return new Date(value).toLocaleDateString('fr-FR');
+        return new Intl.DateTimeFormat(locale, { timeZone: timezone, dateStyle: 'short' }).format(new Date(value));
       }
-      return String(value);
+      return escapeHtml(String(value));
     
     case 'percent':
       if (typeof value === 'number') {
-        return `${(value * 100).toFixed(1)}%`;
-      }
-      return String(value);
-    
-    case 'currency':
-    case 'number':
-      if (typeof value === 'number') {
-        return new Intl.NumberFormat('fr-FR', {
-          minimumFractionDigits: type === 'currency' ? 2 : 0,
-          maximumFractionDigits: type === 'currency' ? 2 : 2,
+        return new Intl.NumberFormat(locale, {
+          style: 'percent',
+          minimumFractionDigits: 1,
+          maximumFractionDigits: 1,
         }).format(value);
       }
-      return String(value);
+      return escapeHtml(String(value));
+    
+    case 'currency':
+      if (typeof value === 'number') {
+        return new Intl.NumberFormat(locale, {
+          style: 'currency',
+          currency: currency,
+          minimumFractionDigits: currency === 'XOF' ? 0 : 2,
+          maximumFractionDigits: currency === 'XOF' ? 0 : 2,
+        }).format(value);
+      }
+      return escapeHtml(String(value));
+    
+    case 'number':
+      if (typeof value === 'number') {
+        return new Intl.NumberFormat(locale, {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2,
+        }).format(value);
+      }
+      return escapeHtml(String(value));
     
     default:
       return escapeHtml(String(value));

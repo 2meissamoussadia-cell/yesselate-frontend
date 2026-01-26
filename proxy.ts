@@ -10,6 +10,7 @@
 
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { randomUUID } from "crypto";
 
 /** Routes publiques accessibles sans authentification */
 const publicRoutes = ["/", "/login", "/register"];
@@ -33,6 +34,12 @@ const roleBasePaths: Record<string, string> = {
  * Actuellement : laisser passer toutes les requêtes (auth désactivée).
  */
 export function proxy(request: NextRequest) {
+  const response = NextResponse.next();
+  
+  // Injecte x-request-id pour corrélation des logs/traces
+  const reqId = request.headers.get('x-request-id') ?? randomUUID();
+  response.headers.set('x-request-id', reqId);
+  
   // 🔓 AUTHENTIFICATION DÉSACTIVÉE TEMPORAIREMENT
   // Pour réactiver l'authentification, décommentez le bloc ci-dessous.
 
@@ -76,7 +83,7 @@ export function proxy(request: NextRequest) {
   }
   */
 
-  return NextResponse.next();
+  return response;
 }
 
 /**

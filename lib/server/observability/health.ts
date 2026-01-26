@@ -1,8 +1,9 @@
 /**
  * Health Checks améliorés
  * Phase P4: Observabilité & Robustesse
+ * Phase P13: Résilience & DR - Extension avec réplication et rôle DB
  * 
- * Vérifie DB, worker heartbeat, MView staleness
+ * Vérifie DB, worker heartbeat, MView staleness, réplication, rôle (primary/standby)
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -21,6 +22,7 @@ interface HealthCheckResult {
 /**
  * Vérifie la santé de la base de données
  * Phase P4: Health checks
+ * Phase P13: Extension avec rôle (primary/standby) et réplication
  */
 async function checkDatabase(): Promise<HealthCheckResult> {
   const start = Date.now();
@@ -31,10 +33,21 @@ async function checkDatabase(): Promise<HealthCheckResult> {
       await client.query('SELECT 1');
       const latency = Date.now() - start;
 
+      // Phase P13: Vérifier le rôle (primary/standby)
+      const roleResult = await client.query<{ pg_is_in_recovery: boolean }>(
+        'SELECT pg_is_in_recovery()'
+      );
+      const isStandby = roleResult.rows[0]?.pg_is_in_recovery ?? false;
+      const role = isStandby ? 'standby' : 'primary';
+
       return {
         service: 'database',
         status: latency < 1000 ? 'healthy' : latency < 3000 ? 'degraded' : 'unhealthy',
         latency,
+        details: {
+          role,
+          is_standby: isStandby,
+        },
       };
     } finally {
       client.release();
@@ -44,6 +57,162 @@ async function checkDatabase(): Promise<HealthCheckResult> {
       service: 'database',
       status: 'unhealthy',
       message: error instanceof Error ? error.message : 'Database connection failed',
+    };
+  }
+}
+
+/**
+ * Vérifie la réplication PostgreSQL
+ * Phase P13: Résilience & DR
+ * 
+ * Vérifie :
+ * - Rôle (primary/standby)
+ * - Replication lag (pour primary)
+ * - Statut des replicas (pour primary)
+ */
+async function checkReplication(): Promise<HealthCheckResult> {
+  try {
+    const client = await pgPool.connect();
+    try {
+      // Vérifier le rôle
+      const roleResult = await client.query<{ pg_is_in_recovery: boolean }>(
+        'SELECT pg_is_in_recovery()'
+      );
+      const isStandby = roleResult.rows[0]?.pg_is_in_recovery ?? false;
+      const role = isStandby ? 'standby' : 'primary';
+
+      if (isStandby) {
+        // Sur un standby, vérifier le lag de replay
+        const lagResult = await client.query<{
+          replay_lag: string | null;
+          replay_lag_seconds: number | null;
+        }>(`
+          SELECT 
+            pg_last_wal_replay_lag() as replay_lag,
+            EXTRACT(EPOCH FROM pg_last_wal_replay_lag())::int as replay_lag_seconds
+        `);
+
+        const replayLagSeconds = lagResult.rows[0]?.replay_lag_seconds ?? null;
+        const maxLagSeconds = 300; // 5 minutes (RPO cible)
+
+        // Status selon le lag
+        let status: 'healthy' | 'degraded' | 'unhealthy';
+        if (replayLagSeconds === null) {
+          status = 'degraded'; // Pas de lag mesurable (peut être normal)
+        } else if (replayLagSeconds <= maxLagSeconds) {
+          status = 'healthy';
+        } else if (replayLagSeconds <= maxLagSeconds * 3) {
+          status = 'degraded';
+        } else {
+          status = 'unhealthy';
+        }
+
+        return {
+          service: 'replication',
+          status,
+          message: replayLagSeconds !== null
+            ? `Standby replay lag: ${replayLagSeconds}s`
+            : 'Standby (lag not measurable)',
+          details: {
+            role,
+            replay_lag_seconds: replayLagSeconds,
+            max_lag_seconds: maxLagSeconds,
+          },
+        };
+      } else {
+        // Sur un primary, vérifier les replicas
+        const replicasResult = await client.query<{
+          application_name: string;
+          sync_state: string;
+          sync_priority: number;
+          replay_lag: string | null;
+          replay_lag_seconds: number | null;
+          state: string;
+        }>(`
+          SELECT 
+            application_name,
+            sync_state,
+            sync_priority,
+            replay_lag,
+            EXTRACT(EPOCH FROM replay_lag)::int as replay_lag_seconds,
+            state
+          FROM pg_stat_replication
+          ORDER BY sync_priority DESC, application_name
+        `);
+
+        const replicas = replicasResult.rows;
+        const maxLagSeconds = 300; // 5 minutes (RPO cible)
+
+        if (replicas.length === 0) {
+          return {
+            service: 'replication',
+            status: 'degraded',
+            message: 'Primary with no replicas',
+            details: {
+              role,
+              replica_count: 0,
+            },
+          };
+        }
+
+        // Vérifier le lag de chaque replica
+        const healthyReplicas = replicas.filter(
+          (r) => r.replay_lag_seconds !== null && r.replay_lag_seconds <= maxLagSeconds
+        );
+        const degradedReplicas = replicas.filter(
+          (r) => r.replay_lag_seconds !== null && r.replay_lag_seconds > maxLagSeconds && r.replay_lag_seconds <= maxLagSeconds * 3
+        );
+        const unhealthyReplicas = replicas.filter(
+          (r) => r.replay_lag_seconds === null || r.replay_lag_seconds > maxLagSeconds * 3
+        );
+
+        let status: 'healthy' | 'degraded' | 'unhealthy';
+        if (unhealthyReplicas.length > 0) {
+          status = 'unhealthy';
+        } else if (degradedReplicas.length > 0) {
+          status = 'degraded';
+        } else {
+          status = 'healthy';
+        }
+
+        return {
+          service: 'replication',
+          status,
+          message: `${replicas.length} replica(s): ${healthyReplicas.length} healthy, ${degradedReplicas.length} degraded, ${unhealthyReplicas.length} unhealthy`,
+          details: {
+            role,
+            replica_count: replicas.length,
+            healthy_count: healthyReplicas.length,
+            degraded_count: degradedReplicas.length,
+            unhealthy_count: unhealthyReplicas.length,
+            max_lag_seconds: maxLagSeconds,
+            replicas: replicas.map((r) => ({
+              application_name: r.application_name,
+              sync_state: r.sync_state,
+              sync_priority: r.sync_priority,
+              replay_lag_seconds: r.replay_lag_seconds,
+              state: r.state,
+            })),
+          },
+        };
+      }
+    } finally {
+      client.release();
+    }
+  } catch (error) {
+    // Si pg_stat_replication n'est pas accessible (permissions), considérer comme degraded
+    if (error instanceof Error && error.message.includes('permission')) {
+      return {
+        service: 'replication',
+        status: 'degraded',
+        message: 'Replication check requires superuser or replication role',
+      };
+    }
+
+    return {
+      service: 'replication',
+      status: 'unhealthy',
+      message: error instanceof Error ? error.message : 'Failed to check replication',
     };
   }
 }
@@ -251,17 +420,19 @@ export async function healthCheck(req: NextRequest): Promise<NextResponse> {
   const start = Date.now();
 
   try {
-    // Exécuter tous les checks en parallèle
-    const [db, mviews, worker] = await Promise.allSettled([
+    // Phase P13: Exécuter tous les checks en parallèle (ajout de checkReplication)
+    const [db, mviews, worker, replication] = await Promise.allSettled([
       checkDatabase(),
       checkMaterializedViews(),
       checkWorker(),
+      checkReplication(), // Phase P13: Nouveau check réplication
     ]);
 
     const checks: HealthCheckResult[] = [
       db.status === 'fulfilled' ? db.value : { service: 'database', status: 'unhealthy', message: 'Check failed' },
       mviews.status === 'fulfilled' ? mviews.value : { service: 'materialized_views', status: 'unhealthy', message: 'Check failed' },
       worker.status === 'fulfilled' ? worker.value : { service: 'refresh_worker', status: 'unhealthy', message: 'Check failed' },
+      replication.status === 'fulfilled' ? replication.value : { service: 'replication', status: 'unhealthy', message: 'Check failed' }, // Phase P13
     ];
 
     // Déterminer le statut global

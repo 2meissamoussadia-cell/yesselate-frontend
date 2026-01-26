@@ -7,7 +7,7 @@
 
 import { Package, AlertTriangle, TrendingUp, DollarSign } from 'lucide-react';
 import { KPICard } from '../shared';
-import { toneToColor } from '@/lib/dashboard/kpi';
+import { toneToColor } from '@lib-root/dashboard/kpi';
 
 export function StocksOverviewPage({ data }: any) {
   const kpis = [

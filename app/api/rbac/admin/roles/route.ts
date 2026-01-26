@@ -2,7 +2,7 @@
 // Phase P10: API Admin - Gestion des rôles
 
 import { NextRequest, NextResponse } from 'next/server';
-import { extractContextFromHeaders } from '@/lib/server/dashboard/context';
+import { extractContextFromHeaders } from '@lib-root/server/dashboard/context';
 import { pgPool } from '@/lib/server/db/pool';
 
 export async function GET(req: NextRequest) {
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
     );
     
     // Invalider le cache RBAC pour tous les utilisateurs de ce tenant
-    const { rbacCache } = await import('@/lib/server/dashboard/rbac/rbacCache');
+    const { rbacCache } = await import('@lib-root/server/dashboard/rbac/rbacCache');
     rbacCache.invalidateTenant(ctx.tenantId);
     
     return NextResponse.json(rows[0]);

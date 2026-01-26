@@ -192,6 +192,88 @@ export const abacAccessDenied = new Counter({
 });
 
 // ============================================================================
+// MÉTRIQUES DR (Phase P13: Résilience & DR)
+// ============================================================================
+
+/**
+ * Lag de replay de réplication PostgreSQL (standby)
+ * Phase P13: Résilience & DR
+ */
+export const dbReplayLagSeconds = new Gauge({
+  name: 'dashboard_db_replay_lag_seconds',
+  help: 'PostgreSQL replication replay lag in seconds',
+  labelNames: ['role'], // 'primary' | 'standby'
+  registers: [metricsRegistry],
+});
+
+/**
+ * Rôle de la base de données (primary/standby)
+ * Phase P13: Résilience & DR
+ */
+export const dbRole = new Gauge({
+  name: 'dashboard_db_role',
+  help: 'PostgreSQL database role (1=primary, 0=standby)',
+  labelNames: ['role'], // 'primary' | 'standby'
+  registers: [metricsRegistry],
+});
+
+/**
+ * Nombre de reconnexions PostgreSQL du worker
+ * Phase P13: Résilience & DR
+ */
+export const workerPgReconnectsTotal = new Counter({
+  name: 'dashboard_worker_pg_reconnects_total',
+  help: 'Total number of PostgreSQL reconnections by worker',
+  labelNames: ['reason'], // 'error' | 'timeout' | 'network'
+  registers: [metricsRegistry],
+});
+
+/**
+ * Nombre d'échecs de refresh MViews
+ * Phase P13: Résilience & DR
+ */
+export const workerRefreshFailuresTotal = new Counter({
+  name: 'dashboard_worker_refresh_failures_total',
+  help: 'Total number of MView refresh failures',
+  labelNames: ['view_name', 'error_type'],
+  registers: [metricsRegistry],
+});
+
+/**
+ * Nombre d'ouvertures de circuit breaker
+ * Phase P13: Résilience & DR
+ */
+export const circuitOpenTotal = new Counter({
+  name: 'dashboard_circuit_open_total',
+  help: 'Total number of circuit breaker openings',
+  labelNames: ['service'], // 'db' | 'redis'
+  registers: [metricsRegistry],
+});
+
+/**
+ * Nombre de tentatives de retry
+ * Phase P13: Résilience & DR
+ */
+export const retryAttemptsTotal = new Counter({
+  name: 'dashboard_retry_attempts_total',
+  help: 'Total number of retry attempts',
+  labelNames: ['service', 'attempt'], // 'db' | 'redis', '1' | '2' | '3'
+  registers: [metricsRegistry],
+});
+
+/**
+ * Temps de récupération DR (RTO)
+ * Phase P13: Résilience & DR
+ */
+export const drRecoveryTimeSeconds = new Histogram({
+  name: 'dashboard_dr_recovery_time_seconds',
+  help: 'Disaster recovery recovery time (RTO) in seconds',
+  labelNames: ['recovery_type'], // 'failover' | 'pitr' | 'network'
+  buckets: [60, 300, 600, 900, 1800, 3600], // 1min, 5min, 10min, 15min, 30min, 1h
+  registers: [metricsRegistry],
+});
+
+// ============================================================================
 // HELPERS
 // ============================================================================
 

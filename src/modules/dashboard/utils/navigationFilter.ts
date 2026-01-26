@@ -1,8 +1,13 @@
 // src/modules/dashboard/utils/navigationFilter.ts
 // Phase P10: Filtrage de la navigation selon permissions et feature flags
 // Utilise le champ `requires` annoté dans navigation.config.json
+// Les helpers peuvent utiliser directement le store Zustand pour récupérer les permissions
 
+'use client';
+
+import { useMemo } from 'react';
 import type { NavNode } from '../navigation/dashboardNavigationConfig';
+import { useDashboardPermissionsStore } from '@/lib/stores/dashboardPermissionsStore';
 
 /**
  * Vérifie si un noeud de navigation est accessible selon ses exigences (requires)
@@ -122,4 +127,26 @@ export function findFirstAuthorizedRoute(
   }
 
   return null;
+}
+
+/**
+ * Hook pour filtrer la navigation en utilisant directement le store Zustand
+ * Simplifie l'utilisation dans les composants (pas besoin de passer les permissions en paramètre)
+ * 
+ * @param config - Configuration de navigation à filtrer
+ * @returns Navigation filtrée selon les permissions stockées dans le store
+ */
+export function useFilteredNavigation(config: Record<string, NavNode>): Record<string, NavNode> {
+  const permissions = useDashboardPermissionsStore((state) => state.permissions);
+  
+  // Utiliser useMemo pour éviter les recalculs inutiles
+  return useMemo(
+    () => filterNavigationConfig(
+      config,
+      permissions.permissions,
+      permissions.roles,
+      permissions.featureFlags
+    ),
+    [config, permissions.permissions, permissions.roles, permissions.featureFlags]
+  );
 }

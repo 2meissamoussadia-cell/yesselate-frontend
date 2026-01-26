@@ -1,60 +1,65 @@
 // src/modules/dashboard/hooks/useDashboardPermissions.ts
 // Phase P10: Hook pour vérifier les permissions côté UI
-// Utilise le store Zustand pour stocker les permissions
+// Utilise le store Zustand pour stocker les permissions depuis /api/me/policy
 
 'use client';
 
-import { useMemo, useEffect } from 'react';
+import { useMemo, useEffect, useRef } from 'react';
 import { useDashboardPermissionsStore, type UserPermissions } from '@/lib/stores/dashboardPermissionsStore';
 
 /**
  * Hook pour charger et utiliser les permissions utilisateur depuis le store
+ * Charge les permissions depuis /api/me/policy et /api/rbac/permissions
+ * Évite les appels multiples grâce au cache du store
  */
 export function useDashboardPermissions() {
-  const { permissions, isLoading, setPermissions, setLoading } = useDashboardPermissionsStore();
+  const { permissions, isLoading, lastFetched, setPermissions, setLoading } = useDashboardPermissionsStore();
+  const loadingRef = useRef(false);
 
   useEffect(() => {
-    // Phase P10: Charger les permissions depuis /api/me/policy (endpoint léger avec cache)
+    // Éviter les appels multiples simultanés
+    if (loadingRef.current) return;
+    
+    // Recharger si jamais chargé ou si le cache est expiré (5 minutes)
+    const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+    const shouldReload = !lastFetched || (Date.now() - lastFetched > CACHE_TTL);
+    
+    if (!shouldReload && lastFetched) {
+      return; // Utiliser le cache
+    }
+
+    loadingRef.current = true;
     setLoading(true);
     
-    fetch('/api/me/policy', {
-      headers: {
-        'x-tenant-id': 'default', // TODO: récupérer depuis le contexte auth
-        'x-user-id': 'anonymous', // TODO: récupérer depuis le contexte auth
-      },
-    })
-      .then((res) => res.json())
-      .then((policy) => {
-        // /api/me/policy retourne { perms, flags }
-        // On doit aussi charger les rôles et scopes depuis /api/rbac/permissions
-        fetch('/api/rbac/permissions', {
-          headers: {
-            'x-tenant-id': 'default',
-            'x-user-id': 'anonymous',
-          },
-        })
-          .then((res) => res.json())
-          .then((rbac) => {
-            setPermissions({
-              roles: rbac.roles || [],
-              permissions: policy.perms || [],
-              scopes: rbac.scopes || { bureaux: [], chantiers: [] },
-              featureFlags: policy.flags || {},
-            });
-          })
-          .catch((err) => {
-            console.warn('[Permissions] Failed to load RBAC', err);
-            // Fallback : utiliser seulement policy
-            setPermissions({
-              roles: [],
-              permissions: policy.perms || [],
-              scopes: { bureaux: [], chantiers: [] },
-              featureFlags: policy.flags || {},
-            });
-          });
+    // Phase P10: Charger les permissions depuis /api/me/policy (endpoint léger avec cache)
+    // Puis charger les rôles et scopes depuis /api/rbac/permissions
+    Promise.all([
+      fetch('/api/me/policy', {
+        headers: {
+          'x-tenant-id': 'default', // TODO: récupérer depuis le contexte auth
+          'x-user-id': 'anonymous', // TODO: récupérer depuis le contexte auth
+        },
+      }).then((res) => res.json()),
+      fetch('/api/rbac/permissions', {
+        headers: {
+          'x-tenant-id': 'default', // TODO: récupérer depuis le contexte auth
+          'x-user-id': 'anonymous', // TODO: récupérer depuis le contexte auth
+        },
+      }).then((res) => res.json()),
+    ])
+      .then(([policy, rbac]) => {
+        // Stocker le résultat de /api/me/policy (perms + flags) dans le store
+        // Combiné avec les rôles et scopes de /api/rbac/permissions
+        setPermissions({
+          roles: rbac.roles || [],
+          permissions: policy.perms || rbac.permissions || [],
+          scopes: rbac.scopes || { bureaux: [], chantiers: [] },
+          featureFlags: policy.flags || rbac.featureFlags || {},
+        });
+        loadingRef.current = false;
       })
       .catch((err) => {
-        console.warn('[Permissions] Failed to load policy', err);
+        console.warn('[Permissions] Failed to load permissions', err);
         // Fallback : permissions vides (pas d'accès)
         setPermissions({
           roles: [],
@@ -62,8 +67,9 @@ export function useDashboardPermissions() {
           scopes: { bureaux: [], chantiers: [] },
           featureFlags: {},
         });
+        loadingRef.current = false;
       });
-  }, [setPermissions, setLoading]);
+  }, [setPermissions, setLoading, lastFetched]);
 
   /**
    * Vérifie si l'utilisateur a une permission spécifique

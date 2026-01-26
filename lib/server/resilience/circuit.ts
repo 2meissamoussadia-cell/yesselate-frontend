@@ -1,6 +1,8 @@
 // lib/server/resilience/circuit.ts
 // Phase P13: Circuit Breaker pour protéger contre les cascading failures
 
+import { circuitOpenTotal } from '@/lib/server/observability/metrics';
+
 /**
  * Circuit Breaker Pattern
  * Phase P13: Résilience & DR
@@ -18,10 +20,12 @@ export class CircuitBreaker {
   /**
    * @param threshold - Nombre d'erreurs avant d'ouvrir le circuit (défaut: 5)
    * @param resetMs - Délai avant tentative de réouverture (défaut: 30s)
+   * @param service - Nom du service pour les métriques (défaut: 'db')
    */
   constructor(
     private readonly threshold = 5,
-    private readonly resetMs = 30_000
+    private readonly resetMs = 30_000,
+    private readonly service: 'db' | 'redis' = 'db'
   ) {}
 
   /**
@@ -68,12 +72,16 @@ export class CircuitBreaker {
     if (this.halfOpen) {
       this.openedAt = Date.now();
       this.halfOpen = null;
+      // Phase P13: Tracker métrique d'ouverture
+      circuitOpenTotal.inc({ service: this.service });
       return;
     }
     
     // Si seuil atteint, ouvrir le circuit
     if (this.failures >= this.threshold) {
       this.openedAt = Date.now();
+      // Phase P13: Tracker métrique d'ouverture
+      circuitOpenTotal.inc({ service: this.service });
     }
   }
 

@@ -10,7 +10,7 @@ import { retry, isRedisRetryable } from '@/lib/server/resilience/retry';
 let redis: Redis | null = null;
 
 // Phase P13: Circuit breaker pour Redis (protège contre cascading failures)
-const redisCircuitBreaker = new CircuitBreaker(5, 30_000); // 5 erreurs, reset après 30s
+const redisCircuitBreaker = new CircuitBreaker(5, 30_000, 'redis'); // 5 erreurs, reset après 30s, service='redis'
 
 /**
  * Initialise la connexion Redis si REDIS_URL est défini
@@ -110,6 +110,7 @@ export async function rateLimitRedis(
         attempts: 3,
         baseDelay: 100,
         isRetryable: isRedisRetryable,
+        service: 'redis',
       }
     );
     

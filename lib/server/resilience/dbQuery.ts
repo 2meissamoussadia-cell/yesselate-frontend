@@ -6,7 +6,7 @@ import { CircuitBreaker } from './circuit';
 import { retry, isPostgresRetryable } from './retry';
 
 // Phase P13: Circuit breaker pour DB (protège contre cascading failures)
-const dbCircuitBreaker = new CircuitBreaker(5, 30_000); // 5 erreurs, reset après 30s
+const dbCircuitBreaker = new CircuitBreaker(5, 30_000, 'db'); // 5 erreurs, reset après 30s, service='db'
 
 /**
  * Exécute une requête PostgreSQL avec circuit breaker et retry
@@ -40,6 +40,7 @@ export async function queryWithResilience<T = any>(
         attempts: 3,
         baseDelay: 250,
         isRetryable: isPostgresRetryable,
+        service: 'db',
       }
     );
 
@@ -71,6 +72,7 @@ export async function connectWithResilience() {
         attempts: 3,
         baseDelay: 250,
         isRetryable: isPostgresRetryable,
+        service: 'db',
       }
     );
 

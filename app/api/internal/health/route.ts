@@ -3,6 +3,7 @@
 // Phase P13: Extension avec rôle DB et replication lag
 import { NextResponse } from 'next/server';
 import { pgPool } from '@/lib/server/db/pool';
+import { dbReplayLagSeconds, dbRole } from '@/lib/server/observability/metrics';
 
 /**
  * GET /api/internal/health
@@ -19,6 +20,7 @@ export async function GET() {
     // Phase P13: Rôle et lag (si vues/permissions disponibles)
     const roleRes = await client.query(`select pg_is_in_recovery() as standby`);
     const isStandby = !!roleRes.rows[0]?.standby;
+    const dbRoleValue = isStandby ? 'standby' : 'primary';
 
     // Phase P13: Lag indicatif (si standby) - sinon 0
     let replayLagSec = 0;
@@ -28,6 +30,10 @@ export async function GET() {
       `);
       replayLagSec = Number(lagRes.rows[0]?.lag_sec ?? 0);
     }
+
+    // Phase P13: Exposer métriques Prometheus
+    dbRole.set({ role: dbRoleValue }, isStandby ? 0 : 1);
+    dbReplayLagSeconds.set({ role: dbRoleValue }, replayLagSec);
 
     // Phase P4: Staleness MViews (déjà posée en P4)
     const { rows: mviews } = await client.query(`
@@ -39,7 +45,7 @@ export async function GET() {
 
     return NextResponse.json({
       ok: true,
-      db: { role: isStandby ? 'standby' : 'primary', replayLagSec },
+      db: { role: dbRoleValue, replayLagSec },
       mviews
     }, { status: 200 });
   } catch (e) {

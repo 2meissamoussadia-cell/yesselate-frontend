@@ -1,6 +1,8 @@
 // lib/server/resilience/retry.ts
 // Phase P13: Retry avec backoff exponentiel et jitter
 
+import { retryAttemptsTotal } from '@/lib/server/observability/metrics';
+
 /**
  * Retry avec backoff exponentiel et jitter
  * Phase P13: Résilience & DR
@@ -22,6 +24,8 @@ export interface RetryOptions {
   jitterMax?: number;
   /** Fonction pour déterminer si une erreur est retryable (défaut: toutes) */
   isRetryable?: (error: any) => boolean;
+  /** Nom du service pour les métriques (défaut: 'db') */
+  service?: 'db' | 'redis';
 }
 
 /**
@@ -43,6 +47,7 @@ export async function retry<T>(
     multiplier = 1.6,
     jitterMax = 100,
     isRetryable = () => true,
+    service = 'db',
   } = options;
 
   let lastErr: any;
@@ -52,6 +57,11 @@ export async function retry<T>(
       return await fn();
     } catch (e) {
       lastErr = e;
+
+      // Phase P13: Tracker métrique de retry (sauf pour la première tentative)
+      if (i > 0) {
+        retryAttemptsTotal.inc({ service, attempt: String(i + 1) });
+      }
 
       // Vérifier si l'erreur est retryable
       if (!isRetryable(e)) {

@@ -1,0 +1,72 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "export": "Exporter",
+    "refresh": "Actualiser",
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "back": "Retour"
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "overview": "Vue d'ensemble",
+    "performance": "Performance",
+    "actions": "Actions",
+    "risks": "Risques",
+    "decisions": "Décisions",
+    "realtime": "Temps réel",
+    "summary": "Résumé",
+    "kpis": "Indicateurs clés",
+    "trends": "Tendances",
+    "validations": "Validations",
+    "bureaux": "Bureaux",
+    "projects": "Projets"
+  },
+  "navigation": {
+    "dashboard": "Tableau de bord",
+    "overview": "Vue d'ensemble",
+    "performance": "Performance",
+    "reporting": "Reporting",
+    "achats": "Achats",
+    "stocks": "Stocks",
+    "materiel": "Matériel",
+    "compliance": "Conformité",
+    "actions": "Actions",
+    "risks": "Risques",
+    "decisions": "Décisions",
+    "realtime": "Temps réel"
+  },
+  "kpi": {
+    "budget": "Budget",
+    "consumed": "Consommé",
+    "remaining": "Restant",
+    "progress": "Progression",
+    "validation_rate": "Taux de validation",
+    "sla_compliance": "Conformité SLA",
+    "avg_delay": "Délai moyen"
+  },
+  "currency": {
+    "EUR": "€",
+    "XOF": "FCFA",
+    "USD": "$",
+    "GBP": "£"
+  },
+  "date": {
+    "today": "Aujourd'hui",
+    "yesterday": "Hier",
+    "this_week": "Cette semaine",
+    "this_month": "Ce mois",
+    "this_year": "Cette année",
+    "last_month": "Mois dernier",
+    "last_year": "Année dernière"
+  }
+}

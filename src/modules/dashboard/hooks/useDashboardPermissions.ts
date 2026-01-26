@@ -69,7 +69,7 @@ export function useDashboardPermissions() {
         });
         loadingRef.current = false;
       });
-  }, [setPermissions, setLoading, lastFetched]);
+  }, [setPermissions, setLoading, lastFetched, isLoading]);
 
   /**
    * Vérifie si l'utilisateur a une permission spécifique

@@ -24,6 +24,7 @@ import { useDashboardPermissions } from '../hooks/useDashboardPermissions';
 import { filterNavigationConfig } from '../utils/navigationFilter';
 import { nodeAllowed } from './permissions';
 import { useDashboardPermissionsStore } from '@/lib/stores/dashboardPermissionsStore';
+import { useI18n } from '@/src/lib/i18n';
 
 interface DashboardSidebarProps {
   collapsed?: boolean;
@@ -75,6 +76,9 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
   
   // Phase P10: Charger les permissions pour filtrer la navigation
   const { permissions: userPerms } = useDashboardPermissions();
+  
+  // Phase P12: i18n pour les labels de navigation
+  const { t } = useI18n();
   
   // Phase P10: Filtrer la navigation selon permissions et feature flags
   const filteredNavConfig = useMemo(
@@ -398,7 +402,7 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
                     : 'text-slate-300 hover:text-slate-50 hover:bg-slate-900/30',
                   'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60'
                 )}
-                aria-label={`${node.label}${badge ? `, ${badge} éléments` : ''}`}
+                aria-label={`${t(node.i18nKey ?? node.label ?? node.id)}${badge ? `, ${badge} éléments` : ''}`}
                 aria-current={isActive ? 'page' : undefined}
               >
                 {isActive && (
@@ -419,7 +423,9 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
                     isActive ? 'text-slate-200' : 'text-slate-400'
                   )} />
                 )}
-                <span className="flex-1 truncate min-w-0 text-xs sm:text-sm">{node.label}</span>
+                <span className="flex-1 truncate min-w-0 text-xs sm:text-sm">
+                  {t(node.i18nKey ?? node.label ?? node.id)}
+                </span>
                 {badge !== undefined && badge !== null && badge !== 0 && (
                   <Badge
                     variant="default"
@@ -431,7 +437,7 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
               </button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>{node.label}</p>
+              <p>{t(node.i18nKey ?? node.label ?? node.id)}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

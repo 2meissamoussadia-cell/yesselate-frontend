@@ -16,8 +16,11 @@ import {
 } from 'recharts';
 import { ChartContainer, chartStyles, chartColors } from '@/modules/dashboard/charts/ChartKit';
 import type { CategoryDistributionData } from '../DashboardCharts';
+import { useI18n } from '@/src/lib/i18n';
 
 export function CategoryDistributionChart({ data }: { data?: CategoryDistributionData[] }) {
+  const { fmt } = useI18n();
+  
   const chartData = useMemo(() => {
     if (!data || data.length === 0) return [];
     return data.map(d => ({
@@ -61,7 +64,7 @@ export function CategoryDistributionChart({ data }: { data?: CategoryDistributio
           <Tooltip
             {...chartStyles.tooltip}
             formatter={(value: number, name: string, props: any) => [
-              `${value} (${props.payload.percentage}%)`,
+              `${fmt.number(value)} (${fmt.percent(props.payload.percentage / 100)})`,
               name,
             ]}
           />

@@ -1,0 +1,230 @@
+{
+  "dashboard": {
+    "title": "Dashboard SLO & Budgets - Phase P11",
+    "tags": ["dashboard", "slo", "p11", "performance"],
+    "timezone": "browser",
+    "schemaVersion": 38,
+    "version": 1,
+    "refresh": "30s",
+    "panels": [
+      {
+        "id": 1,
+        "title": "P95/P99 Latency par Route",
+        "type": "graph",
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(dashboard_api_request_duration_seconds_bucket[5m])) by (le, route)) by (route)",
+            "legendFormat": "{{route}} P95",
+            "refId": "A"
+          },
+          {
+            "expr": "histogram_quantile(0.99, sum(rate(dashboard_api_request_duration_seconds_bucket[5m])) by (le, route)) by (route)",
+            "legendFormat": "{{route}} P99",
+            "refId": "B"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "s",
+            "label": "Duration (seconds)",
+            "min": 0
+          },
+          {
+            "format": "short",
+            "label": null
+          }
+        ],
+        "xaxis": {
+          "mode": "time",
+          "values": []
+        }
+      },
+      {
+        "id": 2,
+        "title": "Violations de Budget SLO",
+        "type": "graph",
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+        "targets": [
+          {
+            "expr": "sum(rate(dashboard_slo_budget_exceeded_total{budget_type=\"p95\"}[5m])) by (route)",
+            "legendFormat": "{{route}} P95 violations",
+            "refId": "A"
+          },
+          {
+            "expr": "sum(rate(dashboard_slo_budget_exceeded_total{budget_type=\"p99\"}[5m])) by (route)",
+            "legendFormat": "{{route}} P99 violations",
+            "refId": "B"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "reqps",
+            "label": "Violations/sec",
+            "min": 0
+          },
+          {
+            "format": "short",
+            "label": null
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Taux de Réussite SLO (P95)",
+        "type": "gauge",
+        "gridPos": { "h": 6, "w": 6, "x": 0, "y": 8 },
+        "targets": [
+          {
+            "expr": "(1 - (sum(rate(dashboard_slo_budget_exceeded_total{budget_type=\"p95\"}[5m])) by (route) / sum(rate(dashboard_api_request_duration_seconds_count[5m])) by (route))) * 100",
+            "legendFormat": "{{route}}",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "min": 0,
+          "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "value": 0, "color": "red" },
+              { "value": 95, "color": "yellow" },
+              { "value": 99, "color": "green" }
+            ]
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": 4,
+        "title": "Taux de Réussite SLO (P99)",
+        "type": "gauge",
+        "gridPos": { "h": 6, "w": 6, "x": 6, "y": 8 },
+        "targets": [
+          {
+            "expr": "(1 - (sum(rate(dashboard_slo_budget_exceeded_total{budget_type=\"p99\"}[5m])) by (route) / sum(rate(dashboard_api_request_duration_seconds_count[5m])) by (route))) * 100",
+            "legendFormat": "{{route}}",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "min": 0,
+          "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "value": 0, "color": "red" },
+              { "value": 98, "color": "yellow" },
+              { "value": 99.5, "color": "green" }
+            ]
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": 5,
+        "title": "Top 10 Routes avec Violations",
+        "type": "table",
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+        "targets": [
+          {
+            "expr": "topk(10, sum by (route) (dashboard_slo_budget_exceeded_total))",
+            "format": "table",
+            "instant": true,
+            "refId": "A"
+          }
+        ],
+        "transformations": [
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {
+                "Time": true
+              },
+              "indexByName": {
+                "route": 0,
+                "Value": 1
+              },
+              "renameByName": {
+                "route": "Route",
+                "Value": "Total Violations"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "TTFB (Time To First Byte) P95",
+        "type": "graph",
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 14 },
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(dashboard_api_ttfb_seconds_bucket[5m])) by (le, route)) by (route)",
+            "legendFormat": "{{route}} TTFB P95",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "s",
+            "label": "TTFB (seconds)",
+            "min": 0
+          },
+          {
+            "format": "short",
+            "label": null
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Durée Moyenne vs Max par Route",
+        "type": "graph",
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 14 },
+        "targets": [
+          {
+            "expr": "sum(rate(dashboard_api_request_duration_seconds_sum[5m])) by (route) / sum(rate(dashboard_api_request_duration_seconds_count[5m])) by (route)",
+            "legendFormat": "{{route}} Avg",
+            "refId": "A"
+          },
+          {
+            "expr": "max_over_time(histogram_quantile(0.99, sum(rate(dashboard_api_request_duration_seconds_bucket[1m])) by (le, route)) by (route)[5m:])",
+            "legendFormat": "{{route}} Max",
+            "refId": "B"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "s",
+            "label": "Duration (seconds)",
+            "min": 0
+          },
+          {
+            "format": "short",
+            "label": null
+          }
+        ]
+      }
+    ],
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": ["10s", "30s", "1m", "5m", "15m", "30m", "1h", "2h", "1d"]
+    }
+  }
+}

@@ -18,6 +18,7 @@ import {
 } from 'recharts';
 import { ChartContainer, chartStyles, chartColors, chartUI } from '@/modules/dashboard/charts/ChartKit';
 import type { MonthlyComparisonData } from '../DashboardCharts';
+import { useI18n } from '@/src/lib/i18n';
 
 export function MonthlyComparisonChart({ data }: { data?: MonthlyComparisonData[] }) {
   const chartData = useMemo(() => {
@@ -42,7 +43,10 @@ export function MonthlyComparisonChart({ data }: { data?: MonthlyComparisonData[
           <CartesianGrid {...chartStyles.grid} />
           <XAxis dataKey="month" {...chartStyles.axis} />
           <YAxis {...chartStyles.axis} />
-          <Tooltip {...chartStyles.tooltip} />
+          <Tooltip 
+            {...chartStyles.tooltip}
+            formatter={(value: number) => fmt.number(value)}
+          />
           <Legend {...chartStyles.legend} />
           <Bar
             dataKey="actuel"

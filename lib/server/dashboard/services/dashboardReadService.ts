@@ -7,6 +7,14 @@ import { SqlReadModelsRepoReporting } from '../repositories/SqlReadModelsRepo.Re
 import { SqlReadModelsRepoStocks } from '../repositories/SqlReadModelsRepo.Stocks';
 import { SqlReadModelsRepoCompliance } from '../repositories/SqlReadModelsRepo.Compliance';
 import { can } from '@/lib/server/security/policy';
+import type { PaginationOptions } from '../types/pagination';
+
+/**
+ * Options pour les requêtes de données
+ */
+export interface GetDataOptions {
+  pagination?: PaginationOptions;
+}
 
 export class DashboardReadService {
   constructor(
@@ -17,7 +25,13 @@ export class DashboardReadService {
     private readonly complianceRepo = new SqlReadModelsRepoCompliance()
   ) {}
 
-  async getData(main: string, sub: string | null, leaf: string | null, ctx: RequestContext) {
+  async getData(
+    main: string, 
+    sub: string | null, 
+    leaf: string | null, 
+    ctx: RequestContext,
+    options: GetDataOptions = {}
+  ) {
     // Dispatcher simple ; on pourra factoriser par mapping si besoin
     if (main === 'overview' && sub === 'summary' && leaf === 'dashboard') {
       const data = await this.repo.loadOverviewSummaryDashboard(ctx);

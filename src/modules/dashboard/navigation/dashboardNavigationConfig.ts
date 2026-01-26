@@ -28,7 +28,10 @@ export interface NavRequires {
 
 export interface NavNode {
   id: string;
-  label: string;
+  /** Label textuel (fallback si i18nKey non défini) */
+  label?: string;
+  /** Phase P12: Clé i18n pour la traduction (prioritaire sur label) */
+  i18nKey?: string;
   icon?: React.ComponentType<{ className?: string }>;
   badge?: number | string;
   badgeType?: 'default' | 'warning' | 'critical' | 'success';
@@ -85,7 +88,7 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
   },
   performance: {
     id: 'performance',
-    label: 'Performance',
+    i18nKey: 'nav.performance',
     icon: TrendingUp,
     requires: { perm: 'dashboard:read' },
     children: [
@@ -146,7 +149,7 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
       },
       {
         id: 'achats',
-        label: 'Achats & Contrats',
+        i18nKey: 'nav.achats',
         requires: { perm: 'achats:view', flag: 'module.achats' },
         children: [
           { id: 'dashboard', label: 'Vue d\'ensemble' },
@@ -166,7 +169,7 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
       },
       {
         id: 'materiel',
-        label: 'Matériel',
+        i18nKey: 'nav.materiel',
         requires: { perm: 'materiel:view', flag: 'module.materiel' },
         children: [
           { id: 'overview', label: 'Parc matériel' },
@@ -174,7 +177,7 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
       },
       {
         id: 'compliance',
-        label: 'Conformité',
+        i18nKey: 'nav.compliance',
         requires: { perm: 'compliance:view', flag: 'module.compliance' },
         children: [
           { id: 'dashboard', label: 'Synthèse' },
@@ -185,7 +188,7 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
       },
       {
         id: 'reporting',
-        label: 'Reporting Direction',
+        i18nKey: 'nav.reporting',
         requires: { perm: 'reporting:view', flag: 'module.reporting' },
         children: [
           { id: 'dashboard', label: 'Synthèse' },

@@ -1,0 +1,72 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "refresh": "Refresh",
+    "close": "Close",
+    "confirm": "Confirm",
+    "back": "Back"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "overview": "Overview",
+    "performance": "Performance",
+    "actions": "Actions",
+    "risks": "Risks",
+    "decisions": "Decisions",
+    "realtime": "Real-time",
+    "summary": "Summary",
+    "kpis": "Key Indicators",
+    "trends": "Trends",
+    "validations": "Validations",
+    "bureaux": "Bureaux",
+    "projects": "Projects"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "overview": "Overview",
+    "performance": "Performance",
+    "reporting": "Reporting",
+    "achats": "Purchases",
+    "stocks": "Stocks",
+    "materiel": "Equipment",
+    "compliance": "Compliance",
+    "actions": "Actions",
+    "risks": "Risks",
+    "decisions": "Decisions",
+    "realtime": "Real-time"
+  },
+  "kpi": {
+    "budget": "Budget",
+    "consumed": "Consumed",
+    "remaining": "Remaining",
+    "progress": "Progress",
+    "validation_rate": "Validation Rate",
+    "sla_compliance": "SLA Compliance",
+    "avg_delay": "Average Delay"
+  },
+  "currency": {
+    "EUR": "€",
+    "XOF": "FCFA",
+    "USD": "$",
+    "GBP": "£"
+  },
+  "date": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "this_week": "This week",
+    "this_month": "This month",
+    "this_year": "This year",
+    "last_month": "Last month",
+    "last_year": "Last year"
+  }
+}

@@ -11,3 +11,5 @@ export { useValidationBCWorkspaceStore } from './validationBCWorkspaceStore';
 export type { ValidationTab, ValidationTabType } from './validationBCWorkspaceStore';
 export { useBlockedWorkspaceStore } from './blockedWorkspaceStore';
 export type { BlockedTab, BlockedTabType, BlockedUIState, BlockedStats, BlockedDecisionEntry } from './blockedWorkspaceStore';
+export { useDashboardPermissionsStore } from './dashboardPermissionsStore';
+export type { UserPermissions } from './dashboardPermissionsStore';

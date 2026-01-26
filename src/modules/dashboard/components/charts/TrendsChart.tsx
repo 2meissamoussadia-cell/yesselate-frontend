@@ -18,20 +18,23 @@ import {
 } from 'recharts';
 import { ChartContainer, chartStyles, chartColors } from '@/modules/dashboard/charts/ChartKit';
 import type { TrendData } from '../DashboardCharts';
+import { useI18n } from '@/src/lib/i18n';
 
 export function TrendsChart({ trends }: { trends?: TrendData[] }) {
+  const { fmt } = useI18n();
+  
   const chartData = useMemo(() => {
     if (!trends || trends.length === 0) return [];
 
     return trends.map(t => {
       const date = new Date(t.date);
       return {
-        date: `${date.getDate()}/${date.getMonth() + 1}`,
+        date: fmt.date(date, { day: 'numeric', month: 'numeric' }),
         demandes: t.demandes,
         validations: Math.round(t.validations * 100),
       };
     });
-  }, [trends]);
+  }, [trends, fmt]);
 
   if (!chartData || chartData.length === 0) {
     return (
@@ -56,7 +59,11 @@ export function TrendsChart({ trends }: { trends?: TrendData[] }) {
             {...chartStyles.axis}
             tickFormatter={(value) => `${value}%`}
           />
-          <Tooltip {...chartStyles.tooltip} />
+          <Tooltip 
+            {...chartStyles.tooltip}
+            formatter={(value: number) => fmt.number(value)}
+            labelFormatter={(label) => label}
+          />
           <Legend {...chartStyles.legend} />
           <Line
             yAxisId="left"

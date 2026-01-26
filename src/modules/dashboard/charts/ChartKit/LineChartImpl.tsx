@@ -20,6 +20,7 @@ import {
 import { ChartContainer } from './ChartContainer';
 import { chartStyles, chartColors, chartUI } from './chartTheme';
 import type { ChartData } from './types';
+import { useI18n } from '@/src/lib/i18n';
 
 // ============================================
 // TYPES
@@ -48,11 +49,13 @@ export interface LineChartImplProps {
 // ============================================
 
 export default function LineChartImpl({ data, title, className }: LineChartImplProps) {
+  const { t, fmt } = useI18n();
+  
   if (!data?.length) {
     return (
       <ChartContainer title={title} className={className}>
         <div className="text-slate-400 flex items-center justify-center h-full">
-          Aucune donnée
+          {t('empty.noData')}
         </div>
       </ChartContainer>
     );
@@ -69,14 +72,26 @@ export default function LineChartImpl({ data, title, className }: LineChartImplP
           />
           <XAxis 
             dataKey="date" 
+            tickFormatter={(v) => fmt.date(v, { month: 'short', day: '2-digit' })}
             stroke={chartUI.axis.stroke}
             {...chartStyles.axis}
           />
           <YAxis 
+            tickFormatter={(v) => fmt.number(v)}
             stroke={chartUI.axis.stroke}
             {...chartStyles.axis}
           />
-          <Tooltip {...chartStyles.tooltip} />
+          <Tooltip 
+            {...chartStyles.tooltip}
+            formatter={(value: number) => fmt.number(value)}
+            labelFormatter={(label) => {
+              if (typeof label === 'string') {
+                const date = new Date(label);
+                return fmt.date(date);
+              }
+              return String(label);
+            }}
+          />
           <Legend {...chartStyles.legend} />
           <Line 
             type="monotone" 

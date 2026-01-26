@@ -1,17 +1,42 @@
 // lib/server/dashboard/export/csvFormatter.ts
 // Phase P9: Formateur CSV avec support streaming
+// Phase P12: Support séparateurs localisés (; pour fr-FR, , pour en-GB)
 
-export function formatAsCSV(data: any): string {
+/**
+ * Détermine le séparateur CSV selon la locale
+ * 
+ * @param locale - Locale (ex: 'fr-FR', 'en-GB')
+ * @returns Séparateur CSV (';' pour fr-FR, ',' pour les autres)
+ */
+export function getCsvSeparator(locale: string): string {
+  // Français utilise le point-virgule
+  if (locale.startsWith('fr')) {
+    return ';';
+  }
+  // Autres locales utilisent la virgule
+  return ',';
+}
+
+/**
+ * Formate les données en CSV avec séparateur localisé
+ * 
+ * @param data - Données à formater
+ * @param locale - Locale pour déterminer le séparateur (défaut: 'fr-FR')
+ * @returns CSV formaté
+ */
+export function formatAsCSV(data: any, locale: string = 'fr-FR'): string {
   if (!data || typeof data !== 'object') {
     return '';
   }
+
+  const separator = getCsvSeparator(locale);
 
   // Si c'est un tableau, exporter directement
   if (Array.isArray(data)) {
     if (data.length === 0) return '';
     const headers = Object.keys(data[0]);
-    const rows = data.map((row) => headers.map((h) => escapeCSVValue(row[h])));
-    return [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+    const rows = data.map((row) => headers.map((h) => escapeCSVValue(row[h], separator)));
+    return [headers.join(separator), ...rows.map((r) => r.join(separator))].join('\n');
   }
 
   // Si c'est un objet, le convertir en tableau à plat
@@ -31,14 +56,22 @@ export function formatAsCSV(data: any): string {
 
   const flat = flatten(data);
   const headers = Object.keys(flat);
-  const values = headers.map((h) => escapeCSVValue(flat[h]));
-  return [headers.join(','), values.join(',')].join('\n');
+  const values = headers.map((h) => escapeCSVValue(flat[h], separator));
+  return [headers.join(separator), values.join(separator)].join('\n');
 }
 
-function escapeCSVValue(value: any): string {
+/**
+ * Échappe une valeur CSV selon le séparateur utilisé
+ * 
+ * @param value - Valeur à échapper
+ * @param separator - Séparateur CSV (',' ou ';')
+ * @returns Valeur échappée
+ */
+function escapeCSVValue(value: any, separator: string = ','): string {
   if (value === null || value === undefined) return '';
   const str = String(value);
-  if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+  // Échapper si contient le séparateur, des guillemets ou des retours à la ligne
+  if (str.includes(separator) || str.includes('"') || str.includes('\n')) {
     return `"${str.replace(/"/g, '""')}"`;
   }
   return str;

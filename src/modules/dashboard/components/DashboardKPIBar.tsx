@@ -40,6 +40,7 @@ import { KpiTile, type KpiTileColor, type KpiTileTrendSentiment } from './KpiTil
 import { KPICard as ModernKPICard } from '@/components/features/bmo/dashboard/components/KPICard';
 import { KPICard as SharedKPICard, type KPICardData } from './shared/KPICard';
 import { parseTrendPercent, toneToColor } from '@lib-root/dashboard/kpi';
+import { useI18n } from '@/src/lib/i18n';
 
 // Types
 type KPITone = 'ok' | 'warn' | 'crit' | 'info';
@@ -100,6 +101,7 @@ const LegacyKPICard = memo(function LegacyKPICard({
   isNegative,
   onClick
 }: LegacyKPICardProps) {
+  const { t } = useI18n();
   const clickable = Boolean(onClick);
   const toneStyles = useMemo(() => {
     switch (kpi.tone) {
@@ -212,7 +214,7 @@ const LegacyKPICard = memo(function LegacyKPICard({
             </div>
 
             <span className={cn('shrink-0 rounded-full border px-2 py-0.5 font-medium', toneStyles.badge)} style={{ fontSize: 'clamp(0.5625rem, 0.7vw, 0.625rem)' }}>
-              {kpi.tone === 'ok' ? 'OK' : kpi.tone === 'warn' ? 'Alerte' : kpi.tone === 'crit' ? 'Critique' : 'Info'}
+              {kpi.tone === 'ok' ? t('kpi.tone.ok') : kpi.tone === 'warn' ? t('kpi.tone.warn') : kpi.tone === 'crit' ? t('kpi.tone.crit') : t('kpi.tone.info')}
             </span>
           </div>
         </button>
@@ -237,12 +239,13 @@ const AutoRefreshTooltipContent = memo(function AutoRefreshTooltipContent({
   isTabVisible: boolean;
   isOnline: boolean;
 }) {
+  const { t } = useI18n();
   return (
     <div className="text-xs space-y-1">
-      <p>Auto-refresh: {autoRefreshEnabled ? 'Activé' : 'Désactivé'}</p>
-      <p>Intervalle: {refreshInterval / 1000}s</p>
-      {!isTabVisible && <p className="text-amber-400">Onglet inactif</p>}
-      {!isOnline && <p className="text-red-400">Hors ligne</p>}
+      <p>{t('kpi.autoRefresh.label')}: {autoRefreshEnabled ? t('kpi.autoRefresh.enabled') : t('kpi.autoRefresh.disabled')}</p>
+      <p>{t('kpi.autoRefresh.interval')}: {refreshInterval / 1000}s</p>
+      {!isTabVisible && <p className="text-amber-400">{t('kpi.autoRefresh.tabInactive')}</p>}
+      {!isOnline && <p className="text-red-400">{t('kpi.autoRefresh.offline')}</p>}
     </div>
   );
 });
@@ -256,11 +259,12 @@ const RefreshTooltipContent = memo(function RefreshTooltipContent({
   loadTime: number;
   isTabVisible: boolean;
 }) {
+  const { t, fmt } = useI18n();
   return (
     <div className="text-xs space-y-1">
-      <p>Actualisations: {refreshCount}</p>
-      <p>Temps de chargement: {loadTime.toFixed(0)}ms</p>
-      {!isTabVisible && <p className="text-amber-400">Onglet inactif</p>}
+      <p>{t('kpi.refresh.count')}: {fmt.number(refreshCount)}</p>
+      <p>{t('kpi.refresh.loadTime')}: {fmt.number(loadTime, { maximumFractionDigits: 0 })}ms</p>
+      {!isTabVisible && <p className="text-amber-400">{t('kpi.autoRefresh.tabInactive')}</p>}
     </div>
   );
 });
@@ -274,12 +278,13 @@ const KPICountTooltipContent = memo(function KPICountTooltipContent({
   total: number;
   filter?: string;
 }) {
+  const { t, fmt } = useI18n();
   return (
     <div className="text-xs space-y-1">
-      <p>{count} sur {total} indicateurs affichés</p>
+      <p>{t('kpi.count.display', { count: fmt.number(count), total: fmt.number(total) })}</p>
       {filter ? (
         <p>
-          Filtre:{' '}
+          {t('kpi.count.filter')}:{' '}
           <span className="font-medium text-slate-200">{filter}</span>
         </p>
       ) : null}
@@ -292,6 +297,7 @@ const LastUpdateDisplay = memo(function LastUpdateDisplay({
 }: { 
   lastUpdate?: Date 
 }) {
+  const { t, fmt } = useI18n();
   if (!lastUpdate) return null;
   
   const now = new Date();
@@ -301,11 +307,11 @@ const LastUpdateDisplay = memo(function LastUpdateDisplay({
   
   let display: string;
   if (seconds < 60) {
-    display = `Il y a ${seconds}s`;
+    display = t('kpi.lastUpdate.secondsAgo', { seconds: fmt.number(seconds) });
   } else if (minutes < 60) {
-    display = `Il y a ${minutes}min`;
+    display = t('kpi.lastUpdate.minutesAgo', { minutes: fmt.number(minutes) });
   } else {
-    display = lastUpdate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    display = fmt.date(lastUpdate, { hour: '2-digit', minute: '2-digit' });
   }
   
   return (
@@ -330,6 +336,7 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
   lastUpdate,
   performanceMetrics = { loadTime: 0 },
 }: DashboardKPIBarProps) {
+  const { t, fmt } = useI18n();
   const log = useLogger('DashboardKPIBar');
   const openModal = useDashboardCommandCenterStore((state) => state.openModal);
   const [showExportMenu, setShowExportMenu] = useState(false);
@@ -627,14 +634,14 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h2 className="font-semibold text-white" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>Indicateurs en temps réel</h2>
+              <h2 className="font-semibold text-white" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>{t('kpi.title')}</h2>
               <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-emerald-200 ring-1 ring-emerald-500/20" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.6875rem)' }}>
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Live
+                {t('kpi.live')}
               </span>
               {lastUpdate ? (
                 <span className="hidden sm:inline text-[11px] text-slate-500">
-                  • Mise à jour <LastUpdateDisplay lastUpdate={lastUpdate} />
+                  • {t('kpi.lastUpdate.label')} <LastUpdateDisplay lastUpdate={lastUpdate} />
                 </span>
               ) : null}
               {topKpis.length !== safeKpis.length ? (
@@ -651,7 +658,7 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
               ) : null}
             </div>
             <p className="text-slate-400" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>
-              KPIs transverses — clic sur une carte pour ouvrir le détail
+              {t('kpi.description')}
             </p>
           </div>
         </div>
@@ -662,7 +669,7 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
             <Search className="absolute left-2 top-1/2 -translate-y-1/2 text-slate-500" style={{ width: 'clamp(0.875rem, 1vw, 0.875rem)', height: 'clamp(0.875rem, 1vw, 0.875rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />
             <input
               type="text"
-              placeholder="Rechercher un indicateur…"
+              placeholder={t('kpi.search.placeholder')}
               value={kpiFilter}
               onChange={(e) => setKpiFilter(e.target.value)}
               className={cn(
@@ -679,7 +686,7 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
                 onClick={handleClearKpiFilter}
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-200 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded"
                 style={{ minWidth: '32px', minHeight: '32px' }}
-                aria-label="Effacer la recherche"
+                aria-label={t('kpi.search.clear')}
               >
                 <X style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />
               </button>
@@ -757,11 +764,11 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
                   className={cn((refreshStatus === "loading" || refreshStatus === "retrying") && 'animate-spin')} 
                   style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} 
                 />
-                <span className="hidden sm:inline">Actualiser</span>
+                <span className="hidden sm:inline">{t('kpi.refresh.label')}</span>
               </button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Actualiser (Ctrl+R)</p>
+              <p>{t('kpi.refresh.shortcut')}</p>
               <RefreshTooltipContent 
                 refreshCount={refreshCount}
                 loadTime={performanceMetrics.loadTime || loadTime}
@@ -809,7 +816,7 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
                 aria-haspopup="true"
               >
                 <Download className="h-4 w-4" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />
-                <span>Exporter</span>
+                <span>{t('actions.export')}</span>
               </button>
             )}
             {showExportMenu && canExport && (
@@ -835,7 +842,7 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
                   >
                     <div className="flex items-center gap-2">
                       <FileText className="h-4 w-4" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />
-                      <span>Exporter en CSV</span>
+                      <span>{t('actions.export.csv')}</span>
                     </div>
                   </button>
                   <button
@@ -847,7 +854,7 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
                   >
                     <div className="flex items-center gap-2">
                       <FileText className="h-4 w-4" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />
-                      <span>Exporter en JSON</span>
+                      <span>{t('actions.export.json')}</span>
                     </div>
                   </button>
                 </div>

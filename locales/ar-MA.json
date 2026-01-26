@@ -1,0 +1,72 @@
+{
+  "common": {
+    "loading": "جاري التحميل...",
+    "error": "خطأ",
+    "success": "نجاح",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "add": "إضافة",
+    "search": "بحث",
+    "filter": "تصفية",
+    "export": "تصدير",
+    "refresh": "تحديث",
+    "close": "إغلاق",
+    "confirm": "تأكيد",
+    "back": "رجوع"
+  },
+  "dashboard": {
+    "title": "لوحة التحكم",
+    "overview": "نظرة عامة",
+    "performance": "الأداء",
+    "actions": "الإجراءات",
+    "risks": "المخاطر",
+    "decisions": "القرارات",
+    "realtime": "الوقت الفعلي",
+    "summary": "ملخص",
+    "kpis": "مؤشرات رئيسية",
+    "trends": "الاتجاهات",
+    "validations": "التحقق",
+    "bureaux": "المكاتب",
+    "projects": "المشاريع"
+  },
+  "navigation": {
+    "dashboard": "لوحة التحكم",
+    "overview": "نظرة عامة",
+    "performance": "الأداء",
+    "reporting": "التقارير",
+    "achats": "المشتريات",
+    "stocks": "المخزون",
+    "materiel": "المعدات",
+    "compliance": "الامتثال",
+    "actions": "الإجراءات",
+    "risks": "المخاطر",
+    "decisions": "القرارات",
+    "realtime": "الوقت الفعلي"
+  },
+  "kpi": {
+    "budget": "الميزانية",
+    "consumed": "المستهلك",
+    "remaining": "المتبقي",
+    "progress": "التقدم",
+    "validation_rate": "معدل التحقق",
+    "sla_compliance": "امتثال SLA",
+    "avg_delay": "متوسط التأخير"
+  },
+  "currency": {
+    "EUR": "€",
+    "XOF": "فرنك",
+    "USD": "$",
+    "GBP": "£"
+  },
+  "date": {
+    "today": "اليوم",
+    "yesterday": "أمس",
+    "this_week": "هذا الأسبوع",
+    "this_month": "هذا الشهر",
+    "this_year": "هذه السنة",
+    "last_month": "الشهر الماضي",
+    "last_year": "السنة الماضية"
+  }
+}

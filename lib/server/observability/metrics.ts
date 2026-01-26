@@ -96,6 +96,72 @@ export const mviewStaleness = new Gauge({
 });
 
 // ============================================================================
+// MÉTRIQUES SLO (Phase P11: Performance & Coût)
+// ============================================================================
+
+/**
+ * Compteur d'alertes SLO (budgets dépassés)
+ */
+export const sloBudgetExceededCounter = new Counter({
+  name: 'dashboard_slo_budget_exceeded_total',
+  help: 'Total number of SLO budget violations',
+  labelNames: ['route', 'budget_type'], // budget_type: 'p95' | 'p99'
+  registers: [metricsRegistry],
+});
+
+/**
+ * Time To First Byte (TTFB) - Temps jusqu'au premier byte de la réponse
+ * Budget SLO: P95 < 400ms pour les endpoints API read
+ */
+export const apiTTFB = new Histogram({
+  name: 'dashboard_api_ttfb_seconds',
+  help: 'Time To First Byte for dashboard API requests (seconds)',
+  labelNames: ['method', 'route', 'cache_strategy'],
+  buckets: [0.05, 0.1, 0.2, 0.4, 0.8, 1.6, 3.2], // Budget: P95 < 0.4s
+  registers: [metricsRegistry],
+});
+
+/**
+ * Cache hit rate - Taux de succès du cache
+ */
+export const cacheHitCounter = new Counter({
+  name: 'dashboard_cache_hits_total',
+  help: 'Total number of cache hits',
+  labelNames: ['cache_strategy', 'route'],
+  registers: [metricsRegistry],
+});
+
+export const cacheMissCounter = new Counter({
+  name: 'dashboard_cache_misses_total',
+  help: 'Total number of cache misses',
+  labelNames: ['cache_strategy', 'route'],
+  registers: [metricsRegistry],
+});
+
+/**
+ * Export size - Taille des exports pour piloter les coûts
+ */
+export const exportSizeBytes = new Histogram({
+  name: 'dashboard_export_size_bytes',
+  help: 'Size of exported data in bytes',
+  labelNames: ['format', 'route'], // format: csv, json, pdf, excel
+  buckets: [1024, 10240, 102400, 1048576, 10485760, 104857600], // 1KB, 10KB, 100KB, 1MB, 10MB, 100MB
+  registers: [metricsRegistry],
+});
+
+/**
+ * Database query cost - Coût estimé des requêtes DB
+ * Basé sur pg_stat_statements (à enrichir avec des labels)
+ */
+export const dbQueryCost = new Histogram({
+  name: 'dashboard_db_query_cost_estimated',
+  help: 'Estimated cost of database queries (arbitrary units)',
+  labelNames: ['query_type', 'table'],
+  buckets: [1, 10, 100, 1000, 10000],
+  registers: [metricsRegistry],
+});
+
+// ============================================================================
 // MÉTRIQUES WORKER
 // ============================================================================
 

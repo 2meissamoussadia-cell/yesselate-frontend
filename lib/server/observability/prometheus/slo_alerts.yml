@@ -1,0 +1,94 @@
+# lib/server/observability/prometheus/slo_alerts.yml
+# Phase P11: Règles d'alerte Prometheus pour budgets SLO
+
+groups:
+  - name: dashboard_slo_budgets
+    interval: 30s
+    rules:
+      # Alerte si taux de violations P95 > 5% sur 5 minutes
+      - alert: HighP95ViolationRate
+        expr: |
+          (
+            sum(rate(dashboard_slo_budget_exceeded_total{budget_type="p95"}[5m])) by (route)
+            /
+            sum(rate(dashboard_api_request_duration_seconds_count[5m])) by (route)
+          ) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+          component: dashboard
+          phase: p11
+        annotations:
+          summary: "High P95 violation rate on {{ $labels.route }}"
+          description: |
+            Route {{ $labels.route }} has {{ $value | humanizePercentage }} of requests
+            exceeding P95 budget over the last 5 minutes.
+            Budget: Check app/api/internal/metrics/budgets.ts
+
+      # Alerte si taux de violations P99 > 2% sur 5 minutes
+      - alert: HighP99ViolationRate
+        expr: |
+          (
+            sum(rate(dashboard_slo_budget_exceeded_total{budget_type="p99"}[5m])) by (route)
+            /
+            sum(rate(dashboard_api_request_duration_seconds_count[5m])) by (route)
+          ) > 0.02
+        for: 5m
+        labels:
+          severity: warning
+          component: dashboard
+          phase: p11
+        annotations:
+          summary: "High P99 violation rate on {{ $labels.route }}"
+          description: |
+            Route {{ $labels.route }} has {{ $value | humanizePercentage }} of requests
+            exceeding P99 budget over the last 5 minutes.
+
+      # Alerte si P95 > budget + 50% (dépassement significatif)
+      - alert: P95SignificantlyExceeded
+        expr: |
+          histogram_quantile(0.95,
+            sum(rate(dashboard_api_request_duration_seconds_bucket[5m])) by (le, route)
+          ) by (route) > 0.6
+        for: 10m
+        labels:
+          severity: critical
+          component: dashboard
+          phase: p11
+        annotations:
+          summary: "P95 significantly exceeds budget on {{ $labels.route }}"
+          description: |
+            Route {{ $labels.route }} has P95 latency of {{ $value }}s (budget: 0.4s).
+            This indicates a significant performance degradation.
+
+      # Alerte si plus de 10 violations/min sur une route critique
+      - alert: CriticalRouteHighViolations
+        expr: |
+          sum(rate(dashboard_slo_budget_exceeded_total{route=~"/api/dashboard/.*"}[1m])) by (route) > 10
+        for: 3m
+        labels:
+          severity: critical
+          component: dashboard
+          phase: p11
+        annotations:
+          summary: "Critical route {{ $labels.route }} has high violation rate"
+          description: |
+            Route {{ $labels.route }} has {{ $value }} violations per minute.
+            This may impact user experience.
+
+      # Alerte si TTFB P95 > 500ms (dégradation réseau/serveur)
+      - alert: HighTTFB
+        expr: |
+          histogram_quantile(0.95,
+            sum(rate(dashboard_api_ttfb_seconds_bucket[5m])) by (le, route)
+          ) by (route) > 0.5
+        for: 5m
+        labels:
+          severity: warning
+          component: dashboard
+          phase: p11
+        annotations:
+          summary: "High TTFB on {{ $labels.route }}"
+          description: |
+            Route {{ $labels.route }} has P95 TTFB of {{ $value }}s.
+            This may indicate network or server issues.

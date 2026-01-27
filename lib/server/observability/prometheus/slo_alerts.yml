@@ -92,3 +92,85 @@ groups:
           description: |
             Route {{ $labels.route }} has P95 TTFB of {{ $value }}s.
             This may indicate network or server issues.
+
+  # ============================================================================
+  # ALERTES DR (Phase P13: Résilience & DR)
+  # ============================================================================
+  - name: dashboard_dr_alerts
+    interval: 30s
+    rules:
+      # Alerte si replication lag > 60s (warning)
+      - alert: HighReplicationLag
+        expr: |
+          dashboard_db_replay_lag_seconds{role="standby"} > 60
+        for: 2m
+        labels:
+          severity: warning
+          component: database
+          phase: p13
+        annotations:
+          summary: "High replication lag on standby"
+          description: |
+            Standby database has replay lag of {{ $value }}s.
+            RPO target: ≤ 5 min (300s).
+
+      # Alerte si replication lag > 300s (critical - RPO dépassé)
+      - alert: CriticalReplicationLag
+        expr: |
+          dashboard_db_replay_lag_seconds{role="standby"} > 300
+        for: 1m
+        labels:
+          severity: critical
+          component: database
+          phase: p13
+        annotations:
+          summary: "Critical replication lag - RPO exceeded"
+          description: |
+            Standby database has replay lag of {{ $value }}s.
+            RPO target (5 min) exceeded. Risk of data loss.
+
+      # Alerte si primary sans replicas
+      - alert: NoReplicas
+        expr: |
+          dashboard_db_role{role="primary"} == 1 AND
+          count(dashboard_db_replay_lag_seconds{role="standby"}) == 0
+        for: 5m
+        labels:
+          severity: warning
+          component: database
+          phase: p13
+        annotations:
+          summary: "Primary database has no replicas"
+          description: |
+            Primary database is running without replicas.
+            No disaster recovery capability.
+
+      # Alerte si worker ne peut pas se reconnecter
+      - alert: WorkerReconnectionFailed
+        expr: |
+          rate(dashboard_worker_pg_reconnects_total{reason="error"}[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          component: worker
+          phase: p13
+        annotations:
+          summary: "Worker reconnection failures"
+          description: |
+            Worker is experiencing frequent reconnection failures.
+            Check database connectivity.
+
+      # Alerte si circuit breaker ouvert > 1 min
+      - alert: CircuitBreakerOpen
+        expr: |
+          dashboard_circuit_open_total > 0
+        for: 1m
+        labels:
+          severity: warning
+          component: resilience
+          phase: p13
+        annotations:
+          summary: "Circuit breaker is open for {{ $labels.service }}"
+          description: |
+            Circuit breaker for {{ $labels.service }} is open.
+            Service may be degraded or unavailable.

@@ -11,11 +11,12 @@ import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { DecisionGouvernance } from '../../types/gouvernanceTypes';
 import { CheckCircle2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { normalizeToArray } from '../../utils/dataNormalization';
 
 export default function DecisionsValideesPage() {
   const { data, isLoading } = useGouvernanceData('decisions-validees');
 
-  const decisions = (data as any)?.data || [];
+  const decisions = normalizeToArray<DecisionGouvernance>(data);
 
   return (
     <div className="h-full w-full bg-slate-950 text-white p-6">

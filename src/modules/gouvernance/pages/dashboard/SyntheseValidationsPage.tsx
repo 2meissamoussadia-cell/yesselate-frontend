@@ -11,11 +11,12 @@ import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { ValidationGouvernance } from '../../types/gouvernanceTypes';
 import { cn } from '@/lib/utils';
 import { AlertCircle } from 'lucide-react';
+import { normalizeToArray } from '../../utils/dataNormalization';
 
 export default function SyntheseValidationsPage() {
   const { data, isLoading } = useGouvernanceData('synthese-validations');
 
-  const validations = (data as any)?.data || [];
+  const validations = normalizeToArray<ValidationGouvernance>(data);
 
   return (
     <div className="h-full w-full bg-slate-950 text-white p-6">

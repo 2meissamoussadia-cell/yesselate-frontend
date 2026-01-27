@@ -1,14 +1,4 @@
-/**
- * Module de télémétrie du dashboard
- * Phase P14: Télémétrie & Analytics
- * 
- * Export centralisé des hooks de télémétrie
- */
+// src/modules/dashboard/telemetry/index.ts
+// Phase P14: Observabilité produit - Exports centralisés
 
-export {
-  useTrackView,
-  useTrackAction,
-  useTrackKPIClick,
-  useTrackError,
-  useTrackPerformance,
-} from './useTrack';
+export { useTrackView, useTrackAction, useTrackError, useTrackPerf } from './useTrack';

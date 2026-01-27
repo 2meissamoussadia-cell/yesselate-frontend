@@ -10,11 +10,12 @@ import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { RisqueGouvernance } from '../../types/gouvernanceTypes';
 import { cn } from '@/lib/utils';
+import { normalizeToArray } from '../../utils/dataNormalization';
 
 export default function SyntheseRisquesPage() {
   const { data, isLoading } = useGouvernanceData('synthese-risques');
 
-  const risques = (data as any)?.data || [];
+  const risques = normalizeToArray<RisqueGouvernance>(data);
 
   return (
     <div className="h-full w-full bg-slate-950 text-white p-6">

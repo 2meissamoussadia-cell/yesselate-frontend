@@ -8,6 +8,7 @@ import { DashboardKPIBar } from './DashboardKPIBar';
 import { DashboardViewRouter } from './DashboardViewRouter';
 import { DashboardFooter } from './DashboardFooter';
 import { DashboardNotifications } from './DashboardNotifications';
+import { AlertNotifications } from './AlertNotifications';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { useI18n } from '@/src/lib/i18n';
 import { cn } from '@/lib/utils';
@@ -15,6 +16,7 @@ import { cn } from '@/lib/utils';
 export function DashboardCommandCenterPage() {
   const nav = useDashboardCommandCenterStore((s) => s.navigation);
   const { locale, currency } = useI18n();
+  const { notifications, dismissNotification, markAsRead } = useDashboardNotifications();
 
   const onExport = useCallback(async (format: 'csv' | 'json' | 'pdf' | 'excel') => {
     // Phase P12.b: Mapper 'excel' vers 'xlsx' pour le format natif
@@ -95,7 +97,13 @@ export function DashboardCommandCenterPage() {
         </main>
 
         {/* Notifications / drawer */}
-        <DashboardNotifications />
+        <DashboardNotifications
+          notifications={notifications}
+          onDismiss={dismissNotification}
+          onMarkAsRead={markAsRead}
+        />
+        {/* Phase P15: Intégration alertes dans notifications */}
+        <AlertNotifications />
       </div>
     </div>
   );

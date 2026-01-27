@@ -15,6 +15,7 @@ import { recordTTFB } from '@lib-root/server/dashboard/cache';
 import { parsePaginationParams } from '@lib-root/server/dashboard/types';
 import { getBudgetForRoute, exceedsBudget } from '@/app/api/internal/metrics/budgets';
 import { sloBudgetExceededCounter } from '@/lib/server/observability/metrics';
+import { enforceQuota, recordDenial, recordUsage, inferRowCount } from '@lib-root/server/finops';
 
 // Cache par défaut "no-store"; override pour reporting
 export const revalidate = 0; // défaut
@@ -100,6 +101,20 @@ export async function GET(
       observeHttp('GET', '/api/dashboard/[main]/[sub]/[leaf]', 403, seconds);
       log.info({ route: parsed.data, seconds, error: 'Forbidden: compliance module' }, 'dashboard api forbidden');
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
+    // Phase P16: FinOps — contrôle de quotas avant requête lourde
+    const scope = 'route:/api/dashboard';
+    const quota = await enforceQuota({ tenantId: ctx.tenantId, scope });
+    if (!quota.allowed) {
+      await recordDenial(ctx.tenantId, scope, quota.reason!, { route: parsed.data }).catch(() => {});
+      const seconds = (performance.now() - t0) / 1000;
+      observeHttp('GET', '/api/dashboard/[main]/[sub]/[leaf]', 429, seconds);
+      log.info({ route: parsed.data, seconds, reason: quota.reason }, 'dashboard api quota exceeded');
+      return NextResponse.json(
+        { error: 'Quota exceeded', retryAfter: 60 },
+        { status: 429, headers: { 'Retry-After': '60' } }
+      );
     }
 
     // Phase P11: Parse des paramètres de pagination (optionnel)
@@ -192,6 +207,11 @@ export async function GET(
       }, 
       'dashboard api served'
     );
+
+    // Phase P16: FinOps — mesure (octets, lignes)
+    const rows = inferRowCount(data);
+    const bytes = Buffer.byteLength(JSON.stringify(data));
+    recordUsage({ tenantId: ctx.tenantId, scope: 'route:/api/dashboard', rows, bytes }).catch(() => {});
     
     return new NextResponse(JSON.stringify(data), { status: 200, headers });
   } catch (error) {

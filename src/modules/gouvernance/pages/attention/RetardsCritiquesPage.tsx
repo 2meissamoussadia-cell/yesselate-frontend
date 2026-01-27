@@ -10,11 +10,12 @@ import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { JalonGouvernance } from '../../types/gouvernanceTypes';
 import { Clock } from 'lucide-react';
+import { normalizeToArray } from '../../utils/dataNormalization';
 
 export default function RetardsCritiquesPage() {
   const { data, isLoading } = useGouvernanceData('retards-critiques');
 
-  const retards = (data as any)?.data || [];
+  const retards = normalizeToArray<JalonGouvernance>(data);
 
   return (
     <div className="h-full w-full bg-slate-950 text-white p-6">

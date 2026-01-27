@@ -11,11 +11,12 @@ import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { IndicateurConformite } from '../../types/gouvernanceTypes';
 import { cn } from '@/lib/utils';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { normalizeToArray } from '../../utils/dataNormalization';
 
 export default function IndicateursConformitePage() {
   const { data, isLoading } = useGouvernanceData('indicateurs-conformite');
 
-  const indicateurs = (data as any)?.data || [];
+  const indicateurs = normalizeToArray<IndicateurConformite>(data);
 
   return (
     <div className="h-full w-full bg-slate-950 text-white p-6">

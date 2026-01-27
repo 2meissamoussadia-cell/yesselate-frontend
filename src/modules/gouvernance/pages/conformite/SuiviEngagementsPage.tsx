@@ -11,11 +11,12 @@ import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { EngagementGouvernance } from '../../types/gouvernanceTypes';
 import { cn } from '@/lib/utils';
 import { CheckCircle2, XCircle, Clock } from 'lucide-react';
+import { normalizeToArray } from '../../utils/dataNormalization';
 
 export default function SuiviEngagementsPage() {
   const { data, isLoading } = useGouvernanceData('suivi-engagements');
 
-  const engagements = (data as any)?.data || [];
+  const engagements = normalizeToArray<EngagementGouvernance>(data);
 
   const stats = {
     total: engagements.length,

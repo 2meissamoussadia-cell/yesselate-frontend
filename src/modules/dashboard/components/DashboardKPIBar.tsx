@@ -40,7 +40,8 @@ import { KpiTile, type KpiTileColor, type KpiTileTrendSentiment } from './KpiTil
 import { KPICard as ModernKPICard } from '@/components/features/bmo/dashboard/components/KPICard';
 import { KPICard as SharedKPICard, type KPICardData } from './shared/KPICard';
 import { parseTrendPercent, toneToColor } from '@lib-root/dashboard/kpi';
-import { useI18n } from '@/src/lib/i18n';
+import { useI18n } from '@/lib/i18n';
+import { useKpiBarTelemetry } from '../telemetry/instruments/kpiBar';
 
 // Types
 type KPITone = 'ok' | 'warn' | 'crit' | 'info';
@@ -412,8 +413,21 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
     },
   });
 
+  // Phase P10: Vérifier permission export
+  const { canExport } = useDashboardPermissions();
+  
+  // Phase P14: Télémetrie - instrumentation KPI Bar
+  const telemetry = useKpiBarTelemetry();
+  
+  // Récupérer la route courante pour le tracking
+  const nav = useDashboardCommandCenterStore((s) => s.navigation);
+  const routeKey = `${nav.mainCategory}::${nav.subCategory || ''}::${nav.subSubCategory || ''}`;
+
   // Handler pour cliquer sur un KPI
   const handleKPIClick = useCallback((kpi: KPIData) => {
+    // Phase P14: Télémetrie - tracker le clic KPI
+    telemetry.onKpiClick(kpi.label, kpi.value);
+    
     if (onKPIClick) {
       onKPIClick(kpi);
     } else {
@@ -425,39 +439,40 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
         openModal('kpi-drilldown', { kpi });
       }
     }
-  }, [onKPIClick, openModal]);
-
-  // Phase P10: Vérifier permission export
-  const { canExport } = useDashboardPermissions();
+  }, [onKPIClick, openModal, telemetry]);
 
   // Handlers d'export
   const handleExportCSV = useCallback(async () => {
     if (onExport && canExport) {
+      telemetry.onExport('csv', routeKey);
       await onExport('csv');
     }
     setShowExportMenu(false);
-  }, [onExport, canExport]);
+  }, [onExport, canExport, telemetry, routeKey]);
 
   const handleExportJSON = useCallback(async () => {
     if (onExport && canExport) {
+      telemetry.onExport('json', routeKey);
       await onExport('json');
     }
     setShowExportMenu(false);
-  }, [onExport, canExport]);
+  }, [onExport, canExport, telemetry, routeKey]);
 
   const handleExportPDF = useCallback(async () => {
     if (onExport && canExport) {
+      telemetry.onExport('pdf', routeKey);
       await onExport('pdf');
     }
     setShowExportMenu(false);
-  }, [onExport, canExport]);
+  }, [onExport, canExport, telemetry, routeKey]);
 
   const handleExportExcel = useCallback(async () => {
     if (onExport && canExport) {
+      telemetry.onExport('excel', routeKey);
       await onExport('excel');
     }
     setShowExportMenu(false);
-  }, [onExport, canExport]);
+  }, [onExport, canExport, telemetry, routeKey]);
 
   const handleToggleExportMenu = useCallback(() => {
     setShowExportMenu(prev => !prev);

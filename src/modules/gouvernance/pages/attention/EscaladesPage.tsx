@@ -11,11 +11,12 @@ import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { PointAttention } from '../../types/gouvernanceTypes';
 import { AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { normalizeToArray } from '../../utils/dataNormalization';
 
 export default function EscaladesPage() {
   const { data, isLoading } = useGouvernanceData('escalades');
 
-  const escalades = (data as any)?.data || [];
+  const escalades = normalizeToArray<PointAttention>(data);
 
   return (
     <div className="h-full w-full bg-slate-950 text-white p-6">

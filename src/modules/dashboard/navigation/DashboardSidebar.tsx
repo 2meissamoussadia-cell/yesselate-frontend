@@ -25,6 +25,7 @@ import { filterNavigationConfig } from '../utils/navigationFilter';
 import { nodeAllowed } from './permissions';
 import { useDashboardPermissionsStore } from '@/lib/stores/dashboardPermissionsStore';
 import { useI18n } from '@/src/lib/i18n';
+import { useAlertStats } from '../hooks/useAlerts';
 
 interface DashboardSidebarProps {
   collapsed?: boolean;
@@ -134,10 +135,38 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onOpenCommandPalette]);
 
-  const getBadgeForNode = useCallback((node: NavNode): number | undefined => {
+  // Phase P15: Récupérer les stats d'alertes pour les badges
+  const { data: alertStatsData } = useAlertStats();
+  const alertStats = alertStatsData?.stats;
+
+  const getBadgeForNode = useCallback((node: NavNode, level?: number): number | undefined => {
+    // Badge depuis props stats (compatibilité)
     const statKey = node.id as keyof typeof stats;
-    return stats[statKey];
-  }, [stats]);
+    const propBadge = stats[statKey];
+    if (propBadge !== undefined) return propBadge;
+
+    // Phase P15: Badge depuis alertes par routeKey
+    if (alertStats && level !== undefined) {
+      // Mapping routeKey -> node.id pour les sections performance
+      const routeKeyMap: Record<string, string> = {
+        'performance::reporting::dashboard': 'reporting',
+        'performance::achats::dashboard': 'achats',
+        'performance::stocks::dashboard': 'stocks',
+        'performance::materiel::dashboard': 'materiel',
+        'performance::conformite::dashboard': 'conformite',
+      };
+
+      const routeKey = routeKeyMap[node.id];
+      if (routeKey) {
+        // Récupérer les alertes pour ce routeKey et compter les critiques/warnings
+        // Pour l'instant, on retourne le total d'alertes ouvertes
+        // TODO: Filtrer par routeKey dans useAlertStats si nécessaire
+        return alertStats.critical_open + alertStats.warning_open;
+      }
+    }
+
+    return node.badge;
+  }, [stats, alertStats]);
 
   const isNodeActive = useCallback((node: NavNode, level: number, parentMain?: string, parentSub?: string): boolean => {
     if (level === 0) {
@@ -235,7 +264,7 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
     const hasChildren = node.children && node.children.length > 0;
     const isExpanded = expandedNodes.has(node.id);
     const isActive = isNodeActive(node, level, parentMain, parentSub);
-    const badge = getBadgeForNode(node);
+    const badge = getBadgeForNode(node, level);
     
     // Déterminer le parent pour les enfants
     const currentMain = level === 0 ? node.id : parentMain;
@@ -428,8 +457,19 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
                 </span>
                 {badge !== undefined && badge !== null && badge !== 0 && (
                   <Badge
-                    variant="default"
-                    className="ml-auto bg-slate-800/50 text-slate-200 border border-slate-700/60"
+                    variant={
+                      badge > 10 ? 'destructive' : 
+                      badge > 5 ? 'warning' : 
+                      'default'
+                    }
+                    className={cn(
+                      "ml-auto border",
+                      badge > 10 
+                        ? "bg-rose-500/20 text-rose-400 border-rose-500/50"
+                        : badge > 5
+                          ? "bg-amber-500/20 text-amber-400 border-amber-500/50"
+                          : "bg-slate-800/50 text-slate-200 border-slate-700/60"
+                    )}
                   >
                     {badge}
                   </Badge>

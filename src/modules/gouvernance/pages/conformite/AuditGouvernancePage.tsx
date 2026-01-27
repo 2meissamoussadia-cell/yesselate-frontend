@@ -11,11 +11,12 @@ import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { AuditGouvernance } from '../../types/gouvernanceTypes';
 import { FileCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { normalizeToArray } from '../../utils/dataNormalization';
 
 export default function AuditGouvernancePage() {
   const { data, isLoading } = useGouvernanceData('audit-gouvernance');
 
-  const audits = (data as any)?.data || [];
+  const audits = normalizeToArray<AuditGouvernance>(data);
 
   return (
     <div className="h-full w-full bg-slate-950 text-white p-6">

@@ -22,6 +22,7 @@ import { Line, Bar } from 'react-chartjs-2';
 import { cn } from '@/lib/utils';
 import { useGouvernanceData } from '../hooks/useGouvernanceData';
 import type { TendanceMensuelle } from '../types/gouvernanceTypes';
+import { normalizeToArray } from '../utils/dataNormalization';
 
 ChartJS.register(
   CategoryScale,
@@ -44,22 +45,7 @@ export function TendancesChart({ className, type = 'line' }: TendancesChartProps
   const { data, isLoading } = useGouvernanceData('tendances');
 
   // Normaliser les données pour garantir que tendances est toujours un tableau
-  const tendances: TendanceMensuelle[] = (() => {
-    if (!data) return [];
-    
-    // Si data est déjà un tableau, le retourner
-    if (Array.isArray(data)) {
-      return data as TendanceMensuelle[];
-    }
-    
-    // Si data est un objet avec une propriété tendances, l'extraire
-    if (typeof data === 'object' && 'tendances' in data && Array.isArray(data.tendances)) {
-      return data.tendances as TendanceMensuelle[];
-    }
-    
-    // Sinon, retourner un tableau vide
-    return [];
-  })();
+  const tendances = normalizeToArray<TendanceMensuelle>(data);
 
   if (isLoading) {
     return (

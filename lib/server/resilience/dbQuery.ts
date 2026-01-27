@@ -4,6 +4,7 @@
 import { pgPool } from '@/lib/server/db/pool';
 import { CircuitBreaker } from './circuit';
 import { retry, isPostgresRetryable } from './retry';
+import { circuitOpenTotal, retryAttemptsTotal } from '@/lib/server/observability/metrics';
 
 // Phase P13: Circuit breaker pour DB (protège contre cascading failures)
 const dbCircuitBreaker = new CircuitBreaker(5, 30_000, 'db'); // 5 erreurs, reset après 30s, service='db'

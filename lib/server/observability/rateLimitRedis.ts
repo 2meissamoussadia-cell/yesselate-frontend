@@ -5,6 +5,7 @@
 import Redis from 'ioredis';
 import { CircuitBreaker } from '@/lib/server/resilience/circuit';
 import { retry, isRedisRetryable } from '@/lib/server/resilience/retry';
+import { circuitOpenTotal, retryAttemptsTotal } from './metrics';
 
 // Instance Redis singleton
 let redis: Redis | null = null;
@@ -62,6 +63,8 @@ export async function rateLimitRedis(
 ): Promise<{ allowed: boolean; remaining: number }> {
   // Phase P13: Vérifier le circuit breaker
   if (!redisCircuitBreaker.canPass()) {
+    // Phase P13: Métriques DR
+    circuitOpenTotal.inc({ service: 'redis' });
     // Circuit ouvert : permettre la requête (fail-open pour rate limiting)
     return { allowed: true, remaining: capacity };
   }
@@ -126,6 +129,11 @@ export async function rateLimitRedis(
   } catch (error) {
     // Phase P13: Enregistrer l'échec
     redisCircuitBreaker.failure();
+    
+    // Phase P13: Métriques DR
+    if (redisCircuitBreaker.getState() === 'open') {
+      circuitOpenTotal.inc({ service: 'redis' });
+    }
     
     console.error('[RateLimit Redis] Error:', error);
     // En cas d'erreur Redis, permettre la requête (fail-open)

@@ -10,11 +10,12 @@ import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { ProjetGouvernance } from '../../types/gouvernanceTypes';
 import { cn } from '@/lib/utils';
+import { normalizeToArray } from '../../utils/dataNormalization';
 
 export default function SyntheseProjetsPage() {
   const { data, isLoading } = useGouvernanceData('synthese-projets');
 
-  const projets = (data as any)?.data || [];
+  const projets = normalizeToArray<ProjetGouvernance>(data);
 
   return (
     <div className="h-full w-full bg-slate-950 text-white p-6">

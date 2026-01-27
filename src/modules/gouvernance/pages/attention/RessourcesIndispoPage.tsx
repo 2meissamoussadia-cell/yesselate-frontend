@@ -10,11 +10,12 @@ import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { PointAttention } from '../../types/gouvernanceTypes';
 import { UserX } from 'lucide-react';
+import { normalizeToArray } from '../../utils/dataNormalization';
 
 export default function RessourcesIndispoPage() {
   const { data, isLoading } = useGouvernanceData('ressources-indispo');
 
-  const ressources = (data as any)?.data || [];
+  const ressources = normalizeToArray<PointAttention>(data);
 
   return (
     <div className="h-full w-full bg-slate-950 text-white p-6">

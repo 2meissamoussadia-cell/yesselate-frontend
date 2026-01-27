@@ -10,11 +10,12 @@ import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { JalonGouvernance } from '../../types/gouvernanceTypes';
 import { cn } from '@/lib/utils';
+import { normalizeToArray } from '../../utils/dataNormalization';
 
 export default function SyntheseJalonsPage() {
   const { data, isLoading } = useGouvernanceData('synthese-jalons');
 
-  const jalons = (data as any)?.data || [];
+  const jalons = normalizeToArray<JalonGouvernance>(data);
 
   return (
     <div className="h-full w-full bg-slate-950 text-white p-6">

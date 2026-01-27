@@ -11,11 +11,12 @@ import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { ArbitrageGouvernance } from '../../types/gouvernanceTypes';
 import { Scale, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { normalizeToArray } from '../../utils/dataNormalization';
 
 export default function ArbitragesEnAttentePage() {
   const { data, isLoading } = useGouvernanceData('arbitrages-en-attente');
 
-  const arbitrages = (data as any)?.data || [];
+  const arbitrages = normalizeToArray<ArbitrageGouvernance>(data);
 
   return (
     <div className="h-full w-full bg-slate-950 text-white p-6">

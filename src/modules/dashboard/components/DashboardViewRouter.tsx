@@ -35,6 +35,7 @@ import { filterNavigationConfig, findFirstAuthorizedRoute } from '../utils/navig
 import { dashboardNavigationConfig } from '../navigation/dashboardNavigationConfig';
 import { nodeAllowed } from '../navigation/permissions';
 import { useDashboardPermissionsStore } from '@/lib/stores/dashboardPermissionsStore';
+import { useTrackView } from '../telemetry/useTrack';
 
 // ✅ Cache des composants chargés pour éviter les rechargements inutiles
 const componentCache = new Map<string, ComponentType>();
@@ -80,6 +81,10 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
     sub: sub || null,
     leaf: leaf || null,
   }), [main, sub, leaf]);
+  
+  // Phase P14: Télémetrie - tracker l'ouverture de la vue
+  const routeKey = `${main}::${sub || ''}::${leaf || ''}`;
+  useTrackView(routeKey);
   
   // ✅ Vérifier l'accès via le registry (vérification locale)
   const registryKey = navToKey(navKey);

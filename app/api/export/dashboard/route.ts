@@ -15,12 +15,15 @@ import { formatAsXLSX } from '@lib-root/server/dashboard/export/xlsxFormatter';
 import { formatAsPDF } from '@lib-root/server/dashboard/export/pdfFormatter';
 import { auditExport } from '@lib-root/server/dashboard/export/auditExport';
 import { rateLimitRedis } from '@/lib/server/observability/rateLimitRedis';
+import { enforceQuota, recordDenial, recordUsage, getBackpressureSignal, decideBackpressure } from '@lib-root/server/finops';
 import crypto from 'node:crypto';
 
 // Phase P12.b: Limites de sécurité pour exports lourds
 const MAX_EXPORT_ROWS = 100_000; // Limite de lignes
 const MAX_EXPORT_SIZE_MB = 50; // Limite de taille (MB)
 const EXPORT_TIMEOUT_MS = 60_000; // Timeout 60s
+// Phase P16: Back-pressure — conservative = CSV only, plafond lignes réduit
+const CONSERVATIVE_MAX_ROWS = 10_000;
 
 const Query = z.object({
   main: z.enum(['overview','performance','actions','risks','decisions','realtime']),
@@ -110,6 +113,58 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Forbidden: export non autorisé' }, { status: 403 });
   }
 
+  // Phase P16: FinOps — contrôle de quotas avant export lourd
+  const scopeExport = 'route:/api/export/dashboard';
+  const quota = await enforceQuota({
+    tenantId: baseCtx.tenantId,
+    scope: scopeExport,
+    isExport: true,
+    estimatedRows: MAX_EXPORT_ROWS,
+    estimatedBytes: MAX_EXPORT_SIZE_MB * 1024 * 1024,
+  });
+  if (!quota.allowed) {
+    await recordDenial(baseCtx.tenantId, scopeExport, quota.reason!, { format }).catch(() => {});
+    return NextResponse.json(
+      { error: 'Quota exceeded', retryAfter: 60 },
+      { status: 429, headers: { 'Retry-After': '60', 'X-RateLimit-Remaining': '0' } }
+    );
+  }
+
+  // Phase P16: Back-pressure & dégradation contrôlée (signal /api/internal/health)
+  const signal = await getBackpressureSignal();
+  const bpMode = decideBackpressure({ replayLagSec: signal.replayLagSec });
+  if (bpMode === 'severe') {
+    await recordDenial(baseCtx.tenantId, scopeExport, 'backpressure', {
+      mode: 'severe',
+      replayLagSec: signal.replayLagSec,
+    }).catch(() => {});
+    return NextResponse.json(
+      {
+        error: 'Export unavailable',
+        message: 'System under pressure. Please retry later.',
+        retryAfter: 300,
+      },
+      { status: 503, headers: { 'Retry-After': '300' } }
+    );
+  }
+  if (bpMode === 'conservative' && format !== 'csv') {
+    await recordDenial(baseCtx.tenantId, scopeExport, 'backpressure', {
+      mode: 'conservative',
+      format,
+      replayLagSec: signal.replayLagSec,
+    }).catch(() => {});
+    return NextResponse.json(
+      {
+        error: 'Degraded mode',
+        message: 'CSV only. Please use format=csv.',
+        retryAfter: 120,
+      },
+      { status: 503, headers: { 'Retry-After': '120' } }
+    );
+  }
+  // conservative + csv: réduire max_rows_per_call (appliqué plus bas)
+  const effectiveMaxRows = bpMode === 'conservative' ? Math.min(MAX_EXPORT_ROWS, 10_000) : MAX_EXPORT_ROWS;
+
   // Phase P12: Résoudre la locale pour les séparateurs CSV
   // Phase P12.b: Priorité query params (si fournis) > resolveLocaleContext
   const queryLocale = url.searchParams.get('locale');
@@ -143,11 +198,11 @@ export async function GET(req: NextRequest) {
   
   const data = await Promise.race([dataPromise, timeoutPromise]) as any;
   
-  // Phase P12.b: Vérifier la taille des données
+  // Phase P12.b: Vérifier la taille des données (avec limite effective selon back-pressure)
   const rows = inferRows(data);
-  if (rows.length > MAX_EXPORT_ROWS) {
+  if (rows.length > effectiveMaxRows) {
     return NextResponse.json(
-      { error: `Too many rows (max ${MAX_EXPORT_ROWS})`, rows: rows.length },
+      { error: `Too many rows (max ${effectiveMaxRows})`, rows: rows.length },
       { status: 400 }
     );
   }
@@ -186,7 +241,8 @@ export async function GET(req: NextRequest) {
     
     // Audit
     await logExport(buf.length, hash, true);
-    
+    recordUsage({ tenantId: baseCtx.tenantId, scope: scopeExport, rows: rows.length, bytes: buf.length, exports: 1 }).catch(() => {});
+
     return new NextResponse(buf, {
       status: 200,
       headers: {
@@ -205,9 +261,9 @@ export async function GET(req: NextRequest) {
     const buf = Buffer.from(csv, 'utf8');
     const hash = crypto.createHash('sha256').update(buf).digest('hex');
     
-    // Audit
     await logExport(buf.length, hash, true);
-    
+    recordUsage({ tenantId: baseCtx.tenantId, scope: scopeExport, rows: rows.length, bytes: buf.length, exports: 1 }).catch(() => {});
+
     return new NextResponse(buf, {
       status: 200,
       headers: {
@@ -226,9 +282,9 @@ export async function GET(req: NextRequest) {
     const buf = Buffer.from(csv, 'utf8');
     const hash = crypto.createHash('sha256').update(buf).digest('hex');
     
-    // Audit
     await logExport(buf.length, hash, true);
-    
+    recordUsage({ tenantId: baseCtx.tenantId, scope: scopeExport, rows: rows.length, bytes: buf.length, exports: 1 }).catch(() => {});
+
     return new NextResponse(buf, {
       status: 200,
       headers: {
@@ -260,12 +316,10 @@ export async function GET(req: NextRequest) {
         );
       }
       
-      // Hash (scellement)
       const hash = crypto.createHash('sha256').update(buffer).digest('hex');
-      
-      // Audit
       await logExport(buffer.length, hash, true);
-      
+      recordUsage({ tenantId: baseCtx.tenantId, scope: scopeExport, rows: rows.length, bytes: buffer.length, exports: 1 }).catch(() => {});
+
       return new NextResponse(buffer, {
         status: 200,
         headers: {
@@ -309,12 +363,10 @@ export async function GET(req: NextRequest) {
         );
       }
       
-      // Hash (scellement)
       const hash = crypto.createHash('sha256').update(buffer).digest('hex');
-      
-      // Audit
       await logExport(buffer.length, hash, true);
-      
+      recordUsage({ tenantId: baseCtx.tenantId, scope: scopeExport, rows: rows.length, bytes: buffer.length, exports: 1 }).catch(() => {});
+
       return new NextResponse(buffer, {
         status: 200,
         headers: {

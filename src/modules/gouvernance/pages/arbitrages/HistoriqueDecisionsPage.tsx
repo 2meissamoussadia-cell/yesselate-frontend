@@ -10,11 +10,12 @@ import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { DecisionGouvernance } from '../../types/gouvernanceTypes';
 import { cn } from '@/lib/utils';
+import { normalizeToArray } from '../../utils/dataNormalization';
 
 export default function HistoriqueDecisionsPage() {
   const { data, isLoading } = useGouvernanceData('historique-decisions');
 
-  const decisions = (data as any)?.data || [];
+  const decisions = normalizeToArray<DecisionGouvernance>(data);
 
   // Grouper par date
   const decisionsByDate = decisions.reduce((acc: Record<string, DecisionGouvernance[]>, decision: DecisionGouvernance) => {

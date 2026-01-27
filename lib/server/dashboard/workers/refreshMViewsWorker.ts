@@ -9,7 +9,7 @@
 
 import { Pool, Client } from 'pg';
 import { logger, withReq } from '@/lib/server/logging';
-import { mviewRefreshCounter, mviewRefreshDuration, mviewRefreshErrors, workerNotificationsReceived, workerProcessingDuration } from '@/lib/server/observability/metrics';
+import { mviewRefreshCounter, mviewRefreshDuration, mviewRefreshErrors, workerNotificationsReceived, workerProcessingDuration, workerPgReconnectsTotal, workerRefreshFailuresTotal } from '@/lib/server/observability/metrics';
 import { withSpan } from '@/lib/server/observability/telemetry';
 
 // Pool PostgreSQL dédié pour le worker (connexion persistante pour LISTEN)
@@ -124,6 +124,20 @@ async function refreshViews(client: Client, views: string[], trigger: 'event-dri
 
         // Ajouter à la liste des vues rafraîchies avec succès
         refreshedViews.push(v);
+        
+        // Phase P15: Évaluer les règles d'alerte après refresh
+        try {
+          const { evaluateRulesForMView } = await import('@/lib/server/dashboard/alerting/worker');
+          // Extraire tenant_id depuis le payload si disponible
+          const tenantId = (payload as any)?.tenant_id;
+          if (tenantId) {
+            await evaluateRulesForMView(tenantId, v);
+          }
+        } catch (alertError) {
+          // Ne pas faire échouer le refresh si l'évaluation d'alertes échoue
+          const log = withReq();
+          log.warn({ err: alertError, view: v, type: 'alert_evaluation_failed' }, `[ALERT] ⚠️ Échec évaluation alertes pour ${v}`);
+        }
       });
     } catch (error) {
       const duration = (Date.now() - start) / 1000;
@@ -132,6 +146,9 @@ async function refreshViews(client: Client, views: string[], trigger: 'event-dri
       // Phase P4: Métriques d'erreur
       mviewRefreshErrors.inc({ view_name: v, error_type: errorType });
       mviewRefreshDuration.observe({ view_name: v, trigger }, duration);
+      
+      // Phase P13: Métriques DR
+      workerRefreshFailuresTotal.inc({ view_name: v, error_type: errorType });
 
       const log = withReq();
       log.error(
@@ -260,9 +277,17 @@ async function retryConnect(): Promise<Client> {
       const client = await pool.connect();
       await client.query('LISTEN dashboard_refresh');
       log.info({ type: 'worker_reconnected', delay }, '[WORKER] ✅ Reconnecté à Postgres');
+      
+      // Phase P13: Métriques de reconnexion
+      workerPgReconnectsTotal.inc({ reason: 'success' });
+      
       return client;
     } catch (e) {
       log.error({ err: e, delay, type: 'worker_reconnect_failed' }, '[WORKER] ❌ Échec reconnexion, nouvelle tentative…');
+      
+      // Phase P13: Métriques de reconnexion
+      workerPgReconnectsTotal.inc({ reason: 'error' });
+      
       // Backoff exponentiel avec jitter
       delay = Math.min(maxDelay, Math.round(delay * 1.5 + Math.random() * 500));
     }

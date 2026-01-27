@@ -10,11 +10,12 @@ import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { InstanceGouvernance } from '../../types/gouvernanceTypes';
 import { Users, Calendar } from 'lucide-react';
+import { normalizeToArray } from '../../utils/dataNormalization';
 
 export default function ReunionsDGPage() {
   const { data, isLoading } = useGouvernanceData('reunions-dg');
 
-  const reunions = (data as any)?.data || [];
+  const reunions = normalizeToArray<InstanceGouvernance>(data);
 
   return (
     <div className="h-full w-full bg-slate-950 text-white p-6">

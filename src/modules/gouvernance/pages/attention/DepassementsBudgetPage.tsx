@@ -11,11 +11,12 @@ import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { BudgetGouvernance } from '../../types/gouvernanceTypes';
 import { cn } from '@/lib/utils';
 import { AlertTriangle } from 'lucide-react';
+import { normalizeToArray } from '../../utils/dataNormalization';
 
 export default function DepassementsBudgetPage() {
   const { data, isLoading } = useGouvernanceData('depassements-budget');
 
-  const depassements = (data as any)?.data || [];
+  const depassements = normalizeToArray<BudgetGouvernance>(data);
 
   return (
     <div className="h-full w-full bg-slate-950 text-white p-6">

@@ -8,7 +8,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { pgPool } from '@/lib/server/db/pool';
-import { mviewStaleness } from './metrics';
+import { mviewStaleness, dbReplayLagSeconds, dbRole } from './metrics';
 import { logger, withReq } from '@/lib/server/logging';
 
 interface HealthCheckResult {
@@ -40,6 +40,24 @@ async function checkDatabase(): Promise<HealthCheckResult> {
       const isStandby = roleResult.rows[0]?.pg_is_in_recovery ?? false;
       const role = isStandby ? 'standby' : 'primary';
 
+      // Phase P13: Exposer métriques Prometheus
+      dbRole.set({ role }, isStandby ? 0 : 1);
+      
+      // Si standby, mesurer le lag
+      if (isStandby) {
+        try {
+          const lagResult = await client.query<{ lag_sec: number }>(`
+            SELECT EXTRACT(EPOCH FROM (NOW() - pg_last_xact_replay_timestamp()))::int AS lag_sec
+          `);
+          const lagSeconds = Number(lagResult.rows[0]?.lag_sec ?? 0);
+          dbReplayLagSeconds.set({ role }, lagSeconds);
+        } catch {
+          // Ignorer si lag non mesurable
+        }
+      } else {
+        dbReplayLagSeconds.set({ role }, 0);
+      }
+      
       return {
         service: 'database',
         status: latency < 1000 ? 'healthy' : latency < 3000 ? 'degraded' : 'unhealthy',

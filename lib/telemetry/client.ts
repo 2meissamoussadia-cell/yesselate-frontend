@@ -1,35 +1,55 @@
+// lib/telemetry/client.ts
+// Phase P14: Observabilité produit - Client front avec queue + batch
+
 /**
- * Client de télémétrie avec queue et batching
- * Phase P14: Télémétrie & Analytics
+ * Client de télémetrie avec queue et batch automatique
+ * Phase P14: Observabilité produit
  * 
- * Collecte les événements de télémétrie et les envoie par batch
- * pour optimiser les performances et réduire le nombre de requêtes
+ * Fonctionnalités :
+ * - Queue en mémoire
+ * - Batch automatique toutes les ~1.2s
+ * - Envoi par batch de max 100 événements
+ * - Best effort (ne bloque pas l'UI)
+ * - Respect du consentement RGPD
  */
 
-type Item = { 
-  event: string; 
-  routeKey?: string; 
-  props?: Record<string, any> 
+type Item = {
+  event: string;
+  routeKey?: string;
+  props?: Record<string, any>;
 };
 
 const QUEUE: Item[] = [];
 let flushTimer: ReturnType<typeof setTimeout> | null = null;
-
-// Configuration
-const FLUSH_DELAY_MS = 1200; // Batch toutes les ~1.2s
-const MAX_BATCH_SIZE = 100;  // Maximum 100 événements par batch
-const MAX_QUEUE_SIZE = 500;  // Limite de sécurité pour éviter l'accumulation
+const BATCH_SIZE = 100;
+const FLUSH_INTERVAL_MS = 1200; // ~1.2s
 
 /**
- * Ajoute un événement à la queue de télémétrie
+ * Vérifie si la télémetrie est autorisée (consentement)
+ * Phase P14: Observabilité produit - RGPD
+ */
+function isTelemetryAllowed(): boolean {
+  if (typeof document === 'undefined') return false;
+
+  const cookies = document.cookie.split(';');
+  const consentCookie = cookies.find((c) => c.trim().startsWith('telemetry_consent='));
+
+  if (!consentCookie) return false; // Pas de consentement = pas de tracking
+
+  const value = consentCookie.split('=')[1]?.trim();
+  return value === 'on';
+}
+
+/**
+ * Enregistre un événement de télémetrie
+ * Phase P14: Observabilité produit
  * 
  * @param item - Événement à tracker
  */
 export function track(item: Item): void {
-  // Limite de sécurité : éviter l'accumulation excessive
-  if (QUEUE.length >= MAX_QUEUE_SIZE) {
-    console.warn('[Telemetry] Queue pleine, suppression des anciens événements');
-    QUEUE.splice(0, QUEUE.length - MAX_QUEUE_SIZE + 1);
+  // Phase P14: RGPD - Vérifier le consentement avant de tracker
+  if (!isTelemetryAllowed()) {
+    return; // Pas de tracking sans consentement
   }
 
   QUEUE.push(item);
@@ -37,35 +57,33 @@ export function track(item: Item): void {
 }
 
 /**
- * Planifie l'envoi du batch
+ * Planifie un flush automatique
  */
 function scheduleFlush(): void {
   if (flushTimer) return;
-  
-  flushTimer = setTimeout(() => {
-    flush().catch((err) => {
-      console.error('[Telemetry] Erreur lors du flush:', err);
-    });
-  }, FLUSH_DELAY_MS);
+  flushTimer = setTimeout(flush, FLUSH_INTERVAL_MS);
 }
 
 /**
- * Envoie les événements en batch vers le serveur
+ * Force l'envoi immédiat de la queue
+ * Phase P14: Observabilité produit
  */
 export async function flush(): Promise<void> {
-  clearTimeout(flushTimer as ReturnType<typeof setTimeout>);
-  flushTimer = null;
-
+  if (flushTimer) {
+    clearTimeout(flushTimer);
+    flushTimer = null;
+  }
+  
   if (!QUEUE.length) return;
-
-  // Extraire un batch (max 100 événements)
-  const batch = QUEUE.splice(0, Math.min(QUEUE.length, MAX_BATCH_SIZE)).map((i) => ({
+  
+  // Extraire un batch (max BATCH_SIZE)
+  const batch = QUEUE.splice(0, Math.min(QUEUE.length, BATCH_SIZE)).map((i) => ({
     event: i.event,
     routeKey: i.routeKey,
     at: Date.now(),
     props: i.props,
   }));
-
+  
   try {
     await fetch('/api/telemetry', {
       method: 'POST',
@@ -74,62 +92,28 @@ export async function flush(): Promise<void> {
       body: JSON.stringify({ items: batch }),
     });
   } catch (error) {
-    // Best effort : ne pas bloquer l'application en cas d'erreur
-    // Les événements non envoyés sont perdus (acceptable pour la télémétrie)
-    console.debug('[Telemetry] Échec envoi batch (ignoré):', error);
+    // Best effort : ne pas bloquer l'UI en cas d'erreur
+    console.warn('[Telemetry] Failed to send batch', error);
   }
 }
 
 /**
- * Force l'envoi immédiat des événements en attente
- * Utile avant la fermeture de la page ou lors d'événements critiques
+ * Flush automatique avant déchargement de la page
  */
-export function flushImmediate(): Promise<void> {
-  return flush();
-}
-
-/**
- * Vide la queue sans envoyer (pour les tests ou le nettoyage)
- */
-export function clearQueue(): void {
-  QUEUE.length = 0;
-  if (flushTimer) {
-    clearTimeout(flushTimer);
-    flushTimer = null;
-  }
-}
-
-/**
- * Retourne le nombre d'événements en attente dans la queue
- */
-export function getQueueSize(): number {
-  return QUEUE.length;
-}
-
-// Envoyer les événements restants avant la fermeture de la page
 if (typeof window !== 'undefined') {
-  // Utiliser sendBeacon si disponible (plus fiable pour les envois avant fermeture)
   window.addEventListener('beforeunload', () => {
+    // Flush synchrone si possible (navigator.sendBeacon serait mieux mais nécessite un endpoint dédié)
     if (QUEUE.length > 0) {
-      const batch = QUEUE.splice(0, MAX_BATCH_SIZE).map((i) => ({
+      // Utiliser sendBeacon pour un envoi fiable même si la page se ferme
+      const batch = QUEUE.splice(0, Math.min(QUEUE.length, BATCH_SIZE)).map((i) => ({
         event: i.event,
         routeKey: i.routeKey,
         at: Date.now(),
         props: i.props,
       }));
-
-      // Utiliser sendBeacon pour l'envoi final (plus fiable)
+      
       const blob = new Blob([JSON.stringify({ items: batch })], { type: 'application/json' });
       navigator.sendBeacon('/api/telemetry', blob);
-    }
-  });
-
-  // Envoyer aussi lors de la visibilité change (page en arrière-plan)
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden' && QUEUE.length > 0) {
-      flush().catch(() => {
-        // Ignorer les erreurs silencieusement
-      });
     }
   });
 }

@@ -38,6 +38,7 @@ import {
   type KPICardData,
   MockDataIndicator,
 } from '../shared';
+import { AlertKPITiles } from '../AlertKPITiles';
 import type {
   RiskScoreCardData,
   AgendaItemData,
@@ -243,6 +244,15 @@ export function OverviewPage() {
             />
           ))}
         </DashboardGrid>
+      </DashboardSection>
+
+      {/* Phase P15: Tuiles KPI Alertes */}
+      <DashboardSection
+        title="Alertes actives"
+        subtitle="Vue d'ensemble des alertes par gravité"
+        icon={AlertTriangle}
+      >
+        <AlertKPITiles />
       </DashboardSection>
 
       {/* Section 2: Circuit de validation */}

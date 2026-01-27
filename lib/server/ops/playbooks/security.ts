@@ -1,85 +1,13 @@
 /**
  * Playbooks sécurité - Opérations critiques
- * Phase P15: Sécurité - Freeze tenant, revoke sessions, rotate JWT (kid)
- * 
- * Fonctions pour opérations de sécurité avec audit et dry-run
+ * Phase P15/P20: Freeze tenant, revoke sessions, rotate JWT (kid), purge tokens
+ * Utilise audit + guards centralisés (P20).
  */
 
-import { withTenant } from '../../db/withTenant';
 import { getSecret, setSecret } from '../../security/secretsManager';
-import Redis from 'ioredis';
-
-// ============================================================================
-// Helpers
-// ============================================================================
-
-/**
- * Client Redis pour sessions (singleton)
- */
-let redisClient: Redis | null = null;
-
-function getRedis(): Redis | null {
-  if (!process.env.REDIS_URL) return null;
-  if (!redisClient) {
-    redisClient = new Redis(process.env.REDIS_URL, {
-      maxRetriesPerRequest: 3,
-      retryStrategy: (times) => Math.min(times * 50, 2000),
-      lazyConnect: true,
-    });
-    redisClient.on('error', (err) => {
-      console.error('[Ops Redis] Connection error:', err);
-    });
-  }
-  return redisClient;
-}
-
-/**
- * Vérifie le scope (tenant)
- */
-function ensureScope({ tenantId }: { tenantId: string }): void {
-  if (!tenantId || typeof tenantId !== 'string') {
-    throw new Error('Invalid tenantId');
-  }
-}
-
-/**
- * Vérifie le mode dry-run
- */
-function ensureDryRun(dryRun: boolean): void {
-  if (typeof dryRun !== 'boolean') {
-    throw new Error('dryRun must be a boolean');
-  }
-}
-
-/**
- * Ajoute une entrée d'audit
- */
-async function appendAudit(params: {
-  kind: string;
-  tenantId: string;
-  details: Record<string, any>;
-}): Promise<void> {
-  try {
-    // TODO: Intégrer avec système d'audit existant
-    // Pour l'instant, log dans console + DB si disponible
-    console.log('[Audit]', {
-      ...params,
-      timestamp: new Date().toISOString(),
-    });
-    
-    // Optionnel : stocker dans DB
-    // await withTenant(params.tenantId, async (client) => {
-    //   await client.query(
-    //     `INSERT INTO security_audit_log (tenant_id, kind, details, created_at)
-    //      VALUES ($1, $2, $3, NOW())`,
-    //     [params.tenantId, params.kind, JSON.stringify(params.details)]
-    //   );
-    // });
-  } catch (error) {
-    // Non-bloquant : si l'audit échoue, on continue
-    console.warn('[Audit] Failed to append audit:', error);
-  }
-}
+import { getOpsRedis } from '../redis';
+import { appendAudit } from '../audit';
+import { ensureDryRun, ensureScope, blastRadiusLabel, type OpsScope } from '../guards';
 
 // ============================================================================
 // Playbooks
@@ -97,28 +25,33 @@ export async function freezeTenant({
   tenantId,
   reason,
   dryRun = true,
+  scope,
 }: {
   tenantId: string;
   reason?: string;
   dryRun?: boolean;
+  scope?: OpsScope;
 }): Promise<{ ok: boolean; dryRun: boolean }> {
-  ensureScope({ tenantId });
-  ensureDryRun(dryRun);
-  
-  const redis = getRedis();
-  
+  ensureScope(scope ?? { tenantId }, true);
+  ensureDryRun(dryRun ?? true);
+
+  const redis = getOpsRedis();
+
   if (!dryRun && redis) {
-    // Stocker le flag de gel dans Redis (TTL 1h, renouvelable)
     await redis.setex(`tenant:${tenantId}:frozen`, 3600, reason ?? 'ops');
   }
-  
+
   await appendAudit({
     kind: 'ops:freeze-tenant',
     tenantId,
-    details: { reason, dryRun },
+    playbook: 'security',
+    params: { reason },
+    details: { reason, dryRun, blastRadius: blastRadiusLabel(scope) },
+    dryRun: dryRun ?? true,
+    ok: true,
   });
-  
-  return { ok: true, dryRun };
+
+  return { ok: true, dryRun: dryRun ?? true };
 }
 
 /**
@@ -133,34 +66,38 @@ export async function revokeSessions({
   tenantId,
   userId,
   dryRun = true,
+  scope,
 }: {
   tenantId: string;
   userId?: string;
   dryRun?: boolean;
+  scope?: OpsScope;
 }): Promise<{ ok: boolean; revoked: number; dryRun: boolean }> {
-  ensureScope({ tenantId });
-  ensureDryRun(dryRun);
-  
-  const redis = getRedis();
+  ensureScope(scope ?? { tenantId }, true);
+  ensureDryRun(dryRun ?? true);
+
+  const redis = getOpsRedis();
   let keys: string[] = [];
-  
+
   if (redis) {
-    // Convention : les sessions sont stockées par clé redis "sess:{tenant}:{user}:*"
     const pattern = `sess:${tenantId}:${userId ?? '*'}:*`;
     keys = await redis.keys(pattern);
-    
     if (!dryRun && keys.length > 0) {
       await redis.del(...keys);
     }
   }
-  
+
   await appendAudit({
     kind: 'ops:revoke-sessions',
     tenantId,
-    details: { userId, count: keys.length, dryRun },
+    playbook: 'security',
+    params: { userId },
+    details: { userId, count: keys.length, dryRun, blastRadius: blastRadiusLabel(scope) },
+    dryRun: dryRun ?? true,
+    ok: true,
   });
-  
-  return { ok: true, revoked: keys.length, dryRun };
+
+  return { ok: true, revoked: keys.length, dryRun: dryRun ?? true };
 }
 
 /**
@@ -173,55 +110,45 @@ export async function revokeSessions({
 export async function rotateJWT({
   tenantId,
   dryRun = true,
+  scope,
 }: {
   tenantId?: string;
   dryRun?: boolean;
+  scope?: OpsScope;
 }): Promise<{ ok: boolean; oldKid?: string; newKid: string; dryRun: boolean }> {
-  if (tenantId) {
-    ensureScope({ tenantId });
-  }
-  ensureDryRun(dryRun);
-  
-  // Générer nouveau kid (timestamp + random)
+  ensureScope(scope ?? (tenantId ? { tenantId } : undefined), false);
+  ensureDryRun(dryRun ?? true);
+
   const newKid = `kid-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
-  
-  // Récupérer ancien kid depuis Secrets Manager
   const oldKidKey = tenantId ? `jwt-kid:${tenantId}` : 'jwt-kid:default';
   const oldKid = await getSecret(oldKidKey);
-  
+
   if (!dryRun) {
-    // Générer nouvelle clé JWT (32 bytes)
     const newSecret = require('crypto').randomBytes(32).toString('base64');
     const newSecretKey = tenantId ? `jwt-secret:${tenantId}:${newKid}` : `jwt-secret:${newKid}`;
-    
-    // Stocker nouvelle clé dans Secrets Manager
     await setSecret(newSecretKey, newSecret);
-    
-    // Mettre à jour le kid actif
     await setSecret(oldKidKey, newKid);
-    
-    // Si ancien kid existe, le conserver pour période de transition (7 jours)
     if (oldKid) {
       const oldSecretKey = tenantId ? `jwt-secret:${tenantId}:${oldKid}` : `jwt-secret:${oldKid}`;
       const oldSecret = await getSecret(oldSecretKey);
-      
       if (oldSecret) {
-        // Marquer ancienne clé comme dépréciée (expiration dans 7 jours)
         const deprecatedKey = `${oldSecretKey}:deprecated`;
         await setSecret(deprecatedKey, oldSecret);
-        
-        // TODO: Job de nettoyage pour supprimer les clés dépréciées après 7 jours
       }
     }
   }
-  
+
   await appendAudit({
     kind: 'ops:rotate-jwt',
     tenantId: tenantId ?? 'default',
+    playbook: 'security',
+    params: { tenantId },
     details: { oldKid, newKid, dryRun },
+    dryRun: dryRun ?? true,
+    ok: true,
   });
-  
-  return { ok: true, oldKid: oldKid ?? undefined, newKid, dryRun };
+
+  return { ok: true, oldKid: oldKid ?? undefined, newKid, dryRun: dryRun ?? true };
 }
 
 /**
@@ -231,9 +158,8 @@ export async function rotateJWT({
  * @returns true si le tenant est gelé
  */
 export async function isTenantFrozen(tenantId: string): Promise<boolean> {
-  const redis = getRedis();
+  const redis = getOpsRedis();
   if (!redis) return false;
-  
   const frozen = await redis.get(`tenant:${tenantId}:frozen`);
   return frozen !== null;
 }
@@ -248,24 +174,28 @@ export async function isTenantFrozen(tenantId: string): Promise<boolean> {
 export async function unfreezeTenant({
   tenantId,
   dryRun = true,
+  scope,
 }: {
   tenantId: string;
   dryRun?: boolean;
+  scope?: OpsScope;
 }): Promise<{ ok: boolean; dryRun: boolean }> {
-  ensureScope({ tenantId });
-  ensureDryRun(dryRun);
-  
-  const redis = getRedis();
-  
+  ensureScope(scope ?? { tenantId }, true);
+  ensureDryRun(dryRun ?? true);
+
+  const redis = getOpsRedis();
   if (!dryRun && redis) {
     await redis.del(`tenant:${tenantId}:frozen`);
   }
-  
+
   await appendAudit({
     kind: 'ops:unfreeze-tenant',
     tenantId,
-    details: { dryRun },
+    playbook: 'security',
+    details: { dryRun, blastRadius: blastRadiusLabel(scope) },
+    dryRun: dryRun ?? true,
+    ok: true,
   });
-  
-  return { ok: true, dryRun };
+
+  return { ok: true, dryRun: dryRun ?? true };
 }

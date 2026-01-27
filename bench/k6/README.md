@@ -12,17 +12,20 @@ Prérequis : [k6](https://k6.io/docs/getting-started/installation/) installé (`
 ## Lancer les scénarios
 
 ```bash
-# Smoke (1 min)
+# Smoke (5 min en campagne type)
 k6 run bench/k6/smoke.js
+# ou : k6 run --duration 5m bench/k6/smoke.js
 
-# Baseline (5 min)
+# Baseline (15–30 min en campagne type)
 k6 run bench/k6/baseline.js
+# ou : k6 run --duration 30m --vus 20 bench/k6/baseline.js
 
 # Stress (ramp-up, ~12 min)
 k6 run bench/k6/stress.js
 
-# Soak (30 min)
+# Soak (2–4 h en campagne type)
 k6 run bench/k6/soak.js
+# ou : k6 run --duration 2h bench/k6/soak.js
 
 # Browsing + exports (ramping-arrival-rate, ~8 min)
 k6 run bench/k6/dashboard_scenarios.js

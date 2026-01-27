@@ -11,7 +11,7 @@
 | **Date** | |
 | **Environnement** | local / staging / prod |
 | **Version app** | (commit ou tag) |
-| **Config** | DB pool, Redis, workers, HPA/VPA si applicable |
+| **Config** | DB pool, Redis, workers, HPA/VPA, guardrails P16 |
 
 ---
 
@@ -30,6 +30,7 @@
 
 - **RPS ou VUs** à partir desquels dégradation nette (latence, erreurs) :
 - **Observation** (ex. saturation DB, Redis, CPU, rate‑limit) :
+- **DB lag** (réplication P13) durant stress : 
 
 ---
 
@@ -52,8 +53,8 @@
 
 ## 6. Go/No‑Go
 
-- [ ] **Go** : critères runbook respectés pour les scénarios exécutés.
-- [ ] **No‑Go** : écarts identifiés ; actions listées ci‑dessus.
+- [ ] **Go** : P95 ≤ budgets, erreurs ≤ 1 %, DB lag ≤ seuil, exports OK (guardrails ON).
+- [ ] **No‑Go** : écarts identifiés ; ouvrir PR tuning, re‑bench (voir [TUNING_CHECKLISTS.md](./TUNING_CHECKLISTS.md)).
 
 ---
 

@@ -33,7 +33,7 @@
 | Phase | Objectif |
 |-------|----------|
 | **P19 – Bench & Capacity Planning** | Modèles de charge multi-tenant, sizing auto, budgets SLO/SLA. Voir [P19_BENCH_CAPACITY_PLANNING.md](../bench/P19_BENCH_CAPACITY_PLANNING.md), [RUNBOOK_BENCH.md](../bench/RUNBOOK_BENCH.md), [CAPACITY_REPORT_TEMPLATE.md](../bench/CAPACITY_REPORT_TEMPLATE.md). |
-| **P20 – Playbooks Ops & Remediations** | Automatiser les corrections courantes : recalcul MViews, purge caches, escalades ciblées. |
+| **P20 – Playbooks Ops & Remediations** | Automatiser les corrections courantes : recalcul MViews, purge caches, escalades ciblées. API `/api/ops/runbook`, approvals two-person rule, jobs `opsRunner` / `cronWarmDashboard`. **Two-phase guard** : pré-check + exécution ; intégration alerting P15/P17. Voir [P20_PLAYBOOKS_OPS_REMEDIATIONS.md](../ops/P20_PLAYBOOKS_OPS_REMEDIATIONS.md). |
 
 ---
 
@@ -41,4 +41,5 @@
 
 - [HARDENING_CHECKLIST.md](./HARDENING_CHECKLIST.md) — Checklists durcissement P15 (CSP, cookies, CSRF, JWT, RLS, etc.)
 - [RUNBOOKS_INCIDENTS.md](./RUNBOOKS_INCIDENTS.md) — Runbooks incidents sécurité
+- [P20_PLAYBOOKS_OPS_REMEDIATIONS.md](../ops/P20_PLAYBOOKS_OPS_REMEDIATIONS.md) — Playbooks ops & remédiations (two-phase guard, alerting)
 - [ENCRYPTION_DEPLOYMENT.md](../../lib/server/security/ENCRYPTION_DEPLOYMENT.md) — Déploiement chiffrement exports

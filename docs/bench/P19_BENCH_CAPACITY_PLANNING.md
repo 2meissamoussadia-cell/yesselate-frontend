@@ -111,7 +111,7 @@ Mêmes endpoints que le front (registry → API). CI : `.github/workflows/bench.
 ### 6.2 API / Workers
 
 - **Node** : cluster / PM2 / K8s — viser CPU‑bound stable (60–70 %) à la pointe.
-- **HPA** : scale sur RPS/pod, latence P95 ou CPU ; min pods ≥ 2 par AZ ; max dimensionné par DB/Redis.
+- **HPA** : scale sur RPS/pod, latence P95 ou CPU ; min pods ≥ 2 par AZ ; max dimensionné par DB/Redis. Calculateur : `tools/capacity/calc.ts` (pods, DB IOPS, règle 70 % capacités / 30 % marge).
 - **Back‑pressure** (P11/P16) : en surcharge, limiter formats coûteux (XLSX/PDF) et/ou tronquer selon `max_rows_per_call`.
 
 ### 6.3 Redis
@@ -123,7 +123,37 @@ Mêmes endpoints que le front (registry → API). CI : `.github/workflows/bench.
 ## 7) Rapport de capacité & runbooks
 
 - **Rapport** : Nombre d’utilisateurs concurrents / TPS soutenu, **breakpoint**, marges. Template : [CAPACITY_REPORT_TEMPLATE.md](./CAPACITY_REPORT_TEMPLATE.md).
-- **Runbook** : [RUNBOOK_BENCH.md](./RUNBOOK_BENCH.md) — pipeline CI/CD ou job GitHub Actions, **critères Go/No‑Go**.
+- **Runbook** : [RUNBOOK_BENCH.md](./RUNBOOK_BENCH.md) — commandes, seuils, interprétation des rapports, critères Go/No‑Go.
+
+---
+
+## 8) Plan de tests (pipeline) & critères Go/No‑Go
+
+Campagne bench à automatiser en CI/CD « bench » ou environnement dédié :
+
+| Phase | Durée | Objectif |
+|-------|-------|----------|
+| **Smoke** | 5 min | Vérifier infra, seuils. |
+| **Baseline** | 15–30 min | Palier nominal (ex. 120 RPS browsing, 30 RPS exports) ; SLO respectés. |
+| **Stress** | paliers +20 % / +40 % / +60 % | Identifier **breakpoint** (latences explosent / erreurs > 1 %). |
+| **Soak** | 2–4 h | Dérives mémoire, vacuums, WAL, fuites, rotation logs. |
+
+**Go** : P95 ≤ budgets (P11), erreurs ≤ 1 %, DB lag ≤ seuil (P13), exports OK (guardrails P16 ON).
+
+**No‑Go** : l’un des critères échoue → ouvrir PR de tuning ciblée, re‑bench.
+
+---
+
+## 9) Livrables PR « P19 – Bench & Capacity Planning »
+
+- [x] `lib/server/dashboard/sql/bench/seed_demo.sql` (jeu de données réaliste) + `26_seed_bench_p19.sql`
+- [x] `bench/k6/dashboard_scenarios.js` (browsing & exports) + job CI `bench.yml`
+- [x] `tools/capacity/calc.ts` (calculateur pods & DB IOPS)
+- [x] Paramétrage HPA indicatif ([hpa-example.yaml](./hpa-example.yaml)) + check‑lists tuning ([TUNING_CHECKLISTS.md](./TUNING_CHECKLISTS.md) : Postgres, Redis, API)
+- [x] Budgets SLO (P11) dans `app/api/internal/metrics/budgets.ts` + FinOps (P16) consommation
+- [x] README « Runbooks de bench » → [RUNBOOK_BENCH.md](./RUNBOOK_BENCH.md) : commandes, seuils, interprétation des rapports
+
+Aucun changement d’UX (routeur, registry, Sidebar, KPI Bar inchangés).
 
 ---
 
@@ -135,10 +165,21 @@ Mêmes endpoints que le front (registry → API). CI : `.github/workflows/bench.
 
 ---
 
+## Suite P19 / Prochaines étapes
+
+1. **Pousser la PR « P19 – Bench & Capacity Planning »** (fichiers et scripts ci‑dessus, aucun changement d’UX).
+2. **Lancer un premier run** : baseline avec seed Démo (ex. 120 RPS browsing, 30 RPS exports, 30 min) et produire un **rapport synthèse** (SLOs, latences, IOPS, CPU/RAM/pods, breakpoint).
+3. **Selon les résultats** : ouvrir des **PR tuning ciblées** (index, HPA, quotas FinOps, back‑pressure) puis re‑bench.
+4. **Enchaîner sur P20 – Playbooks Ops & Remediations** (recalcul MViews, purge caches, escalades, bascule standby→primary, régénération clés, etc.).
+
+---
+
 ## Références
 
-- [RUNBOOK_BENCH.md](./RUNBOOK_BENCH.md) — Procédure de bench et Go/No‑Go
+- [RUNBOOK_BENCH.md](./RUNBOOK_BENCH.md) — Procédure de bench, commandes, seuils, Go/No‑Go
 - [CAPACITY_REPORT_TEMPLATE.md](./CAPACITY_REPORT_TEMPLATE.md) — Modèle de rapport de capacité
+- [TUNING_CHECKLISTS.md](./TUNING_CHECKLISTS.md) — Check-lists tuning Postgres, Redis, API, HPA
+- [hpa-example.yaml](./hpa-example.yaml) — HPA indicatif (K8s)
 - [RISQUES_ATTENUATIONS_ET_DEPLOIEMENT.md](../security/RISQUES_ATTENUATIONS_ET_DEPLOIEMENT.md) — Plan déploiement et suite P19/P20
 - `app/api/internal/metrics/budgets.ts` — Budgets P11
 - `lib/server/dashboard/sql/` — MViews, seed bench

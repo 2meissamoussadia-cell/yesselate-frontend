@@ -1,8 +1,10 @@
-# Playbooks Opérations - Phase P15
+# Playbooks Opérations – P15 / P20
 
 ## 📋 Vue d'ensemble
 
-Playbooks pour opérations critiques de sécurité et maintenance.
+Playbooks pour opérations critiques de **sécurité** (freeze, revoke, rotate JWT) et **maintenance** (MViews, DB hygiene, cache, workers, exports, failover).  
+P20 : audit centralisé (`lib/server/ops/audit`), guards (dry-run, scope, blast radius), API `/api/ops/runbook`, approvals two-person rule, jobs `opsRunner` / `cronWarmDashboard`.  
+Voir [P20_PLAYBOOKS_OPS_REMEDIATIONS.md](../../../../docs/ops/P20_PLAYBOOKS_OPS_REMEDIATIONS.md).
 
 ---
 
@@ -13,7 +15,7 @@ Playbooks pour opérations critiques de sécurité et maintenance.
 Gèle un tenant (bloque toutes les requêtes).
 
 ```typescript
-import { freezeTenant } from '@/lib/server/ops/playbooks/security';
+import { freezeTenant } from '@lib-root/server/ops/playbooks/security';
 
 // Dry-run (par défaut)
 const result = await freezeTenant({
@@ -40,7 +42,7 @@ const result = await freezeTenant({
 Révoque les sessions d'un tenant ou d'un utilisateur spécifique.
 
 ```typescript
-import { revokeSessions } from '@/lib/server/ops/playbooks/security';
+import { revokeSessions } from '@lib-root/server/ops/playbooks/security';
 
 // Révoquer toutes les sessions d'un tenant
 const result = await revokeSessions({
@@ -66,7 +68,7 @@ const result = await revokeSessions({
 Rotation des clés JWT avec support kid (Key ID).
 
 ```typescript
-import { rotateJWT } from '@/lib/server/ops/playbooks/security';
+import { rotateJWT } from '@lib-root/server/ops/playbooks/security';
 
 // Rotation globale (default)
 const result = await rotateJWT({
@@ -98,7 +100,7 @@ const result = await rotateJWT({
 Vérifie si un tenant est gelé.
 
 ```typescript
-import { isTenantFrozen } from '@/lib/server/ops/playbooks/security';
+import { isTenantFrozen } from '@lib-root/server/ops/playbooks/security';
 
 const frozen = await isTenantFrozen('tenant-uuid');
 if (frozen) {
@@ -111,7 +113,7 @@ if (frozen) {
 Dégèle un tenant.
 
 ```typescript
-import { unfreezeTenant } from '@/lib/server/ops/playbooks/security';
+import { unfreezeTenant } from '@lib-root/server/ops/playbooks/security';
 
 const result = await unfreezeTenant({
   tenantId: 'tenant-uuid',
@@ -147,7 +149,7 @@ Validation du scope (tenantId) avant toute opération.
 
 ```typescript
 // middleware.ts
-import { isTenantFrozen } from '@/lib/server/ops/playbooks/security';
+import { isTenantFrozen } from '@lib-root/server/ops/playbooks/security';
 
 export async function middleware(req: NextRequest) {
   const tenantId = req.headers.get('x-tenant-id');
@@ -167,7 +169,7 @@ export async function middleware(req: NextRequest) {
 
 ```typescript
 // lib/server/security/jwt.ts
-import { getSecret } from '@/lib/server/security/secretsManager';
+import { getSecret } from '@lib-root/server/security/secretsManager';
 
 async function getJWTSecret(kid?: string): Promise<string> {
   // Récupérer kid actif si non fourni

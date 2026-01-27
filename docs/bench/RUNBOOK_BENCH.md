@@ -1,6 +1,6 @@
 # Runbook Bench – P19
 
-Procédure pour exécuter la batterie de bench (smoke / baseline / stress / soak), analyser les résultats et appliquer les **critères Go/No‑Go**.
+Procédure pour exécuter la batterie de bench (smoke / baseline / stress / soak), analyser les résultats et appliquer les **critères Go/No-Go**. Commandes, seuils et interprétation des rapports.
 
 ---
 
@@ -8,20 +8,24 @@ Procédure pour exécuter la batterie de bench (smoke / baseline / stress / soak
 
 - App ciblée démarrée (ex. `npm run dev` sur `http://localhost:4001` ou URL de staging).
 - [k6](https://k6.io/docs/getting-started/installation/) installé.
-- (Optionnel) Seed bench exécuté : `26_seed_bench_p19.sql` ou `bench/seed_demo.sql` (tenant T-DEMO). Les MViews sont rafraîchies par le worker Event‑Driven + CRON ; en bench immédiat, déclencher un refresh ou attendre un cycle.
+- (Optionnel) Seed bench exécuté : `26_seed_bench_p19.sql` ou `bench/seed_demo.sql` (tenant T-DEMO). Les MViews sont rafraîchies par le worker Event-Driven + CRON ; en bench immédiat, déclencher un refresh ou attendre un cycle.
 
 ---
 
-## 2. Ordre d’exécution recommandé
+## 2. Campagne bench (pipeline)
 
-| Étape | Script | Durée | Objectif |
-|-------|--------|-------|----------|
-| 1 | `k6 run bench/k6/smoke.js` | 1 min | Vérifier que les routes critiques répondent. |
-| 2 | `k6 run bench/k6/baseline.js` | 5 min | Charge « normale » reproductible. |
-| 3 | `k6 run bench/k6/stress.js` | ~12 min | Ramp‑up pour identifier le breakpoint. |
-| 4 | `k6 run bench/k6/soak.js` | 30 min | Stabilité sous charge soutenue. |
-| 5 | `k6 run bench/k6/dashboard_scenarios.js` | ~8 min | Browsing + exports (ramping-arrival-rate). |
-| 6 | `k6 run bench/k6/mix_scenarios.js` | ~8 min | Mix 50 % browse / 30 % export / 20 % alerts test (heures de pointe). |
+À automatiser en CI/CD « bench » ou environnement dédié. Ordre recommandé :
+
+| Phase | Script / exemple | Durée | Objectif |
+|-------|------------------|-------|----------|
+| **Smoke** | `k6 run bench/k6/smoke.js` ou `--duration 5m` | **5 min** | Vérifier infra, seuils. |
+| **Baseline** | `k6 run bench/k6/baseline.js --duration 30m --vus 20` | **15–30 min** | Palier nominal (ex. 120 RPS browsing, 30 RPS exports) ; SLO respectés. |
+| **Stress** | `k6 run bench/k6/stress.js` ; paliers +20 % / +40 % / +60 % | ~15 min | Identifier **breakpoint** (latences explosent / erreurs > 1 %). |
+| **Soak** | `k6 run bench/k6/soak.js --duration 2h` | **2–4 h** | Dérives mémoire, vacuums, WAL, fuites, rotation logs. |
+| (option) | `k6 run bench/k6/dashboard_scenarios.js` | ~8 min | Browsing + exports (ramping-arrival-rate). |
+| (option) | `k6 run bench/k6/mix_scenarios.js` | ~8 min | Mix 50 % browse / 30 % export / 20 % alerts test. |
+
+**Campagne type (pipeline)** : Smoke **5 min** | Baseline **15–30 min** (ex. `--duration 30m --vus 20`) | Stress paliers +20 % / +40 % / +60 % | Soak **2–4 h** (ex. `--duration 2h`). Voir [P19 §8](P19_BENCH_CAPACITY_PLANNING.md#8-plan-de-tests-pipeline--critères-gonogo).
 
 Variables utiles :
 
@@ -34,24 +38,25 @@ k6 run bench/k6/baseline.js
 
 ---
 
-## 3. Critères Go/No‑Go
+## 3. Critères Go/No-Go
 
-À évaluer **par scénario** (smoke, baseline, stress, soak), en s’appuyant sur les SLOs [P19](P19_BENCH_CAPACITY_PLANNING.md#2-slos--budgets-de-perf-consolidés).
+**Go** : tous les critères ci-dessous respectés pour les scénarios exécutés.
 
-### 3.1 Go (vert)
+- **P95** ≤ budgets (P11) : dashboard ≤ 400 ms, export csv/json ≤ 800 ms, etc.
+- **Erreurs** ≤ 1 % (hors smoke/stress où &lt; 5 % acceptable).
+- **DB lag** ≤ seuil (réplication P13) ; pas de saturation DB (IOPS, locks).
+- **Exports OK** : guardrails P16 ON ; pas de dépassement quotas / back-pressure bloquant.
 
-- **Smoke** : taux d’erreur HTTP &lt; 5 %, P95 &lt; 5 s sur les routes touchées.
-- **Baseline** : taux d’erreur &lt; 1 %, P95 dashboard &lt; 500 ms, P95 export &lt; 1,5 s.
-- **Stress** : taux d’erreur &lt; 5 % pendant le ramp‑up ; on note le **breakpoint** (RPS ou VUs à partir desquels la dégradation est nette).
-- **Soak** : taux d’erreur &lt; 1 %, pas de dérive marquée des latences sur la durée.
+**No-Go** : l’un des critères échoue.
 
-### 3.2 No‑Go (rouge)
+→ Analyser logs (API, DB, Redis), métriques Prometheus/Grafana, puis **ouvrir PR de tuning ciblée** ([TUNING_CHECKLISTS.md](./TUNING_CHECKLISTS.md)) et **re-bench**.
 
-- Taux d’erreur &gt; 5 % (smoke/stress) ou &gt; 1 % (baseline/soak).
-- P95 dashboard &gt; 900 ms ou P99 &gt; 2 s de façon répétée.
-- Chute durable du throughput ou timeouts en masse.
+### 3.1 Par scénario (détail)
 
-En **No‑Go** : analyser logs (API, DB, Redis), métriques Prometheus/Grafana, puis tuning (DB pool, Redis, rate‑limit, back‑pressure, etc.) et rejouer les scénarios concernés.
+- **Smoke** : erreur &lt; 5 %, P95 &lt; 5 s.
+- **Baseline** : erreur &lt; 1 %, P95 dashboard &lt; 500 ms, P95 export &lt; 1,5 s.
+- **Stress** : erreur &lt; 5 % pendant le ramp-up ; noter le **breakpoint** (RPS/VUs où dégradation nette).
+- **Soak** : erreur &lt; 1 %, pas de dérive latences / mémoire.
 
 ---
 
@@ -68,9 +73,17 @@ Un job **bench** peut lancer uniquement le **smoke** (et éventuellement le **ba
 
 Après stress (et si possible soak), remplir le [CAPACITY_REPORT_TEMPLATE.md](CAPACITY_REPORT_TEMPLATE.md) :
 
-- RPS / TPS soutenu, nombre d’utilisateurs concurrents (VUs) équivalent.
+- RPS / TPS soutenu, utilisateurs concurrents (VUs) équivalent.
 - **Breakpoint** observé (RPS ou VUs).
-- Marges par rapport aux SLOs et recommandations (sizing, HPA/VPA, back‑pressure).
+- Marges par rapport aux SLOs ; recommandations (sizing, HPA/VPA, back-pressure).
+
+---
+
+## 6. Interprétation des rapports
+
+- **k6** : résumé stdout (http_req_duration p95/p99, http_req_failed, iteration_duration, RPS). Comparer aux seuils du runbook et aux budgets P11.
+- **Métriques** : API (P4, P11), DB (pg_stat_statements, TPS, WAL, lag), Redis (hit rate, evictions), Workers (refresh MViews, queue). Croiser avec FinOps (P16) si exports / quotas.
+- **Go** : seuils respectés → valider capacité, documenter dans le rapport. **No-Go** : identifier goulot (CPU, DB, Redis, rate-limit), appliquer [TUNING_CHECKLISTS.md](./TUNING_CHECKLISTS.md), re-bench.
 
 ---
 
@@ -78,4 +91,5 @@ Après stress (et si possible soak), remplir le [CAPACITY_REPORT_TEMPLATE.md](CA
 
 - [P19_BENCH_CAPACITY_PLANNING.md](P19_BENCH_CAPACITY_PLANNING.md)
 - [CAPACITY_REPORT_TEMPLATE.md](CAPACITY_REPORT_TEMPLATE.md)
+- [TUNING_CHECKLISTS.md](./TUNING_CHECKLISTS.md)
 - `bench/k6/README.md`

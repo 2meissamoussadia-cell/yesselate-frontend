@@ -4,9 +4,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { TelemetryBatch } from '@/lib/telemetry/schema';
-import { extractContextFromHeaders } from '@/lib/server/dashboard/context';
-import { pgPool } from '@/lib/server/db/pool';
-import { rateLimitRedis } from '@/lib/server/observability/rateLimitRedis';
+import { extractContextFromHeaders } from '@lib-root/server/dashboard/context';
+import { pgPool } from '@lib-root/server/db/pool';
+import { rateLimitRedis } from '@lib-root/server/observability/rateLimitRedis';
 import crypto from 'node:crypto';
 
 /**
@@ -44,8 +44,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     
     const { items } = parsed.data;
     
-    // Extraire IP et User-Agent pour pseudonymisation
-    const ip = req.headers.get('x-forwarded-for') ?? req.headers.get('x-real-ip') ?? 'unknown';
+    // Extraire User-Agent pour pseudonymisation (IP déjà extraite plus haut)
     const userAgent = req.headers.get('user-agent') ?? null;
     
     // Hash IP pour pseudonymisation (optionnel, selon RGPD)

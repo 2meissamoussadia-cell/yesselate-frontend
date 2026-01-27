@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { healthCheck } from '@/lib/server/observability/health';
+import { healthCheck } from '@lib-root/server/observability/health';
 
 /**
  * GET /api/health

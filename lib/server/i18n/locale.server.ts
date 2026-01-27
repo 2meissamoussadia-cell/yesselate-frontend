@@ -2,7 +2,7 @@
 // Phase P12: Négociation de locale côté serveur
 // Résout locale, currency, timezone depuis tenant → user → navigateur
 
-import { pgPool } from '@/lib/server/db/pool';
+import { pgPool } from '@lib-root/server/db/pool';
 
 /**
  * Bundle de contexte i18n résolu

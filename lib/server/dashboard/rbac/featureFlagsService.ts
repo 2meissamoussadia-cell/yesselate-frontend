@@ -2,7 +2,7 @@
 // Phase P10: Service Feature Flags par tenant
 // Adapté pour le nouveau schéma simplifié
 
-import { pgPool } from '@/lib/server/db/pool';
+import { pgPool } from '@lib-root/server/db/pool';
 
 export interface FeatureFlag {
   feature_key: string;

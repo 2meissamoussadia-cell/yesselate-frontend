@@ -2,12 +2,12 @@
 // Phase P15: Moteur d'alertes - API REST pour activer/désactiver une règle
 
 import { NextRequest, NextResponse } from 'next/server';
-import { extractContextFromHeaders } from '@/lib/server/dashboard/context';
-import { hydrateContext } from '@/lib/server/dashboard/context_ext';
-import { can } from '@/lib/server/security/policy';
-import { pgPool } from '@/lib/server/db/pool';
-import { rateLimitRedis } from '@/lib/server/observability/rateLimitRedis';
-import { withReq } from '@/lib/server/logging';
+import { extractContextFromHeaders } from '@lib-root/server/dashboard/context';
+import { hydrateContext } from '@lib-root/server/dashboard/context_ext';
+import { can } from '@lib-root/server/security/policy';
+import { pgPool } from '@lib-root/server/db/pool';
+import { rateLimitRedis } from '@lib-root/server/observability/rateLimitRedis';
+import { withReq } from '@lib-root/server/logging';
 
 const log = withReq('alerts-rules-enable');
 

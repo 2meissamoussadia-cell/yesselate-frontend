@@ -2,7 +2,7 @@
 // Phase P12: Helper de conversion de devise (optionnel)
 // Récupération des taux de change depuis la base de données
 
-import { pgPool } from '@/lib/server/db/pool';
+import { pgPool } from '@lib-root/server/db/pool';
 
 /**
  * Cache mémoire simple pour les taux (60s)

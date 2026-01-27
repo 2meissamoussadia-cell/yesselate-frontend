@@ -7,17 +7,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { extractContextFromHeaders } from '@lib-root/server/dashboard/context';
 import { hydrateContext } from '@lib-root/server/dashboard/context_ext';
-import { can } from '@/lib/server/security/policy';
+import { can } from '@lib-root/server/security/policy';
 import { DashboardReadService } from '@lib-root/server/dashboard/services/dashboardReadService';
 import { InMemoryReadModelsRepo } from '@lib-root/server/dashboard/repositories/InMemoryReadModelsRepo';
 import { SqlReadModelsRepo } from '@lib-root/server/dashboard/repositories/SqlReadModelsRepo';
-import { resolveLocaleContext } from '@/lib/server/i18n';
+import { resolveLocaleContext } from '@lib-root/server/i18n';
 import { formatAsXLSX } from '@lib-root/server/dashboard/export/xlsxFormatter';
 import { formatAsPDF } from '@lib-root/server/dashboard/export/pdfFormatter';
 import { auditExport } from '@lib-root/server/dashboard/export/auditExport';
-import { rateLimitRedis } from '@/lib/server/observability/rateLimitRedis';
+import { rateLimitRedis } from '@lib-root/server/observability/rateLimitRedis';
 import { enforceQuota, recordDenial, recordUsage, getBackpressureSignal, decideBackpressure } from '@lib-root/server/finops';
-import { parseEncryptionOptions, encryptExport, createEncryptedResponse } from '@/lib/server/security/encryptionExport';
+import { parseEncryptionOptions, encryptExport, createEncryptedResponse } from '@lib-root/server/security/encryptionExport';
 import crypto from 'node:crypto';
 
 // Phase P12.b: Limites de sécurité pour exports lourds

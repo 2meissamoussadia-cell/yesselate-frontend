@@ -14,7 +14,7 @@ import React from 'react';
 /**
  * Catégories principales de navigation
  */
-export type Main = 'overview' | 'performance' | 'actions' | 'risks' | 'decisions' | 'realtime';
+export type Main = 'overview' | 'performance' | 'actions' | 'risks' | 'decisions' | 'realtime' | 'administration';
 
 /**
  * Sous-catégories de navigation (peuvent être n'importe quelle chaîne ou null)

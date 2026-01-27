@@ -2,8 +2,8 @@
 // Phase P4: Health check interne basique
 // Phase P13: Extension avec rôle DB et replication lag
 import { NextResponse } from 'next/server';
-import { pgPool } from '@/lib/server/db/pool';
-import { dbReplayLagSeconds, dbRole } from '@/lib/server/observability/metrics';
+import { pgPool } from '@lib-root/server/db/pool';
+import { dbReplayLagSeconds, dbRole } from '@lib-root/server/observability/metrics';
 
 /**
  * GET /api/internal/health

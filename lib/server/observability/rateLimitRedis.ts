@@ -3,8 +3,8 @@
 // Phase P13: Résilience & DR - Circuit breaker et retry
 
 import Redis from 'ioredis';
-import { CircuitBreaker } from '@/lib/server/resilience/circuit';
-import { retry, isRedisRetryable } from '@/lib/server/resilience/retry';
+import { CircuitBreaker } from '@lib-root/server/resilience/circuit';
+import { retry, isRedisRetryable } from '@lib-root/server/resilience/retry';
 import { circuitOpenTotal, retryAttemptsTotal } from './metrics';
 
 // Instance Redis singleton

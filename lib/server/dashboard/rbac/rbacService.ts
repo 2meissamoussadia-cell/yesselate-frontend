@@ -2,7 +2,7 @@
 // Phase P10: Service RBAC runtime (vérification permissions)
 // Adapté pour le nouveau schéma simplifié
 
-import { pgPool } from '@/lib/server/db/pool';
+import { pgPool } from '@lib-root/server/db/pool';
 import type { RequestContext } from '../context';
 
 export interface Permission {

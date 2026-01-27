@@ -1,7 +1,7 @@
 // lib/server/dashboard/export/auditExport.ts
 // Phase P12.b: Audit logging pour les exports
 
-import { pgPool } from '@/lib/server/db/pool';
+import { pgPool } from '@lib-root/server/db/pool';
 
 /**
  * Enregistre un export dans l'audit trail

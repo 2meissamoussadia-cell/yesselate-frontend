@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { processEscalations } from '@lib-root/server/dashboard/alerting/escalationWorker';
-import { withReq } from '@/lib/server/logging';
+import { withReq } from '@lib-root/server/logging';
 
 const log = withReq('cron-alerts-escalations');
 

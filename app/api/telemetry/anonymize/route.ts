@@ -2,10 +2,10 @@
 // Phase P14: Observabilité produit - Anonymisation RGPD
 
 import { NextRequest, NextResponse } from 'next/server';
-import { extractContextFromHeaders } from '@/lib/server/dashboard/context';
-import { pgPool } from '@/lib/server/db/pool';
+import { extractContextFromHeaders } from '@lib-root/server/dashboard/context';
+import { pgPool } from '@lib-root/server/db/pool';
 import { z } from 'zod';
-import { logger } from '@/lib/server/logging';
+import { logger } from '@lib-root/server/logging';
 
 const AnonymizeRequest = z.object({
   userId: z.string().optional(),

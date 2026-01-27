@@ -7,7 +7,7 @@
  */
 
 import { Client } from 'pg';
-import { pgPool } from '@/lib/server/db/pool';
+import { pgPool } from '@lib-root/server/db/pool';
 
 /**
  * Mapping table → vues matérialisées à rafraîchir

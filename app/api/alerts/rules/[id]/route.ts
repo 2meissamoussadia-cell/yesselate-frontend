@@ -2,14 +2,14 @@
 // Phase P15: Moteur d'alertes - API REST pour mise à jour de règle
 
 import { NextRequest, NextResponse } from 'next/server';
-import { extractContextFromHeaders } from '@/lib/server/dashboard/context';
-import { hydrateContext } from '@/lib/server/dashboard/context_ext';
-import { can } from '@/lib/server/security/policy';
-import { pgPool } from '@/lib/server/db/pool';
-import { rateLimitRedis } from '@/lib/server/observability/rateLimitRedis';
+import { extractContextFromHeaders } from '@lib-root/server/dashboard/context';
+import { hydrateContext } from '@lib-root/server/dashboard/context_ext';
+import { can } from '@lib-root/server/security/policy';
+import { pgPool } from '@lib-root/server/db/pool';
+import { rateLimitRedis } from '@lib-root/server/observability/rateLimitRedis';
 import { z } from 'zod';
-import { withReq } from '@/lib/server/logging';
-import { AlertDSLv2Schema, HysteresisSchema, GroupBySchema, CorrelationSchema } from '@/lib/server/dashboard/alerting/schemas';
+import { withReq } from '@lib-root/server/logging';
+import { AlertDSLv2Schema, HysteresisSchema, GroupBySchema, CorrelationSchema } from '@lib-root/server/dashboard/alerting/schemas';
 
 const log = withReq('alerts-rules-update');
 

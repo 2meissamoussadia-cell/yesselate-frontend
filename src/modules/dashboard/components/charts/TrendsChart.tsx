@@ -18,7 +18,7 @@ import {
 } from 'recharts';
 import { ChartContainer, chartStyles, chartColors } from '@/modules/dashboard/charts/ChartKit';
 import type { TrendData } from '../DashboardCharts';
-import { useI18n } from '@/src/lib/i18n';
+import { useI18n } from '@/lib/i18n';
 
 export function TrendsChart({ trends }: { trends?: TrendData[] }) {
   const { fmt } = useI18n();

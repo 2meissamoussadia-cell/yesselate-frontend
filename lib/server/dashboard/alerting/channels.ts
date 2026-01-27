@@ -1,7 +1,7 @@
 // lib/server/dashboard/alerting/channels.ts
 // Phase P15: Moteur d'alertes - Canaux de notification
 
-import { pgPool } from '@/lib/server/db/pool';
+import { pgPool } from '@lib-root/server/db/pool';
 import { AlertRule, AlertEvent, AlertChannel } from './types';
 import { logger } from '@/lib/server/logging';
 

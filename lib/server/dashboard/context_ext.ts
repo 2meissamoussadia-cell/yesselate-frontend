@@ -2,7 +2,7 @@
 // Phase P10: Extension du contexte avec RBAC (permissions + feature flags)
 // Version simplifiée avec requêtes directes + cache court
 
-import { pgPool } from '@/lib/server/db/pool';
+import { pgPool } from '../db/pool';
 import { rbacCache } from './rbac/rbacCache';
 
 export type Role = 'admin' | 'manager' | 'reader' | 'acheteur' | 'juridique' | 'controle' | 'ordonnateur';

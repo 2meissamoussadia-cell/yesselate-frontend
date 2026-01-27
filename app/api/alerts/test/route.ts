@@ -2,16 +2,16 @@
 // Phase P15: Moteur d'alertes - Test d'évaluation de règle (dry-run)
 
 import { NextRequest, NextResponse } from 'next/server';
-import { extractContextFromHeaders } from '@/lib/server/dashboard/context';
-import { hydrateContext } from '@/lib/server/dashboard/context_ext';
-import { can } from '@/lib/server/security/policy';
-import { rateLimitRedis } from '@/lib/server/observability/rateLimitRedis';
-import { evaluateRule } from '@/lib/server/dashboard/alerting/evaluator';
-import { evaluateRuleV2, type RuleV2 } from '@/lib/server/dashboard/alerting/evaluator_v2';
-import { AlertRule } from '@/lib/server/dashboard/alerting/types';
+import { extractContextFromHeaders } from '@lib-root/server/dashboard/context';
+import { hydrateContext } from '@lib-root/server/dashboard/context_ext';
+import { can } from '@lib-root/server/security/policy';
+import { rateLimitRedis } from '@lib-root/server/observability/rateLimitRedis';
+import { evaluateRule } from '@lib-root/server/dashboard/alerting/evaluator';
+import { evaluateRuleV2, type RuleV2 } from '@lib-root/server/dashboard/alerting/evaluator_v2';
+import { AlertRule } from '@lib-root/server/dashboard/alerting/types';
 import { z } from 'zod';
-import { withReq } from '@/lib/server/logging';
-import { AlertDSLv2Schema, HysteresisSchema, GroupBySchema, CorrelationSchema } from '@/lib/server/dashboard/alerting/schemas';
+import { withReq } from '@lib-root/server/logging';
+import { AlertDSLv2Schema, HysteresisSchema, GroupBySchema, CorrelationSchema } from '@lib-root/server/dashboard/alerting/schemas';
 import { enforceQuota, recordUsage } from '@lib-root/server/finops';
 
 const log = withReq('alerts-test');

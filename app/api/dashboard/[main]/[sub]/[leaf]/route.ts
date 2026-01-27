@@ -4,17 +4,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { extractContextFromHeaders } from '@lib-root/server/dashboard/context';
 import { hydrateContext } from '@lib-root/server/dashboard/context_ext';
-import { can } from '@/lib/server/security/policy';
+import { can } from '@lib-root/server/security/policy';
 import { InMemoryReadModelsRepo } from '@lib-root/server/dashboard/repositories/InMemoryReadModelsRepo';
 import { SqlReadModelsRepo } from '@lib-root/server/dashboard/repositories/SqlReadModelsRepo';
 import { DashboardReadService } from '@lib-root/server/dashboard/services/dashboardReadService';
 import { observeHttp } from '@/app/api/internal/metrics/route';
-import { withReq } from '@/lib/server/logging';
-import { rateLimitRedis } from '@/lib/server/observability/rateLimitRedis';
+import { withReq } from '@lib-root/server/logging';
+import { rateLimitRedis } from '@lib-root/server/observability/rateLimitRedis';
 import { recordTTFB } from '@lib-root/server/dashboard/cache';
 import { parsePaginationParams } from '@lib-root/server/dashboard/types';
 import { getBudgetForRoute, exceedsBudget } from '@/app/api/internal/metrics/budgets';
-import { sloBudgetExceededCounter } from '@/lib/server/observability/metrics';
+import { sloBudgetExceededCounter } from '@lib-root/server/observability/metrics';
 import { enforceQuota, recordDenial, recordUsage, inferRowCount } from '@lib-root/server/finops';
 
 // Cache par défaut "no-store"; override pour reporting

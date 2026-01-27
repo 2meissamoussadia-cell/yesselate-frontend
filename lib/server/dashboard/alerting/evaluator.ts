@@ -1,7 +1,7 @@
 // lib/server/dashboard/alerting/evaluator.ts
 // Phase P15: Moteur d'alertes - Évaluateur de règles
 
-import { pgPool } from '@/lib/server/db/pool';
+import { pgPool } from '@lib-root/server/db/pool';
 import { AlertRule, AlertExpression } from './types';
 import crypto from 'node:crypto';
 import { logger } from '@/lib/server/logging';

@@ -7,7 +7,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { pgPool } from '@/lib/server/db/pool';
+import { pgPool } from '@lib-root/server/db/pool';
 import { mviewStaleness, dbReplayLagSeconds, dbRole } from './metrics';
 import { logger, withReq } from '@/lib/server/logging';
 

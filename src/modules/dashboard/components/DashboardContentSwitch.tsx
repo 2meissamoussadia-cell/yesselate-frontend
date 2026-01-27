@@ -11,12 +11,13 @@ import { dashboardRegistry, navToKey, type NavKey } from '../registry';
 import type { DashboardViewData } from '../types/dashboardDataTypes';
 import type { LoaderResult } from '../types/dashboard';
 import { createLogger } from '../utils/logger';
+import { storeNavToNavKey } from '../utils/navAdapter';
 
 const logger = createLogger('DashboardContentSwitch');
 
 type LoaderResultType = LoaderResult<DashboardViewData>;
 
-function isLoaderResult(value: unknown): value is LoaderResult {
+function isLoaderResult(value: unknown): value is LoaderResultType {
   if (!value || typeof value !== 'object') return false;
   const v = value as Record<string, unknown>;
   return 'data' in v && 'fetchedAt' in v && typeof v.fetchedAt === 'number';
@@ -26,8 +27,8 @@ function resolveViewKey(nav: NavKey) {
   // fallback intelligent si un niveau manque
   const main = nav.main;
   const sub = nav.sub ?? 'summary';
-  const subSub = nav.subSub ?? 'dashboard';
-  return `${main}::${sub}::${subSub}`;
+  const leaf = nav.leaf ?? 'dashboard';
+  return `${main}::${sub}::${leaf}`;
 }
 
 export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
@@ -35,12 +36,8 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
   // Ne pas lire cache directement pour éviter les re-renders - on le lira dans le useEffect avec getState()
 
   const nav: NavKey = useMemo(
-    () => ({
-      main: navState.mainCategory,
-      sub: navState.subCategory,
-      subSub: navState.subSubCategory,
-    }),
-    [navState.mainCategory, navState.subCategory, navState.subSubCategory]
+    () => storeNavToNavKey(navState),
+    [navState]
   );
 
   const viewKey = useMemo(() => resolveViewKey(nav), [nav]);
@@ -157,7 +154,7 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [viewKey, view, nav.main, nav.sub, nav.subSub, maxRetries]); // Ne pas inclure cache pour éviter les boucles infinies
+  }, [viewKey, view, nav.main, nav.sub, nav.leaf, maxRetries]); // Ne pas inclure cache pour éviter les boucles infinies
 
   const handleRetry = useCallback(() => {
     setError(null);

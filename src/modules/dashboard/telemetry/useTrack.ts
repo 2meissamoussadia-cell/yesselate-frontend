@@ -4,7 +4,7 @@
 'use client';
 
 import { useEffect, useRef, useCallback } from 'react';
-import { track } from '@/lib/telemetry/client';
+import { track } from '@lib-root/telemetry/client';
 
 /**
  * Hook pour tracker automatiquement l'ouverture d'une vue

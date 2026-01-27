@@ -20,7 +20,7 @@ import {
 import { ChartContainer } from './ChartContainer';
 import { chartStyles, chartColors, chartUI } from './chartTheme';
 import type { ChartData } from './types';
-import { useI18n } from '@/src/lib/i18n';
+import { useI18n } from '@/lib/i18n';
 
 // ============================================
 // TYPES

@@ -1,5 +1,5 @@
 // lib/server/dashboard/repositories/SqlReadModelsRepo.ts
-import { pgPool } from '@/lib/server/db/pool';
+import { pgPool } from '@lib-root/server/db/pool';
 import type { ReadModelsRepo } from './ReadModelsRepo';
 import type { RequestContext } from '../context';
 import type {

@@ -1,7 +1,7 @@
 // lib/server/resilience/dbQuery.ts
 // Phase P13: Wrapper pour requêtes DB avec circuit breaker et retry
 
-import { pgPool } from '@/lib/server/db/pool';
+import { pgPool } from '@lib-root/server/db/pool';
 import { CircuitBreaker } from './circuit';
 import { retry, isPostgresRetryable } from './retry';
 import { circuitOpenTotal, retryAttemptsTotal } from '@/lib/server/observability/metrics';

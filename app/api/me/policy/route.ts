@@ -6,7 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { extractContextFromHeaders } from '@lib-root/server/dashboard/context';
 import { hydrateContext } from '@lib-root/server/dashboard/context_ext';
-import { resolveLocaleContext } from '@/lib/server/i18n';
+import { resolveLocaleContext } from '@lib-root/server/i18n';
 
 export async function GET(req: NextRequest) {
   try {

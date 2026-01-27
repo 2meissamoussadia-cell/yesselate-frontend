@@ -2,8 +2,8 @@
 // Phase P15: Moteur d'alertes - CRON pour évaluation périodique
 
 import { NextRequest, NextResponse } from 'next/server';
-import { evaluateAllTenantsRules } from '@/lib/server/dashboard/alerting/alertsEvaluatorWorker';
-import { withReq } from '@/lib/server/logging';
+import { evaluateAllTenantsRules } from '@lib-root/server/dashboard/alerting/alertsEvaluatorWorker';
+import { withReq } from '@lib-root/server/logging';
 
 const log = withReq('cron-alerts-evaluate');
 

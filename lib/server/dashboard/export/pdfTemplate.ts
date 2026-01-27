@@ -39,6 +39,11 @@ export function renderPdfHtml(options: PdfTemplateOptions): string {
   // Extraire les colonnes depuis la première ligne
   const columns = rows.length > 0 ? Object.keys(rows[0] ?? {}) : [];
 
+  // Construire le contenu du footer (avec support des compteurs CSS)
+  const footerContent = footer 
+    ? `"${footer.replace(/"/g, '\\"')}"`
+    : '"Page " counter(page) " / " counter(pages)';
+
   // CSS avec support RTL et polices
   const css = `
     <style>
@@ -51,7 +56,7 @@ export function renderPdfHtml(options: PdfTemplateOptions): string {
           color: #64748b;
         }
         @bottom-center {
-          content: "${footer || 'Page ' counter(page) ' / ' counter(pages)}";
+          content: ${footerContent};
           font-size: 10px;
           color: #64748b;
         }

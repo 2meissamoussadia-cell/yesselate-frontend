@@ -3,7 +3,7 @@
 
 import type { RequestContext } from './context';
 import type { Main } from '@/modules/dashboard/types/dashboard.readmodels';
-import { hasPerm } from '@/lib/server/security/policy';
+import { hasPerm } from '../security/policy';
 
 /**
  * Phase P10: Vérification ABAC avec permissions granulaires

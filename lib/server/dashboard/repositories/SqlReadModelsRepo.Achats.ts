@@ -1,5 +1,5 @@
 // lib/server/dashboard/repositories/SqlReadModelsRepo.Achats.ts
-import { pgPool } from '@/lib/server/db/pool';
+import { pgPool } from '@lib-root/server/db/pool';
 import type { RequestContext } from '../context';
 
 export interface AchatsOverviewData {

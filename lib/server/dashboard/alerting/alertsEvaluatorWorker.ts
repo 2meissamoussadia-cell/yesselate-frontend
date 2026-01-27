@@ -2,7 +2,7 @@
 // Phase P15: Moteur d'alertes - Worker d'évaluation (event-driven + CRON)
 
 import { Pool } from 'pg';
-import { pgPool } from '@/lib/server/db/pool';
+import { pgPool } from '@lib-root/server/db/pool';
 import { evaluateAllRules, evaluateRulesForMView } from './worker';
 import { logger } from '@/lib/server/logging';
 
@@ -69,7 +69,7 @@ export async function evaluateTenantRules(tenantId: string): Promise<void> {
  * À exécuter via CRON : toutes les 5-10 minutes
  * 
  * @example
- * // CRON : */5 * * * * (toutes les 5 min)
+ * // CRON : 0,5,10,15,20,25,30,35,40,45,50,55 * * * * (toutes les 5 min)
  * node -r ts-node/register lib/server/dashboard/alerting/alertsEvaluatorWorker.ts
  */
 async function run(): Promise<void> {

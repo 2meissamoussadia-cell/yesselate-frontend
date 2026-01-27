@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { extractContextFromHeaders } from '@lib-root/server/dashboard/context';
-import { pgPool } from '@/lib/server/db/pool';
+import { pgPool } from '@lib-root/server/db/pool';
 
 export async function GET(req: NextRequest) {
   const ctx = extractContextFromHeaders(req.headers);

@@ -1,7 +1,7 @@
 // lib/server/dashboard/alerting/processor.ts
 // Phase P15: Moteur d'alertes - Processeur principal
 
-import { pgPool } from '@/lib/server/db/pool';
+import { pgPool } from '@lib-root/server/db/pool';
 import { AlertRule, AlertEvent } from './types';
 import { evaluateRule, isInCooldown, isSilenced } from './evaluator';
 import { sendNotifications } from './channels';

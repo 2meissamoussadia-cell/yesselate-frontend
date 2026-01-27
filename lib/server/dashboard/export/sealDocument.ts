@@ -2,7 +2,7 @@
 // Phase P9: Scellement de document (hash SHA-256 + horodatage)
 
 import { createHash } from 'crypto';
-import { pgPool } from '@/lib/server/db/pool';
+import { pgPool } from '@lib-root/server/db/pool';
 import { withReq } from '@/lib/server/logging';
 
 export async function sealDocument(

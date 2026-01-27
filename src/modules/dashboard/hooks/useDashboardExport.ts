@@ -6,7 +6,7 @@
 
 import { useCallback } from 'react';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
-import { useI18n } from '@/src/lib/i18n';
+import { useI18n } from '@/lib/i18n';
 
 export function useDashboardExport() {
   const nav = useDashboardCommandCenterStore((s) => s.navigation);

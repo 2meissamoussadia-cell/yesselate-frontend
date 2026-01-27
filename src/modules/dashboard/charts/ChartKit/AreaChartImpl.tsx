@@ -1,7 +1,7 @@
 // modules/dashboard/charts/ChartKit/AreaChartImpl.tsx
 'use client';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { useI18n } from '@/src/lib/i18n';
+import { useI18n } from '@/lib/i18n';
 
 export default function AreaChartImpl({ data, series }: { data: any[]; series: Array<{ key: string; label: string; color: string }>}) {
   const { t, fmt } = useI18n();

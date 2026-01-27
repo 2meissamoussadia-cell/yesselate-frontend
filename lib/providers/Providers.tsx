@@ -5,7 +5,7 @@ import { AuthProvider } from '../contexts/AuthContext';
 import { ToastProvider } from '@/components/features/bmo/ToastProvider';
 import { ModalManager } from '@/components/shared/ModalManager';
 import { ErrorBoundary } from '@/components/features/bmo/ErrorBoundary';
-import { I18nProviderWrapper } from '@/src/lib/i18n';
+import { I18nProviderWrapper } from '@/lib/i18n';
 
 /**
  * Providers - Wrapper centralisé pour tous les providers

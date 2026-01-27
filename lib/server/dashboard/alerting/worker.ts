@@ -1,7 +1,7 @@
 // lib/server/dashboard/alerting/worker.ts
 // Phase P15: Moteur d'alertes - Worker d'évaluation
 
-import { pgPool } from '@/lib/server/db/pool';
+import { pgPool } from '@lib-root/server/db/pool';
 import { AlertRule } from './types';
 import { processRule } from './processor';
 import { evaluateRuleV2, type RuleV2 } from './evaluator_v2';

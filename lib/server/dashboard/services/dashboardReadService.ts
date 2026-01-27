@@ -6,7 +6,7 @@ import { SqlReadModelsRepoAchats } from '../repositories/SqlReadModelsRepo.Achat
 import { SqlReadModelsRepoReporting } from '../repositories/SqlReadModelsRepo.Reporting';
 import { SqlReadModelsRepoStocks } from '../repositories/SqlReadModelsRepo.Stocks';
 import { SqlReadModelsRepoCompliance } from '../repositories/SqlReadModelsRepo.Compliance';
-import { can } from '@/lib/server/security/policy';
+import { can } from '../../security/policy';
 import type { PaginationOptions } from '../types/pagination';
 
 /**

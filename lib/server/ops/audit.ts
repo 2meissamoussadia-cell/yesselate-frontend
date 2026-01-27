@@ -1,49 +1,40 @@
 /**
  * P20 – Ops & Remédiations : audit des actions playbooks
- * Centralise appendAudit(entry) pour tous les playbooks.
+ * Garde-fous communs à tous les playbooks.
+ * Persiste dans finops_denials (scope=kind, reason=ops_action).
  */
 
 export { ensureDryRun, ensureScope } from './guards';
 
+import { pgPool } from '../db/pool';
+
 export interface AuditEntry {
   kind: string;
   tenantId?: string;
-  userId?: string;
-  playbook?: string;
-  params?: Record<string, unknown>;
   details?: Record<string, unknown>;
-  dryRun?: boolean;
-  ok?: boolean;
-  error?: string;
 }
 
-const log = typeof console !== 'undefined' ? console : { info: () => {}, warn: () => {} };
+const log = typeof console !== 'undefined' ? console : { warn: () => {} };
 
 /**
- * Enregistre une entrée d’audit (non bloquant).
- * À brancher sur table audit_ops ou équivalent si disponible.
+ * Enregistre une entrée d’audit dans finops_denials.
+ * Non bloquant : en cas d’erreur (ex. tenant_id NULL, table absente), log et continue.
  */
 export async function appendAudit(entry: AuditEntry): Promise<void> {
-  const payload = {
-    ...entry,
-    timestamp: new Date().toISOString(),
-  };
-
+  const c = await pgPool.connect();
   try {
-    log.info?.('[Audit Ops]', payload);
-
-    // Optionnel : INSERT dans audit_ops si la table existe
-    // const { getOpsDb } = await import('./db');
-    // const client = await getOpsDb().connect();
-    // await client.query(
-    //   `INSERT INTO audit_ops (kind, tenant_id, user_id, playbook, params, details, dry_run, ok, error, created_at)
-    //    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())`,
-    //   [entry.kind, entry.tenantId ?? null, entry.userId ?? null, entry.playbook ?? null,
-    //    JSON.stringify(entry.params ?? {}), JSON.stringify(entry.details ?? {}),
-    //    entry.dryRun ?? false, entry.ok ?? true, entry.error ?? null]
-    // );
-    // client.release();
+    await c.query(
+      `insert into finops_denials(tenant_id, scope, reason, details) values($1,$2,$3,$4)`,
+      [
+        entry.tenantId ?? null,
+        entry.kind,
+        'ops_action',
+        JSON.stringify(entry.details ?? {}),
+      ]
+    );
   } catch (e) {
-    log.warn?.('[Audit Ops] Failed to append audit:', e);
+    log.warn?.('[Audit Ops] appendAudit failed:', e);
+  } finally {
+    c.release();
   }
 }

@@ -16,7 +16,7 @@ export async function purgeCachePrefix({
   ensureDryRun(dryRun);
   const redis = getOpsRedis();
   const keys = redis ? await redis.keys(`${prefix}*`) : [];
-  if (!dryRun && keys.length && redis) await redis.del(...keys);
+  if (!dryRun && keys.length && redis) await redis.del(keys);
   await appendAudit({ kind: 'ops:purge-cache', details: { prefix, count: keys.length, dryRun } });
   return { ok: true, removed: keys.length };
 }

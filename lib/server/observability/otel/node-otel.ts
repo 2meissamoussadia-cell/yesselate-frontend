@@ -15,14 +15,14 @@
 import 'dotenv/config';
 import process from 'node:process';
 import { NodeSDK } from '@opentelemetry/sdk-node';
-import { Resource } from '@opentelemetry/resources';
+import { resourceFromAttributes } from '@opentelemetry/resources';
 import { SemanticResourceAttributes as SRA } from '@opentelemetry/semantic-conventions';
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 import { HttpInstrumentation } from '@opentelemetry/instrumentation-http';
 import { PgInstrumentation } from '@opentelemetry/instrumentation-pg';
 
 const sdk = new NodeSDK({
-  resource: new Resource({
+  resource: resourceFromAttributes({
     [SRA.SERVICE_NAME]: 'erp-btp-dashboard',
     [SRA.DEPLOYMENT_ENVIRONMENT]: process.env.NODE_ENV ?? 'development',
   }),

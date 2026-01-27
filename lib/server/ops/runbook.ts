@@ -3,16 +3,14 @@
  * Route POST /api/ops/runbook → exécute un playbook (dry-run ou real).
  */
 
-import type { WorkersParams } from './playbooks/workers';
-import type { ExportsParams } from './playbooks/exports';
 import type { FailoverParams } from './playbooks/failover';
 import type { OpsScope } from './guards';
 
 import { refreshMViews, backfillReadModels } from './playbooks/mviews';
 import { vacuumAnalyze, reindexConcurrently } from './playbooks/db_hygiene';
 import { purgeCachePrefix, warmDashboardKeys } from './playbooks/cache';
-import { workersClearAdvisoryLocks, workersRestartSignal } from './playbooks/workers';
-import { exportsDlqRetry, exportsCsvOnly } from './playbooks/exports';
+import { clearAdvisoryLocks } from './playbooks/workers';
+import { retryDeadLetter, degradeExports } from './playbooks/exports';
 import { failoverDb, failoverPgbouncerBootstrap } from './playbooks/failover';
 import { freezeTenant, unfreezeTenant, revokeSessions, rotateJWT } from './playbooks/security';
 
@@ -24,7 +22,6 @@ export type PlaybookName =
   | 'cache_purge'
   | 'cache_warm'
   | 'workers_clear_locks'
-  | 'workers_restart'
   | 'exports_dlq_retry'
   | 'exports_csv_only'
   | 'failover_db'
@@ -104,25 +101,16 @@ export async function executeRunbook(req: RunbookRequest): Promise<{
       return run(() => warmDashboardKeys({ tenantId, keys, dryRun }));
     }
     case 'workers_clear_locks':
-      return run(() =>
-        workersClearAdvisoryLocks({ dryRun, scope, action: 'clear_locks' })
-      );
-    case 'workers_restart':
-      return run(() =>
-        workersRestartSignal({ dryRun, scope, action: 'restart_signal' })
-      );
+      return run(() => clearAdvisoryLocks({ dryRun }));
     case 'exports_dlq_retry':
-      return run(() =>
-        exportsDlqRetry({
-          dryRun,
-          scope,
-          action: 'dlq_retry',
-          jobIds: p.jobIds as string[] | undefined,
-        })
-      );
+      return run(() => retryDeadLetter({ dryRun }));
     case 'exports_csv_only':
       return run(() =>
-        exportsCsvOnly({ dryRun, scope, action: 'csv_only' })
+        degradeExports({
+          mode: (p.mode as 'csv-only' | 'deny-large') ?? 'csv-only',
+          ttlMin: (p.ttlMin as number) ?? 30,
+          dryRun,
+        })
       );
     case 'failover_db':
       return run(() =>

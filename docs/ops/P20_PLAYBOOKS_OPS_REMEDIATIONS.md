@@ -46,7 +46,7 @@ Content-Type: application/json
 }
 ```
 
-**Playbooks** : `mviews_refresh`, `mviews_backfill`, `db_vacuum`, `db_reindex`, `cache_purge`, `cache_warm`, `workers_clear_locks`, `workers_restart`, `exports_dlq_retry`, `exports_csv_only`, `failover_db`, `failover_pgbouncer`, `security_freeze`, `security_unfreeze`, `security_revoke_sessions`, `security_rotate_jwt`.
+**Playbooks** : `mviews_refresh`, `mviews_backfill`, `db_vacuum`, `db_reindex`, `cache_purge`, `cache_warm`, `workers_clear_locks`, `exports_dlq_retry`, `exports_csv_only`, `failover_db`, `failover_pgbouncer`, `security_freeze`, `security_unfreeze`, `security_revoke_sessions`, `security_rotate_jwt`.
 
 ### 3.2 Approbations (two-person rule)
 
@@ -95,7 +95,12 @@ npx tsx jobs/cronWarmDashboard.ts
 
 - **cache_purge** : `purgeCachePrefix` — `params: { prefix: "cache:dashboard:" }` ou `pattern`. `redis.keys(prefix + "*")` puis `redis.del(...)` si !dryRun.
 - **cache_warm** : `warmDashboardKeys` — `params: { tenantId, keys: ["overview/summary/dashboard", ...] }` ou `scope: { tenantId }`. Stub : enregistre l’intention (priming TTL registry via /api/dashboard).
-- **workers_clear_locks** : liste les PIDs tenant des advisory locks (libération réelle = redémarrage worker).
+- **workers_clear_locks** : `clearAdvisoryLocks` — `pg_advisory_unlock_all()` sur la session courante (`pgPool`). Libère les advisory locks de cette connexion uniquement.
+
+### Exports
+
+- **exports_dlq_retry** : `retryDeadLetter` — `redis.lrange('exports:dlq')` puis `lpush` vers `exports:queue`, `del('exports:dlq')` si !dryRun.
+- **exports_csv_only** : `degradeExports` — `params: { mode?: 'csv-only'|'deny-large', ttlMin?: number }`. `redis.setex('exports:degrade', ttlMin*60, mode)` ; flag lu par `/api/export`.
 
 ---
 

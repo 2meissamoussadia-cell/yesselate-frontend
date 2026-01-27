@@ -24,8 +24,8 @@ import { useDashboardPermissions } from '../hooks/useDashboardPermissions';
 import { filterNavigationConfig } from '../utils/navigationFilter';
 import { nodeAllowed } from './permissions';
 import { useDashboardPermissionsStore } from '@/lib/stores/dashboardPermissionsStore';
-import { useI18n } from '@/src/lib/i18n';
-import { useAlertStats } from '../hooks/useAlerts';
+import { useI18n } from '@/lib/i18n';
+import { useAlertStats, useAlertsByDomain } from '../hooks/useAlerts';
 
 interface DashboardSidebarProps {
   collapsed?: boolean;
@@ -135,17 +135,71 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onOpenCommandPalette]);
 
-  // Phase P15: Récupérer les stats d'alertes pour les badges
+  // Phase P15/P17: Récupérer les stats d'alertes pour les badges
   const { data: alertStatsData } = useAlertStats();
   const alertStats = alertStatsData?.stats;
+
+  // Phase P17: Récupérer les alertes par domaine pour les badges de navigation
+  const { data: alertsAchats } = useAlertsByDomain('achats');
+  const { data: alertsStocks } = useAlertsByDomain('stocks');
+  const { data: alertsMateriel } = useAlertsByDomain('materiel');
+  const { data: alertsCompliance } = useAlertsByDomain('compliance');
+  const { data: alertsReporting } = useAlertsByDomain('reporting');
+
+  // Mapping node.id -> domain pour compter les alertes
+  const domainAlertsMap = useMemo(() => {
+    const map: Record<string, number> = {};
+    
+    if (alertsAchats?.events) {
+      const count = alertsAchats.events.filter(e => 
+        e.severity === 'critical' || e.severity === 'warning'
+      ).length;
+      if (count > 0) map['achats'] = count;
+    }
+    
+    if (alertsStocks?.events) {
+      const count = alertsStocks.events.filter(e => 
+        e.severity === 'critical' || e.severity === 'warning'
+      ).length;
+      if (count > 0) map['stocks'] = count;
+    }
+    
+    if (alertsMateriel?.events) {
+      const count = alertsMateriel.events.filter(e => 
+        e.severity === 'critical' || e.severity === 'warning'
+      ).length;
+      if (count > 0) map['materiel'] = count;
+    }
+    
+    if (alertsCompliance?.events) {
+      const count = alertsCompliance.events.filter(e => 
+        e.severity === 'critical' || e.severity === 'warning'
+      ).length;
+      if (count > 0) map['compliance'] = count;
+    }
+    
+    if (alertsReporting?.events) {
+      const count = alertsReporting.events.filter(e => 
+        e.severity === 'critical' || e.severity === 'warning'
+      ).length;
+      if (count > 0) map['reporting'] = count;
+    }
+    
+    return map;
+  }, [alertsAchats, alertsStocks, alertsMateriel, alertsCompliance, alertsReporting]);
 
   const getBadgeForNode = useCallback((node: NavNode, level?: number): number | undefined => {
     // Badge depuis props stats (compatibilité)
     const statKey = node.id as keyof typeof stats;
     const propBadge = stats[statKey];
-    if (propBadge !== undefined) return propBadge;
+    if (propBadge !== undefined && typeof propBadge === 'number') return propBadge;
 
-    // Phase P15: Badge depuis alertes par routeKey
+    // Phase P17: Badge depuis alertes par domain (labels.domain)
+    if (level === 1 && domainAlertsMap[node.id]) {
+      return domainAlertsMap[node.id];
+    }
+
+    // Phase P15: Badge depuis alertes par routeKey (fallback)
     if (alertStats && level !== undefined) {
       // Mapping routeKey -> node.id pour les sections performance
       const routeKeyMap: Record<string, string> = {
@@ -157,16 +211,14 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
       };
 
       const routeKey = routeKeyMap[node.id];
-      if (routeKey) {
-        // Récupérer les alertes pour ce routeKey et compter les critiques/warnings
-        // Pour l'instant, on retourne le total d'alertes ouvertes
-        // TODO: Filtrer par routeKey dans useAlertStats si nécessaire
-        return alertStats.critical_open + alertStats.warning_open;
+      if (routeKey && domainAlertsMap[routeKey]) {
+        return domainAlertsMap[routeKey];
       }
     }
 
-    return node.badge;
-  }, [stats, alertStats]);
+    // Retourner node.badge seulement si c'est un nombre
+    return typeof node.badge === 'number' ? node.badge : undefined;
+  }, [stats, alertStats, domainAlertsMap]);
 
   const isNodeActive = useCallback((node: NavNode, level: number, parentMain?: string, parentSub?: string): boolean => {
     if (level === 0) {

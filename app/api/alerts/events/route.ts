@@ -57,6 +57,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     const statusParam = url.searchParams.get('status') || 'open';
     const routeKey = url.searchParams.get('routeKey');
     const severity = url.searchParams.get('severity');
+    const domain = url.searchParams.get('domain'); // Phase P17: Filtrage par labels.domain
     const limit = parseInt(url.searchParams.get('limit') || '100', 10);
     const offset = parseInt(url.searchParams.get('offset') || '0', 10);
     
@@ -68,7 +69,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
           r.name AS rule_name,
           r.severity,
           r.description AS rule_description,
-          r.route_key AS rule_route_key
+          r.route_key AS rule_route_key,
+          r.labels AS rule_labels
         FROM alert_events e
         JOIN alert_rules r ON e.rule_id = r.id
         WHERE e.tenant_id = $1
@@ -94,6 +96,13 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       if (severity) {
         query += ` AND r.severity = $${paramIndex}`;
         params.push(severity);
+        paramIndex++;
+      }
+
+      // Phase P17: Filtre domain (labels.domain)
+      if (domain) {
+        query += ` AND (e.labels->>'domain' = $${paramIndex} OR r.labels->>'domain' = $${paramIndex})`;
+        params.push(domain);
         paramIndex++;
       }
 
@@ -170,5 +179,11 @@ function mapEvent(row: any) {
     count: row.count,
     payload: row.payload,
     labels: row.labels,
+    // Phase P17: Champs étendus
+    evidence: row.evidence,
+    ackedAt: row.acked_at,
+    ackedBy: row.acked_by,
+    closedAt: row.closed_at,
+    closedBy: row.closed_by,
   };
 }

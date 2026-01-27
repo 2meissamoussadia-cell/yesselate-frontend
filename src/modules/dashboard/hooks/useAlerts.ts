@@ -17,6 +17,12 @@ export interface AlertEvent {
   count: number;
   payload: Record<string, any>;
   labels?: Record<string, any>;
+  // Phase P17: Champs étendus
+  evidence?: Record<string, any>; // Données sources de la décision
+  ackedAt?: string;
+  ackedBy?: string;
+  closedAt?: string;
+  closedBy?: string;
 }
 
 export interface AlertStats {
@@ -83,6 +89,40 @@ export function useOpenAlerts(limit = 5) {
 }
 
 /**
+ * Hook pour récupérer les alertes par domaine (labels.domain)
+ * Phase P17: Moteur d'alertes avancé - Badges navigation
+ */
+export function useAlertsByDomain(domain?: string) {
+  return useQuery<{ ok: boolean; events: AlertEvent[] }>({
+    queryKey: ['alerts', 'events', 'domain', domain],
+    queryFn: async () => {
+      const params = new URLSearchParams();
+      params.set('status', 'open');
+      if (domain) {
+        // Note: L'API devra filtrer par labels.domain côté serveur
+        // Pour l'instant, on récupère toutes les alertes ouvertes et on filtre côté client
+        params.set('limit', '1000'); // Récupérer assez pour filtrer
+      }
+      
+      const res = await fetch(`/api/alerts/events?${params.toString()}`);
+      if (!res.ok) throw new Error('Failed to fetch alerts by domain');
+      const data = await res.json();
+      
+      // Filtrer par domain côté client si nécessaire
+      if (domain && data.events) {
+        data.events = data.events.filter((event: AlertEvent) => 
+          event.labels?.domain === domain
+        );
+      }
+      
+      return data;
+    },
+    refetchInterval: 30000, // Refresh toutes les 30s
+    enabled: true, // Toujours activé, même sans domain
+  });
+}
+
+/**
  * Hook pour acknowledge une alerte
  * Phase P15: Moteur d'alertes
  */
@@ -116,6 +156,29 @@ export function useCloseAlert() {
         method: 'POST',
       });
       if (!res.ok) throw new Error('Failed to close alert');
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['alerts'] });
+    },
+  });
+}
+
+/**
+ * Hook pour snooze (reporter) une alerte
+ * Phase P17: Moteur d'alertes avancé
+ */
+export function useSnoozeAlert() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async ({ eventId, durationMinutes }: { eventId: string; durationMinutes: number }) => {
+      const res = await fetch(`/api/alerts/events/${eventId}/snooze`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ durationMinutes }),
+      });
+      if (!res.ok) throw new Error('Failed to snooze alert');
       return res.json();
     },
     onSuccess: () => {

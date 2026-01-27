@@ -1,13 +1,13 @@
 // src/modules/dashboard/components/AlertDetailModal.tsx
-// Phase P15: Moteur d'alertes - Modal de détail d'alerte avec ACK/Close
+// Phase P15/P17: Moteur d'alertes - Modal de détail d'alerte avec ACK/Close/Snooze
 
 'use client';
 
 import React, { useState } from 'react';
-import { X, AlertTriangle, CheckCircle2, Clock, Calendar } from 'lucide-react';
+import { X, AlertTriangle, CheckCircle2, Clock, Calendar, BellOff, Database } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { zIndexClass } from '../utils/zIndex';
-import { useAckAlert, useCloseAlert, type AlertEvent } from '../hooks/useAlerts';
+import { useAckAlert, useCloseAlert, useSnoozeAlert, type AlertEvent } from '../hooks/useAlerts';
 
 interface AlertDetailModalProps {
   alert: AlertEvent | null;
@@ -21,8 +21,10 @@ interface AlertDetailModalProps {
  */
 export function AlertDetailModal({ alert, isOpen, onClose }: AlertDetailModalProps) {
   const [isProcessing, setIsProcessing] = useState(false);
+  const [snoozeDuration, setSnoozeDuration] = useState<number>(60); // minutes
   const ackMutation = useAckAlert();
   const closeMutation = useCloseAlert();
+  const snoozeMutation = useSnoozeAlert();
 
   if (!isOpen || !alert) return null;
 
@@ -70,6 +72,19 @@ export function AlertDetailModal({ alert, isOpen, onClose }: AlertDetailModalPro
       onClose();
     } catch (error) {
       console.error('Failed to close alert:', error);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleSnooze = async () => {
+    if (isProcessing || !alert) return;
+    setIsProcessing(true);
+    try {
+      await snoozeMutation.mutateAsync({ eventId: alert.id, durationMinutes: snoozeDuration });
+      onClose();
+    } catch (error) {
+      console.error('Failed to snooze alert:', error);
     } finally {
       setIsProcessing(false);
     }
@@ -169,6 +184,32 @@ export function AlertDetailModal({ alert, isOpen, onClose }: AlertDetailModalPro
             </div>
           )}
 
+          {/* Evidence (P17) - Données sources de la décision */}
+          {(alert as any).evidence && typeof (alert as any).evidence === 'object' && (
+            <div className="bg-slate-800/30 rounded-xl p-6 border border-slate-700/50">
+              <div className="flex items-center gap-2 mb-4">
+                <Database className="h-5 w-5 text-blue-400" />
+                <h3 className="text-lg font-semibold text-slate-200">Evidence (données sources)</h3>
+              </div>
+              <div className="space-y-3">
+                {Object.entries((alert as any).evidence).map(([key, value]) => (
+                  <div key={key} className="flex items-start justify-between gap-4 py-2 border-b border-slate-700/30 last:border-0">
+                    <span className="text-sm text-slate-400 capitalize font-medium">{key.replace(/_/g, ' ')}</span>
+                    <span className="text-sm font-semibold text-slate-200 text-right">
+                      {typeof value === 'object' ? (
+                        <pre className="text-xs bg-slate-900/50 p-2 rounded border border-slate-700/50 max-w-md overflow-auto">
+                          {JSON.stringify(value, null, 2)}
+                        </pre>
+                      ) : (
+                        String(value)
+                      )}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Labels */}
           {alert.labels && Object.keys(alert.labels).length > 0 && (
             <div className="bg-slate-800/30 rounded-lg p-4 border border-slate-700/50">
@@ -185,37 +226,105 @@ export function AlertDetailModal({ alert, isOpen, onClose }: AlertDetailModalPro
               </div>
             </div>
           )}
+
+          {/* ACK/Close timestamps (P17) */}
+          {((alert as any).ackedAt || (alert as any).closedAt) && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {(alert as any).ackedAt && (
+                <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700/50">
+                  <p className="text-xs text-slate-400 mb-1">Acquittée le</p>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                    <p className="text-sm font-semibold text-slate-200">
+                      {formatDate((alert as any).ackedAt)}
+                    </p>
+                  </div>
+                  {(alert as any).ackedBy && (
+                    <p className="text-xs text-slate-500 mt-1">par {(alert as any).ackedBy}</p>
+                  )}
+                </div>
+              )}
+              {(alert as any).closedAt && (
+                <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700/50">
+                  <p className="text-xs text-slate-400 mb-1">Fermée le</p>
+                  <div className="flex items-center gap-2">
+                    <X className="h-4 w-4 text-slate-400" />
+                    <p className="text-sm font-semibold text-slate-200">
+                      {formatDate((alert as any).closedAt)}
+                    </p>
+                  </div>
+                  {(alert as any).closedBy && (
+                    <p className="text-xs text-slate-500 mt-1">par {(alert as any).closedBy}</p>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Footer avec actions */}
         {alert.status === 'open' && (
-          <div className="flex items-center justify-end gap-2 p-6 border-t border-slate-700/50">
-            <button
-              onClick={handleAck}
-              disabled={isProcessing}
-              className={cn(
-                "px-4 py-2 rounded-lg border transition-colors",
-                "bg-amber-500/10 border-amber-500/30 text-amber-400",
-                "hover:bg-amber-500/20 disabled:opacity-50 disabled:cursor-not-allowed",
-                "flex items-center gap-2"
-              )}
-            >
-              <CheckCircle2 className="h-4 w-4" />
-              Acquitter
-            </button>
-            <button
-              onClick={handleClose}
-              disabled={isProcessing}
-              className={cn(
-                "px-4 py-2 rounded-lg border transition-colors",
-                "bg-slate-800/50 border-slate-700/50 text-slate-200",
-                "hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed",
-                "flex items-center gap-2"
-              )}
-            >
-              <X className="h-4 w-4" />
-              Fermer
-            </button>
+          <div className="p-6 border-t border-slate-700/50 space-y-4">
+            {/* Snooze selector */}
+            <div className="flex items-center gap-3">
+              <label className="text-sm text-slate-400 whitespace-nowrap">Reporter de :</label>
+              <select
+                value={snoozeDuration}
+                onChange={(e) => setSnoozeDuration(Number(e.target.value))}
+                disabled={isProcessing}
+                className="px-3 py-1.5 rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 disabled:opacity-50"
+              >
+                <option value={15}>15 minutes</option>
+                <option value={30}>30 minutes</option>
+                <option value={60}>1 heure</option>
+                <option value={120}>2 heures</option>
+                <option value={240}>4 heures</option>
+                <option value={480}>8 heures</option>
+              </select>
+            </div>
+
+            {/* Action buttons */}
+            <div className="flex items-center justify-end gap-2">
+              <button
+                onClick={handleSnooze}
+                disabled={isProcessing}
+                className={cn(
+                  "px-4 py-2 rounded-lg border transition-colors",
+                  "bg-blue-500/10 border-blue-500/30 text-blue-400",
+                  "hover:bg-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed",
+                  "flex items-center gap-2"
+                )}
+              >
+                <BellOff className="h-4 w-4" />
+                Reporter
+              </button>
+              <button
+                onClick={handleAck}
+                disabled={isProcessing}
+                className={cn(
+                  "px-4 py-2 rounded-lg border transition-colors",
+                  "bg-amber-500/10 border-amber-500/30 text-amber-400",
+                  "hover:bg-amber-500/20 disabled:opacity-50 disabled:cursor-not-allowed",
+                  "flex items-center gap-2"
+                )}
+              >
+                <CheckCircle2 className="h-4 w-4" />
+                Acquitter
+              </button>
+              <button
+                onClick={handleClose}
+                disabled={isProcessing}
+                className={cn(
+                  "px-4 py-2 rounded-lg border transition-colors",
+                  "bg-slate-800/50 border-slate-700/50 text-slate-200",
+                  "hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed",
+                  "flex items-center gap-2"
+                )}
+              >
+                <X className="h-4 w-4" />
+                Fermer
+              </button>
+            </div>
           </div>
         )}
       </div>

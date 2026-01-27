@@ -2,6 +2,7 @@
 // Phase P9: Export CSV/JSON/Excel/PDF
 // Phase P12: Support séparateurs localisés
 // Phase P12.b: XLSX natif et PDF riche
+// Phase P15: Chiffrement E2E pour exports sensibles
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { extractContextFromHeaders } from '@lib-root/server/dashboard/context';
@@ -16,6 +17,7 @@ import { formatAsPDF } from '@lib-root/server/dashboard/export/pdfFormatter';
 import { auditExport } from '@lib-root/server/dashboard/export/auditExport';
 import { rateLimitRedis } from '@/lib/server/observability/rateLimitRedis';
 import { enforceQuota, recordDenial, recordUsage, getBackpressureSignal, decideBackpressure } from '@lib-root/server/finops';
+import { parseEncryptionOptions, encryptExport, createEncryptedResponse } from '@/lib/server/security/encryptionExport';
 import crypto from 'node:crypto';
 
 // Phase P12.b: Limites de sécurité pour exports lourds
@@ -316,6 +318,28 @@ export async function GET(req: NextRequest) {
         );
       }
       
+      // Phase P15: Chiffrement E2E si demandé
+      const encryptionOptions = parseEncryptionOptions(req);
+      if (encryptionOptions) {
+        try {
+          const { encrypted, metadata } = await encryptExport(buffer, encryptionOptions);
+          const hash = crypto.createHash('sha256').update(encrypted).digest('hex');
+          await logExport(encrypted.length, hash, true);
+          recordUsage({ tenantId: baseCtx.tenantId, scope: scopeExport, rows: rows.length, bytes: encrypted.length, exports: 1 }).catch(() => {});
+          
+          return createEncryptedResponse(encrypted, metadata, `${baseName}_${now}.xlsx`);
+        } catch (encError) {
+          const errorMsg = encError instanceof Error ? encError.message : 'Encryption failed';
+          console.error('[Export XLSX Encryption] Error:', encError);
+          await logExport(buffer.length, '', false, `Encryption error: ${errorMsg}`);
+          return NextResponse.json(
+            { error: 'Encryption failed', details: errorMsg },
+            { status: 500 }
+          );
+        }
+      }
+      
+      // Export non chiffré
       const hash = crypto.createHash('sha256').update(buffer).digest('hex');
       await logExport(buffer.length, hash, true);
       recordUsage({ tenantId: baseCtx.tenantId, scope: scopeExport, rows: rows.length, bytes: buffer.length, exports: 1 }).catch(() => {});
@@ -363,6 +387,28 @@ export async function GET(req: NextRequest) {
         );
       }
       
+      // Phase P15: Chiffrement E2E si demandé
+      const encryptionOptions = parseEncryptionOptions(req);
+      if (encryptionOptions) {
+        try {
+          const { encrypted, metadata } = await encryptExport(buffer, encryptionOptions);
+          const hash = crypto.createHash('sha256').update(encrypted).digest('hex');
+          await logExport(encrypted.length, hash, true);
+          recordUsage({ tenantId: baseCtx.tenantId, scope: scopeExport, rows: rows.length, bytes: encrypted.length, exports: 1 }).catch(() => {});
+          
+          return createEncryptedResponse(encrypted, metadata, `${baseName}_${now}.pdf`);
+        } catch (encError) {
+          const errorMsg = encError instanceof Error ? encError.message : 'Encryption failed';
+          console.error('[Export PDF Encryption] Error:', encError);
+          await logExport(buffer.length, '', false, `Encryption error: ${errorMsg}`);
+          return NextResponse.json(
+            { error: 'Encryption failed', details: errorMsg },
+            { status: 500 }
+          );
+        }
+      }
+      
+      // Export non chiffré
       const hash = crypto.createHash('sha256').update(buffer).digest('hex');
       await logExport(buffer.length, hash, true);
       recordUsage({ tenantId: baseCtx.tenantId, scope: scopeExport, rows: rows.length, bytes: buffer.length, exports: 1 }).catch(() => {});

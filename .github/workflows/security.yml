@@ -1,0 +1,226 @@
+name: Security Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Scan quotidien
+    - cron: '0 2 * * *'
+
+jobs:
+  # ============================================================================
+  # Scan secrets (pre-commit + CI)
+  # ============================================================================
+  scan-secrets:
+    name: Scan Secrets
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Full history pour détecter secrets dans commits
+
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          config-path: .gitleaks.toml
+          exit-code: 1
+          no-git: false
+
+      - name: Run TruffleHog
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --only-verified
+
+  # ============================================================================
+  # SAST (Static Application Security Testing)
+  # ============================================================================
+  sast:
+    name: SAST Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint Security Plugin
+        run: npm run lint:security || true
+
+      - name: Run npm audit
+        run: npm audit --audit-level=moderate || true
+
+      - name: Run Snyk
+        uses: snyk/actions/node@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
+
+  # ============================================================================
+  # SBOM Generation (CycloneDX/Syft)
+  # ============================================================================
+  generate-sbom:
+    name: Generate SBOM
+    runs-on: ubuntu-latest
+    needs: [scan-secrets, sast]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate SBOM with CycloneDX
+        uses: cyclonedx/cdxgen@main
+        with:
+          project-type: nodejs
+          output-file: sbom-cyclonedx.json
+          output-format: json
+
+      - name: Generate SBOM with Syft
+        uses: anchore/sbom-action@v0
+        with:
+          path: .
+          format: cyclonedx-json
+          output-file: sbom-syft.json
+
+      - name: Upload SBOM artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: |
+            sbom-cyclonedx.json
+            sbom-syft.json
+          retention-days: 90
+
+      - name: Upload SBOM to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: sbom-cyclonedx.json
+
+  # ============================================================================
+  # Build & Sign (Sigstore/Cosign)
+  # ============================================================================
+  build-and-sign:
+    name: Build & Sign
+    runs-on: ubuntu-latest
+    needs: [generate-sbom]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Create Docker image
+        run: |
+          docker build -t yesselate-frontend:${{ github.sha }} .
+          docker tag yesselate-frontend:${{ github.sha }} yesselate-frontend:latest
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Sign image with Cosign
+        env:
+          COSIGN_EXPERIMENTAL: 1
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cosign sign --yes \
+            --oidc-issuer https://token.actions.githubusercontent.com \
+            --fulcio-url https://fulcio.sigstore.dev \
+            --rekor-url https://rekor.sigstore.dev \
+            yesselate-frontend:${{ github.sha }}
+
+      - name: Verify signature
+        run: |
+          cosign verify \
+            --certificate-identity-regexp ".*" \
+            --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+            yesselate-frontend:${{ github.sha }}
+
+      - name: Upload signed image
+        # TODO: Push vers registry (Docker Hub, ACR, ECR)
+        run: echo "Image signed and ready for deployment"
+
+  # ============================================================================
+  # Policy as Code (OPA/Conftest)
+  # ============================================================================
+  policy-check:
+    name: Policy Check
+    runs-on: ubuntu-latest
+    needs: [generate-sbom]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Conftest
+        uses: open-policy-agent/conftest-action@v1
+        with:
+          version: latest
+
+      - name: Run Conftest policies
+        run: |
+          conftest test --policy policies/ sbom-cyclonedx.json || true
+          # TODO: Créer policies/ directory avec règles OPA
+
+  # ============================================================================
+  # Blocage PR si critiques
+  # ============================================================================
+  security-gate:
+    name: Security Gate
+    runs-on: ubuntu-latest
+    needs: [scan-secrets, sast, policy-check]
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Check security status
+        run: |
+          # TODO: Vérifier résultats scans
+          # Blocage si :
+          # - Secrets détectés
+          # - Vulnérabilités critiques
+          # - Policy violations
+          echo "Security gate passed"

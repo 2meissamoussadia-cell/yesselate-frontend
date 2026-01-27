@@ -66,6 +66,12 @@ export const BUDGETS: Record<string, PerformanceBudget> = {
     p95_ms: 150,
     p99_ms: 400,
   },
+
+  // P19: Alertes test (dry-run coûteux)
+  '/api/alerts/test': {
+    p95_ms: 1000,  // ≤ 1 s
+    p99_ms: 2000,  // ≤ 2 s
+  },
 };
 
 /**

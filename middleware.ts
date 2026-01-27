@@ -44,6 +44,8 @@ export function middleware(req: NextRequest) {
 
   // CSP stricte (ajuste tes domaines si besoin : fonts, charts lazy, etc.)
   // Note: 'unsafe-inline' pour style-src peut être remplacé par nonce si tous les styles sont injectés avec nonce
+  // Phase P15: Ajout report-uri pour violations CSP
+  const cspReportUri = '/api/security/csp-report';
   const csp = [
     `default-src 'self'`,
     `script-src 'self' 'nonce-${cspNonce}' 'strict-dynamic'`, // strict-dynamic permet les scripts chargés dynamiquement
@@ -57,6 +59,7 @@ export function middleware(req: NextRequest) {
     `upgrade-insecure-requests`,
     `form-action 'self'`,
     `frame-src 'none'`,
+    `report-uri ${cspReportUri}`, // Phase P15: Rapport violations CSP
   ].join('; ');
   res.headers.set('Content-Security-Policy', csp);
 

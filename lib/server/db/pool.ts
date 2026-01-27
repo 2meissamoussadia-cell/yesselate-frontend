@@ -59,21 +59,34 @@ function getPgPool(): Pool {
 
 /**
  * Configure le contexte RLS sur un client PostgreSQL
- * Phase P18: RLS automatique
+ * Phase P18: RLS automatique (via set_security_context)
+ * Phase P15: Sécurité - SET LOCAL app.tenant_id et app.bureau depuis contexte validé
  */
 async function configureRLSContext(client: PoolClient, ctx: RequestContext | null): Promise<void> {
   if (!ctx) {
     return; // Pas de contexte = pas de RLS
   }
 
+  // Phase P15: Affecter SET LOCAL app.tenant_id depuis le contexte validé
+  await client.query(`SET LOCAL app.tenant_id = $1`, [ctx.tenantId]);
+
+  // Phase P15: Extraire bureau depuis scopes si nécessaire (ex: 'bureau:BMO' → 'BMO')
+  const bureauScope = ctx.scopes?.find(s => s.startsWith('bureau:'));
+  if (bureauScope) {
+    const bureauCode = bureauScope.split(':')[1];
+    if (bureauCode) {
+      await client.query(`SET LOCAL app.bureau = $1`, [bureauCode]);
+    }
+  }
+
+  // Phase P18: Conserver aussi set_security_context pour compatibilité RLS existante
   const scopesArray = ctx.scopes || [];
-  
   await client.query(
     `SELECT set_security_context($1, $2, $3, $4)`,
     [
       ctx.tenantId,
       ctx.userId || 'system',
-      ctx.role || 'user',
+      (ctx as any).role || 'user',
       scopesArray,
     ]
   );

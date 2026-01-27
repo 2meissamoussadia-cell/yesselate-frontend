@@ -1,0 +1,63 @@
+# P19 – Bench (smoke + optionnel baseline)
+# Déclenché manuellement ou sur schedule. Exécute k6 smoke contre l'app buildée.
+
+name: Bench P19
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Tous les jours à 2h UTC (optionnel)
+    - cron: '0 2 * * *'
+
+jobs:
+  bench:
+    name: k6 Smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Install k6
+        run: |
+          sudo gpg -k
+          sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg \
+            --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" \
+            | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update && sudo apt-get install -y k6
+
+      - name: Start app
+        run: npx next start -p 4001 &
+        env:
+          NODE_ENV: production
+
+      - name: Wait for app
+        run: |
+          for i in $(seq 1 60); do
+            curl -sf http://localhost:4001/api/health && break
+            sleep 2
+          done
+          curl -sf http://localhost:4001/api/health || exit 1
+
+      - name: Run k6 smoke
+        run: k6 run -e BASE_URL=http://localhost:4001 bench/k6/smoke.js
+
+      - name: Run k6 baseline (short)
+        if: success() && github.event_name == 'workflow_dispatch'
+        run: k6 run -e BASE_URL=http://localhost:4001 --duration 1m --vus 4 bench/k6/baseline.js

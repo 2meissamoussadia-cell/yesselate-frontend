@@ -344,7 +344,7 @@ export async function GET(req: NextRequest) {
       await logExport(buffer.length, hash, true);
       recordUsage({ tenantId: baseCtx.tenantId, scope: scopeExport, rows: rows.length, bytes: buffer.length, exports: 1 }).catch(() => {});
 
-      return new NextResponse(buffer, {
+      return new NextResponse(new Uint8Array(buffer), {
         status: 200,
         headers: {
           'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -413,7 +413,7 @@ export async function GET(req: NextRequest) {
       await logExport(buffer.length, hash, true);
       recordUsage({ tenantId: baseCtx.tenantId, scope: scopeExport, rows: rows.length, bytes: buffer.length, exports: 1 }).catch(() => {});
 
-      return new NextResponse(buffer, {
+      return new NextResponse(new Uint8Array(buffer), {
         status: 200,
         headers: {
           'Content-Type': 'application/pdf',

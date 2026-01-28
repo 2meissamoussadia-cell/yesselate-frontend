@@ -741,7 +741,7 @@ function InfoItem({ icon, label, value }: { icon: React.ReactNode; label: string
   return (
     <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
       <div className="flex items-center gap-2 mb-1">
-        {React.cloneElement(icon as React.ReactElement, { className: 'w-4 h-4 text-slate-400' })}
+        {React.isValidElement(icon) ? React.cloneElement(icon as React.ReactElement<{ className?: string }>, { className: 'w-4 h-4 text-slate-400' }) : icon}
         <span className="text-xs text-slate-400">{label}</span>
       </div>
       <p className="text-sm font-medium text-slate-200">{value}</p>

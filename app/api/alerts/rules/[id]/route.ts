@@ -20,7 +20,7 @@ const AlertRuleUpdateSchema = z.object({
   severity: z.enum(['info', 'warning', 'critical']).optional(),
   enabled: z.boolean().optional(),
   routeKey: z.string().optional(),
-  labels: z.record(z.any()).optional(),
+  labels: z.record(z.string(), z.any()).optional(),
   expr: z.object({
     source: z.object({
       view: z.string().optional(),
@@ -57,7 +57,7 @@ const AlertRuleUpdateSchema = z.object({
       weekends: z.boolean().optional(),
     }).optional(),
   }).optional(),
-  defaultChannels: z.record(z.boolean()).optional(),
+  defaultChannels: z.record(z.string(), z.boolean()).optional(),
 });
 
 /**
@@ -219,9 +219,9 @@ export async function PUT(
   } catch (error) {
     const seconds = (performance.now() - t0) / 1000;
     if (error instanceof z.ZodError) {
-      logReq.warn({ err: error.errors, seconds }, 'alerts rule validation error');
+      logReq.warn({ err: error.issues, seconds }, 'alerts rule validation error');
       return NextResponse.json(
-        { error: 'Validation error', details: error.errors, ok: false },
+        { error: 'Validation error', details: error.issues, ok: false },
         { status: 400 }
       );
     }

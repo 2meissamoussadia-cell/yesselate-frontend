@@ -52,7 +52,8 @@ export function ValidationContratsKPIBar({
     setIsLoading(true);
     try {
       const stats = await contratsApiService.getStats();
-      
+      const urgentCount = (stats.byUrgency?.['critical'] ?? 0) + (stats.byUrgency?.['high'] ?? 0);
+
       // Construction des KPIs avec les vraies données
       const newKpis: KPIItem[] = [
         {
@@ -66,9 +67,9 @@ export function ValidationContratsKPIBar({
         {
           id: 'urgent-contracts',
           label: 'Urgents',
-          value: stats.urgent,
+          value: urgentCount,
           trend: 'stable',
-          status: stats.urgent > 5 ? 'critical' : stats.urgent > 2 ? 'warning' : 'neutral',
+          status: urgentCount > 5 ? 'critical' : urgentCount > 2 ? 'warning' : 'neutral',
         },
         {
           id: 'validated-today',
@@ -91,15 +92,15 @@ export function ValidationContratsKPIBar({
         {
           id: 'avg-processing-time',
           label: 'Délai moyen',
-          value: `${stats.delaiMoyen.toFixed(1)}j`,
-          trend: stats.delaiMoyen < 3 ? 'down' : 'up',
-          trendValue: stats.delaiMoyen < 3 ? '-0.3j' : '+0.5j',
-          status: stats.delaiMoyen < 2 ? 'success' : stats.delaiMoyen < 4 ? 'neutral' : 'warning',
+          value: `${stats.avgDelaiValidation.toFixed(1)}j`,
+          trend: stats.avgDelaiValidation < 3 ? 'down' : 'up',
+          trendValue: stats.avgDelaiValidation < 3 ? '-0.3j' : '+0.5j',
+          status: stats.avgDelaiValidation < 2 ? 'success' : stats.avgDelaiValidation < 4 ? 'neutral' : 'warning',
         },
         {
           id: 'total-amount',
           label: 'Montant total',
-          value: `${(stats.montantTotal / 1000000).toFixed(0)}M`,
+          value: `${(stats.totalMontant / 1000000).toFixed(0)}M`,
           trend: 'up',
           trendValue: '+12M',
           status: 'neutral',
@@ -110,7 +111,7 @@ export function ValidationContratsKPIBar({
             225,
             230,
             240,
-            Math.floor(stats.montantTotal / 1000000),
+            Math.floor(stats.totalMontant / 1000000),
           ],
         },
         {

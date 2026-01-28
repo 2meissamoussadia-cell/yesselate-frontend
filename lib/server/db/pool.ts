@@ -6,7 +6,7 @@
  * Utilise le package 'pg' pour les connexions directes
  */
 
-import { Pool, PoolClient } from 'pg';
+import { Pool, PoolClient, type QueryResultRow } from 'pg';
 import { RequestContext } from '../dashboard/context';
 import { getPostgresSSLConfig } from '../security/mtls';
 
@@ -119,7 +119,7 @@ export const pgPool = {
    * Exécute une requête avec contexte RLS automatique
    * Phase P18: Helper pour requêtes simples
    */
-  async query<T = any>(text: string, params?: any[], ctx?: RequestContext): Promise<{ rows: T[] }> {
+  async query<T extends QueryResultRow = QueryResultRow>(text: string, params?: any[], ctx?: RequestContext): Promise<{ rows: T[] }> {
     const client = await this.connect(ctx);
     try {
       return await client.query<T>(text, params);

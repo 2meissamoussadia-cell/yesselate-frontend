@@ -64,7 +64,7 @@ export function MissionsStatsModal({ open, onClose }: Props) {
                 </div>
 
                 <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-center">
-                  <p className="text-3xl font-bold text-amber-400">{missionsApiService.formatMontant(stats.fraisDeclares)}</p>
+                  <p className="text-3xl font-bold text-amber-400">{missionsApiService.formatMontant(stats.fraisTotal)}</p>
                   <p className="text-sm text-slate-400 mt-1">Frais déclarés</p>
                 </div>
               </div>
@@ -72,26 +72,26 @@ export function MissionsStatsModal({ open, onClose }: Props) {
               <div className="grid grid-cols-3 gap-3">
                 <div className="p-3 rounded-xl bg-slate-800/50">
                   <p className="text-sm text-slate-400">En cours</p>
-                  <p className="text-xl font-bold text-blue-400">{stats.enCours}</p>
+                  <p className="text-xl font-bold text-blue-400">{stats.in_progress}</p>
                 </div>
                 <div className="p-3 rounded-xl bg-slate-800/50">
                   <p className="text-sm text-slate-400">Planifiées</p>
-                  <p className="text-xl font-bold text-amber-400">{stats.planifiees}</p>
+                  <p className="text-xl font-bold text-amber-400">{stats.pending}</p>
                 </div>
                 <div className="p-3 rounded-xl bg-slate-800/50">
                   <p className="text-sm text-slate-400">Terminées</p>
-                  <p className="text-xl font-bold text-emerald-400">{stats.terminees}</p>
+                  <p className="text-xl font-bold text-emerald-400">{stats.completed}</p>
                 </div>
               </div>
 
-              {stats.parType && stats.parType.length > 0 && (
+              {stats.byDestination && Object.keys(stats.byDestination).length > 0 && (
                 <div className="p-4 rounded-xl bg-slate-800/50">
-                  <h4 className="font-semibold text-slate-200 mb-3">Par type</h4>
+                  <h4 className="font-semibold text-slate-200 mb-3">Par destination</h4>
                   <div className="grid grid-cols-2 gap-3">
-                    {stats.parType.map((item) => (
-                      <div key={item.type} className="flex items-center justify-between p-2 rounded-lg bg-slate-700/30">
-                        <span className="text-sm text-slate-300">{item.type}</span>
-                        <span className="font-bold text-slate-200">{item.count}</span>
+                    {Object.entries(stats.byDestination).map(([dest, count]) => (
+                      <div key={dest} className="flex items-center justify-between p-2 rounded-lg bg-slate-700/30">
+                        <span className="text-sm text-slate-300">{dest}</span>
+                        <span className="font-bold text-slate-200">{count}</span>
                       </div>
                     ))}
                   </div>

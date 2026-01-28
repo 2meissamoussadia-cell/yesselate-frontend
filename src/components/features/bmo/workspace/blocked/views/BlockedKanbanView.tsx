@@ -135,7 +135,7 @@ export function BlockedKanbanView({ className }: BlockedKanbanViewProps) {
   // Filtrer dossiers
   const filteredDossiers = useMemo(() => {
     return dossiers.filter((d) => {
-      if (filters.impact.length > 0 && !filters.impact.includes(d.impactLevel as any)) return false;
+      if (filters.impact.length > 0 && !filters.impact.includes(d.impact as any)) return false;
       if (filters.bureaux.length > 0 && !filters.bureaux.includes(d.bureau)) return false;
       return true;
     });
@@ -166,7 +166,7 @@ export function BlockedKanbanView({ className }: BlockedKanbanViewProps) {
         acc[column as KanbanColumn] = {
           count: items.length,
           totalAmount: items.reduce(
-            (sum, d) => sum + (d.relatedDocument?.amount || 0),
+            (sum, d) => sum + (Number(d.amount) || 0),
             0
           ),
         };
@@ -286,14 +286,14 @@ export function BlockedKanbanView({ className }: BlockedKanbanViewProps) {
               <div className="w-2 h-2 rounded-full bg-red-500" />
               <span className="text-slate-400">Critiques:</span>
               <span className="text-white font-medium">
-                {filteredDossiers.filter((d) => d.impactLevel === 'critical').length}
+                {filteredDossiers.filter((d) => d.impact === 'critical').length}
               </span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-orange-500" />
               <span className="text-slate-400">Urgents:</span>
               <span className="text-white font-medium">
-                {filteredDossiers.filter((d) => d.delayDays >= 7).length}
+                {filteredDossiers.filter((d) => d.delay >= 7).length}
               </span>
             </div>
           </div>
@@ -404,16 +404,16 @@ export function BlockedKanbanView({ className }: BlockedKanbanViewProps) {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
                             <span className="font-medium text-white text-sm truncate">
-                              {dossier.reference}
+                              {dossier.id}
                             </span>
                             <Badge
-                              className={cn('text-xs h-4', getImpactColor(dossier.impactLevel || 'medium'))}
+                              className={cn('text-xs h-4', getImpactColor(dossier.impact || 'medium'))}
                             >
-                              {dossier.impactLevel || 'medium'}
+                              {dossier.impact || 'medium'}
                             </Badge>
                           </div>
                           <p className="text-xs text-slate-400 line-clamp-2 mb-2">
-                            {dossier.description}
+                            {dossier.reason}
                           </p>
                         </div>
                         <div className="opacity-0 group-hover:opacity-100 transition-opacity">
@@ -431,19 +431,19 @@ export function BlockedKanbanView({ className }: BlockedKanbanViewProps) {
                             </div>
                             <div className="flex items-center gap-1 text-orange-400">
                               <Clock className="h-3 w-3" />
-                              <span>{dossier.delayDays}j</span>
+                              <span>{dossier.delay}j</span>
                             </div>
                           </div>
 
-                          {dossier.relatedDocument?.amount && (
+                          {dossier.amount && (
                             <div className="flex items-center gap-1 text-xs text-green-400">
                               <DollarSign className="h-3 w-3" />
-                              <span>{formatAmount(dossier.relatedDocument.amount)} FCFA</span>
+                              <span>{formatAmount(Number(dossier.amount) || 0)} FCFA</span>
                             </div>
                           )}
 
                           {/* SLA indicator */}
-                          {dossier.delayDays >= 7 && (
+                          {dossier.delay >= 7 && (
                             <div className="flex items-center gap-1 text-xs text-red-400">
                               <AlertTriangle className="h-3 w-3" />
                               <span>SLA dépassé</span>

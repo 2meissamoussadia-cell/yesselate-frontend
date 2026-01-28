@@ -66,7 +66,7 @@ export function FinancesStatsModal({ open, onClose }: Props) {
                 <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-center">
                   <Wallet className="w-6 h-6 text-emerald-400 mx-auto mb-2" />
                   <p className="text-2xl font-bold text-emerald-400">
-                    {financesApiService.formatMontant(stats.tresorerie)}
+                    {financesApiService.formatMontant(stats.tresorerieGlobale)}
                   </p>
                   <p className="text-sm text-slate-400 mt-1">Trésorerie</p>
                 </div>
@@ -81,7 +81,7 @@ export function FinancesStatsModal({ open, onClose }: Props) {
 
                 <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-center">
                   <TrendingDown className="w-6 h-6 text-amber-400 mx-auto mb-2" />
-                  <p className="text-2xl font-bold text-amber-400">{stats.tauxConsommation}%</p>
+                  <p className="text-2xl font-bold text-amber-400">{stats.budgetTotal > 0 ? Math.round((stats.budgetConsomme / stats.budgetTotal) * 100) : 0}%</p>
                   <p className="text-sm text-slate-400 mt-1">Taux Consommation</p>
                 </div>
               </div>
@@ -104,8 +104,8 @@ export function FinancesStatsModal({ open, onClose }: Props) {
                 </div>
                 <div className="mt-4 pt-4 border-t border-slate-700">
                   <p className="text-sm text-slate-400">Solde net</p>
-                  <p className={cn("text-2xl font-bold", stats.soldeNet >= 0 ? "text-emerald-400" : "text-red-400")}>
-                    {stats.soldeNet >= 0 ? '+' : ''}{financesApiService.formatMontant(stats.soldeNet)} FCFA
+                  <p className={cn("text-2xl font-bold", (stats.fluxEntrants - stats.fluxSortants) >= 0 ? "text-emerald-400" : "text-red-400")}>
+                    {(stats.fluxEntrants - stats.fluxSortants) >= 0 ? '+' : ''}{financesApiService.formatMontant(stats.fluxEntrants - stats.fluxSortants)} FCFA
                   </p>
                 </div>
               </div>

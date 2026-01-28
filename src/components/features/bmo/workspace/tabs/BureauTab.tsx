@@ -239,11 +239,11 @@ export function BureauTab({ tab }: { tab: WorkspaceTab }) {
                 className="w-full"
                 onClick={() =>
                   openTab({
-                    type: 'report_sla',
+                    type: 'report',
                     id: `report_sla:${bureauCode}`,
                     title: `Rapport SLA - ${bureau.code}`,
                     icon: '📈',
-                    data: { bureau: bureauCode },
+                    data: { bureau: bureauCode, reportKind: 'sla' },
                   })
                 }
               >

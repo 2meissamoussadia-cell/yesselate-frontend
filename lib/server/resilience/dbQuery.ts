@@ -1,6 +1,7 @@
 // lib/server/resilience/dbQuery.ts
 // Phase P13: Wrapper pour requêtes DB avec circuit breaker et retry
 
+import type { QueryResultRow } from 'pg';
 import { pgPool } from '@lib-root/server/db/pool';
 import { CircuitBreaker } from './circuit';
 import { retry, isPostgresRetryable } from './retry';
@@ -17,7 +18,7 @@ const dbCircuitBreaker = new CircuitBreaker(5, 30_000, 'db'); // 5 erreurs, rese
  * @param params - Paramètres de la requête
  * @returns Résultat de la requête
  */
-export async function queryWithResilience<T = any>(
+export async function queryWithResilience<T extends QueryResultRow = QueryResultRow>(
   query: string,
   params?: any[]
 ): Promise<{ rows: T[] }> {

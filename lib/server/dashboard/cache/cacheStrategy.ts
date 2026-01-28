@@ -2,7 +2,7 @@
 // Phase P11: Stratégies de cache serveur pour les endpoints dashboard
 // Définit les TTL et stratégies de cache selon le type de vue
 
-import type { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 /**
  * Types de vues selon leur stabilité et fréquence de mise à jour

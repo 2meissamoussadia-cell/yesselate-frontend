@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { extractContextFromHeaders } from '@lib-root/server/dashboard/context';
 import { hydrateContext } from '@lib-root/server/dashboard/context_ext';
 import { can } from '@lib-root/server/security/policy';
+import { applyTenantFilter, extractSecurityContext } from '@/modules/dashboard/api/security';
 import { InMemoryReadModelsRepo } from '@lib-root/server/dashboard/repositories/InMemoryReadModelsRepo';
 import { SqlReadModelsRepo } from '@lib-root/server/dashboard/repositories/SqlReadModelsRepo';
 import { DashboardReadService } from '@lib-root/server/dashboard/services/dashboardReadService';
@@ -127,13 +128,20 @@ export async function GET(
 
     // Récupération des données (les vérifications module + flag sont déjà faites ci-dessus)
     // Phase P11: Passer les options de pagination si nécessaire
-    const data = await svc.getData(
+    let data = await svc.getData(
       parsed.data.main, 
       parsed.data.sub ?? null, 
       parsed.data.leaf ?? null, 
       ctx as any,
       { pagination }
     );
+
+    // Phase 8: Appliquer le filtrage ABAC/RLS supplémentaire côté application
+    // (Le filtrage RLS DB est déjà fait, mais on applique une couche supplémentaire pour sécurité)
+    const securityContext = await extractSecurityContext(req);
+    if (securityContext) {
+      data = applyTenantFilter(data as Record<string, unknown>, securityContext) as typeof data;
+    }
 
     // Phase P11: Calculer le TTFB (Time To First Byte)
     const ttfbSeconds = (performance.now() - t0) / 1000;

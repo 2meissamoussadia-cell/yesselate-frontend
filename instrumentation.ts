@@ -15,13 +15,7 @@
 
 export async function register() {
   if (process.env.NEXT_RUNTIME === 'nodejs') {
-    // Charger dotenv si disponible (pour développement local)
-    try {
-      await import('dotenv/config');
-    } catch {
-      // dotenv non disponible, continuer sans
-    }
-
+    // Next.js charge .env automatiquement ; pas besoin de dotenv
     const { initializeTelemetry } = await import('./lib/server/observability/telemetry');
     initializeTelemetry();
   }

@@ -193,18 +193,18 @@ export function BCModalTabs({ bc, onDecision, onAuditComplete, allBCs = [] }: BC
     const detectedRisks: BCRisk[] = (bc.anomalies || []).map((anomaly, idx) => ({
       id: anomaly.id || `risk-${idx}`,
       label: anomaly.type,
-      level: anomaly.severity === 'critical' ? 'critical' : 
-             anomaly.severity === 'error' ? 'high' : 
-             anomaly.severity === 'warning' ? 'medium' : 'low',
+      level: (anomaly.severity === 'critical' ? 'critical' :
+              anomaly.severity === 'error' ? 'high' :
+              anomaly.severity === 'warning' ? 'medium' : 'low') as BCRisk['level'],
       status: 'detected' as const,
-      note: anomaly.description,
+      note: anomaly.message,
     }));
 
     // Risques standards non détectés
     const standardRisks: BCRisk[] = [
-      { id: 'risk-budget', label: 'Dépassement budget projet', level: 'medium', status: 'not_detected' },
-      { id: 'risk-fournisseur', label: 'Fournisseur non référencé', level: 'medium', status: 'not_detected' },
-      { id: 'risk-delai', label: 'Délai de livraison non respecté', level: 'low', status: 'not_detected' },
+      { id: 'risk-budget', label: 'Dépassement budget projet', level: 'medium' as const, status: 'not_detected' as const },
+      { id: 'risk-fournisseur', label: 'Fournisseur non référencé', level: 'medium' as const, status: 'not_detected' as const },
+      { id: 'risk-delai', label: 'Délai de livraison non respecté', level: 'low' as const, status: 'not_detected' as const },
     ].filter(risk => !detectedRisks.some(dr => dr.label === risk.label));
 
     return [...detectedRisks, ...standardRisks];
@@ -446,6 +446,7 @@ export function BCModalTabs({ bc, onDecision, onAuditComplete, allBCs = [] }: BC
             documents={documents} 
             bc={bc}
             darkMode={darkMode}
+            scrollContainerRef={scrollRef as React.RefObject<HTMLDivElement>}
           />
         )}
 
@@ -548,7 +549,7 @@ export function BCModalTabs({ bc, onDecision, onAuditComplete, allBCs = [] }: BC
         isOpen={showBudgetPlanning}
         onClose={() => setShowBudgetPlanning(false)}
         bc={bc}
-        allBCs={allBCs}
+        allBCs={allBCs as EnrichedBC[]}
         onValidate={() => {
           runDecision({ decision: 'approve', reason: 'Validation après analyse budgétaire' });
           setShowBudgetPlanning(false);

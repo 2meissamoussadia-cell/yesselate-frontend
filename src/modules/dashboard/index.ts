@@ -8,6 +8,8 @@ export * from './components';
 
 // Dashboard Shell (nouveau)
 export { DashboardShell } from './DashboardShell';
+// Dashboard Shell partagé (alternative)
+export { DashboardShell as DashboardShellShared } from './components/shared/DashboardShell';
 
 // Navigation
 export * from './navigation';

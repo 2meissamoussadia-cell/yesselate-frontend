@@ -234,13 +234,21 @@ function EmployesExportModal({ onClose }: { onClose: () => void }) {
     setSelectedFormat(format);
     
     try {
-      const blob = await employesApiService.exportData(format);
+      const { data } = await employesApiService.getAll();
+      let blob: Blob;
+      const ext = format === 'xlsx' ? 'csv' : format;
+      if (format === 'json') {
+        blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      } else {
+        const headers = Object.keys(data[0] ?? {}).join(';');
+        const rows = data.map((e) => Object.values(e as unknown as Record<string, unknown>).join(';'));
+        blob = new Blob([headers + '\n' + rows.join('\n')], { type: 'text/csv;charset=utf-8' });
+      }
       
-      // Download the file
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `employes-export-${new Date().toISOString().split('T')[0]}.${format}`;
+      a.download = `employes-export-${new Date().toISOString().split('T')[0]}.${ext}`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -498,7 +506,7 @@ function InfoItem({ icon, label, value }: { icon: React.ReactNode; label: string
   return (
     <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
       <div className="flex items-center gap-2 mb-1">
-        {React.cloneElement(icon as React.ReactElement, { className: 'w-4 h-4 text-slate-400' })}
+        {React.isValidElement(icon) ? React.cloneElement(icon as React.ReactElement<{ className?: string }>, { className: 'w-4 h-4 text-slate-400' }) : icon}
         <span className="text-xs text-slate-400">{label}</span>
       </div>
       <p className="text-sm font-medium text-slate-200">{value}</p>

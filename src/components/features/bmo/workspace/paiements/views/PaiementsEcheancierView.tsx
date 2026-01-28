@@ -367,7 +367,7 @@ export function PaiementsEcheancierView({ className }: PaiementsEcheancierViewPr
                       {day.date.getDate()}
                     </span>
                     {hasPaiements && (
-                      <Badge variant="secondary" className="text-xs h-5">
+                      <Badge variant="gray" className="text-xs h-5">
                         {day.paiements.length}
                       </Badge>
                     )}

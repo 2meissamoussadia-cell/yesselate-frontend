@@ -33,7 +33,7 @@ type DemandWithEvents = Demand & {
 // prioText est maintenant importé depuis domain/demandes/service (getPriorityText)
 
 export function DemandTab({ id }: { id: string }) {
-  const { updateTabTitle } = useWorkspaceStore();
+  const { updateTab } = useWorkspaceStore();
 
   const [demand, setDemand] = useState<DemandWithEvents | null>(null);
   const [events, setEvents] = useState<DemandEvent[]>([]);
@@ -52,9 +52,9 @@ export function DemandTab({ id }: { id: string }) {
     try {
       const res = await getDemand(id);
       setDemand(res.demand);
-      setEvents(res.demand?.events ?? []);
+      setEvents((res.demand as DemandWithEvents)?.events ?? []);
       const title = res.demand?.subject ? `${id} — ${res.demand.subject}` : id;
-      updateTabTitle(`demand:${id}`, title);
+      updateTab(`demand:${id}`, { title });
     } catch (e: unknown) {
       setErr((e as Error)?.message ?? 'Erreur');
     } finally {

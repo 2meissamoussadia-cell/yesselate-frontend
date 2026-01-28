@@ -132,25 +132,7 @@ export function RHDelegationManager({ open, onClose }: RHDelegationManagerProps)
       open={open}
       onClose={onClose}
       title="Gestion des délégations de pouvoir"
-      icon={<UserCheck className="w-5 h-5 text-blue-500" />}
-      size="xl"
-      footer={
-        <div className="flex justify-between items-center w-full">
-          <button
-            onClick={() => setShowNewDelegationForm(true)}
-            className="px-4 py-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600 transition-colors flex items-center gap-2"
-          >
-            <Plus className="w-4 h-4" />
-            Nouvelle délégation
-          </button>
-          <button
-            onClick={onClose}
-            className="px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800 transition-colors"
-          >
-            Fermer
-          </button>
-        </div>
-      }
+      maxWidth="5xl"
     >
       <div className="space-y-6">
         {/* Statistiques */}
@@ -335,6 +317,22 @@ export function RHDelegationManager({ open, onClose }: RHDelegationManagerProps)
             permissions de validation à un collègue. Toutes les actions effectuées par le délégataire
             sont tracées et associées à la délégation.
           </p>
+        </div>
+
+        <div className="flex justify-between items-center w-full pt-4 border-t border-slate-700">
+          <button
+            onClick={() => setShowNewDelegationForm(true)}
+            className="px-4 py-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600 transition-colors flex items-center gap-2"
+          >
+            <Plus className="w-4 h-4" />
+            Nouvelle délégation
+          </button>
+          <button
+            onClick={onClose}
+            className="px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800 transition-colors"
+          >
+            Fermer
+          </button>
         </div>
       </div>
     </FluentModal>

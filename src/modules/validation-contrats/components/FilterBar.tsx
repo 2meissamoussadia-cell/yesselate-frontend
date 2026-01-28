@@ -100,7 +100,7 @@ export function FilterBar({ onFiltersChange }: FilterBarProps) {
       ))}
 
       {activeFilters.recherche && (
-        <Badge variant="secondary" className="bg-purple-500/20 text-purple-400 border-purple-500/30">
+        <Badge variant="gray" className="bg-purple-500/20 text-purple-400 border-purple-500/30">
           Recherche: {activeFilters.recherche}
           <button onClick={handleClearSearch} className="ml-1 hover:text-purple-300">
             <X className="h-3 w-3" />

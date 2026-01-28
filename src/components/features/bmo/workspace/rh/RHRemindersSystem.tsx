@@ -250,24 +250,7 @@ export function RHRemindersSystem({ open, onClose }: RHRemindersSystemProps) {
       open={open}
       onClose={onClose}
       title="Système de rappels et échéances"
-      icon={<Bell className="w-5 h-5 text-blue-500" />}
-      size="xl"
-      footer={
-        <div className="flex justify-between items-center w-full">
-          <button
-            className="px-4 py-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600 transition-colors flex items-center gap-2"
-          >
-            <Plus className="w-4 h-4" />
-            Nouveau rappel
-          </button>
-          <button
-            onClick={onClose}
-            className="px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800 transition-colors"
-          >
-            Fermer
-          </button>
-        </div>
-      }
+      maxWidth="5xl"
     >
       <div className="space-y-6">
         {/* Statistiques */}
@@ -377,7 +360,7 @@ export function RHRemindersSystem({ open, onClose }: RHRemindersSystemProps) {
                     <h4 className="font-semibold">{reminder.title}</h4>
                     <div className="flex items-center gap-1 flex-shrink-0">
                       {reminder.recurring && (
-                        <Repeat className="w-4 h-4 text-purple-500" title="Rappel récurrent" />
+                        <span title="Rappel récurrent"><Repeat className="w-4 h-4 text-purple-500" /></span>
                       )}
                       <Badge
                         variant={
@@ -476,6 +459,21 @@ export function RHRemindersSystem({ open, onClose }: RHRemindersSystemProps) {
             <p>Aucun rappel trouvé</p>
           </div>
         )}
+
+        <div className="flex justify-between items-center w-full pt-4 border-t border-slate-200 dark:border-slate-700">
+          <button
+            className="px-4 py-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600 transition-colors flex items-center gap-2"
+          >
+            <Plus className="w-4 h-4" />
+            Nouveau rappel
+          </button>
+          <button
+            onClick={onClose}
+            className="px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800 transition-colors"
+          >
+            Fermer
+          </button>
+        </div>
       </div>
     </FluentModal>
   );

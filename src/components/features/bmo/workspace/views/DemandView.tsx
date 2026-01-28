@@ -5,7 +5,7 @@ import { useWorkspaceStore, WorkspaceTab } from '@/lib/stores/workspaceStore';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { cn } from '@/lib/utils';
 import { adaptLocalDemandToDomain } from '@/domain/demandes/adapters/demande.adapter';
-import { useDemandeService } from '@/hooks/useDemandeService';
+import { useDemandesService } from '@/hooks/useDemandesService';
 import { VirtualizedList } from '@/presentation/components/VirtualizedList/VirtualizedList';
 import { formatCurrency, formatDate, getRiskColor } from '@/domain/demandes/service';
 import { 
@@ -298,8 +298,8 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
     warnings,
     approver,
     canAutoApprove,
-    shouldEscalate
-  } = useDemandeService(demandeForService);
+  } = useDemandesService(demandeForService);
+  const shouldEscalate = !canAutoApprove;
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-[1fr_380px] gap-4">

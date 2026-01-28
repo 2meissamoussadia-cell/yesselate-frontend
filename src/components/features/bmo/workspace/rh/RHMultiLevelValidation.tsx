@@ -273,18 +273,7 @@ export function RHMultiLevelValidation({ open, onClose }: RHMultiLevelValidation
       open={open}
       onClose={onClose}
       title="Validation multi-niveaux"
-      icon={<Shield className="w-5 h-5 text-blue-500" />}
-      size="xl"
-      footer={
-        <div className="flex justify-end w-full">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800 transition-colors"
-          >
-            Fermer
-          </button>
-        </div>
-      }
+      maxWidth="5xl"
     >
       <div className="space-y-6">
         {/* Statistiques */}

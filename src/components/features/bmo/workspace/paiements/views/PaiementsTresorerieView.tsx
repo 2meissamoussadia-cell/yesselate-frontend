@@ -439,7 +439,7 @@ export function PaiementsTresorerieView({ className }: PaiementsTresorerieViewPr
                 color: '#fff'
               }}
               labelFormatter={(label) => new Date(label).toLocaleDateString('fr-FR')}
-              formatter={(value: number) => [`${formatFullMontant(value)} FCFA`, 'Solde']}
+              formatter={(value: number | undefined) => [`${formatFullMontant(value ?? 0)} FCFA`, 'Solde']}
             />
             <Area 
               type="monotone" 
@@ -494,7 +494,7 @@ export function PaiementsTresorerieView({ className }: PaiementsTresorerieViewPr
                   borderRadius: '8px',
                   color: '#fff'
                 }}
-                formatter={(value: number) => `${formatFullMontant(value)} FCFA`}
+                formatter={(value: number | undefined) => `${formatFullMontant(value ?? 0)} FCFA`}
               />
               <Legend />
               <Bar dataKey="entrees" fill="#10b981" name="Entrées" radius={[4, 4, 0, 0]} />
@@ -530,7 +530,7 @@ export function PaiementsTresorerieView({ className }: PaiementsTresorerieViewPr
                   borderRadius: '8px',
                   color: '#fff'
                 }}
-                formatter={(value: number) => [`${value} transactions`, '']}
+                formatter={(value: number | undefined) => [`${value ?? 0} transactions`, '']}
               />
               <Legend />
               <Line 

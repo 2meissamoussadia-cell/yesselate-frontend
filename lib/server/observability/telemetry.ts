@@ -72,7 +72,7 @@ export function initializeTelemetry(): NodeSDK | null {
       ],
     });
 
-    sdk.start().then(() => {
+    (sdk.start() as unknown as Promise<void>).then(() => {
       console.log(`[OTEL] ✅ Tracing started (service: ${serviceName}${tracesEndpoint ? `, traces: ${tracesEndpoint}` : ''}${metricsEndpoint ? `, metrics: ${metricsEndpoint}` : ''})`);
     }).catch((err) => {
       console.error('[OTEL] ❌ Init error:', err);
@@ -80,7 +80,7 @@ export function initializeTelemetry(): NodeSDK | null {
 
     // Arrêt propre
     process.on('SIGTERM', () => {
-      sdk.shutdown()
+      (sdk.shutdown() as unknown as Promise<void>)
         .then(() => {
           console.info('[OTEL] 🛑 OpenTelemetry arrêté');
           process.exit(0);

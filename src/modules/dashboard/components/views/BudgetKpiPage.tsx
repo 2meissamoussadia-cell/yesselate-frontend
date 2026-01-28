@@ -24,9 +24,9 @@ import {
 } from 'lucide-react';
 
 import { SectionTitle, DataCard, KpiStatCard } from '@/components/features/bmo/dashboard/components';
+import type { KpiStatCardProps } from '@/components/features/bmo/dashboard/components/KpiStatCard';
 import { EnterpriseBadge } from '../shared/EnterpriseBadge';
-import { mapColorToTone } from '../../utils/colorMapping';
-import { parseTrendPercent, formatCurrency, toneToColor, normalizeKPIColor } from '@lib-root/dashboard/kpi';
+import { parseTrendPercent, formatCurrency, normalizeKPIColor } from '@lib-root/dashboard/kpi';
 
 import { 
   DashboardPageLayout, 
@@ -35,6 +35,7 @@ import {
   DashboardPanel,
   MockDataIndicator,
 } from '../shared';
+import { BudgetDetailModal } from '../modals/BudgetDetailModal';
 
 const clampPct = (n: number) => Math.max(0, Math.min(100, n));
 
@@ -65,18 +66,28 @@ type ProfitRow = {
   margePct: number;
 };
 
+// Type pour les KPIs
+type BudgetKPI = {
+  id: string;
+  label: string;
+  value: string;
+  trend?: number;
+  trendType?: 'up' | 'down' | 'neutral';
+  icon: React.ComponentType<{ className?: string }>;
+  color: 'blue' | 'amber' | 'emerald' | 'violet' | 'rose' | 'cyan';
+  description?: string;
+  onClick: () => void;
+};
+
 export function BudgetKpiPage() {
   const [q, setQ] = useState('');
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+  const [selectedKpi, setSelectedKpi] = useState<BudgetKPI | null>(null);
 
   // Helpers centralisés importés depuis colorMapping.ts
 
-  const handleKPIClick = (kpi: typeof kpis[0]) => {
-    // TODO: Implémenter l'ouverture du modal de détail
-    // Pour l'instant, juste logger l'action
-    if (process.env.NODE_ENV === 'development') {
-      // Utiliser le logger si disponible, sinon ignorer en production
-    }
+  const handleKPIClick = (kpi: BudgetKPI) => {
+    setSelectedKpi(kpi);
   };
 
   // Dernière synchro "réelle" (même source que l'auto-refresh dashboard)
@@ -98,7 +109,7 @@ export function BudgetKpiPage() {
   }, []);
 
   // KPIs (tu pourras brancher tes vraies stats)
-  const kpis = useMemo(() => {
+  const kpis = useMemo((): BudgetKPI[] => {
     return [
       {
         id: 'budget_total',
@@ -140,7 +151,7 @@ export function BudgetKpiPage() {
         trend: 1,
         trendType: 'up' as const,
         icon: TrendingUp,
-        color: 'purple' as const,
+        color: 'violet' as const,
         description: 'Moyenne sur la sélection de projets',
         onClick: () => {},
       },
@@ -165,7 +176,7 @@ export function BudgetKpiPage() {
         onClick: () => {},
       },
     ];
-  }, []);
+  }, []) as BudgetKPI[];
 
   const projects: BudgetProject[] = useMemo(
     () => [
@@ -286,7 +297,7 @@ export function BudgetKpiPage() {
               value={kpi.value}
               subtitle={kpi.description}
               icon={kpi.icon}
-              tone={normalizeKPIColor(kpi.color)}
+              tone={normalizeKPIColor(kpi.color) as KpiStatCardProps['tone']}
               trend={parseTrendPercent(kpi.trend as string | number)}
               trendDirection={kpi.trendType || 'neutral'}
               tooltip={kpi.description}
@@ -468,6 +479,24 @@ export function BudgetKpiPage() {
         />
       </DashboardGrid>
       </DashboardPageLayout>
+
+      {/* Budget Detail Modal */}
+      {selectedKpi && (() => {
+        const trendValue: string | undefined = selectedKpi.trend !== undefined ? String(selectedKpi.trend) : undefined;
+        return (
+          <BudgetDetailModal
+            isOpen={!!selectedKpi}
+            onClose={() => setSelectedKpi(null)}
+            kpi={{
+              id: selectedKpi.id || '',
+              label: selectedKpi.label || '',
+              value: selectedKpi.value || '—',
+              trend: trendValue,
+              description: selectedKpi.description,
+            }}
+          />
+        );
+      })()}
     </div>
   );
 }

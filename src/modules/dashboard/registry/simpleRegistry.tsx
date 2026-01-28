@@ -139,19 +139,16 @@ export const dashboardRegistry: Record<string, ViewEntry<any>> = {
     ttl: 60_000,
     loader: loadOverviewSummaryPoints,
     render: ({ data }) => {
-      // TODO: Créer un composant pour afficher les points
+      // ✅ Phase 8: Utiliser le composant dédié SummaryPointsPage
+      // Note: Le render doit retourner un composant React, pas une fonction
+      const SummaryPointsPage = React.lazy(() => 
+        import('../components/views/SummaryPointsPage').then(m => ({ default: m.SummaryPointsPage }))
+      );
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
       return (
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-white mb-4">Points clés</h2>
-          <div className="space-y-2">
-            {data.points?.map((point: any) => (
-              <div key={point.id} className="bg-slate-800/40 border border-slate-700/40 rounded-xl p-3">
-                <span className="text-slate-400">{point.label}:</span>{' '}
-                <span className="font-semibold text-white">{point.value}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+        <React.Suspense fallback={<LoadingFallback />}>
+          <SummaryPointsPage data={data} />
+        </React.Suspense>
       );
     },
   },

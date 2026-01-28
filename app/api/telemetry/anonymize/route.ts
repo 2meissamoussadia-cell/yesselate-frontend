@@ -74,12 +74,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           [targetTenantId, userId, baseCtx.userId || 'system', updatedCount, ip, userAgent]
         );
 
-        logger.info('Telemetry anonymized', {
-          tenantId: targetTenantId,
-          userId,
-          updatedCount,
-          performedBy: baseCtx.userId || 'system',
-        });
+        logger.info(
+          {
+            tenantId: targetTenantId,
+            userId,
+            updatedCount,
+            performedBy: baseCtx.userId || 'system',
+          },
+          'Telemetry anonymized'
+        );
       } else {
         // Anonymiser tous les user_id pour le tenant (optionnel, selon politique)
         // Par défaut, on anonymise uniquement si userId est fourni

@@ -3,12 +3,12 @@
 import { useState, useEffect } from 'react';
 import { Ticket, AlertTriangle, Clock, CheckCircle, XCircle, Zap, Timer, BarChart3 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { ticketsApi, type TicketsStats } from '@/lib/services/ticketsApiService';
+import { ticketsApi, type TicketStats } from '@/lib/services/ticketsApiService';
 
 interface Props { onOpenQueue: (queue: string, title: string, icon: string) => void; }
 
 export function TicketsLiveCounters({ onOpenQueue }: Props) {
-  const [stats, setStats] = useState<TicketsStats | null>(null);
+  const [stats, setStats] = useState<TicketStats | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export function TicketsLiveCounters({ onOpenQueue }: Props) {
 
   const counters = [
     { key: 'total', label: 'Total', value: stats.total, icon: Ticket, color: 'purple', action: () => onOpenQueue('all', 'Tous', '🎫') },
-    { key: 'critical', label: 'Critiques', value: stats.criticalCount, icon: Zap, color: stats.criticalCount > 0 ? 'red' : 'slate', action: () => onOpenQueue('critical', 'Critiques', '⚡') },
+    { key: 'critical', label: 'Critiques', value: stats.critical, icon: Zap, color: stats.critical > 0 ? 'red' : 'slate', action: () => onOpenQueue('critical', 'Critiques', '⚡') },
     { key: 'open', label: 'Ouverts', value: stats.open, icon: AlertTriangle, color: stats.open > 0 ? 'blue' : 'slate', action: () => onOpenQueue('open', 'Ouverts', '📬') },
     { key: 'inProgress', label: 'En cours', value: stats.inProgress, icon: Clock, color: stats.inProgress > 0 ? 'indigo' : 'slate', action: () => onOpenQueue('in_progress', 'En cours', '🔄') },
     { key: 'pending', label: 'En attente', value: stats.pending, icon: Timer, color: stats.pending > 0 ? 'amber' : 'slate', action: () => onOpenQueue('pending', 'En attente', '⏳') },

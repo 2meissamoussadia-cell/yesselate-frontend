@@ -6,16 +6,18 @@
  */
 
 import type { ViewEntry } from '../types/dashboard';
-import type { User } from '@/contexts/AuthContext';
+
+/** Type minimal pour les guards (compatible AuthContext.User et lib/types User) */
+type UserLike = { role?: string } | null;
 
 /**
  * Vérifie si un utilisateur a accès à une vue selon son rôle
  * 
  * @param entry - Entrée du registry de la vue
- * @param user - Utilisateur actuel
+ * @param user - Utilisateur actuel (AuthContext ou lib/types)
  * @returns true si l'utilisateur a accès
  */
-export function canAccessView(entry: ViewEntry | undefined, user: User | null): boolean {
+export function canAccessView(entry: ViewEntry | undefined, user: UserLike): boolean {
   if (!entry) return false;
   if (!user) return false;
   
@@ -26,7 +28,8 @@ export function canAccessView(entry: ViewEntry | undefined, user: User | null): 
     ? entry.requiredRole
     : [entry.requiredRole];
   
-  return requiredRoles.includes(user.role);
+  const role = user.role;
+  return role != null && requiredRoles.includes(role);
 }
 
 /**
@@ -52,8 +55,9 @@ export function canAccessViewByTenant(
     ? entry.requiredTenant
     : [entry.requiredTenant];
   
-  // Si pas de tenant courant spécifié, vérifier le tenant de l'utilisateur
-  const tenantToCheck = currentTenant || user.tenant;
+  // Si pas de tenant courant spécifié, on ne peut pas vérifier le tenant
+  // (le type User de lib/types/index n'a pas de propriété tenant)
+  const tenantToCheck = currentTenant;
   if (!tenantToCheck) return false;
   
   return requiredTenants.includes(tenantToCheck);
@@ -63,16 +67,17 @@ export function canAccessViewByTenant(
  * Vérifie si un utilisateur a accès à une vue (rôle + tenant)
  * 
  * @param entry - Entrée du registry de la vue
- * @param user - Utilisateur actuel
+ * @param user - Utilisateur actuel (AuthContext ou lib/types)
  * @param currentTenant - Tenant actuel (optionnel)
  * @returns true si l'utilisateur a accès
  */
 export function hasViewAccess(
   entry: ViewEntry | undefined,
-  user: User | null,
+  user: UserLike,
   currentTenant?: string
 ): boolean {
-  if (!entry) return false;
+  // Pas d'entrée registry (ex. clé avec leaf null) : autoriser pour ne pas masquer les items de navigation
+  if (!entry) return true;
   
   // Si pas de restriction, accès autorisé (même sans utilisateur)
   if (!entry.requiredRole && !entry.requiredTenant) {
@@ -95,13 +100,13 @@ export function hasViewAccess(
  * Filtre les entrées du registry selon les permissions de l'utilisateur
  * 
  * @param entries - Entrées du registry
- * @param user - Utilisateur actuel
+ * @param user - Utilisateur actuel (AuthContext ou lib/types)
  * @param currentTenant - Tenant actuel (optionnel)
  * @returns Entrées accessibles
  */
 export function filterAccessibleViews(
   entries: Record<string, ViewEntry>,
-  user: User | null,
+  user: UserLike,
   currentTenant?: string
 ): Record<string, ViewEntry> {
   if (!user) return {};

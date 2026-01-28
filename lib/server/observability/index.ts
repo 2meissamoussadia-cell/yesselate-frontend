@@ -32,7 +32,7 @@ export {
 export { logger, createChildLogger, getCorrelatedLogger, logError, logMetric } from './logger';
 
 // HTTP Metrics (prom-client simplifié)
-export { httpDuration, observeHttp } from './httpMetrics';
+export { observeHttp } from './httpMetrics';
 
 // Middleware
 export { observabilityMiddleware } from './middleware';

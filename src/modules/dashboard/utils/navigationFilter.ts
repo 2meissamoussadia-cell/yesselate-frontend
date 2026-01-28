@@ -55,6 +55,7 @@ export function isNavNodeAccessible(
 /**
  * Filtre récursivement la navigation selon permissions et feature flags
  * Utilise le champ `requires` annoté dans chaque nœud
+ * Si aucune permission n'est chargée (état initial), retourne la config complète pour éviter une sidebar vide
  */
 export function filterNavigationConfig(
   config: Record<string, NavNode>,
@@ -62,6 +63,15 @@ export function filterNavigationConfig(
   roles: string[] = [],
   featureFlags: Record<string, boolean> = {}
 ): Record<string, NavNode> {
+  const hasPermissionData =
+    permissions.length > 0 ||
+    roles.length > 0 ||
+    (featureFlags && typeof featureFlags === 'object' && Object.keys(featureFlags).length > 0);
+
+  if (!hasPermissionData) {
+    return config;
+  }
+
   const filtered: Record<string, NavNode> = {};
 
   for (const [key, node] of Object.entries(config)) {
@@ -95,6 +105,13 @@ export function filterNavigationConfig(
     }
 
     filtered[key] = filteredNode;
+  }
+
+  // Ne jamais renvoyer une config vide : au rechargement, les permissions peuvent
+  // arriver après le premier rendu et tout filtrer ; on garde la config complète
+  // pour que la navigation reste visible (contrôle d'accès au niveau des vues).
+  if (Object.keys(filtered).length === 0) {
+    return config;
   }
 
   return filtered;

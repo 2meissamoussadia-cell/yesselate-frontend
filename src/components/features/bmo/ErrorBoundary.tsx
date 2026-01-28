@@ -132,8 +132,24 @@ export class ErrorBoundary extends Component<Props, State> {
 
     // En production: envoyer à un service de monitoring (Sentry, etc.)
     if (process.env.NODE_ENV === 'production' && (!this.state.hasError || this.state.error !== error)) {
-      // Exemple avec Sentry:
-      // Sentry.captureException(error, { contexts: { react: { componentStack: errorInfo.componentStack } } });
+      try {
+        // Intégration Sentry (si disponible)
+        if (typeof window !== 'undefined') {
+          const Sentry = (window as any).Sentry;
+          if (Sentry && process.env.NEXT_PUBLIC_SENTRY_DSN) {
+            Sentry.captureException(error, {
+              contexts: { react: { componentStack: errorInfo.componentStack } },
+              tags: {
+                component: 'BMOErrorBoundary',
+                errorBoundary: true,
+              },
+            });
+            return;
+          }
+        }
+      } catch (e) {
+        // Ignorer les erreurs de logging
+      }
     }
   }
 

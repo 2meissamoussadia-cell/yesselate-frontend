@@ -7,15 +7,19 @@ import { DashboardBreadcrumbs } from './DashboardBreadcrumbs';
 import { DashboardKPIBar } from './DashboardKPIBar';
 import { DashboardViewRouter } from './DashboardViewRouter';
 import { DashboardFooter } from './DashboardFooter';
-import { DashboardNotifications } from './DashboardNotifications';
+import { DashboardModals } from './DashboardModals';
+import { DashboardNotifications, useDashboardNotifications } from './DashboardNotifications';
 import { AlertNotifications } from './AlertNotifications';
+import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { useI18n } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
+import { useAuthHeaders } from '../utils/getAuthHeaders';
 
 export function DashboardCommandCenterPage() {
   const nav = useDashboardCommandCenterStore((s) => s.navigation);
   const { locale, currency } = useI18n();
+  const authHeaders = useAuthHeaders();
   const { notifications, dismissNotification, markAsRead } = useDashboardNotifications();
 
   const onExport = useCallback(async (format: 'csv' | 'json' | 'pdf' | 'excel') => {
@@ -36,10 +40,7 @@ export function DashboardCommandCenterPage() {
     }
 
     const res = await fetch(`/api/export/dashboard?${params.toString()}`, {
-      headers: {
-        'x-tenant-id': 'default', // TODO: récupérer depuis le contexte auth
-        'x-user-id': 'anonymous', // TODO: récupérer depuis le contexte auth
-      },
+      headers: authHeaders,
     });
     if (!res.ok) throw new Error('Export failed');
     const blob = await res.blob();
@@ -51,7 +52,7 @@ export function DashboardCommandCenterPage() {
     a.download = match?.[1] ?? `export.${format === 'excel' ? 'xlsx' : format}`;
     a.click();
     URL.revokeObjectURL(url);
-  }, [nav, locale, currency]);
+  }, [nav, locale, currency, authHeaders]);
 
   return (
     <div
@@ -90,11 +91,16 @@ export function DashboardCommandCenterPage() {
           {/* Content */}
           <div className="flex-1 min-w-0 overflow-auto">
             <div className="mx-auto w-full min-w-0 max-w-[1600px] px-4 sm:px-6 lg:px-8 py-6">
-              <DashboardViewRouter />
+              <ErrorBoundary>
+                <DashboardViewRouter />
+              </ErrorBoundary>
             </div>
             <DashboardFooter />
           </div>
         </main>
+
+        {/* Modals globaux (KPI drill-down, raccourcis, etc.) */}
+        <DashboardModals />
 
         {/* Notifications / drawer */}
         <DashboardNotifications

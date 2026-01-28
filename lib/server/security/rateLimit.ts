@@ -73,13 +73,14 @@ export async function applyRateLimitAndQuota(
     
     const isExport = pathname.includes('/export');
     
-    quota = await enforceQuota({
+    const result = await enforceQuota({
       tenantId: ctx.tenantId,
       scope,
       isExport,
       estimatedRows,
       estimatedBytes,
     });
+    quota = { allowed: result.allowed, reason: result.allowed ? undefined : result.reason };
   }
   
   return { rateLimit, quota };

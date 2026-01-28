@@ -44,11 +44,7 @@ export async function freezeTenant({
   await appendAudit({
     kind: 'ops:freeze-tenant',
     tenantId,
-    playbook: 'security',
-    params: { reason },
-    details: { reason, dryRun, blastRadius: blastRadiusLabel(scope) },
-    dryRun: dryRun ?? true,
-    ok: true,
+    details: { playbook: 'security', params: { reason }, reason, dryRun: dryRun ?? true, blastRadius: blastRadiusLabel(scope), ok: true },
   });
 
   return { ok: true, dryRun: dryRun ?? true };
@@ -90,11 +86,7 @@ export async function revokeSessions({
   await appendAudit({
     kind: 'ops:revoke-sessions',
     tenantId,
-    playbook: 'security',
-    params: { userId },
-    details: { userId, count: keys.length, dryRun, blastRadius: blastRadiusLabel(scope) },
-    dryRun: dryRun ?? true,
-    ok: true,
+    details: { playbook: 'security', params: { userId }, userId, count: keys.length, dryRun: dryRun ?? true, blastRadius: blastRadiusLabel(scope), ok: true },
   });
 
   return { ok: true, revoked: keys.length, dryRun: dryRun ?? true };
@@ -141,11 +133,7 @@ export async function rotateJWT({
   await appendAudit({
     kind: 'ops:rotate-jwt',
     tenantId: tenantId ?? 'default',
-    playbook: 'security',
-    params: { tenantId },
-    details: { oldKid, newKid, dryRun },
-    dryRun: dryRun ?? true,
-    ok: true,
+    details: { playbook: 'security', params: { tenantId }, oldKid, newKid, dryRun: dryRun ?? true, ok: true },
   });
 
   return { ok: true, oldKid: oldKid ?? undefined, newKid, dryRun: dryRun ?? true };
@@ -191,10 +179,7 @@ export async function unfreezeTenant({
   await appendAudit({
     kind: 'ops:unfreeze-tenant',
     tenantId,
-    playbook: 'security',
-    details: { dryRun, blastRadius: blastRadiusLabel(scope) },
-    dryRun: dryRun ?? true,
-    ok: true,
+    details: { playbook: 'security', dryRun: dryRun ?? true, blastRadius: blastRadiusLabel(scope), ok: true },
   });
 
   return { ok: true, dryRun: dryRun ?? true };

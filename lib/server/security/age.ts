@@ -17,18 +17,26 @@
  * 4. Seul le destinataire peut déchiffrer avec sa clé privée
  */
 
-// Type pour éviter les erreurs si @age-js/age n'est pas installé
-type AgeJS = typeof import('@age-js/age');
+// Type minimal pour éviter les erreurs si @age-js/age n'est pas installé
+type AgeJS = {
+  x25519RecipientFrom: (key: string) => unknown;
+  x25519IdentityFrom: (key: string) => unknown;
+  encrypt: (plaintext: Buffer, recipients: unknown[]) => Promise<ArrayBuffer | Uint8Array>;
+  decrypt: (encrypted: Buffer | Uint8Array, identities: unknown[]) => Promise<ArrayBuffer | Uint8Array>;
+  generateIdentity: () => { recipient: () => { toString: () => string }; toString: () => string };
+};
 
 let ageModule: AgeJS | null = null;
 
 /**
  * Charge le module @age-js/age (lazy loading)
  */
+const AGE_MODULE_PATH = '@age-js/age';
+
 async function loadAge(): Promise<AgeJS> {
   if (!ageModule) {
     try {
-      ageModule = await import('@age-js/age');
+      ageModule = (await import(/* @vite-ignore */ AGE_MODULE_PATH)) as AgeJS;
     } catch (error) {
       throw new Error(
         '@age-js/age package is required for age encryption. Install it with: npm install @age-js/age'
@@ -54,8 +62,8 @@ export async function encryptWithAge(
   // age utilise X25519 pour les clés publiques
   const recipient = age.x25519RecipientFrom(publicKey);
   const encrypted = await age.encrypt(plaintext, [recipient]);
-  
-  return Buffer.from(encrypted);
+  const arr = encrypted instanceof Uint8Array ? encrypted : new Uint8Array(encrypted);
+  return Buffer.from(arr);
 }
 
 /**
@@ -73,8 +81,8 @@ export async function decryptWithAge(
   
   const identity = age.x25519IdentityFrom(privateKey);
   const decrypted = await age.decrypt(encrypted, [identity]);
-  
-  return Buffer.from(decrypted);
+  const arr = decrypted instanceof Uint8Array ? decrypted : new Uint8Array(decrypted);
+  return Buffer.from(arr);
 }
 
 /**

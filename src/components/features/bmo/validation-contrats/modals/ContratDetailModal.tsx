@@ -586,7 +586,7 @@ function CommentsTab({ contrat }: { contrat: Contrat }) {
                   <span className="text-xs text-slate-500">
                     {new Date(comment.at).toLocaleDateString('fr-FR')}
                   </span>
-                  <Badge className="text-xs" variant={comment.visibility === 'internal' ? 'secondary' : 'default'}>
+                  <Badge className="text-xs" variant={comment.visibility === 'internal' ? 'gray' : 'default'}>
                     {comment.visibility}
                   </Badge>
                 </div>

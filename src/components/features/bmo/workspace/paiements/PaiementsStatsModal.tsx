@@ -291,7 +291,7 @@ function KPICard({
   return (
     <div className={cn('p-4 rounded-xl border border-slate-700/50', bgColor)}>
       <div className="flex items-center gap-2 mb-2">
-        {React.cloneElement(icon as React.ReactElement, { className: cn('w-5 h-5', color) })}
+        {React.isValidElement(icon) ? React.cloneElement(icon as React.ReactElement<{ className?: string }>, { className: cn('w-5 h-5', color) }) : icon}
         <span className="text-xs text-slate-400">{label}</span>
       </div>
       <p className={cn('text-2xl font-bold', color)}>{value}</p>

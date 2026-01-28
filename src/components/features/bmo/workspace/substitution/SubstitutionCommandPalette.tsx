@@ -85,7 +85,7 @@ export function SubstitutionCommandPalette({ open, onClose }: CommandPaletteProp
       icon: <Calendar className="w-4 h-4" />,
       category: 'actions',
       action: () => {
-        openTab({ type: 'absences', id: 'absences', title: 'Absences', icon: '📅' });
+        openTab({ type: 'absences', id: 'absences', title: 'Absences', icon: '📅', data: {} });
         onClose();
       },
     },
@@ -96,7 +96,7 @@ export function SubstitutionCommandPalette({ open, onClose }: CommandPaletteProp
       icon: <Users className="w-4 h-4" />,
       category: 'actions',
       action: () => {
-        openTab({ type: 'delegations', id: 'delegations', title: 'Délégations', icon: '👥' });
+        openTab({ type: 'delegations', id: 'delegations', title: 'Délégations', icon: '👥', data: {} });
         onClose();
       },
     },
@@ -121,7 +121,7 @@ export function SubstitutionCommandPalette({ open, onClose }: CommandPaletteProp
       icon: <FileText className="w-4 h-4" />,
       category: 'navigation',
       action: () => {
-        openTab({ type: 'queue', id: 'overview', title: 'Vue d\'ensemble', icon: '📊', data: { queue: 'all' } });
+        openTab({ type: 'inbox', id: 'overview', title: 'Vue d\'ensemble', icon: '📊', data: { queue: 'all' } });
         onClose();
       },
     },
@@ -132,7 +132,7 @@ export function SubstitutionCommandPalette({ open, onClose }: CommandPaletteProp
       icon: <AlertTriangle className="w-4 h-4" />,
       category: 'navigation',
       action: () => {
-        openTab({ type: 'queue', id: 'critical', title: 'Critiques', icon: '🚨', data: { queue: 'critical' } });
+        openTab({ type: 'inbox', id: 'critical', title: 'Critiques', icon: '🚨', data: { queue: 'critical' } });
         onClose();
       },
     },
@@ -143,7 +143,7 @@ export function SubstitutionCommandPalette({ open, onClose }: CommandPaletteProp
       icon: <Clock className="w-4 h-4" />,
       category: 'navigation',
       action: () => {
-        openTab({ type: 'queue', id: 'pending', title: 'En attente', icon: '⏳', data: { queue: 'pending' } });
+        openTab({ type: 'inbox', id: 'pending', title: 'En attente', icon: '⏳', data: { queue: 'pending' } });
         onClose();
       },
     },
@@ -154,7 +154,7 @@ export function SubstitutionCommandPalette({ open, onClose }: CommandPaletteProp
       icon: <Calendar className="w-4 h-4" />,
       category: 'navigation',
       action: () => {
-        openTab({ type: 'absences', id: 'absences', title: 'Absences', icon: '📅' });
+        openTab({ type: 'absences', id: 'absences', title: 'Absences', icon: '📅', data: {} });
         onClose();
       },
     },
@@ -165,7 +165,7 @@ export function SubstitutionCommandPalette({ open, onClose }: CommandPaletteProp
       icon: <Users className="w-4 h-4" />,
       category: 'navigation',
       action: () => {
-        openTab({ type: 'delegations', id: 'delegations', title: 'Délégations', icon: '👥' });
+        openTab({ type: 'delegations', id: 'delegations', title: 'Délégations', icon: '👥', data: {} });
         onClose();
       },
     },
@@ -176,7 +176,7 @@ export function SubstitutionCommandPalette({ open, onClose }: CommandPaletteProp
       icon: <Clock className="w-4 h-4" />,
       category: 'navigation',
       action: () => {
-        openTab({ type: 'historique', id: 'historique', title: 'Historique', icon: '📜' });
+        openTab({ type: 'historique', id: 'historique', title: 'Historique', icon: '📜', data: {} });
         onClose();
       },
     },
@@ -187,7 +187,7 @@ export function SubstitutionCommandPalette({ open, onClose }: CommandPaletteProp
       icon: <TrendingUp className="w-4 h-4" />,
       category: 'navigation',
       action: () => {
-        openTab({ type: 'analytics', id: 'analytics', title: 'Analytics', icon: '📈' });
+        openTab({ type: 'analytics', id: 'analytics', title: 'Analytics', icon: '📈', data: {} });
         onClose();
       },
     },

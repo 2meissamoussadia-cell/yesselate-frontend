@@ -112,7 +112,7 @@ export function colorToTone(color: string): Tone {
  */
 export function normalizeKPIColor(
   color: string
-): 'blue' | 'emerald' | 'amber' | 'purple' | 'rose' | 'cyan' | 'violet' | 'slate' {
+): 'blue' | 'emerald' | 'amber' | 'rose' | 'cyan' | 'violet' | 'slate' {
   switch (color) {
     case 'emerald':
     case 'green':
@@ -125,7 +125,6 @@ export function normalizeKPIColor(
     case 'rose':
       return 'rose';
     case 'purple':
-      return 'purple';
     case 'violet':
       return 'violet';
     case 'cyan':

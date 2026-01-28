@@ -82,7 +82,8 @@ export async function decryptWithPGP(
   });
   
   if (passphrase) {
-    await privateKey.decrypt(passphrase);
+    const key = privateKey as unknown as { decrypt?: (p: string) => Promise<void> };
+    if (typeof key.decrypt === 'function') await key.decrypt(passphrase);
   }
   
   const message = await openpgp.readMessage({
@@ -120,8 +121,10 @@ export async function generatePGPKeyPair(
     passphrase,
   });
   
+  const pubArmored = typeof publicKey === 'string' ? publicKey : (publicKey as unknown as { armor: () => string }).armor();
+  const privArmored = typeof privateKey === 'string' ? privateKey : (privateKey as unknown as { armor: () => string }).armor();
   return {
-    publicKey: publicKey.armor(),
-    privateKey: privateKey.armor(),
+    publicKey: pubArmored,
+    privateKey: privArmored,
   };
 }

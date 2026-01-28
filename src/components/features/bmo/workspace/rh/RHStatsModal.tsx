@@ -137,7 +137,7 @@ export function RHStatsModal({ open, onOpenChange }: Props) {
       open={open}
       title="Statistiques RH Avancées"
       onClose={() => onOpenChange(false)}
-      size="large"
+      maxWidth="5xl"
     >
       <div className="space-y-6 max-h-[70vh] overflow-y-auto">
         {/* Vue d'ensemble */}

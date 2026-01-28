@@ -99,18 +99,37 @@ class Logger {
     // En production, envoyer les erreurs critiques à un service de tracking
     if (this.isProduction && entry.level === 'error') {
       try {
-        // TODO: Intégrer avec Sentry, LogRocket, ou autre service
-        // Exemple:
-        // if (typeof window !== 'undefined' && window.Sentry) {
-        //   window.Sentry.captureException(new Error(entry.message), {
-        //     contexts: { custom: entry.context },
-        //   });
-        // }
+        // Intégration avec Sentry (si disponible)
+        if (typeof window !== 'undefined') {
+          // Option 1: Sentry via @sentry/nextjs (si installé)
+          const Sentry = (window as any).Sentry;
+          if (Sentry && process.env.NEXT_PUBLIC_SENTRY_DSN) {
+            Sentry.captureException(new Error(entry.message), {
+              contexts: { custom: entry.context },
+              tags: {
+                component: entry.context?.component,
+                action: entry.context?.action,
+              },
+              level: 'error',
+            });
+            return;
+          }
+
+          // Option 2: LogRocket (si disponible)
+          const LogRocket = (window as any).LogRocket;
+          if (LogRocket) {
+            LogRocket.captureException(new Error(entry.message), {
+              extra: entry.context,
+            });
+            return;
+          }
+        }
         
-        // Pour l'instant, utiliser sendBeacon pour envoyer les logs critiques
+        // Option 3: Fallback - utiliser sendBeacon pour envoyer les logs critiques
         if (typeof navigator !== 'undefined' && 'sendBeacon' in navigator) {
           const blob = new Blob([JSON.stringify(entry)], { type: 'application/json' });
-          navigator.sendBeacon('/api/logs', blob);
+          const logEndpoint = process.env.NEXT_PUBLIC_LOG_ENDPOINT || '/api/logs';
+          navigator.sendBeacon(logEndpoint, blob);
         }
       } catch (e) {
         // Ne pas bloquer l'application en cas d'erreur de logging

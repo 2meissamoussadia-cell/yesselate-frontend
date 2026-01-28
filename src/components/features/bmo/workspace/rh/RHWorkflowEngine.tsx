@@ -218,30 +218,7 @@ export function RHWorkflowEngine({ open, onClose }: RHWorkflowEngineProps) {
       open={open}
       onClose={onClose}
       title="Moteur de workflow automatisé"
-      icon={<Workflow className="w-5 h-5 text-purple-500" />}
-      size="xl"
-      footer={
-        <div className="flex justify-between items-center w-full">
-          <div className="flex gap-2">
-            <button
-              onClick={() => {
-                setSelectedWorkflow(null);
-                setIsEditMode(true);
-              }}
-              className="px-4 py-2 rounded-xl bg-purple-500 text-white hover:bg-purple-600 transition-colors flex items-center gap-2"
-            >
-              <Plus className="w-4 h-4" />
-              Nouveau workflow
-            </button>
-          </div>
-          <button
-            onClick={onClose}
-            className="px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800 transition-colors"
-          >
-            Fermer
-          </button>
-        </div>
-      }
+      maxWidth="5xl"
     >
       <div className="space-y-6">
         {/* Statistiques globales */}
@@ -440,6 +417,27 @@ export function RHWorkflowEngine({ open, onClose }: RHWorkflowEngineProps) {
             <p>Aucun workflow trouvé</p>
           </div>
         )}
+
+        <div className="flex justify-between items-center w-full pt-4 border-t border-slate-200 dark:border-slate-700">
+          <div className="flex gap-2">
+            <button
+              onClick={() => {
+                setSelectedWorkflow(null);
+                setIsEditMode(true);
+              }}
+              className="px-4 py-2 rounded-xl bg-purple-500 text-white hover:bg-purple-600 transition-colors flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Nouveau workflow
+            </button>
+          </div>
+          <button
+            onClick={onClose}
+            className="px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800 transition-colors"
+          >
+            Fermer
+          </button>
+        </div>
       </div>
     </FluentModal>
   );

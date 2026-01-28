@@ -3,10 +3,11 @@
 
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { AlertTriangle, AlertCircle, Info } from 'lucide-react';
 import { KpiTile } from './KpiTile';
 import { useAlertStats } from '../hooks/useAlerts';
+import { AlertListModal } from './modals/AlertListModal';
 
 /**
  * Composant pour afficher les tuiles KPI d'alertes
@@ -15,6 +16,7 @@ import { useAlertStats } from '../hooks/useAlerts';
  */
 export function AlertKPITiles() {
   const { data, isLoading } = useAlertStats();
+  const [modalSeverity, setModalSeverity] = useState<'critical' | 'warning' | 'info' | null>(null);
 
   if (isLoading) {
     return (
@@ -30,40 +32,42 @@ export function AlertKPITiles() {
   if (!stats) return null;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <KpiTile
-        label="Alertes critiques"
-        value={stats.critical_open || 0}
-        color="rose"
-        Icon={AlertTriangle}
-        trendSentiment={stats.critical_open > 0 ? 'negative' : 'neutral'}
-        onClick={() => {
-          // TODO: Ouvrir modal ou naviguer vers la liste des alertes critiques
-          console.log('Open critical alerts');
-        }}
-      />
-      <KpiTile
-        label="Alertes warning"
-        value={stats.warning_open || 0}
-        color="amber"
-        Icon={AlertCircle}
-        trendSentiment={stats.warning_open > 0 ? 'negative' : 'neutral'}
-        onClick={() => {
-          // TODO: Ouvrir modal ou naviguer vers la liste des alertes warning
-          console.log('Open warning alerts');
-        }}
-      />
-      <KpiTile
-        label="Alertes info"
-        value={stats.info_open || 0}
-        color="cyan"
-        Icon={Info}
-        trendSentiment="neutral"
-        onClick={() => {
-          // TODO: Ouvrir modal ou naviguer vers la liste des alertes info
-          console.log('Open info alerts');
-        }}
-      />
-    </div>
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <KpiTile
+          label="Alertes critiques"
+          value={stats.critical_open || 0}
+          color="rose"
+          Icon={AlertTriangle}
+          trendSentiment={stats.critical_open > 0 ? 'negative' : 'neutral'}
+          onClick={() => setModalSeverity('critical')}
+        />
+        <KpiTile
+          label="Alertes warning"
+          value={stats.warning_open || 0}
+          color="amber"
+          Icon={AlertCircle}
+          trendSentiment={stats.warning_open > 0 ? 'negative' : 'neutral'}
+          onClick={() => setModalSeverity('warning')}
+        />
+        <KpiTile
+          label="Alertes info"
+          value={stats.info_open || 0}
+          color="cyan"
+          Icon={Info}
+          trendSentiment="neutral"
+          onClick={() => setModalSeverity('info')}
+        />
+      </div>
+
+      {/* Modal de liste d'alertes */}
+      {modalSeverity && (
+        <AlertListModal
+          isOpen={!!modalSeverity}
+          onClose={() => setModalSeverity(null)}
+          severity={modalSeverity}
+        />
+      )}
+    </>
   );
 }

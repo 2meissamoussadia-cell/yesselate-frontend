@@ -4,13 +4,15 @@ import { ChartContainer } from '@/modules/dashboard/charts/ChartKit/ChartContain
 import { AreaChartLazy } from '@/modules/dashboard/charts/ChartKit/AreaChart';
 import { toneToColor } from '@lib-root/dashboard/kpi';
 
-export function ReportingOverviewPage({ data }: { data: { monthly: Array<{ mois: string; production_ht: number; facture_ht: number; encaisse_ht: number; rap_ht: number; raf_ht: number }>, dso?: Array<{ mois: string; dso_jours: number }> }}) {
+import type { ReportingOverviewCombinedData } from '../../types/dashboard.readmodels';
+
+export function ReportingOverviewPage({ data }: { data: ReportingOverviewCombinedData }) {
   const last = data.monthly?.[data.monthly.length - 1];
   const kpis = [
-    { id:'prod', label:'Production (mois)', value:new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'}).format(last?.production_ht ?? 0), color:toneToColor('info') },
-    { id:'fact', label:'Facturé (mois)',   value:new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'}).format(last?.facture_ht ?? 0),    color:toneToColor('ok') },
-    { id:'raf',  label:'Reste à facturer', value:new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'}).format(last?.raf_ht ?? 0),       color:toneToColor('warn') },
-    { id:'dso',  label:'DSO (jours)',      value:Math.round(data.dso?.[data.dso.length-1]?.dso_jours ?? 0),                                         color:toneToColor('warn') },
+    { id:'prod', label:'Production (mois)', value:new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'}).format(last?.productionHt ?? 0), color:toneToColor('info') },
+    { id:'fact', label:'Facturé (mois)',   value:new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'}).format(last?.factureHt ?? 0),    color:toneToColor('ok') },
+    { id:'raf',  label:'Reste à facturer', value:new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'}).format(last?.rafHt ?? 0),       color:toneToColor('warn') },
+    { id:'dso',  label:'DSO (jours)',      value:Math.round(data.dso?.[data.dso.length-1]?.dsoJours ?? 0),                                         color:toneToColor('warn') },
   ];
 
   return (
@@ -21,7 +23,7 @@ export function ReportingOverviewPage({ data }: { data: { monthly: Array<{ mois:
 
       <ChartContainer title="Séries mensuelles">
         <AreaChartLazy
-          data={data.monthly?.map(m => ({ date:m.mois, prod:m.production_ht, fact:m.facture_ht, enca:m.encaisse_ht })) ?? []}
+          data={data.monthly?.map(m => ({ date:m.mois, prod:m.productionHt, fact:m.factureHt, enca:m.encaisseHt })) ?? []}
           series={[
             { key:'prod', label:'Production', color:'#3b82f6' },
             { key:'fact', label:'Facturé',    color:'#22c55e' },

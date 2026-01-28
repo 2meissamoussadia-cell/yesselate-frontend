@@ -65,7 +65,7 @@ export function RecouvrementsStatsModal({ open, onClose }: Props) {
                 </div>
 
                 <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-center">
-                  <p className="text-2xl font-bold text-red-400">{recouvrementsApiService.formatMontant(stats.enRetard)}</p>
+                  <p className="text-2xl font-bold text-red-400">{recouvrementsApiService.formatMontant(stats.montantEnRetard)}</p>
                   <p className="text-sm text-slate-400 mt-1">En retard</p>
                 </div>
               </div>
@@ -74,11 +74,11 @@ export function RecouvrementsStatsModal({ open, onClose }: Props) {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-sm text-slate-400">Créances recouvrées</p>
-                    <p className="text-xl font-bold text-emerald-400">{recouvrementsApiService.formatMontant(stats.recouvre)} FCFA</p>
+                    <p className="text-xl font-bold text-emerald-400">{recouvrementsApiService.formatMontant(stats.montantRecouvre)} FCFA</p>
                   </div>
                   <div>
                     <p className="text-sm text-slate-400">En cours</p>
-                    <p className="text-xl font-bold text-blue-400">{recouvrementsApiService.formatMontant(stats.enCours)} FCFA</p>
+                    <p className="text-xl font-bold text-blue-400">{recouvrementsApiService.formatMontant(stats.montantEnAttente)} FCFA</p>
                   </div>
                 </div>
               </div>

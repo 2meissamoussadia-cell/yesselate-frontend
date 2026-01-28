@@ -17,7 +17,7 @@ const calcDelay = (dateStr: string) => {
 };
 
 export function SlaReportTab({ tab }: { tab: WorkspaceTab }) {
-  const targetBureau = tab.data?.bureau;
+  const targetBureau = tab.data?.bureau as string | undefined;
 
   const slaData = useMemo(() => {
     const allDemands = (demands as Demand[]).map((d) => ({

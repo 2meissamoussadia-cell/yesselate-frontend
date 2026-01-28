@@ -99,24 +99,24 @@ export function WorkflowVisualModal({
 
     // Étape 5: Décision BMO
     const decisionStatus = bc.decisionBMO ? 
-      (bc.decisionBMO.decision === 'approve' ? 'completed' : 'blocked') :
+      ((bc.decisionBMO as { decision?: string }).decision === 'approve' ? 'completed' : 'blocked') :
       (bc.status === 'validated' || bc.status === 'approved_bmo' ? 'completed' : 'pending');
     
     steps.push({
       id: 'decision_bmo',
       label: 'Décision BMO',
       status: decisionStatus,
-      completedAt: bc.decisionBMO?.decisionDate || 
-                   bc.historique?.find(h => h.type === 'validation')?.date,
-      completedBy: bc.decisionBMO?.validatorName || 'BMO',
+completedAt: (bc.decisionBMO as { decisionDate?: string })?.decisionDate || 
+                    bc.historique?.find(h => h.type === 'validation')?.date,
+      completedBy: (bc.decisionBMO as { validatorName?: string })?.validatorName || 'BMO',
       duration: 0,
       estimatedDuration: 30,
-      blockers: bc.decisionBMO?.decision === 'reject' ? ['BC rejeté'] : undefined,
+      blockers: (bc.decisionBMO as { decision?: string })?.decision === 'reject' ? ['BC rejeté'] : undefined,
       canRetry: decisionStatus === 'blocked',
     });
 
     // Étape 6: Signature (si validé)
-    if (bc.status === 'validated' || bc.status === 'approved_bmo' || bc.decisionBMO?.decision === 'approve') {
+    if (bc.status === 'validated' || bc.status === 'approved_bmo' || (bc.decisionBMO as { decision?: string })?.decision === 'approve') {
       steps.push({
         id: 'signature',
         label: 'Signature',

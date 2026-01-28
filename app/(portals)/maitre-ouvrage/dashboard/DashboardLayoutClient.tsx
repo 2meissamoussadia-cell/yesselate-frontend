@@ -43,6 +43,13 @@ export function DashboardLayoutError({ error }: { error: Error }) {
 }
 
 /**
+ * Wrapper pour ErrorBoundary fallback (nécessaire car on ne peut pas passer de fonctions depuis Server Components)
+ */
+export function DashboardErrorFallback({ error }: { error: Error }) {
+  return <DashboardLayoutError error={error} />;
+}
+
+/**
  * Composant client pour la synchronisation (nécessite hooks)
  */
 export function DashboardSyncClient() {

@@ -21,6 +21,7 @@ export type { KPIData } from './DashboardKPIBar';
 export { DashboardFooter } from './DashboardFooter';
 export { DashboardBreadcrumbs } from './DashboardBreadcrumbs';
 export { DashboardCommandCenterPage } from './DashboardCommandCenterPage';
+export { DashboardModals } from './DashboardModals';
 export { DashboardUrlSync } from './DashboardUrlSync';
 export { DynamicSidebar } from './DynamicSidebar';
 export { DynamicSubnav } from './DynamicSubnav';

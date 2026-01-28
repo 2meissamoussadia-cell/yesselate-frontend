@@ -11,6 +11,8 @@
 
 'use client';
 
+import { captureException, captureMessage } from './monitoring';
+
 type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
 interface LogContext {
@@ -68,16 +70,29 @@ class DashboardLogger {
 
     // En production, envoyer les erreurs critiques à un service de monitoring
     if (level === 'error' && process.env.NODE_ENV === 'production') {
-      // TODO: Intégrer avec service de monitoring (Sentry, LogRocket, etc.)
+      // ✅ Phase 6: Intégration monitoring complète (Sentry, LogRocket, API interne)
       this.sendToMonitoring(message, context, error);
     }
   }
 
   private sendToMonitoring(message: string, context?: LogContext, error?: Error): void {
-    // Placeholder pour intégration future avec service de monitoring
-    if (typeof window !== 'undefined' && (window as any).__MONITORING__) {
-      (window as any).__MONITORING__.captureException(error || new Error(message), {
-        extra: context,
+    // Utiliser le service de monitoring centralisé
+    if (error) {
+      captureException(error, {
+        extra: {
+          ...context,
+          message,
+          component: context?.component || this.context,
+        },
+        tags: {
+          component: context?.component || this.context,
+          action: context?.action,
+        },
+      });
+    } else {
+      captureMessage(message, 'error', {
+        ...context,
+        component: context?.component || this.context,
       });
     }
   }

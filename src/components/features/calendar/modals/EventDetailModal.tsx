@@ -223,7 +223,7 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
                 <Building2 className="w-4 h-4" />
                 Bureau
               </label>
-              <Badge variant="secondary">
+              <Badge variant="gray">
                 {event.bureau}
               </Badge>
             </div>

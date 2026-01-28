@@ -522,16 +522,18 @@ export function findNavNodeById(
 export function getSubCategories(
   mainCategory: DashboardMainCategory
 ): NavNode[] {
-  const mainNode = dashboardNavigationConfig[mainCategory];
-  return mainNode?.children || [];
+  const key = (mainCategory && typeof mainCategory === 'string' ? mainCategory.toLowerCase() : 'overview') as DashboardMainCategory;
+  const mainNode = dashboardNavigationConfig[key];
+  return mainNode?.children ?? [];
 }
 
 export function getSubSubCategories(
   mainCategory: DashboardMainCategory,
   subCategory: string
 ): NavNode[] {
-  const mainNode = dashboardNavigationConfig[mainCategory];
+  const key = (mainCategory && typeof mainCategory === 'string' ? mainCategory.toLowerCase() : 'overview') as DashboardMainCategory;
+  const mainNode = dashboardNavigationConfig[key];
   const subNode = mainNode?.children?.find((child) => child.id === subCategory);
-  return subNode?.children || [];
+  return subNode?.children ?? [];
 }
 

@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { TelemetryBatch } from '@/lib/telemetry/schema';
+import { TelemetryBatch } from '@lib-root/telemetry/schema';
 import { extractContextFromHeaders } from '@lib-root/server/dashboard/context';
 import { pgPool } from '@lib-root/server/db/pool';
 import { rateLimitRedis } from '@lib-root/server/observability/rateLimitRedis';

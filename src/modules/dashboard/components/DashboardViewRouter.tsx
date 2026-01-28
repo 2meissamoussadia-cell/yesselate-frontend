@@ -9,7 +9,7 @@
 
 'use client';
 
-import { Suspense, useEffect, useState, useMemo, memo, useCallback } from 'react';
+import { Suspense, useEffect, useState, useMemo, memo, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BarChart3, ShieldX } from 'lucide-react';
 import { EmptyState } from './views/EmptyState';
@@ -36,6 +36,8 @@ import { dashboardNavigationConfig } from '../navigation/dashboardNavigationConf
 import { nodeAllowed } from '../navigation/permissions';
 import { useDashboardPermissionsStore } from '@/lib/stores/dashboardPermissionsStore';
 import { useTrackView } from '../telemetry/useTrack';
+import { getAuthHeaders } from '../utils/getAuthHeaders';
+import { getNextCategoryRoute, getPreviousCategoryRoute } from '../utils/routeNavigation';
 
 // ✅ Cache des composants chargés pour éviter les rechargements inutiles
 const componentCache = new Map<string, ComponentType>();
@@ -88,7 +90,10 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
   
   // ✅ Vérifier l'accès via le registry (vérification locale)
   const registryKey = navToKey(navKey);
-  const registryEntry = dashboardRegistry[registryKey];
+  const registryEntry = useMemo(() => dashboardRegistry[registryKey], [registryKey]);
+  
+  // Note: Le User de lib/contexts/AuthContext utilise déjà le type User de lib/types
+  // qui a nom, prenom (pas firstName, lastName), donc pas de conversion nécessaire
   const hasAccessLocal = useMemo(() => {
     return hasViewAccess(registryEntry, user);
   }, [registryEntry, user]);
@@ -111,11 +116,9 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
     
     async function checkPolicy() {
       try {
+        const authHeaders = getAuthHeaders(user);
         const res = await fetch('/api/me/policy', {
-          headers: {
-            'x-tenant-id': 'default', // TODO: récupérer depuis le contexte auth
-            'x-user-id': 'anonymous', // TODO: récupérer depuis le contexte auth
-          },
+          headers: authHeaders,
         });
         if (cancelled) return;
         
@@ -169,20 +172,25 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
     
     checkPolicy();
     return () => { cancelled = true; };
-  }, [main, sub, leaf, filteredNav]);
+  }, [main, sub, leaf, filteredNav, navigate, log]);
 
   // Phase P10: Rediriger vers la première route autorisée si la route actuelle est interdite
+  // Ne rediriger qu'une seule fois quand l'accès passe à "refusé" pour éviter une boucle
+  // (navigate() change main/sub/leaf, ce qui re-déclenchait l'effet → Maximum update depth)
+  const prevHasAccessPolicyRef = useRef<boolean | null>(null);
   useEffect(() => {
-    // Si le check policy indique un accès refusé, rediriger
-    if (hasAccessPolicy === false) {
-      const firstRoute = findFirstAuthorizedRoute(filteredNav);
-      if (firstRoute) {
-        log.debug('Route interdite (policy), redirection vers première route autorisée', {
-          from: { main, sub, leaf },
-          to: firstRoute,
-        });
-        navigate(firstRoute.main as any, firstRoute.sub, firstRoute.leaf);
-      }
+    const justBecameFalse = prevHasAccessPolicyRef.current !== false && hasAccessPolicy === false;
+    prevHasAccessPolicyRef.current = hasAccessPolicy;
+
+    if (!justBecameFalse) return;
+
+    const firstRoute = findFirstAuthorizedRoute(filteredNav);
+    if (firstRoute) {
+      log.debug('Route interdite (policy), redirection vers première route autorisée', {
+        from: { main, sub, leaf },
+        to: firstRoute,
+      });
+      navigate(firstRoute.main as any, firstRoute.sub, firstRoute.leaf);
     }
   }, [hasAccessPolicy, filteredNav, main, sub, leaf, navigate, log]);
 
@@ -194,12 +202,26 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
   const containerRef = useTouchGestures(
     {
       onSwipeLeft: () => {
-        // Navigation vers la prochaine catégorie (à implémenter selon la logique métier)
-        log.debug('Swipe left détecté');
+        // Navigation vers la prochaine catégorie
+        const currentRoute = { main, sub: sub || null, leaf: leaf || null };
+        const nextRoute = getNextCategoryRoute(currentRoute, filteredNav);
+        if (nextRoute) {
+          log.debug('Swipe left: navigation vers route suivante', { from: currentRoute, to: nextRoute });
+          navigate(nextRoute.main as any, nextRoute.sub, nextRoute.leaf);
+        } else {
+          log.debug('Swipe left: aucune route suivante disponible');
+        }
       },
       onSwipeRight: () => {
         // Navigation vers la catégorie précédente
-        log.debug('Swipe right détecté');
+        const currentRoute = { main, sub: sub || null, leaf: leaf || null };
+        const prevRoute = getPreviousCategoryRoute(currentRoute, filteredNav);
+        if (prevRoute) {
+          log.debug('Swipe right: navigation vers route précédente', { from: currentRoute, to: prevRoute });
+          navigate(prevRoute.main as any, prevRoute.sub, prevRoute.leaf);
+        } else {
+          log.debug('Swipe right: aucune route précédente disponible');
+        }
       },
     },
     { enabled: true, preventDefault: false } // Ne pas bloquer le scroll
@@ -364,7 +386,7 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
     return () => {
       cancelled = true;
     };
-  }, [currentRoute, hasAccess, registryEntry, navKey]); // ✅ Ajouter hasAccess et registryEntry dans les dépendances
+  }, [currentRoute, hasAccessLocal, registryEntry, navKey]); // ✅ Ajouter hasAccessLocal et registryEntry dans les dépendances
 
   if (isLoading) {
     return (
@@ -399,14 +421,15 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
     duration: 0.3,
   };
 
+  // Composant fallback pour Suspense (doit être un composant, pas une fonction)
+  const LoadingFallback = () => (
+    <div className="p-4 sm:p-6 text-gray-400 flex items-center justify-center min-h-[200px] min-w-0">
+      <div className="animate-pulse">Chargement…</div>
+    </div>
+  );
+
   return (
-    <Suspense
-      fallback={
-        <div className="p-4 sm:p-6 text-gray-400 flex items-center justify-center min-h-[200px] min-w-0">
-          <div className="animate-pulse">Chargement…</div>
-        </div>
-      }
-    >
+    <Suspense fallback={<LoadingFallback />}>
       <div ref={containerRef} className={cn('min-w-0', className)}>
         {debug ? (
           <div className="mb-3 rounded-xl border border-slate-800/60 bg-slate-950/30 px-3 py-2 text-xs text-slate-300">

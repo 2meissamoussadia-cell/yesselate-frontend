@@ -103,7 +103,19 @@ const nextConfig: NextConfig = {
         net: false,
         tls: false,
         canvas: false,
+        // Exclure les modules serveur du bundle client
+        'ioredis': false,
+        'pino': false,
+        'prom-client': false,
       };
+      
+      // Exclure explicitement ces modules du bundle client
+      config.externals = config.externals || [];
+      if (Array.isArray(config.externals)) {
+        config.externals.push('ioredis', 'pino', 'prom-client');
+      } else {
+        config.externals = [config.externals, 'ioredis', 'pino', 'prom-client'];
+      }
     }
 
     // ✅ Optimisations Fast Refresh en développement

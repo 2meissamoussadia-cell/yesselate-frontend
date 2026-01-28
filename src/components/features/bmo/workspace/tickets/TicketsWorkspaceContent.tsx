@@ -21,6 +21,9 @@ const PRIORITY_STYLES = {
   low: { badge: 'bg-slate-500/20 text-slate-600', icon: Clock },
 };
 
+const getStatusLabel = (s: string) => ({ open: 'Ouvert', in_progress: 'En cours', pending: 'En attente', resolved: 'Résolu', closed: 'Fermé' })[s] ?? s;
+const getCategoryLabel = (c: string) => ({ technique: 'Technique', commercial: 'Commercial', facturation: 'Facturation', livraison: 'Livraison', qualite: 'Qualité', autre: 'Autre' })[c] ?? c;
+
 export function TicketsWorkspaceContent() {
   const { tabs, activeTabId, openTab, currentFilter, watchlist, addToWatchlist, removeFromWatchlist } = useTicketsWorkspaceStore();
   const activeTab = tabs.find(t => t.id === activeTabId);
@@ -41,7 +44,7 @@ export function TicketsWorkspaceContent() {
           else if (['critical', 'high', 'medium', 'low'].includes(queue)) filter.priority = queue as Ticket['priority'];
         }
         if (searchQuery) filter.search = searchQuery;
-        const result = await ticketsApi.getAll(filter, 'priority', 1, 50);
+        const result = await ticketsApi.getAll(filter, { field: 'priority', direction: 'desc' }, 1, 50);
         setTickets(result.data);
       } catch (error) { console.error('Failed:', error); }
       finally { setLoading(false); }
@@ -50,7 +53,7 @@ export function TicketsWorkspaceContent() {
   }, [currentFilter, queue, searchQuery]);
 
   const handleOpenDetail = (ticket: Ticket) => {
-    openTab({ type: 'detail', id: `detail:${ticket.id}`, title: ticket.ref, icon: '🎫', data: { ticketId: ticket.id } });
+    openTab({ type: 'detail', id: `detail:${ticket.id}`, title: ticket.title ?? ticket.id, icon: '🎫', data: { ticketId: ticket.id } });
   };
 
   const handleToggleWatchlist = (e: React.MouseEvent, ticketId: string) => {
@@ -93,31 +96,32 @@ export function TicketsWorkspaceContent() {
             const PriorityIcon = priorityStyle.icon;
             const isExpanded = expandedId === ticket.id;
             const isInWatchlist = watchlist.includes(ticket.id);
-            const slaPercent = Math.min((ticket.sla.elapsed / ticket.sla.target) * 100, 100);
+            const slaBreached = ticket.sla.resolutionBreached || ticket.sla.firstResponseBreached;
+            const slaPercent = slaBreached ? 100 : 50;
 
             return (
-              <div key={ticket.id} className={cn("rounded-xl border-l-4 bg-white dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800 transition-all hover:shadow-md", statusStyle.border, ticket.sla.breached && "ring-1 ring-red-500/30")} onClick={() => setExpandedId(isExpanded ? null : ticket.id)}>
+              <div key={ticket.id} className={cn("rounded-xl border-l-4 bg-white dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800 transition-all hover:shadow-md", statusStyle.border, slaBreached && "ring-1 ring-red-500/30")} onClick={() => setExpandedId(isExpanded ? null : ticket.id)}>
                 <div className="p-4 cursor-pointer">
                   <div className="flex items-start gap-4">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap mb-1">
-                        <span className="font-mono text-xs px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600">{ticket.ref}</span>
-                        <span className={cn("text-xs font-medium px-2 py-0.5 rounded", statusStyle.badge)}>{ticketsApi.getStatusLabel(ticket.status)}</span>
+                        <span className="font-mono text-xs px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600">{ticket.reference}</span>
+                        <span className={cn("text-xs font-medium px-2 py-0.5 rounded", statusStyle.badge)}>{getStatusLabel(ticket.status)}</span>
                         <span className={cn("text-xs font-medium px-2 py-0.5 rounded flex items-center gap-1", priorityStyle.badge)}><PriorityIcon className="w-3 h-3" />{ticket.priority}</span>
-                        <span className="text-xs px-2 py-0.5 rounded bg-purple-500/10 text-purple-600">{ticketsApi.getCategoryLabel(ticket.category)}</span>
-                        {ticket.sla.breached && <span className="text-xs px-2 py-0.5 rounded bg-red-500/20 text-red-600 flex items-center gap-1"><XCircle className="w-3 h-3" />SLA</span>}
+                        <span className="text-xs px-2 py-0.5 rounded bg-purple-500/10 text-purple-600">{getCategoryLabel(ticket.category)}</span>
+                        {slaBreached && <span className="text-xs px-2 py-0.5 rounded bg-red-500/20 text-red-600 flex items-center gap-1"><XCircle className="w-3 h-3" />SLA</span>}
                       </div>
-                      <p className="font-medium text-slate-900 dark:text-slate-100">{ticket.titre}</p>
+                      <p className="font-medium text-slate-900 dark:text-slate-100">{ticket.title}</p>
                       <div className="flex items-center gap-4 mt-2 text-xs text-slate-500">
                         <span className="flex items-center gap-1"><Building2 className="w-3 h-3" />{ticket.client.name}</span>
                         {ticket.assignee && <span className="flex items-center gap-1"><User className="w-3 h-3" />{ticket.assignee.name}</span>}
-                        <span className="flex items-center gap-1"><MessageSquare className="w-3 h-3" />{ticket.messages}</span>
-                        <span className="flex items-center gap-1"><Paperclip className="w-3 h-3" />{ticket.attachments}</span>
+                        <span className="flex items-center gap-1"><MessageSquare className="w-3 h-3" />{ticket.messages.length}</span>
+                        <span className="flex items-center gap-1"><Paperclip className="w-3 h-3" />{ticket.attachments.length}</span>
                       </div>
                     </div>
                     <div className="text-right flex-none">
                       <div className="mb-2">
-                        <div className="text-xs text-slate-500 mb-1">SLA: {ticket.sla.elapsed}h / {ticket.sla.target}h</div>
+                        <div className="text-xs text-slate-500 mb-1">SLA: résolution {ticket.sla.resolutionDeadline}</div>
                         <div className="w-20 h-1.5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
                           <div className={cn("h-full rounded-full", slaPercent >= 100 ? "bg-red-500" : slaPercent >= 80 ? "bg-amber-500" : "bg-emerald-500")} style={{ width: `${slaPercent}%` }} />
                         </div>
@@ -133,7 +137,6 @@ export function TicketsWorkspaceContent() {
                 {isExpanded && (
                   <div className="px-4 pb-4 pt-0 border-t border-slate-200/70 dark:border-slate-800">
                     <p className="text-sm text-slate-600 dark:text-slate-400 py-4">{ticket.description}</p>
-                    {ticket.project && <p className="text-sm text-slate-500 mb-4">Projet: <span className="font-medium text-purple-600">{ticket.project.name}</span></p>}
                     <div className="flex items-center gap-2 pt-2 border-t border-slate-200/70 dark:border-slate-800">
                       <button onClick={() => handleOpenDetail(ticket)} className="flex-1 px-4 py-2 rounded-lg bg-purple-500 text-white text-sm font-medium hover:bg-purple-600">Voir le détail</button>
                       {!ticket.assignee && <button className="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800">Assigner</button>}

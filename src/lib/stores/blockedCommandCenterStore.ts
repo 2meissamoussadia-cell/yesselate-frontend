@@ -39,7 +39,9 @@ export type BlockedSubCategory = BlockedSubCategoryMap[BlockedMainCategory];
 // Types de modales
 export type BlockedModalType =
   | 'dossier-detail'
+  | 'dossier-detail-enriched'
   | 'resolution'
+  | 'resolution-advanced'
   | 'escalation'
   | 'substitution'
   | 'decision-center'

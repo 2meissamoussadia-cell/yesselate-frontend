@@ -23,7 +23,7 @@ const AlertRuleTestSchema = z.object({
   severity: z.enum(['info', 'warning', 'critical']).default('warning'),
   enabled: z.boolean().default(true),
   routeKey: z.string().optional(),
-  labels: z.record(z.any()).optional(),
+  labels: z.record(z.string(), z.any()).optional(),
   expr: z.object({
     source: z.object({
       view: z.string().optional(),
@@ -60,7 +60,7 @@ const AlertRuleTestSchema = z.object({
       weekends: z.boolean().optional(),
     }).optional(),
   }).optional(),
-  defaultChannels: z.record(z.boolean()).optional(),
+  defaultChannels: z.record(z.string(), z.boolean()).optional(),
 }).refine(
   (data) => data.expr || data.expr_v2,
   { message: 'Either expr (v1) or expr_v2 (v2) must be provided' }
@@ -210,9 +210,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   } catch (error) {
     const seconds = (performance.now() - t0) / 1000;
     if (error instanceof z.ZodError) {
-      logReq.warn({ err: error.errors, seconds }, 'alerts test validation error');
+      logReq.warn({ err: error.issues, seconds }, 'alerts test validation error');
       return NextResponse.json(
-        { error: 'Validation error', details: error.errors, ok: false },
+        { error: 'Validation error', details: error.issues, ok: false },
         { status: 400 }
       );
     }

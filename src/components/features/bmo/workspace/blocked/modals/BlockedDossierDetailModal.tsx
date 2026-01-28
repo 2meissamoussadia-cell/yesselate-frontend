@@ -158,7 +158,7 @@ export function BlockedDossierDetailModal({
                 <h4 className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">
                   Type
                 </h4>
-                <Badge variant="secondary">{dossier.type}</Badge>
+                <Badge variant="gray">{dossier.type}</Badge>
               </div>
               <div>
                 <h4 className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">

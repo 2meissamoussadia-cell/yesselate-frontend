@@ -7,10 +7,12 @@
 import { useCallback } from 'react';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { useI18n } from '@/lib/i18n';
+import { useAuthHeaders } from '../utils/getAuthHeaders';
 
 export function useDashboardExport() {
   const nav = useDashboardCommandCenterStore((s) => s.navigation);
   const { locale, currency } = useI18n();
+  const authHeaders = useAuthHeaders();
 
   const exportData = useCallback(
     async (format: 'csv' | 'json' | 'pdf' | 'excel') => {
@@ -32,10 +34,7 @@ export function useDashboardExport() {
 
       const url = `/api/export/dashboard?${params.toString()}`;
       const response = await fetch(url, {
-        headers: {
-          'x-tenant-id': 'default', // TODO: récupérer depuis le contexte auth
-          'x-user-id': 'anonymous', // TODO: récupérer depuis le contexte auth
-        },
+        headers: authHeaders,
       });
 
       if (!response.ok) {
@@ -64,7 +63,7 @@ export function useDashboardExport() {
         console.log('[Export] Document hash:', hash);
       }
     },
-    [nav, locale, currency]
+    [nav, locale, currency, authHeaders]
   );
 
   return { exportData };

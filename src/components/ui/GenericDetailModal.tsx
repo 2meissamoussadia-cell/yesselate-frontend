@@ -186,7 +186,7 @@ export function GenericDetailModal({
                     statusBadge.variant === 'critical' ? 'destructive' :
                     statusBadge.variant === 'warning' ? 'default' :
                     statusBadge.variant === 'success' ? 'default' :
-                    'secondary'
+                    'gray'
                   }
                   className={cn(
                     statusBadge.variant === 'success' && 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
@@ -260,7 +260,7 @@ export function GenericDetailModal({
                 {tab.icon}
                 <span>{tab.label}</span>
                 {tab.badge !== undefined && (
-                  <Badge variant="secondary" className="ml-1">
+                  <Badge variant="gray" className="ml-1">
                     {tab.badge}
                   </Badge>
                 )}

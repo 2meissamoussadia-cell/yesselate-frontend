@@ -51,7 +51,7 @@ export function TimelineTab() {
         date: d.date,
         timestamp: parseDate(d.date),
         title: d.subject,
-        subtitle: `Décision ${d.number}`,
+        subtitle: `Décision ${d.id}`,
         icon: d.type === 'validated' ? <CheckCircle className="w-4 h-4" /> : <XCircle className="w-4 h-4" />,
         variant: d.type === 'validated' ? 'success' : 'warning',
       });

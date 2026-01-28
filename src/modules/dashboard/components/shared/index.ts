@@ -44,3 +44,8 @@ export type { LastUpdateDisplayProps } from './LastUpdateDisplay';
 
 export { MockDataIndicator, withMockDataIndicator } from './MockDataIndicator';
 export type { MockDataIndicatorProps } from './MockDataIndicator';
+
+export { DashboardDataTable } from './DashboardDataTable';
+export { CardList } from './CardList';
+export type { DashboardDataTableProps } from './DashboardDataTable';
+export type { CardListProps } from './CardList';

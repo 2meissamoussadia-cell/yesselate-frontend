@@ -455,60 +455,57 @@ export function RHQuickCreateModal({ open, onClose, onSuccess }: RHQuickCreateMo
           ? `Nouvelle demande - ${selectedType}`
           : 'Confirmation'
       }
-      icon={<Plus className="w-5 h-5 text-blue-500" />}
-      size="lg"
-      footer={
-        <div className="flex justify-between items-center w-full">
-          {step === 'form' && (
-            <>
-              <button
-                onClick={() => setStep('type')}
-                className="px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800 transition-colors"
-                disabled={isSubmitting}
-              >
-                Retour
-              </button>
-              <button
-                onClick={handleSubmit}
-                disabled={isSubmitting}
-                className="px-6 py-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-              >
-                {isSubmitting ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    Création en cours...
-                  </>
-                ) : (
-                  <>
-                    <Check className="w-4 h-4" />
-                    Créer la demande
-                  </>
-                )}
-              </button>
-            </>
-          )}
-          {step === 'type' && (
-            <button
-              onClick={handleClose}
-              className="ml-auto px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800 transition-colors"
-            >
-              Annuler
-            </button>
-          )}
-          {step === 'confirmation' && (
-            <button
-              onClick={handleClose}
-              className="mx-auto px-6 py-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600 transition-colors"
-            >
-              Fermer
-            </button>
-          )}
-        </div>
-      }
+      maxWidth="4xl"
     >
       {step === 'type' && renderTypeSelection()}
       {step === 'form' && renderForm()}
       {step === 'confirmation' && renderConfirmation()}
+      <div className="flex justify-between items-center w-full pt-4 mt-4 border-t border-slate-700">
+        {step === 'form' && (
+          <>
+            <button
+              onClick={() => setStep('type')}
+              className="px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800 transition-colors"
+              disabled={isSubmitting}
+            >
+              Retour
+            </button>
+            <button
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+              className="px-6 py-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            >
+              {isSubmitting ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Création en cours...
+                </>
+              ) : (
+                <>
+                  <Check className="w-4 h-4" />
+                  Créer la demande
+                </>
+              )}
+            </button>
+          </>
+        )}
+        {step === 'type' && (
+          <button
+            onClick={handleClose}
+            className="ml-auto px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800 transition-colors"
+          >
+            Annuler
+          </button>
+        )}
+        {step === 'confirmation' && (
+          <button
+            onClick={handleClose}
+            className="mx-auto px-6 py-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600 transition-colors"
+          >
+            Fermer
+          </button>
+        )}
+      </div>
     </FluentModal>
   );
 }

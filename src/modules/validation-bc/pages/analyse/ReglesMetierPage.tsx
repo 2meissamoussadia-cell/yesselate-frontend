@@ -62,12 +62,12 @@ export function ReglesMetierPage() {
                 <div className="flex items-center gap-2">
                   <h3 className="font-semibold text-slate-200">{regle.nom}</h3>
                   {regle.active ? (
-                    <Badge variant="secondary" className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
+                    <Badge variant="gray" className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
                       <CheckCircle2 className="h-3 w-3 mr-1" />
                       Actif
                     </Badge>
                   ) : (
-                    <Badge variant="secondary" className="bg-slate-500/20 text-slate-400 border-slate-500/30">
+                    <Badge variant="gray" className="bg-slate-500/20 text-slate-400 border-slate-500/30">
                       <XCircle className="h-3 w-3 mr-1" />
                       Inactif
                     </Badge>

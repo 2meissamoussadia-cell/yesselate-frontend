@@ -90,7 +90,7 @@ export interface KpisFinanceData {
 /**
  * Read Model pour performance/kpis/budget
  * 
- * TODO: Compléter selon les besoins
+ * ✅ Phase 5: Types complets pour reporting et analytics
  */
 export interface KpisBudgetData {
   budget: {
@@ -104,18 +104,51 @@ export interface KpisBudgetData {
     budget: number;
     consomme: number;
     pourcentage: number;
+    evolution?: number; // Évolution vs période précédente
+    alert?: 'ok' | 'warning' | 'critical'; // Alerte si dépassement
   }>;
   tendances?: Array<{
     mois: string;
     budget: number;
     consomme: number;
+    reste: number;
+    pourcentage: number;
+  }>;
+  // Reporting : Détails par projet/bureau
+  parProjet?: Array<{
+    projetId: string;
+    projetNom: string;
+    budget: number;
+    consomme: number;
+    reste: number;
+    pourcentage: number;
+  }>;
+  parBureau?: Array<{
+    bureauCode: string;
+    bureauNom: string;
+    budget: number;
+    consomme: number;
+    reste: number;
+    pourcentage: number;
+  }>;
+  // Analytics : Prévisions et projections
+  previsions?: {
+    consommationPrevue: number;
+    dateEpuisement?: string; // Date prévue d'épuisement du budget
+    risqueDepassement: 'low' | 'medium' | 'high';
+  };
+  historique?: Array<{
+    periode: string; // 'YYYY-MM'
+    budget: number;
+    consomme: number;
+    reste: number;
   }>;
 }
 
 /**
  * Read Model pour performance/validations/global
  * 
- * TODO: Compléter selon les besoins
+ * ✅ Phase 5: Types complets pour reporting et analytics
  */
 export interface ValidationsGlobalData {
   kpis: Array<{
@@ -124,6 +157,9 @@ export interface ValidationsGlobalData {
     value: string | number;
     trend?: string | number;
     color?: string;
+    unit?: string; // Unité de mesure (%, jours, etc.)
+    target?: number; // Valeur cible
+    status?: 'ok' | 'warning' | 'critical'; // Statut par rapport à la cible
   }>;
   bureauStats?: Array<{
     id: string;
@@ -135,6 +171,52 @@ export interface ValidationsGlobalData {
     tempsMoyen: number;
     slaCompliance: number; // ratio 0..1
     evolution: number;
+    // Analytics : Détails supplémentaires
+    volumeTotal?: number;
+    tauxValidation?: number; // ratio 0..1
+    tauxRejet?: number; // ratio 0..1
+    delaiMoyenValidation?: number; // en jours
+    delaiMoyenRejet?: number; // en jours
+    tendance?: 'up' | 'down' | 'stable';
+  }>;
+  // Analytics : Tendances temporelles
+  trends?: Array<{
+    date: string;
+    enAttente: number;
+    validees: number;
+    rejetees: number;
+    tempsMoyen: number;
+    slaCompliance: number;
+  }>;
+  // Reporting : Comparaisons et agrégations
+  comparaison?: {
+    periodePrecedente: {
+      enAttente: number;
+      validees: number;
+      rejetees: number;
+      tempsMoyen: number;
+      slaCompliance: number;
+    };
+    evolution: {
+      enAttente: number; // % d'évolution
+      validees: number;
+      rejetees: number;
+      tempsMoyen: number;
+      slaCompliance: number;
+    };
+  };
+  // Analytics : Top performers et goulots d'étranglement
+  topPerformers?: Array<{
+    id: string;
+    label: string;
+    score: number;
+    metric: 'slaCompliance' | 'tempsMoyen' | 'tauxValidation';
+  }>;
+  goulotsEtranglement?: Array<{
+    id: string;
+    label: string;
+    impact: 'high' | 'medium' | 'low';
+    description?: string;
   }>;
 }
 

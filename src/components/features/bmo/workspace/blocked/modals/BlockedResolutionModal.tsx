@@ -267,7 +267,7 @@ export function BlockedResolutionModal({
                 Résoudre Dossier Bloqué
               </DialogTitle>
               <DialogDescription className="text-slate-400 mt-1">
-                {dossier ? `${dossier.reference} - ${dossier.bureau}` : 'Sélectionner un dossier'}
+                {dossier ? `${dossier.id} - ${dossier.bureau}` : 'Sélectionner un dossier'}
               </DialogDescription>
             </div>
             {resolutionType && (

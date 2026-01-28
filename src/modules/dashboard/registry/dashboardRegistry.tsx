@@ -45,6 +45,100 @@ import {
   loadKpisProjetsApi,
   loadKpisDemandesApi,
   loadKpisBudgetApi,
+  loadAlertsActivesApi,
+  loadAlertsUrgentesApi,
+  loadActionsInboxUrgentesApi,
+  loadActionsInboxAujourdhuiApi,
+  loadActionsInboxSemaineApi,
+  loadActionsInboxPersonnaliseesApi,
+  loadValidationsEnAttenteApi,
+  loadValidationsValideesApi,
+  loadValidationsRejeteesApi,
+  loadValidationsCircuitApi,
+  loadBudgetConsommationApi,
+  loadBudgetRestantApi,
+  loadBudgetPrevisionsApi,
+  loadBudgetAnalyseApi,
+  loadDelaysCritiquesApi,
+  loadDelaysMoyensApi,
+  loadDelaysAnalyseCausesApi,
+  loadPerformanceSyntheseApi,
+  loadPerformanceProjetsApi,
+  loadPerformanceDemandesApi,
+  loadPerformanceBudgetApi,
+  loadTrendsMensuellesApi,
+  loadTrendsTrimestriellesApi,
+  loadTrendsAnnuellesApi,
+  loadComparisonBureauxApi,
+  loadComparisonProjetsApi,
+  loadComparisonPeriodeApi,
+  loadComparisonBenchmarkingApi,
+  loadStocksOverviewApi,
+  loadStocksTrendsApi,
+  loadComplianceDashboardApi,
+  loadComplianceDocumentsApi,
+  loadComplianceBacklogApi,
+  loadComplianceLotsApi,
+  loadRisksCriticalRisquesApi,
+  loadRisksCriticalAlertesApi,
+  loadRisksWarningsMoyensApi,
+  loadRisksWarningsFaiblesApi,
+  loadRisksTypePaiementsRetardApi,
+  loadRisksTypeContratsExpiresApi,
+  loadRisksTypeBlocagesApi,
+  loadRisksTypeAlertesSystemeApi,
+  loadRisksAnalyseTendancesApi,
+  loadRisksAnalyseCausesRacinesApi,
+  loadRisksAnalysePrevisionsApi,
+  loadRisksActionsCorrectivesEnCoursApi,
+  loadRisksActionsCorrectivesPlanifieesApi,
+  loadDecisionsPendingUrgentesApi,
+  loadDecisionsPendingNormalesApi,
+  loadDecisionsPendingPlanifieesApi,
+  loadDecisionsExecutedRecentesApi,
+  loadDecisionsExecutedAnciennesApi,
+  loadDecisionsExecutedParTypeApi,
+  loadDecisionsTimelineChronologiqueApi,
+  loadDecisionsTimelineParTypeApi,
+  loadDecisionsTimelineParAuteurApi,
+  loadDecisionsAuditTracesApi,
+  loadDecisionsAuditRapportsApi,
+  loadDecisionsAuditConformiteApi,
+  loadDecisionsModelesSubstitutionApi,
+  loadDecisionsModelesDelegationApi,
+  loadDecisionsModelesArbitrageApi,
+  loadRealtimeMonitoringVueGlobaleApi,
+  loadRealtimeMonitoringMetriquesApi,
+  loadRealtimeMonitoringPerformanceApi,
+  loadRealtimeAlertsActivesApi,
+  loadRealtimeAlertsResoluesApi,
+  loadRealtimeAlertsHistoriqueApi,
+  loadRealtimeNotificationsNonLuesApi,
+  loadRealtimeNotificationsToutesApi,
+  loadRealtimeNotificationsPreferencesApi,
+  loadRealtimeSyncEtatApi,
+  loadRealtimeSyncHistoriqueApi,
+  loadRealtimeSyncConfigurationApi,
+  loadOverviewActivityTimelineApi,
+  loadOverviewActivityNotificationsApi,
+  loadActionsTypeContratsApi,
+  loadActionsTypeArbitragesApi,
+  loadActionsTypePaiementsApi,
+  loadActionsTypeBcApi,
+  loadActionsTypeAutresApi,
+  loadActionsPriorityCritiqueApi,
+  loadActionsPriorityHauteApi,
+  loadActionsPriorityMoyenneApi,
+  loadActionsBlockedBlocagesApi,
+  loadActionsBlockedEscaladesApi,
+  loadActionsBlockedAnalyseApi,
+  loadActionsAssignedMoiApi,
+  loadActionsAssignedEquipeApi,
+  loadActionsAssignedNonAssigneesApi,
+  loadActionsHistoryRecentesApi,
+  loadActionsHistoryAnciennesApi,
+  loadActionsHistoryArchiveesApi,
+  createDynamicApiLoader,
 } from '../api/loaders';
 
 // Ré-export pour compatibilité ascendante
@@ -119,202 +213,29 @@ const createDefaultView = (title: string, description?: string): ViewEntry => ({
 });
 
 // --------------------------
-// Loaders typés (mock pour l'instant)
-// ⚠️ PHASE 1 - DONNÉES MOCKÉES
-// Plus tard: remplace par fetch('/api/dashboard/:main/:sub/:leaf') ou services.
-// TODO Phase 2: Remplacer par appels API réels
+// Loaders typés - Utilisation des loaders API réels
+// ✅ PHASE 3 - REMPLACEMENT DES MOCKS PAR APPELS API RÉELS
 // --------------------------
-const loadOverviewSummaryDashboard: Loader<OverviewSummaryDashboardData> = async (nav) => {
-  // ⚠️ MOCK: Simule un délai réseau
-  await new Promise((r) => setTimeout(r, 150));
-  
-  // Générer des données de tendances pour les 30 derniers jours
-  const generateTrendData = (days: number = 30) => {
-    const data = [];
-    const today = new Date();
-    for (let i = days - 1; i >= 0; i--) {
-      const date = new Date(today);
-      date.setDate(date.getDate() - i);
-      data.push({
-        date: date.toISOString().split('T')[0],
-        demandes: Math.floor(200 + Math.random() * 100),
-        validations: 0.85 + Math.random() * 0.1,
-        budget: 0.6 + Math.random() * 0.15,
-      });
-    }
-    return data;
-  };
+// Les loaders API sont importés depuis '../api/loaders' et utilisés directement
+// Fallback sur mocks si l'API échoue (géré dans api/loaders.ts)
 
-  // Générer des données mensuelles pour comparaison
-  const generateMonthlyData = () => {
-    const months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'];
-    return months.map((month, index) => ({
-      month,
-      actuel: index === months.length - 1 ? 247 : Math.floor(200 + Math.random() * 80),
-      precedent: index === months.length - 2 ? 235 : Math.floor(190 + Math.random() * 70),
-    }));
-  };
+// Alias pour compatibilité : utiliser les loaders API
+const loadOverviewSummaryDashboard = loadOverviewSummaryDashboardApi;
 
-  // Générer des données par catégorie
-  const generateCategoryData = () => [
-    { category: 'Demandes RH', count: 89, percentage: 36 },
-    { category: 'Validation BC', count: 67, percentage: 27 },
-    { category: 'Décisions', count: 45, percentage: 18 },
-    { category: 'Projets', count: 34, percentage: 14 },
-    { category: 'Autres', count: 12, percentage: 5 },
-  ];
+// Alias pour compatibilité : utiliser les loaders API
+const loadOverviewSummaryHighlights = loadOverviewSummaryPointsApi;
 
-  // Générer des données de tableau détaillé
-  const generateTableData = () => [
-    { id: 'D001', type: 'Demande RH', statut: 'En attente', priorite: 'Haute', date: '2024-01-15', bureau: 'Paris' },
-    { id: 'D002', type: 'Validation BC', statut: 'Validé', priorite: 'Moyenne', date: '2024-01-14', bureau: 'Lyon' },
-    { id: 'D003', type: 'Décision', statut: 'En cours', priorite: 'Critique', date: '2024-01-13', bureau: 'Marseille' },
-    { id: 'D004', type: 'Projet', statut: 'Validé', priorite: 'Haute', date: '2024-01-12', bureau: 'Paris' },
-    { id: 'D005', type: 'Demande RH', statut: 'Rejeté', priorite: 'Basse', date: '2024-01-11', bureau: 'Lyon' },
-    { id: 'D006', type: 'Validation BC', statut: 'En attente', priorite: 'Haute', date: '2024-01-10', bureau: 'Paris' },
-    { id: 'D007', type: 'Décision', statut: 'Validé', priorite: 'Moyenne', date: '2024-01-09', bureau: 'Marseille' },
-    { id: 'D008', type: 'Projet', statut: 'En cours', priorite: 'Haute', date: '2024-01-08', bureau: 'Lyon' },
-  ];
+// Alias pour compatibilité : utiliser les loaders API
+const loadOverviewKpisProjets = loadKpisProjetsApi;
 
-  return {
-    key: navToKey(nav),
-    fetchedAt: Date.now(),
-    data: {
-      kpis: { 
-        demandes: 247, 
-        validations: 0.89, 
-        budget: 0.67,
-        // KPIs supplémentaires
-        blocages: 5,
-        risques: 3,
-        decisions: 8,
-        conformite: 0.94,
-      },
-      highlights: [
-        { id: 'H1', text: '3 risques critiques détectés', type: 'critical' },
-        { id: 'H2', text: '5 blocages nécessitent une attention', type: 'warning' },
-        { id: 'H3', text: '8 décisions en attente de validation', type: 'info' },
-      ],
-      trends: generateTrendData(30),
-      monthlyComparison: generateMonthlyData(),
-      categoryDistribution: generateCategoryData(),
-      tableData: generateTableData(),
-      // Données pour comparaison
-      previousPeriod: {
-        demandes: 235,
-        validations: 0.86,
-        budget: 0.64,
-      },
-    },
-  };
-};
+// Alias pour compatibilité : utiliser les loaders API
+const loadOverviewKpisDemandes = loadKpisDemandesApi;
 
-const loadOverviewSummaryHighlights: TypedLoaderFn<OverviewSummaryPointsData> = async (nav) => {
-  await new Promise((r) => setTimeout(r, 120));
-  return {
-    key: navToKey(nav),
-    fetchedAt: Date.now(),
-    data: {
-      points: [
-        { id: 'P1', label: 'Blocages', value: 5 },
-        { id: 'P2', label: 'Décisions en attente', value: 8 },
-      ],
-    },
-  };
-};
+// Alias pour compatibilité : utiliser les loaders API
+const loadOverviewKpisBudget = loadKpisBudgetApi;
 
-// Loader pour les KPIs Projets
-const loadOverviewKpisProjets: Loader<KpisProjetsData> = async (nav) => {
-  await new Promise((r) => setTimeout(r, 150));
-  return {
-    key: navToKey(nav),
-    fetchedAt: Date.now(),
-    data: {
-      projets: [
-        { id: 'P001', nom: 'Projet Alpha', statut: 'En cours', progression: 65, budget: 150000, consomme: 97500 },
-        { id: 'P002', nom: 'Projet Beta', statut: 'En attente', progression: 0, budget: 80000, consomme: 0 },
-        { id: 'P003', nom: 'Projet Gamma', statut: 'Terminé', progression: 100, budget: 200000, consomme: 195000 },
-        { id: 'P004', nom: 'Projet Delta', statut: 'En cours', progression: 45, budget: 120000, consomme: 54000 },
-        { id: 'P005', nom: 'Projet Epsilon', statut: 'En cours', progression: 80, budget: 95000, consomme: 76000 },
-      ],
-      total: 5,
-      enCours: 3,
-      termines: 1,
-      enAttente: 1,
-    },
-  };
-};
-
-// Loader pour les KPIs Demandes
-const loadOverviewKpisDemandes: TypedLoaderFn<KpisDemandesData> = async (nav) => {
-  await new Promise((r) => setTimeout(r, 150));
-  return {
-    key: navToKey(nav),
-    fetchedAt: Date.now(),
-    data: {
-      demandes: [
-        { id: 'D001', type: 'Demande RH', statut: 'En attente', priorite: 'Haute', date: '2024-01-15', bureau: 'Paris' },
-        { id: 'D002', type: 'Validation BC', statut: 'Validé', priorite: 'Moyenne', date: '2024-01-14', bureau: 'Lyon' },
-        { id: 'D003', type: 'Décision', statut: 'En cours', priorite: 'Critique', date: '2024-01-13', bureau: 'Marseille' },
-        { id: 'D004', type: 'Projet', statut: 'Validé', priorite: 'Haute', date: '2024-01-12', bureau: 'Paris' },
-        { id: 'D005', type: 'Demande RH', statut: 'Rejeté', priorite: 'Basse', date: '2024-01-11', bureau: 'Lyon' },
-      ],
-      total: 247,
-      enAttente: 89,
-      validees: 123,
-      rejetees: 35,
-    },
-  };
-};
-
-// Loader pour les KPIs Budget
-const loadOverviewKpisBudget: Loader<KpisBudgetData> = async (nav) => {
-  await new Promise((r) => setTimeout(r, 150));
-  return {
-    key: navToKey(nav),
-    fetchedAt: Date.now(),
-    data: {
-      budget: {
-        total: 1000000,
-        consomme: 670000,
-        reste: 330000,
-        pourcentage: 67,
-      },
-      parCategorie: [
-        { categorie: 'Projets', budget: 500000, consomme: 350000, pourcentage: 70 },
-        { categorie: 'Demandes RH', budget: 300000, consomme: 200000, pourcentage: 67 },
-        { categorie: 'Infrastructure', budget: 200000, consomme: 120000, pourcentage: 60 },
-      ],
-      tendances: [
-        { mois: 'Jan', budget: 150000, consomme: 120000 },
-        { mois: 'Fév', budget: 150000, consomme: 135000 },
-        { mois: 'Mar', budget: 150000, consomme: 140000 },
-        { mois: 'Avr', budget: 150000, consomme: 145000 },
-        { mois: 'Mai', budget: 150000, consomme: 130000 },
-      ],
-    },
-  };
-};
-
-// Loader pour les KPIs Highlights
-const loadOverviewKpisHighlights: Loader<OverviewKpisHighlightsData> = async (nav) => {
-  await new Promise((r) => setTimeout(r, 150));
-  return {
-    key: navToKey(nav),
-    fetchedAt: Date.now(),
-    data: {
-      topKPIs: [
-        { id: '1', label: 'Taux de conformité global', value: '94%', trend: '+2%', tone: 'ok' as const, trendDirection: 'up' as const },
-        { id: '2', label: 'Projets en retard', value: 3, trend: -2, tone: 'warn' as const, trendDirection: 'down' as const },
-        { id: '3', label: 'Risques critiques', value: 3, trend: 1, tone: 'crit' as const, trendDirection: 'up' as const },
-      ],
-      risques: [
-        { id: 'r1', label: 'Retards projets', severity: 'high', count: 3 },
-        { id: 'r2', label: 'Dépassements budget', severity: 'high', count: 2 },
-      ],
-    } as OverviewKpisHighlightsData,
-  };
-};
+// Alias pour compatibilité : utiliser les loaders API
+const loadOverviewKpisHighlights = loadOverviewKpisHighlightsApi;
 
 // Loader pour le Reporting Direction (Phase P7)
 // Le backend retourne des structures différentes selon la leaf
@@ -378,15 +299,8 @@ const loadReporting: Loader<ReportingOverviewData | ReportingTrendsMonthlyData[]
         key,
         fetchedAt: Date.now(),
         data: {
-          projetsActifs: 0,
-          projetsRetards: 0,
-          budgetRatio: 0,
-          resteAFacturerHt: 0,
-          dsoJours: 0,
-          achatsOtifRatio: 0,
-          achatsVarPrixRatio: 0,
-          rupturesStock: 0,
-          tauxDispoMateriel: 0,
+          monthly: [],
+          dso: [],
         } as ReportingOverviewData,
       };
   }
@@ -400,11 +314,18 @@ const loadKpisAchats: Loader<KpisAchatsData> = async (nav) => {
   const key = navToKey(nav);
   
   // ✅ Phase P5: Appel API réel via /api/dashboard/performance/achats/*
+  // Récupérer les headers d'authentification
+  const { getAuthHeadersSync } = await import('../api/loaders');
+  const authHeaders = getAuthHeadersSync();
+  
   const url = `/api/dashboard/${nav.main}/${nav.sub ?? ''}/${nav.leaf ?? ''}`;
   try {
     const res = await fetch(url, { 
       cache: 'no-store',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...authHeaders,
+      },
     });
     
     if (res.ok) {
@@ -586,8 +507,9 @@ export const dashboardRegistry: DashboardRegistry = {
       const highlightsData = data as OverviewKpisHighlightsData;
       // Utiliser directement le composant HighlightsKpiPage
       const HighlightsKpiPage = React.lazy(() => import('../components/views/HighlightsKpiPage'));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
       return (
-        <React.Suspense fallback={<div className="p-6 text-slate-400">Chargement...</div>}>
+        <React.Suspense fallback={<LoadingFallback />}>
           <HighlightsKpiPage />
         </React.Suspense>
       );
@@ -603,8 +525,9 @@ export const dashboardRegistry: DashboardRegistry = {
     render: ({ data }) => {
       // ✅ v20: Utiliser le composant ProjetKpiPage au lieu du render inline
       const ProjetKpiPage = React.lazy(() => import('../components/views/ProjetKpiPage').then(m => ({ default: m.ProjetKpiPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
       return (
-        <React.Suspense fallback={<div className="p-6 text-slate-400">Chargement...</div>}>
+        <React.Suspense fallback={<LoadingFallback />}>
           <ProjetKpiPage data={data as KpisProjetsData} />
         </React.Suspense>
       );
@@ -620,112 +543,28 @@ export const dashboardRegistry: DashboardRegistry = {
     render: ({ data }) => {
       // ✅ v20: Utiliser le composant DemandesKpiPage au lieu du render inline
       const DemandesKpiPage = React.lazy(() => import('../components/views/DemandesKpiPage').then(m => ({ default: m.DemandesKpiPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
       return (
-        <React.Suspense fallback={<div className="p-6 text-slate-400">Chargement...</div>}>
+        <React.Suspense fallback={<LoadingFallback />}>
           <DemandesKpiPage data={data as KpisDemandesData} />
         </React.Suspense>
       );
     },
   },
 
-  // overview/kpis/budget
+  // overview/kpis/budget — utilise BudgetKpiPage (barre KPI, filtres, BudgetDetailModal, export)
   'overview::kpis::budget': {
     id: 'overview-kpis-budget',
     title: 'KPIs Budget',
     ttl: 60_000,
     loader: loadOverviewKpisBudget,
     render: ({ data }) => {
-      const budgetData = data as KpisBudgetData;
-      const { budget, parCategorie, tendances } = budgetData;
-      
+      const BudgetKpiPage = React.lazy(() => import('../components/views/BudgetKpiPage').then(m => ({ default: m.BudgetKpiPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
       return (
-        <div className="space-y-6 animate-fadeIn">
-          <div>
-            <h2 className="text-2xl font-bold text-white mb-2">Indicateurs Budget</h2>
-            <p className="text-slate-400 text-sm">Vue détaillée du budget et consommation</p>
-          </div>
-
-          {/* Budget global */}
-          {budget && (
-            <div className="bg-gradient-to-br from-amber-500/20 to-amber-600/10 rounded-xl p-6 border border-amber-500/30">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <p className="text-xs text-slate-400 uppercase tracking-wide mb-1">Budget total</p>
-                  <p className="text-3xl font-bold text-white">{formatMoneyEUR(budget.total)}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-xs text-slate-400 uppercase tracking-wide mb-1">Consommé</p>
-                  <p className="text-3xl font-bold text-white">{formatMoneyEUR(budget.consomme)}</p>
-                  <p className="text-sm text-amber-400 mt-1">{budget.pourcentage}%</p>
-                </div>
-              </div>
-              <div className="h-3 bg-slate-800/50 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-amber-500 rounded-full transition-all duration-500"
-                  style={{ width: `${budget.pourcentage}%` }}
-                />
-              </div>
-              <div className="mt-2 flex items-center justify-between text-sm text-slate-400">
-                <span>Reste disponible</span>
-                <span className="font-semibold text-slate-200">{formatMoneyEUR(budget.reste)}</span>
-              </div>
-            </div>
-          )}
-
-          {/* Budget par catégorie */}
-          {parCategorie && Array.isArray(parCategorie) && parCategorie.length > 0 && (
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-slate-200">Budget par catégorie</h3>
-              <div className="space-y-3">
-                {parCategorie.map((cat, index: number) => (
-                  <div
-                    key={cat.categorie}
-                    className={cn(
-                      'bg-slate-800/40 border border-slate-700/40 rounded-xl p-4',
-                      'animate-fadeIn'
-                    )}
-                    style={{ animationDelay: `${index * 50}ms` }}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="text-base font-semibold text-white">{cat.categorie}</h4>
-                      <span className="text-sm text-slate-400">{cat.pourcentage}%</span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm text-slate-400 mb-2">
-                      <span>{formatMoneyEUR(cat.consomme)} / {formatMoneyEUR(cat.budget)}</span>
-                    </div>
-                    <div className="h-2 bg-slate-700/50 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-amber-500 rounded-full transition-all duration-500"
-                        style={{ width: `${cat.pourcentage}%` }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Tendances */}
-          {tendances && Array.isArray(tendances) && tendances.length > 0 && (
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-slate-200">Tendances mensuelles</h3>
-              <div className="bg-slate-800/40 border border-slate-700/40 rounded-xl p-4">
-                <div className="space-y-2">
-                  {tendances.map((tendance, index: number) => (
-                    <div key={index} className="flex items-center justify-between text-sm">
-                      <span className="text-slate-300 font-medium">{tendance.mois}</span>
-                      <div className="flex items-center gap-4">
-                        <span className="text-slate-400">{formatMoneyEUR(tendance.consomme)}</span>
-                        <span className="text-slate-500">/</span>
-                        <span className="text-slate-400">{formatMoneyEUR(tendance.budget)}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
+        <React.Suspense fallback={<LoadingFallback />}>
+          <BudgetKpiPage />
+        </React.Suspense>
       );
     },
   },
@@ -794,6 +633,1859 @@ export const dashboardRegistry: DashboardRegistry = {
     ttl: 60_000,
     loader: loadReporting,
     render: ({ data }) => <ReportingByChantierPage data={data as ReportingByChantierData[]} />,
+  },
+
+  // Overview - Alerts
+  'overview::alerts::actives': {
+    id: 'overview-alerts-actives',
+    title: 'Alertes Actives',
+    ttl: 30_000,
+    loader: loadAlertsActivesApi,
+    render: () => {
+      const AlertsActivesPage = React.lazy(() => import('../components/views/AlertsActivesPage').then(m => ({ default: m.AlertsActivesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <AlertsActivesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'overview::alerts::urgentes': {
+    id: 'overview-alerts-urgentes',
+    title: 'Alertes Urgentes',
+    ttl: 30_000,
+    loader: loadAlertsUrgentesApi,
+    render: () => {
+      const AlertsUrgentesPage = React.lazy(() => import('../components/views/AlertsUrgentesPage').then(m => ({ default: m.AlertsUrgentesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <AlertsUrgentesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  // Overview - Activity
+  'overview::activity::timeline': {
+    id: 'overview-activity-timeline',
+    title: "Timeline d'Activité",
+    ttl: 30_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'overview', sub: 'activity', leaf: 'timeline' }),
+    render: () => {
+      const ActivityTimelinePage = React.lazy(() => import('../components/views/ActivityTimelinePage').then(m => ({ default: m.ActivityTimelinePage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ActivityTimelinePage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'overview::activity::notifications': {
+    id: 'overview-activity-notifications',
+    title: 'Notifications',
+    ttl: 30_000,
+    loader: loadOverviewActivityNotificationsApi,
+    render: () => {
+      const ActivityNotificationsPage = React.lazy(() => import('../components/views/ActivityNotificationsPage').then(m => ({ default: m.ActivityNotificationsPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ActivityNotificationsPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  // Performance - Validation
+  'performance::validation::en-attente': {
+    id: 'performance-validation-en-attente',
+    title: 'Validations En Attente',
+    ttl: 60_000,
+    loader: loadValidationsEnAttenteApi,
+    render: () => {
+      const ValidationsEnAttentePage = React.lazy(() => import('../components/views/ValidationsEnAttentePage').then(m => ({ default: m.ValidationsEnAttentePage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ValidationsEnAttentePage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::validation::validees': {
+    id: 'performance-validation-validees',
+    title: 'Validations Validées',
+    ttl: 60_000,
+    loader: loadValidationsValideesApi,
+    render: () => {
+      const ValidationsValideesPage = React.lazy(() => import('../components/views/ValidationsValideesPage').then(m => ({ default: m.ValidationsValideesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ValidationsValideesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::validation::rejetees': {
+    id: 'performance-validation-rejetees',
+    title: 'Validations Rejetées',
+    ttl: 60_000,
+    loader: loadValidationsRejeteesApi,
+    render: () => {
+      const ValidationsRejeteesPage = React.lazy(() => import('../components/views/ValidationsRejeteesPage').then(m => ({ default: m.ValidationsRejeteesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ValidationsRejeteesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::validation::circuit': {
+    id: 'performance-validation-circuit',
+    title: 'Circuit de Validation',
+    ttl: 60_000,
+    loader: loadValidationsCircuitApi,
+    render: () => {
+      const ValidationsCircuitPage = React.lazy(() => import('../components/views/ValidationsCircuitPage').then(m => ({ default: m.ValidationsCircuitPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ValidationsCircuitPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  // Performance - Budget détaillé
+  'performance::budget::consommation': {
+    id: 'performance-budget-consommation',
+    title: 'Budget Consommation',
+    ttl: 60_000,
+    loader: loadBudgetConsommationApi,
+    render: () => {
+      const BudgetConsommationPage = React.lazy(() => import('../components/views/BudgetConsommationPage').then(m => ({ default: m.BudgetConsommationPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <BudgetConsommationPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::budget::restant': {
+    id: 'performance-budget-restant',
+    title: 'Budget Restant',
+    ttl: 60_000,
+    loader: loadBudgetRestantApi,
+    render: () => {
+      const BudgetRestantPage = React.lazy(() => import('../components/views/BudgetRestantPage').then(m => ({ default: m.BudgetRestantPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <BudgetRestantPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::budget::previsions': {
+    id: 'performance-budget-previsions',
+    title: 'Budget Prévisions',
+    ttl: 60_000,
+    loader: loadBudgetPrevisionsApi,
+    render: () => {
+      const BudgetPrevisionsPage = React.lazy(() => import('../components/views/BudgetPrevisionsPage').then(m => ({ default: m.BudgetPrevisionsPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <BudgetPrevisionsPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::budget::analyse': {
+    id: 'performance-budget-analyse',
+    title: 'Budget Analyse',
+    ttl: 60_000,
+    loader: loadBudgetAnalyseApi,
+    render: () => {
+      const BudgetAnalysePage = React.lazy(() => import('../components/views/BudgetAnalysePage').then(m => ({ default: m.BudgetAnalysePage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <BudgetAnalysePage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  // Actions - Inbox
+  'actions::inbox::urgentes': {
+    id: 'actions-inbox-urgentes',
+    title: 'Actions Urgentes',
+    ttl: 30_000,
+    loader: loadActionsInboxUrgentesApi,
+    render: () => {
+      const ActionsInboxUrgentesPage = React.lazy(() => import('../components/views/ActionsInboxUrgentesPage').then(m => ({ default: m.ActionsInboxUrgentesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ActionsInboxUrgentesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'actions::inbox::aujourdhui': {
+    id: 'actions-inbox-aujourdhui',
+    title: 'Actions Aujourd\'hui',
+    ttl: 30_000,
+    loader: loadActionsInboxAujourdhuiApi,
+    render: () => {
+      const ActionsInboxAujourdhuiPage = React.lazy(() => import('../components/views/ActionsInboxAujourdhuiPage').then(m => ({ default: m.ActionsInboxAujourdhuiPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ActionsInboxAujourdhuiPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'actions::inbox::semaine': {
+    id: 'actions-inbox-semaine',
+    title: 'Actions Cette Semaine',
+    ttl: 60_000,
+    loader: loadActionsInboxSemaineApi,
+    render: () => {
+      const ActionsInboxSemainePage = React.lazy(() => import('../components/views/ActionsInboxSemainePage').then(m => ({ default: m.ActionsInboxSemainePage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ActionsInboxSemainePage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'actions::inbox::personnalisees': {
+    id: 'actions-inbox-personnalisees',
+    title: 'Actions Personnalisées',
+    ttl: 60_000,
+    loader: loadActionsInboxPersonnaliseesApi,
+    render: () => {
+      const ActionsInboxPersonnaliseesPage = React.lazy(() => import('../components/views/ActionsInboxPersonnaliseesPage').then(m => ({ default: m.ActionsInboxPersonnaliseesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ActionsInboxPersonnaliseesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  // Performance - Delays
+  'performance::delays::critiques': {
+    id: 'performance-delays-critiques',
+    title: 'Retards Critiques',
+    ttl: 30_000,
+    loader: loadDelaysCritiquesApi,
+    render: () => {
+      const DelaysCritiquesPage = React.lazy(() => import('../components/views/DelaysCritiquesPage').then(m => ({ default: m.DelaysCritiquesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <DelaysCritiquesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::delays::moyens': {
+    id: 'performance-delays-moyens',
+    title: 'Retards Moyens',
+    ttl: 60_000,
+    loader: loadDelaysMoyensApi,
+    render: () => {
+      const DelaysMoyensPage = React.lazy(() => import('../components/views/DelaysMoyensPage').then(m => ({ default: m.DelaysMoyensPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <DelaysMoyensPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::delays::analyse-causes': {
+    id: 'performance-delays-analyse-causes',
+    title: 'Analyse des Causes de Retards',
+    ttl: 60_000,
+    loader: loadDelaysAnalyseCausesApi,
+    render: () => {
+      const DelaysAnalyseCausesPage = React.lazy(() => import('../components/views/DelaysAnalyseCausesPage').then(m => ({ default: m.DelaysAnalyseCausesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <DelaysAnalyseCausesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  // Performance - Stocks
+  'performance::stocks::overview': {
+    id: 'performance-stocks-overview',
+    title: 'Stocks Vue d\'Ensemble',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'stocks', leaf: 'overview' }),
+    render: () => {
+      const StocksOverviewPage = React.lazy(() => import('../components/views/StocksOverviewPage').then(m => ({ default: m.StocksOverviewPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <StocksOverviewPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::stocks::trends': {
+    id: 'performance-stocks-trends',
+    title: 'Stocks Tendances',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'stocks', leaf: 'trends' }),
+    render: () => {
+      const StocksTrendsPage = React.lazy(() => import('../components/views/StocksTrendsPage').then(m => ({ default: m.StocksTrendsPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <StocksTrendsPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  // Performance - Materiel
+  'performance::materiel::overview': {
+    id: 'performance-materiel-overview',
+    title: 'Parc Matériel',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'materiel', leaf: 'overview' }),
+    render: () => {
+      const MaterielOverviewPage = React.lazy(() => import('../components/views/MaterielOverviewPage').then(m => ({ default: m.MaterielOverviewPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <MaterielOverviewPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  // Performance - Comparison
+  'performance::comparison::bureaux': {
+    id: 'performance-comparison-bureaux',
+    title: 'Comparaison par Bureaux',
+    ttl: 60_000,
+    loader: loadComparisonBureauxApi,
+    render: () => {
+      const ComparisonBureauxPage = React.lazy(() => import('../components/views/ComparisonBureauxPage').then(m => ({ default: m.ComparisonBureauxPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ComparisonBureauxPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::comparison::projets': {
+    id: 'performance-comparison-projets',
+    title: 'Comparaison par Projets',
+    ttl: 60_000,
+    loader: loadComparisonProjetsApi,
+    render: () => {
+      const ComparisonProjetsPage = React.lazy(() => import('../components/views/ComparisonProjetsPage').then(m => ({ default: m.ComparisonProjetsPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ComparisonProjetsPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::comparison::periode': {
+    id: 'performance-comparison-periode',
+    title: 'Comparaison par Période',
+    ttl: 60_000,
+    loader: loadComparisonPeriodeApi,
+    render: () => {
+      const ComparisonPeriodePage = React.lazy(() => import('../components/views/ComparisonPeriodePage').then(m => ({ default: m.ComparisonPeriodePage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ComparisonPeriodePage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::comparison::benchmarking': {
+    id: 'performance-comparison-benchmarking',
+    title: 'Benchmarking',
+    ttl: 60_000,
+    loader: loadComparisonBenchmarkingApi,
+    render: () => {
+      const ComparisonBenchmarkingPage = React.lazy(() => import('../components/views/ComparisonBenchmarkingPage').then(m => ({ default: m.ComparisonBenchmarkingPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ComparisonBenchmarkingPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  // Performance - Compliance
+  'performance::compliance::dashboard': {
+    id: 'performance-compliance-dashboard',
+    title: 'Compliance Synthèse',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'compliance', leaf: 'dashboard' }),
+    render: () => {
+      const ComplianceDashboardPage = React.lazy(() => import('../components/views/ComplianceDashboardPage').then(m => ({ default: m.ComplianceDashboardPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ComplianceDashboardPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::compliance::documents': {
+    id: 'performance-compliance-documents',
+    title: 'Pièces Manquantes',
+    ttl: 60_000,
+    loader: loadComplianceDocumentsApi,
+    render: () => {
+      const ComplianceDocumentsPage = React.lazy(() => import('../components/views/ComplianceDocumentsPage').then(m => ({ default: m.ComplianceDocumentsPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ComplianceDocumentsPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::compliance::backlog': {
+    id: 'performance-compliance-backlog',
+    title: 'Backlog de Visas',
+    ttl: 60_000,
+    loader: loadComplianceBacklogApi,
+    render: () => {
+      const ComplianceBacklogPage = React.lazy(() => import('../components/views/ComplianceBacklogPage').then(m => ({ default: m.ComplianceBacklogPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ComplianceBacklogPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::compliance::lots': {
+    id: 'performance-compliance-lots',
+    title: 'Lots Non Attribués',
+    ttl: 60_000,
+    loader: loadComplianceLotsApi,
+    render: () => {
+      const ComplianceLotsPage = React.lazy(() => import('../components/views/ComplianceLotsPage').then(m => ({ default: m.ComplianceLotsPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ComplianceLotsPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  // Performance - Indicators
+  'performance::indicators::synthese': {
+    id: 'performance-indicators-synthese',
+    title: 'Performance Synthèse',
+    ttl: 60_000,
+    loader: loadPerformanceSyntheseApi,
+    render: () => {
+      const PerformanceSynthesePage = React.lazy(() => import('../components/views/PerformanceSynthesePage').then(m => ({ default: m.PerformanceSynthesePage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <PerformanceSynthesePage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::indicators::projets': {
+    id: 'performance-indicators-projets',
+    title: 'Performance Projets',
+    ttl: 60_000,
+    loader: loadPerformanceProjetsApi,
+    render: () => {
+      const PerformanceProjetsPage = React.lazy(() => import('../components/views/PerformanceProjetsPage').then(m => ({ default: m.PerformanceProjetsPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <PerformanceProjetsPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::indicators::demandes': {
+    id: 'performance-indicators-demandes',
+    title: 'Performance Demandes',
+    ttl: 60_000,
+    loader: loadPerformanceDemandesApi,
+    render: () => {
+      const PerformanceDemandesPage = React.lazy(() => import('../components/views/PerformanceDemandesPage').then(m => ({ default: m.PerformanceDemandesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <PerformanceDemandesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::indicators::budget': {
+    id: 'performance-indicators-budget',
+    title: 'Performance Budget',
+    ttl: 60_000,
+    loader: loadPerformanceBudgetApi,
+    render: () => {
+      const PerformanceBudgetPage = React.lazy(() => import('../components/views/PerformanceBudgetPage').then(m => ({ default: m.PerformanceBudgetPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <PerformanceBudgetPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  // Performance - Trends
+  'performance::trends::mensuelles': {
+    id: 'performance-trends-mensuelles',
+    title: 'Tendances Mensuelles',
+    ttl: 60_000,
+    loader: loadTrendsMensuellesApi,
+    render: () => {
+      const TrendsMensuellesPage = React.lazy(() => import('../components/views/TrendsMensuellesPage').then(m => ({ default: m.TrendsMensuellesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <TrendsMensuellesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::trends::trimestrielles': {
+    id: 'performance-trends-trimestrielles',
+    title: 'Tendances Trimestrielles',
+    ttl: 60_000,
+    loader: loadTrendsTrimestriellesApi,
+    render: () => {
+      const TrendsTrimestriellesPage = React.lazy(() => import('../components/views/TrendsTrimestriellesPage').then(m => ({ default: m.TrendsTrimestriellesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <TrendsTrimestriellesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::trends::annuelles': {
+    id: 'performance-trends-annuelles',
+    title: 'Tendances Annuelles',
+    ttl: 60_000,
+    loader: loadTrendsAnnuellesApi,
+    render: () => {
+      const TrendsAnnuellesPage = React.lazy(() => import('../components/views/TrendsAnnuellesPage').then(m => ({ default: m.TrendsAnnuellesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <TrendsAnnuellesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  // Actions - Type
+  'actions::type::contrats': {
+    id: 'actions-type-contrats',
+    title: 'Actions Contrats',
+    ttl: 60_000,
+    loader: loadActionsTypeContratsApi,
+    render: () => {
+      const ActionsTypeContratsPage = React.lazy(() => import('../components/views/ActionsTypeContratsPage').then(m => ({ default: m.ActionsTypeContratsPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ActionsTypeContratsPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'actions::type::arbitrages': {
+    id: 'actions-type-arbitrages',
+    title: 'Actions Arbitrages',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'actions', sub: 'type', leaf: 'arbitrages' }),
+    render: () => {
+      const ActionsTypeArbitragesPage = React.lazy(() => import('../components/views/ActionsTypeArbitragesPage').then(m => ({ default: m.ActionsTypeArbitragesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ActionsTypeArbitragesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'actions::type::paiements': {
+    id: 'actions-type-paiements',
+    title: 'Actions Paiements',
+    ttl: 60_000,
+    loader: loadActionsTypePaiementsApi,
+    render: () => {
+      const ActionsTypePaiementsPage = React.lazy(() => import('../components/views/ActionsTypePaiementsPage').then(m => ({ default: m.ActionsTypePaiementsPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ActionsTypePaiementsPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'actions::type::bc': {
+    id: 'actions-type-bc',
+    title: 'Actions BC',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'actions', sub: 'type', leaf: 'bc' }),
+    render: () => {
+      const ActionsTypeBcPage = React.lazy(() => import('../components/views/ActionsTypeBcPage').then(m => ({ default: m.ActionsTypeBcPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ActionsTypeBcPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'actions::type::autres': {
+    id: 'actions-type-autres',
+    title: 'Actions Autres',
+    ttl: 60_000,
+    loader: loadActionsTypeAutresApi,
+    render: () => {
+      const ActionsTypeAutresPage = React.lazy(() => import('../components/views/ActionsTypeAutresPage').then(m => ({ default: m.ActionsTypeAutresPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ActionsTypeAutresPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'actions::priority::critique': {
+    id: 'actions-priority-critique',
+    title: 'Actions Priorité Critique',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'actions', sub: 'priority', leaf: 'critique' }),
+    render: () => {
+      const ActionsPriorityCritiquePage = React.lazy(() => import('../components/views/ActionsPriorityCritiquePage').then(m => ({ default: m.ActionsPriorityCritiquePage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ActionsPriorityCritiquePage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'actions::priority::haute': {
+    id: 'actions-priority-haute',
+    title: 'Actions Priorité Haute',
+    ttl: 60_000,
+    loader: loadActionsPriorityHauteApi,
+    render: () => {
+      const ActionsPriorityHautePage = React.lazy(() => import('../components/views/ActionsPriorityHautePage').then(m => ({ default: m.ActionsPriorityHautePage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ActionsPriorityHautePage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'actions::priority::moyenne': {
+    id: 'actions-priority-moyenne',
+    title: 'Actions Priorité Moyenne',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'actions', sub: 'priority', leaf: 'moyenne' }),
+    render: () => {
+      const ActionsPriorityMoyennePage = React.lazy(() => import('../components/views/ActionsPriorityMoyennePage').then(m => ({ default: m.ActionsPriorityMoyennePage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ActionsPriorityMoyennePage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'actions::blocked::blocages': {
+    id: 'actions-blocked-blocages',
+    title: 'Actions Blocages',
+    ttl: 60_000,
+    loader: loadActionsBlockedBlocagesApi,
+    render: () => {
+      const ActionsBlockedBlocagesPage = React.lazy(() => import('../components/views/ActionsBlockedBlocagesPage').then(m => ({ default: m.ActionsBlockedBlocagesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ActionsBlockedBlocagesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'actions::blocked::escalades': {
+    id: 'actions-blocked-escalades',
+    title: 'Actions Escalades',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'actions', sub: 'blocked', leaf: 'escalades' }),
+    render: () => {
+      const ActionsBlockedEscaladesPage = React.lazy(() => import('../components/views/ActionsBlockedEscaladesPage').then(m => ({ default: m.ActionsBlockedEscaladesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ActionsBlockedEscaladesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'actions::blocked::analyse': {
+    id: 'actions-blocked-analyse',
+    title: 'Analyse des Blocages',
+    ttl: 60_000,
+    loader: loadActionsBlockedAnalyseApi,
+    render: () => {
+      const ActionsBlockedAnalysePage = React.lazy(() => import('../components/views/ActionsBlockedAnalysePage').then(m => ({ default: m.ActionsBlockedAnalysePage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ActionsBlockedAnalysePage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'actions::assigned::moi': {
+    id: 'actions-assigned-moi',
+    title: 'Actions À Moi',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'actions', sub: 'assigned', leaf: 'moi' }),
+    render: () => {
+      const ActionsAssignedMoiPage = React.lazy(() => import('../components/views/ActionsAssignedMoiPage').then(m => ({ default: m.ActionsAssignedMoiPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ActionsAssignedMoiPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'actions::assigned::equipe': {
+    id: 'actions-assigned-equipe',
+    title: 'Actions À Mon Équipe',
+    ttl: 60_000,
+    loader: loadActionsAssignedEquipeApi,
+    render: () => {
+      const ActionsAssignedEquipePage = React.lazy(() => import('../components/views/ActionsAssignedEquipePage').then(m => ({ default: m.ActionsAssignedEquipePage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ActionsAssignedEquipePage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'actions::assigned::non-assignees': {
+    id: 'actions-assigned-non-assignees',
+    title: 'Actions Non Assignées',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'actions', sub: 'assigned', leaf: 'non-assignees' }),
+    render: () => {
+      const ActionsAssignedNonAssigneesPage = React.lazy(() => import('../components/views/ActionsAssignedNonAssigneesPage').then(m => ({ default: m.ActionsAssignedNonAssigneesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ActionsAssignedNonAssigneesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'actions::history::recentes': {
+    id: 'actions-history-recentes',
+    title: 'Actions Récentes',
+    ttl: 60_000,
+    loader: loadActionsHistoryRecentesApi,
+    render: () => {
+      const ActionsHistoryRecentPage = React.lazy(() => import('../components/views/ActionsHistoryRecentPage').then(m => ({ default: m.ActionsHistoryRecentPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ActionsHistoryRecentPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'actions::history::anciennes': {
+    id: 'actions-history-anciennes',
+    title: 'Actions Anciennes',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'actions', sub: 'history', leaf: 'anciennes' }),
+    render: () => {
+      const ActionsHistoryAnciennesPage = React.lazy(() => import('../components/views/ActionsHistoryAnciennesPage').then(m => ({ default: m.ActionsHistoryAnciennesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ActionsHistoryAnciennesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'actions::history::archivees': {
+    id: 'actions-history-archivees',
+    title: 'Actions Archivées',
+    ttl: 60_000,
+    loader: loadActionsHistoryArchiveesApi,
+    render: () => {
+      const ActionsHistoryArchiveesPage = React.lazy(() => import('../components/views/ActionsHistoryArchiveesPage').then(m => ({ default: m.ActionsHistoryArchiveesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <ActionsHistoryArchiveesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::bureaux::all': {
+    id: 'performance-bureaux-all',
+    title: 'Tous les Bureaux',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'bureaux', leaf: 'all' }),
+    render: () => {
+      const PerformanceBureauxAllPage = React.lazy(() => import('../components/views/PerformanceBureauxAllPage').then(m => ({ default: m.PerformanceBureauxAllPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <PerformanceBureauxAllPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::bureaux::bmo': {
+    id: 'performance-bureaux-bmo',
+    title: 'BMO',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'bureaux', leaf: 'bmo' }),
+    render: () => {
+      const PerformanceBureauxBmoPage = React.lazy(() => import('../components/views/PerformanceBureauxBmoPage').then(m => ({ default: m.PerformanceBureauxBmoPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <PerformanceBureauxBmoPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::bureaux::bf': {
+    id: 'performance-bureaux-bf',
+    title: 'BF',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'bureaux', leaf: 'bf' }),
+    render: () => {
+      const PerformanceBureauxBfPage = React.lazy(() => import('../components/views/PerformanceBureauxBfPage').then(m => ({ default: m.PerformanceBureauxBfPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <PerformanceBureauxBfPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::bureaux::bj': {
+    id: 'performance-bureaux-bj',
+    title: 'BJ',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'bureaux', leaf: 'bj' }),
+    render: () => {
+      const PerformanceBureauxBjPage = React.lazy(() => import('../components/views/PerformanceBureauxBjPage').then(m => ({ default: m.PerformanceBureauxBjPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <PerformanceBureauxBjPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::bureaux::bct': {
+    id: 'performance-bureaux-bct',
+    title: 'BCT',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'bureaux', leaf: 'bct' }),
+    render: () => {
+      const PerformanceBureauxBctPage = React.lazy(() => import('../components/views/PerformanceBureauxBctPage').then(m => ({ default: m.PerformanceBureauxBctPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <PerformanceBureauxBctPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::bureaux::bop': {
+    id: 'performance-bureaux-bop',
+    title: 'BOP',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'bureaux', leaf: 'bop' }),
+    render: () => {
+      const PerformanceBureauxBopPage = React.lazy(() => import('../components/views/PerformanceBureauxBopPage').then(m => ({ default: m.PerformanceBureauxBopPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <PerformanceBureauxBopPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::bureaux::bcg': {
+    id: 'performance-bureaux-bcg',
+    title: 'BCG',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'bureaux', leaf: 'bcg' }),
+    render: () => {
+      const PerformanceBureauxBcgPage = React.lazy(() => import('../components/views/PerformanceBureauxBcgPage').then(m => ({ default: m.PerformanceBureauxBcgPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <PerformanceBureauxBcgPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::bureaux::bja': {
+    id: 'performance-bureaux-bja',
+    title: 'BJA',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'bureaux', leaf: 'bja' }),
+    render: () => {
+      const PerformanceBureauxBjaPage = React.lazy(() => import('../components/views/PerformanceBureauxBjaPage').then(m => ({ default: m.PerformanceBureauxBjaPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <PerformanceBureauxBjaPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::bureaux::brc': {
+    id: 'performance-bureaux-brc',
+    title: 'BRC',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'bureaux', leaf: 'brc' }),
+    render: () => {
+      const PerformanceBureauxBrcPage = React.lazy(() => import('../components/views/PerformanceBureauxBrcPage').then(m => ({ default: m.PerformanceBureauxBrcPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <PerformanceBureauxBrcPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::bureaux::bpl': {
+    id: 'performance-bureaux-bpl',
+    title: 'BPL',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'bureaux', leaf: 'bpl' }),
+    render: () => {
+      const PerformanceBureauxBplPage = React.lazy(() => import('../components/views/PerformanceBureauxBplPage').then(m => ({ default: m.PerformanceBureauxBplPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <PerformanceBureauxBplPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::bureaux::bex': {
+    id: 'performance-bureaux-bex',
+    title: 'BEX',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'bureaux', leaf: 'bex' }),
+    render: () => {
+      const PerformanceBureauxBexPage = React.lazy(() => import('../components/views/PerformanceBureauxBexPage').then(m => ({ default: m.PerformanceBureauxBexPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <PerformanceBureauxBexPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'performance::bureaux::comparaison': {
+    id: 'performance-bureaux-comparaison',
+    title: 'Comparaison Bureaux',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'bureaux', leaf: 'comparaison' }),
+    render: () => {
+      const PerformanceBureauxComparaisonPage = React.lazy(() => import('../components/views/PerformanceBureauxComparaisonPage').then(m => ({ default: m.PerformanceBureauxComparaisonPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <PerformanceBureauxComparaisonPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'risks::critical::risques': {
+    id: 'risks-critical-risques',
+    title: 'Risques Critiques',
+    ttl: 60_000,
+    loader: loadRisksCriticalRisquesApi,
+    render: () => {
+      const RisksCriticalRisquesPage = React.lazy(() => import('../components/views/RisksCriticalRisquesPage').then(m => ({ default: m.RisksCriticalRisquesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <RisksCriticalRisquesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'risks::critical::alertes': {
+    id: 'risks-critical-alertes',
+    title: 'Alertes Critiques',
+    ttl: 60_000,
+    loader: loadRisksCriticalAlertesApi,
+    render: () => {
+      const RisksCriticalAlertesPage = React.lazy(() => import('../components/views/RisksCriticalAlertesPage').then(m => ({ default: m.RisksCriticalAlertesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <RisksCriticalAlertesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'risks::warnings::moyens': {
+    id: 'risks-warnings-moyens',
+    title: 'Risques Moyens',
+    ttl: 60_000,
+    loader: loadRisksWarningsMoyensApi,
+    render: () => {
+      const RisksWarningsMoyensPage = React.lazy(() => import('../components/views/RisksWarningsMoyensPage').then(m => ({ default: m.RisksWarningsMoyensPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <RisksWarningsMoyensPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'risks::warnings::faibles': {
+    id: 'risks-warnings-faibles',
+    title: 'Risques Faibles',
+    ttl: 60_000,
+    loader: loadRisksWarningsFaiblesApi,
+    render: () => {
+      const RisksWarningsFaiblesPage = React.lazy(() => import('../components/views/RisksWarningsFaiblesPage').then(m => ({ default: m.RisksWarningsFaiblesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <RisksWarningsFaiblesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'risks::type::paiements-retard': {
+    id: 'risks-type-paiements-retard',
+    title: 'Paiements en Retard',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'risks', sub: 'type', leaf: 'paiements-retard' }),
+    render: () => {
+      const RisksTypePaiementsRetardPage = React.lazy(() => import('../components/views/RisksTypePaiementsRetardPage').then(m => ({ default: m.RisksTypePaiementsRetardPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <RisksTypePaiementsRetardPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'risks::type::contrats-expires': {
+    id: 'risks-type-contrats-expires',
+    title: 'Contrats Expirés',
+    ttl: 60_000,
+    loader: loadRisksTypeContratsExpiresApi,
+    render: () => {
+      const RisksTypeContratsExpiresPage = React.lazy(() => import('../components/views/RisksTypeContratsExpiresPage').then(m => ({ default: m.RisksTypeContratsExpiresPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <RisksTypeContratsExpiresPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'risks::type::blocages': {
+    id: 'risks-type-blocages',
+    title: 'Blocages',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'risks', sub: 'type', leaf: 'blocages' }),
+    render: () => {
+      const RisksTypeBlocagesPage = React.lazy(() => import('../components/views/RisksTypeBlocagesPage').then(m => ({ default: m.RisksTypeBlocagesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <RisksTypeBlocagesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'risks::type::alertes-systeme': {
+    id: 'risks-type-alertes-systeme',
+    title: 'Alertes Système',
+    ttl: 60_000,
+    loader: loadRisksTypeAlertesSystemeApi,
+    render: () => {
+      const RisksTypeAlertesSystemePage = React.lazy(() => import('../components/views/RisksTypeAlertesSystemePage').then(m => ({ default: m.RisksTypeAlertesSystemePage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <RisksTypeAlertesSystemePage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'risks::analyse::tendances': {
+    id: 'risks-analyse-tendances',
+    title: 'Tendances des Risques',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'risks', sub: 'analyse', leaf: 'tendances' }),
+    render: () => {
+      const RisksAnalyseTendancesPage = React.lazy(() => import('../components/views/RisksAnalyseTendancesPage').then(m => ({ default: m.RisksAnalyseTendancesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <RisksAnalyseTendancesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'risks::analyse::causes-racines': {
+    id: 'risks-analyse-causes-racines',
+    title: 'Causes Racines',
+    ttl: 60_000,
+    loader: loadRisksAnalyseCausesRacinesApi,
+    render: () => {
+      const RisksAnalyseCausesRacinesPage = React.lazy(() => import('../components/views/RisksAnalyseCausesRacinesPage').then(m => ({ default: m.RisksAnalyseCausesRacinesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <RisksAnalyseCausesRacinesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'risks::analyse::previsions': {
+    id: 'risks-analyse-previsions',
+    title: 'Prévisions des Risques',
+    ttl: 60_000,
+    loader: loadRisksAnalysePrevisionsApi,
+    render: () => {
+      const RisksAnalysePrevisionsPage = React.lazy(() => import('../components/views/RisksAnalysePrevisionsPage').then(m => ({ default: m.RisksAnalysePrevisionsPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <RisksAnalysePrevisionsPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'risks::actions-correctives::en-cours': {
+    id: 'risks-actions-correctives-en-cours',
+    title: 'Actions Correctives En Cours',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'risks', sub: 'actions-correctives', leaf: 'en-cours' }),
+    render: () => {
+      const RisksActionsCorrectivesEnCoursPage = React.lazy(() => import('../components/views/RisksActionsCorrectivesEnCoursPage').then(m => ({ default: m.RisksActionsCorrectivesEnCoursPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <RisksActionsCorrectivesEnCoursPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'risks::actions-correctives::planifiees': {
+    id: 'risks-actions-correctives-planifiees',
+    title: 'Actions Correctives Planifiées',
+    ttl: 60_000,
+    loader: loadRisksActionsCorrectivesPlanifieesApi,
+    render: () => {
+      const RisksActionsCorrectivesPlanifieesPage = React.lazy(() => import('../components/views/RisksActionsCorrectivesPlanifieesPage').then(m => ({ default: m.RisksActionsCorrectivesPlanifieesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <RisksActionsCorrectivesPlanifieesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'decisions::pending::urgentes': {
+    id: 'decisions-pending-urgentes',
+    title: 'Décisions Urgentes',
+    ttl: 60_000,
+    loader: loadDecisionsPendingUrgentesApi,
+    render: () => {
+      const DecisionsPendingUrgentesPage = React.lazy(() => import('../components/views/DecisionsPendingUrgentesPage').then(m => ({ default: m.DecisionsPendingUrgentesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <DecisionsPendingUrgentesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'decisions::pending::normales': {
+    id: 'decisions-pending-normales',
+    title: 'Décisions Normales',
+    ttl: 60_000,
+    loader: loadDecisionsPendingNormalesApi,
+    render: () => {
+      const DecisionsPendingNormalesPage = React.lazy(() => import('../components/views/DecisionsPendingNormalesPage').then(m => ({ default: m.DecisionsPendingNormalesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <DecisionsPendingNormalesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'decisions::pending::planifiees': {
+    id: 'decisions-pending-planifiees',
+    title: 'Décisions Planifiées',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'decisions', sub: 'pending', leaf: 'planifiees' }),
+    render: () => {
+      const DecisionsPendingPlanifieesPage = React.lazy(() => import('../components/views/DecisionsPendingPlanifieesPage').then(m => ({ default: m.DecisionsPendingPlanifieesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <DecisionsPendingPlanifieesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'decisions::executed::recentes': {
+    id: 'decisions-executed-recentes',
+    title: 'Décisions Récentes',
+    ttl: 60_000,
+    loader: loadDecisionsExecutedRecentesApi,
+    render: () => {
+      const DecisionsExecutedRecentesPage = React.lazy(() => import('../components/views/DecisionsExecutedRecentesPage').then(m => ({ default: m.DecisionsExecutedRecentesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <DecisionsExecutedRecentesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'decisions::executed::anciennes': {
+    id: 'decisions-executed-anciennes',
+    title: 'Décisions Anciennes',
+    ttl: 60_000,
+    loader: loadDecisionsExecutedAnciennesApi,
+    render: () => {
+      const DecisionsExecutedAnciennesPage = React.lazy(() => import('../components/views/DecisionsExecutedAnciennesPage').then(m => ({ default: m.DecisionsExecutedAnciennesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <DecisionsExecutedAnciennesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'decisions::executed::par-type': {
+    id: 'decisions-executed-par-type',
+    title: 'Décisions Par Type',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'decisions', sub: 'executed', leaf: 'par-type' }),
+    render: () => {
+      const DecisionsExecutedParTypePage = React.lazy(() => import('../components/views/DecisionsExecutedParTypePage').then(m => ({ default: m.DecisionsExecutedParTypePage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <DecisionsExecutedParTypePage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'decisions::timeline::chronologique': {
+    id: 'decisions-timeline-chronologique',
+    title: 'Timeline Chronologique',
+    ttl: 60_000,
+    loader: loadDecisionsTimelineChronologiqueApi,
+    render: () => {
+      const DecisionsTimelineChronologiquePage = React.lazy(() => import('../components/views/DecisionsTimelineChronologiquePage').then(m => ({ default: m.DecisionsTimelineChronologiquePage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <DecisionsTimelineChronologiquePage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'decisions::timeline::par-type': {
+    id: 'decisions-timeline-par-type',
+    title: 'Timeline Par Type',
+    ttl: 60_000,
+    loader: loadDecisionsTimelineParTypeApi,
+    render: () => {
+      const DecisionsTimelineParTypePage = React.lazy(() => import('../components/views/DecisionsTimelineParTypePage').then(m => ({ default: m.DecisionsTimelineParTypePage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <DecisionsTimelineParTypePage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'decisions::timeline::par-auteur': {
+    id: 'decisions-timeline-par-auteur',
+    title: 'Timeline Par Auteur',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'decisions', sub: 'timeline', leaf: 'par-auteur' }),
+    render: () => {
+      const DecisionsTimelineParAuteurPage = React.lazy(() => import('../components/views/DecisionsTimelineParAuteurPage').then(m => ({ default: m.DecisionsTimelineParAuteurPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <DecisionsTimelineParAuteurPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'decisions::audit::traces': {
+    id: 'decisions-audit-traces',
+    title: "Traces d'Audit",
+    ttl: 60_000,
+    loader: loadDecisionsAuditTracesApi,
+    render: () => {
+      const DecisionsAuditTracesPage = React.lazy(() => import('../components/views/DecisionsAuditTracesPage').then(m => ({ default: m.DecisionsAuditTracesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <DecisionsAuditTracesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'decisions::audit::rapports': {
+    id: 'decisions-audit-rapports',
+    title: "Rapports d'Audit",
+    ttl: 60_000,
+    loader: loadDecisionsAuditRapportsApi,
+    render: () => {
+      const DecisionsAuditRapportsPage = React.lazy(() => import('../components/views/DecisionsAuditRapportsPage').then(m => ({ default: m.DecisionsAuditRapportsPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <DecisionsAuditRapportsPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'decisions::audit::conformite': {
+    id: 'decisions-audit-conformite',
+    title: 'Conformité',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'decisions', sub: 'audit', leaf: 'conformite' }),
+    render: () => {
+      const DecisionsAuditConformitePage = React.lazy(() => import('../components/views/DecisionsAuditConformitePage').then(m => ({ default: m.DecisionsAuditConformitePage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <DecisionsAuditConformitePage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'decisions::modeles::substitution': {
+    id: 'decisions-modeles-substitution',
+    title: 'Modèles de Substitution',
+    ttl: 60_000,
+    loader: loadDecisionsModelesSubstitutionApi,
+    render: () => {
+      const DecisionsModelesSubstitutionPage = React.lazy(() => import('../components/views/DecisionsModelesSubstitutionPage').then(m => ({ default: m.DecisionsModelesSubstitutionPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <DecisionsModelesSubstitutionPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'decisions::modeles::delegation': {
+    id: 'decisions-modeles-delegation',
+    title: 'Modèles de Délégation',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'decisions', sub: 'modeles', leaf: 'delegation' }),
+    render: () => {
+      const DecisionsModelesDelegationPage = React.lazy(() => import('../components/views/DecisionsModelesDelegationPage').then(m => ({ default: m.DecisionsModelesDelegationPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <DecisionsModelesDelegationPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'decisions::modeles::arbitrage': {
+    id: 'decisions-modeles-arbitrage',
+    title: "Modèles d'Arbitrage",
+    ttl: 60_000,
+    loader: loadDecisionsModelesArbitrageApi,
+    render: () => {
+      const DecisionsModelesArbitragePage = React.lazy(() => import('../components/views/DecisionsModelesArbitragePage').then(m => ({ default: m.DecisionsModelesArbitragePage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <DecisionsModelesArbitragePage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'realtime::monitoring::vue-globale': {
+    id: 'realtime-monitoring-vue-globale',
+    title: 'Vue Globale',
+    ttl: 60_000,
+    loader: loadRealtimeMonitoringVueGlobaleApi,
+    render: () => {
+      const RealtimeMonitoringVueGlobalePage = React.lazy(() => import('../components/views/RealtimeMonitoringVueGlobalePage').then(m => ({ default: m.RealtimeMonitoringVueGlobalePage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <RealtimeMonitoringVueGlobalePage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'realtime::monitoring::metriques': {
+    id: 'realtime-monitoring-metriques',
+    title: 'Métriques',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'realtime', sub: 'monitoring', leaf: 'metriques' }),
+    render: () => {
+      const RealtimeMonitoringMetriquesPage = React.lazy(() => import('../components/views/RealtimeMonitoringMetriquesPage').then(m => ({ default: m.RealtimeMonitoringMetriquesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <RealtimeMonitoringMetriquesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'realtime::monitoring::performance': {
+    id: 'realtime-monitoring-performance',
+    title: 'Performance',
+    ttl: 60_000,
+    loader: loadRealtimeMonitoringPerformanceApi,
+    render: () => {
+      const RealtimeMonitoringPerformancePage = React.lazy(() => import('../components/views/RealtimeMonitoringPerformancePage').then(m => ({ default: m.RealtimeMonitoringPerformancePage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <RealtimeMonitoringPerformancePage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'realtime::alerts::actives': {
+    id: 'realtime-alerts-actives',
+    title: 'Alertes Actives',
+    ttl: 60_000,
+    loader: loadRealtimeAlertsActivesApi,
+    render: () => {
+      const RealtimeAlertsActivesPage = React.lazy(() => import('../components/views/RealtimeAlertsActivesPage').then(m => ({ default: m.RealtimeAlertsActivesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <RealtimeAlertsActivesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'realtime::alerts::resolues': {
+    id: 'realtime-alerts-resolues',
+    title: 'Alertes Résolues',
+    ttl: 60_000,
+    loader: loadRealtimeAlertsResoluesApi,
+    render: () => {
+      const RealtimeAlertsResoluesPage = React.lazy(() => import('../components/views/RealtimeAlertsResoluesPage').then(m => ({ default: m.RealtimeAlertsResoluesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <RealtimeAlertsResoluesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'realtime::alerts::historique': {
+    id: 'realtime-alerts-historique',
+    title: 'Historique des Alertes',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'realtime', sub: 'alerts', leaf: 'historique' }),
+    render: () => {
+      const RealtimeAlertsHistoriquePage = React.lazy(() => import('../components/views/RealtimeAlertsHistoriquePage').then(m => ({ default: m.RealtimeAlertsHistoriquePage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <RealtimeAlertsHistoriquePage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'realtime::notifications::non-lues': {
+    id: 'realtime-notifications-non-lues',
+    title: 'Notifications Non Lues',
+    ttl: 60_000,
+    loader: loadRealtimeNotificationsNonLuesApi,
+    render: () => {
+      const RealtimeNotificationsNonLuesPage = React.lazy(() => import('../components/views/RealtimeNotificationsNonLuesPage').then(m => ({ default: m.RealtimeNotificationsNonLuesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <RealtimeNotificationsNonLuesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'realtime::notifications::toutes': {
+    id: 'realtime-notifications-toutes',
+    title: 'Toutes les Notifications',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'realtime', sub: 'notifications', leaf: 'toutes' }),
+    render: () => {
+      const RealtimeNotificationsToutesPage = React.lazy(() => import('../components/views/RealtimeNotificationsToutesPage').then(m => ({ default: m.RealtimeNotificationsToutesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <RealtimeNotificationsToutesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'realtime::notifications::preferences': {
+    id: 'realtime-notifications-preferences',
+    title: 'Préférences Notifications',
+    ttl: 60_000,
+    loader: loadRealtimeNotificationsPreferencesApi,
+    render: () => {
+      const RealtimeNotificationsPreferencesPage = React.lazy(() => import('../components/views/RealtimeNotificationsPreferencesPage').then(m => ({ default: m.RealtimeNotificationsPreferencesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <RealtimeNotificationsPreferencesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'realtime::sync::etat': {
+    id: 'realtime-sync-etat',
+    title: 'État de Synchronisation',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'realtime', sub: 'sync', leaf: 'etat' }),
+    render: () => {
+      const RealtimeSyncEtatPage = React.lazy(() => import('../components/views/RealtimeSyncEtatPage').then(m => ({ default: m.RealtimeSyncEtatPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <RealtimeSyncEtatPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'realtime::sync::historique': {
+    id: 'realtime-sync-historique',
+    title: 'Historique de Synchronisation',
+    ttl: 60_000,
+    loader: loadRealtimeSyncHistoriqueApi,
+    render: () => {
+      const RealtimeSyncHistoriquePage = React.lazy(() => import('../components/views/RealtimeSyncHistoriquePage').then(m => ({ default: m.RealtimeSyncHistoriquePage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <RealtimeSyncHistoriquePage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'realtime::sync::configuration': {
+    id: 'realtime-sync-configuration',
+    title: 'Configuration Synchronisation',
+    ttl: 60_000,
+    loader: loadRealtimeSyncConfigurationApi,
+    render: () => {
+      const RealtimeSyncConfigurationPage = React.lazy(() => import('../components/views/RealtimeSyncConfigurationPage').then(m => ({ default: m.RealtimeSyncConfigurationPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <RealtimeSyncConfigurationPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'administration::settings::dashboard': {
+    id: 'administration-settings-dashboard',
+    title: 'Paramètres Dashboard',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'administration', sub: 'settings', leaf: 'dashboard' }),
+    render: () => {
+      const AdministrationSettingsDashboardPage = React.lazy(() => import('../components/views/AdministrationSettingsDashboardPage').then(m => ({ default: m.AdministrationSettingsDashboardPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <AdministrationSettingsDashboardPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'administration::settings::kpis': {
+    id: 'administration-settings-kpis',
+    title: 'Paramètres KPIs',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'administration', sub: 'settings', leaf: 'kpis' }),
+    render: () => {
+      const AdministrationSettingsKpisPage = React.lazy(() => import('../components/views/AdministrationSettingsKpisPage').then(m => ({ default: m.AdministrationSettingsKpisPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <AdministrationSettingsKpisPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'administration::settings::notifications': {
+    id: 'administration-settings-notifications',
+    title: 'Paramètres Notifications',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'administration', sub: 'settings', leaf: 'notifications' }),
+    render: () => {
+      const AdministrationSettingsNotificationsPage = React.lazy(() => import('../components/views/AdministrationSettingsNotificationsPage').then(m => ({ default: m.AdministrationSettingsNotificationsPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <AdministrationSettingsNotificationsPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'administration::users::liste': {
+    id: 'administration-users-liste',
+    title: 'Liste des Utilisateurs',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'administration', sub: 'users', leaf: 'liste' }),
+    render: () => {
+      const AdministrationUsersListePage = React.lazy(() => import('../components/views/AdministrationUsersListePage').then(m => ({ default: m.AdministrationUsersListePage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <AdministrationUsersListePage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'administration::users::permissions': {
+    id: 'administration-users-permissions',
+    title: 'Permissions Utilisateurs',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'administration', sub: 'users', leaf: 'permissions' }),
+    render: () => {
+      const AdministrationUsersPermissionsPage = React.lazy(() => import('../components/views/AdministrationUsersPermissionsPage').then(m => ({ default: m.AdministrationUsersPermissionsPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <AdministrationUsersPermissionsPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'administration::permissions::roles': {
+    id: 'administration-permissions-roles',
+    title: 'Rôles',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'administration', sub: 'permissions', leaf: 'roles' }),
+    render: () => {
+      const AdministrationPermissionsRolesPage = React.lazy(() => import('../components/views/AdministrationPermissionsRolesPage').then(m => ({ default: m.AdministrationPermissionsRolesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <AdministrationPermissionsRolesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'administration::permissions::acces': {
+    id: 'administration-permissions-acces',
+    title: 'Accès',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'administration', sub: 'permissions', leaf: 'acces' }),
+    render: () => {
+      const AdministrationPermissionsAccesPage = React.lazy(() => import('../components/views/AdministrationPermissionsAccesPage').then(m => ({ default: m.AdministrationPermissionsAccesPage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <AdministrationPermissionsAccesPage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'administration::logs::activite': {
+    id: 'administration-logs-activite',
+    title: "Logs d'Activité",
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'administration', sub: 'logs', leaf: 'activite' }),
+    render: () => {
+      const AdministrationLogsActivitePage = React.lazy(() => import('../components/views/AdministrationLogsActivitePage').then(m => ({ default: m.AdministrationLogsActivitePage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <AdministrationLogsActivitePage />
+        </React.Suspense>
+      );
+    },
+  },
+
+  'administration::logs::systeme': {
+    id: 'administration-logs-systeme',
+    title: 'Logs Système',
+    ttl: 60_000,
+    loader: createDynamicApiLoader<DashboardViewData>({ main: 'administration', sub: 'logs', leaf: 'systeme' }),
+    render: () => {
+      const AdministrationLogsSystemePage = React.lazy(() => import('../components/views/AdministrationLogsSystemePage').then(m => ({ default: m.AdministrationLogsSystemePage })));
+      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
+      return (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <AdministrationLogsSystemePage />
+        </React.Suspense>
+      );
+    },
   },
 };
 

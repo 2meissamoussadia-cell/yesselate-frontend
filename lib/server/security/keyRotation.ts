@@ -3,7 +3,7 @@
 
 import { pgPool } from '../db/pool';
 import { withReq } from '../logging';
-import { generateEncryptionKey } from './encryption';
+import { generateAesKey } from './encryption';
 
 const log = withReq('key-rotation');
 
@@ -29,12 +29,12 @@ export async function createEncryptionKey(
 ): Promise<string> {
   const client = await pgPool.connect();
   try {
-    // Générer la nouvelle clé
-    const keyMaterial = generateEncryptionKey();
+    // Générer la nouvelle clé (32 bytes pour AES-256)
+    const keyBuffer = generateAesKey();
     
     // TODO: Chiffrer keyMaterial avec la clé maître (KMS)
-    // Pour l'instant, on stocke en clair (à sécuriser avec KMS)
-    const encryptedKeyMaterial = keyMaterial; // Placeholder
+    // Pour l'instant, on stocke en base64 (à sécuriser avec KMS)
+    const encryptedKeyMaterial = keyBuffer.toString('base64'); // Placeholder
     
     const expiresAt = expiresInDays
       ? new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000)
@@ -52,7 +52,7 @@ export async function createEncryptionKey(
     
     log.info({ keyId, expiresAt }, 'encryption key created');
     
-    return keyMaterial;
+    return encryptedKeyMaterial;
   } finally {
     client.release();
   }

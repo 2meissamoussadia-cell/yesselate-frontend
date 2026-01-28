@@ -103,9 +103,12 @@ export interface GroupBy {
 // HYSTÉRÉSIS (anti-flapping)
 // ============================================================================
 
+/** Opérateurs de seuil utilisés pour enter/exit (sous-ensemble de ComparisonOp) */
+export type HysteresisOp = '>' | '>=' | '<' | '<=';
+
 export interface Hysteresis {
-  enter: Record<ComparisonOp, number>; // seuil d'entrée (ex: { ">=": 60 })
-  exit: Record<ComparisonOp, number>; // seuil de sortie (ex: { "<=": 55 })
+  enter: Partial<Record<HysteresisOp, number>>; // seuil d'entrée (ex: { ">=": 60 })
+  exit: Partial<Record<HysteresisOp, number>>; // seuil de sortie (ex: { "<=": 55 })
 }
 
 // ============================================================================

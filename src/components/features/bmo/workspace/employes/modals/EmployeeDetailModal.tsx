@@ -267,7 +267,7 @@ export function EmployeeDetailModal({
                     Type de contrat
                   </label>
                   <Badge
-                    variant="secondary"
+                    variant="gray"
                     className={cn(
                       employee.contractType === 'CDI' && 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
                     )}
@@ -327,7 +327,7 @@ export function EmployeeDetailModal({
             {employee.skills && employee.skills.length > 0 ? (
               <div className="flex flex-wrap gap-2">
                 {employee.skills.map((skill, idx) => (
-                  <Badge key={idx} variant="secondary">
+                  <Badge key={idx} variant="gray">
                     {skill}
                   </Badge>
                 ))}

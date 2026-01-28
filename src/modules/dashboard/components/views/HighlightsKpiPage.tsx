@@ -5,7 +5,7 @@
 
 'use client';
 
-import React, { useCallback, memo, useMemo } from 'react';
+import React, { useCallback, memo, useMemo, useState } from 'react';
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -36,6 +36,7 @@ import {
   KPICard,
   type KPICardData,
 } from '../shared';
+import { RiskDetailModal } from '../modals/RiskDetailModal';
 
 interface TopKPI {
   id: string;
@@ -70,6 +71,7 @@ interface Ranking {
 
 export const HighlightsKpiPage = memo(function HighlightsKpiPage() {
   const openModal = useDashboardCommandCenterStore((state) => state.openModal);
+  const [selectedRisk, setSelectedRisk] = useState<Risk | null>(null);
 
   const handleKPIClick = useCallback((kpi: TopKPI) => {
     openModal('kpi-drilldown', {
@@ -443,9 +445,7 @@ export const HighlightsKpiPage = memo(function HighlightsKpiPage() {
               <button
                 key={risk.id}
                 type="button"
-                onClick={() => {
-                  // TODO: Implémenter la navigation vers le détail du risque
-                }}
+                onClick={() => setSelectedRisk(risk)}
                 className={cn(
                   'relative rounded-2xl border border-slate-800/60 bg-slate-900/30',
                   'text-left transition-colors duration-200',
@@ -535,6 +535,13 @@ export const HighlightsKpiPage = memo(function HighlightsKpiPage() {
           </DashboardGrid>
         </DashboardSection>
       </DashboardPageLayout>
+
+      {/* Risk Detail Modal */}
+      <RiskDetailModal
+        isOpen={!!selectedRisk}
+        onClose={() => setSelectedRisk(null)}
+        risk={selectedRisk}
+      />
     </TooltipProvider>
   );
 });

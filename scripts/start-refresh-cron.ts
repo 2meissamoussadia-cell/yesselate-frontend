@@ -11,11 +11,11 @@
  *   # Production (direct)
  *   NODE_ENV=production DATABASE_URL=postgres://... npx tsx scripts/start-refresh-cron.ts
  * 
- *   # Production (via CRON)
- *   */10 * * * * /usr/bin/env NODE_ENV=production DATABASE_URL=postgres://... /path/to/npx tsx /app/scripts/start-refresh-cron.ts >> /var/log/refresh_mviews.log 2>&1
+ *   # Production (via CRON) — toutes les 10 minutes
+ *   # Crontab: * /10 * * * * /usr/bin/env NODE_ENV=production DATABASE_URL=postgres://... /path/to/npx tsx /app/scripts/start-refresh-cron.ts >> /var/log/refresh_mviews.log 2>&1
  * 
- *   # Ou via API (recommandé pour production)
- *   */10 * * * * curl -X POST http://localhost:3000/api/cron/refresh-views -H "x-cron-secret: $CRON_SECRET" >> /var/log/refresh_mviews.log 2>&1
+ *   # Ou via API (recommandé pour production) — toutes les 10 minutes
+ *   # Crontab: * /10 * * * * curl -X POST http://localhost:3000/api/cron/refresh-views -H "x-cron-secret: $CRON_SECRET" >> /var/log/refresh_mviews.log 2>&1
  */
 
 import 'dotenv/config';

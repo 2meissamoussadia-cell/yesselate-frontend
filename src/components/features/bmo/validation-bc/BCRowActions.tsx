@@ -32,8 +32,12 @@ export function BCRowActions({
   const bcAuditReport = bc.auditReport;
   const hasAudit = (!!report && report.bcId === bc.id) || !!bcAuditReport;
   
-  // Utiliser le rapport du hook si disponible, sinon celui du BC
-  const currentReport = (report && report.bcId === bc.id) ? report.domainReport : bcAuditReport?.domainReport;
+  // Utiliser le rapport du hook si disponible, sinon celui du BC (formats différents : AuditReport vs BCAuditReport)
+  const currentReport = (report && report.bcId === bc.id)
+    ? report
+    : bcAuditReport
+      ? { recommendation: (bcAuditReport.blocking ? 'reject' : 'approve') as 'approve' | 'reject', risk: bcAuditReport.riskLevel }
+      : undefined;
   
   // Le bouton de validation est bloqué si :
   // - L'audit n'a pas été exécuté

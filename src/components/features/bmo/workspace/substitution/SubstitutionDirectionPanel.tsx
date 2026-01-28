@@ -51,7 +51,7 @@ export function SubstitutionDirectionPanel({ open, onClose }: DirectionPanelProp
                 <Users className="w-4 h-4 text-blue-400" />
                 <span className="text-sm text-slate-300">Sélectionnés</span>
               </div>
-              <span className="font-semibold text-white">{selectedIds.length}</span>
+              <span className="font-semibold text-white">{selectedIds.size}</span>
             </div>
             <div className="flex items-center justify-between p-3 bg-slate-800 rounded-lg">
               <div className="flex items-center gap-2">

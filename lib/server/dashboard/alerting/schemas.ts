@@ -12,7 +12,7 @@ export const AlertDSLv2Schema = z.object({
     z.object({
       type: z.literal('view'),
       view: z.string(),
-      params: z.record(z.unknown()).optional(),
+      params: z.record(z.string(), z.unknown()).optional(),
     }),
     z.object({
       type: z.literal('query'),
@@ -80,8 +80,8 @@ export const AlertDSLv2Schema = z.object({
       exit: z.record(z.enum(['>', '>=', '<', '<=']), z.number()),
     })
     .optional(),
-  labels: z.record(z.string()).optional(),
-  channels: z.record(z.boolean()).optional(),
+  labels: z.record(z.string(), z.string()).optional(),
+  channels: z.record(z.string(), z.boolean()).optional(),
 });
 
 const AlertConditionSchema: z.ZodType<any> = z.union([

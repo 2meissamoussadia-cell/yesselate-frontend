@@ -68,14 +68,15 @@ export function DashboardCommandPalette() {
       const mainCategory = mainId as NavMainCategory;
       
       // Catégorie principale
+      const mainLabel = mainNode.label ?? mainId;
       items.push({
         id: `nav-${mainId}`,
         type: 'navigation',
-        label: mainNode.label,
-        hint: `Section ${mainNode.label}`,
+        label: mainLabel,
+        hint: `Section ${mainLabel}`,
         icon: mainNode.icon || LayoutDashboard,
         category: 'Navigation',
-        keywords: [mainId, mainNode.label.toLowerCase()],
+        keywords: [mainId, mainLabel.toLowerCase()],
         action: () => {
           navigate(mainCategory as unknown as DashboardMainCategory, null, null);
           toggleCommandPalette();
@@ -87,11 +88,11 @@ export function DashboardCommandPalette() {
         items.push({
           id: `nav-${mainId}-${subNode.id}`,
           type: 'navigation',
-          label: `${mainNode.label} → ${subNode.label}`,
-          hint: subNode.label,
+          label: `${mainLabel} → ${subNode.label ?? subNode.id}`,
+          hint: subNode.label ?? subNode.id,
           icon: mainNode.icon || LayoutDashboard,
           category: 'Navigation',
-          keywords: [mainId, subNode.id, subNode.label.toLowerCase()],
+          keywords: [mainId, subNode.id, (subNode.label ?? subNode.id).toLowerCase()],
           action: () => {
             navigate(mainCategory as unknown as DashboardMainCategory, subNode.id, null);
             toggleCommandPalette();
@@ -99,19 +100,21 @@ export function DashboardCommandPalette() {
         });
 
         // Pages finales (leaf)
+        const subLabel = subNode.label ?? subNode.id;
         subNode.children?.forEach((leafNode) => {
+          const leafLabel = leafNode.label ?? leafNode.id;
           items.push({
             id: `nav-${mainId}-${subNode.id}-${leafNode.id}`,
             type: 'navigation',
-            label: `${mainNode.label} → ${subNode.label} → ${leafNode.label}`,
-            hint: leafNode.label,
+            label: `${mainLabel} → ${subLabel} → ${leafLabel}`,
+            hint: leafLabel,
             icon: mainNode.icon || LayoutDashboard,
             category: 'Navigation',
             keywords: [
               mainId,
               subNode.id,
               leafNode.id,
-              leafNode.label.toLowerCase(),
+              leafLabel.toLowerCase(),
             ],
             action: () => {
               navigate(mainCategory as unknown as DashboardMainCategory, subNode.id, leafNode.id);

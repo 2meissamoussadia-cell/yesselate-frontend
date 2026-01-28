@@ -73,7 +73,14 @@ interface BlockedDossierDetailsModalProps {
   dossierId: string;
 }
 
-interface EnrichedDossier extends BlockedDossier {
+interface EnrichedDossier extends Omit<BlockedDossier, 'impact'> {
+  reference?: string;
+  status?: string;
+  impact?: BlockedDossier['impact'] | {
+    financial: { amount: number; currency: string; description: string };
+    operational: { score: number; description: string; affected: string[] };
+    reputational: { score: number; description: string; stakeholders: string[] };
+  };
   workflow?: {
     currentStep: number;
     totalSteps: number;
@@ -85,11 +92,6 @@ interface EnrichedDossier extends BlockedDossier {
       date?: string;
       duration?: number;
     }>;
-  };
-  impact?: {
-    financial: { amount: number; currency: string; description: string };
-    operational: { score: number; description: string; affected: string[] };
-    reputational: { score: number; description: string; stakeholders: string[] };
   };
   documents?: Array<{
     id: string;
@@ -163,9 +165,15 @@ export function BlockedDossierDetailsModal({
     setLoading(true);
     // TODO: Remplacer par API /api/bmo/blocked/[id]/full
     blockedApi.getById(dossierId).then((baseDossier) => {
+      if (!baseDossier) {
+        setLoading(false);
+        setDossier(null);
+        return;
+      }
       // Mock enrichissement
       const enriched: EnrichedDossier = {
         ...baseDossier,
+        id: baseDossier.id ?? dossierId,
         workflow: {
           currentStep: 2,
           totalSteps: 4,
@@ -373,7 +381,7 @@ export function BlockedDossierDetailsModal({
     setSendingComment(true);
     try {
       // TODO: API POST /api/bmo/blocked/[id]/comment
-      await blockedApi.comment(dossier.id, newComment);
+      await blockedApi.addComment({ dossierId: dossier.id, content: newComment, visibility: 'internal' });
       setNewComment('');
       // Recharger dossier
     } finally {
@@ -515,14 +523,14 @@ export function BlockedDossierDetailsModal({
             <div className="space-y-2">
               <DialogTitle className="text-xl text-white flex items-center gap-3">
                 <FileText className="h-5 w-5 text-red-400" />
-                Dossier Bloqué - {dossier.reference}
+                Dossier Bloqué - {dossier.reference ?? dossier.id}
               </DialogTitle>
               <div className="flex items-center gap-2">
-                <Badge className={getStatusColor(dossier.status)}>
-                  {dossier.status}
+                <Badge className={getStatusColor(dossier.status ?? 'pending')}>
+                  {dossier.status ?? 'pending'}
                 </Badge>
-                <Badge className={getImpactColor(dossier.impact?.financial ? 'high' : 'medium')}>
-                  Impact: {dossier.impact?.financial ? 'High' : 'Medium'}
+                <Badge className={getImpactColor(typeof dossier.impact === 'object' && dossier.impact && 'financial' in dossier.impact ? 'high' : (typeof dossier.impact === 'string' ? dossier.impact : 'medium'))}>
+                  Impact: {typeof dossier.impact === 'object' && dossier.impact && 'financial' in dossier.impact ? 'High' : (typeof dossier.impact === 'string' ? dossier.impact : 'Medium')}
                 </Badge>
                 {dossier.sla && (
                   <Badge variant="outline" className={cn('border', getSLAColor(dossier.sla.status))}>
@@ -595,7 +603,7 @@ export function BlockedDossierDetailsModal({
                 <div className="space-y-4">
                   <div>
                     <label className="text-sm text-slate-400 block mb-1">Référence</label>
-                    <div className="text-white font-medium">{dossier.reference}</div>
+                    <div className="text-white font-medium">{dossier.reference ?? dossier.id}</div>
                   </div>
 
                   <div>
@@ -618,7 +626,7 @@ export function BlockedDossierDetailsModal({
                     <label className="text-sm text-slate-400 block mb-1">Délai de Blocage</label>
                     <div className="flex items-center gap-2">
                       <Timer className="h-4 w-4 text-orange-400" />
-                      <span className="text-white font-medium">{dossier.delayDays} jours</span>
+                      <span className="text-white font-medium">{dossier.delay} jours</span>
                       <span className="text-sm text-slate-500">
                         (depuis {new Date(dossier.blockedSince).toLocaleDateString('fr-FR')})
                       </span>
@@ -629,15 +637,15 @@ export function BlockedDossierDetailsModal({
                 <div className="space-y-4">
                   <div>
                     <label className="text-sm text-slate-400 block mb-1">Statut</label>
-                    <Badge className={getStatusColor(dossier.status)} size="lg">
-                      {dossier.status}
+                    <Badge className={cn(getStatusColor(dossier.status ?? 'pending'), 'text-sm px-3 py-1')}>
+                      {dossier.status ?? 'pending'}
                     </Badge>
                   </div>
 
                   <div>
                     <label className="text-sm text-slate-400 block mb-1">Niveau d'Impact</label>
-                    <Badge className={getImpactColor('high')} size="lg">
-                      {dossier.impactLevel || 'High'}
+                    <Badge className={cn(getImpactColor('high'), 'text-sm px-3 py-1')}>
+                      {typeof dossier.impact === 'string' ? dossier.impact.charAt(0).toUpperCase() + dossier.impact.slice(1) : 'High'}
                     </Badge>
                   </div>
 
@@ -674,7 +682,7 @@ export function BlockedDossierDetailsModal({
               <div>
                 <label className="text-sm text-slate-400 block mb-2">Description du Blocage</label>
                 <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4 text-slate-300">
-                  {dossier.description || 'Aucune description disponible'}
+                  {dossier.reason || 'Aucune description disponible'}
                 </div>
               </div>
 
@@ -820,7 +828,7 @@ export function BlockedDossierDetailsModal({
                         </div>
 
                         {/* Connector line */}
-                        {idx < dossier.workflow.steps.length - 1 && (
+                        {dossier.workflow && idx < dossier.workflow.steps.length - 1 && (
                           <div
                             className={cn(
                               'absolute left-9 top-full h-3 w-0.5 -translate-x-1/2',
@@ -839,7 +847,7 @@ export function BlockedDossierDetailsModal({
 
             {/* ONGLET 3: IMPACT */}
             <TabsContent value="impact" className="space-y-6 m-0">
-              {dossier.impact && (
+              {typeof dossier.impact === 'object' && dossier.impact && 'financial' in dossier.impact && (
                 <>
                   {/* Impact Financier */}
                   <div className="bg-gradient-to-br from-red-500/10 to-orange-500/10 border border-red-500/30 rounded-lg p-6">

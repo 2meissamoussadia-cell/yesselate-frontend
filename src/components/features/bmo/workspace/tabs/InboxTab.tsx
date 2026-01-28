@@ -277,6 +277,7 @@ export function InboxTab({ queue }: { queue: Queue }) {
             rows.map((d) => {
               const pr = badgePriority(d.priority as Priority);
               const st = badgeStatus(d.status as DemandStatus);
+              const assignedToName = (d as Demand & { assignedToName?: string }).assignedToName;
 
               return (
                 <div
@@ -315,7 +316,7 @@ export function InboxTab({ queue }: { queue: Queue }) {
                     <div className="mt-1 text-xs text-[rgb(var(--muted))] flex items-center gap-2">
                       <span>{d.type}</span>
                       <span>•</span>
-                      <span>{d.assignedToName ? `Assignée à ${d.assignedToName}` : 'Non assignée'}</span>
+                      <span>{assignedToName ? `Assignée à ${assignedToName}` : 'Non assignée'}</span>
                     </div>
                   </div>
 

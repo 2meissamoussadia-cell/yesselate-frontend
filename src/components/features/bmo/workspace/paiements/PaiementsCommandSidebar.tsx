@@ -251,6 +251,5 @@ export const PaiementsCommandSidebar = React.memo(function PaiementsCommandSideb
   );
 });
 
-export { paiementsCategories };
 export type { SidebarCategory, PaiementsStats as SidebarPaiementsStats };
 

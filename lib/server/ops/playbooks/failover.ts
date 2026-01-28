@@ -31,11 +31,7 @@ export async function failoverDb(params: FailoverParams): Promise<{
 
   await appendAudit({
     kind: 'ops:failover-db',
-    playbook: 'failover',
-    params: { action: 'db_failover' },
-    details: { dryRun, message },
-    dryRun,
-    ok: true,
+    details: { playbook: 'failover', params: { action: 'db_failover' }, dryRun, message, ok: true },
   });
 
   return { ok: true, dryRun, message };
@@ -58,11 +54,7 @@ export async function failoverPgbouncerBootstrap(params: FailoverParams): Promis
 
   await appendAudit({
     kind: 'ops:failover-pgbouncer',
-    playbook: 'failover',
-    params: { action: 'pgbouncer_bootstrap' },
-    details: { dryRun, message },
-    dryRun,
-    ok: true,
+    details: { playbook: 'failover', params: { action: 'pgbouncer_bootstrap' }, dryRun, message, ok: true },
   });
 
   return { ok: true, dryRun, message };

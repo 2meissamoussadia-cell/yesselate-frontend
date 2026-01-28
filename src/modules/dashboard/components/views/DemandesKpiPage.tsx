@@ -19,7 +19,9 @@ import {
   Zap,
   BarChart3,
   Users,
-  Building2
+  Building2,
+  Shield,
+  DollarSign
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -41,6 +43,7 @@ import {
   type KPICardData,
   MockDataIndicator,
 } from '../shared';
+import { BlocageDetailModal } from '../modals/BlocageDetailModal';
 
 interface DemandeKPI {
   id: string;
@@ -77,6 +80,71 @@ interface DemandesKpiPageProps {
 export const DemandesKpiPage = memo(function DemandesKpiPage({ data: apiData }: DemandesKpiPageProps = {}) {
   const openModal = useDashboardCommandCenterStore((state) => state.openModal);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedBlocage, setSelectedBlocage] = useState<Blocage | null>(null);
+
+  // Goulets d'étranglement
+  const goulets: Goulet[] = [
+    {
+      id: 'g1',
+      processus: 'Validation Budget',
+      tempsMoyen: 4.5,
+      volume: 45,
+      impact: 'high',
+    },
+    {
+      id: 'g2',
+      processus: 'Validation Juridique',
+      tempsMoyen: 3.2,
+      volume: 32,
+      impact: 'medium',
+    },
+    {
+      id: 'g3',
+      processus: 'Approbation Direction',
+      tempsMoyen: 5.8,
+      volume: 18,
+      impact: 'high',
+    },
+    {
+      id: 'g4',
+      processus: 'Revue Technique',
+      tempsMoyen: 2.1,
+      volume: 56,
+      impact: 'low',
+    },
+  ];
+
+  // Blocages critiques
+  const blocages: Blocage[] = [
+    {
+      id: 'b1',
+      type: 'Validation manquante',
+      count: 8,
+      priorite: 'critique',
+      bureau: 'BF',
+    },
+    {
+      id: 'b2',
+      type: 'Documentation incomplète',
+      count: 5,
+      priorite: 'haute',
+      bureau: 'BJ',
+    },
+    {
+      id: 'b3',
+      type: 'Budget non alloué',
+      count: 3,
+      priorite: 'critique',
+      bureau: 'BMO',
+    },
+    {
+      id: 'b4',
+      type: 'Conflit de priorités',
+      count: 2,
+      priorite: 'moyenne',
+      bureau: 'BF',
+    },
+  ];
 
   const handleKPIClick = useCallback((kpi: DemandeKPI) => {
     openModal('kpi-drilldown', {
@@ -195,70 +263,6 @@ export const DemandesKpiPage = memo(function DemandesKpiPage({ data: apiData }: 
     },
   ], [goulets, blocages, kpiCalculations]);
 
-  // Goulets d'étranglement
-  const goulets: Goulet[] = [
-    {
-      id: 'g1',
-      processus: 'Validation Budget',
-      tempsMoyen: 4.5,
-      volume: 45,
-      impact: 'high',
-    },
-    {
-      id: 'g2',
-      processus: 'Validation Juridique',
-      tempsMoyen: 3.2,
-      volume: 32,
-      impact: 'medium',
-    },
-    {
-      id: 'g3',
-      processus: 'Approbation Direction',
-      tempsMoyen: 5.8,
-      volume: 18,
-      impact: 'high',
-    },
-    {
-      id: 'g4',
-      processus: 'Revue Technique',
-      tempsMoyen: 2.1,
-      volume: 56,
-      impact: 'low',
-    },
-  ];
-
-  // Blocages critiques
-  const blocages: Blocage[] = [
-    {
-      id: 'b1',
-      type: 'Validation manquante',
-      count: 8,
-      priorite: 'critique',
-      bureau: 'BF',
-    },
-    {
-      id: 'b2',
-      type: 'Documentation incomplète',
-      count: 5,
-      priorite: 'haute',
-      bureau: 'BJ',
-    },
-    {
-      id: 'b3',
-      type: 'Budget non alloué',
-      count: 3,
-      priorite: 'critique',
-      bureau: 'BMO',
-    },
-    {
-      id: 'b4',
-      type: 'Conflit de priorités',
-      count: 2,
-      priorite: 'moyenne',
-      bureau: 'BF',
-    },
-  ];
-
   // Filtrer les blocages selon la recherche
   const filteredBlocages = useMemo(() => {
     if (!searchQuery.trim()) return blocages;
@@ -324,18 +328,23 @@ export const DemandesKpiPage = memo(function DemandesKpiPage({ data: apiData }: 
 
   // Convertir demandeKPIs au format KPICardData
   const demandeKPIsData: KPICardData[] = useMemo(() => {
-    return demandeKPIs.map((kpi) => ({
-      id: kpi.id,
-      label: kpi.label,
-      value: kpi.value,
-      trend: parseTrendPercent(kpi.trend),
-      trendType: kpi.trendDirection,
-      icon: kpi.icon,
-      color: normalizeKPIColor(kpi.color),
-      description: kpi.description,
-      sparkline: kpi.sparkline,
-      onClick: () => handleKPIClick(kpi),
-    }));
+    return demandeKPIs.map((kpi) => {
+      const normalizedColor = normalizeKPIColor(kpi.color);
+      // KPICardData attend 'purple' au lieu de 'violet'
+      const color: KPICardData['color'] = normalizedColor === 'violet' ? 'purple' : normalizedColor === 'slate' ? undefined : normalizedColor as KPICardData['color'];
+      return {
+        id: kpi.id,
+        label: kpi.label,
+        value: kpi.value,
+        trend: parseTrendPercent(kpi.trend),
+        trendType: kpi.trendDirection,
+        icon: kpi.icon,
+        color,
+        description: kpi.description,
+        sparkline: kpi.sparkline,
+        onClick: () => handleKPIClick(kpi),
+      };
+    });
   }, [demandeKPIs, handleKPIClick]);
 
   return (
@@ -504,9 +513,7 @@ export const DemandesKpiPage = memo(function DemandesKpiPage({ data: apiData }: 
                 <button
                   key={blocage.id}
                   type="button"
-                  onClick={() => {
-                    // TODO: Implémenter la navigation vers le détail du blocage
-                  }}
+                  onClick={() => setSelectedBlocage(blocage)}
                   className={cn(
                     'relative rounded-2xl border border-slate-800/60 bg-slate-900/30',
                     'text-left transition-colors duration-200',
@@ -591,6 +598,13 @@ export const DemandesKpiPage = memo(function DemandesKpiPage({ data: apiData }: 
           </DashboardGrid>
         </DashboardSection>
         </DashboardPageLayout>
+
+        {/* Blocage Detail Modal */}
+        <BlocageDetailModal
+          isOpen={!!selectedBlocage}
+          onClose={() => setSelectedBlocage(null)}
+          blocage={selectedBlocage}
+        />
       </TooltipProvider>
     </div>
   );

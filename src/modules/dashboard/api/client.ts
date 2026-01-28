@@ -215,9 +215,22 @@ export async function fetchDashboardView<TNav extends NavKey>(
         ...options.headers,
       };
       
-      // Ajouter le token d'authentification si disponible
+      // Si les headers d'auth ne sont pas fournis, essayer de les récupérer
+      if (!headers['x-tenant-id'] && !headers['x-user-id']) {
+        try {
+          const { getAuthHeaders } = await import('../utils/getAuthHeaders');
+          // Essayer de récupérer depuis localStorage ou contexte si disponible
+          // Note: Dans un contexte client, on peut accéder au contexte via un mécanisme global
+          const authHeaders = getAuthHeaders(null); // Fallback par défaut
+          Object.assign(headers, authHeaders);
+        } catch (e) {
+          // Si l'import échoue, continuer sans headers auth (sera géré côté serveur)
+        }
+      }
+      
+      // Ajouter le token d'authentification si disponible (pour compatibilité)
       const token = localStorage.getItem('auth_token');
-      if (token) {
+      if (token && !headers['Authorization']) {
         headers['Authorization'] = `Bearer ${token}`;
       }
       

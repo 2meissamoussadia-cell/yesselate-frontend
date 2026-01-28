@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { workflowService, type WorkflowInstance, type WorkflowStep } from '@/lib/services/workflowService';
+import { workflowService, type WorkflowInstance, type WorkflowStep } from '@lib-root/services/workflowService';
 import { CheckCircle, XCircle, Clock, User, MessageSquare, ArrowRight, Send, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

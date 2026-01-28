@@ -21,14 +21,16 @@
     ],
     "typeRoots": ["./node_modules/@types", "./src/types"],
     "paths": {
-      "@/*": ["./src/*"],
+      "@/lib/server/*": ["./lib/server/*"],
       "@/components/*": ["./src/components/*"],
       "@/lib/*": ["./src/lib/*"],
       "@/domain/*": ["./src/domain/*"],
       "@/hooks/*": ["./src/hooks/*"],
       "@/types/*": ["./src/lib/types/*"],
+      "@/modules/*": ["./src/modules/*"],
       "@/app/*": ["./app/*"],
-      "@lib-root/*": ["./lib/*"]
+      "@lib-root/*": ["./lib/*"],
+      "@/*": ["./src/*"]
     }
   },
   "include": [
@@ -40,5 +42,5 @@
     "**/*.mts",
     "src/types/**/*.d.ts"
   ],
-  "exclude": ["node_modules", "CLIENTS_MODULE_EXAMPLES.tsx"]
+  "exclude": ["node_modules", "CLIENTS_MODULE_EXAMPLES.tsx", "**/*.stories.*", "**/*.stories.tsx", "**/*.stories.ts"]
 }

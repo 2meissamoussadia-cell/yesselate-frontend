@@ -64,28 +64,30 @@ export function KPIDetailModal({ open, onClose, kpiId, kpiData }: KPIDetailModal
   }, [kpiData?.sparkline]);
 
   // Breakdown par bureau
+  type BureauRow = { bureauCode: string; totalCount: number; critical?: number; avgDelay?: number };
   const bureauBreakdown = useMemo(() => {
     if (!bureauxData?.bureaux || !stats) return [];
 
+    const bureaux = bureauxData.bureaux as BureauRow[];
     switch (kpiId) {
       case 'total':
-        return bureauxData.bureaux.map(b => ({
+        return bureaux.map((b: BureauRow) => ({
           label: b.bureauCode,
           value: b.totalCount,
           percentage: stats.total > 0 ? Math.round((b.totalCount / stats.total) * 100) : 0,
         }));
       case 'critical':
-        return bureauxData.bureaux
-          .filter(b => b.critical > 0)
-          .map(b => ({
+        return bureaux
+          .filter((b: BureauRow) => (b.critical ?? 0) > 0)
+          .map((b: BureauRow) => ({
             label: b.bureauCode,
-            value: b.critical,
-            percentage: stats.critical > 0 ? Math.round((b.critical / stats.critical) * 100) : 0,
+            value: b.critical ?? 0,
+            percentage: stats.critical > 0 ? Math.round(((b.critical ?? 0) / stats.critical) * 100) : 0,
           }));
       case 'avgDelay':
-        return bureauxData.bureaux.map(b => ({
+        return bureaux.map((b: BureauRow) => ({
           label: b.bureauCode,
-          value: b.avgDelay,
+          value: b.avgDelay ?? 0,
           percentage: null,
         }));
       default:

@@ -283,7 +283,7 @@ function DetailsTab({ arbitrage }: { arbitrage: Arbitrage }) {
         <div className="space-y-2">
           <label className="text-sm font-medium text-gray-600 dark:text-gray-400">Priorité</label>
           <Badge
-            variant={arbitrage.priority === 'critical' ? 'destructive' : arbitrage.priority === 'high' ? 'default' : 'secondary'}
+            variant={arbitrage.priority === 'critical' ? 'destructive' : arbitrage.priority === 'high' ? 'default' : 'gray'}
             className={cn(
               arbitrage.priority === 'critical' && 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
               arbitrage.priority === 'high' && 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200'

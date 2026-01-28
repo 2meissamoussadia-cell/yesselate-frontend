@@ -24,7 +24,7 @@ export async function setSecurityContext(
     [
       ctx.tenantId,
       ctx.userId || 'system',
-      ctx.role || 'user',
+      (ctx.roles?.[0]) || 'user',
       scopesArray,
     ]
   );

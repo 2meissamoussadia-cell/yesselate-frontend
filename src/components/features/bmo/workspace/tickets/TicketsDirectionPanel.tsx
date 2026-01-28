@@ -1,14 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ticketsApi, type TicketsStats } from '@/lib/services/ticketsApiService';
+import { ticketsApi, type TicketStats } from '@/lib/services/ticketsApiService';
 import { X, Zap, Clock, AlertTriangle, XCircle, ArrowRight, CheckCircle, Ticket } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface Props { open: boolean; onClose: () => void; }
 
 export function TicketsDirectionPanel({ open, onClose }: Props) {
-  const [stats, setStats] = useState<TicketsStats | null>(null);
+  const [stats, setStats] = useState<TicketStats | null>(null);
 
   useEffect(() => {
     if (!open) return;
@@ -37,10 +37,10 @@ export function TicketsDirectionPanel({ open, onClose }: Props) {
           <div className="space-y-3 animate-pulse">{[...Array(4)].map((_, i) => <div key={i} className="h-20 rounded-xl bg-slate-100 dark:bg-slate-800" />)}</div>
         ) : (
           <>
-            {stats.criticalCount > 0 && (
+            {stats.critical > 0 && (
               <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30">
                 <div className="flex items-center gap-2 mb-2"><Zap className="w-4 h-4 text-red-500" /><span className="font-semibold text-red-600">Critiques</span></div>
-                <p className="text-2xl font-bold text-red-600">{stats.criticalCount}</p>
+                <p className="text-2xl font-bold text-red-600">{stats.critical}</p>
                 <p className="text-xs text-red-500/80">Tickets nécessitant action immédiate</p>
               </div>
             )}

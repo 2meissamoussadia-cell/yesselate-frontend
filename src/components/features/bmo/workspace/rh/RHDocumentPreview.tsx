@@ -150,7 +150,7 @@ export function RHDocumentPreview({ documents, onVerify }: Props) {
         open={!!selectedDoc}
         title={selectedDoc?.name || 'Document'}
         onClose={() => { setSelectedDoc(null); handleReset(); }}
-        size="full"
+        maxWidth="full"
       >
         {selectedDoc && (
           <div className="flex flex-col h-[80vh]">

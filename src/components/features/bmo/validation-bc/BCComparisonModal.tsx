@@ -92,7 +92,7 @@ export function BCComparisonModal({
     }> = [];
 
     // Comparer montants
-    const amounts = normalizedBCs.map(bc => bc.amount);
+    const amounts = normalizedBCs.map(bc => Number(bc.amount));
     const minAmount = Math.min(...amounts);
     const maxAmount = Math.max(...amounts);
     const amountDiff = ((maxAmount - minAmount) / minAmount) * 100;
@@ -192,7 +192,7 @@ export function BCComparisonModal({
 
     const sameSupplier = new Set(normalizedBCs.map(bc => bc.supplier)).size === 1;
     const sameProject = new Set(normalizedBCs.map(bc => bc.project)).size === 1;
-    const amounts = normalizedBCs.map(bc => bc.amount);
+    const amounts = normalizedBCs.map(bc => Number(bc.amount));
     const amountDiff = (Math.max(...amounts) - Math.min(...amounts)) / Math.min(...amounts);
     const similarAmount = amountDiff <= 0.2; // ±20%
 
@@ -212,7 +212,7 @@ export function BCComparisonModal({
 
   if (!isOpen || normalizedBCs.length < 2) return null;
 
-  const totalAmount = normalizedBCs.reduce((sum, bc) => sum + bc.amount, 0);
+  const totalAmount = normalizedBCs.reduce((sum, bc) => sum + Number(bc.amount), 0);
   const hasSameSupplier = similarityStats?.sameSupplier;
   const hasSameProject = similarityStats?.sameProject;
 
@@ -240,7 +240,7 @@ export function BCComparisonModal({
                   <GitCompare className={cn('w-6 h-6', darkMode ? 'text-blue-400' : 'text-blue-600')} />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold">Comparaison de {normalizedBCs.length} BC{s}</h2>
+                  <h2 className="text-xl font-bold">Comparaison de {normalizedBCs.length} BC{normalizedBCs.length > 1 ? 's' : ''}</h2>
                   <p className="text-sm text-slate-400 mt-1">
                     Total : {totalAmount.toLocaleString('fr-FR')} FCFA
                   </p>
@@ -510,7 +510,7 @@ export function BCComparisonModal({
           darkMode ? 'bg-slate-800/50 border-slate-700' : 'bg-gray-50 border-gray-200'
         )}>
           <div className="text-xs text-slate-400">
-            {normalizedBCs.length} BC{s} sélectionné{s} • Total : {totalAmount.toLocaleString('fr-FR')} FCFA
+            {normalizedBCs.length} BC{normalizedBCs.length > 1 ? 's' : ''} sélectionné{normalizedBCs.length > 1 ? 's' : ''} • Total : {totalAmount.toLocaleString('fr-FR')} FCFA
           </div>
           <div className="flex gap-2">
             {similarityStats && similarityStats.score >= 70 && (

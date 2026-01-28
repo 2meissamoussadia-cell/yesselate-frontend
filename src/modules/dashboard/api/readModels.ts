@@ -40,11 +40,8 @@ export interface ReadModelOptions {
 /**
  * Récupère les données depuis le read model selon la route
  * 
- * TODO: Remplacer par des appels réels à :
- * - Microservices NestJS
- * - Bases de données read-only (read models)
- * - Services d'agrégation
- * - APIs externes
+ * ✅ Phase 3: Utilise maintenant les loaders API réels via dashboardRegistry
+ * Les appels passent par /api/dashboard/* avec authentification complète
  */
 export async function fetchReadModel(
   nav: NavKey,
@@ -86,11 +83,14 @@ export async function fetchReadModel(
 
 /**
  * Read Model pour overview/summary/dashboard
+ * 
+ * ⚠️ FALLBACK: Cette fonction est utilisée comme fallback uniquement.
+ * Les vraies données viennent des loaders API via dashboardRegistry (Phase 3).
  */
 async function fetchOverviewSummaryDashboard(
   options: ReadModelOptions
 ): Promise<OverviewSummaryDashboardData> {
-  // TODO: Remplacer par un appel réel
+  // ⚠️ FALLBACK: Données mockées - les vraies données viennent de /api/dashboard/*
   // Exemple:
   // const db = await getReadModelDatabase();
   // const kpis = await db.query(`
@@ -142,6 +142,9 @@ async function fetchOverviewSummaryDashboard(
 
 /**
  * Read Model pour overview/summary/points
+ * 
+ * ⚠️ FALLBACK: Cette fonction est utilisée comme fallback uniquement.
+ * Les vraies données viennent des loaders API via dashboardRegistry (Phase 3).
  */
 async function fetchOverviewSummaryPoints(
   options: ReadModelOptions
@@ -176,13 +179,16 @@ async function fetchOverviewKpisHighlights(
 
 /**
  * Read Model pour performance/kpis/projets
+ * 
+ * ⚠️ FALLBACK: Cette fonction est utilisée comme fallback uniquement.
+ * Les vraies données viennent des loaders API via dashboardRegistry (Phase 3).
  */
 async function fetchKpisProjets(
   options: ReadModelOptions
 ): Promise<KpisProjetsData> {
   await new Promise((resolve) => setTimeout(resolve, 150));
   
-  // TODO: Remplacer par un appel réel
+  // ⚠️ FALLBACK: Données mockées - les vraies données viennent de /api/dashboard/*
   // const db = await getReadModelDatabase();
   // const projets = await db.query(`
   //   SELECT id, nom, statut, progression, budget, consomme
@@ -231,13 +237,16 @@ async function fetchKpisProjets(
 
 /**
  * Read Model pour performance/kpis/demandes
+ * 
+ * ⚠️ FALLBACK: Cette fonction est utilisée comme fallback uniquement.
+ * Les vraies données viennent des loaders API via dashboardRegistry (Phase 3).
  */
 async function fetchKpisDemandes(
   options: ReadModelOptions
 ): Promise<KpisDemandesData> {
   await new Promise((resolve) => setTimeout(resolve, 150));
   
-  // TODO: Remplacer par un appel réel
+  // ⚠️ FALLBACK: Données mockées - les vraies données viennent de /api/dashboard/*
   // const db = await getReadModelDatabase();
   // const demandes = await db.query(`
   //   SELECT id, type, statut, priorite, date, bureau

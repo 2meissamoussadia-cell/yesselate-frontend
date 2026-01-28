@@ -111,13 +111,12 @@ export function EnhancedDocumentDetailsModal({
 
   // WHY: Bloquer le scroll du body quand la modal est ouverte (vérification SSR)
   useEffect(() => {
-    if (isOpen && typeof document !== 'undefined' && document.body) {
-      const prev = document.body.style.overflow;
-      document.body.style.overflow = 'hidden';
+    const globalDoc = typeof globalThis !== 'undefined' && 'document' in globalThis ? (globalThis as unknown as Window).document : null;
+    if (isOpen && globalDoc?.body) {
+      const prev = globalDoc.body.style.overflow;
+      globalDoc.body.style.overflow = 'hidden';
       return () => {
-        if (typeof document !== 'undefined' && document.body) {
-          document.body.style.overflow = prev;
-        }
+        if (globalDoc?.body) globalDoc.body.style.overflow = prev;
       };
     }
   }, [isOpen]);

@@ -179,7 +179,9 @@ export function PaiementDetailsModal({
       const mockFullDetails: FullPaiementDetails = {
         ...paiement!,
         fournisseurDetails: {
-          nom: paiement!.fournisseur,
+          nom: typeof paiement!.fournisseur === 'object' && paiement!.fournisseur && 'name' in paiement!.fournisseur
+            ? (paiement!.fournisseur as { name: string }).name
+            : String(paiement!.fournisseur ?? ''),
           rib: 'SN08 SN01 0000 0000 1234 5678 90',
           iban: 'SN08SN010000000012345678',
           bic: 'CBAOSNDA',
@@ -416,7 +418,7 @@ export function PaiementDetailsModal({
                           <div className="flex justify-between">
                             <span className="text-slate-400">Date d'échéance</span>
                             <span className="text-slate-300">
-                              {new Date(fullDetails.dueDate).toLocaleDateString('fr-FR')}
+                              {fullDetails.dateEcheance ? new Date(fullDetails.dateEcheance).toLocaleDateString('fr-FR') : '-'}
                             </span>
                           </div>
                         </div>

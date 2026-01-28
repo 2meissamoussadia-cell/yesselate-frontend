@@ -28,26 +28,27 @@ export function BlockedWorkspaceContent() {
     );
   }
 
+  const tabData = activeTab.data ?? {};
+
   // Render based on tab type
   switch (activeTab.type) {
     case 'inbox':
-      return <BlockedInboxView tabId={activeTab.id} data={activeTab.data} />;
+      return <BlockedInboxView tabId={activeTab.id} data={tabData} />;
     
     case 'dossier':
-      return <BlockedDetailView tabId={activeTab.id} data={activeTab.data} />;
+      return <BlockedDetailView tabId={activeTab.id} data={tabData} />;
     
     case 'matrix':
-      return <BlockedMatrixView tabId={activeTab.id} data={activeTab.data} />;
+      return <BlockedMatrixView tabId={activeTab.id} data={tabData} />;
     
     case 'timeline':
-      return <BlockedTimelineView tabId={activeTab.id} data={activeTab.data} />;
+      return <BlockedTimelineView tabId={activeTab.id} data={tabData} />;
     
     case 'bureau':
-      return <BlockedBureauView tabId={activeTab.id} data={activeTab.data} />;
+      return <BlockedBureauView tabId={activeTab.id} data={tabData} />;
     
     case 'resolution':
-    case 'wizard':
-      return <BlockedResolutionWizard tabId={activeTab.id} data={activeTab.data} />;
+      return <BlockedResolutionWizard tabId={activeTab.id} data={tabData} />;
     
     case 'escalation':
       return (
@@ -68,7 +69,7 @@ export function BlockedWorkspaceContent() {
       );
     
     case 'audit':
-      return <BlockedAuditView tabId={activeTab.id} data={activeTab.data} />;
+      return <BlockedAuditView tabId={activeTab.id} data={tabData} />;
     
     case 'analytics':
       return (

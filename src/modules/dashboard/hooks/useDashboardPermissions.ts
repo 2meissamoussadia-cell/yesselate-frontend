@@ -6,6 +6,7 @@
 
 import { useMemo, useEffect, useRef } from 'react';
 import { useDashboardPermissionsStore, type UserPermissions } from '@/lib/stores/dashboardPermissionsStore';
+import { useAuthHeaders } from '../utils/getAuthHeaders';
 
 /**
  * Hook pour charger et utiliser les permissions utilisateur depuis le store
@@ -14,6 +15,7 @@ import { useDashboardPermissionsStore, type UserPermissions } from '@/lib/stores
  */
 export function useDashboardPermissions() {
   const { permissions, isLoading, lastFetched, setPermissions, setLoading } = useDashboardPermissionsStore();
+  const authHeaders = useAuthHeaders();
   const loadingRef = useRef(false);
 
   useEffect(() => {
@@ -31,25 +33,14 @@ export function useDashboardPermissions() {
     loadingRef.current = true;
     setLoading(true);
     
+    const headers = authHeaders;
     // Phase P10: Charger les permissions depuis /api/me/policy (endpoint léger avec cache)
     // Puis charger les rôles et scopes depuis /api/rbac/permissions
     Promise.all([
-      fetch('/api/me/policy', {
-        headers: {
-          'x-tenant-id': 'default', // TODO: récupérer depuis le contexte auth
-          'x-user-id': 'anonymous', // TODO: récupérer depuis le contexte auth
-        },
-      }).then((res) => res.json()),
-      fetch('/api/rbac/permissions', {
-        headers: {
-          'x-tenant-id': 'default', // TODO: récupérer depuis le contexte auth
-          'x-user-id': 'anonymous', // TODO: récupérer depuis le contexte auth
-        },
-      }).then((res) => res.json()),
+      fetch('/api/me/policy', { headers }).then((res) => res.json()),
+      fetch('/api/rbac/permissions', { headers }).then((res) => res.json()),
     ])
       .then(([policy, rbac]) => {
-        // Stocker le résultat de /api/me/policy (perms + flags) dans le store
-        // Combiné avec les rôles et scopes de /api/rbac/permissions
         setPermissions({
           roles: rbac.roles || [],
           permissions: policy.perms || rbac.permissions || [],
@@ -60,7 +51,6 @@ export function useDashboardPermissions() {
       })
       .catch((err) => {
         console.warn('[Permissions] Failed to load permissions', err);
-        // Fallback : permissions vides (pas d'accès)
         setPermissions({
           roles: [],
           permissions: [],
@@ -69,7 +59,8 @@ export function useDashboardPermissions() {
         });
         loadingRef.current = false;
       });
-  }, [setPermissions, setLoading, lastFetched, isLoading]);
+    // authHeaders mémoïsé dans useAuthHeaders (réf stable) ; lastFetched pour éviter boucle
+  }, [setPermissions, setLoading, lastFetched, authHeaders]);
 
   /**
    * Vérifie si l'utilisateur a une permission spécifique

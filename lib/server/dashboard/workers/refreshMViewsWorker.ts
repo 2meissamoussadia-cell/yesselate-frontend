@@ -7,7 +7,7 @@
  * uniquement les vues concernées par les changements.
  */
 
-import { Pool, Client } from 'pg';
+import { Pool, PoolClient } from 'pg';
 import { logger, withReq } from '@/lib/server/logging';
 import { mviewRefreshCounter, mviewRefreshDuration, mviewRefreshErrors, workerNotificationsReceived, workerProcessingDuration, workerPgReconnectsTotal, workerRefreshFailuresTotal } from '@/lib/server/observability/metrics';
 import { withSpan } from '@/lib/server/observability/telemetry';
@@ -23,7 +23,7 @@ const pool = new Pool({
  * Phase P3: Sécurité de concurrence
  */
 async function withAdvisoryLock<T>(
-  client: Client,
+  client: PoolClient,
   key: bigint,
   fn: () => Promise<T>
 ): Promise<T | undefined> {
@@ -95,7 +95,12 @@ const MVIEWS_BY_DOMAIN: Record<string, string[]> = {
  * Rafraîchit une liste de vues matérialisées
  * Phase P3: Rafraîchissement ciblé
  */
-async function refreshViews(client: Client, views: string[], trigger: 'event-driven' | 'cron' = 'event-driven'): Promise<void> {
+async function refreshViews(
+  client: PoolClient,
+  views: string[],
+  trigger: 'event-driven' | 'cron' = 'event-driven',
+  payload?: { tenant_id?: string }
+): Promise<void> {
   const refreshedViews: string[] = [];
   
   for (const v of views) {
@@ -187,7 +192,7 @@ async function refreshViews(client: Client, views: string[], trigger: 'event-dri
  * Configure le handler de notifications sur un client
  * Phase P13: Extraction pour réutilisation après reconnexion
  */
-function setupNotificationHandler(client: Client): void {
+function setupNotificationHandler(client: PoolClient): void {
   // Écouter les notifications
   client.on('notification', async (msg: any) => {
     if (msg.channel !== 'dashboard_refresh' || !msg.payload) {
@@ -215,10 +220,10 @@ function setupNotificationHandler(client: Client): void {
         }
 
         // Lock global pour éviter les conflits entre workers/CRON
-        const lockKey = 0xD45H000000000001n;
+        const lockKey = BigInt('0xD450000000000001');
 
         const result = await withAdvisoryLock(client, lockKey, async () => {
-          await refreshViews(client, views, 'event-driven');
+          await refreshViews(client, views, 'event-driven', evt);
           
           // Phase P4: Mettre à jour le heartbeat
           try {
@@ -266,7 +271,7 @@ function setupNotificationHandler(client: Client): void {
  * Reconnexion avec backoff exponentiel et jitter
  * Phase P13: Résilience & DR
  */
-async function retryConnect(): Promise<Client> {
+async function retryConnect(): Promise<PoolClient> {
   let delay = 1000;
   const maxDelay = 30000;
   const log = withReq();
@@ -300,7 +305,7 @@ async function retryConnect(): Promise<Client> {
  */
 async function startListener(): Promise<void> {
   const log = withReq();
-  let client: Client | null = null;
+  let client: PoolClient | null = null;
   
   try {
     client = await pool.connect();

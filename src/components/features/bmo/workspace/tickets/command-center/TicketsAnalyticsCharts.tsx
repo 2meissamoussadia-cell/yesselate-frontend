@@ -477,7 +477,7 @@ export function TicketsSLAComplianceChart() {
         },
         ticks: {
           color: 'rgb(148, 163, 184)',
-          callback: (value: number) => `${value}%`,
+          callback: (value: number | string) => `${value}%`,
         },
       },
     },

@@ -58,7 +58,7 @@ export function BMOValidatorPanel({ context, item, onAction }: BMOValidatorPanel
         dateFacture: enriched.dateEmission || new Date().toISOString().split('T')[0],
         dateEcheance: enriched.dateLimite || new Date().toISOString().split('T')[0],
         status: enriched.status === 'validated' ? 'validated' : enriched.status === 'rejected' ? 'rejected' : 'pending',
-      } as Invoice;
+      } as unknown as Invoice;
     } else {
       const enriched = item as EnrichedAvenant;
       return {
@@ -68,7 +68,7 @@ export function BMOValidatorPanel({ context, item, onAction }: BMOValidatorPanel
         impactFinancier: enriched.impactFinancier ?? 0,
         impactDelai: enriched.impactDelai ?? 0,
         status: enriched.status === 'validated' ? 'validated' : enriched.status === 'rejected' ? 'rejected' : 'pending',
-      } as Amendment;
+      } as unknown as Amendment;
     }
   }, [context, item]);
 

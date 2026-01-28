@@ -11,7 +11,7 @@ export { RHSmartSearch } from './RHSmartSearch';
 
 // Fonctionnalités avancées
 export { RHComments } from './RHComments';
-export { RHNotificationProvider, useRHNotifications, useRHToast, RHAlertsPanel } from './RHNotifications';
+export { RHNotificationProvider, useRHNotifications, RHAlertsPanel } from './RHNotifications';
 export { RHDocumentPreview, RHDocumentUpload } from './RHDocumentPreview';
 export { RHMetricsDashboard } from './RHMetricsDashboard';
 

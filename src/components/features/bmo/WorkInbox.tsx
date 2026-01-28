@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useBMOStore } from '@/lib/stores';
+import type { ActionLogType } from '@/lib/types/bmo.types';
 import type { WorkItem, WorkKind, WorkAction } from '@/lib/types/work-inbox.types';
 
 type FilterChip = 'all' | 'blocages' | 'retardsPaiements' | 'paiementsUrgents' | 'contratsASigner';
@@ -141,7 +142,7 @@ export function WorkInbox({
       userId: currentUser.id,
       userName: currentUser.name,
       userRole: currentUser.role,
-      action,
+      action: action as ActionLogType,
       module: 'command-center',
       targetId: it.id,
       targetType: it.kind,

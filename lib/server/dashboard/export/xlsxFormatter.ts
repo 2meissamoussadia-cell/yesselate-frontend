@@ -147,8 +147,11 @@ export async function formatAsXLSX(
     };
   }
   
-  // Écrire en mémoire
-  return await wb.xlsx.writeBuffer();
+  // Écrire en mémoire (convertir en Buffer Node si besoin)
+  const buf = await wb.xlsx.writeBuffer();
+  if (Buffer.isBuffer(buf)) return buf;
+  const arr = buf instanceof Uint8Array ? buf : new Uint8Array(buf as ArrayBuffer);
+  return Buffer.from(arr);
 }
 
 /**

@@ -50,6 +50,14 @@ export class ErrorBoundary extends Component<Props, State> {
             ? this.props.fallback(this.state.error)
             : this.props.fallback(new Error('Unknown error'));
         }
+        // Si fallback est un ReactNode, vérifier si c'est un composant React avec une prop error
+        // et lui passer l'erreur
+        if (React.isValidElement(this.props.fallback)) {
+          const error = this.state.error || new Error('Unknown error');
+          return React.cloneElement(this.props.fallback as React.ReactElement<any>, {
+            error,
+          });
+        }
         // Sinon, retourner directement le ReactNode
         return this.props.fallback;
       }

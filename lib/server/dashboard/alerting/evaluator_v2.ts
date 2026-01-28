@@ -175,13 +175,20 @@ function evalCondition(cond: Condition, ctx: Record<string, number>): boolean {
   }
 
   // NOT
-  if ('not' in cond) {
+  if ('not' in cond && cond.not !== undefined) {
     return !evalCondition(cond.not, ctx);
   }
 
-  // Comparateur simple
-  const left = cond.left === 'metric' ? ctx.metric : ctx[cond.left] ?? Number(cond.left);
-  const right = cond.right === 'metric' ? ctx.metric : ctx[cond.right] ?? Number(cond.right);
+  // Comparateur simple (SimpleCondition)
+  if (!('op' in cond && 'left' in cond && 'right' in cond)) {
+    return false;
+  }
+  const left = cond.left === 'metric' ? ctx.metric : ctx[String(cond.left)] ?? Number(cond.left);
+  const right = cond.right === 'metric'
+    ? ctx.metric
+    : Array.isArray(cond.right)
+      ? 0
+      : ctx[String(cond.right)] ?? Number(cond.right);
 
   switch (cond.op) {
     case '>':

@@ -116,17 +116,17 @@ export class DashboardReadService {
       switch (leaf) {
         case 'dashboard':
         case 'overview':
-          return this.reportingOverview(ctx);
+          return this.reportingRepo.loadOverview(ctx);
         case 'tendances':
         case 'trends':
-          return this.reportingTrends(ctx);
+          return this.reportingRepo.loadTrends(ctx);
         case 'bureaux':
-          return this.reportingByBureau(ctx);
+          return this.reportingRepo.loadByBureau(ctx);
         case 'chantiers':
-          return this.reportingByChantier(ctx);
+          return this.reportingRepo.loadByChantier(ctx);
         default:
           // Fallback vers overview si leaf non reconnu
-          return this.reportingOverview(ctx);
+          return this.reportingRepo.loadOverview(ctx);
       }
     }
 
@@ -136,17 +136,17 @@ export class DashboardReadService {
       switch (leaf) {
         case 'dashboard':
         case 'overview':
-          return this.reportingOverview(ctx);
+          return this.reportingRepo.loadOverview(ctx);
         case 'tendances':
         case 'trends':
-          return this.reportingTrends(ctx);
+          return this.reportingRepo.loadTrends(ctx);
         case 'bureaux':
-          return this.reportingByBureau(ctx);
+          return this.reportingRepo.loadByBureau(ctx);
         case 'chantiers':
-          return this.reportingByChantier(ctx);
+          return this.reportingRepo.loadByChantier(ctx);
         default:
           // Fallback vers overview si leaf non reconnu
-          return this.reportingOverview(ctx);
+          return this.reportingRepo.loadOverview(ctx);
       }
     }
 

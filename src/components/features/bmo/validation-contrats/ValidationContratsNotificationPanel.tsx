@@ -216,7 +216,7 @@ export function ValidationContratsNotificationPanel({ isOpen, onClose }: Validat
                     <p className="text-xs text-slate-400 mb-2">{notif.message}</p>
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-slate-500">
-                        {new Date(notif.timestamp).toLocaleTimeTime('fr-FR', {
+                        {new Date(notif.timestamp).toLocaleTimeString('fr-FR', {
                           hour: '2-digit',
                           minute: '2-digit',
                         })}

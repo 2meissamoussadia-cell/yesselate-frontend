@@ -38,12 +38,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     await appendAudit({
       kind: 'ops:runbook-exec',
       tenantId: ctx.tenantId,
-      userId: ctx.userId,
-      playbook,
-      params: body.params,
-      details: { dryRun: out.dryRun, ok: out.ok },
-      dryRun: out.dryRun,
-      ok: out.ok,
+      details: {
+        userId: ctx.userId,
+        playbook,
+        params: body.params,
+        dryRun: out.dryRun,
+        ok: out.ok,
+      },
     });
 
     return NextResponse.json(out, { status: out.ok ? 200 : 422 });

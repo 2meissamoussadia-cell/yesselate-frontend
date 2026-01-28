@@ -6,7 +6,7 @@
  * uniquement les vues concernées par les changements.
  */
 
-import { Client } from 'pg';
+import { Client, type PoolClient } from 'pg';
 import { pgPool } from '@lib-root/server/db/pool';
 
 /**
@@ -34,7 +34,7 @@ const TABLE_TO_VIEWS: Record<string, string[]> = {
  * Rafraîchit une vue matérialisée avec advisory lock pour éviter les conflits
  * Phase P3: Sécurité de concurrence
  */
-async function refreshViewSafely(viewName: string, client: Client): Promise<boolean> {
+async function refreshViewSafely(viewName: string, client: PoolClient): Promise<boolean> {
   // Advisory lock basé sur le hash du nom de la vue
   const lockId = `refresh_${viewName}`.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
   

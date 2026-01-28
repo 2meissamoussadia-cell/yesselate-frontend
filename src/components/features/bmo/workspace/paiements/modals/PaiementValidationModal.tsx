@@ -302,7 +302,7 @@ export function PaiementValidationModal({
               </div>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-slate-400">Fournisseur</span>
-                <span className="font-medium text-slate-200">{paiement.fournisseur}</span>
+                <span className="font-medium text-slate-200">{typeof paiement.fournisseur === 'object' && paiement.fournisseur && 'name' in paiement.fournisseur ? (paiement.fournisseur as { name: string }).name : String(paiement.fournisseur ?? '')}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-slate-400">Montant</span>

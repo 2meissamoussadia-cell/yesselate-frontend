@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { useAppStore } from '@/lib/stores';
+import { useAppStore, useBMOStore } from '@/lib/stores';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -21,7 +21,8 @@ interface DocumentDetailsTabsProps {
 }
 
 export function DocumentDetailsTabs({ document, documentType }: DocumentDetailsTabsProps) {
-  const { darkMode, addToast } = useAppStore();
+  const { darkMode } = useAppStore();
+  const { addToast } = useBMOStore();
 
   if (documentType === 'bc') {
     const bc = document as EnrichedBC;

@@ -75,7 +75,7 @@ export function BlockedModals() {
       <BlockedDossierDetailsModal
         open={true}
         onClose={closeModal}
-        dossierId={(modal.data?.dossierId || modal.data?.dossier?.id) as string}
+        dossierId={((modal.data?.dossierId ?? (modal.data?.dossier as { id?: string } | undefined)?.id) ?? '') as string}
       />
     );
   }

@@ -153,8 +153,11 @@ export function RecommendationsModal({
     // 3. Impact budgétaire du projet
     if (bc.projetDetails) {
       const { budgetTotal, budgetUtilise, budgetRestant } = bc.projetDetails;
-      const budgetUsedPercent = budgetTotal > 0 ? (budgetUtilise / budgetTotal) * 100 : 0;
-      const impactPercent = budgetRestant > 0 ? (bcAmount / budgetRestant) * 100 : 0;
+      const total = budgetTotal ?? 0;
+      const utilise = budgetUtilise ?? 0;
+      const restant = budgetRestant ?? 0;
+      const budgetUsedPercent = total > 0 ? (utilise / total) * 100 : 0;
+      const impactPercent = restant > 0 ? (bcAmount / restant) * 100 : 0;
 
       if (budgetUsedPercent > 80) {
         recs.push({
@@ -166,24 +169,24 @@ export function RecommendationsModal({
           confidence: 80,
           details: [
             { label: 'Budget utilisé', value: `${budgetUsedPercent.toFixed(0)}%` },
-            { label: 'Budget restant', value: `${budgetRestant.toLocaleString('fr-FR')} FCFA` },
+            { label: 'Budget restant', value: `${restant.toLocaleString('fr-FR')} FCFA` },
             { label: 'Impact du BC', value: `${impactPercent.toFixed(1)}%` },
           ],
         });
       }
 
-      if (bcAmount > budgetRestant) {
+      if (bcAmount > restant) {
         recs.push({
           id: 'budget-exceed',
           type: 'budget',
           severity: 'urgent',
           title: '⚠️ Dépassement budgétaire',
-          description: `Le montant de ce BC (${bcAmount.toLocaleString('fr-FR')} FCFA) dépasse le budget restant (${budgetRestant.toLocaleString('fr-FR')} FCFA). Validation impossible sans ajustement.`,
+          description: `Le montant de ce BC (${bcAmount.toLocaleString('fr-FR')} FCFA) dépasse le budget restant (${restant.toLocaleString('fr-FR')} FCFA). Validation impossible sans ajustement.`,
           confidence: 100,
           details: [
-            { label: 'Budget restant', value: `${budgetRestant.toLocaleString('fr-FR')} FCFA` },
+            { label: 'Budget restant', value: `${restant.toLocaleString('fr-FR')} FCFA` },
             { label: 'Montant BC', value: `${bcAmount.toLocaleString('fr-FR')} FCFA` },
-            { label: 'Dépassement', value: `${(bcAmount - budgetRestant).toLocaleString('fr-FR')} FCFA` },
+            { label: 'Dépassement', value: `${(bcAmount - restant).toLocaleString('fr-FR')} FCFA` },
           ],
         });
       }

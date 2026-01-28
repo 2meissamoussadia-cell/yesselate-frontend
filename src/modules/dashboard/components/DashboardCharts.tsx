@@ -56,6 +56,16 @@ const LazyMonthlyComparisonChart = lazy(() => import('./charts/MonthlyComparison
 const LazyCategoryDistributionChart = lazy(() => import('./charts/CategoryDistributionChart').then(m => ({ default: m.CategoryDistributionChart })));
 
 // ============================================
+// FALLBACK COMPONENT
+// ============================================
+
+const ChartLoadingFallback = () => (
+  <div className="h-64 flex items-center justify-center text-slate-400">
+    <p className="text-sm">Chargement du graphique...</p>
+  </div>
+);
+
+// ============================================
 // MAIN COMPONENT
 // ============================================
 
@@ -63,31 +73,19 @@ export function DashboardCharts({ trends, monthlyComparison, categoryDistributio
   return (
     <div className="space-y-6">
       {trends && trends.length > 0 && (
-        <Suspense fallback={
-          <div className="h-64 flex items-center justify-center text-slate-400">
-            <p className="text-sm">Chargement du graphique...</p>
-          </div>
-        }>
+        <Suspense fallback={<ChartLoadingFallback />}>
           <LazyTrendsChart trends={trends} />
         </Suspense>
       )}
 
       {monthlyComparison && monthlyComparison.length > 0 && (
-        <Suspense fallback={
-          <div className="h-64 flex items-center justify-center text-slate-400">
-            <p className="text-sm">Chargement du graphique...</p>
-          </div>
-        }>
+        <Suspense fallback={<ChartLoadingFallback />}>
           <LazyMonthlyComparisonChart data={monthlyComparison} />
         </Suspense>
       )}
 
       {categoryDistribution && categoryDistribution.length > 0 && (
-        <Suspense fallback={
-          <div className="h-64 flex items-center justify-center text-slate-400">
-            <p className="text-sm">Chargement du graphique...</p>
-          </div>
-        }>
+        <Suspense fallback={<ChartLoadingFallback />}>
           <LazyCategoryDistributionChart data={categoryDistribution} />
         </Suspense>
       )}

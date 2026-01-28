@@ -12,6 +12,7 @@ import { DashboardKPIBar } from './components/DashboardKPIBar';
 import { DashboardViewRouter } from './components/DashboardViewRouter';
 import { DashboardBreadcrumbs } from './components/DashboardBreadcrumbs';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
+import { useAuthHeaders } from './utils/getAuthHeaders';
 
 /**
  * Composant shell qui assemble tous les éléments du dashboard
@@ -25,6 +26,7 @@ import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCen
  */
 export function DashboardShell() {
   const nav = useDashboardCommandCenterStore((s) => s.navigation);
+  const authHeaders = useAuthHeaders();
 
   const onExport = useCallback(async (format: 'csv' | 'json' | 'pdf' | 'excel') => {
     const params = new URLSearchParams({
@@ -35,10 +37,7 @@ export function DashboardShell() {
     if (nav.subSubCategory) params.set('leaf', nav.subSubCategory);
 
     const res = await fetch(`/api/export/dashboard?${params.toString()}`, {
-      headers: {
-        'x-tenant-id': 'default', // TODO: récupérer depuis le contexte auth
-        'x-user-id': 'anonymous', // TODO: récupérer depuis le contexte auth
-      },
+      headers: authHeaders,
     });
     if (!res.ok) throw new Error('Export failed');
     const blob = await res.blob();
@@ -50,7 +49,7 @@ export function DashboardShell() {
     a.download = match?.[1] ?? `export.${format === 'excel' ? 'xls' : format}`;
     a.click();
     URL.revokeObjectURL(url);
-  }, [nav]);
+  }, [nav, authHeaders]);
 
   return (
     <div className="flex h-full">

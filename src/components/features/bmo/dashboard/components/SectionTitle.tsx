@@ -88,15 +88,7 @@ export const SectionTitle = memo(function SectionTitle({
               className="inline-flex items-center justify-center flex-shrink-0 relative z-10 overflow-hidden"
             >
               <Icon 
-                className={cn('text-slate-300 flex-shrink-0', sizes.icon)} 
-                style={{ 
-                  width: sizeStyles.icon.width,
-                  height: sizeStyles.icon.height,
-                  maxWidth: sizeStyles.icon.maxWidth,
-                  maxHeight: sizeStyles.icon.maxHeight,
-                  minWidth: sizeStyles.icon.minWidth,
-                  minHeight: sizeStyles.icon.minHeight,
-                }} 
+                className={cn('text-slate-300 flex-shrink-0 w-full h-full max-w-full max-h-full', sizes.icon)} 
               />
             </span>
           </div>

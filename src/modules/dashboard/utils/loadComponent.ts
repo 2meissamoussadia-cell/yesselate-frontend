@@ -152,8 +152,11 @@ export async function loadComponent(name: string): Promise<ComponentType> {
       
       return component;
     } catch (error) {
-      log.error(`Erreur lors du chargement du composant "${name}"`, error instanceof Error ? error : new Error(String(error)), {
+      const err = error instanceof Error ? error : new Error(String(error));
+      log.error(`Erreur lors du chargement du composant "${name}"`, err, {
         name,
+        message: err.message,
+        cause: error instanceof Error && (error as Error & { cause?: unknown }).cause,
       });
       throw error;
     } finally {

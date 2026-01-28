@@ -38,7 +38,39 @@ export async function resolveLocaleContext(
   tenantId: string,
   userId?: string
 ): Promise<LocaleBundle> {
-  const client = await pgPool.connect();
+  // Si pas de DB, retourner des valeurs par défaut basées sur Accept-Language
+  if (!process.env.DATABASE_URL) {
+    const acceptLanguage = headers.get('accept-language') ?? '';
+    const navLocale = acceptLanguage.split(',')[0]?.split(';')[0]?.trim() || 'fr-FR';
+    const lang = navLocale.split('-')[0].toLowerCase();
+    const direction: 'ltr' | 'rtl' = RTL_LANGUAGES.has(lang) ? 'rtl' : 'ltr';
+    
+    return {
+      locale: navLocale,
+      currency: 'EUR',
+      timezone: 'Europe/Paris',
+      direction,
+    };
+  }
+
+  let client;
+  try {
+    client = await pgPool.connect();
+  } catch (error) {
+    // Si la connexion échoue, retourner des valeurs par défaut
+    console.warn('[resolveLocaleContext] Database connection failed, using defaults:', error);
+    const acceptLanguage = headers.get('accept-language') ?? '';
+    const navLocale = acceptLanguage.split(',')[0]?.split(';')[0]?.trim() || 'fr-FR';
+    const lang = navLocale.split('-')[0].toLowerCase();
+    const direction: 'ltr' | 'rtl' = RTL_LANGUAGES.has(lang) ? 'rtl' : 'ltr';
+    
+    return {
+      locale: navLocale,
+      currency: 'EUR',
+      timezone: 'Europe/Paris',
+      direction,
+    };
+  }
   
   try {
     // 1. Récupérer les préférences tenant
@@ -74,7 +106,14 @@ export async function resolveLocaleContext(
         [tenantId, userId]
       );
       
-      userPrefs = userRows[0] ?? {};
+      const row = userRows[0];
+      userPrefs = row
+        ? {
+            locale: row.locale ?? undefined,
+            currency: row.currency ?? undefined,
+            timezone: row.timezone ?? undefined,
+          }
+        : {};
     }
 
     // 3. Négocier la locale (user pref > Accept-Language > tenant default)
@@ -108,8 +147,24 @@ export async function resolveLocaleContext(
       timezone,
       direction,
     };
+  } catch (error) {
+    // Si une erreur se produit lors des requêtes, retourner des valeurs par défaut
+    console.warn('[resolveLocaleContext] Database query failed, using defaults:', error);
+    const acceptLanguage = headers.get('accept-language') ?? '';
+    const navLocale = acceptLanguage.split(',')[0]?.split(';')[0]?.trim() || 'fr-FR';
+    const lang = navLocale.split('-')[0].toLowerCase();
+    const direction: 'ltr' | 'rtl' = RTL_LANGUAGES.has(lang) ? 'rtl' : 'ltr';
+    
+    return {
+      locale: navLocale,
+      currency: 'EUR',
+      timezone: 'Europe/Paris',
+      direction,
+    };
   } finally {
-    client.release();
+    if (client) {
+      client.release();
+    }
   }
 }
 

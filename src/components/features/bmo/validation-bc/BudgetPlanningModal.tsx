@@ -52,24 +52,27 @@ export function BudgetPlanningModal({
     }, 0);
 
     // Impact si ce BC est validé
-    const impactIfValidated = budgetRestant - bcAmount;
-    const impactPercentIfValidated = budgetTotal > 0 ? ((budgetUtilise + bcAmount) / budgetTotal) * 100 : 0;
+    const impactIfValidated = (budgetRestant ?? 0) - bcAmount;
+    const total = budgetTotal ?? 0;
+    const utilise = budgetUtilise ?? 0;
+    const restant = budgetRestant ?? 0;
+    const impactPercentIfValidated = total > 0 ? ((utilise + bcAmount) / total) * 100 : 0;
 
     // Impact si TOUS les BCs en attente sont validés
-    const impactIfAllPending = budgetRestant - bcAmount - totalPendingAmount;
-    const impactPercentIfAllPending = budgetTotal > 0 
-      ? ((budgetUtilise + bcAmount + totalPendingAmount) / budgetTotal) * 100 
+    const impactIfAllPending = restant - bcAmount - totalPendingAmount;
+    const impactPercentIfAllPending = total > 0 
+      ? ((utilise + bcAmount + totalPendingAmount) / total) * 100 
       : 0;
 
     // Seuils d'alerte
-    const isOverBudget = bcAmount > budgetRestant;
-    const isCloseToLimit = (bcAmount / budgetRestant) * 100 > 80;
-    const wouldExceedIfAll = (bcAmount + totalPendingAmount) > budgetRestant;
+    const isOverBudget = bcAmount > restant;
+    const isCloseToLimit = restant > 0 ? (bcAmount / restant) * 100 > 80 : false;
+    const wouldExceedIfAll = (bcAmount + totalPendingAmount) > restant;
 
     return {
-      budgetTotal,
-      budgetUtilise,
-      budgetRestant,
+      budgetTotal: total,
+      budgetUtilise: utilise,
+      budgetRestant: restant,
       bcAmount,
       impactIfValidated,
       impactPercentIfValidated,
@@ -514,7 +517,7 @@ export function BudgetPlanningModal({
           darkMode ? 'bg-slate-800/50 border-slate-700' : 'bg-gray-50 border-gray-200'
         )}>
           <div className="text-xs text-slate-400">
-            {budgetImpact.pendingBCsCount} BC{s} en attente pour ce projet • 
+            {budgetImpact.pendingBCsCount} BC{budgetImpact.pendingBCsCount > 1 ? 's' : ''} en attente pour ce projet • 
             Total en attente: {budgetImpact.totalPendingAmount.toLocaleString('fr-FR')} FCFA
           </div>
           <div className="flex gap-2">

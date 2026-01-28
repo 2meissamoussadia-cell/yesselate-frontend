@@ -12,6 +12,9 @@
 import { NextRequest } from 'next/server';
 import type { SecurityContext, NavKey } from './types';
 import { createLogger } from '../utils/logger';
+import { verifyJWT, type JWTPayload } from '@lib-root/server/security/jwt';
+import { getSessionCookie } from '@lib-root/server/security/cookies';
+import { extractContextFromHeaders } from '@lib-root/server/dashboard/context';
 
 const logger = createLogger('Security');
 
@@ -45,7 +48,7 @@ export interface PermissionCheckResult {
 /**
  * Extrait le contexte de sécurité depuis la requête
  * 
- * TODO: Adapter selon votre système d'authentification (JWT, session, etc.)
+ * ✅ Phase 7: Implémenté avec JWT, session cookie, et fallback headers
  */
 export async function extractSecurityContext(
   req: NextRequest
@@ -55,37 +58,68 @@ export async function extractSecurityContext(
     const authHeader = req.headers.get('authorization');
     if (authHeader?.startsWith('Bearer ')) {
       const token = authHeader.substring(7);
-      // TODO: Décoder et valider le JWT
-      // const decoded = await verifyJWT(token);
-      // return {
-      //   userId: decoded.userId,
-      //   tenantId: decoded.tenantId,
-      //   roles: decoded.roles,
-      //   bureaux: decoded.bureaux,
-      //   chantiers: decoded.chantiers,
-      //   permissions: decoded.permissions,
-      // };
+      try {
+        const decoded = verifyJWT(token);
+        if (decoded) {
+          // Extraire les scopes comme permissions
+          const permissions = decoded.scopes || [];
+          // Extraire tenantId depuis le payload ou depuis les headers
+          const tenantId = decoded.tenantId || req.headers.get('x-tenant-id') || 'default';
+          
+          return {
+            userId: decoded.sub,
+            tenantId,
+            roles: decoded.role ? [decoded.role] : [],
+            permissions,
+            // Note: bureaux et chantiers peuvent être extraits depuis les scopes
+            bureaux: permissions.filter(p => p.startsWith('bureau:')).map(p => p.split(':')[1]),
+            chantiers: permissions.filter(p => p.startsWith('chantier:')).map(p => p.split(':')[1]),
+          };
+        }
+      } catch (error) {
+        logger.warn('Invalid JWT token', { action: 'extractSecurityContext' });
+      }
     }
     
     // Option 2: Depuis une session (cookies)
-    const sessionId = req.cookies.get('session_id')?.value;
-    if (sessionId) {
-      // TODO: Récupérer la session depuis votre store (Redis, DB, etc.)
-      // const session = await getSession(sessionId);
-      // return {
-      //   userId: session.userId,
-      //   tenantId: session.tenantId,
-      //   roles: session.roles,
-      //   bureaux: session.bureaux,
-      //   chantiers: session.chantiers,
-      //   permissions: session.permissions,
-      // };
+    const sessionCookie = getSessionCookie(req);
+    if (sessionCookie) {
+      try {
+        // Vérifier le token de session comme un JWT
+        const decoded = verifyJWT(sessionCookie.token);
+        if (decoded) {
+          const permissions = decoded.scopes || [];
+          const tenantId = decoded.tenantId || req.headers.get('x-tenant-id') || 'default';
+          
+          return {
+            userId: decoded.sub,
+            tenantId,
+            roles: decoded.role ? [decoded.role] : [],
+            permissions,
+            bureaux: permissions.filter(p => p.startsWith('bureau:')).map(p => p.split(':')[1]),
+            chantiers: permissions.filter(p => p.startsWith('chantier:')).map(p => p.split(':')[1]),
+          };
+        }
+      } catch (error) {
+        logger.warn('Invalid session token', { action: 'extractSecurityContext' });
+      }
     }
     
-    // Option 3: Depuis localStorage côté client (pour développement)
-    // En production, cela devrait être géré côté serveur
+    // Option 3: Fallback depuis les headers (pour compatibilité avec système existant)
+    // Utilise extractContextFromHeaders qui lit x-tenant-id, x-user-id, x-roles, x-scopes
+    const headerContext = extractContextFromHeaders(req.headers);
+    if (headerContext.userId !== 'anonymous' && headerContext.tenantId !== 'default') {
+      return {
+        userId: headerContext.userId,
+        tenantId: headerContext.tenantId,
+        roles: headerContext.roles,
+        permissions: headerContext.perms || headerContext.permissions || [],
+        bureaux: headerContext.scopes.filter(s => s.startsWith('bureau:')).map(s => s.split(':')[1]),
+        chantiers: headerContext.scopes.filter(s => s.startsWith('chantier:')).map(s => s.split(':')[1]),
+      };
+    }
     
-    // Pour l'instant, retourner null (pas d'authentification)
+    // Si aucune authentification trouvée, retourner null
     return null;
   } catch (error) {
     const err = error instanceof Error ? error : new Error(String(error));
@@ -236,11 +270,13 @@ export function checkViewAccess(
 // ============================================================================
 
 /**
- * Applique le filtrage multi-tenant aux données
+ * Applique le filtrage multi-tenant et ABAC/RLS aux données
+ * 
+ * ✅ Phase 8: Filtrage complet avec vraies données tenant/user
  * 
  * @param data - Données brutes du read model
- * @param context - Contexte de sécurité
- * @returns Données filtrées selon le tenant
+ * @param context - Contexte de sécurité avec tenant, bureaux, chantiers
+ * @returns Données filtrées selon le tenant, bureaux et chantiers
  */
 export function applyTenantFilter<T extends Record<string, unknown>>(
   data: T,
@@ -251,17 +287,93 @@ export function applyTenantFilter<T extends Record<string, unknown>>(
     return {} as T;
   }
   
-  // TODO: Implémenter le filtrage selon votre modèle de données
-  // Exemple:
-  // if (Array.isArray(data)) {
-  //   return data.filter((item) => item.tenantId === context.tenantId) as T;
-  // }
-  // if (data.tenantId && data.tenantId !== context.tenantId) {
-  //   return {} as T;
-  // }
+  // Helper pour vérifier si un item correspond au contexte de sécurité
+  const matchesContext = (item: any): boolean => {
+    if (!item || typeof item !== 'object') return true;
+    
+    // 1. Filtrage par tenantId
+    if ('tenantId' in item) {
+      if (item.tenantId !== context.tenantId) {
+        return false;
+      }
+    }
+    
+    // 2. Filtrage par bureaux (si scopes bureau:xxx présents)
+    if (context.bureaux && context.bureaux.length > 0) {
+      if ('bureauId' in item || 'bureauCode' in item || 'bureau' in item) {
+        const itemBureau = item.bureauId || item.bureauCode || item.bureau;
+        if (itemBureau && !context.bureaux.includes(String(itemBureau))) {
+          return false;
+        }
+      }
+    }
+    
+    // 3. Filtrage par chantiers (si scopes chantier:xxx présents)
+    if (context.chantiers && context.chantiers.length > 0) {
+      if ('chantierId' in item || 'chantierCode' in item || 'chantier' in item) {
+        const itemChantier = item.chantierId || item.chantierCode || item.chantier;
+        if (itemChantier && !context.chantiers.includes(String(itemChantier))) {
+          return false;
+        }
+      }
+    }
+    
+    // 4. Filtrage par userId (si l'item appartient à un utilisateur spécifique)
+    // Note: Seulement si l'utilisateur n'est pas admin (admins voient tout)
+    if (!context.roles.includes('admin') && 'userId' in item) {
+      // Si l'item a un userId et que ce n'est pas l'utilisateur actuel, filtrer
+      // (sauf si l'utilisateur a la permission de voir les données d'autres utilisateurs)
+      if (item.userId && item.userId !== context.userId) {
+        // Vérifier si l'utilisateur a la permission de voir les données d'autres utilisateurs
+        const canViewOthers = context.permissions?.some(p => 
+          p.includes(':read:others') || p.includes(':view:all') || p.includes('dashboard:read:all')
+        );
+        if (!canViewOthers) {
+          return false;
+        }
+      }
+    }
+    
+    // 5. Filtrage par permissions spécifiques (si l'item a des champs de permission)
+    // Exemple: certains items peuvent nécessiter des permissions spécifiques
+    if ('requiredPermission' in item && typeof item.requiredPermission === 'string') {
+      const hasRequiredPermission = context.permissions?.some(p => 
+        p === item.requiredPermission || p.startsWith(`${item.requiredPermission}:`)
+      );
+      if (!hasRequiredPermission && !context.roles.includes('admin')) {
+        return false;
+      }
+    }
+    
+    return true;
+  };
   
-  // Pour l'instant, retourner les données telles quelles
-  return data;
+  if (Array.isArray(data)) {
+    // Si c'est un tableau, filtrer chaque élément
+    return data.filter(matchesContext) as T;
+  }
+  
+  // Si c'est un objet, vérifier le tenantId et autres filtres
+  if (data && typeof data === 'object') {
+    if (!matchesContext(data)) {
+      // Ne correspond pas au contexte, retourner objet vide
+      return {} as T;
+    }
+  }
+  
+  // Filtrer récursivement les propriétés qui sont des tableaux ou objets
+  const filtered = { ...data } as any;
+  for (const [key, value] of Object.entries(filtered)) {
+    if (Array.isArray(value)) {
+      // Filtrer les tableaux
+      filtered[key] = value.filter(matchesContext);
+    } else if (value && typeof value === 'object' && !(value instanceof Date)) {
+      // Filtrer récursivement les objets imbriqués
+      filtered[key] = applyTenantFilter(value as Record<string, unknown>, context);
+    }
+  }
+  
+  return filtered;
 }
 
 // ============================================================================
@@ -278,7 +390,6 @@ export async function logAccess(
   metadata?: Record<string, unknown>
 ): Promise<void> {
   try {
-    // TODO: Enregistrer dans votre système d'audit (DB, log aggregator, etc.)
     const auditEntry = {
       timestamp: new Date().toISOString(),
       userId: context?.userId || 'anonymous',
@@ -293,8 +404,50 @@ export async function logAccess(
       },
     };
     
-    // Exemple: await auditLogger.log(auditEntry);
-    logger.info('Access audit', { action: 'auditAccess', ...auditEntry });
+    // Enregistrer dans le système d'audit (table authorization_audit si disponible)
+    if (process.env.DATABASE_URL) {
+      try {
+        const { pgPool } = await import('@lib-root/server/db/pool');
+        const client = await pgPool.connect();
+        try {
+          // Convertir tenantId en UUID si nécessaire (le schéma attend UUID)
+          // Si tenantId n'est pas un UUID valide, utiliser un UUID par défaut ou ignorer
+          const tenantIdValue = context?.tenantId || 'unknown';
+          
+          await client.query(
+            `INSERT INTO authorization_audit (
+              tenant_id, user_id, resource, action, route_main, route_sub, route_leaf,
+              decision, reason, roles_used, scopes_used, when_at
+            ) VALUES (
+              COALESCE($1::uuid, (SELECT id FROM tenants LIMIT 1)), 
+              $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW()
+            )`,
+            [
+              tenantIdValue, // PostgreSQL tentera de convertir en UUID, ou utilisera le fallback
+              context?.userId || 'anonymous',
+              'dashboard',
+              action,
+              nav.main,
+              nav.sub || null,
+              nav.leaf || null,
+              'allowed', // On suppose que si on arrive ici, l'accès est autorisé
+              'Access logged',
+              context?.roles || [],
+              context?.permissions || [],
+            ]
+          );
+        } finally {
+          client.release();
+        }
+      } catch (dbError) {
+        // Si l'insertion DB échoue, logger quand même
+        logger.warn('Failed to insert audit log to DB, using logger fallback', { action: 'auditAccess' });
+        logger.info('Access audit', { action: 'auditAccess', ...auditEntry });
+      }
+    } else {
+      // Pas de DB, utiliser le logger uniquement
+      logger.info('Access audit', { action: 'auditAccess', ...auditEntry });
+    }
   } catch (error) {
     const err = error instanceof Error ? error : new Error(String(error));
     logger.error('Error logging access', { action: 'auditAccess' }, err);

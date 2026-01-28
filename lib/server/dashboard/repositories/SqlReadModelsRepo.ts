@@ -11,7 +11,7 @@ import type {
   KpisStocksData,
   KpisMaterielData,
 } from '@/modules/dashboard/types/dashboard.readmodels';
-import { parseScopes } from '../abac';
+import { parseScopes, buildScopeWhereFragment } from '../abac';
 import { SqlReadModelsRepoStocks } from './SqlReadModelsRepo.Stocks';
 
 /**

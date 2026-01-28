@@ -62,6 +62,8 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
   const navigate = useDashboardCommandCenterStore((state) => state.navigate);
   
   // ✅ Helper pour vérifier l'accès à une route
+  // Note: Le User de lib/contexts/AuthContext utilise déjà le type User de lib/types
+  // qui a nom, prenom (pas firstName, lastName), donc compatible avec hasViewAccess
   const checkRouteAccess = useCallback((mainId: string, subId?: string | null, leafId?: string | null): boolean => {
     const nav: NavKey = {
       main: mainId as NavKey['main'],
@@ -73,7 +75,12 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
     return hasViewAccess(entry, user);
   }, [user]);
   
-  const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set([main || 'overview']));
+  // Étendre par défaut toutes les catégories principales pour afficher la subnavigation
+  const [expandedNodes, setExpandedNodes] = useState<Set<string>>(() => {
+    const initial = new Set<string>([main || 'overview']);
+    Object.keys(dashboardNavigationConfig).forEach((id) => initial.add(id));
+    return initial;
+  });
   
   // Phase P10: Charger les permissions pour filtrer la navigation
   const { permissions: userPerms } = useDashboardPermissions();

@@ -2,7 +2,8 @@
 // Phase P18: Chiffrement E2E pour exports sensibles (PDF/XLSX)
 // Support: AES-GCM, PGP, age, secrets éphémères
 
-import { encryptFile, decryptFile, encryptWithEphemeralSecret, generateEphemeralSecret } from './encryption';
+import { encryptWithEphemeralSecret, decryptWithEphemeralSecret } from './encryption';
+import { generateEphemeralSecret } from './encryptionExport';
 import { encryptWithPGP } from './pgp';
 import { encryptWithAge } from './age';
 import { NextResponse } from 'next/server';
@@ -98,20 +99,26 @@ export async function encryptExportResponse(
       algorithm = 'age';
       break;
 
-    case 'ephemeral':
-      // Générer un secret éphémère si non fourni
+    case 'ephemeral': {
+      // Générer un secret éphémère si non fourni (format: iv + tag + encrypted)
       const secret = options.ephemeralSecret || generateEphemeralSecret();
-      encryptedBuffer = encryptWithEphemeralSecret(fileBuffer, secret);
+      const enc = encryptWithEphemeralSecret(fileBuffer, secret);
+      encryptedBuffer = Buffer.concat([enc.iv, enc.tag, enc.enc]);
       algorithm = 'aes-256-gcm-ephemeral';
       secretInfo = secret; // À partager via canal séparé (Teams/SMS)
       break;
+    }
 
     case 'aes-gcm':
-    default:
-      // Chiffrement AES-GCM standard (clé partagée)
-      encryptedBuffer = encryptFile(fileBuffer);
+    default: {
+      // Chiffrement AES-GCM avec secret éphémère (format: iv + tag + encrypted)
+      const secret = options.ephemeralSecret || generateEphemeralSecret();
+      const enc = encryptWithEphemeralSecret(fileBuffer, secret);
+      encryptedBuffer = Buffer.concat([enc.iv, enc.tag, enc.enc]);
       algorithm = 'aes-256-gcm';
+      secretInfo = secret;
       break;
+    }
   }
 
   // Nouveau nom de fichier avec extension .encrypted
@@ -132,7 +139,7 @@ export async function encryptExportResponse(
     // Note: En production, envoyer le secret via Teams/SMS plutôt que dans les headers
   }
 
-  return new NextResponse(encryptedBuffer, {
+  return new NextResponse(new Uint8Array(encryptedBuffer), {
     status: 200,
     headers,
   });
@@ -140,10 +147,18 @@ export async function encryptExportResponse(
 
 /**
  * Déchiffre un fichier exporté (pour usage interne/admin)
- * 
+ * Format buffer: iv (12) + tag (16) + encrypted
+ *
  * @param encryptedBuffer - Buffer chiffré
+ * @param secret - Secret éphémère (optionnel si stocké ailleurs)
  * @returns Buffer déchiffré
  */
-export function decryptExport(encryptedBuffer: Buffer): Buffer {
-  return decryptFile(encryptedBuffer);
+export function decryptExport(encryptedBuffer: Buffer, secret?: string): Buffer {
+  if (!secret || encryptedBuffer.length < 28) {
+    throw new Error('decryptExport requires secret and buffer (iv+tag+encrypted)');
+  }
+  const iv = encryptedBuffer.subarray(0, 12);
+  const tag = encryptedBuffer.subarray(12, 28);
+  const enc = encryptedBuffer.subarray(28);
+  return decryptWithEphemeralSecret({ iv, tag, enc }, secret);
 }

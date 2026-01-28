@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { Search, X, Clock, TrendingUp, FileText, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { demandesRH, employees } from '@/lib/data/bmo-mock-2';
+import { demandesRH } from '@/lib/data/bmo-mock-2';
+import { employees } from '@/lib/data/bmo-mock';
 import type { HRRequest } from '@/lib/types/bmo.types';
 
 type SearchSuggestion = {

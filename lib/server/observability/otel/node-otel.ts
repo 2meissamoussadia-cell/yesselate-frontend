@@ -32,7 +32,7 @@ const sdk = new NodeSDK({
   instrumentations: [new HttpInstrumentation(), new PgInstrumentation()],
 });
 
-sdk.start().then(() => console.log('[OTEL] tracing started'))
+void (sdk.start() as unknown as Promise<void>).then(() => console.log('[OTEL] tracing started'))
   .catch((err) => console.error('[OTEL] init error', err));
 
-process.on('SIGTERM', () => sdk.shutdown().finally(() => process.exit(0)));
+process.on('SIGTERM', () => void (sdk.shutdown() as unknown as Promise<void>).finally(() => process.exit(0)));

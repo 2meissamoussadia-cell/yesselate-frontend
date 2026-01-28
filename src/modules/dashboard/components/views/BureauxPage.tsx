@@ -1863,3 +1863,4 @@ function BureauxPageInner() {
 }
 
 export const BureauxPage = memo(BureauxPageInner);
+export default BureauxPage;

@@ -11,7 +11,7 @@ export const TelemetryEvent = z.object({
   event: z.string(),                       // 'view_opened', 'kpi_click', 'export_triggered', 'filter_applied', 'error', 'perf'
   routeKey: z.string().optional(),         // 'main::sub::leaf'
   at: z.number().int(),                    // Date.now()
-  props: z.record(z.any()).optional(),     // Payload minimal: {kpiId:'...', action:'export', format:'xlsx', ...}
+  props: z.record(z.string(), z.any()).optional(),     // Payload minimal: {kpiId:'...', action:'export', format:'xlsx', ...}
 });
 
 /**

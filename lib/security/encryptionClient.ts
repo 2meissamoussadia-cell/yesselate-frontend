@@ -65,15 +65,16 @@ export async function decryptExport(encryptedBuffer: ArrayBuffer, secret: string
   encryptedWithTag.set(enc, 0);
   encryptedWithTag.set(tag, enc.length);
   
-  // Déchiffrer avec AES-GCM
+  // Déchiffrer avec AES-GCM (copier iv pour garantir ArrayBuffer pour Web Crypto)
+  const ivCopy = new Uint8Array(iv);
   const decrypted = await crypto.subtle.decrypt(
     {
       name: 'AES-GCM',
-      iv: iv,
+      iv: ivCopy,
       tagLength: 128, // 16 bytes = 128 bits
     },
     key,
-    encryptedWithTag.buffer
+    encryptedWithTag
   );
   
   return decrypted;

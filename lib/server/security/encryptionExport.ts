@@ -133,7 +133,7 @@ export function createEncryptedResponse(
     headers['X-Ephemeral-Secret'] = metadata.secret; // ⚠️ À retirer en production, partager via canal séparé
   }
 
-  return new NextResponse(encrypted, {
+  return new NextResponse(new Uint8Array(encrypted), {
     status: 200,
     headers,
   });

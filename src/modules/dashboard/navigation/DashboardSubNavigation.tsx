@@ -79,7 +79,8 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
     [permissions.permissions, permissions.featureFlags, permissions.roles]
   );
 
-  const currentMainCategory = (main || 'overview') as DashboardMainCategory;
+  // Normaliser la casse (config utilise des clés lowercase: overview, performance, etc.)
+  const currentMainCategory = (typeof main === 'string' ? main.toLowerCase() : 'overview') as DashboardMainCategory;
 
   // Récupérer les sous-catégories (niveau 2) et filtrer selon permissions
   const allSubCategories = getSubCategories(currentMainCategory) || [];
@@ -97,8 +98,8 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
     [allSubSubCategories, userContext]
   );
 
-  // Labels pour le breadcrumb
-  const mainConfig = dashboardNavigationConfig[main as keyof typeof dashboardNavigationConfig];
+  // Labels pour le breadcrumb (utiliser la catégorie normalisée pour la config)
+  const mainConfig = dashboardNavigationConfig[currentMainCategory];
   const mainLabel = mainConfig?.label || main || 'Dashboard';
   
   const subConfig = mainConfig?.children?.find((c) => c.id === sub);
@@ -237,7 +238,7 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
           <SegmentedTabs
             items={subCategories.map((subCat) => ({
               id: subCat.id,
-              label: subCat.label,
+              label: subCat.label ?? subCat.id,
               badge: getBadgeForNode(subCat),
             }))}
             value={sub || null}
@@ -252,7 +253,7 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
           <SegmentedTabs
             items={subSubCategories.map((subSubCat) => ({
               id: subSubCat.id,
-              label: subSubCat.label,
+              label: subSubCat.label ?? subSubCat.id,
               badge: getBadgeForNode(subSubCat),
             }))}
             value={leaf || null}

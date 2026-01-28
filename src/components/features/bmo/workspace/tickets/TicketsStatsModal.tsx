@@ -2,14 +2,17 @@
 
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { ticketsApi, type TicketsStats } from '@/lib/services/ticketsApiService';
+import { ticketsApi, type TicketStats, type TicketCategory } from '@/lib/services/ticketsApiService';
 import { BarChart3, X, Ticket, Zap, Clock, CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+
+const getCategoryLabel = (cat: TicketCategory): string =>
+  ({ technique: 'Technique', commercial: 'Commercial', facturation: 'Facturation', livraison: 'Livraison', qualite: 'Qualité', autre: 'Autre' })[cat] ?? cat;
 
 interface Props { open: boolean; onClose: () => void; }
 
 export function TicketsStatsModal({ open, onClose }: Props) {
-  const [stats, setStats] = useState<TicketsStats | null>(null);
+  const [stats, setStats] = useState<TicketStats | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -49,7 +52,7 @@ export function TicketsStatsModal({ open, onClose }: Props) {
                 </div>
                 <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-center">
                   <Zap className="w-6 h-6 mx-auto mb-2 text-red-500" />
-                  <p className="text-3xl font-bold text-red-600">{stats.criticalCount}</p>
+                  <p className="text-3xl font-bold text-red-600">{stats.critical}</p>
                   <p className="text-sm text-slate-500">Critiques</p>
                 </div>
                 <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20 text-center">
@@ -80,11 +83,11 @@ export function TicketsStatsModal({ open, onClose }: Props) {
               <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50">
                 <h4 className="font-semibold mb-4">Par catégorie</h4>
                 <div className="space-y-3">
-                  {Object.entries(stats.byCategory).map(([cat, count]) => (
-                    <div key={cat} className="flex items-center gap-3">
-                      <span className="text-sm text-slate-600 w-24">{ticketsApi.getCategoryLabel(cat)}</span>
+                  {stats.byCategory.map(({ category, count }) => (
+                    <div key={category} className="flex items-center gap-3">
+                      <span className="text-sm text-slate-600 w-24">{getCategoryLabel(category)}</span>
                       <div className="flex-1 h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
-                        <div className="h-full bg-purple-500 rounded-full" style={{ width: `${(count / stats.total) * 100}%` }} />
+                        <div className="h-full bg-purple-500 rounded-full" style={{ width: `${stats.total > 0 ? (count / stats.total) * 100 : 0}%` }} />
                       </div>
                       <span className="text-sm font-medium w-6 text-right">{count}</span>
                     </div>

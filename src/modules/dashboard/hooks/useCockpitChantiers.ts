@@ -8,21 +8,27 @@
 import { useQuery } from '@tanstack/react-query';
 import type { ChantierMock } from '../data/chantiersMock';
 import { chantiers as chantiersMock } from '../data/chantiersMock';
+import { useAuthHeaders } from '../utils/getAuthHeaders';
 
 export interface CockpitChantiersResponse {
   ok: boolean;
   chantiers: ChantierMock[];
 }
 
-async function fetchChantiersWithFallback(): Promise<CockpitChantiersResponse> {
-  try {
-    const res = await fetch('/api/cockpit/chantiers', { cache: 'no-store' });
-    if (res.ok) return res.json();
-    if (res.status >= 500) return { ok: false, chantiers: chantiersMock };
-    throw new Error(`Cockpit chantiers API: ${res.status}`);
-  } catch {
-    return { ok: false, chantiers: chantiersMock };
-  }
+function makeFetchChantiers(headers: Record<string, string>) {
+  return async (): Promise<CockpitChantiersResponse> => {
+    try {
+      const res = await fetch('/api/cockpit/chantiers', {
+        cache: 'no-store',
+        headers: { ...headers },
+      });
+      if (res.ok) return res.json();
+      if (res.status >= 500) return { ok: false, chantiers: chantiersMock };
+      throw new Error(`Cockpit chantiers API: ${res.status}`);
+    } catch {
+      return { ok: false, chantiers: chantiersMock };
+    }
+  };
 }
 
 const REFETCH_INTERVAL_MS = 30_000; // 30s — refresh auto

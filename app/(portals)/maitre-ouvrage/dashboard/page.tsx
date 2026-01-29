@@ -50,7 +50,7 @@ import { useDashboardKPIs } from '@/lib/hooks/useDashboardKPIs';
 import { useDashboardExport } from '@/modules/dashboard/hooks/useDashboardExport';
 import { KPIAlertsSystem } from '@/components/features/bmo/dashboard/command-center/KPIAlertsSystem';
 import { useLogger } from '@/lib/utils/logger';
-import { clearCache } from '@/modules/dashboard/api';
+import { clearCache } from '@/modules/dashboard/api/client';
 
 /* =========================
    Loading

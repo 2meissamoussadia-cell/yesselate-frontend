@@ -3,7 +3,6 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { extractContextFromHeaders, enrichContextWithRbac } from '@lib-root/server/dashboard/context';
-import { hydrateContext } from '@lib-root/server/dashboard/context_ext';
 
 export async function GET(req: NextRequest) {
   try {

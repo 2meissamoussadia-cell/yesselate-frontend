@@ -7,7 +7,7 @@
 
 import React, { useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { useAuthOptional } from '../../hooks/useAuthOptional';
+import { useAuthOptional } from '../hooks/useAuthOptional';
 
 const LOGIN_PATH = '/login';
 

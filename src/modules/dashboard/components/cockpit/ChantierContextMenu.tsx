@@ -5,10 +5,11 @@
 
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { Phone, MessageCircle, Image, AlertTriangle, Archive, X, MessageSquare } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ChantierMock } from '../../data/chantiersMock';
+import { useDashboardPermissions } from '../../hooks/useDashboardPermissions';
 
 export interface ChantierContextMenuProps {
   chantier: ChantierMock;
@@ -41,6 +42,11 @@ export function ChantierContextMenu({
   onAction,
 }: ChantierContextMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null);
+  const { canArchiveChantier } = useDashboardPermissions();
+
+  const visibleActions = useMemo(() => {
+    return ACTIONS.filter((a) => (a.id === 'archive' ? canArchiveChantier : true));
+  }, [canArchiveChantier]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -104,7 +110,7 @@ export function ChantierContextMenu({
           <X className="h-4 w-4" />
         </button>
       </div>
-      {ACTIONS.map(({ id, label, icon: Icon }) => (
+      {visibleActions.map(({ id, label, icon: Icon }) => (
         <button
           key={id}
           type="button"

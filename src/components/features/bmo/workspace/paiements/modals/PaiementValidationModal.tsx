@@ -45,6 +45,7 @@ import {
 
 import type { Paiement } from '@/lib/services/paiementsApiService';
 import { useToast } from '@/components/features/bmo/ToastProvider';
+import { useDashboardPermissions } from '@/modules/dashboard/hooks/useDashboardPermissions';
 
 // ================================
 // Types
@@ -123,6 +124,7 @@ export function PaiementValidationModal({
   onConfirm,
 }: PaiementValidationModalProps) {
   const toast = useToast();
+  const { canValidatePaiement } = useDashboardPermissions();
   const [step, setStep] = useState<1 | 2>(1);
   const [loading, setLoading] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
@@ -778,7 +780,12 @@ export function PaiementValidationModal({
                 </Button>
               )}
               {step === 2 && (
-                <Button type="submit" className={confirmButtonClass} disabled={loading}>
+                <Button
+                  type="submit"
+                  className={confirmButtonClass}
+                  disabled={loading || (isValidation && !canValidatePaiement)}
+                  title={isValidation && !canValidatePaiement ? 'Permission requise pour valider les paiements' : undefined}
+                >
                   {loading ? (
                     <>
                       <Loader2 className="h-4 w-4 mr-2 animate-spin" />

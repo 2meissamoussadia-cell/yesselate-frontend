@@ -5,13 +5,13 @@
 import { pgPool } from '@lib-root/server/db/pool';
 import { rbacCache } from './rbac/rbacCache';
 
-export type Role = 'admin' | 'manager' | 'reader' | 'acheteur' | 'juridique' | 'controle' | 'ordonnateur';
+export type Role = 'admin' | 'manager' | 'reader' | 'acheteur' | 'juridique' | 'controle' | 'ordonnateur' | 'dg' | 'chef_chantier' | 'ouvrier' | 'client';
 export interface RequestContext {
   tenantId: string;
   userId: string;
-  roles: Role[];        // déjà extrait depuis headers en P2
+  roles: string[];      // extrait depuis headers ou chargé depuis DB (rbac_user_assignments + rbac_roles)
   scopes: string[];     // ex: ['bureau:BMO','chantier:CH-001']
-  perms: string[];      // ex: ['dashboard:read','export:read','achats:view',...]
+  perms: string[];      // ex: ['dashboard:read','paiement:validate',...]
   flags: Record<string, boolean>; // ex: {'module.achats':true,...}
 }
 
@@ -25,11 +25,21 @@ export async function hydrateContext(ctx: Omit<RequestContext, 'perms'|'flags'>)
   const flagsCacheKey = `flags:${ctx.tenantId}`;
 
   // Vérifier le cache
-  let cached = rbacCache.get<{ scopes: string[]; perms: string[]; flags: Record<string, boolean> }>(cacheKey);
+  let cached = rbacCache.get<{ roles: string[]; scopes: string[]; perms: string[]; flags: Record<string, boolean> }>(cacheKey);
   
   if (!cached) {
     const client = await pgPool.connect();
     try {
+      // Rôles depuis rbac_user_assignments + rbac_roles (BMO: dg, chef_chantier, ouvrier, client)
+      const { rows: roleRows } = await client.query<{ role_code: string }>(
+        `select distinct r.code as role_code
+           from rbac_user_assignments ua
+           join rbac_roles r on r.id = ua.role_id
+          where ua.tenant_id = $1 and ua.user_id = $2`,
+        [ctx.tenantId, ctx.userId]
+      );
+      const rolesFromDb = roleRows.map((r) => r.role_code);
+
       // Permissions agrégées par rôle
       const { rows: permRows } = await client.query(
         `select distinct p.code as perm
@@ -68,7 +78,7 @@ export async function hydrateContext(ctx: Omit<RequestContext, 'perms'|'flags'>)
         ...Array.from(chantiers).map(c => `chantier:${c}`),
       ];
 
-      cached = { scopes, perms, flags };
+      cached = { roles: rolesFromDb, scopes, perms, flags };
       // Cache pour 5 secondes
       rbacCache.set(cacheKey, cached, 5000);
       // Cache séparé pour les flags (10 secondes)
@@ -84,5 +94,6 @@ export async function hydrateContext(ctx: Omit<RequestContext, 'perms'|'flags'>)
     }
   }
 
-  return { ...ctx, scopes: cached.scopes, perms: cached.perms, flags: cached.flags };
+  const roles = cached.roles?.length ? cached.roles : ctx.roles;
+  return { ...ctx, roles, scopes: cached.scopes, perms: cached.perms, flags: cached.flags };
 }

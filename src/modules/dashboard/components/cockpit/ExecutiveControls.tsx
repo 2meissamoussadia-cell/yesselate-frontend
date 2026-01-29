@@ -159,35 +159,6 @@ export function ExecutiveControls() {
     [executeCommand]
   );
 
-  // Raccourcis clavier V5 (? aide, Ctrl+Shift+V voix, shortcuts commandes)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === '?' && !e.ctrlKey && !e.metaKey && !e.altKey) {
-        setShowShortcutsHelp((prev) => !prev);
-        e.preventDefault();
-        return;
-      }
-      if (e.key === 'Escape') {
-        setShowShortcutsHelp(false);
-        return;
-      }
-      if ((e.key === 'V' || e.key === 'v') && (e.ctrlKey || e.metaKey) && e.shiftKey) {
-        e.preventDefault();
-        startVoice();
-        return;
-      }
-      const shortcut = matchShortcut(e);
-      if (!shortcut) return;
-      const cmd = getCommandByShortcut(shortcut);
-      if (cmd) {
-        e.preventDefault();
-        executeCommand(cmd);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [executeCommand, startVoice]);
-
   const startVoice = useCallback(() => {
     if (typeof window === 'undefined') return;
     const SpeechRecognitionCtor = window.SpeechRecognition ?? window.webkitSpeechRecognition;
@@ -251,6 +222,35 @@ export function ExecutiveControls() {
     setLastTranscript(null);
     recognition.start();
   }, [executeCommand, voiceLang]);
+
+  // Raccourcis clavier V5 (? aide, Ctrl+Shift+V voix, shortcuts commandes)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === '?' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        setShowShortcutsHelp((prev) => !prev);
+        e.preventDefault();
+        return;
+      }
+      if (e.key === 'Escape') {
+        setShowShortcutsHelp(false);
+        return;
+      }
+      if ((e.key === 'V' || e.key === 'v') && (e.ctrlKey || e.metaKey) && e.shiftKey) {
+        e.preventDefault();
+        startVoice();
+        return;
+      }
+      const shortcut = matchShortcut(e);
+      if (!shortcut) return;
+      const cmd = getCommandByShortcut(shortcut);
+      if (cmd) {
+        e.preventDefault();
+        executeCommand(cmd);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [executeCommand, startVoice]);
 
   useEffect(() => {
     return () => {

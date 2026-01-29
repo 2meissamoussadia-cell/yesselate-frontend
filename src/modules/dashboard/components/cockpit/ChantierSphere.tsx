@@ -139,8 +139,35 @@ export const ChantierSphere = React.memo(function ChantierSphere({
           center
           style={{ pointerEvents: 'none' }}
         >
-          <div className="bg-slate-900/95 text-white px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-700/60 whitespace-nowrap">
-            {chantier.id} • {(chantier.sante * 100).toFixed(0)}%
+          <div
+            className="bg-slate-900/95 text-white rounded-lg text-xs border border-slate-700/60 shadow-xl max-w-[220px] overflow-hidden"
+            title={`${chantier.id} — Santé ${(chantier.sante * 100).toFixed(0)}% • CA ${(chantier.ca / 1e6).toFixed(2)}M • Marge ${(chantier.marge * 100).toFixed(0)}%`}
+          >
+            <div className="px-3 py-2 font-semibold border-b border-slate-700/60">
+              {chantier.id} • {(chantier.sante * 100).toFixed(0)}%
+            </div>
+            <div className="px-3 py-2 space-y-1 text-slate-300">
+              <div className="flex justify-between gap-3">
+                <span className="text-slate-500">CA</span>
+                <span className="font-medium text-slate-200">{(chantier.ca / 1000).toFixed(0)}k FCFA</span>
+              </div>
+              <div className="flex justify-between gap-3">
+                <span className="text-slate-500">Marge</span>
+                <span className="font-medium text-emerald-400">{(chantier.marge * 100).toFixed(0)}%</span>
+              </div>
+              <div className="flex justify-between gap-3">
+                <span className="text-slate-500">Photos GPS</span>
+                <span className="font-medium">{chantier.photosGps}{chantier.photosManquantes != null && chantier.photosManquantes > 0 ? ` (${chantier.photosManquantes} manq.)` : ''}</span>
+              </div>
+              {(chantier.chefChantierName || chantier.bureauControle) && (
+                <div className="flex justify-between gap-3 pt-1 border-t border-slate-700/40">
+                  <span className="text-slate-500">Équipe</span>
+                  <span className="font-medium text-slate-200 truncate max-w-[120px]" title={chantier.chefChantierName ?? chantier.bureauControle}>
+                    {chantier.chefChantierName ?? `Bureau ${chantier.bureauControle}`}
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
         </Html>
       )}

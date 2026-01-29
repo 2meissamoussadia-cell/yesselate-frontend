@@ -203,6 +203,16 @@ export const typography = {
 } as const;
 
 // ============================================
+// TOUCH TARGETS - Mobile (44x44px minimum, recommandation Apple/Google)
+// ============================================
+
+export const touchTarget = {
+  min: 'min-h-[44px] min-w-[44px]',
+  tap: 'min-h-[44px] min-w-[44px] flex items-center justify-center',
+  iconButton: 'min-h-[44px] min-w-[44px] p-3 flex items-center justify-center rounded-xl',
+} as const;
+
+// ============================================
 // ÉTATS INTERACTIFS - Hover/Focus/Active
 // ============================================
 

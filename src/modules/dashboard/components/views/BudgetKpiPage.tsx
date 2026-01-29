@@ -267,7 +267,7 @@ export function BudgetKpiPage({ data: apiData }: BudgetKpiPageProps = {}) {
       <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-slate-500">
         <span className="inline-flex items-center gap-1.5 rounded-md border border-slate-800/60 bg-slate-900/40 px-2 py-1">
           <span className="font-medium text-slate-400">App</span>
-          <span>{appMeta.name}</span>
+          <span>{appMeta?.name ?? 'Performance'}</span>
         </span>
         <span className="text-slate-600">•</span>
         <span className="inline-flex items-center gap-1.5 rounded-md border border-slate-800/60 bg-slate-900/40 px-2 py-1">
@@ -318,6 +318,10 @@ export function BudgetKpiPage({ data: apiData }: BudgetKpiPageProps = {}) {
             variant="outline"
             size="sm"
             className="border-slate-800/70 bg-slate-950/30 hover:bg-slate-900/40"
+            onClick={() => {
+              // TODO: brancher export CSV/Excel (modal export ou téléchargement)
+            }}
+            title="Export à brancher (CSV/Excel)"
           >
             <Download className="mr-2 h-4 w-4" />
             Exporter
@@ -340,7 +344,7 @@ export function BudgetKpiPage({ data: apiData }: BudgetKpiPageProps = {}) {
               subtitle={kpi.description}
               icon={kpi.icon}
               tone={normalizeKPIColor(kpi.color) as KpiStatCardProps['tone']}
-              trend={typeof kpi.trend === 'number' ? kpi.trend : parseTrendPercent(kpi.trend ?? undefined)}
+              trend={typeof kpi.trend === 'number' ? kpi.trend : parseTrendPercent(kpi.trend)}
               trendDirection={kpi.trendType || 'neutral'}
               tooltip={kpi.description}
               onClick={() => handleKPIClick(kpi)}
@@ -356,7 +360,10 @@ export function BudgetKpiPage({ data: apiData }: BudgetKpiPageProps = {}) {
         icon={PieChart}
       >
         <div className="space-y-3">
-          {filteredProjects.map((p) => {
+          {filteredProjects.length === 0 ? (
+            <p className="text-slate-400 text-sm py-4 text-center">Aucun projet ne correspond à la recherche.</p>
+          ) : (
+          filteredProjects.map((p) => {
             const ratio = p.alloue > 0 ? (p.consomme / p.alloue) * 100 : 0;
             const over = ratio > 100;
 
@@ -404,7 +411,8 @@ export function BudgetKpiPage({ data: apiData }: BudgetKpiPageProps = {}) {
                 ) : null}
               </DashboardPanel>
             );
-          })}
+          })
+          )}
         </div>
       </DashboardSection>
 
@@ -416,7 +424,10 @@ export function BudgetKpiPage({ data: apiData }: BudgetKpiPageProps = {}) {
           icon={AlertTriangle}
         >
           <div className="space-y-3">
-            {filteredLate.map((p) => (
+            {filteredLate.length === 0 ? (
+              <p className="text-slate-400 text-sm py-4 text-center">Aucun paiement en retard (ou aucun résultat pour la recherche).</p>
+            ) : (
+            filteredLate.map((p) => (
               <DashboardPanel key={p.id} padding="md" className="flex items-center justify-between">
                 <div className="min-w-0">
                   <div className="font-semibold text-slate-50 truncate" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>{p.projet}</div>
@@ -445,7 +456,8 @@ export function BudgetKpiPage({ data: apiData }: BudgetKpiPageProps = {}) {
                   </div>
                 </div>
               </DashboardPanel>
-            ))}
+            ))
+            )}
           </div>
         </DashboardSection>
 
@@ -524,7 +536,13 @@ export function BudgetKpiPage({ data: apiData }: BudgetKpiPageProps = {}) {
 
       {/* Budget Detail Modal */}
       {selectedKpi && (() => {
-        const trendValue: string | undefined = selectedKpi.trend !== undefined ? String(selectedKpi.trend) : undefined;
+        const rawTrend = selectedKpi.trend;
+        const trendValue: string | undefined =
+          rawTrend !== undefined && rawTrend !== null
+            ? (typeof rawTrend === 'number'
+                ? `${rawTrend > 0 ? '+' : ''}${rawTrend}%`
+                : String(rawTrend))
+            : undefined;
         return (
           <BudgetDetailModal
             isOpen={!!selectedKpi}

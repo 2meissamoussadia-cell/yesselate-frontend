@@ -57,8 +57,9 @@ export async function resolveLocaleContext(
   try {
     client = await pgPool.connect();
   } catch (error) {
-    // Si la connexion échoue, retourner des valeurs par défaut
-    console.warn('[resolveLocaleContext] Database connection failed, using defaults:', error);
+    // Si la connexion échoue, retourner des valeurs par défaut (log en string pour éviter sérialisation RSC)
+    const msg = error instanceof Error ? error.message : String(error);
+    console.warn('[resolveLocaleContext] Database connection failed, using defaults:', msg);
     const acceptLanguage = headers.get('accept-language') ?? '';
     const navLocale = acceptLanguage.split(',')[0]?.split(';')[0]?.trim() || 'fr-FR';
     const lang = navLocale.split('-')[0].toLowerCase();
@@ -148,8 +149,9 @@ export async function resolveLocaleContext(
       direction,
     };
   } catch (error) {
-    // Si une erreur se produit lors des requêtes, retourner des valeurs par défaut
-    console.warn('[resolveLocaleContext] Database query failed, using defaults:', error);
+    // Si une erreur se produit lors des requêtes, retourner des valeurs par défaut (log en string pour éviter sérialisation RSC)
+    const msg = error instanceof Error ? error.message : String(error);
+    console.warn('[resolveLocaleContext] Database query failed, using defaults:', msg);
     const acceptLanguage = headers.get('accept-language') ?? '';
     const navLocale = acceptLanguage.split(',')[0]?.split(';')[0]?.trim() || 'fr-FR';
     const lang = navLocale.split('-')[0].toLowerCase();

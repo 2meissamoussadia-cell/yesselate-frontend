@@ -10,11 +10,14 @@ import { ChantierSphere } from './ChantierSphere';
 import { ChantierContextMenu } from './ChantierContextMenu';
 import { ChantierChatModal } from '../modals/ChantierChatModal';
 import { ChantierWhatsAppModal } from '../modals/ChantierWhatsAppModal';
+import { ChantierMediaModal } from '../modals/ChantierMediaModal';
 import { colors } from '../../utils/dashboardDesignTokens';
 import { useCockpitChantiers } from '../../hooks/useCockpitChantiers';
 import { useCockpitFps } from '../../hooks/useCockpitFps';
 import { useCockpitLive } from '../../hooks/useCockpitLive';
 import { LiveStatusBadge } from './LiveStatusBadge';
+import { EmptyState } from '../shared/EmptyState';
+import { FolderKanban } from 'lucide-react';
 
 interface HealthSphereGridProps {
   className?: string;
@@ -158,27 +161,38 @@ export function HealthSphereGrid({
         </div>
       </div>
       <div className="h-[520px] w-full bg-slate-950/80">
-        <Suspense
-          fallback={
-            <div className="h-full flex items-center justify-center text-slate-400 text-sm">
-              Chargement 3D…
-            </div>
-          }
-        >
-          <Canvas
-            camera={{ position: [0, 0, 10], fov: 50 }}
-            gl={{
-              antialias: quality !== 'low',
-              alpha: false,
-              powerPreference: 'high-performance',
-              stencil: false,
-            }}
-            dpr={dprByQuality(quality)}
-            frameloop="always"
+        {list.length === 0 && !isLoading ? (
+          <div className="h-full flex items-center justify-center p-6">
+            <EmptyState
+              title="Aucun chantier"
+              description="Aucun chantier à afficher dans le portfolio. Les chantiers apparaîtront ici une fois les données chargées."
+              icon={FolderKanban}
+              variant="info"
+            />
+          </div>
+        ) : (
+          <Suspense
+            fallback={
+              <div className="h-full flex items-center justify-center text-slate-400 text-sm">
+                Chargement 3D…
+              </div>
+            }
           >
-            <HealthSphereGridInner list={list} quality={quality} onDrilldown={onDrilldown} onContextMenu={handleContextMenu} />
-          </Canvas>
-        </Suspense>
+            <Canvas
+              camera={{ position: [0, 0, 10], fov: 50 }}
+              gl={{
+                antialias: quality !== 'low',
+                alpha: false,
+                powerPreference: 'high-performance',
+                stencil: false,
+              }}
+              dpr={dprByQuality(quality)}
+              frameloop="always"
+            >
+              <HealthSphereGridInner list={list} quality={quality} onDrilldown={onDrilldown} onContextMenu={handleContextMenu} />
+            </Canvas>
+          </Suspense>
+        )}
       </div>
       {contextMenu && (
         <ChantierContextMenu

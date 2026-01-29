@@ -34,17 +34,16 @@ import { useCockpitFps } from '../../hooks/useCockpitFps';
 import { useCockpitBriefing } from '../../hooks/useCockpitBriefing';
 import { useCockpitPredictions } from '../../hooks/useCockpitPredictions';
 import { useCockpitUrgentNotification } from '../../hooks/useCockpitUrgentNotification';
+import { PushConsentBanner } from '../cockpit/PushConsentBanner';
+import { CockpitSpheresLoadingSkeleton } from '../cockpit/CockpitSpheresLoadingSkeleton';
+import { EmptyState } from '../shared/EmptyState';
 
 /** Grille 3D chargée uniquement côté client (Three.js/WebGL incompatible SSR) */
 const HealthSphereGrid = dynamic(
   () => import('../cockpit/HealthSphereGrid').then((mod) => ({ default: mod.HealthSphereGrid })),
   {
     ssr: false,
-    loading: () => (
-      <div className="min-h-[320px] md:min-h-[480px] rounded-2xl border border-slate-800/60 bg-slate-900/40 flex items-center justify-center">
-        <p className="text-slate-400 text-sm">Chargement du portfolio 3D…</p>
-      </div>
-    ),
+    loading: () => <CockpitSpheresLoadingSkeleton />,
   }
 );
 
@@ -192,7 +191,10 @@ const CockpitDGPageComponent = function CockpitDGPage() {
             <p className="text-sm text-slate-200 flex items-center gap-2 flex-wrap">
               <span className="text-slate-400 font-medium">Briefing :</span>
               {briefingLoading && !briefing ? (
-                <span className="text-slate-500">Chargement…</span>
+                <span className="inline-flex items-center gap-2 min-w-[200px]">
+                  <span className="h-4 flex-1 max-w-[280px] rounded dashboard-skeleton-shimmer" />
+                  <span className="h-4 w-16 rounded dashboard-skeleton-shimmer shrink-0" />
+                </span>
               ) : briefingError ? (
                 <span className="text-amber-400/90">{briefingError}</span>
               ) : briefing ? (
@@ -213,7 +215,7 @@ const CockpitDGPageComponent = function CockpitDGPage() {
                 />
               )}
             </p>
-            {(topRisks.length > 0 || opportunities.length > 0) && !briefingLoading && (
+            {!briefingLoading && (topRisks.length > 0 || opportunities.length > 0) && (
               <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 {topRisks.length > 0 && (
                   <div>
@@ -242,6 +244,9 @@ const CockpitDGPageComponent = function CockpitDGPage() {
                   </div>
                 )}
               </div>
+            )}
+            {!briefingLoading && topRisks.length === 0 && opportunities.length === 0 && briefing && (
+              <p className="mt-2 text-xs text-slate-500">Aucun risque ni opportunité identifié.</p>
             )}
           </div>
           <div className="flex items-center gap-2 shrink-0">
@@ -349,10 +354,19 @@ const CockpitDGPageComponent = function CockpitDGPage() {
         </div>
       </ErrorBoundary>
 
-      {/* 4 quadrants — grille 2x2, même design que les panels existants */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      {/* 4 quadrants — mobile: swipe horizontal (snap) / desktop: grille 2x2 */}
+      <div
+        className={cn(
+          'flex overflow-x-auto gap-4 pb-2 scrollbar-dashboard',
+          'snap-x snap-mandatory snap-center',
+          'lg:grid lg:grid-cols-2 lg:overflow-visible lg:snap-none'
+        )}
+        role="region"
+        aria-label="Quadrants Cockpit"
+      >
         {/* Q1 : Santé globale (résumé) */}
-        <DashboardPanel padding="md" className="min-h-[200px]">
+        <div className="snap-center shrink-0 w-[min(88vw,400px)] lg:w-auto lg:shrink-0">
+          <DashboardPanel padding="md" className="min-h-[200px]">
           <div className="flex items-center gap-2 mb-4">
             <Activity className="h-5 w-5 text-slate-400" />
             <h3 className="text-slate-100 font-semibold text-base">Santé globale</h3>
@@ -379,24 +393,30 @@ const CockpitDGPageComponent = function CockpitDGPage() {
             ))}
           </div>
         </DashboardPanel>
+        </div>
 
-        {/* Q2 : Chantier critique (résumé) */}
-        <DashboardPanel padding="md" className="min-h-[200px]">
+        {/* Q2 : Chantier critique (résumé) — Empty state + CTA si aucun focus */}
+        <div className="snap-center shrink-0 w-[min(88vw,400px)] lg:w-auto lg:shrink-0">
+          <DashboardPanel padding="md" className="min-h-[200px]">
           <div className="flex items-center gap-2 mb-4">
             <Building2 className="h-5 w-5 text-slate-400" />
             <h3 className="text-slate-100 font-semibold text-base">Chantier en focus</h3>
           </div>
-          <div className="space-y-2 text-sm">
-            <p className="text-slate-300">
-              <span className="text-slate-500">#042</span> Phase4 — Avancement 62 %
-            </p>
-            <p className="text-slate-400 text-xs">GPS Thiès · Bureau Contrôle 1/3</p>
-            <p className="text-amber-300 text-xs">Peinture stock bas</p>
-          </div>
+          <EmptyState
+            title="Aucun chantier critique"
+            description="Aucun chantier n'est actuellement en focus. Consultez le portfolio 3D ou la liste des chantiers pour en sélectionner un."
+            icon={Building2}
+            variant="info"
+            actionLabel="Voir les chantiers"
+            actionAriaLabel="Ouvrir la vue chantiers"
+            onAction={() => navigate('performance', 'projets', null)}
+          />
         </DashboardPanel>
+        </div>
 
         {/* Q3 : Écosystème */}
-        <DashboardPanel padding="md" className="min-h-[200px]">
+        <div className="snap-center shrink-0 w-[min(88vw,400px)] lg:w-auto lg:shrink-0">
+          <DashboardPanel padding="md" className="min-h-[200px]">
           <div className="flex items-center gap-2 mb-4">
             <Zap className="h-5 w-5 text-slate-400" />
             <h3 className="text-slate-100 font-semibold text-base">Écosystème</h3>
@@ -407,9 +427,11 @@ const CockpitDGPageComponent = function CockpitDGPage() {
             <li>Huissiers : 2 dossiers en attente</li>
           </ul>
         </DashboardPanel>
+        </div>
 
         {/* Q4 : Workflow (mini colonnes) */}
-        <DashboardPanel padding="md" className="min-h-[200px]">
+        <div className="snap-center shrink-0 w-[min(88vw,400px)] lg:w-auto lg:shrink-0">
+          <DashboardPanel padding="md" className="min-h-[200px]">
           <div className="flex items-center gap-2 mb-4">
             <GitBranch className="h-5 w-5 text-slate-400" />
             <h3 className="text-slate-100 font-semibold text-base">Workflow</h3>
@@ -434,6 +456,7 @@ const CockpitDGPageComponent = function CockpitDGPage() {
             ))}
           </div>
         </DashboardPanel>
+        </div>
       </div>
 
       {/* Phase 6 — Photos GPS · Plan AR · Pointage QR · Drone */}

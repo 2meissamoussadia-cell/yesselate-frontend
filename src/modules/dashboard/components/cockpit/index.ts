@@ -14,6 +14,7 @@ export {
   type ExecutiveCommandV5,
 } from './executiveCommandsV5';
 export { HealthSphereGrid } from './HealthSphereGrid';
+export { CockpitSpheresLoadingSkeleton } from './CockpitSpheresLoadingSkeleton';
 export {
   detectVoiceCommand,
   getVoiceSuggestions,

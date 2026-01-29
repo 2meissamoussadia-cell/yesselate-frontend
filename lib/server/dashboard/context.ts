@@ -1,7 +1,7 @@
 // lib/server/dashboard/context.ts
 // Phase P10: Contexte enrichi avec RBAC runtime + cache court
 
-export type Role = 'admin' | 'manager' | 'reader' | 'acheteur' | 'juridique' | 'controle' | 'ordonnateur';
+export type Role = 'admin' | 'manager' | 'reader' | 'acheteur' | 'juridique' | 'controle' | 'ordonnateur' | 'dg' | 'chef_chantier' | 'ouvrier' | 'client';
 export interface RequestContext {
   tenantId: string;
   userId: string;
@@ -40,30 +40,31 @@ export async function enrichContextWithRbac(ctx: RequestContext, reqId?: string)
     const cacheKey = `rbac:${ctx.tenantId}:${ctx.userId}`;
     const flagsCacheKey = `flags:${ctx.tenantId}`;
 
-    // Vérifier le cache pour les permissions utilisateur
-    let cached = rbacCache.get<{ scopes: string[]; perms: string[]; flags: Record<string, boolean> }>(cacheKey);
+    // Vérifier le cache pour les permissions utilisateur (roles, scopes, perms, flags)
+    let cached = rbacCache.get<{ roles: string[]; scopes: string[]; perms: string[]; flags: Record<string, boolean> }>(cacheKey);
     
     if (!cached) {
-      // Utiliser hydrateContext pour charger scopes, perms et flags
+      // Utiliser hydrateContext pour charger roles, scopes, perms et flags depuis DB
       const hydrated = await hydrateContext(ctx as Omit<RequestContext, 'perms'|'flags'>);
-      cached = { scopes: hydrated.scopes, perms: hydrated.perms, flags: hydrated.flags };
+      cached = { roles: hydrated.roles, scopes: hydrated.scopes, perms: hydrated.perms, flags: hydrated.flags };
       // Cache pour 5 secondes
       rbacCache.set(cacheKey, cached, 5000);
       
       // Cache séparé pour les flags (10 secondes, changent moins souvent)
       rbacCache.set(flagsCacheKey, hydrated.flags, 10000);
     } else {
-      // Si on a le cache perms+flags, vérifier aussi le cache flags séparé (plus long)
+      // Si on a le cache, vérifier aussi le cache flags séparé (plus long)
       const cachedFlags = rbacCache.get<Record<string, boolean>>(flagsCacheKey);
       if (cachedFlags) {
         cached.flags = cachedFlags;
       }
     }
 
-    // Enrichir avec les scopes, permissions et feature flags depuis la DB/cache
+    // Enrichir avec les rôles, scopes, permissions et feature flags depuis la DB/cache
     return {
       ...ctx,
-      scopes: cached.scopes, // Scopes depuis DB (remplace ceux des headers si présents)
+      roles: cached.roles?.length ? cached.roles : ctx.roles,
+      scopes: cached.scopes,
       perms: cached.perms,
       permissions: cached.perms, // Alias pour compatibilité
       flags: cached.flags,

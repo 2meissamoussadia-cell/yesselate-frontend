@@ -288,3 +288,5 @@ export const StocksOverviewPage = memo(function StocksOverviewPage() {
     </DashboardPageLayout>
   );
 });
+
+export default StocksOverviewPage;

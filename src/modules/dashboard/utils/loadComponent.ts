@@ -6,6 +6,7 @@
 
 import type { ComponentType } from 'react';
 import { logger } from '@/lib/utils/logger';
+import { CockpitDGPage } from '../components/views/CockpitDGPage';
 
 // Logger pour ce module utilitaire
 const log = {
@@ -32,9 +33,44 @@ const componentMap: Record<string, () => Promise<{ default?: ComponentType; [key
   BudgetKpiPage: () => import('../components/views/BudgetKpiPage'),
   BureauxPage: () => import('../components/views/BureauxPage'),
   TendancesPage: () => import('../components/views/TendancesPage'),
+  CockpitDGPage: () => import('../components/views/CockpitDGPage'),
   
   // Pages Performance
   ValidationsGlobalPage: () => import('../components/views/ValidationsGlobalPage'),
+  PerformanceSynthesePage: () => import('../components/views/PerformanceSynthesePage'),
+  PerformanceProjetsPage: () => import('../components/views/PerformanceProjetsPage'),
+  PerformanceDemandesPage: () => import('../components/views/PerformanceDemandesPage'),
+  PerformanceBudgetPage: () => import('../components/views/PerformanceBudgetPage'),
+  
+  // Alerts & Activity
+  AlertsActivesPage: () => import('../components/views/AlertsActivesPage'),
+  AlertsUrgentesPage: () => import('../components/views/AlertsUrgentesPage'),
+  ActivityTimelinePage: () => import('../components/views/ActivityTimelinePage'),
+  ActivityNotificationsPage: () => import('../components/views/ActivityNotificationsPage'),
+  // Performance > Retards (delays)
+  DelaysCritiquesPage: () => import('../components/views/DelaysCritiquesPage'),
+  DelaysMoyensPage: () => import('../components/views/DelaysMoyensPage'),
+  DelaysAnalyseCausesPage: () => import('../components/views/DelaysAnalyseCausesPage'),
+  
+  // Achats, Stocks, Matériel
+  AchatsOverviewPage: () => import('../components/views/AchatsOverviewPage'),
+  AchatsFournisseursPage: () => import('../components/views/AchatsFournisseursPage'),
+  AchatsOpenOrdersPage: () => import('../components/views/AchatsOpenOrdersPage'),
+  StocksOverviewPage: () => import('../components/views/StocksOverviewPage'),
+  StocksTrendsPage: () => import('../components/views/StocksTrendsPage'),
+  MaterielOverviewPage: () => import('../components/views/MaterielOverviewPage'),
+  
+  // Conformité
+  ComplianceOverviewPage: () => import('../components/compliance/ComplianceOverviewPage'),
+  ComplianceDocumentsPage: () => import('../components/views/ComplianceDocumentsPage'),
+  ComplianceWorkflowsPage: () => import('../components/compliance/ComplianceWorkflowsPage'),
+  ComplianceLotsPage: () => import('../components/views/ComplianceLotsPage'),
+  
+  // Reporting
+  ReportingOverviewPage: () => import('../components/reporting/ReportingOverviewPage'),
+  ReportingTrendsPage: () => import('../components/reporting/ReportingTrendsPage'),
+  ReportingByBureauPage: () => import('../components/reporting/ReportingByBureauPage'),
+  ReportingByChantierPage: () => import('../components/reporting/ReportingByChantierPage'),
   
   // Pages par défaut
   DashboardHome: () => import('../components/views/DashboardHome'),
@@ -94,6 +130,12 @@ export async function loadComponent(name: string): Promise<ComponentType> {
     return componentCache.get(name)!;
   }
 
+  // ✅ CockpitDGPage: résolution statique (évite erreur Turbopack sur import dynamique)
+  if (name === 'CockpitDGPage') {
+    componentCache.set(name, CockpitDGPage);
+    return Promise.resolve(CockpitDGPage);
+  }
+
   // ✅ Vérifier si un chargement est déjà en cours
   if (loadingPromises.has(name)) {
     return loadingPromises.get(name)!;
@@ -121,30 +163,30 @@ export async function loadComponent(name: string): Promise<ComponentType> {
 
       // ✅ Gérer à la fois default export et named export
       // Certains composants utilisent named export (SummaryPage, OverviewPage, etc.)
-      let component: ComponentType;
-      
-      if (loadedModule.default) {
-        // Default export (cas le plus courant)
-        component = loadedModule.default;
+      let component: ComponentType | undefined;
+      const defaultExport = loadedModule.default;
+      const namedExport = loadedModule[name as keyof typeof loadedModule];
+
+      if (defaultExport && typeof defaultExport === 'function') {
+        component = defaultExport as ComponentType;
+      } else if (namedExport && typeof namedExport === 'function') {
+        component = namedExport as ComponentType;
       } else {
-        // Named export - chercher le composant avec le même nom
-        const namedExport = loadedModule[name as keyof typeof loadedModule];
-        if (namedExport && typeof namedExport === 'function') {
-          component = namedExport as ComponentType;
-        } else {
-          // Fallback: prendre le premier export nommé disponible
-          const exports = Object.keys(loadedModule);
-          if (exports.length > 0) {
-            const firstExport = loadedModule[exports[0] as keyof typeof loadedModule];
-            if (typeof firstExport === 'function') {
-              component = firstExport as ComponentType;
-            } else {
-              throw new Error(`Component "${name}" did not export a valid component (no default, no named export matching "${name}")`);
-            }
-          } else {
-            throw new Error(`Component "${name}" did not export any component`);
+        // Fallback: prendre le premier export qui est une fonction
+        const exports = Object.keys(loadedModule).filter(
+          (k) => k !== '__esModule' && k !== 'default'
+        );
+        for (const key of exports) {
+          const exp = loadedModule[key as keyof typeof loadedModule];
+          if (typeof exp === 'function') {
+            component = exp as ComponentType;
+            break;
           }
         }
+      }
+
+      if (!component || typeof component !== 'function') {
+        throw new Error(`Component "${name}" did not export a valid component (no default, no named export matching "${name}")`);
       }
       
       // ✅ Mettre en cache le composant chargé

@@ -529,7 +529,7 @@ function EmployesPageContent() {
 
         {/* Main Content */}
         <main className="flex-1 overflow-hidden">
-          <div className="h-full overflow-y-auto p-4">
+          <div className="h-full overflow-x-hidden overflow-y-auto p-4">
             <EmployesContentRouter
               mainCategory={activeCategory as EmployesMainCategory}
               subCategory={activeSubCategory}

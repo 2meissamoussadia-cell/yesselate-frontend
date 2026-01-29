@@ -16,6 +16,18 @@
             "label": "Points clés",
             "component": "SummaryPointsPage"
           },
+          "cockpit": {
+            "label": "Cockpit DG",
+            "component": "CockpitDGPage"
+          },
+          "cockpit-v2": {
+            "label": "Centrale V2 (IA)",
+            "component": "CockpitDG_V2Page"
+          },
+          "rapport-dg": {
+            "label": "Rapport DG",
+            "component": "RapportDGPage"
+          },
           "projets": {
             "label": "Projets",
             "component": "ProjetKpiPage"
@@ -48,6 +60,10 @@
           "budget": {
             "label": "KPIs Budget",
             "component": "BudgetKpiPage"
+          },
+          "finances": {
+            "label": "Finances",
+            "component": "FinancesOverviewPage"
           }
         }
       },
@@ -112,6 +128,36 @@
             "component": "TendancesPage"
           }
         }
+      },
+      "alerts": {
+        "label": "Alertes critiques",
+        "leaf": {
+          "actives": {
+            "label": "Actives",
+            "component": "AlertsActivesPage"
+          },
+          "urgentes": {
+            "label": "Urgentes",
+            "component": "AlertsUrgentesPage"
+          }
+        }
+      },
+      "activity": {
+        "label": "Activité récente",
+        "leaf": {
+          "timeline": {
+            "label": "Timeline",
+            "component": "ActivityTimelinePage"
+          },
+          "notifications": {
+            "label": "Notifications",
+            "component": "ActivityNotificationsPage"
+          },
+          "conversations": {
+            "label": "Historique conversations",
+            "component": "ConversationsHistoryPage"
+          }
+        }
       }
     }
   },
@@ -121,6 +167,52 @@
       "perm": "dashboard:read"
     },
     "sub": {
+      "indicators": {
+        "label": "Indicateurs",
+        "leaf": {
+          "synthese": {
+            "label": "Synthèse",
+            "component": "PerformanceSynthesePage"
+          },
+          "projets": {
+            "label": "Projets",
+            "component": "PerformanceProjetsPage"
+          },
+          "demandes": {
+            "label": "Demandes",
+            "component": "PerformanceDemandesPage"
+          },
+          "budget": {
+            "label": "Budget",
+            "component": "PerformanceBudgetPage"
+          }
+        }
+      },
+      "validation": {
+        "label": "Validations",
+        "leaf": {
+          "global": {
+            "label": "Vue globale",
+            "component": "ValidationsGlobalPage"
+          },
+          "en-attente": {
+            "label": "En attente",
+            "component": "ValidationsGlobalPage"
+          },
+          "validees": {
+            "label": "Validées",
+            "component": "ValidationsGlobalPage"
+          },
+          "rejetees": {
+            "label": "Rejetées",
+            "component": "ValidationsGlobalPage"
+          },
+          "circuit": {
+            "label": "Circuit de validation",
+            "component": "ValidationsGlobalPage"
+          }
+        }
+      },
       "validations": {
         "label": "Validations",
         "leaf": {
@@ -168,11 +260,15 @@
           },
           "critiques": {
             "label": "Critiques",
-            "component": "SummaryDashboardPage"
+            "component": "DelaysCritiquesPage"
           },
           "moyens": {
             "label": "Moyens",
-            "component": "SummaryDashboardPage"
+            "component": "DelaysMoyensPage"
+          },
+          "analyse-causes": {
+            "label": "Analyse des causes",
+            "component": "DelaysAnalyseCausesPage"
           }
         }
       },

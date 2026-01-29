@@ -1,0 +1,474 @@
+// NICE RÉNOVATION — Schéma PostgreSQL complet
+// PROMPT 1.2
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum UserRole {
+  DG
+  DAF
+  ASSOCIE
+  ADMIN
+  USER
+}
+
+enum ClientSegment {
+  DIASPORA
+  COMMERCANTS
+  COMMERCE_INFORMEL
+  ETABLISSEMENTS
+  PARTICULIERS
+}
+
+enum ChantierStatut {
+  ACTIF
+  TERMINE
+  BLOQUE
+  ARCHIVE
+}
+
+enum JalonStatut {
+  PENDING
+  VALIDATED
+  REJECTED
+}
+
+enum MetierOuvrier {
+  PEINTRE
+  PLOMBIER
+  ELECTRICIEN
+  CARRELEUR
+  MENUISIER
+}
+
+enum PaiementMode {
+  ORANGE_MONEY
+  WAVE
+  VIREMENT
+  CHEQUE
+  CASH
+}
+
+enum AlerteSeverity {
+  CRITICAL
+  WARNING
+  INFO
+}
+
+enum PredictionType {
+  RETARD
+  LITIGE
+  DEPASSEMENT
+}
+
+enum NotificationType {
+  SMS
+  EMAIL
+  PUSH
+}
+
+// ---------------------------------------------------------------------------
+// 1. User
+// ---------------------------------------------------------------------------
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String  @map("password_hash")
+  role         UserRole
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  notifications Notification[]
+  auditLogs     AuditLog[]
+
+  @@map("users")
+}
+
+// ---------------------------------------------------------------------------
+// 2. Client (5 segments)
+// ---------------------------------------------------------------------------
+
+model Client {
+  id        String         @id @default(cuid())
+  nom       String
+  email     String?
+  telephone String?
+  segment   ClientSegment
+  adresse   String?
+  gpsLat    Decimal?       @map("gps_lat")  @db.Decimal(10, 7)
+  gpsLng    Decimal?       @map("gps_lng")  @db.Decimal(10, 7)
+  createdAt DateTime       @default(now()) @map("created_at")
+
+  chantiers Chantier[]
+
+  @@map("clients")
+}
+
+// ---------------------------------------------------------------------------
+// 3. Chantier (projets)
+// ---------------------------------------------------------------------------
+
+model Chantier {
+  id              String         @id @default(cuid())
+  clientId        String         @map("client_id")
+  nom             String
+  description     String?
+  budget          Decimal        @db.Decimal(14, 2)
+  margePct        Decimal?       @map("marge_pct") @db.Decimal(5, 2)
+  segment         ClientSegment
+  phase           Int            // 1-6
+  etape           Int            // 1-26
+  statut          ChantierStatut
+  gpsLat          Decimal?       @map("gps_lat")  @db.Decimal(10, 7)
+  gpsLng          Decimal?       @map("gps_lng")  @db.Decimal(10, 7)
+  dateDebut       DateTime?      @map("date_debut") @db.Date
+  dateFinPrevue   DateTime?      @map("date_fin_prevue") @db.Date
+  avancementPct   Decimal        @default(0) @map("avancement_pct") @db.Decimal(5, 2)
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+
+  client            Client              @relation(fields: [clientId], references: [id], onDelete: Restrict)
+  workflowStates     WorkflowState[]
+  jalons             Jalon[]
+  photosGps          PhotoGps[]
+  chantierOuvriers   ChantierOuvrier[]
+  commandesMateriau  CommandeMateriau[]
+  paiements          Paiement[]
+  certificationsUcie CertificationUcie[]
+  alertes            Alerte[]
+  predictionsIa      PredictionIa[]
+
+  @@index([phase, statut])
+  @@index([segment])
+  @@index([gpsLat, gpsLng])
+  @@map("chantiers")
+}
+
+// ---------------------------------------------------------------------------
+// 4. WorkflowState (26 étapes)
+// ---------------------------------------------------------------------------
+
+model WorkflowState {
+  id                String   @id @default(cuid())
+  chantierId        String   @map("chantier_id")
+  phase             Int
+  etape             Int
+  statut            String
+  validationRequired Boolean @default(false) @map("validation_required")
+  validatedBy       String?  @map("validated_by")
+  validatedAt       DateTime? @map("validated_at")
+  blocage           Boolean  @default(false)
+  commentaire       String?
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  chantier Chantier @relation(fields: [chantierId], references: [id], onDelete: Cascade)
+
+  @@unique([chantierId, phase, etape])
+  @@index([chantierId, phase, etape])
+  @@map("workflow_states")
+}
+
+// ---------------------------------------------------------------------------
+// 5. Jalon (25%, 50%, 75%, 100%)
+// ---------------------------------------------------------------------------
+
+model Jalon {
+  id            String      @id @default(cuid())
+  chantierId    String      @map("chantier_id")
+  pourcentage   Int         // 25, 50, 75, 100
+  statut        JalonStatut
+  validatedBy1   String?    @map("validated_by_1")
+  validatedBy2   String?    @map("validated_by_2")
+  validatedBy3   String?    @map("validated_by_3")
+  dateValidation DateTime? @map("date_validation")
+  createdAt     DateTime   @default(now()) @map("created_at")
+
+  chantier Chantier @relation(fields: [chantierId], references: [id], onDelete: Cascade)
+
+  @@unique([chantierId, pourcentage])
+  @@map("jalons")
+}
+
+// ---------------------------------------------------------------------------
+// 6. Ouvrier (certifiés KYC)
+// ---------------------------------------------------------------------------
+
+model Ouvrier {
+  id           String        @id @default(cuid())
+  nom          String
+  prenom       String
+  cin          String?       @unique
+  telephone    String?
+  adresse      String?
+  metier       MetierOuvrier
+  kycVerified  Boolean       @default(false) @map("kyc_verified")
+  noteMoyenne  Decimal?      @map("note_moyenne") @db.Decimal(3, 2)
+  nbChantiers  Int           @default(0) @map("nb_chantiers")
+  createdAt    DateTime      @default(now()) @map("created_at")
+
+  chantierOuvriers ChantierOuvrier[]
+  photosGps        PhotoGps[]
+
+  @@map("ouvriers")
+}
+
+// ---------------------------------------------------------------------------
+// 7. ChantierOuvrier (N:M)
+// ---------------------------------------------------------------------------
+
+model ChantierOuvrier {
+  chantierId        String   @map("chantier_id")
+  ouvrierId         String   @map("ouvrier_id")
+  dateDebut         DateTime @map("date_debut") @db.Date
+  dateFin           DateTime? @map("date_fin") @db.Date
+  heuresTravaillees Decimal? @map("heures_travaillees") @db.Decimal(8, 2)
+  tarifJour         Decimal? @map("tarif_jour") @db.Decimal(12, 2)
+  prime             Decimal? @db.Decimal(12, 2)
+  noteClient        Decimal? @map("note_client") @db.Decimal(3, 2)
+
+  chantier Chantier @relation(fields: [chantierId], references: [id], onDelete: Cascade)
+  ouvrier  Ouvrier  @relation(fields: [ouvrierId], references: [id], onDelete: Cascade)
+
+  @@id([chantierId, ouvrierId])
+  @@map("chantier_ouvriers")
+}
+
+// ---------------------------------------------------------------------------
+// 8. PhotoGps
+// ---------------------------------------------------------------------------
+
+model PhotoGps {
+  id         String   @id @default(cuid())
+  chantierId String   @map("chantier_id")
+  ouvrierId  String?  @map("ouvrier_id")
+  urlS3      String   @map("url_s3")
+  gpsLat     Decimal? @map("gps_lat") @db.Decimal(10, 7)
+  gpsLng     Decimal? @map("gps_lng") @db.Decimal(10, 7)
+  timestamp  DateTime
+  hashSha256 String?  @map("hash_sha256")
+
+  chantier Chantier @relation(fields: [chantierId], references: [id], onDelete: Cascade)
+  ouvrier  Ouvrier? @relation(fields: [ouvrierId], references: [id], onDelete: SetNull)
+
+  @@index([chantierId, timestamp])
+  @@map("photos_gps")
+}
+
+// ---------------------------------------------------------------------------
+// 9. Materiau (catalogue)
+// ---------------------------------------------------------------------------
+
+model Materiau {
+  id           String   @id @default(cuid())
+  nom          String
+  categorie    String
+  unite        String
+  prixUnitaire Decimal  @map("prix_unitaire") @db.Decimal(12, 2)
+  stockActuel  Decimal  @default(0) @map("stock_actuel") @db.Decimal(12, 2)
+  seuilAlerte  Decimal? @map("seuil_alerte") @db.Decimal(12, 2)
+
+  commandes CommandeMateriau[]
+
+  @@map("materiaux")
+}
+
+// ---------------------------------------------------------------------------
+// 10. CommandeMateriau
+// ---------------------------------------------------------------------------
+
+model CommandeMateriau {
+  id                   String    @id @default(cuid())
+  chantierId           String    @map("chantier_id")
+  quincaillerieId       String    @map("quincaillerie_id")
+  materiauId           String    @map("materiau_id")
+  quantite              Decimal   @db.Decimal(12, 2)
+  prixTotal             Decimal   @map("prix_total") @db.Decimal(14, 2)
+  statut                String
+  dateLivraisonPrevue   DateTime? @map("date_livraison_prevue") @db.Date
+
+  chantier      Chantier      @relation(fields: [chantierId], references: [id], onDelete: Cascade)
+  quincaillerie Quincaillerie @relation(fields: [quincaillerieId], references: [id], onDelete: Restrict)
+  materiau      Materiau      @relation(fields: [materiauId], references: [id], onDelete: Restrict)
+
+  @@map("commandes_materiau")
+}
+
+// ---------------------------------------------------------------------------
+// 11. Quincaillerie
+// ---------------------------------------------------------------------------
+
+model Quincaillerie {
+  id                   String   @id @default(cuid())
+  nom                  String
+  telephone            String?
+  email                String?
+  adresse              String?
+  delaiLivraisonMoyen  Int?     @map("delai_livraison_moyen") // jours
+  noteMoyenne          Decimal? @map("note_moyenne") @db.Decimal(3, 2)
+
+  commandes CommandeMateriau[]
+
+  @@map("quincailleries")
+}
+
+// ---------------------------------------------------------------------------
+// 12. Paiement
+// ---------------------------------------------------------------------------
+
+model Paiement {
+  id            String        @id @default(cuid())
+  chantierId    String        @map("chantier_id")
+  mode          PaiementMode
+  montant       Decimal       @db.Decimal(14, 2)
+  statut        String
+  transactionId String?       @map("transaction_id")
+  date          DateTime      @db.Date
+
+  chantier Chantier @relation(fields: [chantierId], references: [id], onDelete: Restrict)
+
+  @@index([chantierId, statut])
+  @@map("paiements")
+}
+
+// ---------------------------------------------------------------------------
+// 13. Huissier
+// ---------------------------------------------------------------------------
+
+model Huissier {
+  id        String   @id @default(cuid())
+  nom       String
+  telephone String?
+  email     String?
+  adresse   String?
+
+  certifications CertificationUcie[]
+
+  @@map("huissiers")
+}
+
+// ---------------------------------------------------------------------------
+// 14. CertificationUcie
+// ---------------------------------------------------------------------------
+
+model CertificationUcie {
+  id         String   @id @default(cuid())
+  chantierId String   @map("chantier_id")
+  huissierId String   @map("huissier_id")
+  pdfUrl     String   @map("pdf_url")
+  date       DateTime @db.Date
+
+  chantier  Chantier  @relation(fields: [chantierId], references: [id], onDelete: Cascade)
+  huissier  Huissier  @relation(fields: [huissierId], references: [id], onDelete: Restrict)
+
+  @@map("certifications_ucie")
+}
+
+// ---------------------------------------------------------------------------
+// 15. Alerte
+// ---------------------------------------------------------------------------
+
+model Alerte {
+  id         String         @id @default(cuid())
+  type       String
+  severity   AlerteSeverity
+  chantierId String?        @map("chantier_id")
+  message    String
+  resolved   Boolean        @default(false)
+  createdAt  DateTime       @default(now()) @map("created_at")
+
+  chantier Chantier? @relation(fields: [chantierId], references: [id], onDelete: SetNull)
+
+  @@map("alertes")
+}
+
+// ---------------------------------------------------------------------------
+// 16. KpiCache
+// ---------------------------------------------------------------------------
+
+model KpiCache {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  valueJson String   @map("value_json")
+  expiresAt DateTime @map("expires_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("kpi_cache")
+}
+
+// ---------------------------------------------------------------------------
+// 17. PredictionIa
+// ---------------------------------------------------------------------------
+
+model PredictionIa {
+  id          String        @id @default(cuid())
+  chantierId  String        @map("chantier_id")
+  type        PredictionType
+  probabilite Int           // 0-100
+  facteursJson String?      @map("facteurs_json")
+  date        DateTime      @db.Date
+
+  chantier Chantier @relation(fields: [chantierId], references: [id], onDelete: Cascade)
+
+  @@map("predictions_ia")
+}
+
+// ---------------------------------------------------------------------------
+// 18. Notification
+// ---------------------------------------------------------------------------
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String           @map("user_id")
+  type      NotificationType
+  contenu   String
+  statut    String
+  sentAt    DateTime?        @map("sent_at")
+  createdAt DateTime         @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+// ---------------------------------------------------------------------------
+// 19. AuditLog
+// ---------------------------------------------------------------------------
+
+model AuditLog {
+  id             String   @id @default(cuid())
+  userId         String?  @map("user_id")
+  action         String
+  ressourceType  String   @map("ressource_type")
+  ressourceId    String?  @map("ressource_id")
+  detailsJson    String?  @map("details_json")
+  ipAddress      String?  @map("ip_address")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("audit_logs")
+}
+
+// ---------------------------------------------------------------------------
+// 20. Setting
+// ---------------------------------------------------------------------------
+
+model Setting {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  type        String
+  description String?
+
+  @@map("settings")
+}

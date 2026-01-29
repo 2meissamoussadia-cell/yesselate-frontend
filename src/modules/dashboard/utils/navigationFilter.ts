@@ -18,8 +18,9 @@ export function isNavNodeAccessible(
   roles: string[] = [],
   featureFlags: Record<string, boolean> = {}
 ): boolean {
-  // Admin a accès à tout
+  // Admin ou permission "tout le dashboard" → accès à tout
   if (roles.includes('admin')) return true;
+  if (permissions.includes('dashboard:write') || permissions.includes('dashboard:admin')) return true;
 
   // Si pas d'exigence, accessible par défaut (nécessite dashboard:read au niveau racine)
   if (!node.requires) {
@@ -42,9 +43,9 @@ export function isNavNodeAccessible(
     }
   }
 
-  // Vérifier le feature flag requis
+  // Vérifier le feature flag requis : absent = considéré activé (évite de tout cacher si l'API ne renvoie pas de flags)
   if (flag) {
-    if (!featureFlags[flag]) {
+    if (featureFlags[flag] === false) {
       return false;
     }
   }

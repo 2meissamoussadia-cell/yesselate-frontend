@@ -34,6 +34,12 @@ import { EmptyState } from '../shared/EmptyState';
 import { ExportButton } from '../shared/ExportButton';
 import { parseTrendPercent, normalizeKPIColor } from '@lib-root/dashboard/kpi';
 import { formatKPICurrency, formatKPIPercentage, formatKPIValue, calculateDSO } from '../../utils/kpi';
+import {
+  computeDemandesKpisFromApi,
+  getDemandeStateLabel,
+  mapApiStatutToDomain,
+  getAppForCategory,
+} from '../../domain';
 import { 
   DashboardPageLayout, 
   DashboardSection, 
@@ -81,6 +87,22 @@ export const DemandesKpiPage = memo(function DemandesKpiPage({ data: apiData }: 
   const openModal = useDashboardCommandCenterStore((state) => state.openModal);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBlocage, setSelectedBlocage] = useState<Blocage | null>(null);
+
+  // Logique métier (domaine) : KPIs calculés via les règles du domaine demandes
+  const domainKpis = useMemo(
+    () =>
+      computeDemandesKpisFromApi({
+        total: apiData?.total ?? 0,
+        enAttente: apiData?.enAttente ?? 0,
+        validees: apiData?.validees ?? 0,
+        rejetees: apiData?.rejetees ?? 0,
+        demandes: apiData?.demandes,
+      }),
+    [apiData?.total, apiData?.enAttente, apiData?.validees, apiData?.rejetees, apiData?.demandes]
+  );
+
+  // App métier (Odoo-style) : Performance → modèle Demande
+  const appMeta = useMemo(() => getAppForCategory('performance'), []);
 
   // Goulets d'étranglement
   const goulets: Goulet[] = [
@@ -239,7 +261,7 @@ export const DemandesKpiPage = memo(function DemandesKpiPage({ data: apiData }: 
       icon: AlertTriangle,
       color: 'amber',
       sparkline: [9, 8, 7, 7, 6, 6, blocages.reduce((sum, b) => sum + b.count, 0)],
-      description: 'Demandes bloquées nécessitant intervention',
+      description: `Demandes bloquées (en attente domaine: ${domainKpis.enAttente})`,
     },
     {
       id: '6',
@@ -261,7 +283,7 @@ export const DemandesKpiPage = memo(function DemandesKpiPage({ data: apiData }: 
       color: 'blue',
       description: 'Montant restant à facturer',
     },
-  ], [goulets, blocages, kpiCalculations]);
+  ], [goulets, blocages, kpiCalculations, domainKpis]);
 
   // Filtrer les blocages selon la recherche
   const filteredBlocages = useMemo(() => {
@@ -348,10 +370,28 @@ export const DemandesKpiPage = memo(function DemandesKpiPage({ data: apiData }: 
   }, [demandeKPIs, handleKPIClick]);
 
   return (
-    <div className="relative">
+    <div className="relative min-w-0 max-w-full overflow-x-hidden">
       <MockDataIndicator message="Données mockées - Phase 1 (Backend en attente)" />
       <TooltipProvider delayDuration={200}>
         <DashboardPageLayout maxWidth="xl" padding="md">
+        {/* Logique métier (Odoo-style) : App → Modèle → Workflow */}
+        <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+          <span className="inline-flex items-center gap-1.5 rounded-md border border-slate-800/60 bg-slate-900/40 px-2 py-1">
+            <span className="font-medium text-slate-400">App</span>
+            <span>{appMeta.name}</span>
+          </span>
+          <span className="text-slate-600">•</span>
+          <span className="inline-flex items-center gap-1.5 rounded-md border border-slate-800/60 bg-slate-900/40 px-2 py-1">
+            <span className="font-medium text-slate-400">Modèle</span>
+            <span>Demande</span>
+          </span>
+          <span className="text-slate-600">•</span>
+          <span className="inline-flex items-center gap-1.5 rounded-md border border-slate-800/60 bg-slate-900/40 px-2 py-1">
+            <span className="font-medium text-slate-400">Workflow</span>
+            <span>pending → in_progress → validated | rejected</span>
+          </span>
+        </div>
+
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
@@ -359,7 +399,7 @@ export const DemandesKpiPage = memo(function DemandesKpiPage({ data: apiData }: 
               KPIs Flux & Demandes
             </h1>
             <p className="text-slate-400 text-sm mt-1">
-              Suivi du volume, validation, temps moyen, goulets et blocages
+              Suivi du volume, validation, temps moyen, goulets et blocages (règles domaine: demandes)
             </p>
           </div>
           <div className="flex items-center gap-3 flex-wrap">

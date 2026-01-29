@@ -1,7 +1,11 @@
 /**
- * DashboardShell
- * Layout premium "logiciel métier" - Structure sobre et respirante
- * Remplace les effets "gaming" par une hiérarchie visuelle claire
+ * DashboardShell (layout partagé)
+ *
+ * Layout seul : header optionnel, subnav optionnel, zone contenu scrollable.
+ * À utiliser quand la page fournit déjà la sidebar et le reste (ex. maitre-ouvrage/dashboard).
+ *
+ * Pour un shell complet (Sidebar + KPI + ViewRouter), voir le module root : DashboardShell
+ * (src/modules/dashboard/DashboardShell.tsx) ou l’alias DashboardShellShared.
  */
 
 'use client';
@@ -21,36 +25,36 @@ export function DashboardShell({ header, subnav, children, className }: Dashboar
   return (
     <div
       className={cn(
-        // Fond sobre "produit" : profond, avec une lumière très légère
-        'h-full w-full min-w-0 overflow-hidden',
+        // Fond sobre "produit" : cadre strict = viewport, pas de scroll horizontal
+        'h-full w-full min-w-0 max-w-full overflow-x-hidden overflow-hidden',
         'bg-slate-950',
         'relative',
         className
       )}
     >
-      {/* Glow discret (pas d'effet tape-à-l'œil) */}
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-40 -left-40 h-[520px] w-[520px] rounded-full bg-blue-500/10 blur-3xl" />
-        <div className="absolute -bottom-52 -right-52 h-[620px] w-[620px] rounded-full bg-purple-500/10 blur-3xl" />
+      {/* Glow discret (pas d'effet tape-à-l'œil) - adouci pour moins de distraction */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -left-40 h-[480px] w-[480px] rounded-full bg-blue-500/[0.07] blur-3xl" />
+        <div className="absolute -bottom-52 -right-52 h-[560px] w-[560px] rounded-full bg-slate-500/[0.05] blur-3xl" />
       </div>
 
       <div className="relative z-10 flex h-full min-h-0 flex-col">
         {header ? (
-          <div className={cn('shrink-0 border-b backdrop-blur', colors.border.default, 'bg-slate-950/40')}>
-            <div className={cn(spacing.paddingX.md, 'sm:px-6', 'py-3 sm:py-3.5')}>{header}</div>
+          <div className={cn('shrink-0 min-w-0 border-b backdrop-blur-sm', colors.border.default, 'bg-slate-950/50')}>
+            <div className={cn('min-w-0', spacing.paddingX.md, 'sm:px-6', 'py-3 sm:py-3.5')}>{header}</div>
           </div>
         ) : null}
 
         {subnav ? (
-          <div className={cn('shrink-0 border-b backdrop-blur', colors.border.default, 'bg-slate-950/20')}>
-            <div className={cn(spacing.paddingX.md, 'sm:px-6', 'py-2')}>{subnav}</div>
+          <div className={cn('shrink-0 min-w-0 border-b backdrop-blur-sm', colors.border.default, 'bg-slate-950/25')}>
+            <div className={cn('min-w-0', spacing.paddingX.md, 'sm:px-6', 'py-2')}>{subnav}</div>
           </div>
         ) : null}
 
-        {/* Zone contenu - respiration et rythme */}
-        <div className="flex-1 min-h-0 overflow-auto">
-          <div className={cn(spacing.paddingX.md, 'sm:px-6', spacing.paddingY.md, 'sm:py-6')}>{children}</div>
-        </div>
+        {/* Zone contenu - cadre horizontal, défilement vertical uniquement */}
+        <main id="main-content" className="flex-1 min-h-0 min-w-0 overflow-x-hidden overflow-y-auto scroll-smooth scroll-touch scrollbar-dashboard" role="main">
+          <div className={cn('min-w-0 max-w-full', spacing.paddingX.md, 'sm:px-6', spacing.paddingY.md, 'sm:py-6')}>{children}</div>
+        </main>
       </div>
     </div>
   );

@@ -252,3 +252,5 @@ export const AlertsUrgentesPage = memo(function AlertsUrgentesPage() {
     </DashboardPageLayout>
   );
 });
+
+export default AlertsUrgentesPage;

@@ -804,7 +804,7 @@ function EvaluationsPageContent() {
 
         {/* Main Content */}
         <main className="flex-1 overflow-hidden">
-          <div className="h-full overflow-y-auto">
+          <div className="h-full overflow-x-hidden overflow-y-auto">
             <EvaluationsContentRouter
               mainCategory={activeCategory as EvaluationsMainCategory}
               subCategory={activeSubCategory || undefined}
@@ -892,7 +892,7 @@ function EvaluationsPageContent() {
                 ×
               </Button>
             </div>
-            <div className="flex-1 overflow-y-auto p-4">
+            <div className="flex-1 overflow-x-hidden overflow-y-auto p-4">
               {stats.overdueScheduled > 0 && (
                 <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30">
                   <p className="text-sm font-medium text-red-400 mb-1">

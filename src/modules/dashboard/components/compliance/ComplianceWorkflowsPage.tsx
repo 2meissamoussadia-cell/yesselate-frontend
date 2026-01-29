@@ -56,3 +56,5 @@ export function ComplianceWorkflowsPage({ data }: any) {
     </DashboardPageLayout>
   );
 }
+
+export default ComplianceWorkflowsPage;

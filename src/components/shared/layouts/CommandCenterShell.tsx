@@ -55,7 +55,7 @@ export function CommandCenterShell({
   return (
     <div
       className={cn(
-        'flex h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 overflow-hidden',
+        'flex h-screen min-w-0 max-w-full bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 overflow-x-hidden overflow-hidden',
         fullscreen && 'fixed inset-0 z-50',
         className
       )}
@@ -63,8 +63,8 @@ export function CommandCenterShell({
       {/* Sidebar (module) */}
       {sidebar}
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      {/* Main Content Area — viewport-contained (pas de scroll horizontal) */}
+      <div className="flex-1 flex flex-col min-w-0 max-w-full overflow-x-hidden overflow-hidden">
         {/* Header + actions (module) */}
         {header}
 
@@ -75,8 +75,8 @@ export function CommandCenterShell({
         {kpiBar}
 
         {/* Content Router (module) */}
-        <main className="flex-1 overflow-hidden">
-          <div className="h-full overflow-y-auto">{contentRouter}</div>
+        <main className="flex-1 min-w-0 max-w-full overflow-hidden">
+          <div className="h-full min-w-0 max-w-full overflow-x-hidden overflow-y-auto">{contentRouter}</div>
         </main>
 
         {/* StatusBar (common) */}

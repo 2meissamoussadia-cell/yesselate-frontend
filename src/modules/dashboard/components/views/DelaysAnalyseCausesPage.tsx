@@ -238,3 +238,5 @@ export const DelaysAnalyseCausesPage = memo(function DelaysAnalyseCausesPage() {
     </DashboardPageLayout>
   );
 });
+
+export default DelaysAnalyseCausesPage;

@@ -22,6 +22,8 @@ export type {
   DashboardSubCategory,
   DashboardSubSubCategory,
   DashboardNavItem,
+  NavRequires,
+  NavNode,
 } from './dashboardNavigationTypes';
 
 // Types de données du registry (nouveaux)

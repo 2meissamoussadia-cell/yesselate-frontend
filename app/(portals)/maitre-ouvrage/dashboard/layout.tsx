@@ -18,6 +18,8 @@ import {
   DashboardSyncClient,
   DashboardErrorFallback,
 } from './DashboardLayoutClient';
+import { DashboardAlertProvider } from '@/modules/dashboard/components/DashboardAlertProvider';
+import { DashboardAuthGuard } from '@/modules/dashboard/components/DashboardAuthGuard';
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   try {
@@ -75,7 +77,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
             <DashboardSyncClient />
           </Suspense>
           <ErrorBoundary fallback={<DashboardErrorFallback error={new Error('')} />}>
-            {children}
+            <DashboardAuthGuard>
+              <DashboardAlertProvider>
+                {children}
+              </DashboardAlertProvider>
+            </DashboardAuthGuard>
           </ErrorBoundary>
         </I18nProvider>
       </ErrorBoundary>

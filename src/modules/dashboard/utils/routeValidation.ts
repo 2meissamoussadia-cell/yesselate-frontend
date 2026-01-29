@@ -285,13 +285,13 @@ export function getDefaultLeafForSub(main: string, sub: string): string | null {
 }
 
 /**
- * Obtient la route par défaut
+ * Obtient la route par défaut (Cockpit DG = vue d’accueil maître-ouvrage)
  */
 export function getDefaultRoute(): RouteConfig {
   return {
     main: 'overview',
     sub: 'summary',
-    leaf: 'dashboard',
+    leaf: 'cockpit',
   };
 }
 

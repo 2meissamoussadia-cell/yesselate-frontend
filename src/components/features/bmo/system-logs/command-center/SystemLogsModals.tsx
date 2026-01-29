@@ -8,10 +8,12 @@
 import React from 'react';
 import { useSystemLogsCommandCenterStore } from '@/lib/stores/systemLogsCommandCenterStore';
 import { LogDetailModal } from './modals/LogDetailModal';
-// Les autres modals seront créées séparément
-// import { ExportModal } from './modals/ExportModal';
-// import { IntegrityScanModal } from './modals/IntegrityScanModal';
-// import { IncidentDetailModal } from './modals/IncidentDetailModal';
+import { ExportModal } from './modals/ExportModal';
+import { IntegrityScanModal } from './modals/IntegrityScanModal';
+import { IncidentDetailModal } from './modals/IncidentDetailModal';
+import { StatsModal } from './modals/StatsModal';
+import { SettingsModal } from './modals/SettingsModal';
+import { ShortcutsModal } from './modals/ShortcutsModal';
 
 export function SystemLogsModals() {
   const { modal, closeModal } = useSystemLogsCommandCenterStore();
@@ -33,37 +35,40 @@ export function SystemLogsModals() {
     );
   }
 
-  // Export Modal (à créer)
   if (modal.type === 'export') {
-    // return <ExportModal open={true} onClose={closeModal} format={modal.data?.format} />;
-    return null; // TODO: Créer ExportModal
+    return (
+      <ExportModal
+        open={true}
+        onClose={closeModal}
+        format={(modal.data?.format as 'json' | 'csv' | 'xlsx') || 'json'}
+      />
+    );
   }
 
-  // Integrity Scan Modal (à créer)
   if (modal.type === 'integrity-scan') {
-    // return <IntegrityScanModal open={true} onClose={closeModal} />;
-    return null; // TODO: Créer IntegrityScanModal
+    return <IntegrityScanModal open={true} onClose={closeModal} />;
   }
 
-  // Incident Detail Modal (à créer)
   if (modal.type === 'incident-detail') {
-    // return <IncidentDetailModal open={true} onClose={closeModal} incidentId={modal.data?.incidentId} />;
-    return null; // TODO: Créer IncidentDetailModal
+    return (
+      <IncidentDetailModal
+        open={true}
+        onClose={closeModal}
+        incidentId={(modal.data?.incidentId as string) ?? undefined}
+      />
+    );
   }
 
-  // Stats Modal (à créer)
   if (modal.type === 'stats') {
-    return null; // TODO: Créer StatsModal
+    return <StatsModal open={true} onClose={closeModal} />;
   }
 
-  // Settings Modal (à créer)
   if (modal.type === 'settings') {
-    return null; // TODO: Créer SettingsModal
+    return <SettingsModal open={true} onClose={closeModal} />;
   }
 
-  // Shortcuts Modal (à créer)
   if (modal.type === 'shortcuts') {
-    return null; // TODO: Créer ShortcutsModal
+    return <ShortcutsModal open={true} onClose={closeModal} />;
   }
 
   return null;

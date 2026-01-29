@@ -111,7 +111,7 @@ describe('DemandesService', () => {
     it('should add warning for budget > 80%', () => {
       const budget: BudgetInfo = {
         available: 1000000,
-        consumed: 850000,
+        consumed: 750000, // 75% + 100k = 85% → warning (80-90%)
         allocated: 0
       };
 
@@ -245,7 +245,7 @@ describe('DemandesService', () => {
     it('should return urgent for medium risk', () => {
       const budget: BudgetInfo = {
         available: 1000000,
-        consumed: 850000,
+        consumed: 750000, // 85% usage → warning (score 70) → urgent
         allocated: 0
       };
 
@@ -257,7 +257,7 @@ describe('DemandesService', () => {
 
       const priority = DemandesService.calculateAutoPriority(demande);
 
-      expect(['urgent', 'high']).toContain(priority);
+      expect(priority).toBe('urgent');
     });
 
     it('should respect manual priority', () => {

@@ -1,14 +1,32 @@
 // app/api/me/policy/route.ts
 // Phase P10: Endpoint léger pour exposer perms[] et flags{} au front
-// Phase P12: Étendu pour inclure locale/currency/timezone
-// Cache court (60s) pour réduire la charge DB
+// Phase P12: Étendu pour inclure locale/currency/timezone (tenant/user i18n via resolveLocaleContext)
+// Rate limit 240 req, refill 4/s. Cache court (60s) pour réduire la charge DB
 
 import { NextRequest, NextResponse } from 'next/server';
 import { extractContextFromHeaders } from '@lib-root/server/dashboard/context';
 import { hydrateContext } from '@lib-root/server/dashboard/context_ext';
 import { resolveLocaleContext } from '@lib-root/server/i18n';
+import { rateLimitRedis } from '@lib-root/server/observability/rateLimitRedis';
+
+function getClientIp(req: NextRequest): string {
+  return (
+    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    req.headers.get('x-real-ip') ||
+    '127.0.0.1'
+  );
+}
 
 export async function GET(req: NextRequest) {
+  const ip = getClientIp(req);
+  const rl = await rateLimitRedis(`me:policy:${ip}`, 240, 4);
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429, headers: { 'Retry-After': '60', 'X-RateLimit-Remaining': String(rl.remaining) } }
+    );
+  }
+
   try {
     const base = extractContextFromHeaders(req.headers);
     const ctx = await hydrateContext(base);

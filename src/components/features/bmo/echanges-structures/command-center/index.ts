@@ -8,4 +8,5 @@ export type { SidebarCategory } from './EchangesStructuresCommandSidebar';
 export { EchangesStructuresSubNavigation } from './EchangesStructuresSubNavigation';
 export { EchangesStructuresKPIBar } from './EchangesStructuresKPIBar';
 export { EchangesStructuresContentRouter } from './EchangesStructuresContentRouter';
+export { EchangesStructuresCommandPalette } from './EchangesStructuresCommandPalette';
 

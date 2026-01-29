@@ -353,7 +353,7 @@ function MissionsPageContent() {
 
         {/* Main Content */}
         <main className="flex-1 overflow-hidden">
-          <div className="h-full overflow-y-auto">
+          <div className="h-full overflow-x-hidden overflow-y-auto">
             <MissionsContentRouter
               mainCategory={activeCategory as MissionsMainCategory}
               subCategory={activeSubCategory}
@@ -460,7 +460,7 @@ function NotificationsPanel({ onClose }: { onClose: () => void }) {
           </Button>
         </div>
 
-        <div className="flex-1 overflow-y-auto divide-y divide-slate-800/50">
+        <div className="flex-1 overflow-x-hidden overflow-y-auto divide-y divide-slate-800/50">
           {notifications.map((notif) => (
             <div
               key={notif.id}

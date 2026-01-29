@@ -42,5 +42,5 @@
     "**/*.mts",
     "src/types/**/*.d.ts"
   ],
-  "exclude": ["node_modules", "CLIENTS_MODULE_EXAMPLES.tsx", "**/*.stories.*", "**/*.stories.tsx", "**/*.stories.ts"]
+  "exclude": ["node_modules", "CLIENTS_MODULE_EXAMPLES.tsx", "**/*.stories.*", "**/*.stories.tsx", "**/*.stories.ts", "**/GenericModalsTemplate.tsx"]
 }

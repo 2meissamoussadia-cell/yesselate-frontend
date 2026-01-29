@@ -14,15 +14,15 @@ export default function MaitreOuvrageLayout({ children }: { children: ReactNode 
         Aller au contenu
       </a>
 
-      {/* Zone de scroll: doit s'adapter au layout parent (header déjà présent dans BMOLayout) */}
-      <div className="w-full flex-1 min-h-0 overflow-hidden flex flex-col bg-[rgb(var(--bg))]">
+      {/* Zone de scroll: cadre horizontal = viewport, défilement vertical uniquement (style logiciel métier) */}
+      <div className="w-full max-w-full min-w-0 flex-1 min-h-0 overflow-x-hidden overflow-hidden flex flex-col bg-[rgb(var(--bg))]">
         <main
           id="main-content"
           role="main"
           tabIndex={-1}
           className="
-            flex-1 min-h-0
-            overflow-y-auto overscroll-contain scrollbar-gutter-stable scrollbar-subtle
+            flex-1 min-h-0 min-w-0 max-w-full viewport-contained
+            overflow-x-hidden overflow-y-auto overscroll-contain scrollbar-gutter-stable scrollbar-subtle
             pb-[env(safe-area-inset-bottom)]
             focus:outline-none
             bg-[rgb(var(--bg))]
@@ -32,7 +32,10 @@ export default function MaitreOuvrageLayout({ children }: { children: ReactNode 
             scrollbarGutter: 'stable',
           }}
         >
-          {children}
+          {/* Wrapper pour contenir tout le contenu dans la largeur écran (logiciel métier) */}
+          <div className="min-w-0 max-w-full overflow-x-hidden">
+            {children}
+          </div>
         </main>
       </div>
       </BMOAppShell>

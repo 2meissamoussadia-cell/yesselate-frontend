@@ -1,6 +1,6 @@
 /**
- * Page AdminSettingsDashboard
- * TODO: Ajouter description
+ * Page Admin — Paramètres tableau de bord
+ * Configuration générale du tableau de bord.
  */
 
 'use client';
@@ -15,15 +15,15 @@ import {
   type KPICardData,
   MockDataIndicator,
 } from '../shared';
-import { EmptyState } from './EmptyState';
+import { EmptyState } from '../shared/EmptyState';
 import { ExportButton } from '../shared/ExportButton';
 import { SearchFilter } from '../shared/SearchFilter';
 
 export const AdminSettingsDashboardPage = memo(function AdminSettingsDashboardPage() {
   const [searchQuery, setSearchQuery] = React.useState('');
   
-  // TODO: Charger les données depuis l'API
-  const data = [];
+  // Données à connecter via API
+  const data: unknown[] = [];
   const stats = {
     total: 0,
   };
@@ -42,7 +42,7 @@ export const AdminSettingsDashboardPage = memo(function AdminSettingsDashboardPa
     <DashboardPageLayout>
       <MockDataIndicator />
       
-      <DashboardSection title="AdminSettingsDashboard" description="TODO: Ajouter description">
+      <DashboardSection title="Paramètres tableau de bord" description="Configuration générale.">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {kpis.map((kpi) => (
             <KPICard key={kpi.id} kpi={kpi} size="md" />
@@ -70,10 +70,12 @@ export const AdminSettingsDashboardPage = memo(function AdminSettingsDashboardPa
               variant="info"
             />
           ) : (
-            <div className="space-y-3">
-              {/* TODO: Implémenter la liste */}
-              <p className="text-slate-400 text-sm">Liste à implémenter</p>
-            </div>
+            <EmptyState
+              title="Contenu à venir"
+              description="Connectez l'API pour afficher les données."
+              icon={FileText}
+              variant="comingSoon"
+            />
           )}
         </DashboardPanel>
       </DashboardSection>

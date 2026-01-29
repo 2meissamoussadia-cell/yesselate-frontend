@@ -44,6 +44,7 @@ import {
 } from 'lucide-react';
 
 import type { Paiement } from '@/lib/services/paiementsApiService';
+import { useToast } from '@/components/features/bmo/ToastProvider';
 
 // ================================
 // Types
@@ -70,6 +71,9 @@ export interface PaiementValidationData {
   scheduledTime?: string;
   paymentMethod?: 'virement' | 'cheque' | 'especes' | 'carte';
   bankAccount?: string;
+  chantierId?: string;
+  chantierLabel?: string;
+  montantOverride?: number;
   conditions?: {
     ribVerified: boolean;
     budgetAvailable: boolean;
@@ -77,6 +81,18 @@ export interface PaiementValidationData {
     tresorerieOk: boolean;
   };
 }
+
+// Options chantiers (rattachement paiement → chantier/projet)
+const CHANTIERS_OPTIONS = [
+  { value: '', label: 'Aucun / Non rattaché' },
+  { value: 'RENOV-042', label: 'RENOV-042 - Rénovation Diaspora' },
+  { value: 'REPAR-015', label: 'REPAR-015 - Réparations Commerçants' },
+  { value: 'RENOV-038', label: 'RENOV-038 - Rénovation Diaspora' },
+  { value: 'REPAR-009', label: 'REPAR-009 - Réparations Particuliers' },
+  { value: 'RENOV-031', label: 'RENOV-031 - Rénovation Établissements' },
+  { value: 'RENOV-027', label: 'RENOV-027 - Rénovation Commerçants' },
+  { value: 'REPAR-022', label: 'REPAR-022 - Réparations Diaspora' },
+];
 
 // Motifs de rejet
 const REJECTION_REASONS = [
@@ -106,6 +122,7 @@ export function PaiementValidationModal({
   onClose,
   onConfirm,
 }: PaiementValidationModalProps) {
+  const toast = useToast();
   const [step, setStep] = useState<1 | 2>(1);
   const [loading, setLoading] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
@@ -226,12 +243,24 @@ export function PaiementValidationModal({
     }
 
     setLoading(true);
+    setFormErrors(prev => ({ ...prev, submit: '' }));
     try {
       await onConfirm(formData as PaiementValidationData);
+      const isValidation = formData.action === 'validate';
+      const isRejection = formData.action === 'reject';
+      if (isValidation) {
+        toast.success('Paiement validé', { title: 'Validation enregistrée' });
+      } else if (isRejection) {
+        toast.success('Paiement rejeté', { title: 'Rejet enregistré' });
+      } else {
+        toast.success('Paiement planifié', { title: 'Planification enregistrée' });
+      }
       onClose();
     } catch (error) {
       console.error('Validation failed:', error);
-      setFormErrors({ submit: 'Une erreur est survenue. Veuillez réessayer.' });
+      const msg = 'Une erreur est survenue. Veuillez réessayer.';
+      toast.error(msg, { title: 'Erreur' });
+      setFormErrors(prev => ({ ...prev, submit: msg }));
     } finally {
       setLoading(false);
     }
@@ -304,12 +333,29 @@ export function PaiementValidationModal({
                 <span className="text-sm text-slate-400">Fournisseur</span>
                 <span className="font-medium text-slate-200">{typeof paiement.fournisseur === 'object' && paiement.fournisseur && 'name' in paiement.fournisseur ? (paiement.fournisseur as { name: string }).name : String(paiement.fournisseur ?? '')}</span>
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-slate-400">Montant</span>
                 <span className="text-lg font-bold text-emerald-400">
-                  {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF', minimumFractionDigits: 0 }).format(paiement.montant)}
+                  {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF', minimumFractionDigits: 0 }).format(formData.montantOverride ?? paiement.montant)}
                 </span>
               </div>
+              {isValidation && (
+                <div className="mt-3 pt-3 border-t border-slate-700">
+                  <Label htmlFor="montant-override" className="text-xs text-slate-400 mb-1 block">
+                    Montant (override optionnel, FCFA)
+                  </Label>
+                  <Input
+                    id="montant-override"
+                    type="number"
+                    min={0}
+                    step={1000}
+                    placeholder={String(paiement.montant)}
+                    value={formData.montantOverride ?? ''}
+                    onChange={(e) => handleFormChange('montantOverride', e.target.value ? Number(e.target.value) : undefined)}
+                    className="bg-slate-800 border-slate-700 h-9"
+                  />
+                </div>
+              )}
             </div>
 
             {/* ÉTAPE 1 : Formulaire */}
@@ -386,6 +432,30 @@ export function PaiementValidationModal({
                       )}
                     </div>
 
+                    <div>
+                      <Label htmlFor="chantier" className="mb-2 block">
+                        Chantier / Projet (optionnel)
+                      </Label>
+                      <Select
+                        value={formData.chantierId ?? 'none'}
+                        onValueChange={(value) => {
+                          const opt = CHANTIERS_OPTIONS.find(o => (o.value || 'none') === value);
+                          handleFormChange('chantierId', value === 'none' ? undefined : value);
+                          handleFormChange('chantierLabel', opt?.label ?? undefined);
+                        }}
+                      >
+                        <SelectTrigger className="bg-slate-800 border-slate-700">
+                          <SelectValue placeholder="Rattacher à un chantier" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-slate-800 border-slate-700">
+                          {CHANTIERS_OPTIONS.map((opt) => (
+                            <SelectItem key={opt.value || 'none'} value={opt.value || 'none'}>
+                              {opt.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
                     <div>
                       <Label htmlFor="next-validator" className="mb-2 block">
                         Prochain validateur (optionnel)
@@ -523,6 +593,30 @@ export function PaiementValidationModal({
                     </div>
 
                     <div>
+                      <Label htmlFor="chantier-schedule" className="mb-2 block">
+                        Chantier / Projet (optionnel)
+                      </Label>
+                      <Select
+                        value={formData.chantierId ?? 'none'}
+                        onValueChange={(value) => {
+                          const opt = CHANTIERS_OPTIONS.find(o => (o.value || 'none') === value);
+                          handleFormChange('chantierId', value === 'none' ? undefined : value);
+                          handleFormChange('chantierLabel', opt?.label ?? undefined);
+                        }}
+                      >
+                        <SelectTrigger className="bg-slate-800 border-slate-700">
+                          <SelectValue placeholder="Rattacher à un chantier" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-slate-800 border-slate-700">
+                          {CHANTIERS_OPTIONS.map((opt) => (
+                            <SelectItem key={opt.value || 'none'} value={opt.value || 'none'}>
+                              {opt.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
                       <Label htmlFor="bank-account" className="mb-2 block">
                         Compte bancaire (optionnel)
                       </Label>
@@ -598,6 +692,20 @@ export function PaiementValidationModal({
                 <div className="bg-slate-800/50 p-4 rounded-lg text-left space-y-2 border border-slate-700">
                   <h4 className="font-semibold text-slate-200 mb-3">Récapitulatif</h4>
                   
+                  {(formData.chantierId && formData.chantierLabel) && (
+                    <div className="text-sm">
+                      <span className="text-slate-400">Chantier :</span>
+                      <span className="ml-2 text-slate-200">{formData.chantierLabel}</span>
+                    </div>
+                  )}
+                  {isValidation && formData.montantOverride != null && (
+                    <div className="text-sm">
+                      <span className="text-slate-400">Montant :</span>
+                      <span className="ml-2 text-slate-200">
+                        {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF', minimumFractionDigits: 0 }).format(formData.montantOverride)} FCFA
+                      </span>
+                    </div>
+                  )}
                   {isValidation && formData.nextValidator && (
                     <div className="text-sm">
                       <span className="text-slate-400">Prochain validateur :</span>

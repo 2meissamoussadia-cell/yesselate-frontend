@@ -121,3 +121,5 @@ export const ActivityNotificationsPage = memo(function ActivityNotificationsPage
     </DashboardPageLayout>
   );
 });
+
+export default ActivityNotificationsPage;

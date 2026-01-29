@@ -42,7 +42,7 @@ export function DashboardPageLayout({
   padding = 'md',
 }: DashboardPageLayoutProps) {
   return (
-    <div className={cn('w-full min-w-0 mx-auto', maxWidthClasses[maxWidth], paddingClasses[padding], className)}>
+    <div className={cn('w-full min-w-0 max-w-full overflow-x-hidden mx-auto', maxWidthClasses[maxWidth], paddingClasses[padding], className)}>
       <div className="space-y-4 sm:space-y-6 min-w-0">
         {children}
       </div>
@@ -56,6 +56,8 @@ export function DashboardPageLayout({
 export interface DashboardSectionProps {
   title?: string;
   subtitle?: string;
+  /** Alias for subtitle (used by many pages); rendered as subtitle when subtitle is not set */
+  description?: string;
   icon?: React.ComponentType<{ className?: string }>;
   action?: React.ReactNode;
   children: React.ReactNode;
@@ -65,19 +67,21 @@ export interface DashboardSectionProps {
 export function DashboardSection({
   title,
   subtitle,
+  description,
   icon: Icon,
   action,
   children,
   className,
 }: DashboardSectionProps) {
+  const sectionSubtitle = subtitle ?? description;
   return (
     <div className={cn('space-y-4', className)}>
-      {(title || subtitle || Icon || action) && (
+      {(title || sectionSubtitle || Icon || action) && (
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
             {Icon && (
-              <div className="inline-flex items-center justify-center rounded-lg border border-slate-800/60 bg-slate-900/40 p-1.5 flex-shrink-0">
-                <Icon className="h-3 w-3 text-slate-300 flex-shrink-0" style={{ width: '0.75rem', height: '0.75rem', minWidth: '0.75rem', minHeight: '0.75rem', maxWidth: '0.75rem', maxHeight: '0.75rem' }} />
+              <div className="inline-flex items-center justify-center rounded-xl border border-slate-800/60 bg-slate-900/40 p-2 flex-shrink-0">
+                <Icon className="h-3.5 w-3.5 text-slate-300 flex-shrink-0" />
               </div>
             )}
             <div className="min-w-0">
@@ -86,9 +90,9 @@ export function DashboardSection({
                   {title}
                 </h3>
               )}
-              {subtitle && (
+              {sectionSubtitle && (
                 <p className="text-slate-400 text-xs sm:text-sm mt-0.5 truncate">
-                  {subtitle}
+                  {sectionSubtitle}
                 </p>
               )}
             </div>

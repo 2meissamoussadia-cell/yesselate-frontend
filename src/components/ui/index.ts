@@ -1,4 +1,6 @@
 export { Badge } from "./badge";
+export { BmoModal } from "./BmoModal";
+export type { BmoModalProps } from "./BmoModal";
 export { Button } from "./button";
 export { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./card";
 export { Checkbox } from "./checkbox";

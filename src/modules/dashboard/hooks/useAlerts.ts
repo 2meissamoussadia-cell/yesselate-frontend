@@ -34,6 +34,37 @@ export interface AlertStats {
   info_open: number;
 }
 
+/** Fallback côté client quand l’API alertes renvoie 5xx ou est indisponible */
+const EMPTY_STATS: AlertStats = {
+  open_count: 0,
+  ack_count: 0,
+  closed_count: 0,
+  critical_open: 0,
+  warning_open: 0,
+  info_open: 0,
+};
+
+const EMPTY_EVENTS_RESPONSE = { ok: true, events: [] as AlertEvent[] };
+const EMPTY_STATS_RESPONSE = { ok: true, stats: EMPTY_STATS };
+
+/**
+ * Appel fetch avec fallback : en cas de 5xx ou erreur réseau, retourne des données vides
+ * pour que l’UI ne casse pas (ex. backend / DB indisponible en local).
+ */
+async function fetchAlertsWithFallback(
+  url: string,
+  fallback: { ok: boolean; events: AlertEvent[] } | { ok: boolean; stats: AlertStats }
+): Promise<{ ok: boolean; events?: AlertEvent[]; stats?: AlertStats }> {
+  try {
+    const res = await fetch(url);
+    if (res.ok) return res.json();
+    if (res.status >= 500) return fallback;
+    throw new Error(`Alerts API error: ${res.status}`);
+  } catch {
+    return fallback;
+  }
+}
+
 /**
  * Hook pour récupérer les alertes actives
  * Phase P15: Moteur d'alertes
@@ -44,10 +75,10 @@ export function useAlerts(routeKey?: string) {
     queryFn: async () => {
       const params = new URLSearchParams();
       if (routeKey) params.set('routeKey', routeKey);
-      
-      const res = await fetch(`/api/alerts/events?${params.toString()}`);
-      if (!res.ok) throw new Error('Failed to fetch alerts');
-      return res.json();
+      return fetchAlertsWithFallback(
+        `/api/alerts/events?${params.toString()}`,
+        EMPTY_EVENTS_RESPONSE
+      ) as Promise<{ ok: boolean; events: AlertEvent[] }>;
     },
     refetchInterval: 30000, // Refresh toutes les 30s
   });
@@ -63,10 +94,10 @@ export function useAlertStats(routeKey?: string) {
     queryFn: async () => {
       const params = new URLSearchParams();
       if (routeKey) params.set('routeKey', routeKey);
-      
-      const res = await fetch(`/api/alerts/stats?${params.toString()}`);
-      if (!res.ok) throw new Error('Failed to fetch alert stats');
-      return res.json();
+      return fetchAlertsWithFallback(
+        `/api/alerts/stats?${params.toString()}`,
+        EMPTY_STATS_RESPONSE
+      ) as Promise<{ ok: boolean; stats: AlertStats }>;
     },
     refetchInterval: 30000,
   });
@@ -79,11 +110,11 @@ export function useAlertStats(routeKey?: string) {
 export function useOpenAlerts(limit = 5) {
   return useQuery<{ ok: boolean; events: AlertEvent[] }>({
     queryKey: ['alerts', 'events', 'open', limit],
-    queryFn: async () => {
-      const res = await fetch(`/api/alerts/events?status=open&limit=${limit}`);
-      if (!res.ok) throw new Error('Failed to fetch open alerts');
-      return res.json();
-    },
+    queryFn: async () =>
+      fetchAlertsWithFallback(
+        `/api/alerts/events?status=open&limit=${limit}`,
+        EMPTY_EVENTS_RESPONSE
+      ) as Promise<{ ok: boolean; events: AlertEvent[] }>,
     refetchInterval: 30000, // Refresh toutes les 30s
   });
 }
@@ -98,27 +129,18 @@ export function useAlertsByDomain(domain?: string) {
     queryFn: async () => {
       const params = new URLSearchParams();
       params.set('status', 'open');
-      if (domain) {
-        // Note: L'API devra filtrer par labels.domain côté serveur
-        // Pour l'instant, on récupère toutes les alertes ouvertes et on filtre côté client
-        params.set('limit', '1000'); // Récupérer assez pour filtrer
+      if (domain) params.set('limit', '1000');
+      const data = await fetchAlertsWithFallback(
+        `/api/alerts/events?${params.toString()}`,
+        EMPTY_EVENTS_RESPONSE
+      ) as { ok: boolean; events: AlertEvent[] };
+      if (domain && data.events?.length) {
+        data.events = data.events.filter((event: AlertEvent) => event.labels?.domain === domain);
       }
-      
-      const res = await fetch(`/api/alerts/events?${params.toString()}`);
-      if (!res.ok) throw new Error('Failed to fetch alerts by domain');
-      const data = await res.json();
-      
-      // Filtrer par domain côté client si nécessaire
-      if (domain && data.events) {
-        data.events = data.events.filter((event: AlertEvent) => 
-          event.labels?.domain === domain
-        );
-      }
-      
       return data;
     },
-    refetchInterval: 30000, // Refresh toutes les 30s
-    enabled: true, // Toujours activé, même sans domain
+    refetchInterval: 30000,
+    enabled: true,
   });
 }
 

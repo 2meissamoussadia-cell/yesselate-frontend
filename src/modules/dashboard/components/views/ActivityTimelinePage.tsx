@@ -121,3 +121,5 @@ export const ActivityTimelinePage = memo(function ActivityTimelinePage() {
     </DashboardPageLayout>
   );
 });
+
+export default ActivityTimelinePage;

@@ -377,7 +377,7 @@ export default function ArbitragesVivantsPage() {
 
         {/* Main Content */}
         <main className="flex-1 overflow-hidden">
-          <div className="h-full overflow-y-auto dashboard-container">
+          <div className="h-full overflow-x-hidden overflow-y-auto dashboard-container">
         <ArbitragesContentRouter
           mainCategory={main}
           subCategory={sub || undefined}

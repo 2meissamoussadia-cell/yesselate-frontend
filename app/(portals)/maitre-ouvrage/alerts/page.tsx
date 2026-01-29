@@ -888,7 +888,7 @@ function AlertsPageContent() {
 
         {/* Main Content avec nouveau router hiérarchique */}
         <main className="flex-1 overflow-hidden">
-          <div className="h-full overflow-y-auto">
+          <div className="h-full overflow-x-hidden overflow-y-auto">
             {/* Si des onglets workspace sont ouverts, afficher le workspace */}
             {tabs.length > 0 ? (
               <div className="space-y-4 p-4">

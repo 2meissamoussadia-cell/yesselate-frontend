@@ -632,7 +632,7 @@ export default function ValidationPaiementsPage() {
 
         {/* Main Content */}
         <main className="flex-1 overflow-hidden bg-slate-950/50">
-          <div className="h-full overflow-auto">
+          <div className="h-full overflow-x-hidden overflow-y-auto">
             <div className="p-4">
               {/* Content Router basé sur la navigation 3-level */}
               <PaiementsContentRouter

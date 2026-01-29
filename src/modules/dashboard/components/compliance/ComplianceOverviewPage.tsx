@@ -20,3 +20,5 @@ export function ComplianceOverviewPage({ data }: { data: {
     </div>
   );
 }
+
+export default ComplianceOverviewPage;

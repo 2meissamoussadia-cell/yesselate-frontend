@@ -1,6 +1,9 @@
 /**
  * Types pour la navigation à 3 niveaux du module Dashboard
+ * Source unique pour NavNode / NavRequires (sidebar, breadcrumbs, filtres)
  */
+
+import type React from 'react';
 
 export type DashboardMainCategory =
   | 'overview'
@@ -47,6 +50,25 @@ export type DashboardSubSubCategory =
   | 'retards'
   | 'blocages'
   | 'all';
+
+/** Exigences d'accès pour un nœud (RBAC / feature flags) */
+export interface NavRequires {
+  perm?: string;
+  flag?: string;
+  roles?: string[];
+}
+
+/** Nœud de navigation (arbre à 3 niveaux : main → sub → leaf) */
+export interface NavNode {
+  id: string;
+  label?: string;
+  i18nKey?: string;
+  icon?: React.ComponentType<{ className?: string }>;
+  badge?: number | string;
+  badgeType?: 'default' | 'warning' | 'critical' | 'success';
+  requires?: NavRequires;
+  children?: NavNode[];
+}
 
 export interface DashboardNavItem {
   id: string;

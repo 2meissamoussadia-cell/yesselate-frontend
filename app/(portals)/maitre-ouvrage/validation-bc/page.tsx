@@ -319,7 +319,7 @@ function ValidationBCPageContent() {
 
         {/* Main Content */}
         <main className="flex-1 overflow-hidden">
-          <div className="h-full overflow-y-auto bg-slate-950/50">
+          <div className="h-full overflow-x-hidden overflow-y-auto bg-slate-950/50">
             <ValidationContentRouter
               mainCategory={activeCategory}
               subCategory={activeSubCategory}

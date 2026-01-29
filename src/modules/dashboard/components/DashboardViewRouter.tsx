@@ -11,8 +11,12 @@
 
 import { Suspense, useEffect, useState, useMemo, memo, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BarChart3, ShieldX } from 'lucide-react';
-import { EmptyState } from './views/EmptyState';
+import { BarChart3 } from 'lucide-react';
+import { ErrorBoundary } from '@/components/shared/ErrorBoundary';
+import { EmptyState } from './shared/EmptyState';
+import { AccessDeniedView } from './views/AccessDeniedView';
+import { ContentLoadingSkeleton } from './ContentLoadingSkeleton';
+import { DashboardContentSwitch } from './DashboardContentSwitch';
 import { loadComponent } from '../utils/loadComponent';
 import {
   getRouteComponent,
@@ -38,6 +42,7 @@ import { useDashboardPermissionsStore } from '@/lib/stores/dashboardPermissionsS
 import { useTrackView } from '../telemetry/useTrack';
 import { getAuthHeaders } from '../utils/getAuthHeaders';
 import { getNextCategoryRoute, getPreviousCategoryRoute } from '../utils/routeNavigation';
+import { useI18n } from '@/lib/i18n';
 
 // ✅ Cache des composants chargés pour éviter les rechargements inutiles
 const componentCache = new Map<string, ComponentType>();
@@ -54,12 +59,12 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
   className,
   debug = false,
 }: DashboardViewRouterProps) {
-  // ✅ Initialiser le logger
   const log = useLogger('DashboardViewRouter');
-  
-  // ✅ Auth pour les guards de sécurité (optionnel)
+  const { t } = useI18n();
+
   const authContext = useAuthOptional();
   const user = authContext?.user || null;
+  const userId = user?.id ?? null;
 
   // Phase P10: Charger les permissions depuis le store Zustand
   useDashboardPermissions(); // Charge les permissions si nécessaire
@@ -165,8 +170,12 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
         
         setHasAccessPolicy(true);
       } catch (error) {
-        console.warn('[DashboardViewRouter] Failed to check policy', error);
-        setHasAccessPolicy(null); // Indéterminé, on garde l'accès local
+        log.warn('Policy check failed', {
+          route: `${main}/${sub || ''}/${leaf || ''}`,
+          userId,
+          error: error instanceof Error ? error.message : String(error),
+        });
+        setHasAccessPolicy(null);
       }
     }
     
@@ -174,29 +183,13 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
     return () => { cancelled = true; };
   }, [main, sub, leaf, filteredNav, navigate, log]);
 
-  // Phase P10: Rediriger vers la première route autorisée si la route actuelle est interdite
-  // Ne rediriger qu'une seule fois quand l'accès passe à "refusé" pour éviter une boucle
-  // (navigate() change main/sub/leaf, ce qui re-déclenchait l'effet → Maximum update depth)
-  const prevHasAccessPolicyRef = useRef<boolean | null>(null);
-  useEffect(() => {
-    const justBecameFalse = prevHasAccessPolicyRef.current !== false && hasAccessPolicy === false;
-    prevHasAccessPolicyRef.current = hasAccessPolicy;
-
-    if (!justBecameFalse) return;
-
-    const firstRoute = findFirstAuthorizedRoute(filteredNav);
-    if (firstRoute) {
-      log.debug('Route interdite (policy), redirection vers première route autorisée', {
-        from: { main, sub, leaf },
-        to: firstRoute,
-      });
-      navigate(firstRoute.main as any, firstRoute.sub, firstRoute.leaf);
-    }
-  }, [hasAccessPolicy, filteredNav, main, sub, leaf, navigate, log]);
+  // Logiciel métier : afficher "Accès refusé" au lieu de rediriger silencieusement
+  // (pas de redirection auto — l'utilisateur voit le message et clique pour revenir)
 
   const [Component, setComponent] = useState<ComponentType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
   
   // ✅ Touch gestures pour navigation mobile (swipe left/right)
   const containerRef = useTouchGestures(
@@ -241,11 +234,16 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
   );
 
   useEffect(() => {
+    const accessDenied =
+      hasAccessPolicy === false ||
+      (!hasAccessLocal &&
+        registryEntry &&
+        (registryEntry.requiredRole || registryEntry.requiredTenant));
+    if (accessDenied) return;
+
     let cancelled = false;
-    
-    // ✅ Extraire les valeurs de currentRoute une seule fois
     const { main: routeMain, sub: routeSub, leaf: routeLeaf } = currentRoute;
-    
+
     async function resolve() {
       // Créer une clé unique pour cette route
       const routeKey = `${routeMain}|${routeSub || ''}|${routeLeaf || ''}`;
@@ -261,9 +259,6 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
       // Vérifier le cache
       const cached = componentCache.get(routeKey);
       if (cached) {
-        if (process.env.NODE_ENV === 'development') {
-          console.log('[DashboardViewRouter] Composant trouvé dans le cache');
-        }
         if (cancelled) return;
         setComponent(() => cached);
         setIsLoading(false);
@@ -330,17 +325,16 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
           const availableRoutes = getAvailableRoutes(routeMain);
           const leaves = routeSub ? availableRoutes.leaves[routeSub] || [] : [];
           
-          // Utiliser EmptyState pour un affichage propre
           const errorComponent = () => (
             <EmptyState
-              title="Section non configurée"
-              description={`La route "${routeMain}${routeSub ? `/${routeSub}` : ''}${routeLeaf ? `/${routeLeaf}` : ''}" n'est pas encore disponible.`}
+              title={t('dashboard.empty.sectionNotConfigured.title')}
+              description={t('dashboard.empty.sectionNotConfigured.description')}
               icon={BarChart3}
-              actionLabel={leaves.length > 0 ? 'Voir les sections disponibles' : undefined}
+              actionLabel={leaves.length > 0 ? t('dashboard.empty.sectionNotConfigured.seeSections') : undefined}
+              actionAriaLabel={leaves.length > 0 ? t('dashboard.empty.sectionNotConfigured.seeSections') : undefined}
               onAction={leaves.length > 0 ? () => {
-                // Navigation vers la première route disponible
-                const navigate = useDashboardCommandCenterStore.getState().navigate;
-                navigate(routeMain, routeSub || null, leaves[0]);
+                const nav = useDashboardCommandCenterStore.getState().navigate;
+                nav(routeMain, routeSub || null, leaves[0]);
               } : undefined}
             />
           );
@@ -364,18 +358,18 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
         setIsLoading(false);
       } catch (e) {
         if (cancelled) return;
-        
-        const errorMessage = e instanceof Error ? e.message : 'Erreur inconnue';
-        log.error('Router error', { error: e, errorMessage });
-        setError(errorMessage);
-        
-        // ✅ Mémoriser le composant d'erreur
-        const errorComponent = () => (
-          <div className="p-4 sm:p-6 text-red-400 min-w-0 overflow-hidden break-words">
-            Erreur de chargement du module: {errorMessage}
-          </div>
-        );
-        setComponent(() => errorComponent);
+        const technicalMessage = e instanceof Error ? e.message : String(e);
+        log.error('View load failed', e instanceof Error ? e : new Error(technicalMessage), {
+          routeKey,
+          main: routeMain,
+          sub: routeSub,
+          leaf: routeLeaf,
+          userId,
+          retryCount,
+          technicalMessage,
+        });
+        setError(technicalMessage);
+        setComponent(null);
         setIsLoading(false);
       }
     }
@@ -386,14 +380,77 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
     return () => {
       cancelled = true;
     };
-  }, [currentRoute, hasAccessLocal, registryEntry, navKey]); // ✅ Ajouter hasAccessLocal et registryEntry dans les dépendances
+  }, [currentRoute, hasAccessLocal, hasAccessPolicy, registryEntry, navKey, retryCount, t]);
+
+  // Logiciel métier : vue "Accès refusé" (message clair, pas de redirection silencieuse)
+  const showAccessDenied =
+    hasAccessPolicy === false ||
+    (!hasAccessLocal && registryEntry && (registryEntry.requiredRole || registryEntry.requiredTenant));
+  if (showAccessDenied) {
+    return (
+      <div className={cn('min-w-0', className)}>
+        <AccessDeniedView onGoHome={() => navigate('overview', null, null)} />
+      </div>
+    );
+  }
+
+  // Quand une entrée registry existe : utiliser ContentSwitch pour charger les données et appeler render({ data })
+  // (évite le contenu vide pour les vues KPIs / synthèses qui dépendent des loaders)
+  if (registryEntry) {
+    return (
+      <div className={cn('min-w-0', className)}>
+        {debug ? (
+          <div className="mb-3 rounded-xl border border-slate-800/60 bg-slate-950/30 px-3 py-2 text-xs text-slate-300">
+            <div className="font-medium text-slate-200">DashboardViewRouter (registry)</div>
+            <div className="mt-1 tabular-nums">
+              Route: <span className="text-slate-100">{currentRoute.main}</span>
+              {currentRoute.sub ? <span className="text-slate-100"> / {currentRoute.sub}</span> : null}
+              {currentRoute.leaf ? <span className="text-slate-100"> / {currentRoute.leaf}</span> : null}
+            </div>
+          </div>
+        ) : null}
+        <ErrorBoundary
+          fallback={
+            <div className="rounded-xl border border-slate-700/60 bg-slate-900/40 p-6 min-h-[200px] flex items-center justify-center">
+              <EmptyState
+                variant="error"
+                title={t('dashboard.empty.loadError.title')}
+                description={t('dashboard.empty.loadError.description')}
+                actionLabel={t('dashboard.empty.loadError.retry')}
+                onAction={() => window.location.reload()}
+              />
+            </div>
+          }
+        >
+          <DashboardContentSwitch />
+        </ErrorBoundary>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
       <div className={cn('min-w-0', className)}>
-        <div className="p-4 sm:p-6 text-gray-400 flex items-center justify-center min-h-[200px] min-w-0">
-          <div className="animate-pulse">Chargement…</div>
-        </div>
+        <ContentLoadingSkeleton showKPIBar showCharts showTable={false} chartCount={2} />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={cn('min-w-0', className)}>
+        <EmptyState
+          variant="warning"
+          title={t('dashboard.empty.loadError.title')}
+          description={t('dashboard.empty.loadError.description')}
+          actionLabel={t('dashboard.empty.loadError.retry')}
+          actionAriaLabel={t('dashboard.empty.loadError.retry')}
+          onAction={() => {
+            setError(null);
+            setComponent(null);
+            setRetryCount((c) => c + 1);
+          }}
+        />
       </div>
     );
   }
@@ -401,9 +458,10 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
   if (!Component) {
     return (
       <div className={cn('min-w-0', className)}>
-        <div className="p-4 sm:p-6 text-yellow-400 min-w-0 overflow-hidden break-words">
-          Aucun composant disponible pour cette route.
-        </div>
+        <EmptyState
+          title={t('dashboard.empty.noContent.title')}
+          description={t('dashboard.empty.noContent.description')}
+        />
       </div>
     );
   }
@@ -442,19 +500,33 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
             {error ? <div className="mt-1 text-rose-300">Erreur: {error}</div> : null}
           </div>
         ) : null}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentRoute.routeKey}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            variants={pageVariants}
-            transition={pageTransition}
-            className="min-w-0"
-          >
-            <Component />
-          </motion.div>
-        </AnimatePresence>
+        <ErrorBoundary
+          fallback={
+            <div className="rounded-xl border border-slate-700/60 bg-slate-900/40 p-6 min-h-[200px] flex items-center justify-center">
+              <EmptyState
+                variant="error"
+                title={t('dashboard.empty.loadError.title')}
+                description={t('dashboard.empty.loadError.description')}
+                actionLabel={t('dashboard.empty.loadError.retry')}
+                onAction={() => window.location.reload()}
+              />
+            </div>
+          }
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentRoute.routeKey}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              variants={pageVariants}
+              transition={pageTransition}
+              className="min-w-0"
+            >
+              <Component />
+            </motion.div>
+          </AnimatePresence>
+        </ErrorBoundary>
       </div>
     </Suspense>
   );

@@ -72,3 +72,5 @@ export function SummaryPointsPage({ data }: SummaryPointsPageProps) {
     </div>
   );
 }
+
+export default SummaryPointsPage;

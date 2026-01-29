@@ -13,3 +13,7 @@ export { useBlockedWorkspaceStore } from './blockedWorkspaceStore';
 export type { BlockedTab, BlockedTabType, BlockedUIState, BlockedStats, BlockedDecisionEntry } from './blockedWorkspaceStore';
 export { useDashboardPermissionsStore } from './dashboardPermissionsStore';
 export type { UserPermissions } from './dashboardPermissionsStore';
+export { useCockpitWsStore } from './cockpitWsStore';
+export type { CockpitWsMessage } from './cockpitWsStore';
+export { useSearchGlobalStore, useRecentSearches } from './searchGlobalStore';
+export type { RecentSearchEntry } from './searchGlobalStore';

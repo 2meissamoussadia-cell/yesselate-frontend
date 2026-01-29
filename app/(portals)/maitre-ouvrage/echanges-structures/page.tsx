@@ -16,6 +16,7 @@ import {
 import {
   EchangesStructuresKPIBar,
   echangesStructuresCategories,
+  EchangesStructuresCommandPalette,
 } from '@/components/features/bmo/echanges-structures/command-center';
 // New 3-level navigation module
 import {
@@ -404,14 +405,7 @@ function EchangesStructuresPageContent() {
         </footer>
       </div>
 
-      {/* Command Palette - TODO: Créer EchangesStructuresCommandPalette */}
-      {commandPaletteOpen && (
-        <div className="fixed inset-0 bg-black/40 z-40 flex items-start justify-center pt-20">
-          <div className="bg-slate-900 border border-slate-700/50 rounded-lg p-4 max-w-md w-full">
-            <p className="text-slate-400 text-sm">Command Palette (à implémenter)</p>
-          </div>
-        </div>
-      )}
+      <EchangesStructuresCommandPalette />
 
       {/* Notifications Panel */}
       {notificationsPanelOpen && (
@@ -480,7 +474,7 @@ function NotificationsPanel({
           </Button>
         </div>
 
-        <div className="flex-1 overflow-y-auto divide-y divide-slate-800/50">
+        <div className="flex-1 overflow-x-hidden overflow-y-auto divide-y divide-slate-800/50">
           {notifications.map((notif) => (
             <div
               key={notif.id}

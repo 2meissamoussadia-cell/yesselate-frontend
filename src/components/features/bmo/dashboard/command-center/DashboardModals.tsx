@@ -46,9 +46,12 @@ import {
   User,
   ArrowRight,
   Eye,
+  Link2,
+  Copy,
 } from 'lucide-react';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { getKPIMappingByLabel } from '@/lib/mappings/dashboardKPIMapping';
+import { useDashboardExport } from '@/modules/dashboard/hooks/useDashboardExport';
 import { KPIHistoryChart } from './charts/KPIHistoryChart';
 import { DistributionChart } from './charts/DistributionChart';
 import { useApiQuery } from '@/lib/api/hooks/useApiQuery';
@@ -151,6 +154,7 @@ export function DashboardModals() {
         {modal.type === 'stats' && <StatsModal />}
         {modal.type === 'help' && <HelpModal />}
         {modal.type === 'export' && <ExportModal />}
+        {modal.type === 'share' && <ShareLinkModal />}
         {modal.type === 'settings' && <SettingsModal />}
         {modal.type === 'shortcuts' && <ShortcutsModal />}
       </TooltipProvider>
@@ -912,35 +916,26 @@ function DecisionDetailModal() {
 
 function ExportModal() {
   const { closeModal } = useDashboardCommandCenterStore();
+  const { exportData } = useDashboardExport();
   const [format, setFormat] = React.useState<'pdf' | 'excel' | 'csv' | 'json'>('pdf');
   const [includeGraphs, setIncludeGraphs] = React.useState(true);
   const [includeDetails, setIncludeDetails] = React.useState(true);
   const [selectedKPIs, setSelectedKPIs] = React.useState<string[]>([]);
   const [period, setPeriod] = React.useState<'month' | 'quarter' | 'year'>('year');
+  const [exporting, setExporting] = React.useState(false);
 
   const handleExport = async () => {
     try {
-      // JSON export is handled client-side, not via API
-      if (format === 'json') {
-        // TODO: Implement client-side JSON export if needed
-        closeModal();
-        return;
-      }
-      
-      const { dashboardAPI } = await import('@/lib/api/pilotage/dashboardClient');
-      await dashboardAPI.export({
-        format: format as 'csv' | 'pdf' | 'excel',
-        sections: selectedKPIs.length > 0 ? selectedKPIs : undefined,
-        period,
-        includeGraphs,
-        includeDetails,
-      });
+      setExporting(true);
+      await exportData(format);
       closeModal();
     } catch (error) {
       const { useLogger } = await import('@/lib/utils/logger');
       const log = useLogger('DashboardModals');
       const err = error instanceof Error ? error : new Error(String(error));
       log.error('Erreur lors de l\'export', err, { format, period });
+    } finally {
+      setExporting(false);
     }
   };
 
@@ -1017,9 +1012,9 @@ function ExportModal() {
         </div>
 
         <div className="flex gap-2">
-          <Button size="sm" className="flex-1" onClick={handleExport}>
+          <Button size="sm" className="flex-1" onClick={handleExport} disabled={exporting}>
             <Download className="w-4 h-4 mr-2" />
-            Exporter
+            {exporting ? 'Export en cours…' : 'Exporter'}
           </Button>
           <Button
             size="sm"
@@ -1030,6 +1025,147 @@ function ExportModal() {
             Annuler
           </Button>
         </div>
+      </div>
+    </ModalWrapper>
+  );
+}
+
+// ============================================
+// Share Link Modal - Partage sécurisé (lien 7 jours)
+// Client : voit uniquement son/ses chantier(s). Associé : voit tout.
+// ============================================
+
+function ShareLinkModal() {
+  const { closeModal } = useDashboardCommandCenterStore();
+  const [role, setRole] = useState<'client' | 'associe'>('client');
+  const [chantierIdsRaw, setChantierIdsRaw] = useState('');
+  const [created, setCreated] = useState<{ url: string; expiresAt: string } | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  const handleCreate = async () => {
+    setError(null);
+    setLoading(true);
+    try {
+      const chantierIds = role === 'client' && chantierIdsRaw.trim()
+        ? chantierIdsRaw.split(/[\s,]+/).map((s) => s.trim()).filter(Boolean)
+        : [];
+      const res = await fetch('/api/share/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          role,
+          chantierIds: role === 'client' ? chantierIds : undefined,
+          expiryDays: 7,
+        }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.message || data.error || 'Erreur lors de la création du lien');
+      }
+      const data = await res.json();
+      setCreated({ url: data.url, expiresAt: data.expiresAt });
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Erreur inconnue');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCopy = async () => {
+    if (!created?.url) return;
+    try {
+      await navigator.clipboard.writeText(created.url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setError('Copie impossible');
+    }
+  };
+
+  return (
+    <ModalWrapper title="Partager (lien 7 jours)" maxWidth="max-w-md" onClose={closeModal}>
+      <div className="space-y-4">
+        <p className="text-sm text-slate-400">
+          Créez un lien sécurisé. <strong className="text-slate-300">Client</strong> : le destinataire ne voit que le(s) chantier(s) choisi(s). <strong className="text-slate-300">Associé</strong> : il voit tout.
+        </p>
+
+        <div className="space-y-2">
+          <p className="text-xs text-slate-500 font-medium uppercase tracking-wider">Rôle du destinataire</p>
+          <div className="flex gap-4">
+            <label className="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
+              <input
+                type="radio"
+                name="share-role"
+                checked={role === 'client'}
+                onChange={() => setRole('client')}
+                className="rounded border-slate-600"
+              />
+              Client (chantiers limités)
+            </label>
+            <label className="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
+              <input
+                type="radio"
+                name="share-role"
+                checked={role === 'associe'}
+                onChange={() => setRole('associe')}
+                className="rounded border-slate-600"
+              />
+              Associé (voit tout)
+            </label>
+          </div>
+        </div>
+
+        {role === 'client' && (
+          <div className="space-y-1">
+            <label className="text-xs text-slate-500">IDs chantiers (optionnel, séparés par des virgules)</label>
+            <input
+              type="text"
+              value={chantierIdsRaw}
+              onChange={(e) => setChantierIdsRaw(e.target.value)}
+              placeholder="CH-001, CH-002"
+              className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-sm text-slate-200 placeholder:text-slate-500"
+            />
+          </div>
+        )}
+
+        {error && (
+          <p className="text-sm text-red-400">{error}</p>
+        )}
+
+        {created ? (
+          <div className="space-y-2 p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+            <p className="text-xs text-slate-500">Lien valide jusqu&apos;au {new Date(created.expiresAt).toLocaleDateString('fr-FR', { dateStyle: 'medium' })}</p>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                readOnly
+                value={created.url}
+                className="flex-1 px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-slate-300 font-mono truncate"
+              />
+              <Button size="sm" variant="outline" onClick={handleCopy} className="border-slate-700 shrink-0">
+                {copied ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex gap-2">
+            <Button size="sm" className="flex-1 gap-2" onClick={handleCreate} disabled={loading}>
+              <Link2 className="h-4 w-4" />
+              {loading ? 'Création…' : 'Créer le lien'}
+            </Button>
+            <Button size="sm" variant="outline" onClick={closeModal} className="border-slate-700">
+              Annuler
+            </Button>
+          </div>
+        )}
+
+        {created && (
+          <Button size="sm" variant="outline" onClick={closeModal} className="w-full border-slate-700">
+            Fermer
+          </Button>
+        )}
       </div>
     </ModalWrapper>
   );

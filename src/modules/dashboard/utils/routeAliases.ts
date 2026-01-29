@@ -19,6 +19,8 @@ export const routeAliases: Record<string, string> = {
   
   // Normaliser "validation" (singulier) vers "validations" (pluriel)
   'performance::validation': 'performance::validations',
+  // Alias "retards" (label) vers "delays" (id technique)
+  'performance::retards': 'performance::delays',
 };
 
 /**

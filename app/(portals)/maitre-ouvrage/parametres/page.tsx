@@ -42,7 +42,7 @@ export default function ParametresPage() {
         </div>
         <div className="px-6 pb-2"><ParametresWorkspaceTabs /></div>
       </header>
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-x-hidden overflow-y-auto min-w-0 max-w-full">
         <div className="flex">
           <aside className="w-64 flex-none p-4 border-r border-slate-700/50 hidden lg:block">
             <nav className="space-y-1">{quickNav.map(item => { const Icon = item.icon; return <button key={item.type} onClick={() => openTab({ type: item.type, id: item.type, title: item.label, icon: '⚙️', data: {}, closable: item.type !== 'general' })} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-slate-300 hover:bg-slate-800/50 transition-colors"><Icon className={cn("w-5 h-5", item.color === 'teal' ? 'text-teal-400' : item.color === 'red' ? 'text-rose-400' : item.color === 'amber' ? 'text-amber-400' : item.color === 'blue' ? 'text-blue-400' : item.color === 'indigo' ? 'text-indigo-400' : 'text-emerald-400')} /><span className="font-medium">{item.label}</span></button>; })}</nav>

@@ -1,54 +1,157 @@
 /**
- * Composant EmptyState pour afficher des états vides
+ * Composant EmptyState - Affiche un état vide avec un message
+ * Source unique pour tout le module dashboard (variants: default, warning, info, error, comingSoon).
  */
 
 'use client';
 
 import React from 'react';
+import { FileQuestion } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Inbox, Search, FilterX } from 'lucide-react';
 
 interface EmptyStateProps {
-  icon?: React.ComponentType<{ className?: string }>;
-  title: string;
+  /** Message à afficher */
+  message?: string;
+  /** Description à afficher (alternative à message) */
   description?: string;
+  /** Titre optionnel */
+  title?: string;
+  /** Icône personnalisée */
+  icon?: React.ComponentType<{ className?: string }>;
+  /** Actions optionnelles à afficher */
+  actions?: React.ReactNode;
+  /** Label du bouton d'action */
+  actionLabel?: string;
+  /** aria-label pour le bouton d'action (accessibilité) */
+  actionAriaLabel?: string;
+  /** Handler pour le bouton d'action */
+  onAction?: () => void;
+  /** Variante du style */
+  variant?: 'default' | 'warning' | 'info' | 'error' | 'comingSoon' | 'search';
+  /** Contenu d'action (ex: bouton "Effacer la recherche") */
   action?: React.ReactNode;
-  variant?: 'default' | 'search' | 'filter';
+  /** Classe CSS personnalisée */
   className?: string;
 }
 
 export function EmptyState({
-  icon: Icon,
-  title,
+  message,
   description,
+  title,
+  icon: Icon = FileQuestion,
+  actions,
   action,
+  actionLabel,
+  actionAriaLabel,
+  onAction,
   variant = 'default',
   className,
 }: EmptyStateProps) {
-  const defaultIcons = {
-    default: Inbox,
-    search: Search,
-    filter: FilterX,
+  const displayMessage = description || message || 'Aucun contenu disponible pour cette section.';
+  const variantStyles: Record<NonNullable<EmptyStateProps['variant']>, { container: string; icon: string; title: string; message: string }> = {
+    default: {
+      container: 'bg-slate-800/40 border-slate-700/40',
+      icon: 'text-slate-400',
+      title: 'text-slate-200',
+      message: 'text-slate-400',
+    },
+    warning: {
+      container: 'bg-amber-500/10 border-amber-500/30',
+      icon: 'text-amber-400',
+      title: 'text-amber-300',
+      message: 'text-amber-400/80',
+    },
+    error: {
+      container: 'bg-red-500/10 border-red-500/30',
+      icon: 'text-red-400',
+      title: 'text-red-300',
+      message: 'text-red-400/80',
+    },
+    info: {
+      container: 'bg-blue-500/10 border-blue-500/30',
+      icon: 'text-blue-400',
+      title: 'text-blue-300',
+      message: 'text-blue-400/80',
+    },
+    comingSoon: {
+      container: 'bg-slate-800/40 border-slate-600/50 border-dashed',
+      icon: 'text-slate-500',
+      title: 'text-slate-300',
+      message: 'text-slate-500',
+    },
+    search: {
+      container: 'bg-slate-800/40 border-slate-700/40',
+      icon: 'text-slate-400',
+      title: 'text-slate-200',
+      message: 'text-slate-400',
+    },
   };
 
-  const DisplayIcon = Icon || defaultIcons[variant];
+  const styles = variantStyles[variant];
+
+  const isAlert = variant === 'warning' || variant === 'error';
 
   return (
     <div
       className={cn(
-        'flex flex-col items-center justify-center py-8 sm:py-12 px-4 text-center min-w-0 overflow-hidden',
-        className
-      )}
+        'flex flex-col items-center justify-center rounded-xl border',
+        'animate-fadeIn',
+        styles.container,
+      className
+    )}
+      style={{ padding: 'clamp(2rem, 3vw, 3rem)', minHeight: '200px' }}
+      role={isAlert ? 'alert' : 'status'}
+      aria-live="polite"
+      aria-labelledby={title ? 'empty-state-title' : undefined}
+      aria-describedby="empty-state-desc"
     >
-      <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-slate-800/50 flex items-center justify-center mb-3 sm:mb-4 flex-shrink-0">
-        <DisplayIcon className="w-6 h-6 sm:w-8 sm:h-8 text-slate-400" />
+      <div className="relative mb-4">
+        <Icon className={cn(styles.icon)} style={{ width: 'clamp(2.5rem, 3.5vw, 3rem)', height: 'clamp(2.5rem, 3.5vw, 3rem)', minWidth: '2.5rem', minHeight: '2.5rem' }} aria-hidden="true" />
+        <div
+          className={cn(
+            'absolute inset-0 rounded-full opacity-20 blur-xl',
+            variant === 'default' && 'bg-slate-400',
+            variant === 'warning' && 'bg-amber-400',
+            variant === 'error' && 'bg-red-400',
+            variant === 'info' && 'bg-blue-400',
+            variant === 'comingSoon' && 'bg-slate-500'
+          )}
+        />
       </div>
-      <h3 className="text-base sm:text-lg font-semibold text-white mb-2 break-words px-2">{title}</h3>
-      {description && (
-        <p className="text-xs sm:text-sm text-slate-300 max-w-md mb-3 sm:mb-4 break-words px-2">{description}</p>
+
+      {title && (
+        <h3 id="empty-state-title" className={cn('font-semibold mb-2', styles.title)} style={{ fontSize: 'clamp(1rem, 1.5vw, 1.125rem)' }}>
+          {title}
+        </h3>
       )}
-      {action && <div className="mt-2 min-w-0">{action}</div>}
+
+      <p id="empty-state-desc" className={cn('text-center max-w-md', styles.message)} style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>
+        {displayMessage}
+      </p>
+
+      {(actions || action || (actionLabel && onAction)) && (
+        <div className="mt-6 flex items-center gap-3">
+          {actions}
+          {action}
+          {actionLabel && onAction && (
+            <button
+              type="button"
+              onClick={onAction}
+              className={cn(
+                'px-4 py-2 rounded-lg border transition-colors',
+                'border-slate-700/50 bg-slate-800/50 text-slate-200',
+                'hover:bg-slate-800/70 hover:border-slate-600/50',
+                'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40',
+                'min-h-[32px]'
+              )}
+              style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}
+              aria-label={actionAriaLabel ?? actionLabel}
+            >
+              {actionLabel}
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }
-

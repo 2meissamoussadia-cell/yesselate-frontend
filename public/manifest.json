@@ -1,12 +1,20 @@
 {
-  "name": "NICE RÉNOVATION - Plateforme de Gestion",
-  "short_name": "NICE RÉNO",
-  "description": "Plateforme digitale de gestion de projets de rénovation et construction au Sénégal",
+  "id": "/",
+  "name": "NICE RÉNOVATION Cockpit DG V5",
+  "short_name": "Cockpit DG V5",
+  "description": "Plateforme digitale Cockpit DG V5 - gestion de projets de rénovation et construction (installable, offline)",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
   "background_color": "#0F0F11",
   "theme_color": "#F97316",
   "orientation": "portrait-primary",
+  "shortcuts": [
+    { "name": "Tableau de bord", "short_name": "Dashboard", "url": "/maitre-ouvrage/dashboard", "icons": [{ "src": "/images/log_yessalate.png", "sizes": "192x192", "type": "image/png", "purpose": "any" }] },
+    { "name": "Cockpit DG", "short_name": "Cockpit", "url": "/maitre-ouvrage/dashboard/cockpit", "icons": [{ "src": "/images/log_yessalate.png", "sizes": "192x192", "type": "image/png", "purpose": "any" }] },
+    { "name": "Calendrier", "short_name": "Calendrier", "url": "/maitre-ouvrage/calendrier", "icons": [{ "src": "/images/log_yessalate.png", "sizes": "192x192", "type": "image/png", "purpose": "any" }] }
+  ],
   "icons": [
     {
       "src": "/images/log_yessalate.png",

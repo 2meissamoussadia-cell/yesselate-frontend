@@ -1,6 +1,6 @@
 /**
- * Hook personnalisé pour la navigation du dashboard avec URL
- * ✅ Version unifiée: Command Center store + URL
+ * Hook personnalisé pour la navigation du dashboard.
+ * ✅ navigate() met à jour uniquement le store ; l'URL est synchronisée par useDashboardCommandCenterUrlSync.
  */
 
 'use client';
@@ -10,8 +10,8 @@ import { useCallback } from 'react';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 
 /**
- * Hook pour naviguer dans le dashboard avec synchronisation URL
- * Met à jour à la fois le store et l'URL
+ * Hook pour naviguer dans le dashboard.
+ * navigate() met à jour le store uniquement ; navigateToUrl() pousse l'URL sans store (cas rare).
  */
 export function useDashboardNavigationWithUrl() {
   const router = useRouter();
@@ -20,31 +20,14 @@ export function useDashboardNavigationWithUrl() {
   const navigateStore = useDashboardCommandCenterStore((s) => s.navigate);
 
   /**
-   * Naviguer vers une route spécifique
-   * Met à jour le store et l'URL
+   * Naviguer : met à jour le store uniquement (URL via useDashboardCommandCenterUrlSync).
    */
   const navigate = useCallback(
     (main: string, sub?: string | null, leaf?: string | null) => {
-      // Mettre à jour le store (source de vérité)
       navigateStore(main as any, sub ?? null, leaf ?? null);
-
-      // Mettre à jour l'URL
-      const params = new URLSearchParams(searchParams.toString());
-      params.set('main', main);
-      if (sub) {
-        params.set('sub', sub);
-      } else {
-        params.delete('sub');
-      }
-      if (leaf) {
-        params.set('leaf', leaf);
-      } else {
-        params.delete('leaf');
-      }
-
-      router.push(`${pathname}?${params.toString()}`);
+      // URL mise à jour par useDashboardCommandCenterUrlSync (évite double push)
     },
-    [router, pathname, searchParams, navigateStore]
+    [navigateStore]
   );
 
   /**

@@ -23,6 +23,7 @@ import {
   TrendingUp,
   BarChart3,
   Settings,
+  FileSpreadsheet,
 } from 'lucide-react';
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -37,14 +38,19 @@ import {
   DashboardUrlSync,
   DashboardViewRouter,
   DashboardBreadcrumbs,
+  ContentLoadingSkeleton,
+  DashboardModulesBar,
 } from '@/modules/dashboard';
 import { DashboardShell } from '@/modules/dashboard/components/shared/DashboardShell';
 
 import { DashboardModals } from '@/components/features/bmo/dashboard/command-center/DashboardModals';
+import { DashboardCommandPalette } from '@/components/features/bmo/dashboard/command-center/DashboardCommandPalette';
 import { getKPIMappingByLabel } from '@/lib/mappings/dashboardKPIMapping';
 import { useDashboardKPIs } from '@/lib/hooks/useDashboardKPIs';
+import { useDashboardExport } from '@/modules/dashboard/hooks/useDashboardExport';
 import { KPIAlertsSystem } from '@/components/features/bmo/dashboard/command-center/KPIAlertsSystem';
 import { useLogger } from '@/lib/utils/logger';
+import { clearCache } from '@/modules/dashboard/api';
 
 /* =========================
    Loading
@@ -101,6 +107,7 @@ function DashboardContent() {
   const toggleSidebar = useDashboardCommandCenterStore((s) => s.toggleSidebar);
   const toggleCommandPalette = useDashboardCommandCenterStore((s) => s.toggleCommandPalette);
   const openModal = useDashboardCommandCenterStore((s) => s.openModal);
+  const invalidateAllViews = useDashboardCommandCenterStore((s) => s.invalidateAllViews);
 
   const { mainCategory, subCategory, subSubCategory } = navigation;
 
@@ -117,7 +124,9 @@ function DashboardContent() {
   const maxRetries = 3;
 
   const [showExportMenu, setShowExportMenu] = useState(false);
+  const [exportingFormat, setExportingFormat] = useState<'pdf' | 'excel' | null>(null);
   const exportMenuRef = useRef<HTMLDivElement | null>(null);
+  const { exportData } = useDashboardExport();
 
   // 🔒 IMPORTANT : si on change de vue, on ferme les menus.
   // (évite un overlay restant ouvert qui "mange" tous les clics)
@@ -236,6 +245,52 @@ function DashboardContent() {
 
   const refreshKPIs = useCallback(() => refreshKPIsInternal(0), [refreshKPIsInternal]);
 
+  const refreshAllKPIsRef = useRef<((retryAttempt?: number) => Promise<void>) | null>(null);
+  /** Rafraîchit tout : cache API, cache des vues, et barre KPIs. */
+  const refreshAllKPIs = useCallback(
+    async (retryAttempt = 0): Promise<void> => {
+      if (isRefreshingRef.current) return;
+      isRefreshingRef.current = true;
+      setIsRefreshing(true);
+      try {
+        clearCache();
+        invalidateAllViews();
+        await refetchKPIsFromAPI?.();
+        if (retryAttempt > 0) setRetryCount(0);
+        setLastUpdate(new Date());
+        setRefreshCount((p) => p + 1);
+      } catch (e) {
+        if (retryAttempt < maxRetries) {
+          const delay = Math.min(1000 * Math.pow(2, retryAttempt), 8000);
+          setRetryCount(retryAttempt + 1);
+          setTimeout(() => refreshAllKPIsRef.current?.(retryAttempt + 1), delay);
+          return;
+        }
+        setRetryCount(0);
+      } finally {
+        if (retryAttempt === 0 || retryAttempt >= maxRetries) {
+          isRefreshingRef.current = false;
+          setIsRefreshing(false);
+        }
+      }
+    },
+    [invalidateAllViews, refetchKPIsFromAPI, maxRetries]
+  );
+  refreshAllKPIsRef.current = refreshAllKPIs;
+
+  const handleExportDirect = useCallback(
+    async (format: 'pdf' | 'excel') => {
+      setShowExportMenu(false);
+      setExportingFormat(format);
+      try {
+        await exportData(format);
+      } finally {
+        setExportingFormat(null);
+      }
+    },
+    [exportData]
+  );
+
   // keyboard shortcuts
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -248,7 +303,7 @@ function DashboardContent() {
       }
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'r') {
         e.preventDefault();
-        refreshKPIs();
+        refreshAllKPIs();
       }
       if (e.key === 'Escape') {
         setShowExportMenu(false);
@@ -256,7 +311,7 @@ function DashboardContent() {
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [toggleCommandPalette, refreshKPIs]);
+  }, [toggleCommandPalette, refreshAllKPIs]);
 
   // page title (simple mais efficace)
   const pageTitle = useMemo(() => {
@@ -267,9 +322,21 @@ function DashboardContent() {
 
   return (
     <>
-      <DashboardUrlSync />
+      {/* useSearchParams() peut suspendre en Next.js : isoler pour ne pas bloquer tout le dashboard */}
+      <Suspense fallback={null}>
+        <DashboardUrlSync />
+      </Suspense>
+      <DashboardCommandPalette />
 
-      <div className="h-full w-full flex min-h-0 bg-slate-950">
+      {/* Lien d'évitement pour l'accessibilité — visible au focus */}
+      <a
+        href="#main-content"
+        className="absolute left-4 top-4 z-[100] -translate-y-full rounded-lg border border-slate-600 bg-slate-800 px-4 py-2 text-sm font-medium text-slate-100 shadow-lg transition-transform focus:translate-y-0 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-950"
+      >
+        Aller au contenu
+      </a>
+
+      <div className="h-full w-full max-w-full min-w-0 flex min-h-0 overflow-x-hidden bg-slate-950">
         {/* SIDEBAR */}
         <DashboardSidebar
           collapsed={sidebarCollapsed}
@@ -291,34 +358,74 @@ function DashboardContent() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-1.5 shrink-0">
+              <div className="flex items-center gap-2 shrink-0">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      onClick={() => refreshAllKPIs()}
+                      disabled={isRefreshing}
+                      className={cn(
+                        'inline-flex items-center gap-2 rounded-lg border min-h-[36px] px-3 py-2',
+                        'border-slate-800/70 bg-slate-900/40 text-xs text-slate-200',
+                        'hover:bg-slate-800/50 hover:border-slate-700/60 transition-colors duration-200',
+                        'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950',
+                        'disabled:opacity-60 disabled:cursor-not-allowed'
+                      )}
+                      aria-label="Rafraîchir tous les KPIs"
+                    >
+                      <RefreshCw className={cn('h-3.5 w-3.5 flex-shrink-0', isRefreshing && 'animate-spin')} />
+                      <span className="hidden sm:inline">{isRefreshing ? 'Actualisation…' : 'Rafraîchir tout'}</span>
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Rafraîchir tous les KPIs et la vue actuelle (Ctrl+R)</p>
+                  </TooltipContent>
+                </Tooltip>
+                <button
+                  type="button"
+                  disabled={!!exportingFormat}
+                  onClick={() => handleExportDirect('pdf')}
+                  className={cn(
+                    'inline-flex items-center gap-2 rounded-lg border min-h-[36px] px-3 py-2',
+                    'border-slate-800/70 bg-slate-900/40 text-xs text-slate-200',
+                    'hover:bg-slate-800/50 hover:border-slate-700/60 transition-colors duration-200',
+                    'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950',
+                    'disabled:opacity-60 disabled:cursor-not-allowed'
+                  )}
+                  title="Exporter la page en PDF"
+                >
+                  <Download className="h-3.5 w-3.5 text-slate-300 flex-shrink-0" />
+                  <span className="hidden sm:inline">Exporter PDF</span>
+                </button>
+
                 <button
                   type="button"
                   className={cn(
-                    'inline-flex items-center gap-1.5 rounded-md border border-slate-800/70',
-                    'bg-slate-900/40 px-2.5 py-1.5 text-xs text-slate-200',
-                    'hover:bg-slate-900/70 transition-colors duration-200',
-                    'focus:outline-none focus:ring-2 focus:ring-blue-500/40'
+                    'inline-flex items-center gap-2 rounded-lg border min-h-[36px] px-3 py-2',
+                    'border-slate-800/70 bg-slate-900/40 text-xs text-slate-200',
+                    'hover:bg-slate-800/50 hover:border-slate-700/60 transition-colors duration-200',
+                    'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950'
                   )}
                   onClick={() => openModal('stats')}
                   title="Pilotage"
                 >
-                  <BarChart3 className="!h-3 !w-3 text-slate-300 flex-shrink-0" style={{ width: '0.75rem', height: '0.75rem', minWidth: '0.75rem', minHeight: '0.75rem', maxWidth: '0.75rem', maxHeight: '0.75rem' }} />
+                  <BarChart3 className="h-3.5 w-3.5 text-slate-300 flex-shrink-0" />
                   <span className="hidden sm:inline">Pilotage</span>
                 </button>
 
                 <button
                   type="button"
                   className={cn(
-                    'inline-flex items-center gap-1.5 rounded-md border border-slate-800/70',
-                    'bg-slate-900/40 px-2.5 py-1.5 text-xs text-slate-200',
-                    'hover:bg-slate-900/70 transition-colors duration-200',
-                    'focus:outline-none focus:ring-2 focus:ring-blue-500/40'
+                    'inline-flex items-center gap-2 rounded-lg border min-h-[36px] px-3 py-2',
+                    'border-slate-800/70 bg-slate-900/40 text-xs text-slate-200',
+                    'hover:bg-slate-800/50 hover:border-slate-700/60 transition-colors duration-200',
+                    'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950'
                   )}
                   onClick={() => openModal('settings')}
                   title="Paramètres"
                 >
-                  <Settings className="!h-3 !w-3 text-slate-300 flex-shrink-0" style={{ width: '0.75rem', height: '0.75rem', minWidth: '0.75rem', minHeight: '0.75rem', maxWidth: '0.75rem', maxHeight: '0.75rem' }} />
+                  <Settings className="h-3.5 w-3.5 text-slate-300 flex-shrink-0" />
                   <span className="hidden sm:inline">Paramètres</span>
                 </button>
               </div>
@@ -326,6 +433,9 @@ function DashboardContent() {
           }
           subnav={<DashboardSubNavigation stats={stats} />}
         >
+
+          {/* Barre Modules métier type 3P — toujours visible */}
+          <DashboardModulesBar />
 
           {/* KPI BAR (plus sobre, plus "produit") */}
           <div
@@ -349,12 +459,12 @@ function DashboardContent() {
               </div>
 
               <div className="flex items-center gap-2">
-                {/* Refresh */}
+                {/* Refresh (même comportement que « Rafraîchir tout » du header) */}
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <button
                       type="button"
-                      onClick={refreshKPIs}
+                      onClick={() => refreshAllKPIs()}
                       disabled={isRefreshing}
                       className={cn(
                         'p-2 rounded-lg border border-slate-800/70 bg-slate-900/40',
@@ -369,7 +479,7 @@ function DashboardContent() {
                   </TooltipTrigger>
                   <TooltipContent>
                     <div className="space-y-1">
-                      <div>Actualiser (Ctrl+R)</div>
+                      <div>Actualiser tout (Ctrl+R)</div>
                       {refreshCount > 0 && <div className="text-xs text-slate-400">{refreshCount} actualisation(s)</div>}
                       {retryCount > 0 && <div className="text-xs text-amber-300">Tentative {retryCount}/{maxRetries}</div>}
                     </div>
@@ -402,6 +512,25 @@ function DashboardContent() {
                     <div className="absolute right-0 top-full mt-2 w-56 z-50 rounded-xl border border-slate-800/70 bg-slate-950/95 shadow-2xl backdrop-blur-xl overflow-hidden">
                       <button
                         type="button"
+                        disabled={!!exportingFormat}
+                        onClick={() => handleExportDirect('pdf')}
+                        className="w-full px-3 py-2.5 text-left text-xs text-slate-200 hover:bg-slate-900/60 flex items-center gap-2 disabled:opacity-60"
+                      >
+                        <FileText className="h-3 w-3" />
+                        Export PDF
+                      </button>
+                      <button
+                        type="button"
+                        disabled={!!exportingFormat}
+                        onClick={() => handleExportDirect('excel')}
+                        className="w-full px-3 py-2.5 text-left text-xs text-slate-200 hover:bg-slate-900/60 flex items-center gap-2 disabled:opacity-60"
+                      >
+                        <FileSpreadsheet className="h-3 w-3" />
+                        Export Excel (graphiques)
+                      </button>
+                      <div className="h-px bg-slate-800/70" />
+                      <button
+                        type="button"
                         onClick={() => {
                           openModal('export');
                           setShowExportMenu(false);
@@ -421,6 +550,18 @@ function DashboardContent() {
                       >
                         <BarChart3 className="h-3 w-3" />
                         Export JSON
+                      </button>
+                      <div className="h-px bg-slate-800/70" />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          openModal('share');
+                          setShowExportMenu(false);
+                        }}
+                        className="w-full px-3 py-2.5 text-left text-xs text-slate-200 hover:bg-slate-900/60 flex items-center gap-2"
+                      >
+                        <Activity className="h-3 w-3" />
+                        Partager (lien 7 jours)
                       </button>
                       <div className="h-px bg-slate-800/70" />
                       <button
@@ -460,7 +601,7 @@ function DashboardContent() {
                 <div className="text-xs text-slate-500 mt-1">Affiner la recherche ou effacer le filtre.</div>
               </div>
             ) : (
-              <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
+              <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-dashboard">
                 {topKpis.map((kpi) => (
                   <KPICardPro key={kpi.label} kpi={kpi} onClick={() => handleKPIClick(kpi)} />
                 ))}
@@ -495,7 +636,7 @@ function DashboardContent() {
           {/* CONTENT */}
           <ErrorBoundary>
             <div key={`${mainCategory}-${subCategory}-${subSubCategory}`} className="animate-fadeIn">
-              <Suspense fallback={<ContentLoadingSkeleton />}>
+              <Suspense fallback={<ContentLoadingSkeleton showCharts={true} showTable={false} kpiCount={6} />}>
                 <DashboardViewRouter />
               </Suspense>
             </div>
@@ -539,9 +680,9 @@ const KPICardPro = memo(function KPICardPro({
           className={cn(
             'min-w-[220px] sm:min-w-[260px] rounded-2xl border',
             'px-4 py-3 text-left',
-            'transition-all duration-200',
-            'hover:translate-y-[-1px] hover:shadow-xl hover:shadow-black/25',
-            'focus:outline-none focus:ring-2 focus:ring-blue-500/40',
+            'transition-all duration-200 ease-out',
+            'hover:translate-y-[-2px] hover:shadow-xl hover:shadow-black/20',
+            'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950',
             toneClasses
           )}
           aria-label={`${kpi.label}: ${kpi.value} (${kpi.delta})`}
@@ -576,24 +717,6 @@ const KPICardPro = memo(function KPICardPro({
 });
 
 KPICardPro.displayName = 'KPICardPro';
-
-/* =========================
-   Skeleton (simple)
-========================= */
-
-function ContentLoadingSkeleton() {
-  return (
-    <div className="space-y-4 animate-pulse">
-      <div className="h-8 w-64 rounded-xl bg-slate-900/50 border border-slate-800/60" />
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="h-40 rounded-2xl bg-slate-900/40 border border-slate-800/60" />
-        ))}
-      </div>
-      <div className="h-80 rounded-2xl bg-slate-900/40 border border-slate-800/60" />
-    </div>
-  );
-}
 
 function formatTimeAgo(date: Date): string {
   const now = new Date();

@@ -483,7 +483,7 @@ export default function SubstitutionPage() {
         />
 
         {/* Main Content */}
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto min-w-0 max-w-full">
           <div className="p-6">
             <SubstitutionContentRouter
               mainCategory={activeCategory as SubstitutionMainCategory}

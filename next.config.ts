@@ -58,6 +58,20 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      // PWA: service worker ne doit pas être mis en cache pour recevoir les mises à jour
+      {
+        source: "/sw-calendrier.js",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "application/javascript; charset=utf-8",
+          },
+          {
+            key: "Cache-Control",
+            value: "no-cache, no-store, must-revalidate",
+          },
+        ],
+      },
     ];
   },
 

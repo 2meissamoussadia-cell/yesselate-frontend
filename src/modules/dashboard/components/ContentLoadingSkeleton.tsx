@@ -49,17 +49,17 @@ interface ContentLoadingSkeletonProps {
 }
 
 /**
- * Skeleton pour une carte KPI
+ * Skeleton pour une carte KPI (shimmer discret)
  */
 function KPICardSkeleton() {
   return (
-    <div className="bg-slate-800/40 rounded-xl border border-slate-700/50 p-4 animate-pulse">
+    <div className="rounded-2xl border border-slate-800/60 bg-slate-900/30 p-5 overflow-hidden">
       <div className="flex items-center justify-between mb-3">
-        <div className="h-4 w-24 bg-slate-700/50 rounded" />
-        <div className="h-6 w-6 bg-slate-700/50 rounded" />
+        <div className="h-4 w-24 rounded-lg dashboard-skeleton-shimmer" />
+        <div className="h-10 w-10 rounded-xl dashboard-skeleton-shimmer" />
       </div>
-      <div className="h-8 w-20 bg-slate-700/50 rounded mb-2" />
-      <div className="h-3 w-16 bg-slate-700/30 rounded" />
+      <div className="h-8 w-28 rounded-lg dashboard-skeleton-shimmer mb-2" />
+      <div className="h-3 w-16 rounded dashboard-skeleton-shimmer" />
     </div>
   );
 }
@@ -69,16 +69,9 @@ function KPICardSkeleton() {
  */
 function ChartSkeleton() {
   return (
-    <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-6 animate-pulse">
-      <div className="h-6 w-48 bg-slate-700/50 rounded mb-4" />
-      <div className="h-64 bg-slate-700/30 rounded">
-        {/* Lignes de grille simulées */}
-        <div className="h-full flex flex-col justify-between p-4">
-          {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-px bg-slate-700/20 w-full" />
-          ))}
-        </div>
-      </div>
+    <div className="rounded-2xl border border-slate-800/60 bg-slate-950/35 p-6 overflow-hidden">
+      <div className="h-6 w-48 rounded-lg dashboard-skeleton-shimmer mb-4" />
+      <div className="h-64 rounded-xl dashboard-skeleton-shimmer" />
     </div>
   );
 }
@@ -88,21 +81,19 @@ function ChartSkeleton() {
  */
 function TableSkeleton({ rows = 5 }: { rows?: number }) {
   return (
-    <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl overflow-hidden animate-pulse">
-      {/* Header */}
-      <div className="bg-slate-800/50 border-b border-slate-700/50 p-4">
+    <div className="rounded-2xl border border-slate-800/60 bg-slate-950/35 overflow-hidden">
+      <div className="border-b border-slate-800/60 p-4">
         <div className="grid grid-cols-5 gap-4">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-4 bg-slate-700/50 rounded" />
+            <div key={i} className="h-4 rounded dashboard-skeleton-shimmer" />
           ))}
         </div>
       </div>
-      {/* Rows */}
-      <div className="divide-y divide-slate-700/30">
+      <div className="divide-y divide-slate-800/40">
         {[...Array(rows)].map((_, i) => (
           <div key={i} className="p-4 grid grid-cols-5 gap-4">
             {[...Array(5)].map((_, j) => (
-              <div key={j} className="h-4 bg-slate-700/30 rounded" />
+              <div key={j} className="h-4 rounded dashboard-skeleton-shimmer" />
             ))}
           </div>
         ))}
@@ -136,9 +127,9 @@ export function ContentLoadingSkeleton({
   className,
 }: ContentLoadingSkeletonProps = {}) {
   return (
-    <div className={cn('space-y-6', className)}>
+    <div className={cn('space-y-6 animate-fadeIn', className)}>
       {/* Header skeleton */}
-      <div className="h-8 w-1/3 bg-slate-800/50 rounded animate-pulse" />
+      <div className="h-8 max-w-xs rounded-xl dashboard-skeleton-shimmer" />
 
       {/* KPI Cards grid skeleton */}
       {showKPIBar && (

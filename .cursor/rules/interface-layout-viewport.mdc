@@ -1,0 +1,18 @@
+# Interface — Layout et viewport (logiciel métier)
+
+## Règle : pas de scroll horizontal au niveau page
+
+1. **Toute page** du portail maître d’ouvrage doit rester dans la largeur de l’écran.
+2. **Conteneur racine** de la page : utiliser `min-w-0 max-w-full overflow-x-hidden` (ou la classe `.viewport-contained` de `globals.css`).
+3. **Zone de scroll principale** : toujours `overflow-x-hidden overflow-y-auto` (pas de `overflow-auto` seul ni de `overflow-y-auto` sans `overflow-x-hidden`).
+4. **Contenu large** (tableaux, grilles, bandeaux d’actions) : soit en **modal / panneau / page suivante**, soit dans un conteneur avec `overflow-x-auto` **à l’intérieur** d’un parent en `overflow-x-hidden`.
+
+## Pattern recommandé pour une page du portail
+
+- Racine : `min-w-0 max-w-full overflow-x-hidden` (ou `.viewport-contained`).
+- Zone scroll : `flex-1 min-h-0 min-w-0 max-w-full overflow-x-hidden overflow-y-auto`.
+
+## Référence
+
+- `docs/ANALYSE_COHERENCE_INTERFACE_MODULES.md`
+- `app/globals.css` (classe `.viewport-contained`)

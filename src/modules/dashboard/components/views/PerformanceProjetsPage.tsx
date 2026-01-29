@@ -283,3 +283,5 @@ export const PerformanceProjetsPage = memo(function PerformanceProjetsPage() {
     </DashboardPageLayout>
   );
 });
+
+export default PerformanceProjetsPage;

@@ -1247,7 +1247,7 @@ function AnalyticsPageContent() {
             Zone principale d'affichage du contenu
             ============================================ */}
         <main className="flex-1 overflow-hidden">
-          <div ref={scrollRef} className="h-full overflow-y-auto">
+          <div ref={scrollRef} className="h-full overflow-x-hidden overflow-y-auto">
             <AnalyticsErrorBoundary
               showDetails={process.env.NODE_ENV === 'development'}
               onError={(error, errorInfo) => {
@@ -1585,7 +1585,7 @@ function NotificationsPanel({
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto divide-y divide-slate-800/50">
+        <div className="flex-1 overflow-x-hidden overflow-y-auto divide-y divide-slate-800/50">
           {notifications.map((notif) => (
             <div
               key={notif.id}

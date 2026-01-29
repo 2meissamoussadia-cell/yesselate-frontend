@@ -37,11 +37,29 @@
   --muted: 170 180 200;
 }
 
+/* Cadre viewport : pas de scroll horizontal (comportement logiciel métier type Odoo) */
+html {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
 /* Application des couleurs au body */
 body {
   background-color: rgb(var(--bg));
   color: rgb(var(--text));
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+/* Utilitaire : tout conteneur de page doit rester dans la largeur écran */
+.viewport-contained {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Mobile: défilement fluide iOS / Android (Semaine 3 responsive) */
+.scroll-touch {
+  -webkit-overflow-scrolling: touch;
 }
 
 /* ====================================

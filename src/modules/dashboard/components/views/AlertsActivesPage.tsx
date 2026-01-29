@@ -261,3 +261,5 @@ export const AlertsActivesPage = memo(function AlertsActivesPage() {
     </DashboardPageLayout>
   );
 });
+
+export default AlertsActivesPage;

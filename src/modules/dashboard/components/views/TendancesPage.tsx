@@ -445,3 +445,5 @@ export const TendancesPage = memo(function TendancesPage() {
   );
 });
 
+export default TendancesPage;
+

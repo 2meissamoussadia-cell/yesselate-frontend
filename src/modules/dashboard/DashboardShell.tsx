@@ -1,6 +1,11 @@
 /**
- * Shell principal du Dashboard
- * Assemble tous les composants de navigation et d'affichage
+ * DashboardShell (shell complet)
+ *
+ * Assemble Sidebar + zone principale avec KPIBar, Breadcrumbs, SubNavigation, ViewRouter.
+ * À utiliser pour une page dashboard autonome (tout-en-un).
+ *
+ * Pour un layout seul (header + subnav + contenu, sans sidebar), utiliser
+ * DashboardShell depuis components/shared/DashboardShell (alias DashboardShellShared).
  */
 
 'use client';

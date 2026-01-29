@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   icons: {
     icon: "/favicon.ico",
-    apple: "/icons/apple-touch-icon.png",
+    apple: "/images/log_yessalate.png",
   },
 };
 
@@ -37,7 +37,7 @@ export const viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#2563eb",
+  themeColor: "#F97316",
 };
 
 export default function RootLayout({

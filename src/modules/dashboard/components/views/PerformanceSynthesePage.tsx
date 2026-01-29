@@ -236,3 +236,5 @@ export const PerformanceSynthesePage = memo(function PerformanceSynthesePage() {
     </DashboardPageLayout>
   );
 });
+
+export default PerformanceSynthesePage;

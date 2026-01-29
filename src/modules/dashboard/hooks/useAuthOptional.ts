@@ -7,7 +7,7 @@
 'use client';
 
 import { useContext } from 'react';
-import { AuthContext } from '@/contexts/AuthContext';
+import { AuthContext } from '@lib-root/contexts/AuthContext';
 
 /**
  * Hook optionnel pour obtenir le contexte d'authentification

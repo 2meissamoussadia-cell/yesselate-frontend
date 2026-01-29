@@ -273,3 +273,5 @@ export const DelaysCritiquesPage = memo(function DelaysCritiquesPage() {
     </DashboardPageLayout>
   );
 });
+
+export default DelaysCritiquesPage;

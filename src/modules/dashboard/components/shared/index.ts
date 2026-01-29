@@ -28,6 +28,8 @@ export { SparklineChart } from './SparklineChart';
 
 export { SegmentedTabs } from './SegmentedTabs';
 
+export { EmptyState } from './EmptyState';
+
 export { getTrendIcon, getTrendColor } from './getTrendIcon';
 export type { TrendType } from './getTrendIcon';
 
@@ -49,3 +51,15 @@ export { DashboardDataTable } from './DashboardDataTable';
 export { CardList } from './CardList';
 export type { DashboardDataTableProps } from './DashboardDataTable';
 export type { CardListProps } from './CardList';
+
+export { ExportPDFButton } from './ExportPDFButton';
+export type { ExportPDFButtonProps } from './ExportPDFButton';
+
+export { BeforeAfterSlider } from './BeforeAfterSlider';
+export type { BeforeAfterSliderProps } from './BeforeAfterSlider';
+
+export { FinancesGlobalesWidget } from './FinancesGlobalesWidget';
+export type { FinancesGlobalesWidgetProps } from './FinancesGlobalesWidget';
+
+export { CashflowChart } from './CashflowChart';
+export type { CashflowChartProps } from './CashflowChart';

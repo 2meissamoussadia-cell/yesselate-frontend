@@ -6,7 +6,6 @@
 'use client';
 
 import React, { useCallback, memo } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { ChevronRight, Sparkles } from 'lucide-react';
 import {
@@ -44,26 +43,11 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
   showBreadcrumbs = false,
 }: DashboardSubNavigationProps) {
   const log = useLogger('DashboardSubNavigation');
-  const router = useRouter();
-  const params = useSearchParams();
-  
+
   const main = useDashboardCommandCenterStore((state) => state.navigation.mainCategory);
   const sub = useDashboardCommandCenterStore((state) => state.navigation.subCategory);
   const leaf = useDashboardCommandCenterStore((state) => state.navigation.subSubCategory);
   const navigate = useDashboardCommandCenterStore((state) => state.navigate);
-
-  const pushRoute = useCallback(
-    (next: { main: string; sub: string | null; leaf: string | null }) => {
-      const sp = new URLSearchParams(params.toString());
-      sp.set('main', next.main);
-      if (next.sub) sp.set('sub', next.sub);
-      else sp.delete('sub');
-      if (next.leaf) sp.set('leaf', next.leaf);
-      else sp.delete('leaf');
-      router.push(`/maitre-ouvrage/dashboard?${sp.toString()}`);
-    },
-    [router, params]
-  );
 
   // Phase P10: Charger les permissions depuis le store Zustand
   useDashboardPermissions(); // Charge les permissions si nécessaire
@@ -118,7 +102,7 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
     return 'default';
   }, []);
 
-  // ✅ Handler pour niveau 2 (sub-category) avec validation
+  // ✅ Handler niveau 2 : uniquement navigate() (Store). URL mise à jour par useDashboardCommandCenterUrlSync.
   const handleSubCategoryClick = useCallback((subCatId: string) => {
     log.debug('Clic niveau 2', { subCatId, main });
     
@@ -163,10 +147,10 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
     );
     
     navigate(currentMain as any, subCatId, defaultLeaf);
-    pushRoute({ main: currentMain, sub: subCatId, leaf: defaultLeaf || null });
-  }, [main, sub, leaf, navigate, log, pushRoute]);
+    // URL mise à jour par useDashboardCommandCenterUrlSync (Store -> URL)
+  }, [main, sub, leaf, navigate, log]);
 
-  // ✅ Handler pour niveau 3 (sub-sub-category / leaf) avec validation
+  // ✅ Handler niveau 3 (leaf) : uniquement navigate() (Store). URL mise à jour par useDashboardCommandCenterUrlSync.
   const handleSubSubCategoryClick = useCallback((leafId: string) => {
     log.debug('Clic niveau 3', { leafId, main, sub });
     
@@ -198,8 +182,8 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
     );
     
     navigate(currentMain as any, sub, leafId);
-    pushRoute({ main: currentMain, sub, leaf: leafId });
-  }, [main, sub, leaf, navigate, log, pushRoute]);
+    // URL mise à jour par useDashboardCommandCenterUrlSync (Store -> URL)
+  }, [main, sub, leaf, navigate, log]);
 
   return (
     <div className="bg-slate-950/20 border-b border-slate-800/40 backdrop-blur relative overflow-hidden">

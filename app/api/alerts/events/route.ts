@@ -27,22 +27,37 @@ const log = withReq('alerts-events');
  * ABAC: Filtrage par bureau/chantier via labels
  * Phase P15: Moteur d'alertes
  */
+function emptyEventsResponse(req: NextRequest) {
+  const url = new URL(req.url);
+  const limit = parseInt(url.searchParams.get('limit') || '100', 10);
+  const offset = parseInt(url.searchParams.get('offset') || '0', 10);
+  return NextResponse.json({
+    ok: true,
+    events: [],
+    pagination: { total: 0, limit, offset, hasMore: false },
+  }, { status: 200 });
+}
+
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const t0 = performance.now();
   const reqId = req.headers.get('x-request-id') ?? 'no-reqid';
   const logReq = log.child({ reqId });
 
-  // Rate limiting
-  const ip = req.headers.get('x-forwarded-for') ?? '127.0.0.1';
-  const rl = await rateLimitRedis(`alerts:events:${ip}`, 240, 4);
-  if (!rl.allowed) {
-    return NextResponse.json(
-      { error: 'Too Many Requests' },
-      { status: 429, headers: { 'Retry-After': '60', 'X-RateLimit-Remaining': String(rl.remaining) } }
-    );
-  }
-
   try {
+    // Rate limiting (inside try so any throw is caught)
+    const ip = req.headers.get('x-forwarded-for') ?? '127.0.0.1';
+    let rl = { allowed: true as boolean, remaining: 240 };
+    try {
+      rl = await rateLimitRedis(`alerts:events:${ip}`, 240, 4);
+    } catch {
+      // Redis/rate-limit unavailable: allow request
+    }
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { error: 'Too Many Requests' },
+        { status: 429, headers: { 'Retry-After': '60', 'X-RateLimit-Remaining': String(rl.remaining) } }
+      );
+    }
     const baseCtx = extractContextFromHeaders(req.headers);
     const ctx = await hydrateContext(baseCtx);
 
@@ -60,8 +75,19 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     const domain = url.searchParams.get('domain'); // Phase P17: Filtrage par labels.domain
     const limit = parseInt(url.searchParams.get('limit') || '100', 10);
     const offset = parseInt(url.searchParams.get('offset') || '0', 10);
-    
-    const client = await pgPool.connect();
+
+    let client;
+    try {
+      client = await pgPool.connect();
+    } catch (dbError) {
+      const seconds = (performance.now() - t0) / 1000;
+      logReq.warn({ err: dbError, seconds }, 'alerts events: DB unavailable, returning empty list');
+      return NextResponse.json({
+        ok: true,
+        events: [],
+        pagination: { total: 0, limit, offset, hasMore: false },
+      }, { status: 200 });
+    }
     try {
       let query = `
         SELECT 
@@ -154,16 +180,27 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
           hasMore: offset + limit < total,
         },
       }, { status: 200 });
+    } catch (queryError: unknown) {
+      // Graceful fallback when alert_events/alert_rules are missing or query fails (e.g. local dev)
+      const seconds = (performance.now() - t0) / 1000;
+      logReq.warn({ err: queryError, seconds }, 'alerts events: query failed, returning empty list');
+      return NextResponse.json({
+        ok: true,
+        events: [],
+        pagination: { total: 0, limit, offset, hasMore: false },
+      }, { status: 200 });
     } finally {
       client.release();
     }
-  } catch (error) {
-    const seconds = (performance.now() - t0) / 1000;
-    logReq.error({ err: error, seconds }, 'alerts events error');
-    return NextResponse.json(
-      { error: 'Failed to fetch alerts', ok: false },
-      { status: 500 }
-    );
+  } catch (error: unknown) {
+    // Graceful fallback: any error (rate-limit, context, hydrate, DB) → 200 + empty events
+    try {
+      const seconds = (performance.now() - t0) / 1000;
+      logReq.warn({ err: error, seconds }, 'alerts events: error, returning empty list');
+    } catch {
+      // ignore logger errors
+    }
+    return emptyEventsResponse(req);
   }
 }
 

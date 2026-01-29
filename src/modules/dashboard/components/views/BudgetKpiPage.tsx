@@ -23,11 +23,12 @@ import {
   Search,
 } from 'lucide-react';
 
-import { SectionTitle, DataCard, KpiStatCard } from '@/components/features/bmo/dashboard/components';
+import { DataCard, KpiStatCard } from '@/components/features/bmo/dashboard/components';
 import type { KpiStatCardProps } from '@/components/features/bmo/dashboard/components/KpiStatCard';
 import { EnterpriseBadge } from '../shared/EnterpriseBadge';
 import { parseTrendPercent, formatCurrency, normalizeKPIColor } from '@lib-root/dashboard/kpi';
 
+import { getAppForCategory, getBudgetStatut, getBudgetAlertsFromData } from '../../domain';
 import { 
   DashboardPageLayout, 
   DashboardSection, 
@@ -79,10 +80,24 @@ type BudgetKPI = {
   onClick: () => void;
 };
 
-export function BudgetKpiPage() {
+interface BudgetKpiPageProps {
+  data?: { budget?: { total?: number; consomme?: number; reste?: number; pourcentage?: number } };
+}
+
+export function BudgetKpiPage({ data: apiData }: BudgetKpiPageProps = {}) {
   const [q, setQ] = useState('');
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [selectedKpi, setSelectedKpi] = useState<BudgetKPI | null>(null);
+
+  // Logique métier (domaine gouvernance) : statut et alertes budget
+  const budgetDomain = useMemo(() => {
+    const raw = apiData?.budget ?? { total: 4_200_000_000, consomme: 3_100_000_000, reste: 1_100_000_000, pourcentage: 74 };
+    const statut = getBudgetStatut(raw);
+    const alertes = getBudgetAlertsFromData(raw);
+    return { statut, alertes, raw };
+  }, [apiData?.budget]);
+
+  const appMeta = useMemo(() => getAppForCategory('performance'), []);
 
   // Helpers centralisés importés depuis colorMapping.ts
 
@@ -245,9 +260,36 @@ export function BudgetKpiPage() {
   }, [lastUpdate]);
 
   return (
-    <div className="relative">
+    <div className="relative min-w-0 max-w-full overflow-x-hidden">
       <MockDataIndicator message="Données mockées - Phase 1 (Backend en attente)" />
       <DashboardPageLayout maxWidth="xl" padding="md">
+      {/* Logique métier (Odoo-style) : App → Modèle → Workflow Budget */}
+      <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+        <span className="inline-flex items-center gap-1.5 rounded-md border border-slate-800/60 bg-slate-900/40 px-2 py-1">
+          <span className="font-medium text-slate-400">App</span>
+          <span>{appMeta.name}</span>
+        </span>
+        <span className="text-slate-600">•</span>
+        <span className="inline-flex items-center gap-1.5 rounded-md border border-slate-800/60 bg-slate-900/40 px-2 py-1">
+          <span className="font-medium text-slate-400">Modèle</span>
+          <span>Budget</span>
+        </span>
+        <span className="text-slate-600">•</span>
+        <span className="inline-flex items-center gap-1.5 rounded-md border border-slate-800/60 bg-slate-900/40 px-2 py-1">
+          <span className="font-medium text-slate-400">Statut (domaine)</span>
+          <span>{budgetDomain.statut}</span>
+        </span>
+        {budgetDomain.alertes.length > 0 && (
+          <>
+            <span className="text-slate-600">•</span>
+            <span className="inline-flex items-center gap-1.5 rounded-md border border-amber-500/30 bg-amber-500/10 px-2 py-1 text-amber-300">
+              <span className="font-medium">Alertes</span>
+              <span>{budgetDomain.alertes.length}</span>
+            </span>
+          </>
+        )}
+      </div>
+
       {/* Header avec recherche et export */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
@@ -255,7 +297,7 @@ export function BudgetKpiPage() {
             KPIs Budget
           </h1>
           <p className="text-slate-400 text-sm mt-1">
-            Indicateurs budgétaires et financiers — lecture instantanée + drill-down
+            Indicateurs budgétaires (règles domaine: gouvernance/budget) — lecture instantanée + drill-down
           </p>
         </div>
 
@@ -298,7 +340,7 @@ export function BudgetKpiPage() {
               subtitle={kpi.description}
               icon={kpi.icon}
               tone={normalizeKPIColor(kpi.color) as KpiStatCardProps['tone']}
-              trend={parseTrendPercent(kpi.trend as string | number)}
+              trend={typeof kpi.trend === 'number' ? kpi.trend : parseTrendPercent(kpi.trend ?? undefined)}
               trendDirection={kpi.trendType || 'neutral'}
               tooltip={kpi.description}
               onClick={() => handleKPIClick(kpi)}

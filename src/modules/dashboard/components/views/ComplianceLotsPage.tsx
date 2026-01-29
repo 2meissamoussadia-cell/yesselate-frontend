@@ -101,3 +101,5 @@ export const ComplianceLotsPage = memo(function ComplianceLotsPage() {
     </DashboardPageLayout>
   );
 });
+
+export default ComplianceLotsPage;

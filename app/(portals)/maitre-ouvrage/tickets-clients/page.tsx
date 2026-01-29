@@ -815,7 +815,7 @@ function TicketsClientsPageContent() {
 
         {/* Main Content */}
         <main className="flex-1 overflow-hidden">
-          <div className="h-full overflow-y-auto">
+          <div className="h-full overflow-x-hidden overflow-y-auto">
             <TicketsContentRouter
               mainCategory={navigation.mainCategory as TicketsMainCategory}
               subCategory={navigation.subCategory}

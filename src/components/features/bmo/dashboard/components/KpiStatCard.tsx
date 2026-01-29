@@ -2,6 +2,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { ChevronRight } from 'lucide-react';
+import { colors, borderRadius, transitions, interactive } from '@/modules/dashboard/utils/dashboardDesignTokens';
 
 type Tone = 'slate' | 'blue' | 'emerald' | 'amber' | 'rose' | 'violet' | 'cyan';
 
@@ -66,7 +67,7 @@ export interface KpiStatCardProps {
   title: string;
   value: React.ReactNode;
   subtitle?: string;
-  icon?: React.ElementType;
+  icon?: React.ComponentType<{ className?: string }>;
   tone?: Tone;
   trend?: number;
   trendDirection?: KpiTrendDirection;
@@ -105,14 +106,18 @@ export function KpiStatCard({
       type="button"
       onClick={onClick}
       className={cn(
-        // Surface "métier" : sobre, lisible, pas de dégradés flashy
-        'group relative w-full overflow-hidden rounded-2xl p-5 text-left',
-        'bg-slate-950/35 ring-1 ring-slate-800/60 backdrop-blur',
-        'transition-all duration-200',
-        'hover:bg-slate-900/45 hover:ring-slate-700/60',
-        'focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500/60',
-        'min-h-[120px] flex flex-col', // Hauteur minimale pour cohérence visuelle
-        '[&>svg]:hidden', // Masquer tout SVG flottant
+        'group relative w-full overflow-hidden p-5 text-left',
+        borderRadius.lg,
+        colors.bg.card,
+        'ring-1',
+        colors.border.default,
+        'backdrop-blur',
+        transitions.standard,
+        interactive.hover.bg,
+        'hover:ring-slate-700/60 hover:shadow-lg hover:shadow-black/10',
+        'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950',
+        'min-h-[120px] flex flex-col min-w-0',
+        '[&>svg]:hidden',
         className
       )}
     >
@@ -122,7 +127,7 @@ export function KpiStatCard({
       <div className="flex items-start gap-3 flex-1">
         {Icon ? (
           <div className={cn('mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl', t.iconWrap)}>
-            <Icon className={cn('h-5 w-5', t.icon)} />
+            <Icon {...({ className: cn('h-5 w-5', t.icon) } as { className?: string })} />
           </div>
         ) : null}
 

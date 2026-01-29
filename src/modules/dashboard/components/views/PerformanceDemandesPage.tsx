@@ -265,3 +265,5 @@ export const PerformanceDemandesPage = memo(function PerformanceDemandesPage() {
     </DashboardPageLayout>
   );
 });
+
+export default PerformanceDemandesPage;

@@ -64,6 +64,8 @@ export interface ModalState {
 export interface DashboardCommandCenterStore {
   // Navigation
   navigation: DashboardNavigation;
+  /** Timestamp du dernier navigate() (pour la sync URL : ne pas réappliquer l’URL tout de suite). */
+  lastNavigatedAt: number;
   navigate: (
     mainCategory: DashboardMainCategory, 
     subCategory?: string | null, 
@@ -139,6 +141,10 @@ export interface DashboardCommandCenterStore {
   // Cache management
   cache: Record<string, CacheEntry>;
   setCache: (key: string, entry: CacheEntry) => void;
+  /** Invalide tout le cache des vues et déclenche un rechargement des données (refresh global KPIs). */
+  invalidateAllViews: () => void;
+  /** Timestamp incrémenté à chaque invalidateAllViews pour forcer le rechargement du ContentSwitch. */
+  viewDataRefreshTrigger: number;
 }
 
 // ============================================
@@ -148,12 +154,13 @@ export interface DashboardCommandCenterStore {
 export const useDashboardCommandCenterStore = create<DashboardCommandCenterStore>()(
   devtools(
     (set, get) => ({
-      // Initial navigation state
+      // Initial navigation state — Cockpit DG par défaut (sphères 3D santé chantiers)
       navigation: {
         mainCategory: 'overview',
         subCategory: 'summary',
-        subSubCategory: 'dashboard',
+        subSubCategory: 'cockpit',
       },
+      lastNavigatedAt: 0,
       navigationHistory: [],
 
       // Cache initial
@@ -197,36 +204,16 @@ export const useDashboardCommandCenterStore = create<DashboardCommandCenterStore
           subSubCategory: subSubCategory || null,
         };
 
-        // Log pour debug
-        if (process.env.NODE_ENV === 'development') {
-          console.log('🚀 [Store] Navigate appelé:', { 
-            mainCategory, 
-            subCategory, 
-            subSubCategory,
-            currentNavigation: current,
-            newNavigation 
-          });
-        }
-
         // CORRECTION: Utiliser set avec fonction updater pour garantir la mise à jour
         // Forcer la mise à jour en créant un nouvel objet pour déclencher les re-renders
         set((state) => {
           const updated = {
             ...state,
             navigation: { ...newNavigation }, // Nouvel objet pour forcer le re-render
+            lastNavigatedAt: Date.now(),
             navigationHistory: [...state.navigationHistory, current].slice(-20),
           };
-          
-          // Log après mise à jour pour vérifier
-          if (process.env.NODE_ENV === 'development') {
-            console.log('✅ [Store] Navigation mise à jour dans set:', updated.navigation);
-            console.log('✅ [Store] État complet après mise à jour:', {
-              mainCategory: updated.navigation.mainCategory,
-              subCategory: updated.navigation.subCategory,
-              subSubCategory: updated.navigation.subSubCategory,
-            });
-          }
-          
+
           return updated;
         }, false, { type: 'navigate', payload: newNavigation });
       },
@@ -453,6 +440,18 @@ export const useDashboardCommandCenterStore = create<DashboardCommandCenterStore
           }),
           false,
           { type: 'setCache', payload: { key, entry } }
+        );
+      },
+
+      invalidateAllViews: () => {
+        set(
+          (state) => ({
+            ...state,
+            cache: {},
+            viewDataRefreshTrigger: Date.now(),
+          }),
+          false,
+          { type: 'invalidateAllViews' }
         );
       },
     }),

@@ -266,3 +266,5 @@ export const StocksTrendsPage = memo(function StocksTrendsPage() {
     </DashboardPageLayout>
   );
 });
+
+export default StocksTrendsPage;

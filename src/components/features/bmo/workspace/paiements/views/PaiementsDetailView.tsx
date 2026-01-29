@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { paiementsApiService, type Paiement } from '@/lib/services/paiementsApiService';
 import { usePaiementsWorkspaceStore } from '@/lib/stores/paiementsWorkspaceStore';
+import { PaiementValidationModal, type PaiementAction, type PaiementValidationData } from '../modals/PaiementValidationModal';
 import { FileText, Building2, Calendar, DollarSign, User, CheckCircle, XCircle, Clock, Download, History, AlertTriangle, Ban } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -24,6 +25,8 @@ export function PaiementsDetailView({ tabId, data }: Props) {
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState<'info' | 'documents' | 'historique'>('info');
   const [processing, setProcessing] = useState(false);
+  const [validationModalOpen, setValidationModalOpen] = useState(false);
+  const [validationAction, setValidationAction] = useState<PaiementAction>('validate');
 
   const paiementId = data.paiementId as string;
 
@@ -43,31 +46,46 @@ export function PaiementsDetailView({ tabId, data }: Props) {
     load();
   }, [paiementId]);
 
-  const handleValidate = async () => {
-    if (!paiement) return;
-    setProcessing(true);
-    try {
-      const decision = await paiementsApiService.validatePaiement(paiement.id, 'Validation accordée', 'USR-001', 'A. DIALLO', 'Directeur Général');
-      addDecision(decision);
-      alert('Paiement validé !');
-    } catch (error) {
-      console.error('Failed:', error);
-    } finally {
-      setProcessing(false);
-    }
+  const handleOpenValidationModal = (action: PaiementAction) => {
+    setValidationAction(action);
+    setValidationModalOpen(true);
   };
 
-  const handleReject = async () => {
+  const handleConfirmValidation = async (formData: PaiementValidationData) => {
     if (!paiement) return;
-    setProcessing(true);
-    try {
-      const decision = await paiementsApiService.rejectPaiement(paiement.id, 'Justificatifs insuffisants', 'USR-001', 'A. DIALLO', 'Directeur Général');
+    const userId = 'USR-001';
+    const userName = 'A. DIALLO';
+    const userRole = 'Directeur Général';
+    if (formData.action === 'validate') {
+      const decision = await paiementsApiService.validatePaiement(
+        paiement.id,
+        formData.comment || 'Validation accordée',
+        userId,
+        userName,
+        userRole
+      );
       addDecision(decision);
-      alert('Paiement rejeté');
-    } catch (error) {
-      console.error('Failed:', error);
-    } finally {
-      setProcessing(false);
+    } else if (formData.action === 'reject') {
+      const decision = await paiementsApiService.rejectPaiement(
+        paiement.id,
+        formData.comment || formData.reasonCategory || 'Rejet',
+        userId,
+        userName,
+        userRole
+      );
+      addDecision(decision);
+    } else if (formData.action === 'schedule' && formData.scheduledDate) {
+      const dateExecution = formData.scheduledTime
+        ? `${formData.scheduledDate}T${formData.scheduledTime}:00`
+        : formData.scheduledDate;
+      const decision = await paiementsApiService.schedulePaiement(
+        paiement.id,
+        dateExecution,
+        userId,
+        userName,
+        userRole
+      );
+      addDecision(decision);
     }
   };
 
@@ -184,16 +202,24 @@ export function PaiementsDetailView({ tabId, data }: Props) {
 
       {/* Actions */}
       <div className="flex items-center justify-end gap-3 p-4 bg-white dark:bg-slate-900/50 rounded-xl border border-slate-200/70 dark:border-slate-800">
-        <button onClick={handleReject} disabled={processing} className="px-6 py-2.5 rounded-lg border border-red-500 text-red-600 font-medium hover:bg-red-500/10 disabled:opacity-50">
+        <button onClick={() => handleOpenValidationModal('reject')} className="px-6 py-2.5 rounded-lg border border-red-500 text-red-600 font-medium hover:bg-red-500/10">
           <XCircle className="w-4 h-4 inline mr-2" />Rejeter
         </button>
-        <button disabled={processing} className="px-6 py-2.5 rounded-lg border border-blue-500 text-blue-600 font-medium hover:bg-blue-500/10 disabled:opacity-50">
+        <button onClick={() => handleOpenValidationModal('schedule')} className="px-6 py-2.5 rounded-lg border border-blue-500 text-blue-600 font-medium hover:bg-blue-500/10">
           <Calendar className="w-4 h-4 inline mr-2" />Planifier
         </button>
-        <button onClick={handleValidate} disabled={processing} className="px-6 py-2.5 rounded-lg bg-emerald-500 text-white font-medium hover:bg-emerald-600 disabled:opacity-50">
+        <button onClick={() => handleOpenValidationModal('validate')} className="px-6 py-2.5 rounded-lg bg-emerald-500 text-white font-medium hover:bg-emerald-600">
           <CheckCircle className="w-4 h-4 inline mr-2" />Valider
         </button>
       </div>
+
+      <PaiementValidationModal
+        paiement={paiement}
+        action={validationAction}
+        isOpen={validationModalOpen}
+        onClose={() => setValidationModalOpen(false)}
+        onConfirm={handleConfirmValidation}
+      />
     </div>
   );
 }

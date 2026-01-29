@@ -34,3 +34,5 @@ export function ReportingOverviewPage({ data }: { data: ReportingOverviewCombine
     </div>
   );
 }
+
+export default ReportingOverviewPage;

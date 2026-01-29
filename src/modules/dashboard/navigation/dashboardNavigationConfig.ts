@@ -1,8 +1,9 @@
 /**
  * Configuration de navigation à 3 niveaux pour le module Dashboard
+ * Types NavNode / NavRequires : voir types/dashboardNavigationTypes.ts
  */
 
-import type { DashboardMainCategory, DashboardNavItem } from '../types/dashboardNavigationTypes';
+import type { DashboardMainCategory, NavNode, NavRequires } from '../types/dashboardNavigationTypes';
 import {
   LayoutDashboard,
   TrendingUp,
@@ -14,31 +15,8 @@ import {
   Settings,
 } from 'lucide-react';
 
-/**
- * Exigences d'accès pour un nœud de navigation (Phase P10)
- */
-export interface NavRequires {
-  /** Permission requise (ex: 'dashboard:read', 'achats:view') */
-  perm?: string;
-  /** Feature flag requis (ex: 'module.achats', 'module.stocks') */
-  flag?: string;
-  /** Rôles requis (ex: ['admin', 'manager']) - si non spécifié, vérifie seulement perm/flag */
-  roles?: string[];
-}
-
-export interface NavNode {
-  id: string;
-  /** Label textuel (fallback si i18nKey non défini) */
-  label?: string;
-  /** Phase P12: Clé i18n pour la traduction (prioritaire sur label) */
-  i18nKey?: string;
-  icon?: React.ComponentType<{ className?: string }>;
-  badge?: number | string;
-  badgeType?: 'default' | 'warning' | 'critical' | 'success';
-  /** Phase P10: Exigences d'accès (permission + feature flag) */
-  requires?: NavRequires;
-  children?: NavNode[];
-}
+/** Ré-export pour compatibilité des imports existants */
+export type { NavNode, NavRequires } from '../types/dashboardNavigationTypes';
 
 export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> = {
   overview: {
@@ -51,7 +29,9 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
         id: 'summary',
         label: 'Vue d\'ensemble',
         children: [
-          { id: 'dashboard', label: 'Dashboard principal' },
+          { id: 'cockpit', label: 'Centrale de commandement' },
+          { id: 'cockpit-v2', label: 'Centrale V2 (IA)' },
+          { id: 'rapport-dg', label: 'Rapport DG' },
         ],
       },
       {
@@ -64,6 +44,7 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
           { id: 'projets', label: 'Projets' },
           { id: 'demandes', label: 'Demandes' },
           { id: 'budget', label: 'Budget' },
+          { id: 'finances', label: 'Finances' },
         ],
       },
       {
@@ -82,6 +63,7 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
         children: [
           { id: 'timeline', label: 'Timeline' },
           { id: 'notifications', label: 'Notifications' },
+          { id: 'conversations', label: 'Historique conversations' },
         ],
       },
     ],

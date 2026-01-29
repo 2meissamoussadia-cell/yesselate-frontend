@@ -22,7 +22,7 @@ import { enforceQuota, recordDenial, recordUsage, inferRowCount } from '@lib-roo
 export const revalidate = 0; // défaut
 
 const Params = z.object({
-  main: z.enum(['overview','performance','actions','risks','decisions','realtime']),
+  main: z.enum(['overview','performance','actions','risks','decisions','realtime','administration']),
   sub: z.string().nullable().optional(),
   leaf: z.string().nullable().optional(),
 });
@@ -101,6 +101,12 @@ export async function GET(
       const seconds = (performance.now() - t0) / 1000;
       observeHttp('GET', '/api/dashboard/[main]/[sub]/[leaf]', 403, seconds);
       log.info({ route: parsed.data, seconds, error: 'Forbidden: compliance module' }, 'dashboard api forbidden');
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+    if (main === 'administration' && !can(ctx, { perm: 'dashboard:admin' }) && !(ctx as { roles?: string[] }).roles?.includes?.('admin')) {
+      const seconds = (performance.now() - t0) / 1000;
+      observeHttp('GET', '/api/dashboard/[main]/[sub]/[leaf]', 403, seconds);
+      log.info({ route: parsed.data, seconds, error: 'Forbidden: administration' }, 'dashboard api forbidden');
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 

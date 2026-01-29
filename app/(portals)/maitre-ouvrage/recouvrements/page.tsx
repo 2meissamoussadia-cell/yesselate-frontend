@@ -463,7 +463,7 @@ function RecouvrementsPageContent() {
 
         {/* Main Content */}
         <main className="flex-1 overflow-hidden">
-          <div className="h-full overflow-y-auto">
+          <div className="h-full overflow-x-hidden overflow-y-auto">
             <RecouvrementsContentRouter
               mainCategory={activeCategory as RecouvrementsMainCategory}
               subCategory={activeSubCategory}

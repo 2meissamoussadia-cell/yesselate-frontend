@@ -40,6 +40,8 @@ import {
   formatKPIValue, 
   formatKPIPercentage 
 } from '@lib-root/dashboard/kpi';
+import { getAppForCategory } from '../../domain';
+import { VALIDATION_STATE_LABELS } from '@/domain/gouvernance/workflows';
 import { 
   DashboardPageLayout, 
   DashboardSection, 
@@ -88,6 +90,55 @@ interface ValidationRecent {
 
 export const ValidationsGlobalPage = memo(function ValidationsGlobalPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const appMeta = useMemo(() => getAppForCategory('performance'), []);
+
+  // Statistiques par bureau (déclaré avant kpiCalculations qui en dépend)
+  const bureauStats: BureauValidation[] = useMemo(() => [
+    {
+      id: 'bmo',
+      bureau: 'Bureau Maître d\'Ouvrage',
+      code: 'BMO',
+      enAttente: 5,
+      validees: 45,
+      rejetees: 2,
+      tempsMoyen: 2.1,
+      slaCompliance: 96,
+      evolution: 5.2,
+    },
+    {
+      id: 'bf',
+      bureau: 'Bureau Financier',
+      code: 'BF',
+      enAttente: 8,
+      validees: 38,
+      rejetees: 3,
+      tempsMoyen: 1.8,
+      slaCompliance: 94,
+      evolution: 3.1,
+    },
+    {
+      id: 'bop',
+      bureau: 'Bureau Opérationnel',
+      code: 'BOP',
+      enAttente: 12,
+      validees: 52,
+      rejetees: 5,
+      tempsMoyen: 3.2,
+      slaCompliance: 88,
+      evolution: -2.5,
+    },
+    {
+      id: 'bex',
+      bureau: 'Bureau Exécution',
+      code: 'BEX',
+      enAttente: 3,
+      validees: 28,
+      rejetees: 1,
+      tempsMoyen: 1.9,
+      slaCompliance: 98,
+      evolution: 4.8,
+    },
+  ], []);
 
   // Calculs des KPIs métier BTP (Opérations/Conduite de travaux)
   const kpiCalculations = useMemo(() => {
@@ -178,54 +229,6 @@ export const ValidationsGlobalPage = memo(function ValidationsGlobalPage() {
     },
   ], [kpiCalculations]);
 
-  // Statistiques par bureau
-  const bureauStats: BureauValidation[] = useMemo(() => [
-    {
-      id: 'bmo',
-      bureau: 'Bureau Maître d\'Ouvrage',
-      code: 'BMO',
-      enAttente: 5,
-      validees: 45,
-      rejetees: 2,
-      tempsMoyen: 2.1,
-      slaCompliance: 96,
-      evolution: 5.2,
-    },
-    {
-      id: 'bf',
-      bureau: 'Bureau Financier',
-      code: 'BF',
-      enAttente: 8,
-      validees: 38,
-      rejetees: 3,
-      tempsMoyen: 1.8,
-      slaCompliance: 94,
-      evolution: 3.1,
-    },
-    {
-      id: 'bop',
-      bureau: 'Bureau Opérationnel',
-      code: 'BOP',
-      enAttente: 12,
-      validees: 52,
-      rejetees: 5,
-      tempsMoyen: 3.2,
-      slaCompliance: 88,
-      evolution: -2.5,
-    },
-    {
-      id: 'bex',
-      bureau: 'Bureau Exécution',
-      code: 'BEX',
-      enAttente: 3,
-      validees: 28,
-      rejetees: 1,
-      tempsMoyen: 1.9,
-      slaCompliance: 98,
-      evolution: 4.8,
-    },
-  ], []);
-
   // Validations récentes
   const recentValidations: ValidationRecent[] = useMemo(() => [
     {
@@ -307,10 +310,33 @@ export const ValidationsGlobalPage = memo(function ValidationsGlobalPage() {
   }, [chargeConsolidee]);
 
   return (
-    <div className="relative">
+    <div className="relative min-w-0 max-w-full overflow-x-hidden">
       <MockDataIndicator message="Données mockées - Phase 1 (Backend en attente)" />
       
       <DashboardPageLayout maxWidth="xl" padding="md">
+        {/* Logique métier (Odoo-style) : App → Modèle → Workflow */}
+        <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+          <span className="inline-flex items-center gap-1.5 rounded-md border border-slate-800/60 bg-slate-900/40 px-2 py-1">
+            <span className="font-medium text-slate-400">App</span>
+            <span>{appMeta.name}</span>
+          </span>
+          <span className="text-slate-600">•</span>
+          <span className="inline-flex items-center gap-1.5 rounded-md border border-slate-800/60 bg-slate-900/40 px-2 py-1">
+            <span className="font-medium text-slate-400">Modèle</span>
+            <span>Validation</span>
+          </span>
+          <span className="text-slate-600">•</span>
+          <span className="inline-flex items-center gap-1.5 rounded-md border border-slate-800/60 bg-slate-900/40 px-2 py-1">
+            <span className="font-medium text-slate-400">Workflow</span>
+            <span>pending → approved | rejected | cancelled</span>
+          </span>
+          <span className="text-slate-600">•</span>
+          <span className="inline-flex items-center gap-1.5 rounded-md border border-slate-800/60 bg-slate-900/40 px-2 py-1">
+            <span className="font-medium text-slate-400">Libellés (domaine)</span>
+            <span>{Object.values(VALIDATION_STATE_LABELS).join(', ')}</span>
+          </span>
+        </div>
+
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
@@ -318,7 +344,7 @@ export const ValidationsGlobalPage = memo(function ValidationsGlobalPage() {
             Validations — Vue globale
           </h1>
           <p className="text-slate-400 text-sm mt-1">
-            Performance & KPIs — suivi des validations BC, factures et avenants
+            Performance & KPIs (règles domaine: gouvernance/validation) — suivi BC, factures et avenants
           </p>
         </div>
         <div className="flex items-center gap-3 flex-wrap">

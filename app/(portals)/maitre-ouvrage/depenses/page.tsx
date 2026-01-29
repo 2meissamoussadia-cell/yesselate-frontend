@@ -112,7 +112,7 @@ export default function DepensesPage() {
       </header>
 
       {/* Content */}
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-x-hidden overflow-y-auto min-w-0 max-w-full">
         <div className="p-6 space-y-6">
           <DepensesLiveCounters key={refreshKey} onOpenQueue={handleOpenQueue} />
           <DepensesWorkspaceContent />

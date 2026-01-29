@@ -283,3 +283,5 @@ export const DelaysMoyensPage = memo(function DelaysMoyensPage() {
     </DashboardPageLayout>
   );
 });
+
+export default DelaysMoyensPage;

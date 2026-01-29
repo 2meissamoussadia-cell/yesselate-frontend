@@ -10,6 +10,11 @@ import dynamic from 'next/dynamic';
 import { FileText, CheckCircle2, DollarSign, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DashboardAdvancedView } from '../components/DashboardAdvancedView';
+import { DashboardAccueil3P } from '../components/views/DashboardAccueil3P';
+import { CockpitDGPage } from '../components/views/CockpitDGPage';
+import { CockpitDG_V2Page } from '../components/views/CockpitDG_V2Page';
+import { RapportDGPage } from '../components/views/RapportDGPage';
+import { DashboardPageSkeleton } from '../components/shared/DashboardSkeleton';
 import { formatMoneyEUR } from '../utils/colorMapping';
 import type {
   DashboardMainCategory,
@@ -24,7 +29,6 @@ import type {
 import type {
   DashboardViewData,
   OverviewSummaryDashboardData,
-  OverviewSummaryPointsData,
   OverviewKpisHighlightsData,
   KpisProjetsData,
   KpisDemandesData,
@@ -189,6 +193,19 @@ const ReportingByChantierPage = dynamic(
   { ssr: false }
 );
 export type { NavKey } from '../types/dashboard';
+
+/** Fallback unifié pour le chargement lazy des vues. */
+function createLazyView(
+  loader: () => Promise<{ default: React.ComponentType<{ data?: unknown }> }>,
+  opts?: { passData?: boolean }
+): ViewEntry['render'] {
+  const Lazy = React.lazy(loader as () => Promise<{ default: React.ComponentType<{ data?: unknown }> }>);
+  return ({ data }) => (
+    <React.Suspense fallback={<DashboardPageSkeleton />}>
+      {opts?.passData ? <Lazy data={data} /> : <Lazy />}
+    </React.Suspense>
+  );
+}
 
 // Helper pour créer une vue par défaut (fallback)
 const createDefaultView = (title: string, description?: string): ViewEntry => ({
@@ -457,44 +474,45 @@ const loadKpisAchats: Loader<KpisAchatsData> = async (nav) => {
 // Registry typé
 // --------------------------
 export const dashboardRegistry: DashboardRegistry = {
-  // overview/summary/dashboard
+  // overview/summary/* — Vue d'accueil maître-ouvrage = Centrale de commandement (Cockpit DG)
+  // dashboard et highlights pointent vers le même Cockpit pour cohérence et anciens liens
   'overview::summary::dashboard': {
     id: 'overview-summary-dashboard',
-    title: 'Dashboard principal',
+    title: 'Centrale de commandement',
     ttl: 60_000,
-    // ✅ Phase 2: Loader API avec fetch direct
     loader: loadOverviewSummaryDashboard,
-    render: ({ data }) => {
-      const dashboardData = data as OverviewSummaryDashboardData | null;
-      return <DashboardAdvancedView data={dashboardData || {}} />;
-    },
+    render: () => <CockpitDGPage />,
   },
 
-  // overview/summary/highlights
+  'overview::summary::cockpit': {
+    id: 'overview-summary-cockpit',
+    title: 'Centrale de commandement',
+    ttl: 60_000,
+    loader: loadOverviewSummaryDashboard,
+    render: () => <CockpitDGPage />,
+  },
+
+  'overview::summary::cockpit-v2': {
+    id: 'overview-summary-cockpit-v2',
+    title: 'Centrale V2 (IA)',
+    ttl: 60_000,
+    loader: loadOverviewSummaryDashboard,
+    render: () => <CockpitDG_V2Page />,
+  },
+
+  'overview::summary::rapport-dg': {
+    id: 'overview-summary-rapport-dg',
+    title: 'Rapport DG',
+    ttl: 5 * 60_000,
+    render: () => <RapportDGPage />,
+  },
+
   'overview::summary::highlights': {
     id: 'overview-summary-highlights',
-    title: 'Points clés',
+    title: 'Centrale de commandement',
     ttl: 60_000,
     loader: loadOverviewSummaryHighlights,
-    render: ({ data }) => {
-      const pointsData = data as OverviewSummaryPointsData;
-      return (
-        <div className="p-4">
-          <h2 className="text-slate-100 font-semibold">Points clés</h2>
-          <ul className="mt-3 space-y-2">
-            {pointsData.points?.map((p) => (
-            <li
-              key={p.id}
-              className="text-sm text-slate-200 bg-slate-800/40 border border-slate-700/40 rounded-xl p-3"
-            >
-              <span className="text-slate-400">{p.label} :</span>{' '}
-              <span className="font-semibold">{p.value}</span>
-            </li>
-            ))}
-          </ul>
-        </div>
-      );
-    },
+    render: () => <CockpitDGPage />,
   },
 
   // overview/kpis/highlights
@@ -503,17 +521,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Synthèse stratégique',
     ttl: 60_000,
     loader: loadOverviewKpisHighlights as TypedLoaderFn<OverviewKpisHighlightsData>,
-    render: ({ data }) => {
-      const highlightsData = data as OverviewKpisHighlightsData;
-      // Utiliser directement le composant HighlightsKpiPage
-      const HighlightsKpiPage = React.lazy(() => import('../components/views/HighlightsKpiPage'));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <HighlightsKpiPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/HighlightsKpiPage').then(m => ({ default: m.HighlightsKpiPage }))),
   },
 
   // overview/kpis/projets
@@ -522,16 +530,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'KPIs Projets',
     ttl: 60_000,
     loader: loadOverviewKpisProjets,
-    render: ({ data }) => {
-      // ✅ v20: Utiliser le composant ProjetKpiPage au lieu du render inline
-      const ProjetKpiPage = React.lazy(() => import('../components/views/ProjetKpiPage').then(m => ({ default: m.ProjetKpiPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ProjetKpiPage data={data as KpisProjetsData} />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ProjetKpiPage').then(m => ({ default: m.ProjetKpiPage })) as Promise<{ default: React.ComponentType<{ data?: unknown }> }>, { passData: true }),
   },
 
   // overview/kpis/demandes
@@ -540,33 +539,23 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'KPIs Demandes',
     ttl: 60_000,
     loader: loadOverviewKpisDemandes,
-    render: ({ data }) => {
-      // ✅ v20: Utiliser le composant DemandesKpiPage au lieu du render inline
-      const DemandesKpiPage = React.lazy(() => import('../components/views/DemandesKpiPage').then(m => ({ default: m.DemandesKpiPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <DemandesKpiPage data={data as KpisDemandesData} />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/DemandesKpiPage').then(m => ({ default: m.DemandesKpiPage })) as Promise<{ default: React.ComponentType<{ data?: unknown }> }>, { passData: true }),
   },
 
-  // overview/kpis/budget — utilise BudgetKpiPage (barre KPI, filtres, BudgetDetailModal, export)
+  // overview/kpis/budget — utilise BudgetKpiPage (logique domaine: gouvernance/budget)
   'overview::kpis::budget': {
     id: 'overview-kpis-budget',
     title: 'KPIs Budget',
     ttl: 60_000,
     loader: loadOverviewKpisBudget,
-    render: ({ data }) => {
-      const BudgetKpiPage = React.lazy(() => import('../components/views/BudgetKpiPage').then(m => ({ default: m.BudgetKpiPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <BudgetKpiPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/BudgetKpiPage').then(m => ({ default: m.BudgetKpiPage as React.ComponentType<{ data?: unknown }> })), { passData: true }),
+  },
+
+  'overview::kpis::finances': {
+    id: 'overview-kpis-finances',
+    title: 'Finances',
+    ttl: 60_000,
+    render: createLazyView(() => import('../components/views/FinancesOverviewPage').then(m => ({ default: m.FinancesOverviewPage }))),
   },
 
   // Phase P5: performance/achats/* (Achats/Contrats)
@@ -641,15 +630,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Alertes Actives',
     ttl: 30_000,
     loader: loadAlertsActivesApi,
-    render: () => {
-      const AlertsActivesPage = React.lazy(() => import('../components/views/AlertsActivesPage').then(m => ({ default: m.AlertsActivesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <AlertsActivesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/AlertsActivesPage').then(m => ({ default: m.AlertsActivesPage }))),
   },
 
   'overview::alerts::urgentes': {
@@ -657,15 +638,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Alertes Urgentes',
     ttl: 30_000,
     loader: loadAlertsUrgentesApi,
-    render: () => {
-      const AlertsUrgentesPage = React.lazy(() => import('../components/views/AlertsUrgentesPage').then(m => ({ default: m.AlertsUrgentesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <AlertsUrgentesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/AlertsUrgentesPage').then(m => ({ default: m.AlertsUrgentesPage }))),
   },
 
   // Overview - Activity
@@ -674,15 +647,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: "Timeline d'Activité",
     ttl: 30_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'overview', sub: 'activity', leaf: 'timeline' }),
-    render: () => {
-      const ActivityTimelinePage = React.lazy(() => import('../components/views/ActivityTimelinePage').then(m => ({ default: m.ActivityTimelinePage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ActivityTimelinePage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ActivityTimelinePage').then(m => ({ default: m.ActivityTimelinePage }))),
   },
 
   'overview::activity::notifications': {
@@ -690,15 +655,14 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Notifications',
     ttl: 30_000,
     loader: loadOverviewActivityNotificationsApi,
-    render: () => {
-      const ActivityNotificationsPage = React.lazy(() => import('../components/views/ActivityNotificationsPage').then(m => ({ default: m.ActivityNotificationsPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ActivityNotificationsPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ActivityNotificationsPage').then(m => ({ default: m.ActivityNotificationsPage }))),
+  },
+
+  'overview::activity::conversations': {
+    id: 'overview-activity-conversations',
+    title: 'Historique conversations',
+    ttl: 30_000,
+    render: createLazyView(() => import('../components/views/ConversationsHistoryPage').then(m => ({ default: m.ConversationsHistoryPage }))),
   },
 
   // Performance - Validation
@@ -707,15 +671,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Validations En Attente',
     ttl: 60_000,
     loader: loadValidationsEnAttenteApi,
-    render: () => {
-      const ValidationsEnAttentePage = React.lazy(() => import('../components/views/ValidationsEnAttentePage').then(m => ({ default: m.ValidationsEnAttentePage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ValidationsEnAttentePage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ValidationsEnAttentePage').then(m => ({ default: m.ValidationsEnAttentePage }))),
   },
 
   'performance::validation::validees': {
@@ -723,15 +679,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Validations Validées',
     ttl: 60_000,
     loader: loadValidationsValideesApi,
-    render: () => {
-      const ValidationsValideesPage = React.lazy(() => import('../components/views/ValidationsValideesPage').then(m => ({ default: m.ValidationsValideesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ValidationsValideesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ValidationsValideesPage').then(m => ({ default: m.ValidationsValideesPage }))),
   },
 
   'performance::validation::rejetees': {
@@ -739,15 +687,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Validations Rejetées',
     ttl: 60_000,
     loader: loadValidationsRejeteesApi,
-    render: () => {
-      const ValidationsRejeteesPage = React.lazy(() => import('../components/views/ValidationsRejeteesPage').then(m => ({ default: m.ValidationsRejeteesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ValidationsRejeteesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ValidationsRejeteesPage').then(m => ({ default: m.ValidationsRejeteesPage }))),
   },
 
   'performance::validation::circuit': {
@@ -755,15 +695,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Circuit de Validation',
     ttl: 60_000,
     loader: loadValidationsCircuitApi,
-    render: () => {
-      const ValidationsCircuitPage = React.lazy(() => import('../components/views/ValidationsCircuitPage').then(m => ({ default: m.ValidationsCircuitPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ValidationsCircuitPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ValidationsCircuitPage').then(m => ({ default: m.ValidationsCircuitPage }))),
   },
 
   // Performance - Budget détaillé
@@ -772,15 +704,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Budget Consommation',
     ttl: 60_000,
     loader: loadBudgetConsommationApi,
-    render: () => {
-      const BudgetConsommationPage = React.lazy(() => import('../components/views/BudgetConsommationPage').then(m => ({ default: m.BudgetConsommationPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <BudgetConsommationPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/BudgetConsommationPage').then(m => ({ default: m.BudgetConsommationPage }))),
   },
 
   'performance::budget::restant': {
@@ -788,15 +712,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Budget Restant',
     ttl: 60_000,
     loader: loadBudgetRestantApi,
-    render: () => {
-      const BudgetRestantPage = React.lazy(() => import('../components/views/BudgetRestantPage').then(m => ({ default: m.BudgetRestantPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <BudgetRestantPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/BudgetRestantPage').then(m => ({ default: m.BudgetRestantPage }))),
   },
 
   'performance::budget::previsions': {
@@ -804,15 +720,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Budget Prévisions',
     ttl: 60_000,
     loader: loadBudgetPrevisionsApi,
-    render: () => {
-      const BudgetPrevisionsPage = React.lazy(() => import('../components/views/BudgetPrevisionsPage').then(m => ({ default: m.BudgetPrevisionsPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <BudgetPrevisionsPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/BudgetPrevisionsPage').then(m => ({ default: m.BudgetPrevisionsPage }))),
   },
 
   'performance::budget::analyse': {
@@ -820,15 +728,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Budget Analyse',
     ttl: 60_000,
     loader: loadBudgetAnalyseApi,
-    render: () => {
-      const BudgetAnalysePage = React.lazy(() => import('../components/views/BudgetAnalysePage').then(m => ({ default: m.BudgetAnalysePage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <BudgetAnalysePage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/BudgetAnalysePage').then(m => ({ default: m.BudgetAnalysePage }))),
   },
 
   // Actions - Inbox
@@ -837,15 +737,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Actions Urgentes',
     ttl: 30_000,
     loader: loadActionsInboxUrgentesApi,
-    render: () => {
-      const ActionsInboxUrgentesPage = React.lazy(() => import('../components/views/ActionsInboxUrgentesPage').then(m => ({ default: m.ActionsInboxUrgentesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ActionsInboxUrgentesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ActionsInboxUrgentesPage').then(m => ({ default: m.ActionsInboxUrgentesPage }))),
   },
 
   'actions::inbox::aujourdhui': {
@@ -853,15 +745,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Actions Aujourd\'hui',
     ttl: 30_000,
     loader: loadActionsInboxAujourdhuiApi,
-    render: () => {
-      const ActionsInboxAujourdhuiPage = React.lazy(() => import('../components/views/ActionsInboxAujourdhuiPage').then(m => ({ default: m.ActionsInboxAujourdhuiPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ActionsInboxAujourdhuiPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ActionsInboxAujourdhuiPage').then(m => ({ default: m.ActionsInboxAujourdhuiPage }))),
   },
 
   'actions::inbox::semaine': {
@@ -869,15 +753,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Actions Cette Semaine',
     ttl: 60_000,
     loader: loadActionsInboxSemaineApi,
-    render: () => {
-      const ActionsInboxSemainePage = React.lazy(() => import('../components/views/ActionsInboxSemainePage').then(m => ({ default: m.ActionsInboxSemainePage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ActionsInboxSemainePage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ActionsInboxSemainePage').then(m => ({ default: m.ActionsInboxSemainePage }))),
   },
 
   'actions::inbox::personnalisees': {
@@ -885,15 +761,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Actions Personnalisées',
     ttl: 60_000,
     loader: loadActionsInboxPersonnaliseesApi,
-    render: () => {
-      const ActionsInboxPersonnaliseesPage = React.lazy(() => import('../components/views/ActionsInboxPersonnaliseesPage').then(m => ({ default: m.ActionsInboxPersonnaliseesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ActionsInboxPersonnaliseesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ActionsInboxPersonnaliseesPage').then(m => ({ default: m.ActionsInboxPersonnaliseesPage }))),
   },
 
   // Performance - Delays
@@ -902,15 +770,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Retards Critiques',
     ttl: 30_000,
     loader: loadDelaysCritiquesApi,
-    render: () => {
-      const DelaysCritiquesPage = React.lazy(() => import('../components/views/DelaysCritiquesPage').then(m => ({ default: m.DelaysCritiquesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <DelaysCritiquesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/DelaysCritiquesPage').then(m => ({ default: m.DelaysCritiquesPage }))),
   },
 
   'performance::delays::moyens': {
@@ -918,15 +778,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Retards Moyens',
     ttl: 60_000,
     loader: loadDelaysMoyensApi,
-    render: () => {
-      const DelaysMoyensPage = React.lazy(() => import('../components/views/DelaysMoyensPage').then(m => ({ default: m.DelaysMoyensPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <DelaysMoyensPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/DelaysMoyensPage').then(m => ({ default: m.DelaysMoyensPage }))),
   },
 
   'performance::delays::analyse-causes': {
@@ -934,15 +786,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Analyse des Causes de Retards',
     ttl: 60_000,
     loader: loadDelaysAnalyseCausesApi,
-    render: () => {
-      const DelaysAnalyseCausesPage = React.lazy(() => import('../components/views/DelaysAnalyseCausesPage').then(m => ({ default: m.DelaysAnalyseCausesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <DelaysAnalyseCausesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/DelaysAnalyseCausesPage').then(m => ({ default: m.DelaysAnalyseCausesPage }))),
   },
 
   // Performance - Stocks
@@ -951,15 +795,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Stocks Vue d\'Ensemble',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'stocks', leaf: 'overview' }),
-    render: () => {
-      const StocksOverviewPage = React.lazy(() => import('../components/views/StocksOverviewPage').then(m => ({ default: m.StocksOverviewPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <StocksOverviewPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/StocksOverviewPage').then(m => ({ default: m.StocksOverviewPage }))),
   },
 
   'performance::stocks::trends': {
@@ -967,15 +803,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Stocks Tendances',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'stocks', leaf: 'trends' }),
-    render: () => {
-      const StocksTrendsPage = React.lazy(() => import('../components/views/StocksTrendsPage').then(m => ({ default: m.StocksTrendsPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <StocksTrendsPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/StocksTrendsPage').then(m => ({ default: m.StocksTrendsPage }))),
   },
 
   // Performance - Materiel
@@ -984,15 +812,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Parc Matériel',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'materiel', leaf: 'overview' }),
-    render: () => {
-      const MaterielOverviewPage = React.lazy(() => import('../components/views/MaterielOverviewPage').then(m => ({ default: m.MaterielOverviewPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <MaterielOverviewPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/MaterielOverviewPage').then(m => ({ default: m.MaterielOverviewPage as React.ComponentType<{ data?: unknown }> })), { passData: true }),
   },
 
   // Performance - Comparison
@@ -1001,15 +821,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Comparaison par Bureaux',
     ttl: 60_000,
     loader: loadComparisonBureauxApi,
-    render: () => {
-      const ComparisonBureauxPage = React.lazy(() => import('../components/views/ComparisonBureauxPage').then(m => ({ default: m.ComparisonBureauxPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ComparisonBureauxPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ComparisonBureauxPage').then(m => ({ default: m.ComparisonBureauxPage }))),
   },
 
   'performance::comparison::projets': {
@@ -1017,15 +829,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Comparaison par Projets',
     ttl: 60_000,
     loader: loadComparisonProjetsApi,
-    render: () => {
-      const ComparisonProjetsPage = React.lazy(() => import('../components/views/ComparisonProjetsPage').then(m => ({ default: m.ComparisonProjetsPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ComparisonProjetsPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ComparisonProjetsPage').then(m => ({ default: m.ComparisonProjetsPage }))),
   },
 
   'performance::comparison::periode': {
@@ -1033,15 +837,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Comparaison par Période',
     ttl: 60_000,
     loader: loadComparisonPeriodeApi,
-    render: () => {
-      const ComparisonPeriodePage = React.lazy(() => import('../components/views/ComparisonPeriodePage').then(m => ({ default: m.ComparisonPeriodePage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ComparisonPeriodePage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ComparisonPeriodePage').then(m => ({ default: m.ComparisonPeriodePage }))),
   },
 
   'performance::comparison::benchmarking': {
@@ -1049,15 +845,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Benchmarking',
     ttl: 60_000,
     loader: loadComparisonBenchmarkingApi,
-    render: () => {
-      const ComparisonBenchmarkingPage = React.lazy(() => import('../components/views/ComparisonBenchmarkingPage').then(m => ({ default: m.ComparisonBenchmarkingPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ComparisonBenchmarkingPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ComparisonBenchmarkingPage').then(m => ({ default: m.ComparisonBenchmarkingPage }))),
   },
 
   // Performance - Compliance
@@ -1066,15 +854,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Compliance Synthèse',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'compliance', leaf: 'dashboard' }),
-    render: () => {
-      const ComplianceDashboardPage = React.lazy(() => import('../components/views/ComplianceDashboardPage').then(m => ({ default: m.ComplianceDashboardPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ComplianceDashboardPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ComplianceDashboardPage').then(m => ({ default: m.ComplianceDashboardPage }))),
   },
 
   'performance::compliance::documents': {
@@ -1082,15 +862,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Pièces Manquantes',
     ttl: 60_000,
     loader: loadComplianceDocumentsApi,
-    render: () => {
-      const ComplianceDocumentsPage = React.lazy(() => import('../components/views/ComplianceDocumentsPage').then(m => ({ default: m.ComplianceDocumentsPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ComplianceDocumentsPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ComplianceDocumentsPage').then(m => ({ default: m.ComplianceDocumentsPage }))),
   },
 
   'performance::compliance::backlog': {
@@ -1098,15 +870,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Backlog de Visas',
     ttl: 60_000,
     loader: loadComplianceBacklogApi,
-    render: () => {
-      const ComplianceBacklogPage = React.lazy(() => import('../components/views/ComplianceBacklogPage').then(m => ({ default: m.ComplianceBacklogPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ComplianceBacklogPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ComplianceBacklogPage').then(m => ({ default: m.ComplianceBacklogPage }))),
   },
 
   'performance::compliance::lots': {
@@ -1114,15 +878,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Lots Non Attribués',
     ttl: 60_000,
     loader: loadComplianceLotsApi,
-    render: () => {
-      const ComplianceLotsPage = React.lazy(() => import('../components/views/ComplianceLotsPage').then(m => ({ default: m.ComplianceLotsPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ComplianceLotsPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ComplianceLotsPage').then(m => ({ default: m.ComplianceLotsPage }))),
   },
 
   // Performance - Indicators
@@ -1131,15 +887,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Performance Synthèse',
     ttl: 60_000,
     loader: loadPerformanceSyntheseApi,
-    render: () => {
-      const PerformanceSynthesePage = React.lazy(() => import('../components/views/PerformanceSynthesePage').then(m => ({ default: m.PerformanceSynthesePage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <PerformanceSynthesePage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/PerformanceSynthesePage').then(m => ({ default: m.PerformanceSynthesePage }))),
   },
 
   'performance::indicators::projets': {
@@ -1147,15 +895,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Performance Projets',
     ttl: 60_000,
     loader: loadPerformanceProjetsApi,
-    render: () => {
-      const PerformanceProjetsPage = React.lazy(() => import('../components/views/PerformanceProjetsPage').then(m => ({ default: m.PerformanceProjetsPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <PerformanceProjetsPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/PerformanceProjetsPage').then(m => ({ default: m.PerformanceProjetsPage }))),
   },
 
   'performance::indicators::demandes': {
@@ -1163,15 +903,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Performance Demandes',
     ttl: 60_000,
     loader: loadPerformanceDemandesApi,
-    render: () => {
-      const PerformanceDemandesPage = React.lazy(() => import('../components/views/PerformanceDemandesPage').then(m => ({ default: m.PerformanceDemandesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <PerformanceDemandesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/PerformanceDemandesPage').then(m => ({ default: m.PerformanceDemandesPage }))),
   },
 
   'performance::indicators::budget': {
@@ -1179,15 +911,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Performance Budget',
     ttl: 60_000,
     loader: loadPerformanceBudgetApi,
-    render: () => {
-      const PerformanceBudgetPage = React.lazy(() => import('../components/views/PerformanceBudgetPage').then(m => ({ default: m.PerformanceBudgetPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <PerformanceBudgetPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/PerformanceBudgetPage').then(m => ({ default: m.PerformanceBudgetPage }))),
   },
 
   // Performance - Trends
@@ -1196,15 +920,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Tendances Mensuelles',
     ttl: 60_000,
     loader: loadTrendsMensuellesApi,
-    render: () => {
-      const TrendsMensuellesPage = React.lazy(() => import('../components/views/TrendsMensuellesPage').then(m => ({ default: m.TrendsMensuellesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <TrendsMensuellesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/TrendsMensuellesPage').then(m => ({ default: m.TrendsMensuellesPage }))),
   },
 
   'performance::trends::trimestrielles': {
@@ -1212,15 +928,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Tendances Trimestrielles',
     ttl: 60_000,
     loader: loadTrendsTrimestriellesApi,
-    render: () => {
-      const TrendsTrimestriellesPage = React.lazy(() => import('../components/views/TrendsTrimestriellesPage').then(m => ({ default: m.TrendsTrimestriellesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <TrendsTrimestriellesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/TrendsTrimestriellesPage').then(m => ({ default: m.TrendsTrimestriellesPage }))),
   },
 
   'performance::trends::annuelles': {
@@ -1228,15 +936,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Tendances Annuelles',
     ttl: 60_000,
     loader: loadTrendsAnnuellesApi,
-    render: () => {
-      const TrendsAnnuellesPage = React.lazy(() => import('../components/views/TrendsAnnuellesPage').then(m => ({ default: m.TrendsAnnuellesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <TrendsAnnuellesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/TrendsAnnuellesPage').then(m => ({ default: m.TrendsAnnuellesPage }))),
   },
 
   // Actions - Type
@@ -1245,15 +945,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Actions Contrats',
     ttl: 60_000,
     loader: loadActionsTypeContratsApi,
-    render: () => {
-      const ActionsTypeContratsPage = React.lazy(() => import('../components/views/ActionsTypeContratsPage').then(m => ({ default: m.ActionsTypeContratsPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ActionsTypeContratsPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ActionsTypeContratsPage').then(m => ({ default: m.ActionsTypeContratsPage }))),
   },
 
   'actions::type::arbitrages': {
@@ -1261,15 +953,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Actions Arbitrages',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'actions', sub: 'type', leaf: 'arbitrages' }),
-    render: () => {
-      const ActionsTypeArbitragesPage = React.lazy(() => import('../components/views/ActionsTypeArbitragesPage').then(m => ({ default: m.ActionsTypeArbitragesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ActionsTypeArbitragesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ActionsTypeArbitragesPage').then(m => ({ default: m.ActionsTypeArbitragesPage }))),
   },
 
   'actions::type::paiements': {
@@ -1277,15 +961,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Actions Paiements',
     ttl: 60_000,
     loader: loadActionsTypePaiementsApi,
-    render: () => {
-      const ActionsTypePaiementsPage = React.lazy(() => import('../components/views/ActionsTypePaiementsPage').then(m => ({ default: m.ActionsTypePaiementsPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ActionsTypePaiementsPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ActionsTypePaiementsPage').then(m => ({ default: m.ActionsTypePaiementsPage }))),
   },
 
   'actions::type::bc': {
@@ -1293,15 +969,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Actions BC',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'actions', sub: 'type', leaf: 'bc' }),
-    render: () => {
-      const ActionsTypeBcPage = React.lazy(() => import('../components/views/ActionsTypeBcPage').then(m => ({ default: m.ActionsTypeBcPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ActionsTypeBcPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ActionsTypeBcPage').then(m => ({ default: m.ActionsTypeBcPage }))),
   },
 
   'actions::type::autres': {
@@ -1309,15 +977,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Actions Autres',
     ttl: 60_000,
     loader: loadActionsTypeAutresApi,
-    render: () => {
-      const ActionsTypeAutresPage = React.lazy(() => import('../components/views/ActionsTypeAutresPage').then(m => ({ default: m.ActionsTypeAutresPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ActionsTypeAutresPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ActionsTypeAutresPage').then(m => ({ default: m.ActionsTypeAutresPage }))),
   },
 
   'actions::priority::critique': {
@@ -1325,15 +985,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Actions Priorité Critique',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'actions', sub: 'priority', leaf: 'critique' }),
-    render: () => {
-      const ActionsPriorityCritiquePage = React.lazy(() => import('../components/views/ActionsPriorityCritiquePage').then(m => ({ default: m.ActionsPriorityCritiquePage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ActionsPriorityCritiquePage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ActionsPriorityCritiquePage').then(m => ({ default: m.ActionsPriorityCritiquePage }))),
   },
 
   'actions::priority::haute': {
@@ -1341,15 +993,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Actions Priorité Haute',
     ttl: 60_000,
     loader: loadActionsPriorityHauteApi,
-    render: () => {
-      const ActionsPriorityHautePage = React.lazy(() => import('../components/views/ActionsPriorityHautePage').then(m => ({ default: m.ActionsPriorityHautePage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ActionsPriorityHautePage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ActionsPriorityHautePage').then(m => ({ default: m.ActionsPriorityHautePage }))),
   },
 
   'actions::priority::moyenne': {
@@ -1357,15 +1001,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Actions Priorité Moyenne',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'actions', sub: 'priority', leaf: 'moyenne' }),
-    render: () => {
-      const ActionsPriorityMoyennePage = React.lazy(() => import('../components/views/ActionsPriorityMoyennePage').then(m => ({ default: m.ActionsPriorityMoyennePage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ActionsPriorityMoyennePage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ActionsPriorityMoyennePage').then(m => ({ default: m.ActionsPriorityMoyennePage }))),
   },
 
   'actions::blocked::blocages': {
@@ -1373,15 +1009,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Actions Blocages',
     ttl: 60_000,
     loader: loadActionsBlockedBlocagesApi,
-    render: () => {
-      const ActionsBlockedBlocagesPage = React.lazy(() => import('../components/views/ActionsBlockedBlocagesPage').then(m => ({ default: m.ActionsBlockedBlocagesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ActionsBlockedBlocagesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ActionsBlockedBlocagesPage').then(m => ({ default: m.ActionsBlockedBlocagesPage }))),
   },
 
   'actions::blocked::escalades': {
@@ -1389,15 +1017,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Actions Escalades',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'actions', sub: 'blocked', leaf: 'escalades' }),
-    render: () => {
-      const ActionsBlockedEscaladesPage = React.lazy(() => import('../components/views/ActionsBlockedEscaladesPage').then(m => ({ default: m.ActionsBlockedEscaladesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ActionsBlockedEscaladesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ActionsBlockedEscaladesPage').then(m => ({ default: m.ActionsBlockedEscaladesPage }))),
   },
 
   'actions::blocked::analyse': {
@@ -1405,15 +1025,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Analyse des Blocages',
     ttl: 60_000,
     loader: loadActionsBlockedAnalyseApi,
-    render: () => {
-      const ActionsBlockedAnalysePage = React.lazy(() => import('../components/views/ActionsBlockedAnalysePage').then(m => ({ default: m.ActionsBlockedAnalysePage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ActionsBlockedAnalysePage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ActionsBlockedAnalysePage').then(m => ({ default: m.ActionsBlockedAnalysePage }))),
   },
 
   'actions::assigned::moi': {
@@ -1421,15 +1033,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Actions À Moi',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'actions', sub: 'assigned', leaf: 'moi' }),
-    render: () => {
-      const ActionsAssignedMoiPage = React.lazy(() => import('../components/views/ActionsAssignedMoiPage').then(m => ({ default: m.ActionsAssignedMoiPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ActionsAssignedMoiPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ActionsAssignedMoiPage').then(m => ({ default: m.ActionsAssignedMoiPage }))),
   },
 
   'actions::assigned::equipe': {
@@ -1437,15 +1041,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Actions À Mon Équipe',
     ttl: 60_000,
     loader: loadActionsAssignedEquipeApi,
-    render: () => {
-      const ActionsAssignedEquipePage = React.lazy(() => import('../components/views/ActionsAssignedEquipePage').then(m => ({ default: m.ActionsAssignedEquipePage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ActionsAssignedEquipePage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ActionsAssignedEquipePage').then(m => ({ default: m.ActionsAssignedEquipePage }))),
   },
 
   'actions::assigned::non-assignees': {
@@ -1453,15 +1049,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Actions Non Assignées',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'actions', sub: 'assigned', leaf: 'non-assignees' }),
-    render: () => {
-      const ActionsAssignedNonAssigneesPage = React.lazy(() => import('../components/views/ActionsAssignedNonAssigneesPage').then(m => ({ default: m.ActionsAssignedNonAssigneesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ActionsAssignedNonAssigneesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ActionsAssignedNonAssigneesPage').then(m => ({ default: m.ActionsAssignedNonAssigneesPage }))),
   },
 
   'actions::history::recentes': {
@@ -1469,15 +1057,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Actions Récentes',
     ttl: 60_000,
     loader: loadActionsHistoryRecentesApi,
-    render: () => {
-      const ActionsHistoryRecentPage = React.lazy(() => import('../components/views/ActionsHistoryRecentPage').then(m => ({ default: m.ActionsHistoryRecentPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ActionsHistoryRecentPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ActionsHistoryRecentPage').then(m => ({ default: m.ActionsHistoryRecentPage }))),
   },
 
   'actions::history::anciennes': {
@@ -1485,15 +1065,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Actions Anciennes',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'actions', sub: 'history', leaf: 'anciennes' }),
-    render: () => {
-      const ActionsHistoryAnciennesPage = React.lazy(() => import('../components/views/ActionsHistoryAnciennesPage').then(m => ({ default: m.ActionsHistoryAnciennesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ActionsHistoryAnciennesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ActionsHistoryAnciennesPage').then(m => ({ default: m.ActionsHistoryAnciennesPage }))),
   },
 
   'actions::history::archivees': {
@@ -1501,15 +1073,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Actions Archivées',
     ttl: 60_000,
     loader: loadActionsHistoryArchiveesApi,
-    render: () => {
-      const ActionsHistoryArchiveesPage = React.lazy(() => import('../components/views/ActionsHistoryArchiveesPage').then(m => ({ default: m.ActionsHistoryArchiveesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <ActionsHistoryArchiveesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/ActionsHistoryArchiveesPage').then(m => ({ default: m.ActionsHistoryArchiveesPage }))),
   },
 
   'performance::bureaux::all': {
@@ -1517,15 +1081,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Tous les Bureaux',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'bureaux', leaf: 'all' }),
-    render: () => {
-      const PerformanceBureauxAllPage = React.lazy(() => import('../components/views/PerformanceBureauxAllPage').then(m => ({ default: m.PerformanceBureauxAllPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <PerformanceBureauxAllPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/PerformanceBureauxAllPage').then(m => ({ default: m.PerformanceBureauxAllPage as React.ComponentType<{ data?: unknown }> })), { passData: true }),
   },
 
   'performance::bureaux::bmo': {
@@ -1533,15 +1089,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'BMO',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'bureaux', leaf: 'bmo' }),
-    render: () => {
-      const PerformanceBureauxBmoPage = React.lazy(() => import('../components/views/PerformanceBureauxBmoPage').then(m => ({ default: m.PerformanceBureauxBmoPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <PerformanceBureauxBmoPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/PerformanceBureauxBmoPage').then(m => ({ default: m.PerformanceBureauxBmoPage as React.ComponentType<{ data?: unknown }> })), { passData: true }),
   },
 
   'performance::bureaux::bf': {
@@ -1549,15 +1097,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'BF',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'bureaux', leaf: 'bf' }),
-    render: () => {
-      const PerformanceBureauxBfPage = React.lazy(() => import('../components/views/PerformanceBureauxBfPage').then(m => ({ default: m.PerformanceBureauxBfPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <PerformanceBureauxBfPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/PerformanceBureauxBfPage').then(m => ({ default: m.PerformanceBureauxBfPage as React.ComponentType<{ data?: unknown }> })), { passData: true }),
   },
 
   'performance::bureaux::bj': {
@@ -1565,15 +1105,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'BJ',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'bureaux', leaf: 'bj' }),
-    render: () => {
-      const PerformanceBureauxBjPage = React.lazy(() => import('../components/views/PerformanceBureauxBjPage').then(m => ({ default: m.PerformanceBureauxBjPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <PerformanceBureauxBjPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/PerformanceBureauxBjPage').then(m => ({ default: m.PerformanceBureauxBjPage as React.ComponentType<{ data?: unknown }> })), { passData: true }),
   },
 
   'performance::bureaux::bct': {
@@ -1581,15 +1113,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'BCT',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'bureaux', leaf: 'bct' }),
-    render: () => {
-      const PerformanceBureauxBctPage = React.lazy(() => import('../components/views/PerformanceBureauxBctPage').then(m => ({ default: m.PerformanceBureauxBctPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <PerformanceBureauxBctPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/PerformanceBureauxBctPage').then(m => ({ default: m.PerformanceBureauxBctPage as React.ComponentType<{ data?: unknown }> })), { passData: true }),
   },
 
   'performance::bureaux::bop': {
@@ -1597,15 +1121,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'BOP',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'bureaux', leaf: 'bop' }),
-    render: () => {
-      const PerformanceBureauxBopPage = React.lazy(() => import('../components/views/PerformanceBureauxBopPage').then(m => ({ default: m.PerformanceBureauxBopPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <PerformanceBureauxBopPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/PerformanceBureauxBopPage').then(m => ({ default: m.PerformanceBureauxBopPage as React.ComponentType<{ data?: unknown }> })), { passData: true }),
   },
 
   'performance::bureaux::bcg': {
@@ -1613,15 +1129,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'BCG',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'bureaux', leaf: 'bcg' }),
-    render: () => {
-      const PerformanceBureauxBcgPage = React.lazy(() => import('../components/views/PerformanceBureauxBcgPage').then(m => ({ default: m.PerformanceBureauxBcgPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <PerformanceBureauxBcgPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/PerformanceBureauxBcgPage').then(m => ({ default: m.PerformanceBureauxBcgPage as React.ComponentType<{ data?: unknown }> })), { passData: true }),
   },
 
   'performance::bureaux::bja': {
@@ -1629,15 +1137,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'BJA',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'bureaux', leaf: 'bja' }),
-    render: () => {
-      const PerformanceBureauxBjaPage = React.lazy(() => import('../components/views/PerformanceBureauxBjaPage').then(m => ({ default: m.PerformanceBureauxBjaPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <PerformanceBureauxBjaPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/PerformanceBureauxBjaPage').then(m => ({ default: m.PerformanceBureauxBjaPage as React.ComponentType<{ data?: unknown }> })), { passData: true }),
   },
 
   'performance::bureaux::brc': {
@@ -1645,15 +1145,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'BRC',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'bureaux', leaf: 'brc' }),
-    render: () => {
-      const PerformanceBureauxBrcPage = React.lazy(() => import('../components/views/PerformanceBureauxBrcPage').then(m => ({ default: m.PerformanceBureauxBrcPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <PerformanceBureauxBrcPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/PerformanceBureauxBrcPage').then(m => ({ default: m.PerformanceBureauxBrcPage as React.ComponentType<{ data?: unknown }> })), { passData: true }),
   },
 
   'performance::bureaux::bpl': {
@@ -1661,15 +1153,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'BPL',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'bureaux', leaf: 'bpl' }),
-    render: () => {
-      const PerformanceBureauxBplPage = React.lazy(() => import('../components/views/PerformanceBureauxBplPage').then(m => ({ default: m.PerformanceBureauxBplPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <PerformanceBureauxBplPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/PerformanceBureauxBplPage').then(m => ({ default: m.PerformanceBureauxBplPage as React.ComponentType<{ data?: unknown }> })), { passData: true }),
   },
 
   'performance::bureaux::bex': {
@@ -1677,15 +1161,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'BEX',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'bureaux', leaf: 'bex' }),
-    render: () => {
-      const PerformanceBureauxBexPage = React.lazy(() => import('../components/views/PerformanceBureauxBexPage').then(m => ({ default: m.PerformanceBureauxBexPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <PerformanceBureauxBexPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/PerformanceBureauxBexPage').then(m => ({ default: m.PerformanceBureauxBexPage as React.ComponentType<{ data?: unknown }> })), { passData: true }),
   },
 
   'performance::bureaux::comparaison': {
@@ -1693,15 +1169,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Comparaison Bureaux',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'performance', sub: 'bureaux', leaf: 'comparaison' }),
-    render: () => {
-      const PerformanceBureauxComparaisonPage = React.lazy(() => import('../components/views/PerformanceBureauxComparaisonPage').then(m => ({ default: m.PerformanceBureauxComparaisonPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <PerformanceBureauxComparaisonPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/PerformanceBureauxComparaisonPage').then(m => ({ default: m.PerformanceBureauxComparaisonPage as React.ComponentType<{ data?: unknown }> })), { passData: true }),
   },
 
   'risks::critical::risques': {
@@ -1709,15 +1177,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Risques Critiques',
     ttl: 60_000,
     loader: loadRisksCriticalRisquesApi,
-    render: () => {
-      const RisksCriticalRisquesPage = React.lazy(() => import('../components/views/RisksCriticalRisquesPage').then(m => ({ default: m.RisksCriticalRisquesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <RisksCriticalRisquesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/RisksCriticalRisquesPage').then(m => ({ default: m.RisksCriticalRisquesPage }))),
   },
 
   'risks::critical::alertes': {
@@ -1725,15 +1185,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Alertes Critiques',
     ttl: 60_000,
     loader: loadRisksCriticalAlertesApi,
-    render: () => {
-      const RisksCriticalAlertesPage = React.lazy(() => import('../components/views/RisksCriticalAlertesPage').then(m => ({ default: m.RisksCriticalAlertesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <RisksCriticalAlertesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/RisksCriticalAlertesPage').then(m => ({ default: m.RisksCriticalAlertesPage }))),
   },
 
   'risks::warnings::moyens': {
@@ -1741,15 +1193,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Risques Moyens',
     ttl: 60_000,
     loader: loadRisksWarningsMoyensApi,
-    render: () => {
-      const RisksWarningsMoyensPage = React.lazy(() => import('../components/views/RisksWarningsMoyensPage').then(m => ({ default: m.RisksWarningsMoyensPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <RisksWarningsMoyensPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/RisksWarningsMoyensPage').then(m => ({ default: m.RisksWarningsMoyensPage }))),
   },
 
   'risks::warnings::faibles': {
@@ -1757,15 +1201,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Risques Faibles',
     ttl: 60_000,
     loader: loadRisksWarningsFaiblesApi,
-    render: () => {
-      const RisksWarningsFaiblesPage = React.lazy(() => import('../components/views/RisksWarningsFaiblesPage').then(m => ({ default: m.RisksWarningsFaiblesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <RisksWarningsFaiblesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/RisksWarningsFaiblesPage').then(m => ({ default: m.RisksWarningsFaiblesPage }))),
   },
 
   'risks::type::paiements-retard': {
@@ -1773,15 +1209,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Paiements en Retard',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'risks', sub: 'type', leaf: 'paiements-retard' }),
-    render: () => {
-      const RisksTypePaiementsRetardPage = React.lazy(() => import('../components/views/RisksTypePaiementsRetardPage').then(m => ({ default: m.RisksTypePaiementsRetardPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <RisksTypePaiementsRetardPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/RisksTypePaiementsRetardPage').then(m => ({ default: m.RisksTypePaiementsRetardPage }))),
   },
 
   'risks::type::contrats-expires': {
@@ -1789,15 +1217,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Contrats Expirés',
     ttl: 60_000,
     loader: loadRisksTypeContratsExpiresApi,
-    render: () => {
-      const RisksTypeContratsExpiresPage = React.lazy(() => import('../components/views/RisksTypeContratsExpiresPage').then(m => ({ default: m.RisksTypeContratsExpiresPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <RisksTypeContratsExpiresPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/RisksTypeContratsExpiresPage').then(m => ({ default: m.RisksTypeContratsExpiresPage }))),
   },
 
   'risks::type::blocages': {
@@ -1805,15 +1225,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Blocages',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'risks', sub: 'type', leaf: 'blocages' }),
-    render: () => {
-      const RisksTypeBlocagesPage = React.lazy(() => import('../components/views/RisksTypeBlocagesPage').then(m => ({ default: m.RisksTypeBlocagesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <RisksTypeBlocagesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/RisksTypeBlocagesPage').then(m => ({ default: m.RisksTypeBlocagesPage }))),
   },
 
   'risks::type::alertes-systeme': {
@@ -1821,15 +1233,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Alertes Système',
     ttl: 60_000,
     loader: loadRisksTypeAlertesSystemeApi,
-    render: () => {
-      const RisksTypeAlertesSystemePage = React.lazy(() => import('../components/views/RisksTypeAlertesSystemePage').then(m => ({ default: m.RisksTypeAlertesSystemePage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <RisksTypeAlertesSystemePage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/RisksTypeAlertesSystemePage').then(m => ({ default: m.RisksTypeAlertesSystemePage }))),
   },
 
   'risks::analyse::tendances': {
@@ -1837,15 +1241,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Tendances des Risques',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'risks', sub: 'analyse', leaf: 'tendances' }),
-    render: () => {
-      const RisksAnalyseTendancesPage = React.lazy(() => import('../components/views/RisksAnalyseTendancesPage').then(m => ({ default: m.RisksAnalyseTendancesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <RisksAnalyseTendancesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/RisksAnalyseTendancesPage').then(m => ({ default: m.RisksAnalyseTendancesPage }))),
   },
 
   'risks::analyse::causes-racines': {
@@ -1853,15 +1249,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Causes Racines',
     ttl: 60_000,
     loader: loadRisksAnalyseCausesRacinesApi,
-    render: () => {
-      const RisksAnalyseCausesRacinesPage = React.lazy(() => import('../components/views/RisksAnalyseCausesRacinesPage').then(m => ({ default: m.RisksAnalyseCausesRacinesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <RisksAnalyseCausesRacinesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/RisksAnalyseCausesRacinesPage').then(m => ({ default: m.RisksAnalyseCausesRacinesPage }))),
   },
 
   'risks::analyse::previsions': {
@@ -1869,15 +1257,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Prévisions des Risques',
     ttl: 60_000,
     loader: loadRisksAnalysePrevisionsApi,
-    render: () => {
-      const RisksAnalysePrevisionsPage = React.lazy(() => import('../components/views/RisksAnalysePrevisionsPage').then(m => ({ default: m.RisksAnalysePrevisionsPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <RisksAnalysePrevisionsPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/RisksAnalysePrevisionsPage').then(m => ({ default: m.RisksAnalysePrevisionsPage }))),
   },
 
   'risks::actions-correctives::en-cours': {
@@ -1885,15 +1265,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Actions Correctives En Cours',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'risks', sub: 'actions-correctives', leaf: 'en-cours' }),
-    render: () => {
-      const RisksActionsCorrectivesEnCoursPage = React.lazy(() => import('../components/views/RisksActionsCorrectivesEnCoursPage').then(m => ({ default: m.RisksActionsCorrectivesEnCoursPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <RisksActionsCorrectivesEnCoursPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/RisksActionsCorrectivesEnCoursPage').then(m => ({ default: m.RisksActionsCorrectivesEnCoursPage }))),
   },
 
   'risks::actions-correctives::planifiees': {
@@ -1901,15 +1273,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Actions Correctives Planifiées',
     ttl: 60_000,
     loader: loadRisksActionsCorrectivesPlanifieesApi,
-    render: () => {
-      const RisksActionsCorrectivesPlanifieesPage = React.lazy(() => import('../components/views/RisksActionsCorrectivesPlanifieesPage').then(m => ({ default: m.RisksActionsCorrectivesPlanifieesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <RisksActionsCorrectivesPlanifieesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/RisksActionsCorrectivesPlanifieesPage').then(m => ({ default: m.RisksActionsCorrectivesPlanifieesPage }))),
   },
 
   'decisions::pending::urgentes': {
@@ -1917,15 +1281,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Décisions Urgentes',
     ttl: 60_000,
     loader: loadDecisionsPendingUrgentesApi,
-    render: () => {
-      const DecisionsPendingUrgentesPage = React.lazy(() => import('../components/views/DecisionsPendingUrgentesPage').then(m => ({ default: m.DecisionsPendingUrgentesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <DecisionsPendingUrgentesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/DecisionsPendingUrgentesPage').then(m => ({ default: m.DecisionsPendingUrgentesPage }))),
   },
 
   'decisions::pending::normales': {
@@ -1933,15 +1289,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Décisions Normales',
     ttl: 60_000,
     loader: loadDecisionsPendingNormalesApi,
-    render: () => {
-      const DecisionsPendingNormalesPage = React.lazy(() => import('../components/views/DecisionsPendingNormalesPage').then(m => ({ default: m.DecisionsPendingNormalesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <DecisionsPendingNormalesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/DecisionsPendingNormalesPage').then(m => ({ default: m.DecisionsPendingNormalesPage }))),
   },
 
   'decisions::pending::planifiees': {
@@ -1949,15 +1297,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Décisions Planifiées',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'decisions', sub: 'pending', leaf: 'planifiees' }),
-    render: () => {
-      const DecisionsPendingPlanifieesPage = React.lazy(() => import('../components/views/DecisionsPendingPlanifieesPage').then(m => ({ default: m.DecisionsPendingPlanifieesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <DecisionsPendingPlanifieesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/DecisionsPendingPlanifieesPage').then(m => ({ default: m.DecisionsPendingPlanifieesPage }))),
   },
 
   'decisions::executed::recentes': {
@@ -1965,15 +1305,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Décisions Récentes',
     ttl: 60_000,
     loader: loadDecisionsExecutedRecentesApi,
-    render: () => {
-      const DecisionsExecutedRecentesPage = React.lazy(() => import('../components/views/DecisionsExecutedRecentesPage').then(m => ({ default: m.DecisionsExecutedRecentesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <DecisionsExecutedRecentesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/DecisionsExecutedRecentesPage').then(m => ({ default: m.DecisionsExecutedRecentesPage }))),
   },
 
   'decisions::executed::anciennes': {
@@ -1981,15 +1313,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Décisions Anciennes',
     ttl: 60_000,
     loader: loadDecisionsExecutedAnciennesApi,
-    render: () => {
-      const DecisionsExecutedAnciennesPage = React.lazy(() => import('../components/views/DecisionsExecutedAnciennesPage').then(m => ({ default: m.DecisionsExecutedAnciennesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <DecisionsExecutedAnciennesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/DecisionsExecutedAnciennesPage').then(m => ({ default: m.DecisionsExecutedAnciennesPage }))),
   },
 
   'decisions::executed::par-type': {
@@ -1997,15 +1321,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Décisions Par Type',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'decisions', sub: 'executed', leaf: 'par-type' }),
-    render: () => {
-      const DecisionsExecutedParTypePage = React.lazy(() => import('../components/views/DecisionsExecutedParTypePage').then(m => ({ default: m.DecisionsExecutedParTypePage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <DecisionsExecutedParTypePage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/DecisionsExecutedParTypePage').then(m => ({ default: m.DecisionsExecutedParTypePage }))),
   },
 
   'decisions::timeline::chronologique': {
@@ -2013,15 +1329,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Timeline Chronologique',
     ttl: 60_000,
     loader: loadDecisionsTimelineChronologiqueApi,
-    render: () => {
-      const DecisionsTimelineChronologiquePage = React.lazy(() => import('../components/views/DecisionsTimelineChronologiquePage').then(m => ({ default: m.DecisionsTimelineChronologiquePage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <DecisionsTimelineChronologiquePage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/DecisionsTimelineChronologiquePage').then(m => ({ default: m.DecisionsTimelineChronologiquePage }))),
   },
 
   'decisions::timeline::par-type': {
@@ -2029,15 +1337,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Timeline Par Type',
     ttl: 60_000,
     loader: loadDecisionsTimelineParTypeApi,
-    render: () => {
-      const DecisionsTimelineParTypePage = React.lazy(() => import('../components/views/DecisionsTimelineParTypePage').then(m => ({ default: m.DecisionsTimelineParTypePage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <DecisionsTimelineParTypePage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/DecisionsTimelineParTypePage').then(m => ({ default: m.DecisionsTimelineParTypePage }))),
   },
 
   'decisions::timeline::par-auteur': {
@@ -2045,15 +1345,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Timeline Par Auteur',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'decisions', sub: 'timeline', leaf: 'par-auteur' }),
-    render: () => {
-      const DecisionsTimelineParAuteurPage = React.lazy(() => import('../components/views/DecisionsTimelineParAuteurPage').then(m => ({ default: m.DecisionsTimelineParAuteurPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <DecisionsTimelineParAuteurPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/DecisionsTimelineParAuteurPage').then(m => ({ default: m.DecisionsTimelineParAuteurPage }))),
   },
 
   'decisions::audit::traces': {
@@ -2061,15 +1353,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: "Traces d'Audit",
     ttl: 60_000,
     loader: loadDecisionsAuditTracesApi,
-    render: () => {
-      const DecisionsAuditTracesPage = React.lazy(() => import('../components/views/DecisionsAuditTracesPage').then(m => ({ default: m.DecisionsAuditTracesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <DecisionsAuditTracesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/DecisionsAuditTracesPage').then(m => ({ default: m.DecisionsAuditTracesPage }))),
   },
 
   'decisions::audit::rapports': {
@@ -2077,15 +1361,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: "Rapports d'Audit",
     ttl: 60_000,
     loader: loadDecisionsAuditRapportsApi,
-    render: () => {
-      const DecisionsAuditRapportsPage = React.lazy(() => import('../components/views/DecisionsAuditRapportsPage').then(m => ({ default: m.DecisionsAuditRapportsPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <DecisionsAuditRapportsPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/DecisionsAuditRapportsPage').then(m => ({ default: m.DecisionsAuditRapportsPage }))),
   },
 
   'decisions::audit::conformite': {
@@ -2093,15 +1369,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Conformité',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'decisions', sub: 'audit', leaf: 'conformite' }),
-    render: () => {
-      const DecisionsAuditConformitePage = React.lazy(() => import('../components/views/DecisionsAuditConformitePage').then(m => ({ default: m.DecisionsAuditConformitePage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <DecisionsAuditConformitePage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/DecisionsAuditConformitePage').then(m => ({ default: m.DecisionsAuditConformitePage }))),
   },
 
   'decisions::modeles::substitution': {
@@ -2109,15 +1377,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Modèles de Substitution',
     ttl: 60_000,
     loader: loadDecisionsModelesSubstitutionApi,
-    render: () => {
-      const DecisionsModelesSubstitutionPage = React.lazy(() => import('../components/views/DecisionsModelesSubstitutionPage').then(m => ({ default: m.DecisionsModelesSubstitutionPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <DecisionsModelesSubstitutionPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/DecisionsModelesSubstitutionPage').then(m => ({ default: m.DecisionsModelesSubstitutionPage }))),
   },
 
   'decisions::modeles::delegation': {
@@ -2125,15 +1385,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Modèles de Délégation',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'decisions', sub: 'modeles', leaf: 'delegation' }),
-    render: () => {
-      const DecisionsModelesDelegationPage = React.lazy(() => import('../components/views/DecisionsModelesDelegationPage').then(m => ({ default: m.DecisionsModelesDelegationPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <DecisionsModelesDelegationPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/DecisionsModelesDelegationPage').then(m => ({ default: m.DecisionsModelesDelegationPage }))),
   },
 
   'decisions::modeles::arbitrage': {
@@ -2141,15 +1393,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: "Modèles d'Arbitrage",
     ttl: 60_000,
     loader: loadDecisionsModelesArbitrageApi,
-    render: () => {
-      const DecisionsModelesArbitragePage = React.lazy(() => import('../components/views/DecisionsModelesArbitragePage').then(m => ({ default: m.DecisionsModelesArbitragePage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <DecisionsModelesArbitragePage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/DecisionsModelesArbitragePage').then(m => ({ default: m.DecisionsModelesArbitragePage }))),
   },
 
   'realtime::monitoring::vue-globale': {
@@ -2157,15 +1401,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Vue Globale',
     ttl: 60_000,
     loader: loadRealtimeMonitoringVueGlobaleApi,
-    render: () => {
-      const RealtimeMonitoringVueGlobalePage = React.lazy(() => import('../components/views/RealtimeMonitoringVueGlobalePage').then(m => ({ default: m.RealtimeMonitoringVueGlobalePage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <RealtimeMonitoringVueGlobalePage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/RealtimeMonitoringVueGlobalePage').then(m => ({ default: m.RealtimeMonitoringVueGlobalePage }))),
   },
 
   'realtime::monitoring::metriques': {
@@ -2173,15 +1409,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Métriques',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'realtime', sub: 'monitoring', leaf: 'metriques' }),
-    render: () => {
-      const RealtimeMonitoringMetriquesPage = React.lazy(() => import('../components/views/RealtimeMonitoringMetriquesPage').then(m => ({ default: m.RealtimeMonitoringMetriquesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <RealtimeMonitoringMetriquesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/RealtimeMonitoringMetriquesPage').then(m => ({ default: m.RealtimeMonitoringMetriquesPage }))),
   },
 
   'realtime::monitoring::performance': {
@@ -2189,15 +1417,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Performance',
     ttl: 60_000,
     loader: loadRealtimeMonitoringPerformanceApi,
-    render: () => {
-      const RealtimeMonitoringPerformancePage = React.lazy(() => import('../components/views/RealtimeMonitoringPerformancePage').then(m => ({ default: m.RealtimeMonitoringPerformancePage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <RealtimeMonitoringPerformancePage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/RealtimeMonitoringPerformancePage').then(m => ({ default: m.RealtimeMonitoringPerformancePage }))),
   },
 
   'realtime::alerts::actives': {
@@ -2205,15 +1425,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Alertes Actives',
     ttl: 60_000,
     loader: loadRealtimeAlertsActivesApi,
-    render: () => {
-      const RealtimeAlertsActivesPage = React.lazy(() => import('../components/views/RealtimeAlertsActivesPage').then(m => ({ default: m.RealtimeAlertsActivesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <RealtimeAlertsActivesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/RealtimeAlertsActivesPage').then(m => ({ default: m.RealtimeAlertsActivesPage }))),
   },
 
   'realtime::alerts::resolues': {
@@ -2221,15 +1433,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Alertes Résolues',
     ttl: 60_000,
     loader: loadRealtimeAlertsResoluesApi,
-    render: () => {
-      const RealtimeAlertsResoluesPage = React.lazy(() => import('../components/views/RealtimeAlertsResoluesPage').then(m => ({ default: m.RealtimeAlertsResoluesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <RealtimeAlertsResoluesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/RealtimeAlertsResoluesPage').then(m => ({ default: m.RealtimeAlertsResoluesPage }))),
   },
 
   'realtime::alerts::historique': {
@@ -2237,15 +1441,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Historique des Alertes',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'realtime', sub: 'alerts', leaf: 'historique' }),
-    render: () => {
-      const RealtimeAlertsHistoriquePage = React.lazy(() => import('../components/views/RealtimeAlertsHistoriquePage').then(m => ({ default: m.RealtimeAlertsHistoriquePage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <RealtimeAlertsHistoriquePage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/RealtimeAlertsHistoriquePage').then(m => ({ default: m.RealtimeAlertsHistoriquePage }))),
   },
 
   'realtime::notifications::non-lues': {
@@ -2253,15 +1449,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Notifications Non Lues',
     ttl: 60_000,
     loader: loadRealtimeNotificationsNonLuesApi,
-    render: () => {
-      const RealtimeNotificationsNonLuesPage = React.lazy(() => import('../components/views/RealtimeNotificationsNonLuesPage').then(m => ({ default: m.RealtimeNotificationsNonLuesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <RealtimeNotificationsNonLuesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/RealtimeNotificationsNonLuesPage').then(m => ({ default: m.RealtimeNotificationsNonLuesPage }))),
   },
 
   'realtime::notifications::toutes': {
@@ -2269,15 +1457,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Toutes les Notifications',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'realtime', sub: 'notifications', leaf: 'toutes' }),
-    render: () => {
-      const RealtimeNotificationsToutesPage = React.lazy(() => import('../components/views/RealtimeNotificationsToutesPage').then(m => ({ default: m.RealtimeNotificationsToutesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <RealtimeNotificationsToutesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/RealtimeNotificationsToutesPage').then(m => ({ default: m.RealtimeNotificationsToutesPage }))),
   },
 
   'realtime::notifications::preferences': {
@@ -2285,15 +1465,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Préférences Notifications',
     ttl: 60_000,
     loader: loadRealtimeNotificationsPreferencesApi,
-    render: () => {
-      const RealtimeNotificationsPreferencesPage = React.lazy(() => import('../components/views/RealtimeNotificationsPreferencesPage').then(m => ({ default: m.RealtimeNotificationsPreferencesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <RealtimeNotificationsPreferencesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/RealtimeNotificationsPreferencesPage').then(m => ({ default: m.RealtimeNotificationsPreferencesPage }))),
   },
 
   'realtime::sync::etat': {
@@ -2301,15 +1473,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'État de Synchronisation',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'realtime', sub: 'sync', leaf: 'etat' }),
-    render: () => {
-      const RealtimeSyncEtatPage = React.lazy(() => import('../components/views/RealtimeSyncEtatPage').then(m => ({ default: m.RealtimeSyncEtatPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <RealtimeSyncEtatPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/RealtimeSyncEtatPage').then(m => ({ default: m.RealtimeSyncEtatPage }))),
   },
 
   'realtime::sync::historique': {
@@ -2317,15 +1481,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Historique de Synchronisation',
     ttl: 60_000,
     loader: loadRealtimeSyncHistoriqueApi,
-    render: () => {
-      const RealtimeSyncHistoriquePage = React.lazy(() => import('../components/views/RealtimeSyncHistoriquePage').then(m => ({ default: m.RealtimeSyncHistoriquePage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <RealtimeSyncHistoriquePage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/RealtimeSyncHistoriquePage').then(m => ({ default: m.RealtimeSyncHistoriquePage }))),
   },
 
   'realtime::sync::configuration': {
@@ -2333,15 +1489,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Configuration Synchronisation',
     ttl: 60_000,
     loader: loadRealtimeSyncConfigurationApi,
-    render: () => {
-      const RealtimeSyncConfigurationPage = React.lazy(() => import('../components/views/RealtimeSyncConfigurationPage').then(m => ({ default: m.RealtimeSyncConfigurationPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <RealtimeSyncConfigurationPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/RealtimeSyncConfigurationPage').then(m => ({ default: m.RealtimeSyncConfigurationPage }))),
   },
 
   'administration::settings::dashboard': {
@@ -2349,15 +1497,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Paramètres Dashboard',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'administration', sub: 'settings', leaf: 'dashboard' }),
-    render: () => {
-      const AdministrationSettingsDashboardPage = React.lazy(() => import('../components/views/AdministrationSettingsDashboardPage').then(m => ({ default: m.AdministrationSettingsDashboardPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <AdministrationSettingsDashboardPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/AdminSettingsDashboardPage').then(m => ({ default: m.AdminSettingsDashboardPage as React.ComponentType<{ data?: unknown }> })), { passData: true }),
   },
 
   'administration::settings::kpis': {
@@ -2365,15 +1505,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Paramètres KPIs',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'administration', sub: 'settings', leaf: 'kpis' }),
-    render: () => {
-      const AdministrationSettingsKpisPage = React.lazy(() => import('../components/views/AdministrationSettingsKpisPage').then(m => ({ default: m.AdministrationSettingsKpisPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <AdministrationSettingsKpisPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/AdminSettingsKpisPage').then(m => ({ default: m.AdminSettingsKpisPage as React.ComponentType<{ data?: unknown }> })), { passData: true }),
   },
 
   'administration::settings::notifications': {
@@ -2381,15 +1513,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Paramètres Notifications',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'administration', sub: 'settings', leaf: 'notifications' }),
-    render: () => {
-      const AdministrationSettingsNotificationsPage = React.lazy(() => import('../components/views/AdministrationSettingsNotificationsPage').then(m => ({ default: m.AdministrationSettingsNotificationsPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <AdministrationSettingsNotificationsPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/AdminSettingsNotificationsPage').then(m => ({ default: m.AdminSettingsNotificationsPage as React.ComponentType<{ data?: unknown }> })), { passData: true }),
   },
 
   'administration::users::liste': {
@@ -2397,15 +1521,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Liste des Utilisateurs',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'administration', sub: 'users', leaf: 'liste' }),
-    render: () => {
-      const AdministrationUsersListePage = React.lazy(() => import('../components/views/AdministrationUsersListePage').then(m => ({ default: m.AdministrationUsersListePage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <AdministrationUsersListePage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/AdminUsersListePage').then(m => ({ default: m.AdminUsersListePage as React.ComponentType<{ data?: unknown }> })), { passData: true }),
   },
 
   'administration::users::permissions': {
@@ -2413,15 +1529,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Permissions Utilisateurs',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'administration', sub: 'users', leaf: 'permissions' }),
-    render: () => {
-      const AdministrationUsersPermissionsPage = React.lazy(() => import('../components/views/AdministrationUsersPermissionsPage').then(m => ({ default: m.AdministrationUsersPermissionsPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <AdministrationUsersPermissionsPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/AdminUsersPermissionsPage').then(m => ({ default: m.AdminUsersPermissionsPage as React.ComponentType<{ data?: unknown }> })), { passData: true }),
   },
 
   'administration::permissions::roles': {
@@ -2429,15 +1537,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Rôles',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'administration', sub: 'permissions', leaf: 'roles' }),
-    render: () => {
-      const AdministrationPermissionsRolesPage = React.lazy(() => import('../components/views/AdministrationPermissionsRolesPage').then(m => ({ default: m.AdministrationPermissionsRolesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <AdministrationPermissionsRolesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/AdminPermissionsRolesPage').then(m => ({ default: m.AdminPermissionsRolesPage as React.ComponentType<{ data?: unknown }> })), { passData: true }),
   },
 
   'administration::permissions::acces': {
@@ -2445,15 +1545,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Accès',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'administration', sub: 'permissions', leaf: 'acces' }),
-    render: () => {
-      const AdministrationPermissionsAccesPage = React.lazy(() => import('../components/views/AdministrationPermissionsAccesPage').then(m => ({ default: m.AdministrationPermissionsAccesPage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <AdministrationPermissionsAccesPage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/AdminPermissionsAccesPage').then(m => ({ default: m.AdminPermissionsAccesPage as React.ComponentType<{ data?: unknown }> })), { passData: true }),
   },
 
   'administration::logs::activite': {
@@ -2461,15 +1553,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: "Logs d'Activité",
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'administration', sub: 'logs', leaf: 'activite' }),
-    render: () => {
-      const AdministrationLogsActivitePage = React.lazy(() => import('../components/views/AdministrationLogsActivitePage').then(m => ({ default: m.AdministrationLogsActivitePage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <AdministrationLogsActivitePage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/AdminLogsActivitePage').then(m => ({ default: m.AdminLogsActivitePage as React.ComponentType<{ data?: unknown }> })), { passData: true }),
   },
 
   'administration::logs::systeme': {
@@ -2477,15 +1561,7 @@ export const dashboardRegistry: DashboardRegistry = {
     title: 'Logs Système',
     ttl: 60_000,
     loader: createDynamicApiLoader<DashboardViewData>({ main: 'administration', sub: 'logs', leaf: 'systeme' }),
-    render: () => {
-      const AdministrationLogsSystemePage = React.lazy(() => import('../components/views/AdministrationLogsSystemePage').then(m => ({ default: m.AdministrationLogsSystemePage })));
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
-      return (
-        <React.Suspense fallback={<LoadingFallback />}>
-          <AdministrationLogsSystemePage />
-        </React.Suspense>
-      );
-    },
+    render: createLazyView(() => import('../components/views/AdminLogsSystemePage').then(m => ({ default: m.AdminLogsSystemePage as React.ComponentType<{ data?: unknown }> })), { passData: true }),
   },
 };
 

@@ -2,7 +2,8 @@
  * Export des composants du module Dashboard
  */
 
-export { 
+/** @deprecated Utiliser DashboardViewRouter. Conservé pour rétrocompat. */
+export {
   DashboardContentRouter,
   useNavigationView,
   useIsViewActive,
@@ -10,6 +11,7 @@ export {
   DashboardContentRouterWithProps,
 } from './DashboardContentRouter';
 
+/** @deprecated Utiliser DashboardViewRouter. */
 export type { DashboardContentRouterProps } from './DashboardContentRouter';
 
 export { DashboardRegistryView } from './DashboardRegistryView';
@@ -20,6 +22,7 @@ export { DashboardKPIBarWithExport } from './DashboardKPIBarWithExport';
 export type { KPIData } from './DashboardKPIBar';
 export { DashboardFooter } from './DashboardFooter';
 export { DashboardBreadcrumbs } from './DashboardBreadcrumbs';
+export { DashboardModulesBar } from './DashboardModulesBar';
 export { DashboardCommandCenterPage } from './DashboardCommandCenterPage';
 export { DashboardModals } from './DashboardModals';
 export { DashboardUrlSync } from './DashboardUrlSync';

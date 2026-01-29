@@ -43,28 +43,8 @@ export function AuthProvider({ children, initialUser = null }: AuthProviderProps
         const storedUser = localStorage.getItem('yesselate_user');
         if (storedUser) {
           setUser(JSON.parse(storedUser));
-        } else {
-          // Pour dev: utiliser un utilisateur mock par défaut
-          const defaultUser = mockEmployes.find((e: any) => e.id === 'USR-001' || e.id === 'EMP001') as any;
-          if (defaultUser) {
-            const nameParts = (defaultUser.name || defaultUser.nom || '').split(' ');
-            const user: User = {
-              id: defaultUser.id,
-              nom: nameParts.length > 1 ? nameParts.slice(1).join(' ') : (defaultUser.name || defaultUser.nom || ''),
-              prenom: nameParts[0] || (defaultUser.prenom || ''),
-              email: defaultUser.email || '',
-              telephone: defaultUser.phone || defaultUser.telephone || '',
-              role: 'manager',
-              avatar: undefined,
-              bureauId: defaultUser.bureau || defaultUser.bureauId || undefined,
-              isActive: (defaultUser.status || defaultUser.statut) === 'actif',
-              createdAt: defaultUser.dateEmbauche || defaultUser.createdAt || new Date().toISOString(),
-              updatedAt: defaultUser.updatedAt || new Date().toISOString(),
-            };
-            setUser(user);
-            localStorage.setItem('yesselate_user', JSON.stringify(user));
-          }
         }
+        // Sinon: pas d'utilisateur par défaut — connexion requise (login page)
       } catch (error) {
         console.error('Erreur initialisation auth:', error);
       } finally {

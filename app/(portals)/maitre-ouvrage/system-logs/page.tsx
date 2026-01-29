@@ -1369,7 +1369,7 @@ export default function SystemLogsPage() {
 
         {/* Main Content */}
         <main className="flex-1 overflow-hidden">
-          <div className="h-full overflow-y-auto p-4">
+          <div className="h-full overflow-x-hidden overflow-y-auto p-4">
             <div className="space-y-3 sm:space-y-4">
       {/* Header / Console controls responsive */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">

@@ -228,3 +228,5 @@ export const PerformanceBudgetPage = memo(function PerformanceBudgetPage() {
     </DashboardPageLayout>
   );
 });
+
+export default PerformanceBudgetPage;

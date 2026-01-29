@@ -21,3 +21,5 @@ export function DashboardHome() {
   );
 }
 
+export default DashboardHome;
+

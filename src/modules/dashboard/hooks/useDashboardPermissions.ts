@@ -47,6 +47,7 @@ export function useDashboardPermissions() {
           scopes: rbac.scopes || { bureaux: [], chantiers: [] },
           featureFlags: policy.flags || rbac.featureFlags || {},
         });
+        setLoading(false);
         loadingRef.current = false;
       })
       .catch((err) => {
@@ -57,6 +58,7 @@ export function useDashboardPermissions() {
           scopes: { bureaux: [], chantiers: [] },
           featureFlags: {},
         });
+        setLoading(false);
         loadingRef.current = false;
       });
     // authHeaders mémoïsé dans useAuthHeaders (réf stable) ; lastFetched pour éviter boucle
@@ -67,10 +69,46 @@ export function useDashboardPermissions() {
    */
   const hasPermission = useMemo(
     () => (resource: string, action: string): boolean => {
-      if (permissions.roles.includes('admin')) return true;
+      if (permissions.roles.includes('admin') || permissions.roles.includes('dg')) return true;
       return permissions.permissions.some((p) => p === `${resource}:${action}`);
     },
     [permissions]
+  );
+
+  /**
+   * Vérifie si l'utilisateur a un rôle (BMO ou admin)
+   */
+  const hasRole = useMemo(
+    () => (role: string): boolean => permissions.roles.includes(role),
+    [permissions.roles]
+  );
+
+  /**
+   * Vérifie si l'utilisateur peut voir un chantier (DG = tout, sinon scope chantiers)
+   */
+  const canSeeChantier = useMemo(
+    () => (chantierCode: string): boolean => {
+      if (permissions.roles.includes('admin') || permissions.roles.includes('dg')) return true;
+      const list = permissions.scopes?.chantiers ?? [];
+      return list.length === 0 ? false : list.includes(chantierCode);
+    },
+    [permissions]
+  );
+
+  /**
+   * Permissions granulaires BMO
+   */
+  const canValidatePaiement = useMemo(
+    () => hasPermission('paiement', 'validate'),
+    [hasPermission]
+  );
+  const canArchiveChantier = useMemo(
+    () => hasPermission('chantier', 'archive'),
+    [hasPermission]
+  );
+  const canUpdateBudget = useMemo(
+    () => hasPermission('budget', 'update'),
+    [hasPermission]
   );
 
   /**
@@ -90,7 +128,13 @@ export function useDashboardPermissions() {
 
   return {
     permissions,
+    isLoading,
     hasPermission,
+    hasRole,
+    canSeeChantier,
+    canValidatePaiement,
+    canArchiveChantier,
+    canUpdateBudget,
     canAccessModule,
     canExport,
   };

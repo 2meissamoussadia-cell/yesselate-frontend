@@ -42,73 +42,93 @@ export type { NavKey };
 // ============================================================================
 
 const DashboardAdvancedView = dynamic(
-  () => import('../components/DashboardAdvancedView').then(m => m.DashboardAdvancedView),
+  () => import('../components/DashboardAdvancedView').then(m => ({ default: m.DashboardAdvancedView })),
   { ssr: false }
 );
 
 const ProjetKpiPage = dynamic(
-  () => import('../components/views/ProjetKpiPage').then(m => m.ProjetKpiPage),
+  () => import('../components/views/ProjetKpiPage').then(m => ({ default: m.ProjetKpiPage })),
   { ssr: false }
 );
 
 const DemandesKpiPage = dynamic(
-  () => import('../components/views/DemandesKpiPage').then(m => m.DemandesKpiPage),
+  () => import('../components/views/DemandesKpiPage').then(m => ({ default: m.DemandesKpiPage })),
   { ssr: false }
 );
 
 // Phase P5: Composants Achats/Contrats
 const AchatsOverviewPage = dynamic(
-  () => import('../components/views/AchatsOverviewPage').then(m => m.AchatsOverviewPage),
+  () => import('../components/views/AchatsOverviewPage').then(m => ({ default: m.AchatsOverviewPage })),
   { ssr: false }
 );
 const AchatsFournisseursPage = dynamic(
-  () => import('../components/views/AchatsFournisseursPage').then(m => m.AchatsFournisseursPage),
+  () => import('../components/views/AchatsFournisseursPage').then(m => ({ default: m.AchatsFournisseursPage })),
   { ssr: false }
 );
 const AchatsOpenOrdersPage = dynamic(
-  () => import('../components/views/AchatsOpenOrdersPage').then(m => m.AchatsOpenOrdersPage),
+  () => import('../components/views/AchatsOpenOrdersPage').then(m => ({ default: m.AchatsOpenOrdersPage })),
   { ssr: false }
 );
 const TendancesPage = dynamic(
-  () => import('../components/views/TendancesPage').then(m => m.TendancesPage),
+  () => import('../components/views/TendancesPage').then(m => ({ default: m.TendancesPage })),
   { ssr: false }
 );
 
 // Phase P6: Composants Stocks & Matériel
 const StocksOverviewPage = dynamic(
-  () => import('../components/stocks/StocksOverviewPage').then(m => m.StocksOverviewPage),
+  () => import('../components/stocks/StocksOverviewPage').then(m => ({ default: m.StocksOverviewPage })),
   { ssr: false }
 );
 const StocksTrendsPage = dynamic(
-  () => import('../components/stocks/StocksTrendsPage').then(m => m.StocksTrendsPage),
+  () => import('../components/stocks/StocksTrendsPage').then(m => ({ default: m.StocksTrendsPage })),
+  { ssr: false }
+);
+const StocksKpiPage = dynamic(
+  () => import('../components/views/StocksKpiPage').then(m => ({ default: m.StocksKpiPage })),
   { ssr: false }
 );
 const MaterielOverviewPage = dynamic(
-  () => import('../components/stocks/MaterielOverviewPage').then(m => m.MaterielOverviewPage),
+  () => import('../components/stocks/MaterielOverviewPage').then(m => ({ default: m.MaterielOverviewPage })),
+  { ssr: false }
+);
+const MaterielKpiPage = dynamic(
+  () => import('../components/views/MaterielKpiPage').then(m => ({ default: m.MaterielKpiPage })),
   { ssr: false }
 );
 
 // Phase P8: Composants Conformité & Marchés publics
-const ComplianceOverviewPage = dynamic(() => import('../components/compliance/ComplianceOverviewPage').then(m => m.ComplianceOverviewPage), { ssr: false });
-const ComplianceDocumentsPage = dynamic(() => import('../components/compliance/ComplianceDocumentsPage').then(m => m.ComplianceDocumentsPage), { ssr: false });
-const ComplianceWorkflowsPage = dynamic(() => import('../components/compliance/ComplianceWorkflowsPage').then(m => m.ComplianceWorkflowsPage), { ssr: false });
-const ComplianceLotsPage = dynamic(() => import('../components/compliance/ComplianceLotsPage').then(m => m.ComplianceLotsPage), { ssr: false });
+const ComplianceOverviewPage = dynamic(
+  () => import('../components/compliance/ComplianceOverviewPage').then(m => ({ default: m.ComplianceOverviewPage })),
+  { ssr: false }
+);
+const ComplianceDocumentsPage = dynamic(
+  () => import('../components/compliance/ComplianceDocumentsPage').then(m => ({ default: m.ComplianceDocumentsPage })),
+  { ssr: false }
+);
+const ComplianceWorkflowsPage = dynamic(
+  () => import('../components/compliance/ComplianceWorkflowsPage').then(m => ({ default: m.ComplianceWorkflowsPage })),
+  { ssr: false }
+);
+const ComplianceLotsPage = dynamic(
+  () => import('../components/compliance/ComplianceLotsPage').then(m => ({ default: m.ComplianceLotsPage })),
+  { ssr: false }
+);
 
 // Phase P7: Composants Reporting Direction
 const ReportingOverviewPage = dynamic(
-  () => import('../components/reporting/ReportingOverviewPage').then(m => m.ReportingOverviewPage),
+  () => import('../components/reporting/ReportingOverviewPage').then(m => ({ default: m.ReportingOverviewPage })),
   { ssr: false }
 );
 const ReportingTrendsPage = dynamic(
-  () => import('../components/reporting/ReportingTrendsPage').then(m => m.ReportingTrendsPage),
+  () => import('../components/reporting/ReportingTrendsPage').then(m => ({ default: m.ReportingTrendsPage })),
   { ssr: false }
 );
 const ReportingByBureauPage = dynamic(
-  () => import('../components/reporting/ReportingByBureauPage').then(m => m.ReportingByBureauPage),
+  () => import('../components/reporting/ReportingByBureauPage').then(m => ({ default: m.ReportingByBureauPage })),
   { ssr: false }
 );
 const ReportingByChantierPage = dynamic(
-  () => import('../components/reporting/ReportingByChantierPage').then(m => m.ReportingByChantierPage),
+  () => import('../components/reporting/ReportingByChantierPage').then(m => ({ default: m.ReportingByChantierPage })),
   { ssr: false }
 );
 

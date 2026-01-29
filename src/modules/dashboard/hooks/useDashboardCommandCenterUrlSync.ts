@@ -34,9 +34,21 @@ export function useDashboardCommandCenterUrlSync() {
 
   const isApplyingUrlToStoreRef = useRef(false);
   const lastPushedQueryRef = useRef<string>('');
+  // Ne synchroniser URL -> Store que quand l'URL a vraiment changé (back/forward, lien).
+  const lastUrlKeyRef = useRef<string>('');
+  // Après un Store -> URL push, ne pas appliquer URL -> Store tout de suite (params encore stales).
+  const justPushedRef = useRef(false);
 
   // 1) URL -> Store
   useEffect(() => {
+    const urlKey = `${urlMain ?? ''}|${urlSub ?? ''}|${urlLeaf ?? ''}`;
+    if (urlKey === lastUrlKeyRef.current) return;
+    if (justPushedRef.current) return;
+    // Ne pas réappliquer l’URL si le store vient d’être mis à jour par un clic (évite revert après remount).
+    const lastNav = useDashboardCommandCenterStore.getState().lastNavigatedAt;
+    if (lastNav && Date.now() - lastNav < 1500) return;
+    lastUrlKeyRef.current = urlKey;
+
     const normalized = normalizeRoute(urlMain, urlSub, urlLeaf);
     const nextMain = normalized.main;
     const nextSub = normalized.sub;
@@ -89,7 +101,12 @@ export function useDashboardCommandCenterUrlSync() {
     if (nextQuery === lastPushedQueryRef.current) return;
 
     lastPushedQueryRef.current = nextQuery;
+    justPushedRef.current = true;
     router.push(`${pathname}?${nextQuery}`);
+    const t = setTimeout(() => {
+      justPushedRef.current = false;
+    }, 300);
+    return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [main, sub, leaf, pathname, urlMain, urlSub, urlLeaf]); // router est stable (Next)
 }

@@ -319,7 +319,7 @@ export default function CalendarPageV2() {
         </aside>
 
         {/* Contenu */}
-        <main className="min-w-0 flex-1 overflow-y-auto pb-8">
+        <main className="min-w-0 max-w-full flex-1 overflow-x-hidden overflow-y-auto pb-8">
           <div className="mb-4 rounded-2xl border border-white/10 bg-white/5 p-4">
             <div className="flex items-start justify-between gap-3">
               <div>

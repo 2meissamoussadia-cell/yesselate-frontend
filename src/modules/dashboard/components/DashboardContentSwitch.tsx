@@ -42,6 +42,7 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
 
   const viewKey = useMemo(() => resolveViewKey(nav), [nav]);
   const view = dashboardRegistry[viewKey];
+  const viewDataRefreshTrigger = useDashboardCommandCenterStore((s) => s.viewDataRefreshTrigger);
 
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<DashboardViewData | null>(null);
@@ -154,7 +155,7 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [viewKey, view, nav.main, nav.sub, nav.leaf, maxRetries]); // Ne pas inclure cache pour éviter les boucles infinies
+  }, [viewKey, view, nav.main, nav.sub, nav.leaf, viewDataRefreshTrigger, maxRetries]); // viewDataRefreshTrigger déclenche un rechargement après invalidateAllViews()
 
   const handleRetry = useCallback(() => {
     setError(null);
@@ -180,7 +181,7 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
   }
 
   return (
-    <div className="relative min-h-[300px]">
+    <div className="relative min-h-[300px] min-w-0 max-w-full">
       {/* Loading overlay amélioré */}
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center bg-slate-950/50 backdrop-blur-md z-10 animate-fadeIn">
@@ -241,6 +242,7 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
       <AnimatePresence mode="wait">
         <motion.div
           key={viewKey}
+          className="min-w-0 max-w-full"
           initial={{ opacity: 0, y: 8, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -8, scale: 0.98 }}

@@ -5,15 +5,9 @@
 'use client';
 
 import { useDashboardPermissionsStore } from '@/lib/stores/dashboardPermissionsStore';
+import type { NavRequires } from '../types/dashboardNavigationTypes';
 
-/**
- * Exigences d'accès pour un nœud de navigation
- */
-export type NavRequires = {
-  perm?: string;
-  flag?: string;
-  roles?: string[];
-};
+export type { NavRequires };
 
 /**
  * Contexte utilisateur avec permissions et feature flags

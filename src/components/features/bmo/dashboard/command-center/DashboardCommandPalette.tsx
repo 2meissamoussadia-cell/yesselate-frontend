@@ -28,10 +28,11 @@ import {
   Command,
 } from 'lucide-react';
 import { useDashboardCommandCenterStore, type DashboardMainCategory } from '@/lib/stores/dashboardCommandCenterStore';
-import { dashboardNavigationConfig, findNavNodeById } from '@/modules/dashboard/navigation/dashboardNavigationConfig';
+import { dashboardNavigationConfig } from '@/modules/dashboard/navigation/dashboardNavigationConfig';
 import type { DashboardMainCategory as NavMainCategory } from '@/modules/dashboard/types/dashboardNavigationTypes';
 import { useGlobalSearch } from '@/modules/dashboard/hooks/useGlobalSearch';
 import { useDashboardKPIs } from '@/lib/hooks/useDashboardKPIs';
+import { useI18n } from '@/lib/i18n';
 
 interface CommandItem {
   id: string;
@@ -47,6 +48,7 @@ interface CommandItem {
 
 export function DashboardCommandPalette() {
   const router = useRouter();
+  const { t } = useI18n();
   const { commandPaletteOpen, toggleCommandPalette, navigate, openModal } =
     useDashboardCommandCenterStore();
 
@@ -59,16 +61,16 @@ export function DashboardCommandPalette() {
   // Recherche globale (KPIs, projets, etc.)
   const globalSearchResults = useGlobalSearch(query, kpis);
 
-  // Commandes disponibles - Génération dynamique depuis la config
+  // Commandes disponibles - Génération dynamique depuis la config (labels i18n)
   const commands: CommandItem[] = useMemo(() => {
     const items: CommandItem[] = [];
 
     // Parcourir toutes les catégories principales
     Object.entries(dashboardNavigationConfig).forEach(([mainId, mainNode]) => {
       const mainCategory = mainId as NavMainCategory;
+      const mainLabel = t(mainNode.i18nKey ?? mainNode.label ?? mainId);
       
       // Catégorie principale
-      const mainLabel = mainNode.label ?? mainId;
       items.push({
         id: `nav-${mainId}`,
         type: 'navigation',
@@ -85,14 +87,15 @@ export function DashboardCommandPalette() {
 
       // Sous-catégories
       mainNode.children?.forEach((subNode) => {
+        const subLabel = t(subNode.i18nKey ?? subNode.label ?? subNode.id);
         items.push({
           id: `nav-${mainId}-${subNode.id}`,
           type: 'navigation',
-          label: `${mainLabel} → ${subNode.label ?? subNode.id}`,
-          hint: subNode.label ?? subNode.id,
+          label: `${mainLabel} → ${subLabel}`,
+          hint: subLabel,
           icon: mainNode.icon || LayoutDashboard,
           category: 'Navigation',
-          keywords: [mainId, subNode.id, (subNode.label ?? subNode.id).toLowerCase()],
+          keywords: [mainId, subNode.id, subLabel.toLowerCase()],
           action: () => {
             navigate(mainCategory as unknown as DashboardMainCategory, subNode.id, null);
             toggleCommandPalette();
@@ -100,9 +103,8 @@ export function DashboardCommandPalette() {
         });
 
         // Pages finales (leaf)
-        const subLabel = subNode.label ?? subNode.id;
         subNode.children?.forEach((leafNode) => {
-          const leafLabel = leafNode.label ?? leafNode.id;
+          const leafLabel = t(leafNode.i18nKey ?? leafNode.label ?? leafNode.id);
           items.push({
             id: `nav-${mainId}-${subNode.id}-${leafNode.id}`,
             type: 'navigation',
@@ -124,8 +126,9 @@ export function DashboardCommandPalette() {
         });
       });
     });
-    
-    // Navigation externe
+
+    // Navigation externe (hors dashboard) : router.push pour changer de page/portail.
+    // La navigation interne (main/sub/leaf) utilise uniquement navigate() ci-dessus.
     items.push({
       id: 'nav-substitution',
       type: 'navigation',
@@ -196,10 +199,10 @@ export function DashboardCommandPalette() {
     });
 
     return items;
-  }, [navigate, router, openModal, toggleCommandPalette]);
+  }, [t, navigate, router, openModal, toggleCommandPalette]);
 
   // Filtrer les commandes avec recherche améliorée
-  const filteredCommands = useMemo(() => {
+  const filteredCommands = useMemo((): CommandItem[] => {
     if (!query.trim()) return commands;
     
     const q = query.toLowerCase().trim();
@@ -317,8 +320,8 @@ export function DashboardCommandPalette() {
               </div>
             ) : (
               <div className="py-2">
-                {filteredCommands.map((cmd, index) => {
-                  const Icon = cmd.icon;
+                {(filteredCommands as CommandItem[]).map((cmd, index) => {
+                  const Icon = cmd.icon as React.ComponentType<{ className?: string }>;
                   const isSelected = index === selectedIndex;
 
                   return (

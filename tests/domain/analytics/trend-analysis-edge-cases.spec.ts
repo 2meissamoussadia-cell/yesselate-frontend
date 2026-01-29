@@ -95,7 +95,8 @@ describe('TrendAnalysisService - Edge Cases', () => {
       });
 
       expect(result).toBeDefined();
-      expect(result.isImproving).toBe(true);
+      // Pour "critical", une hausse (0→5) = dégradation, donc isImproving = false
+      expect(result.isImproving).toBe(false);
     });
   });
 

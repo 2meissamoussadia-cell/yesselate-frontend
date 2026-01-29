@@ -160,8 +160,8 @@ export class GouvernanceService {
       
       // Calcul direction (comparaison avec mois précédent)
       let direction: 'up' | 'down' | 'stable' = 'stable';
-      if (i > 0) {
-        const prevTendance = tendances[tendances.length - 1];
+      const prevTendance = tendances[tendances.length - 1];
+      if (prevTendance != null) {
         if (projetsMois.length > prevTendance.projets) direction = 'up';
         else if (projetsMois.length < prevTendance.projets) direction = 'down';
       }

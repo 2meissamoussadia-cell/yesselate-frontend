@@ -83,6 +83,13 @@ export const RATE_LIMITS = {
     windowMs: 60 * 1000,
     maxRequests: 1000,
   },
+
+  // IA Briefing (V5) : 100 req/h
+  AI_BRIEFING: {
+    windowMs: 60 * 60 * 1000,
+    maxRequests: 100,
+    message: 'Limite briefing IA atteinte, réessayez dans 1 heure',
+  },
 };
 
 // ============================================

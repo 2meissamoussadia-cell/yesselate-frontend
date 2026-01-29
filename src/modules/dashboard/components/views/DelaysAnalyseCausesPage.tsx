@@ -6,7 +6,8 @@
 'use client';
 
 import React, { memo, useMemo, useCallback } from 'react';
-import { BarChart3, TrendingDown, AlertCircle, PieChart, TrendingUp } from 'lucide-react';
+import Link from 'next/link';
+import { BarChart3, TrendingDown, AlertCircle, PieChart, TrendingUp, Clock, ExternalLink } from 'lucide-react';
 import { 
   DashboardPageLayout, 
   DashboardSection, 
@@ -201,6 +202,18 @@ export const DelaysAnalyseCausesPage = memo(function DelaysAnalyseCausesPage() {
   
   return (
     <DashboardPageLayout>
+      {/* Redistribution : accès au module Alertes > Projets > Retards */}
+      <div className="mb-4 rounded-xl border border-slate-800/70 bg-slate-900/40 px-4 py-3 flex flex-wrap items-center gap-3">
+        <span className="text-xs font-medium text-slate-400">Accès module :</span>
+        <Link
+          href="/maitre-ouvrage/alerts/projets/retards"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700/60 bg-slate-950/50 px-3 py-1.5 text-xs font-medium text-slate-200 hover:bg-slate-800/60 hover:text-slate-100 transition-colors"
+        >
+          <Clock className="h-3.5 w-3.5" />
+          Centre d&apos;alertes — Retards projets
+          <ExternalLink className="h-3 w-3 text-slate-500" />
+        </Link>
+      </div>
       <DashboardSection title="Analyse des Causes de Retards" description="Analyse approfondie des causes des retards">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {kpis.map((kpi) => (

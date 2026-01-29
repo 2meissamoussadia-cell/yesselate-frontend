@@ -19,6 +19,7 @@ export interface CockpitBriefingData {
   topRisks: string[];
   opportunities: string[];
   fromCache?: boolean;
+  fallback?: boolean; // true quand OPENAI non configurée (message par défaut)
 }
 
 const REFRESH_INTERVAL_MS = 60_000; // 60s
@@ -41,13 +42,14 @@ export function useCockpitBriefing(options?: { enabled?: boolean; refreshInterva
         const body = await res.json().catch(() => ({}));
         throw new Error(body?.error ?? `HTTP ${res.status}`);
       }
-      const json = (await res.json()) as CockpitBriefingData & { fromCache?: boolean };
+      const json = (await res.json()) as CockpitBriefingData & { fromCache?: boolean; fallback?: boolean };
       const payload: CockpitBriefingData = {
         status: json.status ?? 'yellow',
         briefing: json.briefing ?? 'Briefing non disponible.',
         topRisks: Array.isArray(json.topRisks) ? json.topRisks : [],
         opportunities: Array.isArray(json.opportunities) ? json.opportunities : [],
         fromCache: json.fromCache,
+        fallback: json.fallback,
       };
       setData(payload);
       await setBriefingOffline(payload);
@@ -79,6 +81,7 @@ export function useCockpitBriefing(options?: { enabled?: boolean; refreshInterva
     topRisks: data?.topRisks ?? [],
     opportunities: data?.opportunities ?? [],
     fromCache: data?.fromCache ?? false,
+    fallback: data?.fallback ?? false,
     isLoading,
     error,
     refetch: fetchBriefing,

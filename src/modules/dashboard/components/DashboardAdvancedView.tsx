@@ -62,10 +62,12 @@ interface DashboardAdvancedViewProps {
       validations: number;
       budget: number;
     };
-  };
+  } | null | undefined;
 }
 
 export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
+  const d = data ?? ({} as NonNullable<DashboardAdvancedViewProps['data']>);
+
   const [filters, setFilters] = useState({
     period: '30j',
     category: 'all',
@@ -82,7 +84,7 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
     highlights: true,
   });
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(null);
-  const [selectedKPI, setSelectedKPI] = useState<{ label: string; value: string | number; type: string } | null>(null);
+  const [selectedKPI, setSelectedKPI] = useState<{ label: string; value: string | number; type: 'demandes' | 'validations' | 'budget' | 'other' } | null>(null);
   
   // Gestion des notifications
   const {
@@ -94,8 +96,8 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
 
   // Générer des notifications basées sur les données
   React.useEffect(() => {
-    if (data.highlights && data.highlights.length > 0) {
-      data.highlights.forEach(highlight => {
+    if (d.highlights && d.highlights.length > 0) {
+      d.highlights.forEach(highlight => {
         const type = highlight.type === 'critical' ? 'error' as const :
                      highlight.type === 'warning' ? 'warning' as const :
                      'info' as const;
@@ -107,7 +109,7 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
         });
       });
     }
-  }, [data.highlights, addNotification]);
+  }, [d.highlights, addNotification]);
 
   // Helpers
   const formatPercentage = (value: number): string => `${(value * 100).toFixed(0)}%`;
@@ -115,18 +117,18 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
 
   // Calculer les variations
   const variations = useMemo(() => {
-    if (!data.previousPeriod || !data.kpis) return null;
+    if (!d.previousPeriod || !d.kpis) return null;
     return {
-      demandes: data.kpis.demandes - data.previousPeriod.demandes,
-      validations: (data.kpis.validations - data.previousPeriod.validations) * 100,
-      budget: (data.kpis.budget - data.previousPeriod.budget) * 100,
+      demandes: d.kpis.demandes - d.previousPeriod.demandes,
+      validations: (d.kpis.validations - d.previousPeriod.validations) * 100,
+      budget: (d.kpis.budget - d.previousPeriod.budget) * 100,
     };
-  }, [data]);
+  }, [d]);
 
   // Filtrer les données du tableau
   const filteredTableData = useMemo(() => {
-    if (!data.tableData) return [];
-    let filtered = [...data.tableData];
+    if (!d.tableData) return [];
+    let filtered = [...d.tableData];
 
     if (filters.search) {
       const searchLower = filters.search.toLowerCase();
@@ -155,13 +157,13 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
     }
 
     return filtered;
-  }, [data.tableData, filters, sortConfig]);
+  }, [d.tableData, filters, sortConfig]);
 
   // Export de données
   const handleExport = useCallback((format: 'csv' | 'json') => {
     const exportData = {
-      kpis: data.kpis,
-      highlights: data.highlights,
+      kpis: d.kpis,
+      highlights: d.highlights,
       tableData: filteredTableData,
       exportedAt: new Date().toISOString(),
     };
@@ -340,7 +342,7 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
         )}
 
         {/* KPIs Section */}
-        {visibleSections.kpis && data.kpis && (
+        {visibleSections.kpis && d.kpis && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-slate-200">Indicateurs de performance</h3>
@@ -356,7 +358,7 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
               {/* Demandes KPI */}
               <div 
                 className="group bg-gradient-to-br from-blue-500/20 to-blue-600/10 rounded-xl p-6 border border-blue-500/30 hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-200 cursor-pointer"
-                onClick={() => setSelectedKPI({ label: 'Demandes', value: data.kpis.demandes, type: 'demandes' })}
+                onClick={() => setSelectedKPI({ label: 'Demandes', value: d.kpis?.demandes ?? 0, type: 'demandes' })}
               >
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center group-hover:bg-blue-500/30 transition-colors">
@@ -364,7 +366,7 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
                   </div>
                   <div className="flex-1">
                     <p className="text-xs text-slate-400 uppercase tracking-wide">Demandes</p>
-                    <p className="text-3xl font-bold text-white mt-1">{data.kpis.demandes ?? 0}</p>
+                    <p className="text-3xl font-bold text-white mt-1">{d.kpis.demandes ?? 0}</p>
                     {variations && (
                       <div className={cn(
                         'flex items-center gap-1 text-xs mt-1',
@@ -385,7 +387,7 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
               {/* Validations KPI */}
               <div 
                 className="group bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 rounded-xl p-6 border border-emerald-500/30 hover:border-emerald-500/50 hover:shadow-lg hover:shadow-emerald-500/10 transition-all duration-200 cursor-pointer"
-                onClick={() => setSelectedKPI({ label: 'Validations', value: formatPercentage(data.kpis.validations), type: 'validations' })}
+                onClick={() => setSelectedKPI({ label: 'Validations', value: formatPercentage(d.kpis?.validations ?? 0), type: 'validations' })}
               >
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-10 bg-emerald-500/20 rounded-lg flex items-center justify-center group-hover:bg-emerald-500/30 transition-colors">
@@ -394,7 +396,7 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
                   <div className="flex-1">
                     <p className="text-xs text-slate-400 uppercase tracking-wide">Validations</p>
                     <p className="text-3xl font-bold text-white mt-1">
-                      {formatPercentage(data.kpis.validations)}
+                      {formatPercentage(d.kpis.validations)}
                     </p>
                     {variations && (
                       <div className={cn(
@@ -414,7 +416,7 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
                 <div className="mt-3 h-1.5 bg-slate-800/50 rounded-full overflow-hidden">
                   <div 
                     className="h-full bg-emerald-500 rounded-full transition-all duration-500 ease-out"
-                    style={{ width: `${getPercentageValue(data.kpis.validations)}%` }}
+                    style={{ width: `${getPercentageValue(d.kpis.validations)}%` }}
                   />
                 </div>
               </div>
@@ -422,7 +424,7 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
               {/* Budget KPI */}
               <div 
                 className="group bg-gradient-to-br from-amber-500/20 to-amber-600/10 rounded-xl p-6 border border-amber-500/30 hover:border-amber-500/50 hover:shadow-lg hover:shadow-amber-500/10 transition-all duration-200 cursor-pointer"
-                onClick={() => setSelectedKPI({ label: 'Budget', value: formatPercentage(data.kpis.budget), type: 'budget' })}
+                onClick={() => setSelectedKPI({ label: 'Budget', value: formatPercentage(d.kpis?.budget ?? 0), type: 'budget' })}
               >
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-10 bg-amber-500/20 rounded-lg flex items-center justify-center group-hover:bg-amber-500/30 transition-colors">
@@ -431,7 +433,7 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
                   <div className="flex-1">
                     <p className="text-xs text-slate-400 uppercase tracking-wide">Budget</p>
                     <p className="text-3xl font-bold text-white mt-1">
-                      {formatPercentage(data.kpis.budget)}
+                      {formatPercentage(d.kpis.budget)}
                     </p>
                     {variations && (
                       <div className={cn(
@@ -451,37 +453,37 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
                 <div className="mt-3 h-1.5 bg-slate-800/50 rounded-full overflow-hidden">
                   <div 
                     className="h-full bg-amber-500 rounded-full transition-all duration-500 ease-out"
-                    style={{ width: `${getPercentageValue(data.kpis.budget)}%` }}
+                    style={{ width: `${getPercentageValue(d.kpis.budget)}%` }}
                   />
                 </div>
               </div>
             </div>
 
             {/* KPIs supplémentaires */}
-            {data.kpis.blocages !== undefined && (
+            {d.kpis.blocages !== undefined && (
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
-                {data.kpis.blocages !== undefined && (
+                {d.kpis.blocages !== undefined && (
                   <div className="bg-slate-800/30 rounded-lg p-4 border border-slate-700/50">
                     <p className="text-xs text-slate-400 mb-1">Blocages</p>
-                    <p className="text-2xl font-bold text-amber-400">{data.kpis.blocages}</p>
+                    <p className="text-2xl font-bold text-amber-400">{d.kpis.blocages}</p>
                   </div>
                 )}
-                {data.kpis.risques !== undefined && (
+                {d.kpis.risques !== undefined && (
                   <div className="bg-slate-800/30 rounded-lg p-4 border border-slate-700/50">
                     <p className="text-xs text-slate-400 mb-1">Risques critiques</p>
-                    <p className="text-2xl font-bold text-red-400">{data.kpis.risques}</p>
+                    <p className="text-2xl font-bold text-red-400">{d.kpis.risques}</p>
                   </div>
                 )}
-                {data.kpis.decisions !== undefined && (
+                {d.kpis.decisions !== undefined && (
                   <div className="bg-slate-800/30 rounded-lg p-4 border border-slate-700/50">
                     <p className="text-xs text-slate-400 mb-1">Décisions en attente</p>
-                    <p className="text-2xl font-bold text-blue-400">{data.kpis.decisions}</p>
+                    <p className="text-2xl font-bold text-blue-400">{d.kpis.decisions}</p>
                   </div>
                 )}
-                {data.kpis.conformite !== undefined && (
+                {d.kpis.conformite !== undefined && (
                   <div className="bg-slate-800/30 rounded-lg p-4 border border-slate-700/50">
                     <p className="text-xs text-slate-400 mb-1">Conformité SLA</p>
-                    <p className="text-2xl font-bold text-emerald-400">{formatPercentage(data.kpis.conformite)}</p>
+                    <p className="text-2xl font-bold text-emerald-400">{formatPercentage(d.kpis.conformite)}</p>
                   </div>
                 )}
               </div>
@@ -490,7 +492,7 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
         )}
 
         {/* Highlights Section */}
-        {visibleSections.highlights && data.highlights && data.highlights.length > 0 && (
+        {visibleSections.highlights && d.highlights && d.highlights.length > 0 && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-slate-200">Points clés</h3>
@@ -502,7 +504,7 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
               </button>
             </div>
             <div className="space-y-3">
-              {data.highlights.map((highlight, index) => (
+              {d.highlights.map((highlight, index) => (
                 <div
                   key={highlight.id}
                   className={cn(
@@ -537,7 +539,7 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
         )}
 
         {/* Graphiques de tendances */}
-        {visibleSections.trends && data.trends && data.trends.length > 0 && (
+        {visibleSections.trends && d.trends && d.trends.length > 0 && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-slate-200">Évolution (30 derniers jours)</h3>
@@ -549,13 +551,13 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
               </button>
             </div>
             <div className="bg-slate-800/30 rounded-xl p-6 border border-slate-700/50">
-              <TrendsChart trends={data.trends} />
+              <TrendsChart trends={d.trends} />
             </div>
           </div>
         )}
 
         {/* Comparaison mensuelle */}
-        {visibleSections.comparison && data.monthlyComparison && data.monthlyComparison.length > 0 && (
+        {visibleSections.comparison && d.monthlyComparison && d.monthlyComparison.length > 0 && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-slate-200">Comparaison mensuelle</h3>
@@ -567,13 +569,13 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
               </button>
             </div>
             <div className="bg-slate-800/30 rounded-xl p-6 border border-slate-700/50">
-              <MonthlyComparisonChart data={data.monthlyComparison} />
+              <MonthlyComparisonChart data={d.monthlyComparison} />
             </div>
           </div>
         )}
 
         {/* Distribution par catégorie */}
-        {visibleSections.categories && data.categoryDistribution && data.categoryDistribution.length > 0 && (
+        {visibleSections.categories && d.categoryDistribution && d.categoryDistribution.length > 0 && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-slate-200">Répartition par catégorie</h3>
@@ -585,11 +587,11 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
               </button>
             </div>
             <div className="bg-slate-800/30 rounded-xl p-6 border border-slate-700/50">
-              <CategoryDistributionChart data={data.categoryDistribution} />
+              <CategoryDistributionChart data={d.categoryDistribution} />
             </div>
             {/* Cards supplémentaires avec détails */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-              {data.categoryDistribution.map((item, index) => (
+              {d.categoryDistribution.map((item, index) => (
                 <div
                   key={item.category}
                   className="bg-slate-800/30 rounded-lg p-4 border border-slate-700/50 animate-fadeIn"
@@ -692,7 +694,7 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
         )}
 
         {/* Message si aucune donnée */}
-        {(!data.kpis && (!data.highlights || data.highlights.length === 0)) && (
+        {(!d.kpis && (!d.highlights || d.highlights.length === 0)) && (
           <div className="text-center py-12">
             <p className="text-slate-400">Aucune donnée disponible</p>
           </div>
@@ -704,7 +706,7 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
             kpi={selectedKPI}
             isOpen={!!selectedKPI}
             onClose={() => setSelectedKPI(null)}
-            historicalData={data.trends?.map(t => ({
+            historicalData={d.trends?.map(t => ({
               date: t.date,
               value: selectedKPI.type === 'demandes' ? t.demandes : 
                      selectedKPI.type === 'validations' ? t.validations * 100 : 

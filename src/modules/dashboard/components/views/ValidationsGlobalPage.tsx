@@ -7,6 +7,7 @@
 'use client';
 
 import React, { memo, useMemo, useState, useCallback } from 'react';
+import Link from 'next/link';
 import {
   FileCheck,
   Clock,
@@ -24,6 +25,7 @@ import {
   Shield,
   Download,
   Search,
+  ExternalLink,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -312,7 +314,26 @@ export const ValidationsGlobalPage = memo(function ValidationsGlobalPage() {
   return (
     <div className="relative min-w-0 max-w-full overflow-x-hidden">
       <MockDataIndicator message="Données mockées - Phase 1 (Backend en attente)" />
-      
+      {/* Redistribution : accès aux modules dédiés Validation BC / Contrats */}
+      <div className="mb-4 rounded-xl border border-slate-800/70 bg-slate-900/40 px-4 py-3 flex flex-wrap items-center gap-3">
+        <span className="text-xs font-medium text-slate-400">Accès modules :</span>
+        <Link
+          href="/maitre-ouvrage/validation-bc"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700/60 bg-slate-950/50 px-3 py-1.5 text-xs font-medium text-slate-200 hover:bg-slate-800/60 hover:text-slate-100 transition-colors"
+        >
+          <FileCheck className="h-3.5 w-3.5" />
+          Validation BC / Factures
+          <ExternalLink className="h-3 w-3 text-slate-500" />
+        </Link>
+        <Link
+          href="/maitre-ouvrage/validation-contrats"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700/60 bg-slate-950/50 px-3 py-1.5 text-xs font-medium text-slate-200 hover:bg-slate-800/60 hover:text-slate-100 transition-colors"
+        >
+          <Building2 className="h-3.5 w-3.5" />
+          Validation contrats
+          <ExternalLink className="h-3 w-3 text-slate-500" />
+        </Link>
+      </div>
       <DashboardPageLayout maxWidth="xl" padding="md">
         {/* Logique métier (Odoo-style) : App → Modèle → Workflow */}
         <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-slate-500">

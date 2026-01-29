@@ -37,6 +37,7 @@ import { useCockpitUrgentNotification } from '../../hooks/useCockpitUrgentNotifi
 import { PushConsentBanner } from '../cockpit/PushConsentBanner';
 import { CockpitSpheresLoadingSkeleton } from '../cockpit/CockpitSpheresLoadingSkeleton';
 import { EmptyState } from '../shared/EmptyState';
+import { ThemeToggle } from '../mobile/ThemeToggle';
 
 /** Grille 3D chargée uniquement côté client (Three.js/WebGL incompatible SSR) */
 const HealthSphereGrid = dynamic(
@@ -50,7 +51,18 @@ const HealthSphereGrid = dynamic(
 /** Phase 4 — Barre Executive Controls + commandes vocales (fixe en bas) */
 const ExecutiveControls = dynamic(
   () => import('../cockpit/ExecutiveControls').then((mod) => ({ default: mod.ExecutiveControls })),
-  { ssr: false }
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        className="fixed bottom-0 left-0 right-0 z-50 min-h-[72px] pb-[max(0.5rem,env(safe-area-inset-bottom))] bg-slate-950/95 border-t border-slate-800/60 flex items-center justify-center"
+        role="status"
+        aria-label="Chargement des commandes exécutives"
+      >
+        <div className="h-10 w-48 rounded-lg dashboard-skeleton-shimmer" />
+      </div>
+    ),
+  }
 );
 
 /** Phase 6 — Photos GPS + Plan AR + Pointage QR + Drone */
@@ -109,6 +121,7 @@ const CockpitDGPageComponent = function CockpitDGPage() {
     isLoading: briefingLoading,
     error: briefingError,
     fromCache: briefingFromCache,
+    fallback: briefingFallback,
   } = useCockpitBriefing({ enabled: true });
   const {
     retardRisk,
@@ -214,6 +227,14 @@ const CockpitDGPageComponent = function CockpitDGPage() {
                   aria-hidden
                 />
               )}
+              {briefingFallback && (
+                <span
+                  className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-slate-600/60 text-slate-400 border border-slate-500/40 ml-1"
+                  title="Configurez OPENAI_API_KEY pour activer le briefing IA"
+                >
+                  IA non configurée
+                </span>
+              )}
             </p>
             {!briefingLoading && (topRisks.length > 0 || opportunities.length > 0) && (
               <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
@@ -249,7 +270,8 @@ const CockpitDGPageComponent = function CockpitDGPage() {
               <p className="mt-2 text-xs text-slate-500">Aucun risque ni opportunité identifié.</p>
             )}
           </div>
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-2 shrink-0 flex-wrap">
+            <ThemeToggle />
             {liveConnected && (
               <span
                 className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
@@ -350,7 +372,11 @@ const CockpitDGPageComponent = function CockpitDGPage() {
         }
       >
         <div className="min-h-[320px] md:min-h-[480px]">
-          <HealthSphereGrid maxSpheres={20} onDrilldown={handleDrilldown} />
+          <HealthSphereGrid
+            maxSpheres={20}
+            onDrilldown={handleDrilldown}
+            onNewChantier={() => navigate('performance', 'projets', null)}
+          />
         </div>
       </ErrorBoundary>
 
@@ -404,11 +430,11 @@ const CockpitDGPageComponent = function CockpitDGPage() {
           </div>
           <EmptyState
             title="Aucun chantier critique"
-            description="Aucun chantier n'est actuellement en focus. Consultez le portfolio 3D ou la liste des chantiers pour en sélectionner un."
+            description="Aucun chantier n'est actuellement en focus. Consultez le portfolio 3D ou créez un nouveau chantier."
             icon={Building2}
             variant="info"
-            actionLabel="Voir les chantiers"
-            actionAriaLabel="Ouvrir la vue chantiers"
+            actionLabel="Nouveau chantier"
+            actionAriaLabel="Créer un nouveau chantier"
             onAction={() => navigate('performance', 'projets', null)}
           />
         </DashboardPanel>

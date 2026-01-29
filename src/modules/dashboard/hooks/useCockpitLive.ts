@@ -1,7 +1,7 @@
 /**
  * Phase 5 — Hook WebSocket Cockpit Live
  * Connexion temps réel : GPS ouvriers, stock quincaillerie, alertes critiques.
- * Quand NEXT_PUBLIC_COCKPIT_WS_URL est défini, se connecte ; sinon inactif.
+ * URLs : NEXT_PUBLIC_COCKPIT_WS_URL ou NEXT_PUBLIC_WS_URL (fallback, ex. wss://yessalate-api.onrender.com).
  */
 
 'use client';
@@ -9,7 +9,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useCockpitWsStore } from '@/lib/stores/cockpitWsStore';
 
-const MAX_RECONNECT_ATTEMPTS = 5;
+const MAX_RECONNECT_ATTEMPTS = 10;
 const RECONNECT_DELAY_MS = 3000;
 const HEARTBEAT_INTERVAL_MS = 30000; // 30s
 
@@ -24,7 +24,9 @@ export type CockpitLiveMessageType =
   | 'worker:gps'
   | 'stock:low'
   | 'payment:completed'
-  | 'emergency:alert';
+  | 'emergency:alert'
+  | 'gps_live_update'
+  | 'stock_critical';
 
 export interface CockpitLiveMessage {
   type: CockpitLiveMessageType;
@@ -41,11 +43,15 @@ interface UseCockpitLiveOptions {
 
 function getCockpitWsUrl(): string | null {
   if (typeof window === 'undefined') return null;
-  const env = process.env.NEXT_PUBLIC_COCKPIT_WS_URL;
-  if (env) return env;
-  // Optionnel : décommenter pour utiliser /api/cockpit/ws quand la route existe
-  // const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-  // return `${protocol}//${window.location.host}/api/cockpit/ws`;
+  const cockpit = process.env.NEXT_PUBLIC_COCKPIT_WS_URL;
+  if (cockpit) return cockpit;
+  const ws = process.env.NEXT_PUBLIC_WS_URL;
+  if (ws) {
+    if (ws.startsWith('wss://') || ws.startsWith('ws://')) return ws;
+    if (ws.startsWith('https://')) return ws.replace(/^https/, 'wss');
+    if (ws.startsWith('http://')) return ws.replace(/^http/, 'ws');
+    return `wss://${ws}`;
+  }
   return null;
 }
 
@@ -69,7 +75,8 @@ export function useCockpitLive({
   const isAlertType = (type: string): boolean =>
     type === 'cockpit_alert' ||
     type === 'cockpit_emergency' ||
-    type === 'emergency:alert';
+    type === 'emergency:alert' ||
+    type === 'stock_critical';
 
   const connect = useCallback(() => {
     const url = getCockpitWsUrl();

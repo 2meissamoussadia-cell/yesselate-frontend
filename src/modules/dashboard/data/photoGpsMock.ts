@@ -23,12 +23,13 @@ export interface PlanARMock {
   ecartCm?: number; // décalage simulé en cm
 }
 
-// Placeholder images (picsum pour variété ; en prod = URLs stock/CDN)
-function thumb(id: string) {
-  return `https://picsum.photos/seed/${id}/200/150`;
+// Placeholder local pour éviter 503 picsum.photos (réseau/CORS) ; en prod = URLs stock/CDN
+const PLACEHOLDER_PHOTO = '/images/placeholder-photo.svg';
+function thumb(_id: string) {
+  return PLACEHOLDER_PHOTO;
 }
-function large(id: string) {
-  return `https://picsum.photos/seed/${id}/800/600`;
+function large(_id: string) {
+  return PLACEHOLDER_PHOTO;
 }
 
 /** Libellés des phases (Fondations, Gros œuvre, Finitions, etc.) */

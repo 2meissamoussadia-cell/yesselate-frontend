@@ -24,19 +24,10 @@ Document d’analyse des manquements identifiés sur l’interface du tableau de
 
 **Piste de correction** : faire en sorte que le routeur utilise le registry pour les routes connues (ex. `overview::summary::*`, `overview::kpis::*`) et appelle `entry.render({ data })` avec les données du loader, ou unifier le rendu sur un seul mécanisme (registry + data) pour toute la Centrale de commandement.
 
-#### 1.2 Images externes (Photos GPS — Façade nord / Électricité)
+#### 1.2 Images externes (Photos GPS — Façade nord / Électricité) — **Corrigé**
 - Les libellés « Façade nord » et « Électricité » (et les coordonnées 14.7925, -16.9264 / date) proviennent du **mock** `photoGpsMock.ts`, utilisé par **CockpitPhotosGpsPanel** (section Phase 6 du Cockpit DG).
-- Les URLs d’images sont des **picsum.photos** :
-  - `thumb(id)` → `https://picsum.photos/seed/${id}/200/150`
-  - `large(id)` → `https://picsum.photos/seed/${id}/800/600`
-- En cas d’échec (réseau, CORS, blocage, timeout), le navigateur affiche une **icône d’image cassée** et il n’y a **pas de fallback** (pas d’`onError` ni de placeholder local) dans `CockpitPhotosGpsPanel.tsx` (balises `<img src={photo.thumbUrl}>` / `<img src={selected.url}>`).
-
-**Impact** : galerie Photos GPS avec cases vides ou icône « image manquante », et grande zone vide sous « Électricité » si l’image principale ne charge pas.
-
-**Pistes de correction** :
-- Ajouter `onError` sur les `<img>` et afficher un placeholder (couleur neutre + icône) ou un message court.
-- En production, remplacer picsum par des URLs stock/CDN contrôlées et fiables.
-- Optionnel : précharger ou vérifier les URLs côté API avant de les envoyer au front.
+- **Correction appliquée** : les URLs utilisent désormais un **placeholder local** (`/images/placeholder-photo.svg`) au lieu de picsum.photos, ce qui évite les 503 et les images cassées. **CockpitPhotosGpsPanel** a déjà un fallback `onError` + `ImagePlaceholder` si une image échoue.
+- En production : remplacer le placeholder par des URLs stock/CDN contrôlées.
 
 #### 1.3 Cohérence route / composant
 - Pour **overview > summary > dashboard**, `navigation.config.json` pointe vers **SummaryDashboardPage** (qui rend **OverviewView**).

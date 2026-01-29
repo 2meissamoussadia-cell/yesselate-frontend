@@ -11,8 +11,10 @@
 | **Loading states absents** | Squelettons animés + progress bars (Procore-style) | ✅ Fait |
 | **Empty states manquants** | "Aucun chantier critique" + CTA "Voir les chantiers" | ✅ Fait |
 | **Tooltips pauvres** | Tooltip riche chantier (photos GPS, équipe, budget détail) | ✅ Fait |
-| **Dark mode statique** | Auto-detect system preference + custom gradient | ⬜ À faire |
-| **Responsive mobile** | Mobile-first : swipe quadrants + collapse sidebar | ⬜ À faire |
+| **Dark mode statique** | Auto-detect system preference (thème "Système") | ✅ Fait |
+| **Responsive mobile** | Mobile-first : swipe quadrants (snap scroll) | ✅ Fait |
+| **Thème sur Cockpit** | ThemeToggle (System/Dark/Dakar/Light) dans la barre briefing | ✅ Fait |
+| **Barre Executive** | Loading placeholder (skeleton) pendant chargement | ✅ Fait |
 
 ---
 

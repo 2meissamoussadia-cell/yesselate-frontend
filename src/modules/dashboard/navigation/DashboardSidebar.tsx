@@ -301,21 +301,25 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
 
   const renderNavNode = useCallback(
     (node: NavNode, level: number, parentMain?: string, parentSub?: string): React.ReactNode => {
-      const hasChildren = Boolean(node.children?.length);
+      const hasExternalHref = Boolean(node.externalHref);
+      const hasChildren = !hasExternalHref && Boolean(node.children?.length);
       const isExpanded = expandedNodes.has(node.id);
-      const isActive = isNodeActive(node, level, parentMain, parentSub);
+      const isActive = !hasExternalHref && isNodeActive(node, level, parentMain, parentSub);
       const badge = getBadgeForNode(node, level);
       const currentMain = level === 0 ? node.id : parentMain;
       const currentSub = level === 1 ? node.id : parentSub;
-      const accessibleChildren = getAccessibleChildren(node, level, parentMain);
+      const accessibleChildren = hasChildren ? getAccessibleChildren(node, level, parentMain) : [];
 
+      if (level === 0 && accessibleChildren.length === 0) return null;
       if (level > 0 && hasChildren && accessibleChildren.length === 0) return null;
 
       const label = t(node.i18nKey ?? node.label ?? node.id);
+      const externalHref = node.externalHref;
 
       const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         e.stopPropagation();
+        if (hasExternalHref && externalHref) return; // lien géré par href
 
         if (hasChildren) {
           if (accessibleChildren.length > 0) {
@@ -348,6 +352,7 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
           hasChildren={hasChildren}
           isExpanded={isExpanded}
           isActive={isActive}
+          href={externalHref}
           onClick={handleClick}
           ariaLabel={badge ? `${label}, ${badge} éléments` : label}
           tooltipLabel={label}

@@ -68,6 +68,8 @@ export interface NavNode {
   badgeType?: 'default' | 'warning' | 'critical' | 'success';
   requires?: NavRequires;
   children?: NavNode[];
+  /** Lien externe vers un module maître-ouvrage (ex: /maitre-ouvrage/alerts). Si défini, le clic ouvre cette URL au lieu de naviguer en interne. */
+  externalHref?: string;
 }
 
 export interface DashboardNavItem {

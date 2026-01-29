@@ -29,7 +29,7 @@ interface BudgetDetailModalProps {
 export function BudgetDetailModal({ isOpen, onClose, kpi }: BudgetDetailModalProps) {
   if (!isOpen || !kpi) return null;
 
-  const trendIcon = kpi.trend?.includes('+') ? TrendingUp : kpi.trend?.includes('-') ? TrendingDown : null;
+  const TrendIcon = kpi.trend?.includes('+') ? TrendingUp : kpi.trend?.includes('-') ? TrendingDown : null;
   const trendColor = kpi.trend?.includes('+') ? 'text-red-400' : kpi.trend?.includes('-') ? 'text-green-400' : 'text-slate-400';
 
   return (
@@ -91,7 +91,7 @@ export function BudgetDetailModal({ isOpen, onClose, kpi }: BudgetDetailModalPro
                 <div>
                   <div className="text-sm text-slate-400 mb-1">Tendance</div>
                   <div className="flex items-center gap-2">
-                    {trendIcon && <trendIcon className={cn('w-5 h-5', trendColor)} />}
+                    {TrendIcon && <TrendIcon className={cn('w-5 h-5', trendColor)} />}
                     <span className={cn('text-lg font-semibold', trendColor)}>
                       {kpi.trend}
                     </span>

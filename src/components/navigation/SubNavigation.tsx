@@ -23,7 +23,7 @@ export function SubNavigation({
   return (
     <div
       className={cn(
-        'flex flex-col gap-3 px-4 py-3 bg-slate-800/40 border-b border-slate-700/60 min-w-0 overflow-x-hidden',
+        'flex flex-col gap-3 px-4 sm:px-6 py-3 bg-slate-900/40 border-b border-slate-800/60 min-w-0 overflow-x-hidden',
         'transition-all duration-300',
         className
       )}
@@ -41,8 +41,8 @@ export function SubNavigation({
                 onClick={action.onClick}
                 className={cn(
                   'px-3 py-1.5 rounded-lg text-xs font-medium',
-                  'bg-slate-700/50 text-slate-300 hover:bg-orange-500/20 hover:text-orange-400',
-                  'border border-slate-600/50 hover:border-orange-500/30',
+                  'bg-slate-950/50 text-slate-300 hover:bg-orange-500/20 hover:text-orange-400',
+                  'border border-slate-800/70 hover:border-orange-500/30',
                   'transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-orange-500/50'
                 )}
                 aria-label={action.label}
@@ -65,7 +65,7 @@ export function SubNavigation({
                 <span>{tab.label}</span>
                 {tab.count !== undefined && tab.count > 0 && (
                   <span
-                    className="inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 rounded-md text-[10px] font-medium bg-slate-600/80 text-slate-300"
+                    className="inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 rounded-md text-[10px] font-medium bg-slate-800/80 text-slate-300"
                     aria-hidden
                   >
                     {tab.count > 99 ? '99+' : tab.count}
@@ -75,10 +75,10 @@ export function SubNavigation({
             );
             const tabClass = cn(
               'px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300',
-              'focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:ring-offset-2 focus:ring-offset-slate-900',
+              'focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:ring-offset-2 focus:ring-offset-slate-950',
               isActive
                 ? 'bg-orange-500/20 text-orange-400 border border-orange-500/30'
-                : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-200 border border-transparent'
+                : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 border border-slate-800/70'
             );
             return tab.path !== undefined ? (
               <Link
@@ -112,7 +112,7 @@ export function SubNavigation({
                 'focus:outline-none focus:ring-2 focus:ring-orange-500/50',
                 filter.active
                   ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
-                  : 'bg-slate-700/50 text-slate-400 border border-slate-600/50 hover:bg-slate-600/50'
+                  : 'bg-slate-950/50 text-slate-400 border border-slate-800/70 hover:bg-slate-800/50'
               )}
               aria-pressed={filter.active}
               aria-label={filter.label}

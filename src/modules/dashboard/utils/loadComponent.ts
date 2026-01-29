@@ -7,6 +7,19 @@
 import type { ComponentType } from 'react';
 import { logger } from '@/lib/utils/logger';
 import { CockpitDGPage } from '../components/views/CockpitDGPage';
+import { SummaryDashboardPage } from '../components/views/SummaryDashboardPage';
+import { DelaysCritiquesPage } from '../components/views/DelaysCritiquesPage';
+
+/** Composant valide : fonction ou objet React (memo, forwardRef, etc.) */
+function isValidReactComponent(value: unknown): value is ComponentType {
+  if (typeof value === 'function') return true;
+  if (typeof value === 'object' && value !== null) {
+    const v = value as { $$typeof?: unknown; type?: unknown };
+    if (typeof v.$$typeof === 'symbol' || typeof v.$$typeof === 'number') return true;
+    if (typeof v.type === 'function') return true;
+  }
+  return false;
+}
 
 // Logger pour ce module utilitaire
 const log = {
@@ -34,7 +47,11 @@ const componentMap: Record<string, () => Promise<{ default?: ComponentType; [key
   BureauxPage: () => import('../components/views/BureauxPage'),
   TendancesPage: () => import('../components/views/TendancesPage'),
   CockpitDGPage: () => import('../components/views/CockpitDGPage'),
-  
+  CockpitDG_V2Page: () => import('../components/views/CockpitDG_V2Page'),
+  RapportDGPage: () => import('../components/views/RapportDGPage'),
+  FinancesOverviewPage: () => import('../components/views/FinancesOverviewPage'),
+  ConversationsHistoryPage: () => import('../components/views/ConversationsHistoryPage'),
+
   // Pages Performance
   ValidationsGlobalPage: () => import('../components/views/ValidationsGlobalPage'),
   PerformanceSynthesePage: () => import('../components/views/PerformanceSynthesePage'),
@@ -130,10 +147,18 @@ export async function loadComponent(name: string): Promise<ComponentType> {
     return componentCache.get(name)!;
   }
 
-  // ✅ CockpitDGPage: résolution statique (évite erreur Turbopack sur import dynamique)
+  // ✅ Résolution statique pour éviter erreur Turbopack sur import dynamique
   if (name === 'CockpitDGPage') {
     componentCache.set(name, CockpitDGPage);
     return Promise.resolve(CockpitDGPage);
+  }
+  if (name === 'SummaryDashboardPage') {
+    componentCache.set(name, SummaryDashboardPage);
+    return Promise.resolve(SummaryDashboardPage);
+  }
+  if (name === 'DelaysCritiquesPage') {
+    componentCache.set(name, DelaysCritiquesPage);
+    return Promise.resolve(DelaysCritiquesPage);
   }
 
   // ✅ Vérifier si un chargement est déjà en cours
@@ -163,29 +188,30 @@ export async function loadComponent(name: string): Promise<ComponentType> {
 
       // ✅ Gérer à la fois default export et named export
       // Certains composants utilisent named export (SummaryPage, OverviewPage, etc.)
+      // Accepter aussi React.memo() / forwardRef (typeof === 'object')
       let component: ComponentType | undefined;
       const defaultExport = loadedModule.default;
       const namedExport = loadedModule[name as keyof typeof loadedModule];
 
-      if (defaultExport && typeof defaultExport === 'function') {
+      if (defaultExport && isValidReactComponent(defaultExport)) {
         component = defaultExport as ComponentType;
-      } else if (namedExport && typeof namedExport === 'function') {
+      } else if (namedExport && isValidReactComponent(namedExport)) {
         component = namedExport as ComponentType;
       } else {
-        // Fallback: prendre le premier export qui est une fonction
+        // Fallback: prendre le premier export qui est un composant valide
         const exports = Object.keys(loadedModule).filter(
           (k) => k !== '__esModule' && k !== 'default'
         );
         for (const key of exports) {
           const exp = loadedModule[key as keyof typeof loadedModule];
-          if (typeof exp === 'function') {
+          if (isValidReactComponent(exp)) {
             component = exp as ComponentType;
             break;
           }
         }
       }
 
-      if (!component || typeof component !== 'function') {
+      if (!component || !isValidReactComponent(component)) {
         throw new Error(`Component "${name}" did not export a valid component (no default, no named export matching "${name}")`);
       }
       

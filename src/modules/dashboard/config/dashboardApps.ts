@@ -94,6 +94,13 @@ export const dashboardApps: Record<DashboardMainCategory, DashboardApp> = {
     models: ['alerte', 'action', 'demande'],
     permission: 'dashboard:read',
   },
+  administration: {
+    id: 'administration',
+    name: 'Administration',
+    i18nKey: 'nav.administration',
+    models: [],
+    permission: 'dashboard:read',
+  },
 };
 
 /**

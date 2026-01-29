@@ -64,6 +64,7 @@ export * from './hooks/useDashboardData';
 // Phase 5 — Cockpit API + Live
 export * from './hooks/useCockpitChantiers';
 export * from './hooks/useCockpitLive';
+export * from './hooks/useLiveChantiers';
 
 // V5 Ultimate — Performance
 export * from './hooks/useCockpitFps';

@@ -37,8 +37,17 @@ import {
   MockDataIndicator,
 } from '../shared';
 import { BudgetDetailModal } from '../modals/BudgetDetailModal';
+import { exportToCSV } from '../../utils/exportUtils';
 
 const clampPct = (n: number) => Math.max(0, Math.min(100, n));
+
+/** Format compact pour affichage KPI (ex. "4.2 Mds", "125 M", "8.5 M") */
+function formatCompactAmount(n: number): string {
+  if (n >= 1e9) return `${(n / 1e9).toFixed(1)} Mds`;
+  if (n >= 1e6) return `${(n / 1e6).toFixed(1)} M`;
+  if (n >= 1e3) return `${Math.round(n / 1e3)} K`;
+  return String(Math.round(n));
+}
 
 // ---------------------------
 // Mock data (garde tes vraies datas ensuite)
@@ -123,76 +132,6 @@ export function BudgetKpiPage({ data: apiData }: BudgetKpiPageProps = {}) {
     };
   }, []);
 
-  // KPIs (tu pourras brancher tes vraies stats)
-  const kpis = useMemo((): BudgetKPI[] => {
-    return [
-      {
-        id: 'budget_total',
-        label: 'Budget total',
-        value: '4.2 Mds',
-        trend: 5,
-        trendType: 'up' as const,
-        icon: DollarSign,
-        color: 'blue' as const,
-        description: 'Total des enveloppes budgétaires (exercice en cours)',
-        onClick: () => {},
-      },
-      {
-        id: 'budget_consomme',
-        label: 'Budget consommé',
-        value: '67%',
-        trend: -2,
-        trendType: 'down' as const,
-        icon: PieChart,
-        color: 'amber' as const,
-        description: 'Part consommée (engagé + payé selon paramétrage)',
-        onClick: () => {},
-      },
-      {
-        id: 'budget_restant',
-        label: 'Budget restant',
-        value: '1.4 Mds',
-        trend: -2,
-        trendType: 'down' as const,
-        icon: Wallet,
-        color: 'emerald' as const,
-        description: "Reste à engager sur l’exercice",
-        onClick: () => {},
-      },
-      {
-        id: 'budget_moyen',
-        label: 'Budget moyen / projet',
-        value: '125 M',
-        trend: 1,
-        trendType: 'up' as const,
-        icon: TrendingUp,
-        color: 'violet' as const,
-        description: 'Moyenne sur la sélection de projets',
-        onClick: () => {},
-      },
-      {
-        id: 'paiements_retard',
-        label: 'Paiements en retard',
-        value: '8.5 M',
-        icon: AlertTriangle,
-        color: 'rose' as const,
-        description: 'Total des paiements dépassant le SLA',
-        onClick: () => {},
-      },
-      {
-        id: 'conformite_budget',
-        label: 'Conformité budget',
-        value: '94%',
-        trend: 2,
-        trendType: 'up' as const,
-        icon: ShieldCheck,
-        color: 'cyan' as const,
-        description: 'Respect des règles budget / engagement / pièces',
-        onClick: () => {},
-      },
-    ];
-  }, []) as BudgetKPI[];
-
   const projects: BudgetProject[] = useMemo(
     () => [
       { id: 'p1', nom: 'Villa Diamniadio', alloue: 36_400_000, consomme: 24_700_000 },
@@ -211,6 +150,88 @@ export function BudgetKpiPage({ data: apiData }: BudgetKpiPageProps = {}) {
     ],
     []
   );
+
+  // KPIs branchés sur budgetDomain, projects, latePayments (pas de tendance réelle pour l'instant)
+  const kpis = useMemo((): BudgetKPI[] => {
+    const { raw } = budgetDomain;
+    const total = raw.total ?? 0;
+    const consomme = raw.consomme ?? 0;
+    const reste = raw.reste ?? 0;
+    const pourcentage = raw.pourcentage ?? (total > 0 ? (consomme / total) * 100 : 0);
+
+    const totalAlloue = projects.reduce((s, p) => s + p.alloue, 0);
+    const budgetMoyen = projects.length > 0 ? totalAlloue / projects.length : 0;
+    const totalRetard = latePayments.reduce((s, p) => s + p.montant, 0);
+
+    return [
+      {
+        id: 'budget_total',
+        label: 'Budget total',
+        value: formatCompactAmount(total),
+        trend: undefined,
+        trendType: 'neutral' as const,
+        icon: DollarSign,
+        color: 'blue' as const,
+        description: 'Total des enveloppes budgétaires (exercice en cours)',
+        onClick: () => {},
+      },
+      {
+        id: 'budget_consomme',
+        label: 'Budget consommé',
+        value: `${Math.round(pourcentage)}%`,
+        trend: undefined,
+        trendType: 'neutral' as const,
+        icon: PieChart,
+        color: 'amber' as const,
+        description: 'Part consommée (engagé + payé selon paramétrage)',
+        onClick: () => {},
+      },
+      {
+        id: 'budget_restant',
+        label: 'Budget restant',
+        value: formatCompactAmount(reste),
+        trend: undefined,
+        trendType: 'neutral' as const,
+        icon: Wallet,
+        color: 'emerald' as const,
+        description: "Reste à engager sur l’exercice",
+        onClick: () => {},
+      },
+      {
+        id: 'budget_moyen',
+        label: 'Budget moyen / projet',
+        value: formatCompactAmount(budgetMoyen),
+        trend: undefined,
+        trendType: 'neutral' as const,
+        icon: TrendingUp,
+        color: 'violet' as const,
+        description: 'Moyenne sur la sélection de projets',
+        onClick: () => {},
+      },
+      {
+        id: 'paiements_retard',
+        label: 'Paiements en retard',
+        value: formatCompactAmount(totalRetard),
+        trend: undefined,
+        trendType: 'neutral' as const,
+        icon: AlertTriangle,
+        color: 'rose' as const,
+        description: 'Total des paiements dépassant le SLA',
+        onClick: () => {},
+      },
+      {
+        id: 'conformite_budget',
+        label: 'Conformité budget',
+        value: '94%',
+        trend: undefined,
+        trendType: 'neutral' as const,
+        icon: ShieldCheck,
+        color: 'cyan' as const,
+        description: 'Respect des règles budget / engagement / pièces',
+        onClick: () => {},
+      },
+    ];
+  }, [budgetDomain, projects, latePayments]) as BudgetKPI[];
 
   const profitability: ProfitRow[] = useMemo(
     () => [
@@ -254,10 +275,68 @@ export function BudgetKpiPage({ data: apiData }: BudgetKpiPageProps = {}) {
     return latePayments.filter((p) => p.projet.toLowerCase().includes(s));
   }, [q, latePayments]);
 
+  const filteredProfitability = useMemo(() => {
+    const s = q.trim().toLowerCase();
+    if (!s) return profitability;
+    return profitability.filter((r) => r.projet.toLowerCase().includes(s));
+  }, [q, profitability]);
+
   const lastUpdateLabel = useMemo(() => {
     if (!lastUpdate) return '—';
     return lastUpdate.toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' });
   }, [lastUpdate]);
+
+  const handleExportCSV = () => {
+    const date = new Date().toISOString().split('T')[0];
+    const headersProjets = ['Projet', 'Alloué (XOF)', 'Consommé (XOF)', 'Ratio %', 'Dépassement'];
+    const rowsProjets = filteredProjects.map((p) => {
+      const ratio = p.alloue > 0 ? Math.round((p.consomme / p.alloue) * 100) : 0;
+      const dep = p.consomme > p.alloue ? formatCurrency(p.consomme - p.alloue, 'XOF') : '—';
+      return [p.nom, formatCurrency(p.alloue, 'XOF'), formatCurrency(p.consomme, 'XOF'), `${ratio}%`, dep];
+    });
+    exportToCSV(rowsProjets, headersProjets, `budget-kpis-projets-${date}.csv`);
+
+    const headersRetards = ['Projet', 'Jours retard', 'Montant (XOF)', 'Priorité'];
+    const rowsRetards = filteredLate.map((p) => [
+      p.projet,
+      p.retardJours,
+      formatCurrency(p.montant, 'XOF'),
+      p.priorite === 'critique' ? 'Critique' : p.priorite === 'haute' ? 'Haute' : 'Moyenne',
+    ]);
+    exportToCSV(rowsRetards, headersRetards, `budget-kpis-retards-${date}.csv`);
+
+    const headersRent = ['Projet', 'Investissement (XOF)', 'Retour attendu (XOF)', 'Retour réel (XOF)', 'Marge %', 'Réel/Attendu %'];
+    const rowsRent = filteredProfitability.map((r) => {
+      const pct = Math.round((r.retourReel / Math.max(1, r.retourAttendu)) * 100);
+      return [
+        r.projet,
+        formatCurrency(r.investissement, 'XOF'),
+        formatCurrency(r.retourAttendu, 'XOF'),
+        formatCurrency(r.retourReel, 'XOF'),
+        `${r.margePct}%`,
+        `${pct}%`,
+      ];
+    });
+    exportToCSV(rowsRent, headersRent, `budget-kpis-rentabilite-${date}.csv`);
+  };
+
+  const modalKpi = useMemo(() => {
+    if (!selectedKpi) return null;
+    const rawTrend = selectedKpi.trend;
+    const trendValue: string | undefined =
+      rawTrend != null
+        ? typeof rawTrend === 'number'
+          ? `${rawTrend > 0 ? '+' : ''}${rawTrend}%`
+          : String(rawTrend)
+        : undefined;
+    return {
+      id: selectedKpi.id || '',
+      label: selectedKpi.label || '',
+      value: selectedKpi.value || '—',
+      trend: trendValue,
+      description: selectedKpi.description,
+    };
+  }, [selectedKpi]);
 
   return (
     <div className="relative min-w-0 max-w-full overflow-x-hidden">
@@ -311,6 +390,7 @@ export function BudgetKpiPage({ data: apiData }: BudgetKpiPageProps = {}) {
               onChange={(e) => setQ(e.target.value)}
               placeholder="Rechercher un projet…"
               className="bg-slate-950/40 border-slate-800/70 pl-9 w-[200px] sm:w-[260px]"
+              aria-label="Rechercher un projet (budget, retards, rentabilité)"
             />
           </div>
 
@@ -318,10 +398,8 @@ export function BudgetKpiPage({ data: apiData }: BudgetKpiPageProps = {}) {
             variant="outline"
             size="sm"
             className="border-slate-800/70 bg-slate-950/30 hover:bg-slate-900/40"
-            onClick={() => {
-              // TODO: brancher export CSV/Excel (modal export ou téléchargement)
-            }}
-            title="Export à brancher (CSV/Excel)"
+            onClick={handleExportCSV}
+            title="Exporter projets, retards et rentabilité en CSV"
           >
             <Download className="mr-2 h-4 w-4" />
             Exporter
@@ -344,8 +422,8 @@ export function BudgetKpiPage({ data: apiData }: BudgetKpiPageProps = {}) {
               subtitle={kpi.description}
               icon={kpi.icon}
               tone={normalizeKPIColor(kpi.color) as KpiStatCardProps['tone']}
-              trend={typeof kpi.trend === 'number' ? kpi.trend : parseTrendPercent(kpi.trend)}
-              trendDirection={kpi.trendType || 'neutral'}
+              trend={kpi.trend != null ? (typeof kpi.trend === 'number' ? kpi.trend : parseTrendPercent(kpi.trend)) : undefined}
+              trendDirection={kpi.trendType ?? 'neutral'}
               tooltip={kpi.description}
               onClick={() => handleKPIClick(kpi)}
             />
@@ -361,7 +439,9 @@ export function BudgetKpiPage({ data: apiData }: BudgetKpiPageProps = {}) {
       >
         <div className="space-y-3">
           {filteredProjects.length === 0 ? (
-            <p className="text-slate-400 text-sm py-4 text-center">Aucun projet ne correspond à la recherche.</p>
+            <p className="text-slate-400 text-sm py-4 text-center">
+              {q.trim() ? 'Aucun projet ne correspond à la recherche.' : 'Aucun projet.'}
+            </p>
           ) : (
           filteredProjects.map((p) => {
             const ratio = p.alloue > 0 ? (p.consomme / p.alloue) * 100 : 0;
@@ -425,7 +505,9 @@ export function BudgetKpiPage({ data: apiData }: BudgetKpiPageProps = {}) {
         >
           <div className="space-y-3">
             {filteredLate.length === 0 ? (
-              <p className="text-slate-400 text-sm py-4 text-center">Aucun paiement en retard (ou aucun résultat pour la recherche).</p>
+              <p className="text-slate-400 text-sm py-4 text-center">
+                {q.trim() ? 'Aucun paiement en retard ne correspond à la recherche.' : 'Aucun paiement en retard.'}
+              </p>
             ) : (
             filteredLate.map((p) => (
               <DashboardPanel key={p.id} padding="md" className="flex items-center justify-between">
@@ -467,7 +549,12 @@ export function BudgetKpiPage({ data: apiData }: BudgetKpiPageProps = {}) {
           icon={TrendingUp}
         >
           <div className="space-y-3">
-            {profitability.map((r) => (
+            {filteredProfitability.length === 0 ? (
+              <p className="text-slate-400 text-sm py-4 text-center">
+                {q.trim() ? 'Aucun projet ne correspond à la recherche.' : 'Aucun projet.'}
+              </p>
+            ) : (
+            filteredProfitability.map((r) => (
               <DashboardPanel key={r.id} padding="md">
                 <div className="flex items-start justify-between" style={{ gap: 'clamp(1rem, 1.5vw, 1.25rem)' }}>
                   <div className="min-w-0">
@@ -509,7 +596,8 @@ export function BudgetKpiPage({ data: apiData }: BudgetKpiPageProps = {}) {
                   </span>
                 </div>
               </DashboardPanel>
-            ))}
+            ))
+            )}
           </div>
         </DashboardSection>
       </DashboardGrid>
@@ -534,29 +622,11 @@ export function BudgetKpiPage({ data: apiData }: BudgetKpiPageProps = {}) {
       </DashboardGrid>
       </DashboardPageLayout>
 
-      {/* Budget Detail Modal */}
-      {selectedKpi && (() => {
-        const rawTrend = selectedKpi.trend;
-        const trendValue: string | undefined =
-          rawTrend !== undefined && rawTrend !== null
-            ? (typeof rawTrend === 'number'
-                ? `${rawTrend > 0 ? '+' : ''}${rawTrend}%`
-                : String(rawTrend))
-            : undefined;
-        return (
-          <BudgetDetailModal
-            isOpen={!!selectedKpi}
-            onClose={() => setSelectedKpi(null)}
-            kpi={{
-              id: selectedKpi.id || '',
-              label: selectedKpi.label || '',
-              value: selectedKpi.value || '—',
-              trend: trendValue,
-              description: selectedKpi.description,
-            }}
-          />
-        );
-      })()}
+      <BudgetDetailModal
+        isOpen={!!selectedKpi}
+        onClose={() => setSelectedKpi(null)}
+        kpi={modalKpi}
+      />
     </div>
   );
 }

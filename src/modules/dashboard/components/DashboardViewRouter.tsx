@@ -15,7 +15,7 @@ import { BarChart3 } from 'lucide-react';
 import { ErrorBoundary } from '@/components/shared/ErrorBoundary';
 import { EmptyState } from './shared/EmptyState';
 import { AccessDeniedView } from './views/AccessDeniedView';
-import { ContentLoadingSkeleton } from './ContentLoadingSkeleton';
+import { DashboardLoadingFallback } from './shared/DashboardLoadingFallback';
 import { DashboardContentSwitch } from './DashboardContentSwitch';
 import { loadComponent } from '../utils/loadComponent';
 import {
@@ -49,6 +49,9 @@ const componentCache = new Map<string, ComponentType>();
 
 // ✅ Set pour tracker les routes déjà loggées comme "non trouvées" (évite le spam de warnings)
 const warnedRoutes = new Set<string>();
+
+/** Désactive temporairement la vérification des droits d'accès (accès libre au dashboard). Réactiver quand l'auth/RBAC est en place. */
+const DISABLE_ACCESS_CHECK = true;
 
 interface DashboardViewRouterProps {
   className?: string;
@@ -142,11 +145,16 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
           return;
         }
         
-        // Contexte utilisateur pour nodeAllowed
+        // Contexte utilisateur pour nodeAllowed (rôle session en secours si RBAC vide)
+        const rolesFromStore = permissions.roles ?? [];
+        const rolesWithUser =
+          rolesFromStore.length > 0
+            ? rolesFromStore
+            : (user?.role ? [user.role] : []);
         const userContext = {
           perms,
           flags,
-          roles: permissions.roles,
+          roles: rolesWithUser,
         };
         
         // Vérifier l'accès au nœud principal avec nodeAllowed
@@ -181,7 +189,7 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
     
     checkPolicy();
     return () => { cancelled = true; };
-  }, [main, sub, leaf, filteredNav, navigate, log]);
+  }, [main, sub, leaf, filteredNav, navigate, log, user, permissions.roles]);
 
   // Logiciel métier : afficher "Accès refusé" au lieu de rediriger silencieusement
   // (pas de redirection auto — l'utilisateur voit le message et clique pour revenir)
@@ -235,10 +243,11 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
 
   useEffect(() => {
     const accessDenied =
-      hasAccessPolicy === false ||
-      (!hasAccessLocal &&
-        registryEntry &&
-        (registryEntry.requiredRole || registryEntry.requiredTenant));
+      DISABLE_ACCESS_CHECK === false &&
+      (hasAccessPolicy === false ||
+        (!hasAccessLocal &&
+          registryEntry &&
+          (registryEntry.requiredRole || registryEntry.requiredTenant)));
     if (accessDenied) return;
 
     let cancelled = false;
@@ -382,10 +391,11 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
     };
   }, [currentRoute, hasAccessLocal, hasAccessPolicy, registryEntry, navKey, retryCount, t]);
 
-  // Logiciel métier : vue "Accès refusé" (message clair, pas de redirection silencieuse)
+  // Logiciel métier : vue "Accès refusé" (désactivée si DISABLE_ACCESS_CHECK)
   const showAccessDenied =
-    hasAccessPolicy === false ||
-    (!hasAccessLocal && registryEntry && (registryEntry.requiredRole || registryEntry.requiredTenant));
+    !DISABLE_ACCESS_CHECK &&
+    (hasAccessPolicy === false ||
+      (!hasAccessLocal && registryEntry && (registryEntry.requiredRole || registryEntry.requiredTenant)));
   if (showAccessDenied) {
     return (
       <div className={cn('min-w-0', className)}>
@@ -431,7 +441,13 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
   if (isLoading) {
     return (
       <div className={cn('min-w-0', className)}>
-        <ContentLoadingSkeleton showKPIBar showCharts showTable={false} chartCount={2} />
+        <DashboardLoadingFallback
+          showProgress
+          kpiCount={4}
+          chartCount={2}
+          showTable={false}
+          message={undefined}
+        />
       </div>
     );
   }
@@ -479,10 +495,10 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
     duration: 0.3,
   };
 
-  // Composant fallback pour Suspense (doit être un composant, pas une fonction)
+  // Composant fallback pour Suspense (squelette animé Procore-style)
   const LoadingFallback = () => (
-    <div className="p-4 sm:p-6 text-gray-400 flex items-center justify-center min-h-[200px] min-w-0">
-      <div className="animate-pulse">Chargement…</div>
+    <div className="min-w-0 p-4 sm:p-6">
+      <DashboardLoadingFallback showProgress kpiCount={4} chartCount={2} showTable={false} />
     </div>
   );
 

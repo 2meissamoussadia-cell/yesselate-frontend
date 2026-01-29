@@ -73,14 +73,6 @@ export const navigationConfig: NavigationConfig = [
         badge: { count: 5, variant: 'urgent', live: true },
         ariaLabel: 'Centre d\'alertes',
       },
-      {
-        id: 'centre-alertes',
-        label: 'Centre d\'Alertes MOA',
-        path: b('/centre-alertes'),
-        icon: '🚨',
-        badge: { count: 0, variant: 'warning' },
-        ariaLabel: 'Centre d\'alertes maître d\'ouvrage',
-      },
     ],
   },
   // ─── 2. EXÉCUTION ───────────────────────────────────────────────────
@@ -136,11 +128,11 @@ export const navigationConfig: NavigationConfig = [
       },
     ],
   },
-  // ─── 3. CHANTIERS & CLIENTS ─────────────────────────────────────────
+  // ─── 3. PROJETS & CLIENTS ───────────────────────────────────────────
   {
-    id: 'chantiers-clients',
-    title: 'CHANTIERS & CLIENTS',
-    ariaLabel: 'Section Chantiers et Clients',
+    id: 'projets-clients',
+    title: 'PROJETS & CLIENTS',
+    ariaLabel: 'Section Projets et Clients',
     items: [
       {
         id: 'projets-en-cours',
@@ -153,13 +145,6 @@ export const navigationConfig: NavigationConfig = [
           { id: 'projets-en-cours-list', label: 'En cours', path: b('/projets-en-cours'), ariaLabel: 'Projets en cours' },
           { id: 'projets-archives', label: 'Archivés', path: b('/projets-en-cours/archives'), ariaLabel: 'Projets archivés' },
         ],
-      },
-      {
-        id: 'chantiers',
-        label: 'Chantiers',
-        path: b('/chantiers'),
-        icon: '📍',
-        ariaLabel: 'Chantiers',
       },
       {
         id: 'clients',

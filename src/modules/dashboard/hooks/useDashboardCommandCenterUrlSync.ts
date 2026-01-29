@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { isValidRoute, normalizeRoute } from '../utils/routeValidation';
+import { getDashboardRedirectPath } from '../utils/dashboardRedirectMap';
 import { useLogger } from '@/lib/utils/logger';
 
 /**
@@ -38,6 +39,15 @@ export function useDashboardCommandCenterUrlSync() {
   const lastUrlKeyRef = useRef<string>('');
   // Après un Store -> URL push, ne pas appliquer URL -> Store tout de suite (params encore stales).
   const justPushedRef = useRef(false);
+
+  // 0) Redirection dashboard → modules (anciennes URLs déplacées)
+  useEffect(() => {
+    if (!pathname?.includes('dashboard')) return;
+    const target = getDashboardRedirectPath(urlMain, urlSub, urlLeaf);
+    if (!target) return;
+    log.debug('Redirection dashboard → module', { from: { urlMain, urlSub, urlLeaf }, to: target });
+    router.replace(target);
+  }, [pathname, urlMain, urlSub, urlLeaf, router, log]);
 
   // 1) URL -> Store
   useEffect(() => {

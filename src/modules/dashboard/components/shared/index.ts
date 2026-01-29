@@ -30,6 +30,8 @@ export { SegmentedTabs } from './SegmentedTabs';
 
 export { EmptyState } from './EmptyState';
 
+export { DashboardLoadingFallback } from './DashboardLoadingFallback';
+
 export { getTrendIcon, getTrendColor } from './getTrendIcon';
 export type { TrendType } from './getTrendIcon';
 

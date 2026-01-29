@@ -18,6 +18,14 @@ import {
 /** Ré-export pour compatibilité des imports existants */
 export type { NavNode, NavRequires } from '../types/dashboardNavigationTypes';
 
+const base = '/maitre-ouvrage';
+
+/**
+ * Navigation dashboard : contenu strictement interne au tableau de bord.
+ * Les modules (Centre d'alertes, Gouvernance, Validation, Demandes, etc.)
+ * sont accessibles uniquement depuis la barre principale (portail) pour éviter
+ * saturation et doublons.
+ */
 export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> = {
   overview: {
     id: 'overview',
@@ -47,25 +55,6 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
           { id: 'finances', label: 'Finances' },
         ],
       },
-      {
-        id: 'alerts',
-        label: 'Alertes critiques',
-        badge: 0,
-        badgeType: 'critical',
-        children: [
-          { id: 'actives', label: 'Actives' },
-          { id: 'urgentes', label: 'Urgentes' },
-        ],
-      },
-      {
-        id: 'activity',
-        label: 'Activité récente',
-        children: [
-          { id: 'timeline', label: 'Timeline' },
-          { id: 'notifications', label: 'Notifications' },
-          { id: 'conversations', label: 'Historique conversations' },
-        ],
-      },
     ],
   },
   performance: {
@@ -82,101 +71,6 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
           { id: 'projets', label: 'Projets' },
           { id: 'demandes', label: 'Demandes' },
           { id: 'budget', label: 'Budget' },
-        ],
-      },
-      {
-        id: 'validation',
-        label: 'Validations',
-        badge: 0,
-        badgeType: 'warning',
-        children: [
-          { id: 'en-attente', label: 'En attente' },
-          { id: 'validees', label: 'Validées' },
-          { id: 'rejetees', label: 'Rejetées' },
-          { id: 'circuit', label: 'Circuit de validation' },
-        ],
-      },
-      {
-        id: 'budget',
-        label: 'Budget',
-        badge: 0,
-        badgeType: 'warning',
-        children: [
-          { id: 'consommation', label: 'Consommation' },
-          { id: 'restant', label: 'Restant' },
-          { id: 'previsions', label: 'Prévisions' },
-          { id: 'analyse', label: 'Analyse' },
-        ],
-      },
-      {
-        id: 'delays',
-        label: 'Retards',
-        badge: 0,
-        badgeType: 'critical',
-        children: [
-          { id: 'critiques', label: 'Critiques' },
-          { id: 'moyens', label: 'Moyens' },
-          { id: 'analyse-causes', label: 'Analyse des causes' },
-        ],
-      },
-      {
-        id: 'comparison',
-        label: 'Comparaisons',
-        children: [
-          { id: 'bureaux', label: 'Par bureaux' },
-          { id: 'projets', label: 'Par projets' },
-          { id: 'periode', label: 'Par période' },
-          { id: 'benchmarking', label: 'Benchmarking' },
-        ],
-      },
-      {
-        id: 'achats',
-        i18nKey: 'nav.achats',
-        requires: { perm: 'achats:view', flag: 'module.achats' },
-        children: [
-          { id: 'dashboard', label: 'Vue d\'ensemble' },
-          { id: 'trends', label: 'Tendances' },
-          { id: 'fournisseurs', label: 'Fournisseurs' },
-          { id: 'open-orders', label: 'Commandes ouvertes' },
-        ],
-      },
-      {
-        id: 'stocks',
-        label: 'Stocks',
-        requires: { perm: 'stocks:view', flag: 'module.stocks' },
-        children: [
-          { id: 'overview', label: 'Vue d\'ensemble' },
-          { id: 'trends', label: 'Tendances' },
-        ],
-      },
-      {
-        id: 'materiel',
-        i18nKey: 'nav.materiel',
-        requires: { perm: 'materiel:view', flag: 'module.materiel' },
-        children: [
-          { id: 'overview', label: 'Parc matériel' },
-        ],
-      },
-      {
-        id: 'compliance',
-        i18nKey: 'nav.compliance',
-        requires: { perm: 'compliance:view', flag: 'module.compliance' },
-        children: [
-          { id: 'dashboard', label: 'Synthèse' },
-          { id: 'documents', label: 'Pièces manquantes' },
-          { id: 'backlog', label: 'Backlog de visas' },
-          { id: 'lots', label: 'Lots non attribués' },
-        ],
-      },
-      {
-        id: 'reporting',
-        i18nKey: 'nav.reporting',
-        requires: { perm: 'reporting:view', flag: 'module.reporting' },
-        children: [
-          { id: 'dashboard', label: 'Synthèse' },
-          { id: 'tendances', label: 'Tendances' },
-          { id: 'bureaux', label: 'Par bureaux' },
-          { id: 'chantiers', label: 'Par chantiers' },
         ],
       },
       {
@@ -212,273 +106,35 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
     id: 'actions',
     label: 'Actions & Tâches',
     icon: Zap,
-    badge: 0,
-    badgeType: 'warning',
-    children: [
-      {
-        id: 'inbox',
-        label: 'Ma boîte de réception',
-        badge: 0,
-        badgeType: 'critical',
-        children: [
-          { id: 'urgentes', label: 'Urgentes' },
-          { id: 'aujourdhui', label: 'Aujourd\'hui' },
-          { id: 'semaine', label: 'Cette semaine' },
-          { id: 'personnalisees', label: 'Personnalisées' },
-        ],
-      },
-      {
-        id: 'type',
-        label: 'Par type',
-        children: [
-          { id: 'contrats', label: 'Contrats' },
-          { id: 'arbitrages', label: 'Arbitrages' },
-          { id: 'paiements', label: 'Paiements' },
-          { id: 'bc', label: 'BC' },
-          { id: 'autres', label: 'Autres' },
-        ],
-      },
-      {
-        id: 'priority',
-        label: 'Par priorité',
-        children: [
-          { id: 'critique', label: 'Critique' },
-          { id: 'haute', label: 'Haute' },
-          { id: 'moyenne', label: 'Moyenne' },
-        ],
-      },
-      {
-        id: 'blocked',
-        label: 'Bloquées',
-        badge: 0,
-        badgeType: 'critical',
-        children: [
-          { id: 'blocages', label: 'Blocages' },
-          { id: 'escalades', label: 'Escalades' },
-          { id: 'analyse', label: 'Analyse' },
-        ],
-      },
-      {
-        id: 'assigned',
-        label: 'Assignées',
-        children: [
-          { id: 'moi', label: 'À moi' },
-          { id: 'equipe', label: 'À mon équipe' },
-          { id: 'non-assignees', label: 'Non assignées' },
-        ],
-      },
-      {
-        id: 'history',
-        label: 'Historique',
-        children: [
-          { id: 'recentes', label: 'Récentes' },
-          { id: 'anciennes', label: 'Anciennes' },
-          { id: 'archivees', label: 'Archivées' },
-        ],
-      },
-    ],
+    requires: { perm: 'dashboard:read' },
+    children: [],
   },
   risks: {
     id: 'risks',
     label: 'Risques',
     icon: AlertTriangle,
-    badge: 0,
-    badgeType: 'critical',
     requires: { perm: 'dashboard:read' },
-    children: [
-      {
-        id: 'critical',
-        label: 'Critiques',
-        badge: 0,
-        badgeType: 'critical',
-        children: [
-          { id: 'risques', label: 'Risques' },
-          { id: 'alertes', label: 'Alertes' },
-        ],
-      },
-      {
-        id: 'warnings',
-        label: 'Avertissements',
-        badge: 0,
-        badgeType: 'warning',
-        children: [
-          { id: 'moyens', label: 'Moyens' },
-          { id: 'faibles', label: 'Faibles' },
-        ],
-      },
-      {
-        id: 'type',
-        label: 'Par type',
-        children: [
-          { id: 'paiements-retard', label: 'Paiements en retard' },
-          { id: 'contrats-expires', label: 'Contrats expirés' },
-          { id: 'blocages', label: 'Blocages' },
-          { id: 'alertes-systeme', label: 'Alertes système' },
-        ],
-      },
-      {
-        id: 'analyse',
-        label: 'Analyse',
-        children: [
-          { id: 'tendances', label: 'Tendances' },
-          { id: 'causes-racines', label: 'Causes racines' },
-          { id: 'previsions', label: 'Prévisions' },
-        ],
-      },
-      {
-        id: 'actions-correctives',
-        label: 'Actions correctives',
-        children: [
-          { id: 'en-cours', label: 'En cours' },
-          { id: 'planifiees', label: 'Planifiées' },
-        ],
-      },
-    ],
+    children: [],
   },
   decisions: {
     id: 'decisions',
     label: 'Décisions',
     icon: Scale,
-    badge: 0,
-    badgeType: 'warning',
     requires: { perm: 'dashboard:read' },
-    children: [
-      {
-        id: 'pending',
-        label: 'En attente',
-        badge: 0,
-        badgeType: 'critical',
-        children: [
-          { id: 'urgentes', label: 'Urgentes' },
-          { id: 'normales', label: 'Normales' },
-          { id: 'planifiees', label: 'Planifiées' },
-        ],
-      },
-      {
-        id: 'executed',
-        label: 'Exécutées',
-        children: [
-          { id: 'recentes', label: 'Récentes' },
-          { id: 'anciennes', label: 'Anciennes' },
-          { id: 'par-type', label: 'Par type' },
-        ],
-      },
-      {
-        id: 'timeline',
-        label: 'Timeline',
-        children: [
-          { id: 'chronologique', label: 'Chronologique' },
-          { id: 'par-type', label: 'Par type' },
-          { id: 'par-auteur', label: 'Par auteur' },
-        ],
-      },
-      {
-        id: 'audit',
-        label: 'Audit',
-        children: [
-          { id: 'traces', label: 'Traces' },
-          { id: 'rapports', label: 'Rapports' },
-          { id: 'conformite', label: 'Conformité' },
-        ],
-      },
-      {
-        id: 'modeles',
-        label: 'Modèles',
-        children: [
-          { id: 'substitution', label: 'Substitution' },
-          { id: 'delegation', label: 'Délégation' },
-          { id: 'arbitrage', label: 'Arbitrage' },
-        ],
-      },
-    ],
+    children: [],
   },
   realtime: {
     id: 'realtime',
     label: 'Temps réel',
     icon: Activity,
     requires: { perm: 'dashboard:read' },
-    children: [
-      {
-        id: 'monitoring',
-        label: 'Monitoring',
-        children: [
-          { id: 'vue-globale', label: 'Vue globale' },
-          { id: 'metriques', label: 'Métriques' },
-          { id: 'performance', label: 'Performance' },
-        ],
-      },
-      {
-        id: 'alerts',
-        label: 'Alertes',
-        badge: 0,
-        badgeType: 'warning',
-        children: [
-          { id: 'actives', label: 'Actives' },
-          { id: 'resolues', label: 'Résolues' },
-          { id: 'historique', label: 'Historique' },
-        ],
-      },
-      {
-        id: 'notifications',
-        label: 'Notifications',
-        badge: 0,
-        badgeType: 'warning',
-        children: [
-          { id: 'non-lues', label: 'Non lues' },
-          { id: 'toutes', label: 'Toutes' },
-          { id: 'preferences', label: 'Préférences' },
-        ],
-      },
-      {
-        id: 'sync',
-        label: 'Synchronisation',
-        children: [
-          { id: 'etat', label: 'État' },
-          { id: 'historique', label: 'Historique' },
-          { id: 'configuration', label: 'Configuration' },
-        ],
-      },
-    ],
+    children: [],
   },
   administration: {
     id: 'administration',
     label: 'Administration',
     icon: Settings,
-    children: [
-      {
-        id: 'settings',
-        label: 'Paramètres',
-        children: [
-          { id: 'dashboard', label: 'Dashboard' },
-          { id: 'kpis', label: 'KPIs' },
-          { id: 'notifications', label: 'Notifications' },
-        ],
-      },
-      {
-        id: 'users',
-        label: 'Utilisateurs',
-        children: [
-          { id: 'liste', label: 'Liste' },
-          { id: 'permissions', label: 'Permissions' },
-        ],
-      },
-      {
-        id: 'permissions',
-        label: 'Permissions',
-        children: [
-          { id: 'roles', label: 'Rôles' },
-          { id: 'acces', label: 'Accès' },
-        ],
-      },
-      {
-        id: 'logs',
-        label: 'Logs',
-        children: [
-          { id: 'activite', label: 'Activité' },
-          { id: 'systeme', label: 'Système' },
-        ],
-      },
-    ],
+    children: [],
   },
 };
 

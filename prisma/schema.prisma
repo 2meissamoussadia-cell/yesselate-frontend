@@ -834,3 +834,65 @@ model BlockedComment {
   @@index([visibility])
   @@index([commentType])
 }
+
+// ============================================
+// CHANTIERS — Cockpit DG / Nice Rénovation (Phase 5 Production)
+// ============================================
+// Pour 42k+ chantiers : provider "postgresql", DATABASE_URL → Render/Neon.
+// Segment : DIASPORA | COMMERCANTS | COMMERCE_INFORMEL | ETABLISSEMENTS | PARTICULIERS
+// Voir docs/dashboard/PHASE5_PRODUCTION.md.
+
+model Chantier {
+  id               String   @id @default(cuid())
+  numero           String   @unique // ex: RENOV-042
+  segment          String   // DIASPORA | COMMERCANTS | COMMERCE_INFORMEL | ETABLISSEMENTS | PARTICULIERS
+  prestation       String   // ex: "Rénovation", "Réparations"
+  phase            Int      // 1-26 (workflow 26 étapes)
+  ca               Float    // chiffre d'affaires (FCFA)
+  marge            Float    // marge ratio 0-1
+  sante            Float    // santé projet 0-1 (sphères 3D)
+  gpsLatitude      Float?
+  gpsLongitude     Float?
+  photosGps        String?  // JSON array d'URLs S3
+  stockPeinture    Float?   // 0-1
+  stockCarrelage   Float?
+  bureauControle   String?  // "2/3 ✓" | "1/3 ✗"
+  photosManquantes Int      @default(0)
+  localisation     String?
+  clientType       String?
+  chefChantierId   String?
+  chefChantierName String?
+  chefChantierPhone String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  ouvriers Ouvrier[]
+
+  @@index([segment, phase])
+  @@index([sante])
+  @@index([numero])
+}
+
+model Ouvrier {
+  id         String   @id @default(cuid())
+  nom        String
+  cni        String   @unique
+  kycStatus  String   @default("VALIDÉ") // VALIDÉ | EN_COURS | REJETÉ
+  gpsLat     Float?
+  gpsLng     Float?
+  chantierId String?
+  isPresent  Boolean  @default(false)
+  lastPing   DateTime @default(now())
+
+  chantier Chantier? @relation(fields: [chantierId], references: [id])
+}
+
+model Quincaillerie {
+  id            String @id @default(cuid())
+  nom           String
+  localisation  String
+  stockPeinture Float
+  stockCarrelage Float
+  retardLivraison Int  // heures
+  critical      Boolean @default(false)
+}

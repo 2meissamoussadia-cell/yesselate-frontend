@@ -13,7 +13,8 @@ export {
   matchShortcut,
   type ExecutiveCommandV5,
 } from './executiveCommandsV5';
-export { HealthSphereGrid } from './HealthSphereGrid';
+export { HealthSphereGrid, HealthSphereGridInner } from './HealthSphereGrid';
+export { LiveHealthSpheres } from './LiveHealthSpheres';
 export { CockpitSpheresLoadingSkeleton } from './CockpitSpheresLoadingSkeleton';
 export {
   detectVoiceCommand,

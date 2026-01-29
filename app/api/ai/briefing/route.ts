@@ -73,13 +73,16 @@ export async function GET(req: NextRequest) {
 
   const openai = getOpenAIClient();
   if (!openai) {
-    return NextResponse.json(
-      {
-        error: 'IA non configurée',
-        hint: 'Définir OPENAI_API_KEY pour activer le briefing GPT-4.',
-      },
-      { status: 503 }
-    );
+    // Fallback 200 pour éviter 503 en dev : le client affiche un briefing par défaut
+    return NextResponse.json({
+      status: 'yellow' as const,
+      briefing:
+        'Briefing IA non disponible. Configurez OPENAI_API_KEY pour activer le briefing GPT-4.',
+      topRisks: [] as string[],
+      opportunities: [] as string[],
+      fromCache: false,
+      fallback: true,
+    });
   }
 
   const summary = buildChantiersSummary();

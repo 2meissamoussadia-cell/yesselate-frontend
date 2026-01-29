@@ -178,7 +178,7 @@ export const dashboardRegistry: Record<string, ViewEntry<any>> = {
     id: 'performance-kpis-budget',
     ttl: 120_000,
     loader: loadKpisBudget,
-    render: ({ data }) => <BudgetKpiPage />,
+    render: ({ data }) => <BudgetKpiPage data={data} />,
   },
 
   // … autres entrées à convertir au fil de l'eau

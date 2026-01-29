@@ -3,8 +3,9 @@
 import { useEffect, useMemo, useState, memo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { Loader2, AlertCircle, RefreshCw } from 'lucide-react';
+import { AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { DashboardLoadingFallback } from './shared/DashboardLoadingFallback';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { dashboardRegistry, navToKey, type NavKey } from '../registry';
@@ -182,22 +183,17 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
 
   return (
     <div className="relative min-h-[300px] min-w-0 max-w-full">
-      {/* Loading overlay amélioré */}
+      {/* Loading overlay : squelettes animés + progress bar (Procore-style) */}
       {loading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-slate-950/50 backdrop-blur-md z-10 animate-fadeIn">
-          <div className="flex flex-col items-center gap-4 p-6 rounded-xl border border-slate-700/50 bg-slate-900/80 shadow-xl">
-            <div className="relative">
-              <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
-              <div className="absolute inset-0 h-8 w-8 animate-ping text-blue-400/20" />
-            </div>
-            <div className="text-sm text-slate-200 font-medium">
-              {retryCount > 0 ? `Tentative ${retryCount}/${maxRetries}...` : 'Chargement...'}
-            </div>
-            {retryCount > 0 && (
-              <div className="text-xs text-slate-400 text-center">
-                Nouvelle tentative en cours
-              </div>
-            )}
+        <div className="absolute inset-0 z-10 animate-fadeIn overflow-auto">
+          <div className="min-h-full bg-slate-950/80 backdrop-blur-sm p-4 sm:p-6">
+            <DashboardLoadingFallback
+              showProgress
+              kpiCount={4}
+              chartCount={2}
+              showTable={false}
+              message={retryCount > 0 ? `Tentative ${retryCount}/${maxRetries}…` : undefined}
+            />
           </div>
         </div>
       )}

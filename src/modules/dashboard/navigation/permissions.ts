@@ -25,12 +25,21 @@ export interface UserContext {
  * @param req - Exigences d'accès du nœud (permission, feature flag, rôles)
  * @returns true si le nœud est accessible, false sinon
  */
+/** Rôles qui ont accès à tout le dashboard (aligné sur useDashboardPermissions) */
+const FULL_ACCESS_ROLES = ['admin', 'dg'];
+
+function hasFullAccessRole(roles: string[] | undefined): boolean {
+  if (!roles?.length) return false;
+  const lower = roles.map((r) => r?.toLowerCase?.() ?? '');
+  return lower.some((r) => FULL_ACCESS_ROLES.includes(r));
+}
+
 export function nodeAllowed(ctx: UserContext, req?: NavRequires): boolean {
   // Si pas d'exigence, accessible par défaut
   if (!req) return true;
 
-  // Admin a accès à tout
-  if (ctx.roles?.includes('admin')) return true;
+  // Admin et DG ont accès à tout (aligné sur useDashboardPermissions.hasPermission)
+  if (hasFullAccessRole(ctx.roles)) return true;
 
   // Vérifier les rôles requis si spécifiés
   if (req.roles && req.roles.length > 0) {

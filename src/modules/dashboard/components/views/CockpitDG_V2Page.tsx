@@ -47,6 +47,18 @@ const HealthSphereGrid = dynamic(
   }
 );
 
+const LiveHealthSpheres = dynamic(
+  () => import('../cockpit/LiveHealthSpheres').then((mod) => ({ default: mod.LiveHealthSpheres })),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="min-h-[480px] rounded-2xl border border-slate-800/60 bg-slate-900/40 flex items-center justify-center">
+        <p className="text-slate-400 text-sm">Chargement Live (Phase 5)…</p>
+      </div>
+    ),
+  }
+);
+
 const FourDimensionalView = dynamic(
   () => import('../cockpit/FourDimensionalView').then((mod) => ({ default: mod.FourDimensionalView })),
   {
@@ -95,6 +107,7 @@ export function CockpitDG_V2Page() {
   const [insights, setInsights] = useState<PredictiveInsight[]>([]);
   const [decisions, setDecisions] = useState<AutoPilotDecision[]>([]);
   const [viewMode, setViewMode] = useState<'3d' | '4d'>('3d');
+  const [liveMode, setLiveMode] = useState(false);
 
   const handleDrilldown = useCallback(
     (chantierId: string) => {
@@ -104,35 +117,15 @@ export function CockpitDG_V2Page() {
   );
 
   const hasRunPredictions = useRef(false);
-  const workerRef = useRef<Worker | null>(null);
 
-  // Web Worker : calculs lourds hors UI (santé, prédictions)
-  useEffect(() => {
-    try {
-      workerRef.current = new Worker(
-        new URL('../../../workers/analytics.worker.ts', import.meta.url)
-      );
-      workerRef.current.onmessage = (e: MessageEvent<{ type: string; scores?: Record<string, number> }>) => {
-        if (e.data?.type === 'health_scores_ready' && e.data.scores) {
-          // Prêt pour affichage ou cache (optionnel)
-        }
-      };
-    } catch {
-      workerRef.current = null;
+  // Calculs santé (main thread) — worker désactivé temporairement (Turbopack worker loader)
+  // TODO: réactiver Worker quand support Turbopack stabilisé
+  const _healthScores = useMemo(() => {
+    const scores: Record<string, number> = {};
+    for (const c of chantiers) {
+      scores[c.id] = c.sante ?? 0.7;
     }
-    return () => {
-      workerRef.current?.terminate();
-      workerRef.current = null;
-    };
-  }, []);
-
-  useEffect(() => {
-    if (chantiers.length > 0 && workerRef.current) {
-      workerRef.current.postMessage({
-        type: 'compute_health_scores',
-        data: { chantiers: chantiers.map((c) => ({ id: c.id, sante: c.sante, ca: c.ca })) },
-      });
-    }
+    return scores;
   }, [chantiers]);
 
   // Lancer prédictions + auto-pilot une fois quand chantiers sont disponibles
@@ -201,8 +194,8 @@ export function CockpitDG_V2Page() {
         </p>
       </div>
 
-      {/* Toggle Vue 3D / Vue 4D */}
-      <div className="flex items-center gap-2">
+      {/* Toggle Vue 3D / Vue 4D / Live (Phase 5) */}
+      <div className="flex flex-wrap items-center gap-2">
         <span className="text-xs text-slate-500 font-medium">Vue :</span>
         <button
           type="button"
@@ -226,6 +219,18 @@ export function CockpitDG_V2Page() {
         >
           4D Temps + Prédictions
         </button>
+        <button
+          type="button"
+          onClick={() => setLiveMode((prev) => !prev)}
+          className={cn(
+            'rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors',
+            colors.border.default,
+            liveMode ? 'bg-emerald-700/50 text-emerald-100 border-emerald-600' : 'bg-slate-900/40 text-slate-400 hover:bg-slate-800/50'
+          )}
+          title="Phase 5 — /api/chantiers/health, refresh 5s, WebSocket GPS/stock"
+        >
+          Live
+        </button>
       </div>
 
       {/* Grille 3D ou Vue 4D + Panneau Auto-pilot côte à côte */}
@@ -238,7 +243,19 @@ export function CockpitDG_V2Page() {
           }
         >
           {viewMode === '3d' ? (
-            <HealthSphereGrid maxSpheres={20} onDrilldown={handleDrilldown} />
+            liveMode ? (
+              <LiveHealthSpheres
+                maxSpheres={20}
+                onDrilldown={handleDrilldown}
+                onNewChantier={() => navigate('performance', 'projets', null)}
+              />
+            ) : (
+              <HealthSphereGrid
+                maxSpheres={20}
+                onDrilldown={handleDrilldown}
+                onNewChantier={() => navigate('performance', 'projets', null)}
+              />
+            )
           ) : (
             <FourDimensionalView
               chantiers={chantiers}

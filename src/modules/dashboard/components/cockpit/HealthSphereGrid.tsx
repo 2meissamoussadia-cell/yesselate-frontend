@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import type { ChantierMock } from '../../data/chantiersMock';
 import { ChantierSphere } from './ChantierSphere';
+import { GpsPhotosOrbits } from './GpsPhotosOrbits';
 import { ChantierContextMenu } from './ChantierContextMenu';
 import { ChantierChatModal } from '../modals/ChantierChatModal';
 import { ChantierWhatsAppModal } from '../modals/ChantierWhatsAppModal';
@@ -23,9 +24,15 @@ interface HealthSphereGridProps {
   className?: string;
   maxSpheres?: number;
   onDrilldown?: (chantierId: string) => void;
+  /** CTA "Nouveau chantier" dans l'empty state */
+  onNewChantier?: () => void;
 }
 
-/** V5 : max sphères selon qualité adaptative (FPS) */
+/**
+ * V5 : max sphères selon qualité adaptative (FPS).
+ * Roadmap perf : pour 1000+ chantiers, prévoir InstancedMesh + LOD (Level of Detail)
+ * pour garder 60 FPS (voir COCKPIT_DG_AUDIT_ROADMAP.md §2).
+ */
 function maxSpheresByQuality(quality: 'low' | 'medium' | 'high' | 'ultra', base: number): number {
   switch (quality) {
     case 'low': return Math.min(10, base);
@@ -48,7 +55,7 @@ function dprByQuality(quality: CockpitQualityLevel): number {
   }
 }
 
-const HealthSphereGridInner = React.memo(function HealthSphereGridInner({
+export const HealthSphereGridInner = React.memo(function HealthSphereGridInner({
   list,
   onDrilldown,
   onContextMenu,
@@ -76,21 +83,24 @@ const HealthSphereGridInner = React.memo(function HealthSphereGridInner({
       {list.map((chantier, i) => {
         const row = Math.floor(i / 5);
         const col = i % 5;
+        const pos: [number, number, number] = [
+          (col - 2) * 2.2,
+          (1 - row) * 2.2,
+          Math.sin(i * 0.4) * 0.3,
+        ];
         return (
-          <ChantierSphere
-            key={chantier.id}
-            chantier={chantier}
-            position={[
-              (col - 2) * 2.2,
-              (1 - row) * 2.2,
-              Math.sin(i * 0.4) * 0.3,
-            ]}
-            isHovered={hovered === chantier.id}
-            onHover={setHovered}
-            onClick={handleDrilldown}
-            onContextMenu={onContextMenu}
-            quality={quality}
-          />
+          <React.Fragment key={chantier.id}>
+            <ChantierSphere
+              chantier={chantier}
+              position={pos}
+              isHovered={hovered === chantier.id}
+              onHover={setHovered}
+              onClick={handleDrilldown}
+              onContextMenu={onContextMenu}
+              quality={quality}
+            />
+            <GpsPhotosOrbits chantierId={chantier.id} chantier={chantier} position={pos} />
+          </React.Fragment>
         );
       })}
       <OrbitControls enableZoom enablePan={false} />
@@ -102,6 +112,7 @@ export function HealthSphereGrid({
   className,
   maxSpheres = 20,
   onDrilldown,
+  onNewChantier,
 }: HealthSphereGridProps) {
   const { quality } = useCockpitFps({ enabled: true });
   const effectiveMax = maxSpheresByQuality(quality, maxSpheres);
@@ -165,9 +176,12 @@ export function HealthSphereGrid({
           <div className="h-full flex items-center justify-center p-6">
             <EmptyState
               title="Aucun chantier"
-              description="Aucun chantier à afficher dans le portfolio. Les chantiers apparaîtront ici une fois les données chargées."
+              description="Aucun chantier à afficher dans le portfolio. Créez un nouveau chantier ou attendez le chargement des données."
               icon={FolderKanban}
               variant="info"
+              actionLabel={onNewChantier ? 'Nouveau chantier' : undefined}
+              actionAriaLabel={onNewChantier ? 'Créer un nouveau chantier' : undefined}
+              onAction={onNewChantier}
             />
           </div>
         ) : (

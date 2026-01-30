@@ -123,6 +123,8 @@ export default function CalendrierLayout({
 
   const handleCategoryChange = (category: CalendrierMainCategory, subCategory?: string) => {
     navigate(category, subCategory || null, null);
+    const path = `/maitre-ouvrage/calendrier/${category}${subCategory ? `/${subCategory}` : ''}`;
+    router.push(path);
   };
 
   const handleSubCategoryChange = (subCategory: string) => {

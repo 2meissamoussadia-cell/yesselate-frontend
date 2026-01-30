@@ -9,6 +9,7 @@ import { logger } from '@/lib/utils/logger';
 import { CockpitDGPage } from '../components/views/CockpitDGPage';
 import { SummaryDashboardPage } from '../components/views/SummaryDashboardPage';
 import { DelaysCritiquesPage } from '../components/views/DelaysCritiquesPage';
+import { DashboardDGLayout } from '../components/views/DashboardDGLayout';
 
 /** Composant valide : fonction ou objet React (memo, forwardRef, etc.) */
 function isValidReactComponent(value: unknown): value is ComponentType {
@@ -48,6 +49,7 @@ const componentMap: Record<string, () => Promise<{ default?: ComponentType; [key
   TendancesPage: () => import('../components/views/TendancesPage'),
   CockpitDGPage: () => import('../components/views/CockpitDGPage'),
   CockpitDG_V2Page: () => import('../components/views/CockpitDG_V2Page'),
+  DashboardDGLayout: () => import('../components/views/DashboardDGLayout'),
   RapportDGPage: () => import('../components/views/RapportDGPage'),
   FinancesOverviewPage: () => import('../components/views/FinancesOverviewPage'),
   ConversationsHistoryPage: () => import('../components/views/ConversationsHistoryPage'),
@@ -58,6 +60,7 @@ const componentMap: Record<string, () => Promise<{ default?: ComponentType; [key
   PerformanceProjetsPage: () => import('../components/views/PerformanceProjetsPage'),
   PerformanceDemandesPage: () => import('../components/views/PerformanceDemandesPage'),
   PerformanceBudgetPage: () => import('../components/views/PerformanceBudgetPage'),
+  ValidationPaiementsPage: () => import('../components/views/ValidationPaiementsPage'),
   
   // Alerts & Activity
   AlertsActivesPage: () => import('../components/views/AlertsActivesPage'),
@@ -160,6 +163,10 @@ export async function loadComponent(name: string): Promise<ComponentType> {
     componentCache.set(name, DelaysCritiquesPage);
     return Promise.resolve(DelaysCritiquesPage);
   }
+  if (name === 'DashboardDGLayout') {
+    componentCache.set(name, DashboardDGLayout);
+    return Promise.resolve(DashboardDGLayout);
+  }
 
   // ✅ Vérifier si un chargement est déjà en cours
   if (loadingPromises.has(name)) {
@@ -170,10 +177,11 @@ export async function loadComponent(name: string): Promise<ComponentType> {
   const loader = componentMap[name];
   
   if (!loader) {
+    const available = Object.keys(componentMap).join(', ');
     const error = new Error(
-      `Component "${name}" not found in component map. Available components: ${Object.keys(componentMap).join(', ')}`
+      `Component "${name}" not found in component map. Available: ${available}`
     );
-    log.error('Composant non trouvé', error, { name, available: Object.keys(componentMap) });
+    log.error(`Composant non trouvé: "${name}"`, error, { name, available: Object.keys(componentMap) });
     throw error;
   }
 

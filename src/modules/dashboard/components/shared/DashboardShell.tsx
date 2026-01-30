@@ -19,9 +19,11 @@ type DashboardShellProps = {
   subnav?: React.ReactNode;
   children: React.ReactNode;
   className?: string;
+  /** À true quand le shell est déjà dans un main (ex. BmoLayoutShell) pour éviter doublon main / id main-content */
+  embedded?: boolean;
 };
 
-export function DashboardShell({ header, subnav, children, className }: DashboardShellProps) {
+export function DashboardShell({ header, subnav, children, className, embedded }: DashboardShellProps) {
   return (
     <div
       className={cn(
@@ -51,10 +53,20 @@ export function DashboardShell({ header, subnav, children, className }: Dashboar
           </div>
         ) : null}
 
-        {/* Zone contenu - cadre horizontal, défilement vertical uniquement */}
-        <main id="main-content" className="flex-1 min-h-0 min-w-0 overflow-x-hidden overflow-y-auto scroll-smooth scroll-touch scrollbar-dashboard" role="main">
-          <div className={cn('min-w-0 max-w-full', spacing.paddingX.md, 'sm:px-6', spacing.paddingY.md, 'sm:py-6')}>{children}</div>
-        </main>
+        {/* Zone contenu - cadre horizontal, défilement vertical uniquement (évite doublon main/id si embedded) */}
+        {embedded ? (
+          <div
+            role="region"
+            aria-label="Contenu dashboard"
+            className="flex-1 min-h-0 min-w-0 overflow-x-hidden overflow-y-auto scroll-smooth scroll-touch scrollbar-dashboard"
+          >
+            <div className={cn('min-w-0 max-w-full', spacing.paddingX.md, 'sm:px-6', spacing.paddingY.md, 'sm:py-6')}>{children}</div>
+          </div>
+        ) : (
+          <main id="main-content" className="flex-1 min-h-0 min-w-0 overflow-x-hidden overflow-y-auto scroll-smooth scroll-touch scrollbar-dashboard" role="main">
+            <div className={cn('min-w-0 max-w-full', spacing.paddingX.md, 'sm:px-6', spacing.paddingY.md, 'sm:py-6')}>{children}</div>
+          </main>
+        )}
       </div>
     </div>
   );

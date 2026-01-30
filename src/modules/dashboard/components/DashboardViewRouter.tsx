@@ -17,7 +17,7 @@ import { EmptyState } from './shared/EmptyState';
 import { AccessDeniedView } from './views/AccessDeniedView';
 import { DashboardLoadingFallback } from './shared/DashboardLoadingFallback';
 import { DashboardContentSwitch } from './DashboardContentSwitch';
-import { loadComponent } from '../utils/loadComponent';
+import { loadComponent, hasComponent } from '../utils/loadComponent';
 import {
   getRouteComponent,
   isValidRoute,
@@ -356,11 +356,16 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
 
         // Charger le composant dynamiquement
         log.debug('Chargement composant', { componentName });
-        const Loaded = await loadComponent(componentName);
-        
+        let Loaded: ComponentType;
+        // Fallback: si DashboardDGLayout est demandé mais absent du map (chunk en cache), import direct
+        if (componentName === 'DashboardDGLayout' && !hasComponent('DashboardDGLayout')) {
+          const mod = await import('../components/views/DashboardDGLayout');
+          Loaded = (mod.DashboardDGLayout ?? mod.default) as ComponentType;
+        } else {
+          Loaded = await loadComponent(componentName);
+        }
         // ✅ Vérifier si le composant n'a pas été annulé avant de mettre à jour
         if (cancelled) return;
-        
         componentCache.set(routeKey, Loaded); // Mettre en cache
         log.debug('Composant chargé avec succès', { componentName, routeKey });
         setComponent(() => Loaded);
@@ -368,12 +373,13 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
       } catch (e) {
         if (cancelled) return;
         const technicalMessage = e instanceof Error ? e.message : String(e);
-        log.error('View load failed', e instanceof Error ? e : new Error(technicalMessage), {
+        const err = e instanceof Error ? e : new Error(technicalMessage);
+        log.error(`View load failed: ${technicalMessage}`, err, {
           routeKey,
           main: routeMain,
           sub: routeSub,
           leaf: routeLeaf,
-          userId,
+          userId: userId ?? undefined,
           retryCount,
           technicalMessage,
         });

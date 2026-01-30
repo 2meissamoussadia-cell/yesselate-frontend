@@ -6,6 +6,8 @@
 'use client';
 
 import React, { Suspense, useMemo, memo, useCallback, useEffect, useState, useRef } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import {
   Loader2,
@@ -24,6 +26,7 @@ import {
   BarChart3,
   Settings,
   FileSpreadsheet,
+  ChevronDown,
 } from 'lucide-react';
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -35,18 +38,20 @@ import type { DashboardMainCategory } from '@/modules/dashboard/types/dashboardN
 import {
   DashboardSidebar,
   DashboardSubNavigation,
+  DashboardSubSidebar,
   DashboardUrlSync,
   DashboardViewRouter,
   DashboardBreadcrumbs,
   ContentLoadingSkeleton,
   DashboardModulesBar,
   DashboardCleanLayout,
-  DashboardCleanHome,
+  DashboardAccueil3P,
 } from '@/modules/dashboard';
 import { DashboardShell } from '@/modules/dashboard/components/shared/DashboardShell';
 
 import { DashboardModals } from '@/components/features/bmo/dashboard/command-center/DashboardModals';
 import { DashboardCommandPalette } from '@/components/features/bmo/dashboard/command-center/DashboardCommandPalette';
+import { DashboardBottomNav } from '@/modules/dashboard/components/mobile/DashboardBottomNav';
 import { getKPIMappingByLabel } from '@/lib/mappings/dashboardKPIMapping';
 import { useDashboardKPIs } from '@/lib/hooks/useDashboardKPIs';
 import { useDashboardExport } from '@/modules/dashboard/hooks/useDashboardExport';
@@ -124,6 +129,25 @@ function DashboardContent() {
   const [refreshCount, setRefreshCount] = useState(0);
   const [retryCount, setRetryCount] = useState(0);
   const maxRetries = 3;
+  const [kpiStripCollapsed, setKpiStripCollapsed] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    try {
+      return localStorage.getItem('dashboard-kpi-strip-collapsed') === 'true';
+    } catch {
+      return false;
+    }
+  });
+  const toggleKpiStrip = useCallback(() => {
+    setKpiStripCollapsed((c) => {
+      const next = !c;
+      try {
+        localStorage.setItem('dashboard-kpi-strip-collapsed', String(next));
+      } catch {
+        /* ignore */
+      }
+      return next;
+    });
+  }, []);
 
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [exportingFormat, setExportingFormat] = useState<'pdf' | 'excel' | null>(null);
@@ -201,15 +225,15 @@ function DashboardContent() {
 
   const topKpis = allKpis;
 
-  // stats sidebar
+  // stats sidebar (clés alignées sur DashboardMainCategory)
   const stats = useMemo(
     () => ({
-      overview: 3,
-      performance: 5,
-      actions: 12,
-      risks: 4,
-      decisions: 8,
-      realtime: 2,
+      pilotage: 3,
+      chantiers: 5,
+      finance: 12,
+      clients: 4,
+      rh: 8,
+      systeme: 2,
     }),
     []
   );
@@ -321,8 +345,12 @@ function DashboardContent() {
     return parts.length ? parts.join(' • ') : "Vue d'ensemble";
   }, [mainCategory, subCategory, subSubCategory]);
 
-  // Clean & Corporate : vue d'accueil = 4 KPI + tableau Phase 4
-  const isCleanHome = mainCategory === 'overview' && (subCategory === 'summary' || !subCategory);
+  const pathname = usePathname();
+  // Vue d'accueil Cockpit DG = page dashboard (ou pilotage/dashboard en store). Afficher directement DashboardAccueil3P sans ViewRouter pour éviter la barre "DG Cockpit" en double.
+  const isCockpitHome =
+    (typeof pathname === 'string' && pathname.includes('/maitre-ouvrage/dashboard')) ||
+    (mainCategory === 'pilotage' && subCategory === 'dashboard') ||
+    ((mainCategory as string) === 'overview' && (subCategory === 'summary' || !subCategory));
   const useCleanLayout = true; // Refonte UX — layout Procore / SAP Fiori
 
   if (useCleanLayout) {
@@ -331,41 +359,243 @@ function DashboardContent() {
         <Suspense fallback={null}>
           <DashboardUrlSync />
         </Suspense>
-        <DashboardCommandPalette />
-        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:border focus:border-slate-600 focus:bg-slate-800 focus:px-4 focus:py-2 focus:text-sm focus:text-slate-100">
-          Aller au contenu
-        </a>
-        <DashboardCleanLayout lastUpdate={formatTimeAgo(lastUpdate)}>
-          {isCleanHome ? (
-            <DashboardCleanHome
-              kpis={[
-                { title: 'Chantiers Actifs', value: String(topKpis[0]?.value ?? 42), trend: topKpis[0]?.delta ?? '+12%', color: 'blue', critical: false },
-                { title: 'CA Cumulé', value: String(topKpis.find((k) => k.label.includes('Budget') || k.label.includes('CA'))?.value ?? '18M XOF'), trend: '-2%', color: 'green', critical: false },
-                { title: 'Marge Nette', value: '23%', trend: '+1pt', color: 'yellow', critical: false },
-                { title: 'Alertes Critiques', value: String(topKpis.find((k) => k.tone === 'crit')?.value ?? 3), trend: '+1', color: 'red', critical: true },
-              ]}
-            />
-          ) : (
-            <div className="flex-1 min-h-0 overflow-auto flex flex-col">
-              <DashboardModulesBar />
-              <div className={cn('border-b border-slate-800/60 bg-slate-950/40 px-4 sm:px-6 py-3')}>
-                <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-dashboard">
-                  {topKpis.slice(0, 6).map((kpi) => (
-                    <KPICardPro key={kpi.label} kpi={kpi} onClick={() => handleKPIClick(kpi)} />
-                  ))}
+        <DashboardCommandPalette kpis={allKpis} />
+        <DashboardCleanLayout lastUpdate={formatTimeAgo(lastUpdate)} hideHeader>
+          {isCockpitHome ? (
+            <div className="flex-1 min-h-0 min-w-0 flex overflow-hidden">
+              <DashboardSubSidebar />
+              <div className="flex-1 min-h-0 min-w-0 flex flex-col overflow-hidden">
+                <div className="shrink-0 border-b border-slate-800/60 bg-slate-950/50">
+                  <DashboardSubNavigation stats={stats} mainTabsOnly />
+                  <div className={cn('border-b border-slate-800/60 bg-slate-950/40')}>
+                    <button
+                      type="button"
+                      onClick={toggleKpiStrip}
+                      className={cn(
+                        'w-full px-4 sm:px-6 py-2.5 flex items-center justify-between gap-2 text-left text-sm font-medium text-slate-300 hover:bg-slate-800/50 transition-colors',
+                        'focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500/50'
+                      )}
+                      aria-expanded={!kpiStripCollapsed}
+                      aria-controls="dashboard-kpi-strip"
+                      id="dashboard-kpi-strip-toggle"
+                    >
+                      <span className="text-[10px] uppercase tracking-wider text-slate-400">Indicateurs clés</span>
+                      <ChevronDown className={cn('h-4 w-4 shrink-0 text-slate-500 transition-transform duration-200', kpiStripCollapsed && '-rotate-90')} aria-hidden />
+                    </button>
+                    {!kpiStripCollapsed && (
+                      <div id="dashboard-kpi-strip" className={cn('px-4 sm:px-6 pb-3 pt-0')} role="region" aria-labelledby="dashboard-kpi-strip-toggle">
+                        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-dashboard min-w-0" role="list" style={{ scrollbarGutter: 'stable' }}>
+                          {topKpis.slice(0, 6).map((kpi) => (
+                            <KPICardPro key={kpi.label} kpi={kpi} onClick={() => handleKPIClick(kpi)} />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="px-4 sm:px-6 py-2 flex items-center justify-between gap-3 border-b border-slate-800/60 bg-slate-950/30">
+                    <div className="flex items-center gap-2 text-[11px] text-slate-400">
+                      <span>Dernière MAJ : {formatTimeAgo(lastUpdate)}</span>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            type="button"
+                            onClick={() => refreshAllKPIs()}
+                            disabled={isRefreshing}
+                            className="p-1.5 rounded-lg hover:bg-slate-800/60 text-slate-400 hover:text-slate-200 disabled:opacity-50"
+                            aria-label="Rafraîchir"
+                          >
+                            <RefreshCw className={cn('h-3.5 w-3.5', isRefreshing && 'animate-spin')} />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>Rafraîchir (Ctrl+R)</TooltipContent>
+                      </Tooltip>
+                    </div>
+                    <div className="relative" ref={exportMenuRef}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            type="button"
+                            onClick={() => setShowExportMenu((v) => !v)}
+                            disabled={!!exportingFormat}
+                            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-700/60 bg-slate-800/40 text-[11px] text-slate-300 hover:bg-slate-700/50 disabled:opacity-50"
+                            aria-label="Exporter"
+                            aria-expanded={showExportMenu}
+                          >
+                            <Download className="h-3.5 w-3.5" />
+                            <span>Exporter</span>
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>Exporter en PDF ou Excel</TooltipContent>
+                      </Tooltip>
+                      {showExportMenu && (
+                        <div className="absolute right-0 top-full mt-1 w-44 z-50 rounded-lg border border-slate-700/70 bg-slate-900 shadow-xl overflow-hidden">
+                          <button
+                            type="button"
+                            disabled={!!exportingFormat}
+                            onClick={() => handleExportDirect('pdf')}
+                            className="w-full px-3 py-2 text-left text-[11px] text-slate-200 hover:bg-slate-800 flex items-center gap-2 disabled:opacity-60"
+                          >
+                            <FileText className="h-3 w-3" /> PDF
+                          </button>
+                          <button
+                            type="button"
+                            disabled={!!exportingFormat}
+                            onClick={() => handleExportDirect('excel')}
+                            className="w-full px-3 py-2 text-left text-[11px] text-slate-200 hover:bg-slate-800 flex items-center gap-2 disabled:opacity-60"
+                          >
+                            <FileSpreadsheet className="h-3 w-3" /> Excel
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="px-4 sm:px-6 py-2">
+                    <KPIAlertsSystem
+                      kpis={allKpis.map((k) => ({
+                        label: k.label,
+                        value: k.value,
+                        delta: k.delta,
+                        tone: k.tone,
+                        trend: k.trend,
+                        icon: k.icon,
+                      }))}
+                      onAlert={(alert) => {
+                        log.info('Alerte KPI', {
+                          kpiId: alert.kpiId,
+                          kpiLabel: alert.kpiLabel,
+                          message: alert.message,
+                          severity: alert.severity,
+                          timestamp: alert.timestamp?.toISOString?.(),
+                        });
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="flex-1 min-h-0 overflow-auto animate-fadeIn pb-20 md:pb-0">
+                  <DashboardAccueil3P kpis={allKpis} />
                 </div>
               </div>
-              <ErrorBoundary>
-                <div key={`${mainCategory}-${subCategory}-${subSubCategory}`} className="animate-fadeIn flex-1 min-h-0 p-4 sm:p-6">
-                  <Suspense fallback={<ContentLoadingSkeleton showCharts={true} showTable={false} kpiCount={6} />}>
-                    <DashboardViewRouter />
-                  </Suspense>
+            </div>
+          ) : (
+            <div className="flex-1 min-h-0 min-w-0 flex overflow-hidden">
+              <DashboardSubSidebar />
+              <div className="flex-1 min-h-0 min-w-0 flex flex-col overflow-hidden">
+                <div className="shrink-0 border-b border-slate-800/60 bg-slate-950/50">
+                  <DashboardSubNavigation stats={stats} mainTabsOnly />
+                  <div className={cn('border-b border-slate-800/60 bg-slate-950/40')}>
+                    <button
+                      type="button"
+                      onClick={toggleKpiStrip}
+                      className={cn(
+                        'w-full px-4 sm:px-6 py-2.5 flex items-center justify-between gap-2 text-left text-sm font-medium text-slate-300 hover:bg-slate-800/50 transition-colors',
+                        'focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500/50'
+                      )}
+                      aria-expanded={!kpiStripCollapsed}
+                      aria-controls="dashboard-kpi-strip-other"
+                      id="dashboard-kpi-strip-toggle-other"
+                    >
+                      <span className="text-[10px] uppercase tracking-wider text-slate-400">Indicateurs clés</span>
+                      <ChevronDown className={cn('h-4 w-4 shrink-0 text-slate-500 transition-transform duration-200', kpiStripCollapsed && '-rotate-90')} aria-hidden />
+                    </button>
+                    {!kpiStripCollapsed && (
+                      <div id="dashboard-kpi-strip-other" className={cn('px-4 sm:px-6 pb-3 pt-0')} role="region" aria-labelledby="dashboard-kpi-strip-toggle-other">
+                        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-dashboard min-w-0" role="list" style={{ scrollbarGutter: 'stable' }}>
+                          {topKpis.slice(0, 6).map((kpi) => (
+                            <KPICardPro key={kpi.label} kpi={kpi} onClick={() => handleKPIClick(kpi)} />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="px-4 sm:px-6 py-2 flex items-center justify-between gap-3 border-b border-slate-800/60 bg-slate-950/30">
+                    <div className="flex items-center gap-2 text-[11px] text-slate-400">
+                      <span>Dernière MAJ : {formatTimeAgo(lastUpdate)}</span>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            type="button"
+                            onClick={() => refreshAllKPIs()}
+                            disabled={isRefreshing}
+                            className="p-1.5 rounded-lg hover:bg-slate-800/60 text-slate-400 hover:text-slate-200 disabled:opacity-50"
+                            aria-label="Rafraîchir"
+                          >
+                            <RefreshCw className={cn('h-3.5 w-3.5', isRefreshing && 'animate-spin')} />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>Rafraîchir (Ctrl+R)</TooltipContent>
+                      </Tooltip>
+                    </div>
+                    <div className="relative" ref={exportMenuRef}>
+                      <button
+                        type="button"
+                        onClick={() => setShowExportMenu((v) => !v)}
+                        disabled={!!exportingFormat}
+                        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-700/60 bg-slate-800/40 text-[11px] text-slate-300 hover:bg-slate-700/50 disabled:opacity-50"
+                        aria-label="Exporter"
+                        aria-expanded={showExportMenu}
+                      >
+                        <Download className="h-3.5 w-3.5" />
+                        <span>Exporter</span>
+                      </button>
+                      {showExportMenu && (
+                        <div className="absolute right-0 top-full mt-1 w-44 z-50 rounded-lg border border-slate-700/70 bg-slate-900 shadow-xl overflow-hidden">
+                          <button
+                            type="button"
+                            disabled={!!exportingFormat}
+                            onClick={() => handleExportDirect('pdf')}
+                            className="w-full px-3 py-2 text-left text-[11px] text-slate-200 hover:bg-slate-800 flex items-center gap-2 disabled:opacity-60"
+                          >
+                            <FileText className="h-3 w-3" /> PDF
+                          </button>
+                          <button
+                            type="button"
+                            disabled={!!exportingFormat}
+                            onClick={() => handleExportDirect('excel')}
+                            className="w-full px-3 py-2 text-left text-[11px] text-slate-200 hover:bg-slate-800 flex items-center gap-2 disabled:opacity-60"
+                          >
+                            <FileSpreadsheet className="h-3 w-3" /> Excel
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="px-4 sm:px-6 py-2">
+                    <KPIAlertsSystem
+                      kpis={allKpis.map((k) => ({
+                        label: k.label,
+                        value: k.value,
+                        delta: k.delta,
+                        tone: k.tone,
+                        trend: k.trend,
+                        icon: k.icon,
+                      }))}
+                      onAlert={(alert) => {
+                        log.info('Alerte KPI', {
+                          kpiId: alert.kpiId,
+                          kpiLabel: alert.kpiLabel,
+                          message: alert.message,
+                          severity: alert.severity,
+                          timestamp: alert.timestamp?.toISOString?.(),
+                        });
+                      }}
+                    />
+                  </div>
                 </div>
-              </ErrorBoundary>
+                <div className="flex-1 min-h-0 overflow-auto pb-20 md:pb-0">
+                  <ErrorBoundary>
+                    <div key={`${mainCategory}-${subCategory}-${subSubCategory}`} className="animate-fadeIn p-4 sm:p-6">
+                      <Suspense fallback={<ContentLoadingSkeleton showCharts={true} showTable={false} kpiCount={6} />}>
+                        <DashboardViewRouter />
+                      </Suspense>
+                    </div>
+                  </ErrorBoundary>
+                </div>
+              </div>
             </div>
           )}
         </DashboardCleanLayout>
         <DashboardModals />
+        <DashboardBottomNav />
       </>
     );
   }
@@ -375,13 +605,7 @@ function DashboardContent() {
       <Suspense fallback={null}>
         <DashboardUrlSync />
       </Suspense>
-      <DashboardCommandPalette />
-      <a
-        href="#main-content"
-        className="absolute left-4 top-4 z-[100] -translate-y-full rounded-lg border border-slate-600 bg-slate-800 px-4 py-2 text-sm font-medium text-slate-100 shadow-lg transition-transform focus:translate-y-0 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-950"
-      >
-        Aller au contenu
-      </a>
+      <DashboardCommandPalette kpis={allKpis} />
 
       <div className="h-full w-full max-w-full min-w-0 flex min-h-0 overflow-x-hidden bg-slate-950">
         <DashboardSidebar
@@ -391,8 +615,9 @@ function DashboardContent() {
           onOpenCommandPalette={toggleCommandPalette}
         />
 
-        {/* MAIN */}
+        {/* MAIN — embedded pour éviter doublon main#main-content (déjà dans BmoLayoutShell) */}
         <DashboardShell
+          embedded
           header={
             <div className="flex items-center justify-between gap-4">
               <div className="min-w-0 flex-1 flex items-center gap-3">
@@ -445,6 +670,20 @@ function DashboardContent() {
                   <span className="hidden sm:inline">Exporter PDF</span>
                 </button>
 
+                <Link
+                  href="/maitre-ouvrage/analytics"
+                  className={cn(
+                    'inline-flex items-center gap-2 rounded-lg border min-h-[36px] px-3 py-2',
+                    'border-slate-800/70 bg-slate-900/40 text-xs text-slate-200',
+                    'hover:bg-slate-800/50 hover:border-slate-700/60 transition-colors duration-200',
+                    'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950'
+                  )}
+                  title="Analytics intégrés (BI)"
+                >
+                  <BarChart3 className="h-3.5 w-3.5 text-slate-300 flex-shrink-0" />
+                  <span className="hidden sm:inline">Analytics</span>
+                </Link>
+
                 <button
                   type="button"
                   className={cn(
@@ -456,7 +695,7 @@ function DashboardContent() {
                   onClick={() => openModal('stats')}
                   title="Pilotage"
                 >
-                  <BarChart3 className="h-3.5 w-3.5 text-slate-300 flex-shrink-0" />
+                  <TrendingUp className="h-3.5 w-3.5 text-slate-300 flex-shrink-0" />
                   <span className="hidden sm:inline">Pilotage</span>
                 </button>
 
@@ -480,7 +719,7 @@ function DashboardContent() {
           subnav={<DashboardSubNavigation stats={stats} />}
         >
 
-          {/* Barre Modules métier type 3P — toujours visible */}
+          {/* Action bar compacte — raccourcis métier + accès modules (sans titres 3P / Accès modules) */}
           <DashboardModulesBar />
 
           {/* KPI BAR (plus sobre, plus "produit") */}
@@ -654,8 +893,8 @@ function DashboardContent() {
               </div>
             )}
 
-            {/* alert system (si tu veux le garder) */}
-            <div className="mt-3 hidden md:block">
+            {/* Système d'alertes KPI — visible sur tous les breakpoints */}
+            <div className="mt-3">
               <KPIAlertsSystem
                 kpis={allKpis.map((k) => ({
                   label: k.label,
@@ -723,8 +962,9 @@ const KPICardPro = memo(function KPICardPro({
         <button
           type="button"
           onClick={onClick}
+          title={kpi.label}
           className={cn(
-            'min-w-[220px] sm:min-w-[260px] rounded-2xl border',
+            'flex-shrink-0 min-w-[200px] w-[200px] sm:min-w-[220px] sm:w-[220px] rounded-2xl border',
             'px-4 py-3 text-left',
             'transition-all duration-200 ease-out',
             'hover:translate-y-[-2px] hover:shadow-xl hover:shadow-black/20',
@@ -733,29 +973,29 @@ const KPICardPro = memo(function KPICardPro({
           )}
           aria-label={`${kpi.label}: ${kpi.value} (${kpi.delta})`}
         >
-          <div className="flex items-center justify-between gap-3">
-            <div className="min-w-0">
-              <div className="text-[11px] text-slate-400 uppercase tracking-wide truncate">{kpi.label}</div>
-              <div className="text-2xl font-semibold text-slate-100 truncate">{String(kpi.value)}</div>
-              <div className="text-xs text-slate-400 mt-1">
-                <span className="inline-flex items-center gap-1">
-                  <Activity className="h-5 w-5 text-slate-500" />
-                  {kpi.delta}
-                </span>
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0 flex-1 overflow-hidden">
+              <div className="text-[11px] text-slate-400 uppercase tracking-wide break-words line-clamp-2 leading-tight" style={{ wordBreak: 'break-word' }}>
+                {kpi.label}
+              </div>
+              <div className="text-xl font-semibold text-slate-100 mt-0.5 leading-tight tabular-nums">{String(kpi.value)}</div>
+              <div className="text-xs text-slate-400 mt-1.5 flex items-center gap-1">
+                <Activity className="h-4 w-4 text-slate-500 flex-shrink-0" aria-hidden />
+                <span>{kpi.delta}</span>
               </div>
             </div>
-            <div className="h-10 w-10 rounded-xl bg-slate-900/40 border border-slate-800/70 flex items-center justify-center">
-              <Icon className="h-5 w-5 text-slate-200" />
+            <div className="h-9 w-9 flex-shrink-0 rounded-xl bg-slate-900/40 border border-slate-800/70 flex items-center justify-center">
+              <Icon className="h-4 w-4 text-slate-200" aria-hidden />
             </div>
           </div>
         </button>
       </TooltipTrigger>
-      <TooltipContent>
+      <TooltipContent side="bottom" className="max-w-[280px]">
         <div className="text-xs">
-          <div className="font-semibold">{kpi.label}</div>
-          <div className="text-slate-300">Valeur : {String(kpi.value)}</div>
+          <div className="font-semibold text-slate-100">{kpi.label}</div>
+          <div className="text-slate-300 mt-0.5">Valeur : {String(kpi.value)}</div>
           <div className="text-slate-400">Variation : {kpi.delta}</div>
-          <div className="text-blue-300 mt-2">Cliquer pour détails</div>
+          <p className="text-blue-300 mt-2 text-[11px]">Cliquer pour détails</p>
         </div>
       </TooltipContent>
     </Tooltip>

@@ -50,6 +50,8 @@ import {
   MockDataIndicator,
 } from '../shared';
 import { BlocageDetailModal } from '../modals/BlocageDetailModal';
+import { FilterBar } from '@/components/erp';
+import type { ErpFilters } from '@/components/erp';
 
 interface DemandeKPI {
   id: string;
@@ -86,7 +88,12 @@ interface DemandesKpiPageProps {
 export const DemandesKpiPage = memo(function DemandesKpiPage({ data: apiData }: DemandesKpiPageProps = {}) {
   const openModal = useDashboardCommandCenterStore((state) => state.openModal);
   const [searchQuery, setSearchQuery] = useState('');
+  const [filters, setFilters] = useState<ErpFilters>({ priorite: '' });
   const [selectedBlocage, setSelectedBlocage] = useState<Blocage | null>(null);
+
+  const onFilterChange = useCallback((key: string, value: unknown) => {
+    setFilters((prev) => ({ ...prev, [key]: value } as ErpFilters));
+  }, []);
 
   // Logique métier (domaine) : KPIs calculés via les règles du domaine demandes
   const domainKpis = useMemo(
@@ -101,8 +108,8 @@ export const DemandesKpiPage = memo(function DemandesKpiPage({ data: apiData }: 
     [apiData?.total, apiData?.enAttente, apiData?.validees, apiData?.rejetees, apiData?.demandes]
   );
 
-  // App métier (Odoo-style) : Performance → modèle Demande
-  const appMeta = useMemo(() => getAppForCategory('performance'), []);
+  // App métier (Odoo-style) : Demandes sous chantiers
+  const appMeta = useMemo(() => getAppForCategory('chantiers'), []);
 
   // Goulets d'étranglement
   const goulets: Goulet[] = [
@@ -507,6 +514,14 @@ export const DemandesKpiPage = memo(function DemandesKpiPage({ data: apiData }: 
           </DashboardGrid>
         </DashboardSection>
 
+        {/* Filtres ERP pour blocages */}
+        <FilterBar
+          filters={filters}
+          onFilterChange={onFilterChange}
+          options={{ priorites: ['Toutes', 'Critique', 'Haute', 'Moyenne'] }}
+          hideSections={['perimetre', 'dates', 'avances', 'savedViews']}
+          className="mb-4 rounded-xl border-0 bg-transparent"
+        />
         {/* Blocages critiques */}
         <DashboardSection
           title="Blocages actifs"

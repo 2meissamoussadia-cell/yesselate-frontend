@@ -25,10 +25,17 @@ import { exportToCSV, exportToJSON } from '../../utils/exportUtils';
 import type { AlertsActivesData } from '../../types/dashboardDataTypes';
 import { AlertDetailModal } from '../AlertDetailModal';
 import type { AlertEvent } from '../../hooks/useAlerts';
+import { FilterBar } from '@/components/erp';
+import type { ErpFilters } from '@/components/erp';
 
 export const AlertsActivesPage = memo(function AlertsActivesPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [filters, setFilters] = useState<ErpFilters>({ gravite: '' });
   const [selectedAlert, setSelectedAlert] = useState<AlertEvent | null>(null);
+
+  const onFilterChange = useCallback((key: string, value: unknown) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  }, []);
   
   // ✅ Charger les données depuis l'API
   const { data, isLoading, error } = useDashboardData<AlertsActivesData>();
@@ -195,6 +202,13 @@ export const AlertsActivesPage = memo(function AlertsActivesPage() {
         </div>
 
         <DashboardPanel>
+          <FilterBar
+            filters={filters}
+            onFilterChange={onFilterChange}
+            options={{ gravites: ['Toutes', 'Critique', 'Urgente', 'Normale'] }}
+            hideSections={['perimetre', 'dates', 'avances', 'savedViews']}
+            className="mb-4 rounded-xl border-0 bg-transparent"
+          />
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-slate-200">Liste des alertes</h3>
             <div className="flex items-center gap-3">

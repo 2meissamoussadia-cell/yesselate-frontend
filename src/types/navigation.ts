@@ -87,12 +87,12 @@ export interface SubNavContext {
   actions?: { id: string; label: string; onClick?: () => void }[];
 }
 
-/** Props Sidebar */
+/** Props Sidebar BMO v1 (overlay, open/onToggle) */
 export interface SidebarProps {
-  collapsed?: boolean;
-  onToggleCollapse?: () => void;
-  /** Comptages temps réel pour badges */
-  badgeCounts?: Record<string, number>;
+  open?: boolean;
+  onToggle?: () => void;
+  /** Comptages temps réel pour badges (optionnel, ignoré si fourni par store) */
+  badgeCounts?: Record<string, number | undefined>;
   /** User profile */
   user?: {
     name: string;

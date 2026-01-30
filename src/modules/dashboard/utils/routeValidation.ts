@@ -286,14 +286,16 @@ export function getDefaultLeafForSub(main: string, sub: string): string | null {
 }
 
 /**
- * Obtient la route par défaut (Cockpit DG = vue d’accueil maître-ouvrage)
+ * Route par défaut = Cockpit DG (default DG home). Verrouillée : /maitre-ouvrage/dashboard ou /dg/cockpit → pilotage::dashboard::default. (Cockpit DG = vue d’accueil maître-ouvrage)
  */
+export const DEFAULT_DG_HOME: RouteConfig = {
+  main: 'pilotage',
+  sub: 'dashboard',
+  leaf: 'default',
+};
+
 export function getDefaultRoute(): RouteConfig {
-  return {
-    main: 'pilotage',
-    sub: 'dashboard',
-    leaf: 'default',
-  };
+  return DEFAULT_DG_HOME;
 }
 
 /**

@@ -1,0 +1,277 @@
+{
+  "app": "Yessalate BMO",
+  "area": "maitre-ouvrage",
+  "groups": [
+    {
+      "id": "PILOTAGE",
+      "label": "PILOTAGE",
+      "modules": [
+        {
+          "id": "cockpit",
+          "label": "Dashboard",
+          "path": "/maitre-ouvrage/dashboard",
+          "phaseRange": [0, 10],
+          "description": "Synthèse pilotage, KPIs et décisions DG",
+          "title": "Dashboard — Yessalate BMO",
+          "children": [
+            { "id": "cockpit-home", "label": "Vue d'accueil", "path": "/maitre-ouvrage/dashboard" },
+            { "id": "cockpit-kpis", "label": "KPIs", "path": "/maitre-ouvrage/dashboard" },
+            { "id": "cockpit-reports", "label": "Rapports", "path": "/maitre-ouvrage/dashboard" }
+          ]
+        },
+        {
+          "id": "alerts",
+          "label": "Alertes & Incidents",
+          "path": "/maitre-ouvrage/alerts",
+          "phaseRange": [0, 10],
+          "description": "Alertes actives, retards, blocages"
+        },
+        {
+          "id": "governance",
+          "label": "Gouvernance & Arbitrage",
+          "path": "/maitre-ouvrage/governance",
+          "phaseRange": [0, 10],
+          "description": "Décisions, arbitrages, gates"
+        },
+        {
+          "id": "performance",
+          "label": "Performance & SLA",
+          "path": "/maitre-ouvrage/performance",
+          "phaseRange": [3, 10],
+          "description": "Indicateurs performance, SLA, jalons"
+        },
+        {
+          "id": "opportunities",
+          "label": "Opportunités & Programmes",
+          "path": "/maitre-ouvrage/opportunities",
+          "phaseRange": [0, 2],
+          "description": "Phases 0–2 : pipeline, études d'opportunité, Gate 2",
+          "children": [
+            { "id": "opportunities-list", "label": "Pipeline", "path": "/maitre-ouvrage/opportunities" },
+            { "id": "opportunity-detail", "label": "Fiche opportunité", "path": "/maitre-ouvrage/opportunities/[id]" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "EXECUTION",
+      "label": "EXÉCUTION",
+      "modules": [
+        {
+          "id": "chantiers",
+          "label": "Chantiers & Programmes",
+          "path": "/maitre-ouvrage/chantiers",
+          "phaseRange": [2, 10],
+          "description": "Portefeuille chantiers, programmes, carte, planning",
+          "children": [
+            { "id": "chantiers-programmes", "label": "Programmes", "path": "/maitre-ouvrage/chantiers/programmes" },
+            { "id": "chantiers-list", "label": "Chantiers", "path": "/maitre-ouvrage/chantiers" },
+            { "id": "chantiers-carte", "label": "Carte", "path": "/maitre-ouvrage/chantiers/carte" },
+            { "id": "chantiers-planning", "label": "Planning", "path": "/maitre-ouvrage/chantiers/planning" },
+            { "id": "chantier-detail", "label": "Fiche chantier", "path": "/maitre-ouvrage/chantiers/[id]" }
+          ]
+        },
+        {
+          "id": "conception",
+          "label": "Études & Conception",
+          "path": "/maitre-ouvrage/conception",
+          "phaseRange": [3, 3],
+          "description": "Phase 3 : ESQ, APS, APD, études techniques",
+          "children": [
+            { "id": "conception-list", "label": "Projets en étude", "path": "/maitre-ouvrage/conception" },
+            { "id": "conception-detail", "label": "Fiche conception (ESQ/APS/APD)", "path": "/maitre-ouvrage/conception/[id]" }
+          ]
+        },
+        {
+          "id": "planning",
+          "label": "Planning & Ordonnancement",
+          "path": "/maitre-ouvrage/planning",
+          "phaseRange": [3, 8]
+        },
+        {
+          "id": "execution",
+          "label": "Suivi Exécution Chantier",
+          "path": "/maitre-ouvrage/execution",
+          "phaseRange": [6, 8],
+          "children": [
+            { "id": "execution-dashboard", "label": "Vue chantiers", "path": "/maitre-ouvrage/execution" },
+            { "id": "execution-site", "label": "Dashboard chantier", "path": "/maitre-ouvrage/execution/[chantierId]" },
+            { "id": "execution-daily", "label": "Rapports journaliers", "path": "/maitre-ouvrage/execution/[chantierId]/journal" }
+          ]
+        },
+        {
+          "id": "quality",
+          "label": "Qualité & Réserves",
+          "path": "/maitre-ouvrage/quality",
+          "phaseRange": [8, 9],
+          "description": "Phases 8–9 : punch list, réserves réception",
+          "children": [
+            { "id": "quality-global", "label": "Réserves globales", "path": "/maitre-ouvrage/quality" },
+            { "id": "quality-site", "label": "Réserves chantier", "path": "/maitre-ouvrage/quality/[chantierId]" }
+          ]
+        },
+        {
+          "id": "receptions",
+          "label": "Livraisons & Réceptions",
+          "path": "/maitre-ouvrage/receptions",
+          "phaseRange": [9, 9],
+          "children": [
+            { "id": "receptions-list", "label": "Chantiers en réception", "path": "/maitre-ouvrage/receptions" },
+            { "id": "receptions-detail", "label": "Dossier de réception", "path": "/maitre-ouvrage/receptions/[chantierId]" }
+          ]
+        },
+        {
+          "id": "engagements",
+          "label": "Engagements & Finances",
+          "path": "/maitre-ouvrage/engagements",
+          "phaseRange": [2, 10],
+          "description": "BC, factures, paiements, engagements",
+          "children": [
+            { "id": "engagements-list", "label": "Vue engagements", "path": "/maitre-ouvrage/engagements" },
+            { "id": "engagements-invoices", "label": "Factures", "path": "/maitre-ouvrage/engagements/factures" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SUPPORT",
+      "label": "SUPPORT",
+      "modules": [
+        {
+          "id": "foncier",
+          "label": "Foncier & Diagnostics",
+          "path": "/maitre-ouvrage/foncier",
+          "phaseRange": [1, 1]
+        },
+        {
+          "id": "achats",
+          "label": "Achats & Appels d'Offres",
+          "path": "/maitre-ouvrage/achats",
+          "phaseRange": [5, 5],
+          "children": [
+            { "id": "achats-list", "label": "Liste AO / lots", "path": "/maitre-ouvrage/achats" },
+            { "id": "achats-detail", "label": "Fiche AO / lot", "path": "/maitre-ouvrage/achats/[id]" }
+          ]
+        },
+        {
+          "id": "fournisseurs",
+          "label": "Fournisseurs & Entreprises",
+          "path": "/maitre-ouvrage/fournisseurs",
+          "phaseRange": [0, 10],
+          "description": "Répertoire entreprises, lots, sous-traitants"
+        },
+        {
+          "id": "conformite",
+          "label": "Conformité & Autorisations",
+          "path": "/maitre-ouvrage/conformite",
+          "phaseRange": [4, 4],
+          "description": "Phase 4 : permis, DEEC, assurances, Gate 4",
+          "children": [
+            { "id": "conformite-list", "label": "Suivi permis / DEEC", "path": "/maitre-ouvrage/conformite" },
+            { "id": "conformite-detail", "label": "Fiche conformité projet", "path": "/maitre-ouvrage/conformite/[id]" }
+          ]
+        },
+        {
+          "id": "maintenance",
+          "label": "Maintenance & Garanties",
+          "path": "/maitre-ouvrage/maintenance",
+          "phaseRange": [10, 10],
+          "children": [
+            { "id": "maintenance-assets", "label": "Bâtiments livrés", "path": "/maitre-ouvrage/maintenance" },
+            { "id": "maintenance-detail", "label": "Fiche bâtiment / garanties", "path": "/maitre-ouvrage/maintenance/[batimentId]" }
+          ]
+        },
+        {
+          "id": "documents",
+          "label": "Documents & Contrats",
+          "path": "/maitre-ouvrage/documents",
+          "phaseRange": [0, 10],
+          "description": "Contrats, DCE, DOE, as-built"
+        },
+        {
+          "id": "support",
+          "label": "Aide & Support",
+          "path": "/maitre-ouvrage/support",
+          "phaseRange": [0, 10],
+          "description": "Aide, méthodo, fil conducteur"
+        },
+        {
+          "id": "admin",
+          "label": "Admin & Référentiels",
+          "path": "/maitre-ouvrage/admin",
+          "phaseRange": [0, 10],
+          "description": "Paramètres, référentiels, utilisateurs"
+        }
+      ]
+    },
+    {
+      "id": "SYSTÈME",
+      "label": "COMMUNICATION & SYSTÈME",
+      "modules": [
+        {
+          "id": "echanges",
+          "label": "Échanges structures",
+          "path": "/maitre-ouvrage/dashboard?main=systeme&sub=echanges",
+          "phaseRange": [0, 10],
+          "description": "Échanges structures"
+        },
+        {
+          "id": "conferences",
+          "label": "Conférences décisionnelles",
+          "path": "/maitre-ouvrage/dashboard?main=systeme&sub=conferences",
+          "phaseRange": [0, 10],
+          "description": "Conférences décisionnelles"
+        },
+        {
+          "id": "messages",
+          "label": "Messages externes",
+          "path": "/maitre-ouvrage/dashboard?main=systeme&sub=messages",
+          "phaseRange": [0, 10],
+          "description": "Messages externes"
+        },
+        {
+          "id": "registre-decisions",
+          "label": "Registre des décisions",
+          "path": "/maitre-ouvrage/dashboard?main=systeme&sub=registre-decisions",
+          "phaseRange": [0, 10],
+          "description": "Registre des décisions"
+        },
+        {
+          "id": "audit",
+          "label": "Audit & conformité",
+          "path": "/maitre-ouvrage/dashboard?main=systeme&sub=audit",
+          "phaseRange": [0, 10],
+          "description": "Audit & conformité"
+        },
+        {
+          "id": "journal-actions",
+          "label": "Journal des actions",
+          "path": "/maitre-ouvrage/dashboard?main=systeme&sub=journal-actions",
+          "phaseRange": [0, 10],
+          "description": "Journal des actions"
+        },
+        {
+          "id": "logs",
+          "label": "Logs système",
+          "path": "/maitre-ouvrage/dashboard?main=systeme&sub=logs",
+          "phaseRange": [0, 10],
+          "description": "Logs système"
+        },
+        {
+          "id": "ia",
+          "label": "IA & assistants",
+          "path": "/maitre-ouvrage/dashboard?main=systeme&sub=ia",
+          "phaseRange": [0, 10],
+          "description": "IA & assistants"
+        },
+        {
+          "id": "parametres-systeme",
+          "label": "Paramètres",
+          "path": "/maitre-ouvrage/dashboard?main=systeme&sub=parametres",
+          "phaseRange": [0, 10],
+          "description": "Paramètres système"
+        }
+      ]
+    }
+  ]
+}

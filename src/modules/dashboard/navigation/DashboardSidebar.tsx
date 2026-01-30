@@ -303,25 +303,39 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
     (node: NavNode, level: number, parentMain?: string, parentSub?: string): React.ReactNode => {
       const hasExternalHref = Boolean(node.externalHref);
       const hasChildren = !hasExternalHref && Boolean(node.children?.length);
+      // PILOTAGE : un seul niveau dans la sidebar, la sous-navigation (Cockpit DG, Gouvernance, …) est dans la barre d’onglets
+      const isPilotageSingleLevel = level === 0 && node.id === 'pilotage';
+      const showChildren = hasChildren && !isPilotageSingleLevel;
       const isExpanded = expandedNodes.has(node.id);
       const isActive = !hasExternalHref && isNodeActive(node, level, parentMain, parentSub);
       const badge = getBadgeForNode(node, level);
       const currentMain = level === 0 ? node.id : parentMain;
       const currentSub = level === 1 ? node.id : parentSub;
-      const accessibleChildren = hasChildren ? getAccessibleChildren(node, level, parentMain) : [];
+      const accessibleChildren = showChildren ? getAccessibleChildren(node, level, parentMain) : [];
 
-      if (level === 0 && accessibleChildren.length === 0) return null;
+      if (level === 0 && accessibleChildren.length === 0 && !isPilotageSingleLevel) return null;
       if (level > 0 && hasChildren && accessibleChildren.length === 0) return null;
 
       const label = t(node.i18nKey ?? node.label ?? node.id);
       const externalHref = node.externalHref;
+
+      // Pour PILOTAGE en mode "un seul niveau", cible = première sous-vue autorisée (ex. Cockpit DG)
+      const pilotageFirstChild = isPilotageSingleLevel
+        ? getAccessibleChildren(node, level, parentMain)[0]
+        : null;
 
       const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         e.stopPropagation();
         if (hasExternalHref && externalHref) return; // lien géré par href
 
-        if (hasChildren) {
+        if (isPilotageSingleLevel && pilotageFirstChild) {
+          const defLeaf = getDefaultLeafForSub(node.id, pilotageFirstChild.id);
+          handleNavigation(node.id, pilotageFirstChild.id, defLeaf ?? null);
+          return;
+        }
+
+        if (showChildren) {
           if (accessibleChildren.length > 0) {
             const firstChild = accessibleChildren[0];
             if (!isExpanded) toggleNode(node.id);
@@ -352,7 +366,7 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
           icon={node.icon}
           badge={badge}
           badgeVariant={badgeVariant}
-          hasChildren={hasChildren}
+          hasChildren={showChildren}
           isExpanded={isExpanded}
           isActive={isActive}
           href={externalHref}
@@ -360,7 +374,7 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
           ariaLabel={badge ? `${label}, ${badge} éléments` : label}
           tooltipLabel={label}
         >
-          {hasChildren && isExpanded &&
+          {showChildren && isExpanded &&
             accessibleChildren.map((child) =>
               renderNavNode(child, level + 1, currentMain, currentSub)
             )}

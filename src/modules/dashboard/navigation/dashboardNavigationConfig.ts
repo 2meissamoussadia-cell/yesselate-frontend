@@ -6,8 +6,10 @@
 import type { DashboardMainCategory, NavNode, NavRequires } from '../types/dashboardNavigationTypes';
 import {
   LayoutDashboard,
+  Gauge,
   Building2,
   Calendar,
+  LineChart,
   BarChart3,
   AlertTriangle,
   FolderKanban,
@@ -53,14 +55,14 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
   pilotage: {
     id: 'pilotage',
     label: 'PILOTAGE',
-    icon: LayoutDashboard,
+    icon: Gauge,
     requires: { perm: 'dashboard:read' },
     children: [
-      { id: 'dashboard', label: 'Tableau de bord DG', icon: LayoutDashboard },
+      { id: 'dashboard', label: 'Cockpit DG', icon: Gauge, to: '/dg/cockpit', requires: { perm: 'dashboard:read', roles: ['DG', 'DIRECTION'] } },
+      { id: 'alertes', label: "Centre d'alertes", icon: AlertTriangle, badge: 4, badgeType: 'critical' },
       { id: 'gouvernance', label: 'Gouvernance & décisions', icon: Building2, badge: 7, badgeType: 'warning' },
       { id: 'calendrier', label: 'Calendrier & échéances', icon: Calendar },
-      { id: 'analytics', label: 'Analytics & rapports', icon: BarChart3 },
-      { id: 'alertes', label: "Centre d'alertes", icon: AlertTriangle, badge: 4, badgeType: 'critical' },
+      { id: 'analytics', label: 'Analytics & rapports', icon: LineChart },
     ],
   },
   chantiers: {
@@ -84,8 +86,8 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
     children: [
       { id: 'budget', label: 'Budget & engagements', icon: Wallet },
       { id: 'validation-paiements', label: 'Validation paiements', icon: CheckCircle2, badge: 5, badgeType: 'warning' },
-      { id: 'gains-pertes', label: 'Gains & pertes', icon: TrendingUp },
       { id: 'tresorerie', label: 'Trésorerie', icon: Landmark },
+      { id: 'gains-pertes', label: 'Gains & pertes', icon: TrendingUp },
       { id: 'recouvrements', label: 'Recouvrements', icon: Inbox, badge: 4, badgeType: 'warning' },
     ],
   },

@@ -14,12 +14,30 @@ export type ProjetStatus =
   | 'termine'
   | 'annule';
 
+/** Types de projets BTP : ouvrage, rénovation, chantier, construction + route, bâtiment, aménagement */
 export type ProjetType =
   | 'BTP_route'
   | 'BTP_ouvrage_art'
+  | 'BTP_ouvrage'      // Ouvrage (générique)
   | 'BTP_batiment'
   | 'BTP_amenagement'
+  | 'BTP_renovation'   // Rénovation
+  | 'BTP_chantier'     // Chantier / travaux chantier
+  | 'BTP_construction' // Construction (neuf)
   | 'autre';
+
+/** Libellés des types BTP pour l’UI (ouvrage, rénovation, chantier, construction) */
+export const PROJET_TYPE_LABELS: Record<ProjetType, string> = {
+  BTP_route: 'Route / Voirie',
+  BTP_ouvrage_art: 'Ouvrage d\'art',
+  BTP_ouvrage: 'Ouvrage',
+  BTP_batiment: 'Bâtiment',
+  BTP_amenagement: 'Aménagement',
+  BTP_renovation: 'Rénovation',
+  BTP_chantier: 'Chantier',
+  BTP_construction: 'Construction',
+  autre: 'Autre',
+};
 
 export interface Projet {
   id: string;
@@ -148,8 +166,12 @@ class ProjetsApiService {
       parType: [
         { type: 'BTP_route', count: 18 },
         { type: 'BTP_ouvrage_art', count: 8 },
+        { type: 'BTP_ouvrage', count: 3 },
         { type: 'BTP_batiment', count: 10 },
         { type: 'BTP_amenagement', count: 4 },
+        { type: 'BTP_renovation', count: 12 },
+        { type: 'BTP_chantier', count: 6 },
+        { type: 'BTP_construction', count: 7 },
         { type: 'autre', count: 2 },
       ],
       parRisque: [

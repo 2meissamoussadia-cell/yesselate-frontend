@@ -1,44 +1,12 @@
+'use client';
+
 import type { ReactNode } from 'react';
-import { BMOAppShell } from '@/components/bmo/BMOAppShell';
-import { FluentProviderClient } from '@/components/shared/FluentProviderClient';
+import { BmoPortalLayout } from '@/components/bmo/layout/BmoPortalLayout';
 
+/**
+ * Layout Maître d'Ouvrage — un seul shell (BmoPortalLayout), partagé avec (bmo).
+ * Pas de doublon : (portals)/dg/cockpit redirige vers /maitre-ouvrage/dashboard.
+ */
 export default function MaitreOuvrageLayout({ children }: { children: ReactNode }) {
-  return (
-    <FluentProviderClient>
-      <BMOAppShell>
-      {/* Skip link (accessibilité clavier) */}
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[9999] focus:rounded focus:bg-black focus:px-3 focus:py-2 focus:text-white"
-      >
-        Aller au contenu
-      </a>
-
-      {/* Zone de scroll: cadre horizontal = viewport, défilement vertical uniquement (style logiciel métier) */}
-      <div className="w-full max-w-full min-w-0 flex-1 min-h-0 overflow-x-hidden overflow-hidden flex flex-col bg-[rgb(var(--bg))]">
-        <main
-          id="main-content"
-          role="main"
-          tabIndex={-1}
-          className="
-            flex-1 min-h-0 min-w-0 max-w-full viewport-contained
-            overflow-x-hidden overflow-y-auto overscroll-contain scrollbar-gutter-stable scrollbar-subtle
-            pb-[env(safe-area-inset-bottom)]
-            focus:outline-none
-            bg-[rgb(var(--bg))]
-          "
-          style={{
-            // évite les sauts de layout quand la scrollbar apparaît/disparaît
-            scrollbarGutter: 'stable',
-          }}
-        >
-          {/* Wrapper pour contenir tout le contenu dans la largeur écran (logiciel métier) */}
-          <div className="min-w-0 max-w-full overflow-x-hidden">
-            {children}
-          </div>
-        </main>
-      </div>
-      </BMOAppShell>
-    </FluentProviderClient>
-  );
+  return <BmoPortalLayout>{children}</BmoPortalLayout>;
 }

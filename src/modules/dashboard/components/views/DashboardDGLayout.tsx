@@ -13,7 +13,7 @@
 import React, { useCallback } from 'react';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { cn } from '@/lib/utils';
-import { Download } from 'lucide-react';
+import { EnterpriseBadge } from '../shared/EnterpriseBadge';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -154,7 +154,12 @@ function MiniTable({
 // Layout principal
 // ---------------------------------------------------------------------------
 
-export function DashboardDGLayout() {
+export interface DashboardDGLayoutProps {
+  /** Contenu personnalisé (ex. DashboardAccueil3P). Si fourni, remplace le contenu par défaut (onglets + KPI + synthèse). */
+  content?: React.ReactNode;
+}
+
+export function DashboardDGLayout({ content }: DashboardDGLayoutProps = {}) {
   const navigate = useDashboardCommandCenterStore((s) => s.navigate);
   const main = useDashboardCommandCenterStore((s) => s.navigation.mainCategory);
   const sub = useDashboardCommandCenterStore((s) => s.navigation.subCategory);
@@ -187,36 +192,35 @@ export function DashboardDGLayout() {
   const routeKey = `${main ?? 'pilotage'}::${sub ?? 'dashboard'}`;
   const activeTabIndex = routeToTab[routeKey] ?? 0;
 
+  // Quand un contenu personnalisé est fourni (ex. DashboardAccueil3P), ne pas afficher le header
+  // pour éviter la duplication avec le header de la page (breadcrumbs, SubNav, KPIs, actions).
+  const showHeader = content == null || content === undefined;
   return (
     <div className="flex flex-col h-full bg-slate-950 text-slate-50">
-      {/* HEADER SIMPLE DG */}
-      <header className="h-16 flex-shrink-0 flex items-center justify-between px-6 sm:px-8 border-b border-slate-800 bg-slate-950/90 backdrop-blur">
-        <div className="text-lg font-semibold">
-          Tableau de bord DG
-          <span className="ml-2 text-xs font-normal text-slate-400">Vue d’ensemble</span>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <div className="w-64 sm:w-80">
-            <input
-              type="text"
-              placeholder="Rechercher chantier, client, fournisseur..."
-              className="w-full h-9 px-3 rounded-lg bg-slate-900 border border-slate-700 text-xs placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              aria-label="Recherche"
-            />
+      {showHeader && (
+        <header className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between px-6 sm:px-8 py-4 border-b border-slate-800 bg-slate-950/90 backdrop-blur shrink-0">
+          <div className="space-y-1">
+            <div className="flex items-center gap-3">
+              <h1 className="text-lg font-semibold tracking-tight">DG Cockpit</h1>
+              <EnterpriseBadge variant="info" size="sm">NICE RÉNOVATION • DG</EnterpriseBadge>
+            </div>
+            <p className="text-xs text-slate-400">
+              Vue synthèse NICE RÉNOVATION • Portefeuille chantiers, finance, risques et satisfaction clients.
+            </p>
           </div>
-          <button
-            type="button"
-            className="h-9 px-3 rounded-lg bg-slate-800 text-xs border border-slate-700 flex items-center gap-2 hover:bg-slate-700/50 transition-colors"
-          >
-            <Download className="h-3.5 w-3.5" aria-hidden />
-            <span>Exporter</span>
-          </button>
-        </div>
-      </header>
+          <div className="flex items-center gap-2">
+            <button type="button" className="inline-flex items-center gap-1 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-1 text-[11px] text-slate-200 hover:border-emerald-500/60 transition-colors">
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-400" /> Activer briefing IA
+            </button>
+            <button type="button" className="rounded-full border border-slate-700 bg-slate-900/70 px-3 py-1 text-[11px] text-slate-300 hover:border-slate-500 transition-colors">Export PDF</button>
+            <button type="button" className="rounded-full border border-slate-700 bg-slate-900/70 px-3 py-1 text-[11px] text-slate-300 hover:border-violet-500/60 transition-colors">Mode 3D</button>
+          </div>
+        </header>
+      )}
 
-      {/* CONTENT SCROLLABLE */}
-      <main className="flex-1 overflow-y-auto px-6 sm:px-8 py-6 space-y-8">
+      <main className="flex-1 min-h-0 overflow-y-auto px-6 sm:px-8 py-6 space-y-8">
+        {content ?? (
+          <>
         {/* ONGLETS NIVEAU 2 */}
         <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs border-b border-slate-800 pb-2">
           {TABS.map((tab, idx) => (
@@ -335,6 +339,8 @@ export function DashboardDGLayout() {
             </CardBlock>
           </div>
         </section>
+          </>
+        )}
       </main>
     </div>
   );

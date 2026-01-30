@@ -1,6 +1,7 @@
 'use client';
 
 import React, { memo, useMemo } from 'react';
+import { BarChart2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { getTrendIcon, getTrendColor } from './getTrendIcon';
@@ -11,7 +12,7 @@ export interface KPICardData {
   value: string | number;
   trend?: number;
   trendType?: 'up' | 'down' | 'neutral';
-  icon: React.ComponentType<{ className?: string }>;
+  icon?: React.ComponentType<{ className?: string }>;
   color?: 'blue' | 'emerald' | 'amber' | 'purple' | 'rose' | 'cyan';
   description?: string;
   onClick?: () => void;
@@ -40,7 +41,7 @@ const sizeTokens = {
 } as const;
 
 export const KPICard = memo(function KPICard({ kpi, size = 'md', className }: KPICardProps) {
-  const Icon = kpi.icon;
+  const Icon = kpi.icon ?? BarChart2;
   const tokens = sizeTokens[size];
   const color = kpi.color ?? 'blue';
   const accent = accentByColor[color];
@@ -73,7 +74,7 @@ export const KPICard = memo(function KPICard({ kpi, size = 'md', className }: KP
 
       <div className="flex items-start justify-between gap-3 relative z-10">
         <div className="min-w-0 flex-1">
-          <div className={cn('text-slate-300/90 font-medium tracking-wide truncate', tokens.label)}>
+          <div className={cn('text-slate-300/90 font-medium tracking-wide line-clamp-2 leading-tight', tokens.label)}>
             {kpi.label}
           </div>
           <div className={cn('mt-1 font-semibold text-slate-50 leading-none', tokens.value)}>

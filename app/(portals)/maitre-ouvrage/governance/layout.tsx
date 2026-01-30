@@ -98,42 +98,54 @@ export default function GouvernanceLayout({
   };
 
   return (
-    <div className="flex h-screen bg-slate-950 overflow-hidden">
-      {/* Sidebar - Level 1 */}
-      <GovernanceSidebar
-        activeCategory={activeCategory}
-        activeSubCategory={activeSubCategory}
-        collapsed={sidebarCollapsed}
-        stats={statsForBadges}
-        onCategoryChange={handleCategoryChange}
-        onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
-        onOpenCommandPalette={() => {
-          // TODO: Implement command palette
-        }}
-      />
-
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Sub Navigation - Levels 2 & 3 */}
-        <GovernanceSubNavigation
-          mainCategory={activeCategory}
-          subCategory={activeSubCategory}
-          subSubCategory={activeSubSubCategory}
-          onSubCategoryChange={handleSubCategoryChange}
-          onSubSubCategoryChange={handleSubSubCategoryChange}
+    <div
+      className="flex flex-1 min-h-0 min-w-0 flex-col overflow-hidden bg-slate-950/30"
+      role="region"
+      aria-label="Gouvernance"
+    >
+      <div className="flex flex-1 min-h-0 min-w-0 overflow-hidden">
+        {/* Sidebar - même style que dashboard (PortalModuleCleanLayout) */}
+        <GovernanceSidebar
+          activeCategory={activeCategory}
+          activeSubCategory={activeSubCategory}
+          collapsed={sidebarCollapsed}
           stats={statsForBadges}
+          onCategoryChange={handleCategoryChange}
+          onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+          onOpenCommandPalette={() => {
+            // TODO: Implement command palette
+          }}
         />
 
-        {/* Content Router */}
-        <main className="flex-1 overflow-hidden">
-          <div className="h-full overflow-x-hidden overflow-y-auto">
+        {/* Zone principale — même structure que dashboard */}
+        <div className="flex flex-1 min-h-0 min-w-0 flex-col overflow-hidden">
+          {/* Sub Navigation - Levels 2 & 3 (barre type dashboard) */}
+          <GovernanceSubNavigation
+            mainCategory={activeCategory}
+            subCategory={activeSubCategory}
+            subSubCategory={activeSubSubCategory}
+            onSubCategoryChange={handleSubCategoryChange}
+            onSubSubCategoryChange={handleSubSubCategoryChange}
+            stats={statsForBadges}
+          />
+
+          {/* Titre module + contenu — aligné dashboard */}
+          <div className="shrink-0 px-4 py-2 border-b border-slate-800/50 bg-slate-950/40">
+            <h2 className="text-sm font-semibold text-slate-200 truncate">
+              Gouvernance & Arbitrage
+            </h2>
+          </div>
+          <main
+            className="flex-1 min-h-0 min-w-0 overflow-x-hidden overflow-y-auto px-2 sm:px-4 py-2 scrollbar-dashboard"
+            role="main"
+          >
             <GovernanceContentRouter
               mainCategory={activeCategory}
               subCategory={activeSubCategory}
               subSubCategory={activeSubSubCategory}
             />
-          </div>
-        </main>
+          </main>
+        </div>
       </div>
     </div>
   );

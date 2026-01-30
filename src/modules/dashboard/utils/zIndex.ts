@@ -19,6 +19,7 @@ export const Z_INDEX = {
   sidebar: 11,
   breadcrumbs: 12,
   subNavigation: 13,
+  subnav: 13, // alias pour la barre d’onglets DG
   
   // Dropdowns
   dropdown: 20,

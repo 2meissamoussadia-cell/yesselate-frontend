@@ -7,7 +7,7 @@
 
 import React, { useCallback, memo } from 'react';
 import { cn } from '@/lib/utils';
-import { ChevronRight, Sparkles } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import {
   dashboardNavigationConfig,
   getSubCategories,
@@ -36,11 +36,14 @@ interface DashboardSubNavigationProps {
   };
   /** Par défaut: on évite une 2e breadcrumb (DashboardBreadcrumbs fait déjà le job) */
   showBreadcrumbs?: boolean;
+  /** Afficher uniquement les onglets principaux (PILOTAGE, CHANTIERS, etc.) — utilisé quand la sub-nav est en sidebar verticale */
+  mainTabsOnly?: boolean;
 }
 
 export const DashboardSubNavigation = memo(function DashboardSubNavigation({
   stats = {},
   showBreadcrumbs = false,
+  mainTabsOnly = false,
 }: DashboardSubNavigationProps) {
   const log = useLogger('DashboardSubNavigation');
 
@@ -185,65 +188,126 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
     // URL mise à jour par useDashboardCommandCenterUrlSync (Store -> URL)
   }, [main, sub, leaf, navigate, log]);
 
-  return (
-    <div className="bg-slate-950/20 border-b border-slate-800/40 backdrop-blur relative overflow-hidden">
-      
-      {/* Breadcrumb (optionnel). Par défaut on évite la double breadcrumb. */}
-      {showBreadcrumbs ? (
-        <div 
-          className={cn("px-2 sm:px-4 py-1.5 flex items-center gap-1.5 sm:gap-2 text-xs border-b border-slate-800/50 relative min-w-0 overflow-x-auto", zIndexClass('breadcrumbs'))}
-          role="navigation"
-          aria-label="Fil d'Ariane"
-        >
-          <span className="text-slate-400">Dashboard</span>
-          <ChevronRight className="h-3 w-3 text-slate-500" />
-          <span className="text-slate-200 font-medium">{mainLabel}</span>
-          {sub && activeSubLabel && (
-            <>
-              <ChevronRight className="h-3 w-3 text-slate-500" />
-              <span className="text-slate-300">{activeSubLabel}</span>
-            </>
-          )}
-          {leaf && activeSubSubLabel && (
-            <>
-              <ChevronRight className="h-3 w-3 text-slate-500" />
-              <span className="text-slate-400 text-xs flex items-center gap-1">
-                <Sparkles className="h-3 w-3" />
-                {activeSubSubLabel}
-              </span>
-            </>
-          )}
-        </div>
-      ) : null}
+  const MAIN_DG_CATEGORIES: DashboardMainCategory[] = [
+    'pilotage',
+    'chantiers',
+    'finance',
+    'clients',
+    'rh',
+    'systeme',
+  ];
 
-      {/* Level 2 Navigation - Sub Categories (Segmented Tabs) */}
-      {subCategories.length > 0 && (
-        <div className={cn("px-2 sm:px-4 py-1.5 border-b border-slate-800/50 relative min-w-0", zIndexClass('subNavigation'))}>
-          <SegmentedTabs
-            items={subCategories.map((subCat) => ({
-              id: subCat.id,
-              label: subCat.label ?? subCat.id,
-              badge: getBadgeForNode(subCat),
-            }))}
-            value={sub || null}
-            onChange={handleSubCategoryClick}
-          />
+  const mainTabs = MAIN_DG_CATEGORIES
+    .map((key) => {
+      const node = dashboardNavigationConfig[key];
+      if (!node || !nodeAllowed(userContext, node.requires)) return null;
+      return {
+        id: key,
+        label: node.label,
+        icon: node.icon,
+      };
+    })
+    .filter(Boolean);
+
+  return (
+    <div
+      className={cn(
+        'border-b border-slate-800/80 bg-slate-950/80',
+        zIndexClass('subnav')
+      )}
+    >
+      {/* NIVEAU 1 : TABS PRINCIPAUX (6 BLOCS DG) — header breadcrumb supprimé (présent dans la topbar) */}
+      <div className="px-3 pb-2 pt-1">
+        <SegmentedTabs
+          value={currentMainCategory}
+          onChange={(val) => {
+            const nextMain = val as DashboardMainCategory;
+            const subs = getSubCategories(nextMain);
+            const firstSub = subs[0];
+            const defaultLeaf =
+              firstSub?.id != null
+                ? getDefaultLeafForSub(nextMain, firstSub.id)
+                : null;
+
+            navigate(nextMain, firstSub?.id ?? null, defaultLeaf);
+          }}
+          items={mainTabs as any}
+          className="h-9 text-[11px]"
+          pillClassName="rounded-full bg-transparent"
+          pillItemClassName="rounded-full px-3 py-1.5 data-[state=active]:bg-slate-800 data-[state=active]:text-slate-50 data-[state=inactive]:bg-slate-900/40 data-[state=inactive]:text-slate-400"
+          underlineClassName="h-[2px] rounded-full bg-sky-500"
+        />
+      </div>
+
+      {/* NIVEAU 2 : CHIPS HORIZONTAUX (sub) — masqués si mainTabsOnly (sub-nav en sidebar) */}
+      {!mainTabsOnly && subCategories.length > 0 && (
+        <div className="flex flex-wrap items-center gap-1.5 px-4 pb-2">
+          {subCategories.map((subCat) => {
+            const active = subCat.id === sub;
+            return (
+              <button
+                key={subCat.id}
+                type="button"
+                onClick={() => handleSubCategoryClick(subCat.id)}
+                className={cn(
+                  'inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] transition-colors',
+                  active
+                    ? 'border-sky-500/70 bg-sky-500/10 text-sky-100'
+                    : 'border-slate-800/60 bg-slate-900/60 text-slate-400 hover:bg-slate-800/80'
+                )}
+              >
+                {subCat.icon && (
+                  <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center overflow-hidden rounded">
+                    <subCat.icon className="h-3 w-3 min-h-0 min-w-0 max-h-full max-w-full" aria-hidden />
+                  </span>
+                )}
+                <span>{subCat.label}</span>
+              </button>
+            );
+          })}
         </div>
       )}
 
-      {/* Level 3 Navigation - Sub Sub Categories (Segmented Tabs) */}
-      {subSubCategories.length > 0 && sub && (
-        <div className={cn("px-2 sm:px-4 py-1.5 bg-slate-800/20 relative min-w-0", zIndexClass('subNavigation'))}>
-          <SegmentedTabs
-            items={subSubCategories.map((subSubCat) => ({
-              id: subSubCat.id,
-              label: subSubCat.label ?? subSubCat.id,
-              badge: getBadgeForNode(subSubCat),
-            }))}
-            value={leaf || null}
-            onChange={handleSubSubCategoryClick}
-            className="text-xs"
-          />
+      {/* NIVEAU 3 : FILTRES DISCRETS (leaf) — masqués si mainTabsOnly */}
+      {!mainTabsOnly && subSubCategories.length > 1 && (
+        <div className="flex flex-wrap items-center gap-1.5 px-4 pb-2">
+          {subSubCategories.map((leafNode) => {
+            const active = leafNode.id === leaf;
+            return (
+              <button
+                key={leafNode.id}
+                type="button"
+                onClick={() => handleSubSubCategoryClick(leafNode.id)}
+                className={cn(
+                  'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] transition-colors',
+                  active
+                    ? 'bg-slate-800 text-slate-100'
+                    : 'bg-transparent text-slate-500 hover:bg-slate-900'
+                )}
+              >
+                {leafNode.label}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {/* BREADCRUMB OPTIONNEL EN BAS — masqué si mainTabsOnly */}
+      {!mainTabsOnly && showBreadcrumbs && (
+        <div className="px-4 pb-2 text-[10px] text-slate-500 flex items-center gap-1">
+          <span>{mainLabel}</span>
+          {activeSubLabel && (
+            <>
+              <ChevronRight className="h-3 w-3 text-slate-600" />
+              <span>{activeSubLabel}</span>
+            </>
+          )}
+          {activeSubSubLabel && (
+            <>
+              <ChevronRight className="h-3 w-3 text-slate-600" />
+              <span>{activeSubSubLabel}</span>
+            </>
+          )}
         </div>
       )}
     </div>

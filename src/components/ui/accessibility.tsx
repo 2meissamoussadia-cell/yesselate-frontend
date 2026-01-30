@@ -3,8 +3,9 @@
 import { cn } from '@/lib/utils';
 
 /**
- * SkipLinks - Liens de navigation rapide pour l'accessibilité
- * Permet aux utilisateurs de clavier de sauter directement au contenu principal
+ * SkipLinks - Liens de navigation rapide pour l'accessibilité.
+ * Permet aux utilisateurs de clavier de sauter au contenu principal (#main-content) et à la navigation (#navigation).
+ * Ne pas utiliser si BmoPortalLayout/BmoLayoutShell est déjà en place (lien « Aller au contenu » déjà présent).
  */
 export function SkipLinks() {
   return (

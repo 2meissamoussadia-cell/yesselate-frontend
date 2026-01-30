@@ -5,18 +5,33 @@
 
 'use client';
 
-import React from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { ArbitrageGouvernance } from '../../types/gouvernanceTypes';
 import { Scale, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { normalizeToArray } from '../../utils/dataNormalization';
+import { FilterBar } from '@/components/erp';
+import type { ErpFilters } from '@/components/erp';
 
 export default function ArbitragesEnAttentePage() {
   const { data, isLoading } = useGouvernanceData('arbitrages-en-attente');
+  const [filters, setFilters] = useState<ErpFilters>({ gravite: '' });
 
-  const arbitrages = normalizeToArray<ArbitrageGouvernance>(data);
+  const onFilterChange = useCallback((key: string, value: unknown) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  }, []);
+
+  const arbitrages = useMemo(() => normalizeToArray<ArbitrageGouvernance>(data), [data]);
+  const filteredArbitrages = useMemo(() => {
+    const enAttente = arbitrages.filter((a) => a.statut === 'en-attente');
+    const niveauFilter = String(filters.gravite ?? '').trim();
+    if (!niveauFilter || niveauFilter === 'Tous') return enAttente;
+    const niveau = parseInt(niveauFilter, 10);
+    if (Number.isNaN(niveau)) return enAttente;
+    return enAttente.filter((a) => a.niveau === niveau);
+  }, [arbitrages, filters.gravite]);
 
   return (
     <div className="h-full w-full bg-slate-950 text-white p-6">
@@ -26,14 +41,25 @@ export default function ArbitragesEnAttentePage() {
         onExport={() => console.log('Export arbitrages')}
       />
 
+      {!isLoading && arbitrages.length > 0 && (
+        <FilterBar
+          filters={filters}
+          onFilterChange={onFilterChange}
+          options={{ gravites: ['Tous', '1', '2', '3'] }}
+          hideSections={['perimetre', 'etats', 'dates', 'avances', 'savedViews']}
+          className="mb-4 rounded-xl border border-slate-800/60 bg-slate-900/60"
+        />
+      )}
+
       {isLoading ? (
         <div className="text-center text-slate-400 py-12">Chargement...</div>
-      ) : arbitrages.length === 0 ? (
-        <div className="text-center text-slate-400 py-12">Aucun arbitrage en attente</div>
+      ) : filteredArbitrages.length === 0 ? (
+        <div className="text-center text-slate-400 py-12">
+          {arbitrages.length === 0 ? 'Aucun arbitrage en attente' : 'Aucun arbitrage ne correspond aux filtres'}
+        </div>
       ) : (
         <div className="space-y-2">
-          {arbitrages
-            .filter((a: ArbitrageGouvernance) => a.statut === 'en-attente')
+          {filteredArbitrages
             .map((arbitrage: ArbitrageGouvernance) => (
               <div
                 key={arbitrage.id}

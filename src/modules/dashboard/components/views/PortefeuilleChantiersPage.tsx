@@ -9,11 +9,14 @@
 
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { cn } from '@/lib/utils';
-import { Download, Plus, Eye, AlertTriangle, Ban, FileText, X } from 'lucide-react';
+import { Download, Plus, Eye, AlertTriangle, Ban, FileText } from 'lucide-react';
 import { ChantierDetailModal } from '../modals/ChantierDetailModal';
 import type { ChantierMock } from '../../data/chantiersMock';
+import { FilterBar, ErpButton } from '@/components/erp';
+import type { ErpFilters } from '@/components/erp';
+import { useAlertToast } from '@/components/ui/toast';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -144,36 +147,6 @@ function rowToChantierMock(row: ChantierRow): ChantierMock {
 // ---------------------------------------------------------------------------
 // Sous-composants
 // ---------------------------------------------------------------------------
-
-function FilterSelect({
-  label,
-  options,
-  value,
-  onChange,
-}: {
-  label: string;
-  options: string[];
-  value: string;
-  onChange: (v: string) => void;
-}) {
-  return (
-    <div className="flex flex-col text-[11px] space-y-1">
-      <span className="text-slate-400">{label}</span>
-      <select
-        className="h-8 min-w-[140px] bg-slate-900 border border-slate-700 rounded-md px-2 text-[11px] text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        aria-label={label}
-      >
-        {options.map((opt) => (
-          <option key={opt} value={opt}>
-            {opt}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-}
 
 function SummaryCard({
   label,
@@ -311,16 +284,21 @@ function ActionButtons({
 // Page principale
 // ---------------------------------------------------------------------------
 
+const INITIAL_FILTERS: ErpFilters = {
+  programme: '',
+  statut: '',
+  priorite: '',
+  gravite: '',
+};
+
 export function PortefeuilleChantiersPage() {
-  const [segment, setSegment] = useState(SEGMENTS[0]);
-  const [prestation, setPrestation] = useState(PRESTATIONS[0]);
-  const [phase, setPhase] = useState(PHASES[0]);
-  const [risque, setRisque] = useState(RISQUES[0]);
+  const [filters, setFilters] = useState<ErpFilters>(INITIAL_FILTERS);
   const [selectedChantier, setSelectedChantier] = useState<ChantierRow | null>(null);
   const [confirmAction, setConfirmAction] = useState<{
     type: ConfirmActionType;
     chantierId: string;
   } | null>(null);
+  const [exporting, setExporting] = useState(false);
 
   const onVoir = useCallback((id: string) => {
     const row = CHANTIERS_MOCK.find((c) => c.id === id) ?? null;
@@ -350,19 +328,30 @@ export function PortefeuilleChantiersPage() {
     setConfirmAction(null);
   }, []);
 
-  const resetFilters = useCallback(() => {
-    setSegment(SEGMENTS[0]);
-    setPrestation(PRESTATIONS[0]);
-    setPhase(PHASES[0]);
-    setRisque(RISQUES[0]);
+  const onFilterChange = useCallback((key: string, value: unknown) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
   }, []);
+
+  const filterOptions = useMemo(
+    () => ({
+      programmes: SEGMENTS.map((s) => ({ value: s === 'Tous' ? '' : s, label: s })),
+      statuts: PHASES,
+      priorites: PRESTATIONS,
+      gravites: RISQUES,
+    }),
+    []
+  );
 
   // Filtrage côté client (à remplacer par API)
   const filtered = CHANTIERS_MOCK.filter((c) => {
-    if (segment !== 'Tous' && c.segment !== segment) return false;
-    if (prestation !== 'Toutes' && !c.prestation.toLowerCase().includes(prestation.toLowerCase())) return false;
-    if (phase !== 'Toutes' && c.phase !== phase) return false;
-    if (risque !== 'Tous' && c.risque !== risque) return false;
+    const programme = String(filters.programme ?? '');
+    const statut = String(filters.statut ?? '');
+    const priorite = String(filters.priorite ?? '');
+    const gravite = String(filters.gravite ?? '');
+    if (programme && programme !== 'Tous' && c.segment !== programme) return false;
+    if (statut && statut !== 'Toutes' && c.phase !== statut) return false;
+    if (priorite && priorite !== 'Toutes' && !c.prestation.toLowerCase().includes(priorite.toLowerCase())) return false;
+    if (gravite && gravite !== 'Tous' && c.risque !== gravite) return false;
     return true;
   });
 
@@ -377,44 +366,43 @@ export function PortefeuilleChantiersPage() {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <button
-            type="button"
-            className="h-9 px-3 rounded-lg bg-slate-800 text-xs border border-slate-700 hover:bg-slate-700/50 inline-flex items-center gap-2"
-          >
+          <ErpButton variant="default" size="sm" className="border border-slate-700">
             <Plus className="h-3.5 w-3.5" aria-hidden />
             Nouveau chantier
-          </button>
-          <button
-            type="button"
-            className="h-9 px-3 rounded-lg bg-slate-800 text-xs border border-slate-700 hover:bg-slate-700/50 inline-flex items-center gap-2"
+          </ErpButton>
+          <ErpButton
+            variant="outline"
+            size="sm"
+            loading={exporting}
+            onClick={() => {
+              setExporting(true);
+              setTimeout(() => {
+                setExporting(false);
+                toast.exportSuccess('CSV');
+              }, 1200);
+            }}
           >
             <Download className="h-3.5 w-3.5" aria-hidden />
             Exporter
-          </button>
+          </ErpButton>
         </div>
       </header>
 
       {/* CONTENT */}
       <main className="flex-1 overflow-y-auto px-6 sm:px-8 py-6 space-y-6">
-        {/* FILTRES */}
-        <section
-          className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex flex-wrap gap-4 items-end"
-          aria-label="Filtres"
-        >
-          <FilterSelect label="Segment" options={SEGMENTS} value={segment} onChange={setSegment} />
-          <FilterSelect label="Prestation" options={PRESTATIONS} value={prestation} onChange={setPrestation} />
-          <FilterSelect label="Phase" options={PHASES} value={phase} onChange={setPhase} />
-          <FilterSelect label="Risque" options={RISQUES} value={risque} onChange={setRisque} />
-          <div className="ml-auto flex gap-2">
-            <button
-              type="button"
-              onClick={resetFilters}
-              className="h-8 px-3 rounded-lg bg-slate-800 text-xs border border-slate-700 hover:bg-slate-700/50"
-            >
-              Réinitialiser
-            </button>
-          </div>
-        </section>
+        {/* FILTRES ERP (FilterBar réutilisable) */}
+        <FilterBar
+          filters={filters}
+          onFilterChange={onFilterChange}
+          options={{
+            programmes: filterOptions.programmes,
+            statuts: filterOptions.statuts,
+            priorites: filterOptions.priorites,
+            gravites: filterOptions.gravites,
+          }}
+          hideSections={['dates', 'avances', 'savedViews']}
+          className="rounded-2xl border border-slate-800/60 bg-slate-900/80"
+        />
 
         {/* RÉSUMÉ */}
         <section className="grid grid-cols-1 md:grid-cols-3 gap-4" aria-label="Résumé">

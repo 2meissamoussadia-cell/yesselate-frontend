@@ -24,9 +24,23 @@ import { useDashboardData } from '../../hooks/useDashboardData';
 import { exportToCSV, exportToJSON } from '../../utils/exportUtils';
 import type { PerformanceDemandesData } from '../../types/dashboardDataTypes';
 import { cn } from '@/lib/utils';
+import { FilterBar } from '@/components/erp';
+import type { ErpFilters } from '@/components/erp';
+
+const STATUT_TO_API: Record<string, string> = {
+  '': '',
+  'En attente': 'en-attente',
+  'En cours': 'en-cours',
+  'Traitée': 'traitee',
+};
 
 export const PerformanceDemandesPage = memo(function PerformanceDemandesPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [filters, setFilters] = useState<ErpFilters>({ statut: '', priorite: '' });
+
+  const onFilterChange = useCallback((key: string, value: unknown) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  }, []);
   
   // ✅ Charger les données depuis l'API
   const { data, isLoading, error } = useDashboardData<PerformanceDemandesData>();
@@ -44,18 +58,22 @@ export const PerformanceDemandesPage = memo(function PerformanceDemandesPage() {
     return data.stats;
   }, [data]);
   
-  // ✅ Filtrer les données
+  // ✅ Filtrer les données (filtres ERP + recherche)
   const filteredDemandes = useMemo(() => {
     if (!data?.demandes) return [];
-    if (!searchQuery.trim()) return data.demandes;
-    
+    let list = data.demandes;
+
+    const statutApi = STATUT_TO_API[String(filters.statut ?? '')];
+    if (statutApi) list = list.filter((d) => d.statut === statutApi);
+
+    if (!searchQuery.trim()) return list;
     const query = searchQuery.toLowerCase();
-    return data.demandes.filter(demande => 
+    return list.filter(demande =>
       demande.titre.toLowerCase().includes(query) ||
       demande.type.toLowerCase().includes(query) ||
       demande.bureau.toLowerCase().includes(query)
     );
-  }, [data, searchQuery]);
+  }, [data, searchQuery, filters.statut]);
   
   // ✅ Export CSV
   const handleExportCSV = useCallback(() => {
@@ -223,6 +241,13 @@ export const PerformanceDemandesPage = memo(function PerformanceDemandesPage() {
         </div>
 
         <DashboardPanel>
+          <FilterBar
+            filters={filters}
+            onFilterChange={onFilterChange}
+            options={{ statuts: ['Toutes', 'En attente', 'En cours', 'Traitée'] }}
+            hideSections={['perimetre', 'dates', 'avances', 'savedViews']}
+            className="mb-4 rounded-xl border-0 bg-transparent"
+          />
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-slate-200">Liste des demandes</h3>
             <div className="flex items-center gap-3">

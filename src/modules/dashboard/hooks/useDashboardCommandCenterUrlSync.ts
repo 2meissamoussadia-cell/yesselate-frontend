@@ -3,9 +3,15 @@
 import { useEffect, useRef } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
-import { isValidRoute, normalizeRoute } from '../utils/routeValidation';
+import { isValidRoute, normalizeRoute, DEFAULT_DG_HOME } from '../utils/routeValidation';
 import { getDashboardRedirectPath } from '../utils/dashboardRedirectMap';
 import { useLogger } from '@/lib/utils/logger';
+
+/** Path canonique Cockpit DG (default DG home). */
+export const DG_COCKPIT_PATH = '/dg/cockpit';
+
+/** Path maître-ouvrage Cockpit (équivalent DG home). */
+export const MAITRE_OUVRAGE_COCKPIT_PATH = '/maitre-ouvrage/cockpit';
 
 /**
  * Synchronise l'URL du dashboard avec `dashboardCommandCenterStore`.
@@ -49,8 +55,34 @@ export function useDashboardCommandCenterUrlSync() {
     router.replace(target);
   }, [pathname, urlMain, urlSub, urlLeaf, router, log]);
 
-  // 1) URL -> Store
+  // 1) URL -> Store (incl. /dg/cockpit et /maitre-ouvrage/cockpit → DEFAULT_DG_HOME)
   useEffect(() => {
+    const isCockpitPath =
+      pathname === DG_COCKPIT_PATH || pathname === MAITRE_OUVRAGE_COCKPIT_PATH;
+
+    if (isCockpitPath) {
+      const sameAsStore =
+        main === DEFAULT_DG_HOME.main &&
+        (sub ?? null) === DEFAULT_DG_HOME.sub &&
+        (leaf ?? null) === DEFAULT_DG_HOME.leaf;
+      if (!sameAsStore) {
+        isApplyingUrlToStoreRef.current = true;
+        try {
+          navigate(
+            DEFAULT_DG_HOME.main as any,
+            DEFAULT_DG_HOME.sub,
+            DEFAULT_DG_HOME.leaf
+          );
+        } finally {
+          queueMicrotask(() => {
+            isApplyingUrlToStoreRef.current = false;
+          });
+        }
+      }
+      lastUrlKeyRef.current = `${DEFAULT_DG_HOME.main}|${DEFAULT_DG_HOME.sub ?? ''}|${DEFAULT_DG_HOME.leaf ?? ''}`;
+      return;
+    }
+
     const urlKey = `${urlMain ?? ''}|${urlSub ?? ''}|${urlLeaf ?? ''}`;
     if (urlKey === lastUrlKeyRef.current) return;
     if (justPushedRef.current) return;
@@ -85,9 +117,9 @@ export function useDashboardCommandCenterUrlSync() {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [urlMain, urlSub, urlLeaf]); // `navigate` est stable (Zustand)
+  }, [pathname, urlMain, urlSub, urlLeaf]); // `navigate` est stable (Zustand)
 
-  // 2) Store -> URL
+  // 2) Store -> URL (query params sur /maitre-ouvrage/dashboard ; /dg/cockpit est une entrée dédiée qui redirige)
   useEffect(() => {
     if (isApplyingUrlToStoreRef.current) return;
     if (!pathname) return;

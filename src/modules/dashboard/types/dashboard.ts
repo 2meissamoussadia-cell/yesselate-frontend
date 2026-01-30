@@ -12,9 +12,22 @@ import React from 'react';
 // ============================================================================
 
 /**
- * Catégories principales de navigation (6 blocs métier DG)
+ * Catégories principales de navigation (6 blocs métier DG + catégories étendues registry/loaders)
  */
-export type Main = 'pilotage' | 'chantiers' | 'finance' | 'clients' | 'rh' | 'systeme';
+export type Main =
+  | 'pilotage'
+  | 'chantiers'
+  | 'finance'
+  | 'clients'
+  | 'rh'
+  | 'systeme'
+  | 'overview'
+  | 'performance'
+  | 'actions'
+  | 'risks'
+  | 'decisions'
+  | 'realtime'
+  | 'administration';
 
 /**
  * Sous-catégories de navigation (peuvent être n'importe quelle chaîne ou null)

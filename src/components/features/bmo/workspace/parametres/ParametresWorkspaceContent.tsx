@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { useParametresWorkspaceStore } from '@/lib/stores/parametresWorkspaceStore';
 import { Settings, Shield, Bell, Plug, Users, Database, Save, Globe, Building2, Moon, Sun, Monitor, ChevronRight, Check, AlertTriangle, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { UserRoleManager } from '@/components/admin';
+import { BtpSecurityWidget } from '@/components/bmo/security/BtpSecurityWidget';
 
 export function ParametresWorkspaceContent() {
   const { tabs, activeTabId } = useParametresWorkspaceStore();
@@ -67,6 +69,9 @@ function SecuritySettings() {
   return (
     <div className="space-y-8 max-w-4xl">
       <div><h2 className="text-lg font-bold mb-1">Sécurité</h2><p className="text-sm text-slate-500">Paramètres de sécurité et authentification</p></div>
+
+      <BtpSecurityWidget criticalEventsCount={3} compliancePercent={92} />
+
       <SettingsSection title="Authentification" icon={<Shield className="w-5 h-5" />}>
         <div className="space-y-4">
           <ToggleItem label="Authentification à deux facteurs" description="Sécurisez votre compte avec 2FA" checked={twoFactor} onChange={setTwoFactor} />
@@ -107,9 +112,9 @@ function IntegrationsSettings() {
 function PermissionsSettings() {
   return (
     <div className="space-y-8 max-w-4xl">
-      <div><h2 className="text-lg font-bold mb-1">Permissions</h2><p className="text-sm text-slate-500">Gestion des rôles et permissions</p></div>
-      <SettingsSection title="Rôles" icon={<Users className="w-5 h-5" />}>
-        <div className="space-y-3">{['Administrateur', 'Directeur', 'Chef de Bureau', 'Employé'].map((role, i) => <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50"><div className="flex items-center gap-3"><Users className="w-5 h-5 text-teal-500" /><p className="font-medium">{role}</p></div><ChevronRight className="w-5 h-5 text-slate-400" /></div>)}</div>
+      <div><h2 className="text-lg font-bold mb-1">Permissions</h2><p className="text-sm text-slate-500">Gestion des rôles et permissions (DG, MOA, MOE, OPC)</p></div>
+      <SettingsSection title="Utilisateurs et rôles" icon={<Users className="w-5 h-5" />}>
+        <UserRoleManager onRoleChange={(userId, role) => { /* à brancher sur API */ }} />
       </SettingsSection>
     </div>
   );

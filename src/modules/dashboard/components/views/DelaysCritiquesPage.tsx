@@ -7,7 +7,7 @@
 
 import React, { memo, useMemo, useState, useCallback } from 'react';
 import Link from 'next/link';
-import { AlertTriangle, Clock, TrendingUp, FileText, DollarSign, Briefcase, CheckCircle2, ExternalLink } from 'lucide-react';
+import { AlertTriangle, Clock, TrendingUp, FileText, DollarSign, Briefcase, CheckCircle2, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
 import { 
   DashboardPageLayout, 
   DashboardSection, 
@@ -29,6 +29,7 @@ import { cn } from '@/lib/utils';
 
 export const DelaysCritiquesPage = memo(function DelaysCritiquesPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [kpisExpanded, setKpisExpanded] = useState(false);
   
   // ✅ Charger les données depuis l'API
   const { data, isLoading, error } = useDashboardData<DelaysCritiquesData>();
@@ -237,10 +238,46 @@ export const DelaysCritiquesPage = memo(function DelaysCritiquesPage() {
         </Link>
       </div>
       <DashboardSection title="Retards Critiques" description="Retards nécessitant une intervention immédiate">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          {kpis.map((kpi) => (
-            <KPICard key={kpi.id} kpi={kpi} size="md" />
-          ))}
+        {/* KPIs COMPACTS COLLAPSIBLES */}
+        <div className="rounded-2xl border border-slate-800/80 bg-slate-950/80 overflow-hidden transition-all duration-300 mb-6">
+          {/* Header cliquable */}
+          <button
+            type="button"
+            onClick={() => setKpisExpanded(!kpisExpanded)}
+            className="w-full px-4 py-3 flex items-center justify-between hover:bg-slate-900/40 transition-colors"
+          >
+            <div className="flex items-center gap-3 flex-wrap">
+              <TrendingUp className="h-4 w-4 text-rose-400" />
+              <span className="text-xs font-medium text-slate-100">
+                Indicateurs de retard
+              </span>
+              <div className="flex items-center gap-3 text-[11px]">
+                <span className="text-slate-400">Total: <span className="text-rose-400 font-semibold">{stats.total}</span></span>
+                <span className="text-slate-600">·</span>
+                <span className="text-slate-400">+30j: <span className="text-amber-400 font-semibold">{stats.plus30Jours}</span></span>
+                <span className="text-slate-600">·</span>
+                <span className="text-slate-400">+60j: <span className="text-rose-400 font-semibold">{stats.plus60Jours}</span></span>
+                <span className="text-slate-600">·</span>
+                <span className="text-slate-400">Impact: <span className="text-amber-400 font-semibold">{formatMoneyEUR(stats.impactBudget)}</span></span>
+              </div>
+            </div>
+            {kpisExpanded ? (
+              <ChevronUp className="h-4 w-4 text-slate-400 flex-shrink-0" />
+            ) : (
+              <ChevronDown className="h-4 w-4 text-slate-400 flex-shrink-0" />
+            )}
+          </button>
+
+          {/* Contenu détaillé expandable */}
+          {kpisExpanded && (
+            <div className="px-4 pb-4 border-t border-slate-800/60">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-3">
+                {kpis.map((kpi) => (
+                  <KPICard key={kpi.id} kpi={kpi} size="md" />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         <DashboardPanel>

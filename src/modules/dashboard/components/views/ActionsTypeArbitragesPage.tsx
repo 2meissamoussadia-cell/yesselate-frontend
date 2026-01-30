@@ -23,22 +23,34 @@ import { SearchFilter } from '../shared/SearchFilter';
 import { useDashboardData } from '../../hooks/useDashboardData';
 import { exportToCSV, exportToJSON } from '../../utils/exportUtils';
 import type { ActionsViewData } from '../../types/dashboardDataTypes';
+import { FilterBar } from '@/components/erp';
+import type { ErpFilters } from '@/components/erp';
 
 type ActionRow = ActionsViewData['rows'][number];
 
 export const ActionsTypeArbitragesPage = memo(function ActionsTypeArbitragesPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [filters, setFilters] = useState<ErpFilters>({ statut: '', priorite: '' });
   const { data, isLoading, error } = useDashboardData<ActionsViewData>();
+
+  const onFilterChange = useCallback((key: string, value: unknown) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  }, []);
 
   const stats = useMemo(() => ({ total: data?.stats?.total ?? 0, ...data?.stats }), [data]);
   const rows = useMemo(() => data?.rows ?? [], [data]);
   const filteredRows = useMemo(() => {
-    if (!searchQuery.trim()) return rows;
+    let list = rows;
+    const statut = String(filters.statut ?? '').toLowerCase();
+    if (statut) list = list.filter((row) => String((row as Record<string, unknown>).statut ?? '').toLowerCase() === statut);
+    const priorite = String(filters.priorite ?? '').toLowerCase();
+    if (priorite) list = list.filter((row) => String((row as Record<string, unknown>).priorite ?? '').toLowerCase() === priorite);
+    if (!searchQuery.trim()) return list;
     const q = searchQuery.toLowerCase();
-    return rows.filter((row) =>
+    return list.filter((row) =>
       Object.values(row).some((v) => v != null && String(v).toLowerCase().includes(q))
     );
-  }, [rows, searchQuery]);
+  }, [rows, searchQuery, filters.statut, filters.priorite]);
 
   const handleExportCSV = useCallback(() => {
     if (filteredRows.length === 0) return;
@@ -89,6 +101,13 @@ export const ActionsTypeArbitragesPage = memo(function ActionsTypeArbitragesPage
           {kpis.map((kpi) => <KPICard key={kpi.id} kpi={kpi} size="md" />)}
         </div>
         <DashboardPanel>
+          <FilterBar
+            filters={filters}
+            onFilterChange={onFilterChange}
+            options={{ statuts: ['Tous', 'En attente', 'En cours', 'Traité'], priorites: ['Toutes', 'Basse', 'Moyenne', 'Haute', 'Critique'] }}
+            hideSections={['perimetre', 'dates', 'avances', 'savedViews']}
+            className="mb-4 rounded-xl border-0 bg-transparent"
+          />
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-slate-200">Liste</h3>
             <div className="flex items-center gap-3">

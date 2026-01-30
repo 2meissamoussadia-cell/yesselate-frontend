@@ -4,6 +4,7 @@
 
 export type CalendrierMainCategory =
   | 'overview'
+  | 'agenda'
   | 'gantt'
   | 'timeline'
   | 'jalons'

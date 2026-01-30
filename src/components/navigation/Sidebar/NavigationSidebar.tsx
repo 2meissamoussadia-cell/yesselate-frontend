@@ -1,9 +1,8 @@
 'use client';
 
 /**
- * Sidebar navigation V2 — utilise lib/navigation + useNavigation
- * Compose SidebarHeader, sections/items (SidebarSection, SidebarItem), SidebarFooter.
- * Accepte collapsed / onToggleCollapse en mode contrôlé (BMOAppShell).
+ * Sidebar navigation BMO v2 — utilise lib/navigation (bmoModules) + useNavigation.
+ * Overlay : contenu dans un wrapper fixe ; icônes Lucide depuis bmoModules.
  */
 
 import React, { useMemo, useCallback } from 'react';
@@ -11,15 +10,14 @@ import { cn } from '@/lib/utils';
 import { useNavigation } from '@/hooks/navigation';
 import { isNavigationLink, isNavigationSection } from '@/lib/navigation/types';
 import type { NavigationItem, NavigationLink, NavigationSection } from '@/lib/navigation/types';
+import { bmoModulesById } from '@/lib/navigation/bmoModules';
+import type { BMOModuleId } from '@/lib/navigation/bmoModules';
 import type { SidebarBadgeProps } from './SidebarBadge';
 import { SidebarHeader } from './SidebarHeader';
 import { SidebarFooter } from './SidebarFooter';
 import { SidebarItem } from './SidebarItem';
 import { SidebarSection } from './SidebarSection';
 import type { SidebarHeaderUser } from './SidebarHeader';
-
-const SIDEBAR_WIDTH_EXPANDED = 288;
-const SIDEBAR_WIDTH_COLLAPSED = 80;
 
 function navBadgeVariantToSidebar(
   v?: string
@@ -29,10 +27,24 @@ function navBadgeVariantToSidebar(
   return 'default';
 }
 
+/** Icône : Lucide depuis bmoModules si module BMO, sinon fallback string */
+function renderIconForItem(
+  itemId: string,
+  icon: NavigationLink['icon'] | NavigationSection['icon']
+): React.ReactNode {
+  const module = bmoModulesById.get(itemId as BMOModuleId);
+  if (module) {
+    const Icon = module.icon;
+    return <Icon className="h-5 w-5 flex-shrink-0" aria-hidden />;
+  }
+  if (icon != null && typeof icon === 'string')
+    return <span className="text-base flex-shrink-0" aria-hidden>{icon}</span>;
+  return null;
+}
+
 /** Rend un item (link ou section) avec enfants récursifs */
 function NavItemRenderer({
   item,
-  collapsed,
   isLinkActive,
   isSectionOpen,
   toggleSection,
@@ -41,13 +53,12 @@ function NavItemRenderer({
   renderIcon,
 }: {
   item: NavigationItem;
-  collapsed: boolean;
   isLinkActive: (href: string, exact?: boolean) => boolean;
   isSectionOpen: (id: string) => boolean;
   toggleSection: (id: string) => void;
   getBadgeCount: (id: string) => number | undefined;
   hasPermission: (item: NavigationItem) => boolean;
-  renderIcon: (icon: NavigationLink['icon'] | NavigationSection['icon']) => React.ReactNode;
+  renderIcon: (itemId: string, icon: NavigationLink['icon'] | NavigationSection['icon']) => React.ReactNode;
 }): React.ReactNode {
   if (!hasPermission(item)) return null;
 
@@ -59,7 +70,7 @@ function NavItemRenderer({
         key={item.id}
         id={item.id}
         label={item.label}
-        icon={renderIcon(item.icon)}
+        icon={renderIcon(item.id, item.icon)}
         href={item.href}
         isActive={isLinkActive(item.href, item.exact)}
         badge={num > 0 ? num : undefined}
@@ -79,7 +90,6 @@ function NavItemRenderer({
     const childrenNodes = item.children.map((child) =>
       NavItemRenderer({
         item: child,
-        collapsed,
         isLinkActive,
         isSectionOpen,
         toggleSection,
@@ -96,7 +106,7 @@ function NavItemRenderer({
         key={item.id}
         id={item.id}
         label={item.label}
-        icon={renderIcon(item.icon)}
+        icon={renderIcon(item.id, item.icon)}
         badge={num > 0 ? num : undefined}
         badgeVariant={item.badge ? navBadgeVariantToSidebar(item.badge.variant) : undefined}
         isExpanded={isExpanded}
@@ -113,31 +123,25 @@ function NavItemRenderer({
 }
 
 export interface NavigationSidebarProps {
-  /** Contrôle externe (ex: BMOAppShell) — si défini, utilisé à la place de useNavigationState */
-  collapsed?: boolean;
-  onToggleCollapse?: () => void;
+  /** Overlay ouvert (visible) */
+  open?: boolean;
+  onToggle?: () => void;
   /** Bloc utilisateur optionnel (header) */
   user?: SidebarHeaderUser;
   className?: string;
 }
 
 export function NavigationSidebar({
-  collapsed: controlledCollapsed,
-  onToggleCollapse: controlledToggle,
+  open = true,
+  onToggle,
   user,
   className,
 }: NavigationSidebarProps) {
   const nav = useNavigation();
-  const isCollapsed = controlledCollapsed ?? nav.isCollapsed;
-  const onToggleCollapse = controlledToggle ?? nav.toggleSidebar;
 
   const renderIcon = useCallback(
-    (icon: NavigationLink['icon'] | NavigationSection['icon']): React.ReactNode => {
-      if (icon == null) return null;
-      if (typeof icon === 'string')
-        return <span className="text-base flex-shrink-0" aria-hidden>{icon}</span>;
-      return null;
-    },
+    (itemId: string, icon: NavigationLink['icon'] | NavigationSection['icon']): React.ReactNode =>
+      renderIconForItem(itemId, icon),
     []
   );
 
@@ -149,7 +153,6 @@ export function NavigationSidebar({
       const childrenNodes = item.children.map((child) =>
         NavItemRenderer({
           item: child,
-          collapsed: isCollapsed,
           isLinkActive: nav.isLinkActive,
           isSectionOpen: nav.isSectionOpen,
           toggleSection: nav.toggleSection,
@@ -164,16 +167,14 @@ export function NavigationSidebar({
           key={item.id}
           className="mb-4"
           role="group"
-          aria-labelledby={isCollapsed ? undefined : `nav-section-${item.id}`}
+          aria-labelledby={`nav-section-${item.id}`}
         >
-          {!isCollapsed && (
-            <h2
-              id={`nav-section-${item.id}`}
-              className="px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-amber-500/80"
-            >
-              {groupLabel}
-            </h2>
-          )}
+          <h2
+            id={`nav-section-${item.id}`}
+            className="px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-amber-500/80"
+          >
+            {groupLabel}
+          </h2>
           <ul className="space-y-0.5" role="list">
             {childrenNodes.map((node, i) => (
               <li key={i} role="none">
@@ -192,25 +193,21 @@ export function NavigationSidebar({
     nav.toggleSection,
     nav.getBadgeCount,
     nav.hasPermission,
-    isCollapsed,
     renderIcon,
   ]);
 
   return (
     <aside
       className={cn(
-        'fixed inset-y-0 left-0 z-50 flex flex-col overflow-x-hidden bg-slate-900 border-r border-slate-700/60',
+        'flex h-full w-full flex-col overflow-x-hidden bg-slate-950/95 border-r border-slate-800/60',
         'transition-all duration-300 ease-out',
         className
       )}
-      style={{
-        width: isCollapsed ? SIDEBAR_WIDTH_COLLAPSED : SIDEBAR_WIDTH_EXPANDED,
-      }}
       role="navigation"
       aria-label="Navigation principale BMO"
     >
       <SidebarHeader
-        collapsed={isCollapsed}
+        collapsed={false}
         title="YESSALATE BMO"
         version="V1.0"
         user={user}
@@ -222,8 +219,8 @@ export function NavigationSidebar({
         {sections}
       </nav>
       <SidebarFooter
-        collapsed={isCollapsed}
-        onToggleCollapse={onToggleCollapse}
+        collapsed={false}
+        onToggleCollapse={onToggle}
       />
     </aside>
   );

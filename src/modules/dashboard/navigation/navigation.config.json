@@ -3,7 +3,8 @@
     "label": "PILOTAGE",
     "requires": { "perm": "dashboard:read" },
     "sub": {
-      "dashboard": { "label": "Tableau de bord DG", "leaf": { "default": { "label": "Tableau de bord", "component": "CockpitDGPage" } } },
+      "dashboard": { "label": "Cockpit DG", "leaf": { "default": { "label": "Cockpit DG", "component": "DashboardDGLayout" } } },
+      "cockpit-advanced": { "label": "Vue avancée 3D", "leaf": { "default": { "label": "Vue avancée 3D", "component": "CockpitDG_V2Page" } } },
       "gouvernance": { "label": "Gouvernance & décisions", "leaf": { "default": { "label": "Gouvernance", "component": "SummaryDashboardPage" } } },
       "calendrier": { "label": "Calendrier & échéances", "leaf": { "default": { "label": "Calendrier", "component": "SummaryDashboardPage" } } },
       "analytics": { "label": "Analytics & rapports", "leaf": { "default": { "label": "Analytics", "component": "SummaryDashboardPage" } } },

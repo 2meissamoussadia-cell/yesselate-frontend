@@ -114,21 +114,16 @@ export function GovernanceSidebar({
             'w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 text-left',
             'group relative',
             isActive
-              ? 'bg-blue-500/10 border border-blue-500/30 text-blue-300'
-              : 'hover:bg-slate-700/40 border border-transparent text-slate-300'
+              ? 'bg-sky-500/15 text-sky-100 border-l-2 border-sky-500'
+              : 'text-slate-400 hover:bg-slate-800/80 hover:text-slate-200 border-l-2 border-transparent'
           )}
         >
-          {/* Indicator */}
-          {isActive && (
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 rounded-r-full bg-blue-400" />
-          )}
-
           {/* Icon */}
           {Icon && (
             <Icon
               className={cn(
-                'h-4 w-4 flex-shrink-0 transition-all duration-200',
-                isActive ? 'text-blue-400 scale-110' : 'text-slate-400 group-hover:text-slate-200'
+                'h-3.5 w-3.5 flex-shrink-0 transition-all duration-200',
+                isActive ? 'text-sky-100' : 'text-slate-400 group-hover:text-slate-200'
               )}
             />
           )}
@@ -139,7 +134,7 @@ export function GovernanceSidebar({
               <span
                 className={cn(
                   'flex-1 transition-colors duration-200 text-sm',
-                  isActive ? 'text-blue-400' : 'text-slate-300'
+                  isActive ? 'text-sky-100' : 'text-slate-300'
                 )}
               >
                 {node.label}
@@ -184,13 +179,14 @@ export function GovernanceSidebar({
   return (
     <aside
       className={cn(
-        'flex flex-col border-r border-slate-700/50 bg-slate-900/80 backdrop-blur-xl transition-all duration-300',
-        'fixed sm:relative z-40 h-full',
-        collapsed ? 'w-16' : 'w-64'
+        'shrink-0 flex flex-col border-r border-slate-800/70 bg-slate-950/60 overflow-y-auto overflow-x-hidden scrollbar-dashboard transition-[width] duration-200 ease-out',
+        'z-40 h-full',
+        collapsed ? 'w-14' : 'w-52'
       )}
+      aria-label="Navigation Gouvernance"
     >
-      {/* Header */}
-      <div className="flex items-center justify-between p-3 border-b border-slate-700/50">
+      {/* Header — aligné dashboard */}
+      <div className="flex items-center justify-between p-3 border-b border-slate-800/60">
         {!collapsed && (
           <div className="flex items-center gap-2">
             <CalendarClock className="h-5 w-5 text-blue-400" />
@@ -220,7 +216,7 @@ export function GovernanceSidebar({
 
       {/* Search */}
       {!collapsed && (
-        <div className="px-3 pb-3 border-b border-slate-700/50">
+        <div className="px-3 pb-3 border-b border-slate-800/60">
           <div className="relative">
             <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <input
@@ -234,19 +230,19 @@ export function GovernanceSidebar({
       )}
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto py-2">
-        <div className="space-y-1 px-2">
+      <nav className="flex-1 overflow-y-auto py-2 min-w-0">
+        <div className="space-y-0.5 px-2">
           {Object.values(governanceNavigationConfig).map((node) => (
             <NavNodeComponent key={node.id} node={node} level={0} />
           ))}
         </div>
       </nav>
 
-      {/* Footer */}
+      {/* Footer — aligné dashboard */}
       {!collapsed && (
-        <div className="border-t border-slate-700/50 p-3">
+        <div className="border-t border-slate-800/60 p-3">
           <div className="text-xs text-slate-500 text-center">
-            Gouvernance v2.0
+            Gouvernance
           </div>
         </div>
       )}

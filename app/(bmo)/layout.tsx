@@ -1,9 +1,9 @@
-// app/(bmo)/layout.tsx
-"use client";
+'use client';
 
-import { BMOAppShell } from "@/components/bmo/BMOAppShell";
+import type { ReactNode } from 'react';
+import { BmoPortalLayout } from '@/components/bmo/layout/BmoPortalLayout';
 
-export default function RootBMOLayout({ children }: { children: React.ReactNode }) {
-  return <BMOAppShell>{children}</BMOAppShell>;
+/** Layout BMO — même shell que (portals)/maitre-ouvrage (BmoPortalLayout). */
+export default function BmoLayout({ children }: { children: ReactNode }) {
+  return <BmoPortalLayout>{children}</BmoPortalLayout>;
 }
-

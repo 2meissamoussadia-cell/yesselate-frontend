@@ -4,6 +4,7 @@
 
 import {
   LayoutDashboard,
+  CalendarRange,
   GanttChartSquare,
   History,
   Flag,
@@ -44,6 +45,12 @@ export const calendrierNavigationConfig3Levels: Record<CalendrierMainCategory, N
         ],
       },
     ],
+  },
+  agenda: {
+    id: 'agenda',
+    label: 'Vue mois BMO',
+    icon: CalendarRange,
+    children: [],
   },
   gantt: {
     id: 'gantt',

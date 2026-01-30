@@ -477,23 +477,26 @@ const loadKpisAchats: Loader<KpisAchatsData> = async (nav) => {
 // --------------------------
 // 6 blocs métier DG (PILOTAGE, CHANTIERS, FINANCE, CLIENTS, RH, SYSTÈME)
 // --------------------------
-const pilotageDashboard = () => <DashboardDGLayout />;
 const portefeuilleChantiers = () => <PortefeuilleChantiersPage />;
 const pilotageAlertes = createLazyView(() => import('../components/views/AlertsActivesPage').then(m => ({ default: m.AlertsActivesPage })));
 const chantiersDemandes = createLazyView(() => import('../components/views/DemandesKpiPage').then(m => ({ default: m.DemandesKpiPage })) as Promise<{ default: React.ComponentType<{ data?: unknown }> }>, { passData: true });
 const financeBudget = createLazyView(() => import('../components/views/BudgetKpiPage').then(m => ({ default: m.BudgetKpiPage as React.ComponentType<{ data?: unknown }> })), { passData: true });
-const financeValidation = createLazyView(() => import('../components/views/ValidationPaiementsPage').then(m => ({ default: m.ValidationPaiementsPage })));
+const financeValidation = createLazyView(() => import('../components/views/ValidationPaiementsPage').then(m => ({ default: m.ValidationPaiementsPage as React.ComponentType<{ data?: unknown }> })));
 const clientsProjets = createLazyView(() => import('../components/views/ProjetKpiPage').then(m => ({ default: m.ProjetKpiPage })) as Promise<{ default: React.ComponentType<{ data?: unknown }> }>, { passData: true });
+
+// Cockpit DG = entrée par défaut (clé canonique pilotage::dashboard::default ; alias dashboard pour robustesse)
+const dgCockpitEntry: ViewEntry<DashboardViewData> = {
+  id: 'dg-cockpit',
+  title: 'Cockpit DG',
+  ttl: 60_000,
+  loader: loadOverviewSummaryDashboard,
+  render: () => <DashboardDGLayout content={<DashboardAccueil3P />} />,
+};
 
 export const dashboardRegistry: DashboardRegistry = {
   // --- PILOTAGE ---
-  'pilotage::dashboard::default': {
-    id: 'pilotage-dashboard',
-    title: 'Tableau de bord DG',
-    ttl: 60_000,
-    loader: loadOverviewSummaryDashboard,
-    render: pilotageDashboard,
-  },
+  'pilotage::dashboard::default': dgCockpitEntry,
+  'pilotage::dashboard::dashboard': dgCockpitEntry,
   'pilotage::gouvernance::default': createDefaultView('Gouvernance & décisions', 'Décisions et instances de pilotage'),
   'pilotage::calendrier::default': createDefaultView('Calendrier & échéances', 'Jalons et planning'),
   'pilotage::analytics::default': createDefaultView('Analytics & rapports', 'Rapports et tableaux de bord'),
@@ -503,6 +506,13 @@ export const dashboardRegistry: DashboardRegistry = {
     ttl: 30_000,
     loader: loadAlertsActivesApi,
     render: pilotageAlertes,
+  },
+  'pilotage::cockpit-advanced::default': {
+    id: 'dg-cockpit-advanced',
+    title: 'Vue avancée 3D (IA)',
+    ttl: 60_000,
+    loader: loadOverviewSummaryDashboard,
+    render: () => <CockpitDG_V2Page />,
   },
   // --- CHANTIERS & MARCHÉS ---
   'chantiers::portefeuille::default': { id: 'chantiers-portefeuille', title: 'Portefeuille chantiers', ttl: 60_000, loader: loadOverviewSummaryDashboard, render: portefeuilleChantiers },
@@ -538,10 +548,10 @@ export const dashboardRegistry: DashboardRegistry = {
   'systeme::ia::default': createDefaultView('IA & assistants', 'Assistants et automatisations'),
   'systeme::parametres::default': createDefaultView('Paramètres', 'Configuration du système'),
 
-  // overview/summary/* — Legacy (redirections)
+  // overview/summary/* — Legacy (mode avancé 3D, non entrée par défaut)
   'overview::summary::dashboard': {
     id: 'overview-summary-dashboard',
-    title: 'Centrale de commandement',
+    title: 'Cockpit (legacy)',
     ttl: 60_000,
     loader: loadOverviewSummaryDashboard,
     render: () => <CockpitDGPage />,
@@ -549,7 +559,7 @@ export const dashboardRegistry: DashboardRegistry = {
 
   'overview::summary::cockpit': {
     id: 'overview-summary-cockpit',
-    title: 'Centrale de commandement',
+    title: 'Cockpit (legacy)',
     ttl: 60_000,
     loader: loadOverviewSummaryDashboard,
     render: () => <CockpitDGPage />,
@@ -557,7 +567,7 @@ export const dashboardRegistry: DashboardRegistry = {
 
   'overview::summary::cockpit-v2': {
     id: 'overview-summary-cockpit-v2',
-    title: 'Centrale V2 (IA)',
+    title: 'Vue avancée 3D (IA)',
     ttl: 60_000,
     loader: loadOverviewSummaryDashboard,
     render: () => <CockpitDG_V2Page />,

@@ -46,7 +46,17 @@ interface CommandItem {
   category?: string;
 }
 
-export function DashboardCommandPalette() {
+/** KPIs optionnels : si fournis par la page (ex. dashboard), on évite un second appel API. */
+export interface DashboardCommandPaletteProps {
+  kpis?: Array<{ label: string; value?: string | number; description?: string }>;
+}
+
+/** Rendu quand les KPIs sont fournis par la page : pas d'appel API. */
+function DashboardCommandPaletteInner({
+  kpis,
+}: {
+  kpis: Array<{ label: string; value?: string | number; description?: string }>;
+}) {
   const router = useRouter();
   const { t } = useI18n();
   const { commandPaletteOpen, toggleCommandPalette, navigate, openModal } =
@@ -54,11 +64,7 @@ export function DashboardCommandPalette() {
 
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
-  
-  // Récupérer les KPIs pour la recherche globale
-  const { kpis } = useDashboardKPIs('year');
-  
-  // Recherche globale (KPIs, projets, etc.)
+
   const globalSearchResults = useGlobalSearch(query, kpis);
 
   // Commandes disponibles - Génération dynamique depuis la config (labels i18n)
@@ -392,5 +398,19 @@ export function DashboardCommandPalette() {
       </div>
     </>
   );
+}
+
+/** Charge les KPIs (un seul appel API quand la palette est utilisée hors page dashboard). */
+function DashboardCommandPaletteWithKpiFetch() {
+  const { kpis } = useDashboardKPIs('year');
+  return <DashboardCommandPaletteInner kpis={kpis} />;
+}
+
+/** Palette de commandes (⌘K). Passe kpis depuis la page dashboard pour éviter un second appel API. */
+export function DashboardCommandPalette(props: DashboardCommandPaletteProps = {}) {
+  if (props.kpis != null) {
+    return <DashboardCommandPaletteInner kpis={props.kpis} />;
+  }
+  return <DashboardCommandPaletteWithKpiFetch />;
 }
 

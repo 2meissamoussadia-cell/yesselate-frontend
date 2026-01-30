@@ -23,6 +23,7 @@ import { AbsencesParChantierPage } from '../pages/absences/AbsencesParChantierPa
 import { EvenementsInternesPage } from '../pages/evenements/EvenementsInternesPage';
 import { ReunionsProjetsPage } from '../pages/evenements/ReunionsProjetsPage';
 import { ReunionsDecisionnellesPage } from '../pages/evenements/ReunionsDecisionnellesPage';
+import { BMOCalendar } from '@/components/bmo/calendar/BMOCalendar';
 
 interface CalendrierContentRouterProps {
   mainCategory: CalendrierMainCategory;
@@ -35,6 +36,15 @@ export function CalendrierContentRouter({
   subCategory,
   subSubCategory,
 }: CalendrierContentRouterProps) {
+  // Agenda BMO (FullCalendar vue mois)
+  if (mainCategory === 'agenda') {
+    return (
+      <div className="p-4 h-full">
+        <BMOCalendar />
+      </div>
+    );
+  }
+
   // Vue d'ensemble
   if (mainCategory === 'overview') {
     if (subCategory === 'global') {

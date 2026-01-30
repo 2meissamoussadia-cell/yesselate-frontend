@@ -1,13 +1,15 @@
 'use client';
 
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useAppStore, useBMOStore } from '@/lib/stores';
 import { Badge } from '@/components/ui/badge';
-import { SearchIcon, X } from 'lucide-react';
+import { SearchIcon, X, Menu } from 'lucide-react';
 import { ActivityCenter } from './ActivityCenter';
 import { GlobalShortcutsMenu } from './GlobalShortcutsMenu';
+import { DataFreshnessIndicator } from '@/components/ui/DataFreshnessIndicator';
+import { DarkModeToggle } from '@/components/ui/DarkModeToggle';
 import {
   demands,
   projects,
@@ -29,7 +31,7 @@ interface SearchResult {
 
 export function BMOHeader() {
   const router = useRouter();
-  const { darkMode, toggleDarkMode } = useAppStore();
+  const { darkMode, setDarkMode, toggleSidebar } = useAppStore();
   const {
     showNotifications,
     setShowNotifications,
@@ -40,10 +42,19 @@ export function BMOHeader() {
   } = useBMOStore();
 
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
+  const [lastDataUpdate, setLastDataUpdate] = useState<Date>(() => new Date());
+  const [isRefreshingData, setIsRefreshingData] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
+
+  const handleRefreshData = useCallback(() => {
+    setIsRefreshingData(true);
+    setLastDataUpdate(new Date());
+    // Simulate refresh; en prod : refetch queries / WebSocket reconnect
+    setTimeout(() => setIsRefreshingData(false), 800);
+  }, []);
 
   // Initialiser l'heure uniquement côté client pour éviter les erreurs d'hydratation
   useEffect(() => {
@@ -158,9 +169,9 @@ export function BMOHeader() {
     return items;
   }, []);
 
-  // Résultats de recherche
+  // Résultats de recherche (affichés quand la recherche est dépliée)
   const searchResults = useMemo(() => {
-    if (!searchQuery.trim() || !isSearchFocused) return [];
+    if (!searchQuery.trim()) return [];
     const query = searchQuery.toLowerCase();
     return searchIndex
       .filter(
@@ -171,16 +182,20 @@ export function BMOHeader() {
           item.type.toLowerCase().includes(query)
       )
       .slice(0, 8);
-  }, [searchQuery, searchIndex, isSearchFocused]);
+  }, [searchQuery, searchIndex]);
+
+  const openSearch = () => {
+    setIsSearchFocused(true);
+    setTimeout(() => searchInputRef.current?.focus(), 0);
+  };
 
   // Raccourcis clavier
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Cmd/Ctrl + K pour ouvrir la recherche
+      // Cmd/Ctrl + K pour ouvrir la recherche (loupe dépliée)
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
-        searchInputRef.current?.focus();
-        setIsSearchFocused(true);
+        openSearch();
       }
 
       // Escape pour fermer
@@ -256,71 +271,94 @@ export function BMOHeader() {
           : 'bg-white/80 border-b border-gray-200/50'
       )}
     >
-      {/* Recherche inline */}
-      <div ref={searchContainerRef} className="relative flex-1 max-w-md">
-        <div
-          className={cn(
-            'relative flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200',
-            isSearchFocused
-              ? darkMode
+      {/* Bouton hamburger : ouvre/ferme la sidebar (trois traits) */}
+      <button
+        type="button"
+        onClick={toggleSidebar}
+        className={cn(
+          'flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition-colors',
+          darkMode
+            ? 'text-slate-300 hover:bg-slate-800 hover:text-white'
+            : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+        )}
+        aria-label="Ouvrir ou fermer le menu de navigation"
+      >
+        <Menu className="h-6 w-6" aria-hidden />
+      </button>
+
+      {/* Recherche : loupe seule par défaut, se déplie au clic */}
+      <div ref={searchContainerRef} className="relative flex items-center justify-end min-w-0">
+        {!isSearchFocused ? (
+          <button
+            type="button"
+            onClick={openSearch}
+            className={cn(
+              'flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition-colors',
+              darkMode
+                ? 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'
+                : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+            )}
+            aria-label="Ouvrir la recherche (⌘K)"
+            title="Rechercher (⌘K)"
+          >
+            <SearchIcon className="h-5 w-5" aria-hidden />
+          </button>
+        ) : (
+          <div
+            className={cn(
+              'relative flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 w-full max-w-md',
+              darkMode
                 ? 'bg-slate-800 border-2 border-orange-500/50 shadow-lg'
                 : 'bg-white border-2 border-orange-500/50 shadow-lg'
-              : darkMode
-              ? 'bg-slate-800/50 border border-slate-700/50'
-              : 'bg-gray-50 border border-gray-200',
-            isSearchFocused && 'scale-[1.02]'
-      )}
-    >
-          <SearchIcon
-            className={cn(
-              'w-4 h-4 flex-shrink-0',
-              darkMode ? 'text-slate-400' : 'text-gray-400'
             )}
-          />
-          <input
-            ref={searchInputRef}
-            type="text"
-            placeholder="Rechercher..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onFocus={() => setIsSearchFocused(true)}
-            className={cn(
-              'flex-1 bg-transparent outline-none text-sm placeholder:text-xs',
-              darkMode
-                ? 'text-white placeholder:text-slate-500'
-                : 'text-gray-900 placeholder:text-gray-400'
-            )}
-          />
-          {searchQuery && (
-      <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setSearchQuery('');
-                searchInputRef.current?.focus();
-              }}
+          >
+            <SearchIcon
+              className={cn('w-4 h-4 flex-shrink-0', darkMode ? 'text-slate-400' : 'text-gray-400')}
+            />
+            <input
+              ref={searchInputRef}
+              type="text"
+              placeholder="Rechercher..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className={cn(
-                'p-0.5 rounded hover:bg-slate-700/50',
-                darkMode ? 'text-slate-400' : 'text-gray-400'
+                'flex-1 min-w-0 bg-transparent outline-none text-sm placeholder:text-xs',
+                darkMode
+                  ? 'text-white placeholder:text-slate-500'
+                  : 'text-gray-900 placeholder:text-gray-400'
               )}
-            >
-              <X className="w-3.5 h-3.5" />
-            </button>
-          )}
-          {!isSearchFocused && (
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSearchQuery('');
+                  searchInputRef.current?.focus();
+                }}
+                className={cn(
+                  'p-0.5 rounded hover:bg-slate-700/50',
+                  darkMode ? 'text-slate-400' : 'text-gray-400'
+                )}
+                aria-label="Effacer"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
             <kbd
-        className={cn(
+              className={cn(
                 'hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium',
-          darkMode
+                darkMode
                   ? 'bg-slate-700/50 text-slate-400 border border-slate-600'
                   : 'bg-white text-gray-500 border border-gray-300'
+              )}
+            >
+              ⌘K
+            </kbd>
+          </div>
         )}
-      >
-          ⌘K
-        </kbd>
-          )}
-        </div>
 
-        {/* Panneau de résultats */}
+        {/* Panneau de résultats (quand recherche dépliée) */}
         {isSearchFocused && (
           <div
             className={cn(
@@ -429,18 +467,24 @@ export function BMOHeader() {
           )}
         </button>
 
-        {/* Dark mode toggle */}
-        <button
-          onClick={toggleDarkMode}
+        {/* Fraîcheur des données (cockpit) */}
+        <div className="hidden lg:flex items-center">
+          <DataFreshnessIndicator
+            lastUpdated={lastDataUpdate}
+            onRefresh={handleRefreshData}
+            isRefreshing={isRefreshingData}
+          />
+        </div>
+
+        {/* Mode sombre (sauvegardé via store persist) */}
+        <DarkModeToggle
+          darkMode={darkMode}
+          setDarkMode={setDarkMode}
           className={cn(
-            'p-2 rounded-lg transition-colors text-base',
-            darkMode
-              ? 'hover:bg-slate-800 text-slate-300'
-              : 'hover:bg-gray-100 text-gray-600'
+            'transition-colors',
+            !darkMode && 'border-gray-300 bg-gray-100 hover:bg-gray-200 text-gray-700'
           )}
-        >
-          {darkMode ? '☀️' : '🌙'}
-        </button>
+        />
 
         {/* Time */}
         <div className="hidden sm:flex items-center gap-1.5 px-2">

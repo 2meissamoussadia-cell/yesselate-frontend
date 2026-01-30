@@ -25,10 +25,12 @@ function isLoaderResult(value: unknown): value is LoaderResultType {
 }
 
 function resolveViewKey(nav: NavKey) {
-  // fallback intelligent si un niveau manque
+  // fallback intelligent si un niveau manque (aligné sur le registry et DEFAULT_DG_HOME)
   const main = nav.main;
   const sub = nav.sub ?? 'summary';
-  const leaf = nav.leaf ?? 'dashboard';
+  const leaf =
+    nav.leaf ??
+    (main === 'pilotage' && sub === 'dashboard' ? 'default' : 'dashboard');
   return `${main}::${sub}::${leaf}`;
 }
 

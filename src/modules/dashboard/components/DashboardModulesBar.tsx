@@ -1,17 +1,14 @@
 /**
- * Barre "Modules métier" type 3P
- * Toujours visible sous le header : 6 modules (Accueil, Performance, Actions, Risques, Décisions, Temps réel)
- * Chaque module est cliquable et navigue vers la section correspondante.
+ * Action bar compacte — raccourcis vers sous-vues et modules (sans dupliquer le rail des 6 blocs).
+ * Utilise la navigation dashboard (main/sub/leaf) quand la cible existe dans la config, sinon lien externe.
  */
 
 'use client';
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import {
-  Home,
-  ExternalLink,
   Bell,
   Building2,
   FileCheck,
@@ -24,96 +21,106 @@ import {
   Settings,
 } from 'lucide-react';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
-import { dashboardApps, type DashboardMainCategory } from '../config/dashboardApps';
-import { dashboardNavigationConfig } from '../navigation/dashboardNavigationConfig';
+import { getDefaultLeafForSub } from '../utils/routeValidation';
+import type { DashboardMainCategory } from '../types/dashboardNavigationTypes';
 
-const MODULE_ICONS: Record<DashboardMainCategory, React.ComponentType<{ className?: string }>> = {
-  pilotage: Home,
-  chantiers: Building2,
-  finance: Wallet,
-  clients: FileText,
-  rh: ClipboardList,
-  systeme: Settings,
-};
+type ShortcutItem =
+  | {
+      id: string;
+      label: string;
+      icon: React.ComponentType<{ className?: string }>;
+      main: DashboardMainCategory;
+      sub: string;
+    }
+  | {
+      id: string;
+      label: string;
+      icon: React.ComponentType<{ className?: string }>;
+      href: string;
+    };
 
-/** Liens directs vers les modules maître-ouvrage (redistribution dashboard → modules) */
-const MODULE_LINKS: Array<{ href: string; label: string; icon: React.ComponentType<{ className?: string }> }> = [
-  { href: '/maitre-ouvrage/alerts', label: 'Alertes', icon: Bell },
-  { href: '/maitre-ouvrage/governance', label: 'Gouvernance', icon: Building2 },
-  { href: '/maitre-ouvrage/validation-bc', label: 'Validation BC', icon: FileCheck },
-  { href: '/maitre-ouvrage/validation-contrats', label: 'Validation contrats', icon: FileText },
-  { href: '/maitre-ouvrage/validation-paiements', label: 'Validation paiements', icon: CreditCard },
-  { href: '/maitre-ouvrage/demandes', label: 'Demandes', icon: ClipboardList },
-  { href: '/maitre-ouvrage/decisions', label: 'Décisions', icon: Gavel },
-  { href: '/maitre-ouvrage/arbitrages-vivants', label: 'Arbitrages', icon: Scale },
-  { href: '/maitre-ouvrage/finances', label: 'Finances', icon: Wallet },
-  { href: '/maitre-ouvrage/parametres', label: 'Paramètres', icon: Settings },
+/** Raccourcis : dashboard (main/sub) quand la vue existe, sinon lien maître-ouvrage */
+const SHORTCUTS: ShortcutItem[] = [
+  { id: 'alertes', label: 'Alertes', icon: Bell, main: 'pilotage', sub: 'alertes' },
+  { id: 'gouvernance', label: 'Gouvernance', icon: Building2, main: 'pilotage', sub: 'gouvernance' },
+  { id: 'validation-bc', label: 'Validation BC', icon: FileCheck, href: '/maitre-ouvrage/validation-bc' },
+  { id: 'validation-contrats', label: 'Contrats', icon: FileText, href: '/maitre-ouvrage/validation-contrats' },
+  { id: 'validation-paiements', label: 'Paiements', icon: CreditCard, main: 'finance', sub: 'validation-paiements' },
+  { id: 'demandes', label: 'Demandes', icon: ClipboardList, main: 'chantiers', sub: 'demandes' },
+  { id: 'decisions', label: 'Décisions', icon: Gavel, main: 'pilotage', sub: 'gouvernance' },
+  { id: 'arbitrages', label: 'Arbitrages', icon: Scale, main: 'chantiers', sub: 'litiges' },
+  { id: 'finances', label: 'Finances', icon: Wallet, main: 'finance', sub: 'budget' },
+  { id: 'parametres', label: 'Paramètres', icon: Settings, main: 'systeme', sub: 'parametres' },
 ];
+
+function isDashboardShortcut(item: ShortcutItem): item is ShortcutItem & { main: DashboardMainCategory; sub: string } {
+  return 'main' in item && 'sub' in item;
+}
 
 export function DashboardModulesBar() {
   const nav = useDashboardCommandCenterStore((s) => s.navigation);
   const navigate = useDashboardCommandCenterStore((s) => s.navigate);
 
-  const modules = useMemo(() => Object.values(dashboardApps), []);
-
   return (
     <div
-      className="min-w-0 overflow-x-hidden border-b border-slate-800/60 bg-slate-900/30 px-4 sm:px-6 py-2"
+      className="min-w-0 overflow-x-auto border-b border-slate-800/80 bg-slate-950/60 px-4 sm:px-6 py-2.5"
       role="navigation"
-      aria-label="Modules métier"
+      aria-label="Raccourcis modules"
     >
-      <div className="flex items-center gap-1 mb-1.5 min-w-0">
-        <span className="text-[10px] uppercase tracking-wider text-slate-500 font-medium">
-          Solutions métier (3P)
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 sm:justify-between">
+        <span className="text-[10px] uppercase tracking-wider text-slate-500 font-medium shrink-0 py-0.5">
+          Accès rapide
         </span>
-      </div>
-      <div className="flex flex-wrap items-center gap-2 mb-3">
-        {modules.map((app) => {
-          const isActive = nav.mainCategory === app.id;
-          const Icon = MODULE_ICONS[app.id];
-          const firstSub = dashboardNavigationConfig[app.id]?.children?.[0];
-          const firstSubId = firstSub?.id ?? null;
-          return (
-            <button
-              key={app.id}
-              type="button"
-              onClick={() => navigate(app.id, firstSubId, 'default')}
-              className={cn(
-                'inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-all duration-200',
-                isActive
-                  ? 'border-blue-500/60 bg-blue-500/15 text-blue-200'
-                  : 'border-slate-800/70 bg-slate-950/50 text-slate-300 hover:bg-slate-800/50 hover:border-slate-700/60 hover:text-slate-100'
-              )}
-              aria-current={isActive ? 'page' : undefined}
-            >
-              {Icon && <Icon className="h-4 w-4 shrink-0" />}
-              <span>{app.name}</span>
-            </button>
-          );
-        })}
-      </div>
-      {/* Accès rapide vers les modules maître-ouvrage (redistribution) */}
-      <div className="flex items-center gap-1 min-w-0">
-        <ExternalLink className="h-3.5 w-3.5 text-slate-500 shrink-0" aria-hidden />
-        <span className="text-[10px] uppercase tracking-wider text-slate-500 font-medium">
-          Accès modules
-        </span>
-      </div>
-      <div className="flex flex-wrap items-center gap-2">
-        {MODULE_LINKS.map(({ href, label, icon: Icon }) => (
-          <Link
-            key={href}
-            href={href}
-            className={cn(
-              'inline-flex items-center gap-1.5 rounded-lg border border-slate-800/70 bg-slate-950/40 px-2.5 py-1.5 text-xs font-medium text-slate-300 transition-all duration-200',
-              'hover:bg-slate-800/50 hover:border-slate-700/60 hover:text-slate-100'
-            )}
-            aria-label={`Ouvrir ${label}`}
-          >
-            <Icon className="h-3.5 w-3.5 shrink-0 text-slate-400" />
-            <span>{label}</span>
-          </Link>
-        ))}
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 min-w-0">
+          {SHORTCUTS.map((item) => {
+            const Icon = item.icon;
+            const baseClass =
+              'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] transition-colors shrink-0 whitespace-nowrap border border-transparent';
+            if (isDashboardShortcut(item)) {
+              const { main, sub } = item;
+              const leaf = getDefaultLeafForSub(main, sub);
+              const isActive = nav.mainCategory === main && nav.subCategory === sub;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => navigate(main, sub, leaf)}
+                  className={cn(
+                    baseClass,
+                    isActive
+                      ? 'bg-slate-800 text-slate-100 border-slate-700'
+                      : 'text-slate-400 hover:bg-slate-900/80 hover:text-slate-200 hover:border-slate-700/50'
+                  )}
+                  aria-current={isActive ? 'page' : undefined}
+                  aria-label={item.label}
+                  title={item.label}
+                >
+                  <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center overflow-hidden rounded">
+                    <Icon className="h-3 w-3 min-h-0 min-w-0 max-h-full max-w-full" aria-hidden />
+                  </span>
+                  <span>{item.label}</span>
+                </button>
+              );
+            }
+            return (
+              <Link
+                key={item.id}
+                href={item.href}
+                className={cn(
+                  baseClass,
+                  'text-slate-400 hover:bg-slate-900/80 hover:text-slate-200 hover:border-slate-700/50'
+                )}
+                aria-label={`Ouvrir ${item.label}`}
+                title={item.label}
+              >
+                <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center overflow-hidden rounded">
+                  <Icon className="h-3 w-3 min-h-0 min-w-0 max-h-full max-w-full" aria-hidden />
+                </span>
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

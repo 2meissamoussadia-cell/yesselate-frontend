@@ -21,6 +21,7 @@ export type DashboardSubCategory =
   | 'calendrier'
   | 'analytics'
   | 'alertes'
+  | 'cockpit-advanced'
   | 'portefeuille'
   | 'demandes'
   | 'execution'
@@ -103,6 +104,8 @@ export interface NavNode {
   badgeType?: 'default' | 'warning' | 'critical' | 'success';
   requires?: NavRequires;
   children?: NavNode[];
+  /** Chemin interne (ex: /dg/cockpit). Optionnel : utilisé pour <Link to>, synchro URL, etc. */
+  to?: string;
   /** Lien externe vers un module maître-ouvrage (ex: /maitre-ouvrage/alerts). Si défini, le clic ouvre cette URL au lieu de naviguer en interne. */
   externalHref?: string;
 }

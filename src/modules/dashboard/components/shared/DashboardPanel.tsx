@@ -15,6 +15,12 @@ export type DashboardPanelProps = {
   className?: string;
   style?: React.CSSProperties;
   padding?: 'sm' | 'md' | 'lg';
+  /** Titre du bloc (style 3P/Odoo) */
+  title?: string;
+  /** Sous-titre ou description courte */
+  subtitle?: string;
+  /** Icône affichée à côté du titre */
+  icon?: React.ComponentType<{ className?: string }>;
 };
 
 const paddingClasses = {
@@ -28,6 +34,9 @@ export function DashboardPanel({
   className,
   style,
   padding = 'md',
+  title,
+  subtitle,
+  icon: Icon,
 }: DashboardPanelProps) {
   return (
     <div
@@ -44,6 +53,25 @@ export function DashboardPanel({
       )}
       style={style}
     >
+      {(title || subtitle || Icon) && (
+        <div className="mb-4 space-y-1">
+          <div className="flex items-center gap-3">
+            {Icon && (
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-800/60 bg-slate-900/40">
+                <Icon className="h-4 w-4 text-slate-300" />
+              </div>
+            )}
+            {title && (
+              <h2 className="text-base font-semibold tracking-tight text-slate-50">
+                {title}
+              </h2>
+            )}
+          </div>
+          {subtitle && (
+            <p className="text-xs text-slate-400">{subtitle}</p>
+          )}
+        </div>
+      )}
       {children}
     </div>
   );

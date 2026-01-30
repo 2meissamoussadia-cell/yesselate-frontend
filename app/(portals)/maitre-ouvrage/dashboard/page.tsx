@@ -40,6 +40,8 @@ import {
   DashboardBreadcrumbs,
   ContentLoadingSkeleton,
   DashboardModulesBar,
+  DashboardCleanLayout,
+  DashboardCleanHome,
 } from '@/modules/dashboard';
 import { DashboardShell } from '@/modules/dashboard/components/shared/DashboardShell';
 
@@ -315,20 +317,65 @@ function DashboardContent() {
 
   // page title (simple mais efficace)
   const pageTitle = useMemo(() => {
-    // fallback lisible (tu peux ensuite brancher ton mapping config)
     const parts = [mainCategory, subCategory, subSubCategory].filter(Boolean);
     return parts.length ? parts.join(' • ') : "Vue d'ensemble";
   }, [mainCategory, subCategory, subSubCategory]);
 
+  // Clean & Corporate : vue d'accueil = 4 KPI + tableau Phase 4
+  const isCleanHome = mainCategory === 'overview' && (subCategory === 'summary' || !subCategory);
+  const useCleanLayout = true; // Refonte UX — layout Procore / SAP Fiori
+
+  if (useCleanLayout) {
+    return (
+      <>
+        <Suspense fallback={null}>
+          <DashboardUrlSync />
+        </Suspense>
+        <DashboardCommandPalette />
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:border focus:border-slate-600 focus:bg-slate-800 focus:px-4 focus:py-2 focus:text-sm focus:text-slate-100">
+          Aller au contenu
+        </a>
+        <DashboardCleanLayout lastUpdate={formatTimeAgo(lastUpdate)}>
+          {isCleanHome ? (
+            <DashboardCleanHome
+              kpis={[
+                { title: 'Chantiers Actifs', value: String(topKpis[0]?.value ?? 42), trend: topKpis[0]?.delta ?? '+12%', color: 'blue', critical: false },
+                { title: 'CA Cumulé', value: String(topKpis.find((k) => k.label.includes('Budget') || k.label.includes('CA'))?.value ?? '18M XOF'), trend: '-2%', color: 'green', critical: false },
+                { title: 'Marge Nette', value: '23%', trend: '+1pt', color: 'yellow', critical: false },
+                { title: 'Alertes Critiques', value: String(topKpis.find((k) => k.tone === 'crit')?.value ?? 3), trend: '+1', color: 'red', critical: true },
+              ]}
+            />
+          ) : (
+            <div className="flex-1 min-h-0 overflow-auto flex flex-col">
+              <DashboardModulesBar />
+              <div className={cn('border-b border-slate-800/60 bg-slate-950/40 px-4 sm:px-6 py-3')}>
+                <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-dashboard">
+                  {topKpis.slice(0, 6).map((kpi) => (
+                    <KPICardPro key={kpi.label} kpi={kpi} onClick={() => handleKPIClick(kpi)} />
+                  ))}
+                </div>
+              </div>
+              <ErrorBoundary>
+                <div key={`${mainCategory}-${subCategory}-${subSubCategory}`} className="animate-fadeIn flex-1 min-h-0 p-4 sm:p-6">
+                  <Suspense fallback={<ContentLoadingSkeleton showCharts={true} showTable={false} kpiCount={6} />}>
+                    <DashboardViewRouter />
+                  </Suspense>
+                </div>
+              </ErrorBoundary>
+            </div>
+          )}
+        </DashboardCleanLayout>
+        <DashboardModals />
+      </>
+    );
+  }
+
   return (
     <>
-      {/* useSearchParams() peut suspendre en Next.js : isoler pour ne pas bloquer tout le dashboard */}
       <Suspense fallback={null}>
         <DashboardUrlSync />
       </Suspense>
       <DashboardCommandPalette />
-
-      {/* Lien d'évitement pour l'accessibilité — visible au focus */}
       <a
         href="#main-content"
         className="absolute left-4 top-4 z-[100] -translate-y-full rounded-lg border border-slate-600 bg-slate-800 px-4 py-2 text-sm font-medium text-slate-100 shadow-lg transition-transform focus:translate-y-0 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-950"
@@ -337,7 +384,6 @@ function DashboardContent() {
       </a>
 
       <div className="h-full w-full max-w-full min-w-0 flex min-h-0 overflow-x-hidden bg-slate-950">
-        {/* SIDEBAR */}
         <DashboardSidebar
           collapsed={sidebarCollapsed}
           stats={stats}

@@ -26,6 +26,7 @@ import {
   Brain,
 } from 'lucide-react';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
+import { useIsMobile } from '@/application/hooks/useMediaQuery';
 import { DashboardPanel } from '../shared/DashboardPanel';
 import { ErrorBoundary } from '@/components/shared/ErrorBoundary';
 import { colors, spacing } from '../../utils/dashboardDesignTokens';
@@ -34,6 +35,11 @@ import { useCockpitLive } from '../../hooks/useCockpitLive';
 import { predictiveEngine, autoPilot, EVENT_DG_APPROVAL } from '../../cockpit-v2';
 import type { PredictiveInsight, AutoPilotDecision } from '../../types/cockpitV2';
 import { AutoPilotPanel } from '../cockpit/AutoPilotPanel';
+
+const MobileCockpit = dynamic(
+  () => import('../cockpit/MobileCockpit').then((mod) => ({ default: mod.MobileCockpit })),
+  { ssr: false }
+);
 
 const HealthSphereGrid = dynamic(
   () => import('../cockpit/HealthSphereGrid').then((mod) => ({ default: mod.HealthSphereGrid })),
@@ -159,6 +165,17 @@ export function CockpitDG_V2Page() {
   );
 
   const criticalCount = insights.filter((i) => i.severity === 'critical').length;
+  const isMobile = useIsMobile();
+
+  // Phase 7 — Mobile-First: cockpit swipe quadrants sur mobile
+  if (isMobile) {
+    return (
+      <MobileCockpit
+        onDrilldown={handleDrilldown}
+        onNewChantier={() => navigate('performance', 'projets', null)}
+      />
+    );
+  }
 
   return (
     <div className="space-y-4 animate-fadeIn min-w-0 max-w-full overflow-x-hidden">

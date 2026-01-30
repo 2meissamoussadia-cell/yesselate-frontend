@@ -8,13 +8,12 @@ import { devtools } from 'zustand/middleware';
 // ============================================
 
 export type DashboardMainCategory = 
-  | 'overview' 
-  | 'performance' 
-  | 'actions' 
-  | 'risks' 
-  | 'decisions' 
-  | 'realtime'
-  | 'administration';
+  | 'pilotage' 
+  | 'chantiers' 
+  | 'finance' 
+  | 'clients' 
+  | 'rh' 
+  | 'systeme';
 
 export type DashboardSubCategory =
   | 'summary'
@@ -154,11 +153,11 @@ export interface DashboardCommandCenterStore {
 export const useDashboardCommandCenterStore = create<DashboardCommandCenterStore>()(
   devtools(
     (set, get) => ({
-      // Initial navigation state — Cockpit DG par défaut (sphères 3D santé chantiers)
+      // Initial navigation state — Tableau de bord DG (6 blocs métier)
       navigation: {
-        mainCategory: 'overview',
-        subCategory: 'summary',
-        subSubCategory: 'cockpit',
+        mainCategory: 'pilotage',
+        subCategory: 'dashboard',
+        subSubCategory: 'default',
       },
       lastNavigatedAt: 0,
       navigationHistory: [],
@@ -270,9 +269,9 @@ export const useDashboardCommandCenterStore = create<DashboardCommandCenterStore
         set(
           {
             navigation: {
-              mainCategory: 'overview',
-              subCategory: 'summary',
-              subSubCategory: 'dashboard',
+              mainCategory: 'pilotage',
+              subCategory: 'dashboard',
+              subSubCategory: 'default',
             },
             navigationHistory: [],
           },

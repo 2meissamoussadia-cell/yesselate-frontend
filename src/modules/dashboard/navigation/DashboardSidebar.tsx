@@ -33,12 +33,12 @@ import { useDashboardFavorites } from '../hooks/useDashboardFavorites';
 interface DashboardSidebarProps {
   collapsed?: boolean;
   stats?: {
-    overview?: number;
-    performance?: number;
-    actions?: number;
-    risks?: number;
-    decisions?: number;
-    realtime?: number;
+    pilotage?: number;
+    chantiers?: number;
+    finance?: number;
+    clients?: number;
+    rh?: number;
+    systeme?: number;
   };
   onToggleCollapse?: () => void;
   onOpenCommandPalette?: () => void;
@@ -80,7 +80,7 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
   }, [user]);
 
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(() => {
-    const initial = new Set<string>([main || 'overview']);
+    const initial = new Set<string>([main || 'pilotage']);
     Object.keys(dashboardNavigationConfig).forEach((id) => initial.add(id));
     return initial;
   });
@@ -104,7 +104,7 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
   const lastMainRef = useRef<string | null>(main || null);
 
   useEffect(() => {
-    const currentMain = main || 'overview';
+    const currentMain = main || 'pilotage';
     if (lastMainRef.current === currentMain) return;
     lastMainRef.current = currentMain;
     setExpandedNodes((prev) => {
@@ -137,17 +137,17 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
       if (e.ctrlKey && !e.metaKey && !e.altKey && !e.shiftKey) {
         if (e.key === '1') {
           e.preventDefault();
-          navigate('overview', null, null);
+          navigate('pilotage', 'dashboard', 'default');
           return;
         }
         if (e.key === '2') {
           e.preventDefault();
-          navigate('overview', 'kpis', 'demandes');
+          navigate('pilotage', 'analytics', 'default');
           return;
         }
         if (e.key === '3') {
           e.preventDefault();
-          navigate('performance', 'validation', 'en-attente');
+          navigate('finance', 'validation-paiements', 'default');
           return;
         }
       }
@@ -159,7 +159,7 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
   // Phase 5: enregistrer la route actuelle dans "récemment visités"
   useEffect(() => {
     const key = navToKey({
-      main: main ?? 'overview',
+      main: main ?? 'pilotage',
       sub: sub ?? null,
       leaf: leaf ?? null,
     });
@@ -194,7 +194,7 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
     const statKey = node.id as keyof typeof stats;
     const propBadge = stats[statKey];
     if (propBadge !== undefined && typeof propBadge === 'number') return propBadge;
-    if (level === 1 && node.id === 'alerts' && alertStats) {
+    if (level === 1 && (node.id === 'alerts' || node.id === 'alertes') && alertStats) {
       return alertStats.critical_open ?? alertStats.open_count ?? 0;
     }
     if (level === 1 && domainAlertsMap[node.id]) return domainAlertsMap[node.id];
@@ -272,7 +272,7 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
         if (!firstLeaf && firstChild.children?.length) firstLeaf = firstChild.children[0].id;
         handleNavigation(node.id, firstChild.id, firstLeaf ?? null);
       } else if (level === 1) {
-        const mainId = currentMain || main || 'overview';
+        const mainId = currentMain || main || 'pilotage';
         let firstLeaf: string | null = null;
         try {
           firstLeaf = getDefaultLeafForSub(mainId, node.id);
@@ -280,7 +280,7 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
           // ignore
         }
         if (!firstLeaf && firstChild.children?.length) firstLeaf = firstChild.children[0].id;
-        handleNavigation(main || 'overview', node.id, firstLeaf ?? null);
+        handleNavigation(main || 'pilotage', node.id, firstLeaf ?? null);
       }
     },
     [main, handleNavigation]
@@ -292,7 +292,7 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
       return node.children.filter((child) => {
         if (!nodeAllowed(userContext, child.requires)) return false;
         if (level === 0) return checkRouteAccess(node.id, child.id, null);
-        if (level === 1) return checkRouteAccess(parentMain ?? main ?? 'overview', node.id, child.id);
+        if (level === 1) return checkRouteAccess(parentMain ?? main ?? 'pilotage', node.id, child.id);
         return true;
       });
     },
@@ -331,8 +331,11 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
           }
         } else {
           if (level === 0) handleNavigation(node.id, null, null);
-          else if (level === 1) handleNavigation(parentMain ?? main ?? 'overview', node.id, null);
-          else if (level === 2) handleNavigation(parentMain ?? main ?? 'overview', parentSub ?? sub ?? null, node.id);
+          else if (level === 1) {
+            const mainId = parentMain ?? main ?? 'pilotage';
+            const defLeaf = getDefaultLeafForSub(mainId, node.id);
+            handleNavigation(mainId, node.id, defLeaf ?? null);
+          } else if (level === 2) handleNavigation(parentMain ?? main ?? 'pilotage', parentSub ?? sub ?? null, node.id);
         }
       };
 
@@ -404,7 +407,7 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
   }
 
   const currentKey = navToKey({
-    main: main ?? 'overview',
+    main: main ?? 'pilotage',
     sub: sub ?? null,
     leaf: leaf ?? null,
   });

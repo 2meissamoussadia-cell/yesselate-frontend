@@ -9,6 +9,8 @@
    ==================================== */
 /* Mode sombre par défaut */
 :root {
+  --font-geist-sans: ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-geist-mono: ui-monospace, "Cascadia Mono", "Segoe UI Mono", Consolas, monospace;
   --bg: 15 15 17;             /* fond très sombre #0F0F11 */
   --surface: 24 24 27;        /* cartes #18181B */
   --surface-2: 30 30 33;      /* surfaces secondaires #1E1E21 */

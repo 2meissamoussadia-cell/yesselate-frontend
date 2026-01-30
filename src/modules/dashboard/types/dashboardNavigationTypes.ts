@@ -5,16 +5,51 @@
 
 import type React from 'react';
 
+/** Arborescence métier DG : 6 blocs (référence ERP-BTP) */
 export type DashboardMainCategory =
-  | 'overview'
-  | 'performance'
-  | 'actions'
-  | 'risks'
-  | 'decisions'
-  | 'realtime'
-  | 'administration';
+  | 'pilotage'
+  | 'chantiers'
+  | 'finance'
+  | 'clients'
+  | 'rh'
+  | 'systeme';
 
+/** Sous-catégories par bloc (ids des items sidebar) */
 export type DashboardSubCategory =
+  | 'dashboard'
+  | 'gouvernance'
+  | 'calendrier'
+  | 'analytics'
+  | 'alertes'
+  | 'portefeuille'
+  | 'demandes'
+  | 'execution'
+  | 'dossiers-bloques'
+  | 'litiges'
+  | 'budget'
+  | 'validation-paiements'
+  | 'gains-pertes'
+  | 'tresorerie'
+  | 'recouvrements'
+  | 'projets'
+  | 'clients'
+  | 'tickets'
+  | 'propositions'
+  | 'employes'
+  | 'missions'
+  | 'evaluations'
+  | 'demandes-rh'
+  | 'organigramme'
+  | 'echanges'
+  | 'conferences'
+  | 'messages'
+  | 'registre-decisions'
+  | 'audit'
+  | 'journal-actions'
+  | 'logs'
+  | 'ia'
+  | 'parametres'
+  // Legacy (redirections)
   | 'summary'
   | 'kpis'
   | 'bureaux'
@@ -39,8 +74,7 @@ export type DashboardSubCategory =
   | 'live'
   | 'alerts'
   | 'notifications'
-  | 'sync'
-  | 'all';
+  | 'sync';
 
 export type DashboardSubSubCategory =
   | 'projets'
@@ -49,7 +83,8 @@ export type DashboardSubSubCategory =
   | 'validations'
   | 'retards'
   | 'blocages'
-  | 'all';
+  | 'all'
+  | string;
 
 /** Exigences d'accès pour un nœud (RBAC / feature flags) */
 export interface NavRequires {

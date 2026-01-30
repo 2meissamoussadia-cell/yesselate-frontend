@@ -1,5 +1,7 @@
 export { AutoPilotPanel } from './AutoPilotPanel';
 export { ChantierSphere } from './ChantierSphere';
+export { GpsPhotosOrbits } from './GpsPhotosOrbits';
+export { OrangeMoneyButton, formatCFA } from './OrangeMoneyButton';
 export { FourDimensionalView } from './FourDimensionalView';
 export { CockpitDroneFeedPanel } from './CockpitDroneFeedPanel';
 export { CockpitPhase6Section } from './CockpitPhase6Section';
@@ -15,6 +17,8 @@ export {
 } from './executiveCommandsV5';
 export { HealthSphereGrid, HealthSphereGridInner } from './HealthSphereGrid';
 export { LiveHealthSpheres } from './LiveHealthSpheres';
+export { MobileCockpit } from './MobileCockpit';
+export { MobileSphereOptimizer } from './MobileSphereOptimizer';
 export { CockpitSpheresLoadingSkeleton } from './CockpitSpheresLoadingSkeleton';
 export {
   detectVoiceCommand,

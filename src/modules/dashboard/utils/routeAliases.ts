@@ -9,18 +9,31 @@
  */
 
 /**
- * Mapping des alias vers les routes normalisées
- * Format: "main::sub::leaf" → "main::sub::leaf"
+ * Mapping des alias vers les routes normalisées (6 blocs métier)
+ * Legacy overview/performance/actions → pilotage/chantiers/finance/...
  */
 export const routeAliases: Record<string, string> = {
-  // Normaliser "blocages" vers "blocked"
-  'actions::blocages': 'actions::blocked',
-  'risks::blocages': 'risks::blocked',
-  
-  // Normaliser "validation" (singulier) vers "validations" (pluriel)
-  'performance::validation': 'performance::validations',
-  // Alias "retards" (label) vers "delays" (id technique)
-  'performance::retards': 'performance::delays',
+  // Legacy overview → pilotage (Tableau de bord DG)
+  'overview::summary': 'pilotage::dashboard',
+  'overview::kpis': 'pilotage::analytics',
+  'overview::alerts': 'pilotage::alertes',
+  'overview::alertes': 'pilotage::alertes',
+  // Legacy performance → finance / pilotage
+  'performance::validation': 'finance::validation-paiements',
+  'performance::validations': 'finance::validation-paiements',
+  'performance::budget': 'finance::budget',
+  'performance::indicators': 'pilotage::analytics',
+  // Legacy actions → chantiers
+  'actions::blocages': 'chantiers::dossiers-bloques',
+  'actions::blocked': 'chantiers::dossiers-bloques',
+  'actions::inbox': 'chantiers::demandes',
+  // Legacy risks/decisions/realtime → pilotage (alertes)
+  'risks::critical': 'pilotage::alertes',
+  'risks::blocages': 'chantiers::dossiers-bloques',
+  'decisions::pending': 'pilotage::gouvernance',
+  'realtime::alerts': 'pilotage::alertes',
+  // Legacy administration → systeme
+  'administration::': 'systeme::parametres',
 };
 
 /**
@@ -45,10 +58,11 @@ export function normalizeRouteWithAliases(
   
   if (target) {
     const [tMain, tSub] = target.split('::');
+    // Pour les 6 blocs métier, chaque écran = main::sub::default
     return {
       main: tMain,
       sub: tSub || null,
-      leaf: leaf, // Conserver la feuille
+      leaf: 'default',
     };
   }
   

@@ -1,140 +1,135 @@
 /**
- * Configuration de navigation à 3 niveaux pour le module Dashboard
+ * Configuration de navigation DG : 6 blocs métier (référence ERP-BTP)
  * Types NavNode / NavRequires : voir types/dashboardNavigationTypes.ts
  */
 
 import type { DashboardMainCategory, NavNode, NavRequires } from '../types/dashboardNavigationTypes';
 import {
   LayoutDashboard,
-  TrendingUp,
-  Zap,
+  Building2,
+  Calendar,
+  BarChart3,
   AlertTriangle,
+  FolderKanban,
+  FileText,
+  Hammer,
+  Ban,
   Scale,
-  Activity,
-  Home,
+  Wallet,
+  CheckCircle2,
+  TrendingUp,
+  Landmark,
+  Inbox,
+  MapPin,
+  Users,
+  Ticket,
+  FileEdit,
+  UserCircle,
+  Target,
+  ClipboardList,
+  Network,
+  MessageSquare,
+  Video,
+  Mail,
+  BookOpen,
+  ShieldCheck,
+  ScrollText,
+  Database,
+  Bot,
   Settings,
 } from 'lucide-react';
 
 /** Ré-export pour compatibilité des imports existants */
 export type { NavNode, NavRequires } from '../types/dashboardNavigationTypes';
 
+/** Base URL maître-ouvrage (pas /dg) */
 const base = '/maitre-ouvrage';
 
 /**
- * Navigation dashboard : contenu strictement interne au tableau de bord.
- * Les modules (Centre d'alertes, Gouvernance, Validation, Demandes, etc.)
- * sont accessibles uniquement depuis la barre principale (portail) pour éviter
- * saturation et doublons.
+ * Navigation dashboard : 6 blocs métier.
+ * Chaque entrée = un écran métier précis (ERP-BTP).
  */
 export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> = {
-  overview: {
-    id: 'overview',
-    label: 'Accueil',
-    icon: Home,
+  pilotage: {
+    id: 'pilotage',
+    label: 'PILOTAGE',
+    icon: LayoutDashboard,
     requires: { perm: 'dashboard:read' },
     children: [
-      {
-        id: 'summary',
-        label: 'Vue d\'ensemble',
-        children: [
-          { id: 'cockpit', label: 'Centrale de commandement' },
-          { id: 'cockpit-v2', label: 'Centrale V2 (IA)' },
-          { id: 'rapport-dg', label: 'Rapport DG' },
-        ],
-      },
-      {
-        id: 'kpis',
-        label: 'KPIs clés',
-        badge: 0,
-        badgeType: 'warning',
-        children: [
-          { id: 'highlights', label: 'Synthèse' },
-          { id: 'projets', label: 'Projets' },
-          { id: 'demandes', label: 'Demandes' },
-          { id: 'budget', label: 'Budget' },
-          { id: 'finances', label: 'Finances' },
-        ],
-      },
+      { id: 'dashboard', label: 'Tableau de bord DG', icon: LayoutDashboard },
+      { id: 'gouvernance', label: 'Gouvernance & décisions', icon: Building2, badge: 7, badgeType: 'warning' },
+      { id: 'calendrier', label: 'Calendrier & échéances', icon: Calendar },
+      { id: 'analytics', label: 'Analytics & rapports', icon: BarChart3 },
+      { id: 'alertes', label: "Centre d'alertes", icon: AlertTriangle, badge: 4, badgeType: 'critical' },
     ],
   },
-  performance: {
-    id: 'performance',
-    i18nKey: 'nav.performance',
-    icon: TrendingUp,
+  chantiers: {
+    id: 'chantiers',
+    label: 'CHANTIERS & MARCHÉS',
+    icon: FolderKanban,
     requires: { perm: 'dashboard:read' },
     children: [
-      {
-        id: 'indicators',
-        label: 'Indicateurs',
-        children: [
-          { id: 'synthese', label: 'Synthèse' },
-          { id: 'projets', label: 'Projets' },
-          { id: 'demandes', label: 'Demandes' },
-          { id: 'budget', label: 'Budget' },
-        ],
-      },
-      {
-        id: 'bureaux',
-        label: 'Bureaux',
-        children: [
-          { id: 'all', label: 'Tous' },
-          { id: 'bmo', label: 'BMO' },
-          { id: 'bf', label: 'BF' },
-          { id: 'bj', label: 'BJ' },
-          { id: 'bct', label: 'BCT' },
-          { id: 'bop', label: 'BOP' },
-          { id: 'bcg', label: 'BCG' },
-          { id: 'bja', label: 'BJA' },
-          { id: 'brc', label: 'BRC' },
-          { id: 'bpl', label: 'BPL' },
-          { id: 'bex', label: 'BEX' },
-          { id: 'comparaison', label: 'Comparaison' },
-        ],
-      },
-      {
-        id: 'trends',
-        label: 'Tendances',
-        children: [
-          { id: 'mensuelles', label: 'Mensuelles' },
-          { id: 'trimestrielles', label: 'Trimestrielles' },
-          { id: 'annuelles', label: 'Annuelles' },
-        ],
-      },
+      { id: 'portefeuille', label: 'Portefeuille chantiers', icon: FolderKanban },
+      { id: 'demandes', label: 'Demandes & devis', icon: FileText },
+      { id: 'execution', label: 'Exécution chantiers', icon: Hammer },
+      { id: 'dossiers-bloques', label: 'Dossiers bloqués', icon: Ban, badge: 4, badgeType: 'critical' },
+      { id: 'litiges', label: 'Arbitrages & litiges', icon: Scale, badge: 3, badgeType: 'warning' },
     ],
   },
-  actions: {
-    id: 'actions',
-    label: 'Actions & Tâches',
-    icon: Zap,
+  finance: {
+    id: 'finance',
+    label: 'FINANCE',
+    icon: Wallet,
     requires: { perm: 'dashboard:read' },
-    children: [],
+    children: [
+      { id: 'budget', label: 'Budget & engagements', icon: Wallet },
+      { id: 'validation-paiements', label: 'Validation paiements', icon: CheckCircle2, badge: 5, badgeType: 'warning' },
+      { id: 'gains-pertes', label: 'Gains & pertes', icon: TrendingUp },
+      { id: 'tresorerie', label: 'Trésorerie', icon: Landmark },
+      { id: 'recouvrements', label: 'Recouvrements', icon: Inbox, badge: 4, badgeType: 'warning' },
+    ],
   },
-  risks: {
-    id: 'risks',
-    label: 'Risques',
-    icon: AlertTriangle,
+  clients: {
+    id: 'clients',
+    label: 'CLIENTS & COMMERCIAL',
+    icon: Users,
     requires: { perm: 'dashboard:read' },
-    children: [],
+    children: [
+      { id: 'projets', label: 'Projets en cours', icon: MapPin, badge: 8, badgeType: 'default' },
+      { id: 'clients', label: 'Clients', icon: Users },
+      { id: 'tickets', label: 'Tickets clients / SAV', icon: Ticket, badge: 2, badgeType: 'warning' },
+      { id: 'propositions', label: 'Propositions commerciales', icon: FileEdit },
+    ],
   },
-  decisions: {
-    id: 'decisions',
-    label: 'Décisions',
-    icon: Scale,
+  rh: {
+    id: 'rh',
+    label: 'RH & RESSOURCES',
+    icon: UserCircle,
     requires: { perm: 'dashboard:read' },
-    children: [],
+    children: [
+      { id: 'employes', label: 'Employés & agents', icon: UserCircle, badge: 8, badgeType: 'default' },
+      { id: 'missions', label: 'Missions & affectations', icon: Target, badge: 2, badgeType: 'default' },
+      { id: 'evaluations', label: 'Évaluations', icon: BarChart3, badge: 2, badgeType: 'default' },
+      { id: 'demandes-rh', label: 'Demandes RH', icon: ClipboardList, badge: 10, badgeType: 'critical' },
+      { id: 'organigramme', label: 'Organigramme', icon: Network },
+    ],
   },
-  realtime: {
-    id: 'realtime',
-    label: 'Temps réel',
-    icon: Activity,
-    requires: { perm: 'dashboard:read' },
-    children: [],
-  },
-  administration: {
-    id: 'administration',
-    label: 'Administration',
+  systeme: {
+    id: 'systeme',
+    label: 'COMMUNICATION & SYSTÈME',
     icon: Settings,
-    children: [],
+    requires: { perm: 'dashboard:read' },
+    children: [
+      { id: 'echanges', label: 'Échanges structures', icon: MessageSquare },
+      { id: 'conferences', label: 'Conférences décisionnelles', icon: Video },
+      { id: 'messages', label: 'Messages externes', icon: Mail },
+      { id: 'registre-decisions', label: 'Registre des décisions', icon: BookOpen },
+      { id: 'audit', label: 'Audit & conformité', icon: ShieldCheck },
+      { id: 'journal-actions', label: 'Journal des actions', icon: ScrollText },
+      { id: 'logs', label: 'Logs système', icon: Database },
+      { id: 'ia', label: 'IA & assistants', icon: Bot },
+      { id: 'parametres', label: 'Paramètres', icon: Settings },
+    ],
   },
 };
 
@@ -160,7 +155,7 @@ export function findNavNodeById(
 export function getSubCategories(
   mainCategory: DashboardMainCategory
 ): NavNode[] {
-  const key = (mainCategory && typeof mainCategory === 'string' ? mainCategory.toLowerCase() : 'overview') as DashboardMainCategory;
+  const key = (mainCategory && typeof mainCategory === 'string' ? mainCategory.toLowerCase() : 'pilotage') as DashboardMainCategory;
   const mainNode = dashboardNavigationConfig[key];
   return mainNode?.children ?? [];
 }
@@ -169,9 +164,8 @@ export function getSubSubCategories(
   mainCategory: DashboardMainCategory,
   subCategory: string
 ): NavNode[] {
-  const key = (mainCategory && typeof mainCategory === 'string' ? mainCategory.toLowerCase() : 'overview') as DashboardMainCategory;
+  const key = (mainCategory && typeof mainCategory === 'string' ? mainCategory.toLowerCase() : 'pilotage') as DashboardMainCategory;
   const mainNode = dashboardNavigationConfig[key];
   const subNode = mainNode?.children?.find((child) => child.id === subCategory);
   return subNode?.children ?? [];
 }
-

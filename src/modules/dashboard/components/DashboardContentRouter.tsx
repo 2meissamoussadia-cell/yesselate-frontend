@@ -45,13 +45,12 @@ export interface DashboardContentRouterProps {
 type ViewComponent = React.ComponentType<Record<string, unknown>>;
 
 const ROUTE_MAPPING: Record<DashboardMainCategory, ViewComponent> = {
-  overview: OverviewView,
-  performance: PerformanceView,
-  actions: ActionsView,
-  risks: RisksView,
-  decisions: DecisionsView,
-  realtime: RealtimeView,
-  administration: OverviewView,
+  pilotage: OverviewView,
+  chantiers: OverviewView,
+  finance: PerformanceView,
+  clients: OverviewView,
+  rh: OverviewView,
+  systeme: OverviewView,
 };
 
 // ============================================
@@ -73,7 +72,7 @@ export function DashboardContentRouter({
   const navigation = useDashboardCommandCenterStore((state) => state.navigation);
 
   // Utiliser le store EN PRIORITÉ, fallback sur les props
-  const mainCategory = navigation.mainCategory || propMainCategory || 'overview';
+  const mainCategory = navigation.mainCategory || propMainCategory || 'pilotage';
   const subCategory = navigation.subCategory || propSubCategory;
   const subSubCategory = navigation.subSubCategory || propSubSubCategory;
 
@@ -203,7 +202,7 @@ export function DashboardContentRouterWithProps({
 }: DashboardContentRouterWithPropsProps) {
   const navigation = useDashboardCommandCenterStore((state) => state.navigation);
 
-  const mainCategory = navigation.mainCategory || propMainCategory || 'overview';
+  const mainCategory = navigation.mainCategory || propMainCategory || 'pilotage';
   const subCategory = navigation.subCategory || propSubCategory;
   const subSubCategory = navigation.subSubCategory || propSubSubCategory;
 

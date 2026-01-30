@@ -1,4 +1,73 @@
 {
+  "pilotage": {
+    "label": "PILOTAGE",
+    "requires": { "perm": "dashboard:read" },
+    "sub": {
+      "dashboard": { "label": "Tableau de bord DG", "leaf": { "default": { "label": "Tableau de bord", "component": "CockpitDGPage" } } },
+      "gouvernance": { "label": "Gouvernance & décisions", "leaf": { "default": { "label": "Gouvernance", "component": "SummaryDashboardPage" } } },
+      "calendrier": { "label": "Calendrier & échéances", "leaf": { "default": { "label": "Calendrier", "component": "SummaryDashboardPage" } } },
+      "analytics": { "label": "Analytics & rapports", "leaf": { "default": { "label": "Analytics", "component": "SummaryDashboardPage" } } },
+      "alertes": { "label": "Centre d'alertes", "leaf": { "default": { "label": "Alertes", "component": "AlertsActivesPage" } } }
+    }
+  },
+  "chantiers": {
+    "label": "CHANTIERS & MARCHÉS",
+    "requires": { "perm": "dashboard:read" },
+    "sub": {
+      "portefeuille": { "label": "Portefeuille chantiers", "leaf": { "default": { "label": "Portefeuille", "component": "CockpitDGPage" } } },
+      "demandes": { "label": "Demandes & devis", "leaf": { "default": { "label": "Demandes", "component": "DemandesKpiPage" } } },
+      "execution": { "label": "Exécution chantiers", "leaf": { "default": { "label": "Exécution", "component": "SummaryDashboardPage" } } },
+      "dossiers-bloques": { "label": "Dossiers bloqués", "leaf": { "default": { "label": "Dossiers bloqués", "component": "SummaryDashboardPage" } } },
+      "litiges": { "label": "Arbitrages & litiges", "leaf": { "default": { "label": "Litiges", "component": "SummaryDashboardPage" } } }
+    }
+  },
+  "finance": {
+    "label": "FINANCE",
+    "requires": { "perm": "dashboard:read" },
+    "sub": {
+      "budget": { "label": "Budget & engagements", "leaf": { "default": { "label": "Budget", "component": "BudgetKpiPage" } } },
+      "validation-paiements": { "label": "Validation paiements", "leaf": { "default": { "label": "Validation", "component": "ValidationPaiementsPage" } } },
+      "gains-pertes": { "label": "Gains & pertes", "leaf": { "default": { "label": "Gains & pertes", "component": "SummaryDashboardPage" } } },
+      "tresorerie": { "label": "Trésorerie", "leaf": { "default": { "label": "Trésorerie", "component": "SummaryDashboardPage" } } },
+      "recouvrements": { "label": "Recouvrements", "leaf": { "default": { "label": "Recouvrements", "component": "SummaryDashboardPage" } } }
+    }
+  },
+  "clients": {
+    "label": "CLIENTS & COMMERCIAL",
+    "requires": { "perm": "dashboard:read" },
+    "sub": {
+      "projets": { "label": "Projets en cours", "leaf": { "default": { "label": "Projets", "component": "ProjetKpiPage" } } },
+      "clients": { "label": "Clients", "leaf": { "default": { "label": "Clients", "component": "SummaryDashboardPage" } } },
+      "tickets": { "label": "Tickets clients / SAV", "leaf": { "default": { "label": "Tickets", "component": "SummaryDashboardPage" } } },
+      "propositions": { "label": "Propositions commerciales", "leaf": { "default": { "label": "Propositions", "component": "SummaryDashboardPage" } } }
+    }
+  },
+  "rh": {
+    "label": "RH & RESSOURCES",
+    "requires": { "perm": "dashboard:read" },
+    "sub": {
+      "employes": { "label": "Employés & agents", "leaf": { "default": { "label": "Employés", "component": "SummaryDashboardPage" } } },
+      "missions": { "label": "Missions & affectations", "leaf": { "default": { "label": "Missions", "component": "SummaryDashboardPage" } } },
+      "evaluations": { "label": "Évaluations", "leaf": { "default": { "label": "Évaluations", "component": "SummaryDashboardPage" } } },
+      "demandes-rh": { "label": "Demandes RH", "leaf": { "default": { "label": "Demandes RH", "component": "SummaryDashboardPage" } } },
+      "organigramme": { "label": "Organigramme", "leaf": { "default": { "label": "Organigramme", "component": "SummaryDashboardPage" } } }
+    }
+  },
+  "systeme": {
+    "label": "COMMUNICATION & SYSTÈME",
+    "requires": { "perm": "dashboard:read" },
+    "sub": {
+      "echanges": { "label": "Échanges structures", "leaf": { "default": { "label": "Échanges", "component": "SummaryDashboardPage" } } },
+      "conferences": { "label": "Conférences décisionnelles", "leaf": { "default": { "label": "Conférences", "component": "SummaryDashboardPage" } } },
+      "messages": { "label": "Messages externes", "leaf": { "default": { "label": "Messages", "component": "SummaryDashboardPage" } } },
+      "registre-decisions": { "label": "Registre des décisions", "leaf": { "default": { "label": "Registre", "component": "SummaryDashboardPage" } } },
+      "audit": { "label": "Audit & conformité", "leaf": { "default": { "label": "Audit", "component": "SummaryDashboardPage" } } },
+      "journal-actions": { "label": "Journal des actions", "leaf": { "default": { "label": "Journal", "component": "SummaryDashboardPage" } } },
+      "logs": { "label": "Logs système", "leaf": { "default": { "label": "Logs", "component": "SummaryDashboardPage" } } },
+      "ia": { "label": "IA & assistants", "leaf": { "default": { "label": "IA", "component": "SummaryDashboardPage" } } },
+      "parametres": { "label": "Paramètres", "leaf": { "default": { "label": "Paramètres", "component": "SummaryDashboardPage" } } }
+    }
+  },
   "overview": {
     "label": "Vue d'ensemble",
     "requires": {

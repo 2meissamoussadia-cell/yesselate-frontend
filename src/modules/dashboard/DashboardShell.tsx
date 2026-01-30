@@ -35,7 +35,7 @@ export function DashboardShell() {
 
   const onExport = useCallback(async (format: 'csv' | 'json' | 'pdf' | 'excel') => {
     const params = new URLSearchParams({
-      main: nav.mainCategory || 'overview',
+      main: nav.mainCategory || 'pilotage',
       format,
     });
     if (nav.subCategory) params.set('sub', nav.subCategory);

@@ -23,7 +23,7 @@ export const DashboardBreadcrumbs = memo(function DashboardBreadcrumbs({ classNa
   const navigate = useDashboardCommandCenterStore((s) => s.navigate);
 
   const { mainLabel, subLabel, leafLabel } = useMemo(
-    () => getBreadcrumbLabels(main || 'overview', sub, leaf),
+    () => getBreadcrumbLabels(main || 'pilotage', sub, leaf),
     [main, sub, leaf]
   );
 
@@ -48,7 +48,7 @@ export const DashboardBreadcrumbs = memo(function DashboardBreadcrumbs({ classNa
     <nav className={cn('flex items-center gap-1.5 text-xs min-w-0', className)} aria-label="Fil d'Ariane">
       <button
         type="button"
-        onClick={() => go({ main: 'overview', sub: null, leaf: null })}
+        onClick={() => go({ main: 'pilotage', sub: 'dashboard', leaf: 'default' })}
         className={cn(
           'group inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 min-h-[32px]',
           'text-slate-400 transition-colors duration-150 hover:bg-slate-800/50 hover:text-slate-200',

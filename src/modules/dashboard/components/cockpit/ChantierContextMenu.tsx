@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useEffect, useRef, useMemo } from 'react';
-import { Phone, MessageCircle, Image, AlertTriangle, Archive, X, MessageSquare } from 'lucide-react';
+import { Phone, MessageCircle, Image, AlertTriangle, Archive, X, MessageSquare, Wallet } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ChantierMock } from '../../data/chantiersMock';
 import { useDashboardPermissions } from '../../hooks/useDashboardPermissions';
@@ -29,6 +29,7 @@ const ACTIONS = [
   { id: 'chat', label: 'Chat chef chantier', icon: MessageSquare },
   { id: 'call', label: 'Appeler', icon: Phone },
   { id: 'whatsapp', label: 'WhatsApp (templates)', icon: MessageCircle },
+  { id: 'pay', label: 'Payer Orange Money (PAY NOW)', icon: Wallet },
   { id: 'photos', label: 'Voir photos récentes', icon: Image },
   { id: 'urgent', label: 'Marquer urgence', icon: AlertTriangle },
   { id: 'archive', label: 'Archiver', icon: Archive },
@@ -78,6 +79,9 @@ export function ChantierContextMenu({
       onAction?.('whatsapp', chantier);
       onClose();
       return;
+    }
+    if (id === 'pay') {
+      onAction?.('pay', chantier);
     }
     if (id === 'photos') {
       onAction?.('photos', chantier);

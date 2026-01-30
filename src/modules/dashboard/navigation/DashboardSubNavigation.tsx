@@ -27,12 +27,12 @@ import { useMemo } from 'react';
 
 interface DashboardSubNavigationProps {
   stats?: {
-    overview?: number;
-    performance?: number;
-    actions?: number;
-    risks?: number;
-    decisions?: number;
-    realtime?: number;
+    pilotage?: number;
+    chantiers?: number;
+    finance?: number;
+    clients?: number;
+    rh?: number;
+    systeme?: number;
   };
   /** Par défaut: on évite une 2e breadcrumb (DashboardBreadcrumbs fait déjà le job) */
   showBreadcrumbs?: boolean;
@@ -64,7 +64,7 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
   );
 
   // Normaliser la casse (config utilise des clés lowercase: overview, performance, etc.)
-  const currentMainCategory = (typeof main === 'string' ? main.toLowerCase() : 'overview') as DashboardMainCategory;
+  const currentMainCategory = (typeof main === 'string' ? main.toLowerCase() : 'pilotage') as DashboardMainCategory;
 
   // Récupérer les sous-catégories (niveau 2) et filtrer selon permissions
   const allSubCategories = getSubCategories(currentMainCategory) || [];
@@ -108,7 +108,7 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
     
     // ✅ Utiliser getDefaultLeafForSub depuis routeValidation (plus optimisé et cache)
     let defaultLeaf: string | null = null;
-    const currentMain = main || 'overview';
+    const currentMain = main || 'pilotage';
     
     try {
       defaultLeaf = getDefaultLeafForSub(currentMain, subCatId);
@@ -159,7 +159,7 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
       return;
     }
     
-    const currentMain = main || 'overview';
+    const currentMain = main || 'pilotage';
     
     // ✅ Valider la route avant de naviguer
     try {

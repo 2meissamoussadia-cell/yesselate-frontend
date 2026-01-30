@@ -14,6 +14,8 @@ import { DashboardAccueil3P } from '../components/views/DashboardAccueil3P';
 import { CockpitDGPage } from '../components/views/CockpitDGPage';
 import { CockpitDG_V2Page } from '../components/views/CockpitDG_V2Page';
 import { RapportDGPage } from '../components/views/RapportDGPage';
+import { DashboardDGLayout } from '../components/views/DashboardDGLayout';
+import { PortefeuilleChantiersPage } from '../components/views/PortefeuilleChantiersPage';
 import { DashboardPageSkeleton } from '../components/shared/DashboardSkeleton';
 import { formatMoneyEUR } from '../utils/colorMapping';
 import type {
@@ -473,9 +475,70 @@ const loadKpisAchats: Loader<KpisAchatsData> = async (nav) => {
 // --------------------------
 // Registry typé
 // --------------------------
+// 6 blocs métier DG (PILOTAGE, CHANTIERS, FINANCE, CLIENTS, RH, SYSTÈME)
+// --------------------------
+const pilotageDashboard = () => <DashboardDGLayout />;
+const portefeuilleChantiers = () => <PortefeuilleChantiersPage />;
+const pilotageAlertes = createLazyView(() => import('../components/views/AlertsActivesPage').then(m => ({ default: m.AlertsActivesPage })));
+const chantiersDemandes = createLazyView(() => import('../components/views/DemandesKpiPage').then(m => ({ default: m.DemandesKpiPage })) as Promise<{ default: React.ComponentType<{ data?: unknown }> }>, { passData: true });
+const financeBudget = createLazyView(() => import('../components/views/BudgetKpiPage').then(m => ({ default: m.BudgetKpiPage as React.ComponentType<{ data?: unknown }> })), { passData: true });
+const financeValidation = createLazyView(() => import('../components/views/ValidationPaiementsPage').then(m => ({ default: m.ValidationPaiementsPage })));
+const clientsProjets = createLazyView(() => import('../components/views/ProjetKpiPage').then(m => ({ default: m.ProjetKpiPage })) as Promise<{ default: React.ComponentType<{ data?: unknown }> }>, { passData: true });
+
 export const dashboardRegistry: DashboardRegistry = {
-  // overview/summary/* — Vue d'accueil maître-ouvrage = Centrale de commandement (Cockpit DG)
-  // dashboard et highlights pointent vers le même Cockpit pour cohérence et anciens liens
+  // --- PILOTAGE ---
+  'pilotage::dashboard::default': {
+    id: 'pilotage-dashboard',
+    title: 'Tableau de bord DG',
+    ttl: 60_000,
+    loader: loadOverviewSummaryDashboard,
+    render: pilotageDashboard,
+  },
+  'pilotage::gouvernance::default': createDefaultView('Gouvernance & décisions', 'Décisions et instances de pilotage'),
+  'pilotage::calendrier::default': createDefaultView('Calendrier & échéances', 'Jalons et planning'),
+  'pilotage::analytics::default': createDefaultView('Analytics & rapports', 'Rapports et tableaux de bord'),
+  'pilotage::alertes::default': {
+    id: 'pilotage-alertes',
+    title: "Centre d'alertes",
+    ttl: 30_000,
+    loader: loadAlertsActivesApi,
+    render: pilotageAlertes,
+  },
+  // --- CHANTIERS & MARCHÉS ---
+  'chantiers::portefeuille::default': { id: 'chantiers-portefeuille', title: 'Portefeuille chantiers', ttl: 60_000, loader: loadOverviewSummaryDashboard, render: portefeuilleChantiers },
+  'chantiers::demandes::default': { id: 'chantiers-demandes', title: 'Demandes & devis', ttl: 60_000, loader: loadOverviewKpisDemandes, render: chantiersDemandes },
+  'chantiers::execution::default': createDefaultView('Exécution chantiers', 'Suivi d\'exécution'),
+  'chantiers::dossiers-bloques::default': createDefaultView('Dossiers bloqués', 'Dossiers en attente de déblocage'),
+  'chantiers::litiges::default': createDefaultView('Arbitrages & litiges', 'Litiges et arbitrages'),
+  // --- FINANCE ---
+  'finance::budget::default': { id: 'finance-budget', title: 'Budget & engagements', ttl: 60_000, loader: loadOverviewKpisBudget, render: financeBudget },
+  'finance::validation-paiements::default': { id: 'finance-validation-paiements', title: 'Validation paiements', ttl: 60_000, loader: loadValidationsEnAttenteApi, render: financeValidation },
+  'finance::gains-pertes::default': createDefaultView('Gains & pertes', 'Analyse gains et pertes'),
+  'finance::tresorerie::default': createDefaultView('Trésorerie', 'Suivi trésorerie'),
+  'finance::recouvrements::default': createDefaultView('Recouvrements', 'Suivi recouvrements'),
+  // --- CLIENTS & COMMERCIAL ---
+  'clients::projets::default': { id: 'clients-projets', title: 'Projets en cours', ttl: 60_000, loader: loadOverviewKpisProjets, render: clientsProjets },
+  'clients::clients::default': createDefaultView('Clients', 'Répertoire clients'),
+  'clients::tickets::default': createDefaultView('Tickets clients / SAV', 'Support et SAV'),
+  'clients::propositions::default': createDefaultView('Propositions commerciales', 'Devis et propositions'),
+  // --- RH & RESSOURCES ---
+  'rh::employes::default': createDefaultView('Employés & agents', 'Effectifs et fiches'),
+  'rh::missions::default': createDefaultView('Missions & affectations', 'Affectations en cours'),
+  'rh::evaluations::default': createDefaultView('Évaluations', 'Évaluations et objectifs'),
+  'rh::demandes-rh::default': createDefaultView('Demandes RH', 'Congés, formations, etc.'),
+  'rh::organigramme::default': createDefaultView('Organigramme', 'Structure et organigramme'),
+  // --- COMMUNICATION & SYSTÈME ---
+  'systeme::echanges::default': createDefaultView('Échanges structures', 'Messagerie interne'),
+  'systeme::conferences::default': createDefaultView('Conférences décisionnelles', 'Réunions et conférences'),
+  'systeme::messages::default': createDefaultView('Messages externes', 'Emails et canaux externes'),
+  'systeme::registre-decisions::default': createDefaultView('Registre des décisions', 'Décisions enregistrées'),
+  'systeme::audit::default': createDefaultView('Audit & conformité', 'Traçabilité et conformité'),
+  'systeme::journal-actions::default': createDefaultView('Journal des actions', 'Historique des actions'),
+  'systeme::logs::default': createDefaultView('Logs système', 'Logs techniques'),
+  'systeme::ia::default': createDefaultView('IA & assistants', 'Assistants et automatisations'),
+  'systeme::parametres::default': createDefaultView('Paramètres', 'Configuration du système'),
+
+  // overview/summary/* — Legacy (redirections)
   'overview::summary::dashboard': {
     id: 'overview-summary-dashboard',
     title: 'Centrale de commandement',

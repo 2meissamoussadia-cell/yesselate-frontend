@@ -13,11 +13,11 @@ import type { DashboardMainCategory } from '../../types/dashboardNavigationTypes
 import { touchTarget } from '../../utils/dashboardDesignTokens';
 
 const MOBILE_TABS: { id: DashboardMainCategory; label: string; icon: React.ElementType }[] = [
-  { id: 'overview', label: 'Accueil', icon: Home },
-  { id: 'overview', label: 'Cockpit', icon: LayoutDashboard },
-  { id: 'performance', label: 'KPIs', icon: BarChart3 },
-  { id: 'performance', label: 'Validations', icon: CheckCircle },
-  { id: 'administration', label: 'Plus', icon: MoreHorizontal },
+  { id: 'pilotage', label: 'Accueil', icon: Home },
+  { id: 'pilotage', label: 'Cockpit', icon: LayoutDashboard },
+  { id: 'finance', label: 'KPIs', icon: BarChart3 },
+  { id: 'finance', label: 'Validations', icon: CheckCircle },
+  { id: 'systeme', label: 'Plus', icon: MoreHorizontal },
 ];
 
 export function DashboardBottomNav() {
@@ -27,21 +27,20 @@ export function DashboardBottomNav() {
   const navigate = useDashboardCommandCenterStore((s) => s.navigate);
 
   const getRouteForTab = (tab: (typeof MOBILE_TABS)[number]) => {
-    if (tab.label === 'Accueil') return { main: 'overview' as const, sub: null, leaf: null };
-    if (tab.label === 'Cockpit') return { main: 'overview' as const, sub: 'summary', leaf: 'cockpit' };
-    if (tab.label === 'KPIs') return { main: 'performance' as const, sub: 'indicators', leaf: 'synthese' };
-    if (tab.label === 'Validations') return { main: 'performance' as const, sub: 'validation', leaf: 'en-attente' };
-    if (tab.label === 'Plus') return { main: 'administration' as const, sub: null, leaf: null };
-    return { main: 'overview', sub: null, leaf: null };
+    if (tab.label === 'Accueil') return { main: 'pilotage' as const, sub: 'dashboard' as const, leaf: 'default' as const };
+    if (tab.label === 'Cockpit') return { main: 'pilotage' as const, sub: 'dashboard', leaf: 'default' };
+    if (tab.label === 'KPIs') return { main: 'finance' as const, sub: 'budget', leaf: 'default' };
+    if (tab.label === 'Validations') return { main: 'finance' as const, sub: 'validation-paiements', leaf: 'default' };
+    if (tab.label === 'Plus') return { main: 'systeme' as const, sub: 'parametres', leaf: 'default' };
+    return { main: 'pilotage', sub: 'dashboard', leaf: 'default' };
   };
 
   const isActive = (tab: (typeof MOBILE_TABS)[number]) => {
-    const r = getRouteForTab(tab);
-    if (tab.label === 'Cockpit') return main === 'overview' && sub === 'summary' && leaf === 'cockpit';
-    if (tab.label === 'Accueil') return main === 'overview' && !sub && !leaf;
-    if (tab.label === 'KPIs') return main === 'performance' && sub === 'indicators';
-    if (tab.label === 'Validations') return main === 'performance' && sub === 'validation';
-    if (tab.label === 'Plus') return main === 'administration';
+    if (tab.label === 'Cockpit') return main === 'pilotage' && sub === 'dashboard';
+    if (tab.label === 'Accueil') return main === 'pilotage' && sub === 'dashboard';
+    if (tab.label === 'KPIs') return main === 'finance' && sub === 'budget';
+    if (tab.label === 'Validations') return main === 'finance' && sub === 'validation-paiements';
+    if (tab.label === 'Plus') return main === 'systeme' && sub === 'parametres';
     return false;
   };
 

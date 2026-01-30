@@ -27,7 +27,7 @@ export function DashboardCommandCenterPage() {
     const apiFormat = format === 'excel' ? 'xlsx' : format;
     
     const params = new URLSearchParams({
-      main: nav.mainCategory || 'overview',
+      main: nav.mainCategory || 'pilotage',
       format: apiFormat,
     });
     if (nav.subCategory) params.set('sub', nav.subCategory);

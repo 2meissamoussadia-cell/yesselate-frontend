@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { X, MapPin, User, Image } from 'lucide-react';
+import { X, User, Image } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ChantierMock } from '../../data/chantiersMock';
 import { OrangeMoneyButton } from '../cockpit/OrangeMoneyButton';

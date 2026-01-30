@@ -399,7 +399,7 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
   if (showAccessDenied) {
     return (
       <div className={cn('min-w-0', className)}>
-        <AccessDeniedView onGoHome={() => navigate('overview', null, null)} />
+        <AccessDeniedView onGoHome={() => navigate('pilotage', 'dashboard', 'default')} />
       </div>
     );
   }

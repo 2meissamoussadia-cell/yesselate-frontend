@@ -1,35 +1,28 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { QueryProvider } from "@/lib/providers/QueryProvider";
 import { Providers } from "../lib/providers/Providers";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
-  title: "NICE RÉNOVATION - Plateforme de Gestion",
+  title: "YESSALATE Centrale DG - Cockpit Rénovation Digitale",
   description:
-    "Plateforme digitale de gestion de projets de rénovation et construction au Sénégal",
+    "Cockpit DG Rénovation Digitale - Zéro surprise, 100% satisfaction. Plateforme de gestion de projets de rénovation.",
   keywords: [
     "rénovation",
     "construction",
     "Sénégal",
     "gestion de chantier",
     "BTP",
+    "YESSALATE",
   ],
-  authors: [{ name: "NICE RÉNOVATION" }],
+  authors: [{ name: "YESSALATE" }],
   manifest: "/manifest.json",
   icons: {
     icon: "/favicon.ico",
     apple: "/images/log_yessalate.png",
+  },
+  other: {
+    "apple-touch-icon": "/images/log_yessalate.png",
   },
 };
 
@@ -37,7 +30,7 @@ export const viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#F97316",
+  themeColor: "#0f172a",
 };
 
 export default function RootLayout({
@@ -47,10 +40,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        suppressHydrationWarning
-      >
+      <body className="antialiased" suppressHydrationWarning>
         <QueryProvider>
           <Providers>
             {children}

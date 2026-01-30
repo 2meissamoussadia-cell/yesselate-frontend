@@ -256,6 +256,14 @@ En appliquant cette analyse, les fonctionnalités sont **réparties dans les mod
 | administration / logs, journal | `/maitre-ouvrage/logs` |
 | administration / system, systeme | `/maitre-ouvrage/system-logs` |
 | administration (autres) | `/maitre-ouvrage/parametres` |
+| overview / kpis (leaf: demandes, budget, finances) | demandes → `/demandes`, budget/finances → `/finances` |
+| performance / indicators (leaf: demandes, budget) | idem |
+
+### Allègement nav dashboard (éviter doublons avec barre principale)
+
+- **Accueil > KPIs clés** : affiche uniquement « Synthèse » et « Projets ». Demandes, Budget, Finances retirés (accessibles via barre principale).
+- **Performance > Indicateurs** : affiche uniquement « Synthèse » et « Projets ». Demandes et Budget retirés.
+- Les URLs anciennes `?main=overview&sub=kpis&leaf=demandes` (ou budget/finances) et `?main=performance&sub=indicators&leaf=demandes` (ou budget) redirigent vers les modules correspondants.
 
 ### Vues exposées dans les modules
 

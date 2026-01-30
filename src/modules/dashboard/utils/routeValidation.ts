@@ -264,9 +264,10 @@ export function getDefaultLeafForSub(main: string, sub: string): string | null {
     }
 
     // ✅ Prioriser certains leafs selon le contexte
-    // Prioriser 'dashboard', 'global', 'all', 'highlights', sinon premier disponible
+    // Prioriser 'default' (6 blocs), 'dashboard', 'global', 'all', 'highlights', sinon premier disponible
     let defaultLeaf: string | null = null;
-    if (leaves.includes('dashboard')) defaultLeaf = 'dashboard';
+    if (leaves.includes('default')) defaultLeaf = 'default';
+    else if (leaves.includes('dashboard')) defaultLeaf = 'dashboard';
     else if (leaves.includes('global')) defaultLeaf = 'global';
     else if (leaves.includes('all')) defaultLeaf = 'all';
     else if (leaves.includes('highlights')) defaultLeaf = 'highlights';
@@ -289,9 +290,9 @@ export function getDefaultLeafForSub(main: string, sub: string): string | null {
  */
 export function getDefaultRoute(): RouteConfig {
   return {
-    main: 'overview',
-    sub: 'summary',
-    leaf: 'cockpit',
+    main: 'pilotage',
+    sub: 'dashboard',
+    leaf: 'default',
   };
 }
 

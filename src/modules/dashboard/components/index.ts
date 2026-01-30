@@ -39,6 +39,10 @@ export { KPISparkline } from './shared/KPISparkline';
 export type { KPITone, KPITrend } from './shared/KPISparkline';
 export { EnterpriseBadge } from './shared/EnterpriseBadge';
 export type { EnterpriseBadgeVariant } from './shared/EnterpriseBadge';
+export { DashboardCleanLayout } from './shared/DashboardCleanLayout';
+export { DashboardCleanHome } from './shared/DashboardCleanHome';
+export { KpiCardClean } from './shared/KpiCardClean';
+export type { KpiCardCleanColor, KpiCardCleanProps } from './shared/KpiCardClean';
 
 // Export des vues
 export * from './views';

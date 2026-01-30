@@ -31,7 +31,7 @@ export function useServiceWorker() {
     }
 
     navigator.serviceWorker
-      .register('/sw-calendrier.js', { scope: '/' })
+      .register('/sw.js', { scope: '/' })
       .then((reg) => {
         setRegistration(reg);
 

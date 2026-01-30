@@ -12,6 +12,7 @@ import { ChantierContextMenu } from './ChantierContextMenu';
 import { ChantierChatModal } from '../modals/ChantierChatModal';
 import { ChantierWhatsAppModal } from '../modals/ChantierWhatsAppModal';
 import { ChantierMediaModal } from '../modals/ChantierMediaModal';
+import { ChantierDetailModal } from '../modals/ChantierDetailModal';
 import { colors } from '../../utils/dashboardDesignTokens';
 import { useCockpitChantiers } from '../../hooks/useCockpitChantiers';
 import { useCockpitFps } from '../../hooks/useCockpitFps';
@@ -134,6 +135,16 @@ export function HealthSphereGrid({
   const [chatChantier, setChatChantier] = useState<ChantierMock | null>(null);
   const [whatsappChantier, setWhatsappChantier] = useState<ChantierMock | null>(null);
   const [mediaChantier, setMediaChantier] = useState<ChantierMock | null>(null);
+  const [detailChantier, setDetailChantier] = useState<ChantierMock | null>(null);
+
+  const handleDrilldownInternal = useCallback(
+    (id: string) => {
+      const ch = list.find((c) => c.id === id) ?? null;
+      setDetailChantier(ch);
+      onDrilldown?.(id);
+    },
+    [list, onDrilldown]
+  );
 
   const handleContextMenu = useCallback(
     (chantier: ChantierMock, event: { clientX: number; clientY: number }) => {
@@ -203,7 +214,7 @@ export function HealthSphereGrid({
               dpr={dprByQuality(quality)}
               frameloop="always"
             >
-              <HealthSphereGridInner list={list} quality={quality} onDrilldown={onDrilldown} onContextMenu={handleContextMenu} />
+              <HealthSphereGridInner list={list} quality={quality} onDrilldown={handleDrilldownInternal} onContextMenu={handleContextMenu} />
             </Canvas>
           </Suspense>
         )}
@@ -215,21 +226,12 @@ export function HealthSphereGrid({
           y={contextMenu.y}
           onClose={() => setContextMenu(null)}
           onAction={(action, ch) => {
-            if (action === 'chat') {
-              setChatChantier(ch);
-            }
-            if (action === 'whatsapp') {
-              setWhatsappChantier(ch);
-            }
-            if (action === 'photos') {
-              toast.info(`Photos récentes – ${ch.id}`, { description: 'Ouverture de la galerie…' });
-            }
-            if (action === 'urgent') {
-              toast.warning(`Urgence marquée – ${ch.id}`, { description: 'Le chantier est signalé comme prioritaire.' });
-            }
-            if (action === 'archive') {
-              toast.success(`Chantier archivé – ${ch.id}`, { description: 'Déplacé dans les archives.' });
-            }
+            if (action === 'chat') setChatChantier(ch);
+            if (action === 'whatsapp') setWhatsappChantier(ch);
+            if (action === 'pay') setDetailChantier(ch);
+            if (action === 'photos') toast.info(`Photos récentes – ${ch.id}`, { description: 'Ouverture de la galerie…' });
+            if (action === 'urgent') toast.warning(`Urgence marquée – ${ch.id}`, { description: 'Le chantier est signalé comme prioritaire.' });
+            if (action === 'archive') toast.success(`Chantier archivé – ${ch.id}`, { description: 'Déplacé dans les archives.' });
           }}
         />
       )}
@@ -250,6 +252,9 @@ export function HealthSphereGrid({
           chantier={mediaChantier}
           onClose={() => setMediaChantier(null)}
         />
+      )}
+      {detailChantier && (
+        <ChantierDetailModal chantier={detailChantier} onClose={() => setDetailChantier(null)} />
       )}
     </div>
   );

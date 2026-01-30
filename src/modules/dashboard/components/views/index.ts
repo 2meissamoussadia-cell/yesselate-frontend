@@ -13,6 +13,7 @@
 // ─── Core & accueil ────────────────────────────────────────────────────────
 export { DashboardAccueil3P } from './DashboardAccueil3P';
 export { CockpitDGPage } from './CockpitDGPage';
+export { DashboardDGLayout } from './DashboardDGLayout';
 export { DashboardHome } from './DashboardHome';
 export { AccessDeniedView } from './AccessDeniedView';
 export { EmptyState } from './EmptyState';
@@ -83,6 +84,9 @@ export { BudgetRestantPage } from './BudgetRestantPage';
 export { BureauxPage } from './BureauxPage';
 export { ConducteurTravauxPage } from './ConducteurTravauxPage';
 export { DirecteurTravauxPage } from './DirecteurTravauxPage';
+
+// ─── Chantiers (portefeuille DG) ─────────────────────────────────────────────
+export { PortefeuilleChantiersPage } from './PortefeuilleChantiersPage';
 
 // ─── Comparison ──────────────────────────────────────────────────────────────
 export { ComparisonBenchmarkingPage } from './ComparisonBenchmarkingPage';
@@ -191,3 +195,4 @@ export { ValidationsEnAttentePage } from './ValidationsEnAttentePage';
 export { ValidationsGlobalPage } from './ValidationsGlobalPage';
 export { ValidationsRejeteesPage } from './ValidationsRejeteesPage';
 export { ValidationsValideesPage } from './ValidationsValideesPage';
+export { ValidationPaiementsPage } from './ValidationPaiementsPage';

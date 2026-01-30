@@ -11,11 +11,6 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import {
   Home,
-  TrendingUp,
-  Zap,
-  AlertTriangle,
-  Scale,
-  Activity,
   ExternalLink,
   Bell,
   Building2,
@@ -24,19 +19,21 @@ import {
   CreditCard,
   ClipboardList,
   Gavel,
+  Scale,
   Wallet,
   Settings,
 } from 'lucide-react';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { dashboardApps, type DashboardMainCategory } from '../config/dashboardApps';
+import { dashboardNavigationConfig } from '../navigation/dashboardNavigationConfig';
 
 const MODULE_ICONS: Record<DashboardMainCategory, React.ComponentType<{ className?: string }>> = {
-  overview: Home,
-  performance: TrendingUp,
-  actions: Zap,
-  risks: AlertTriangle,
-  decisions: Scale,
-  realtime: Activity,
+  pilotage: Home,
+  chantiers: Building2,
+  finance: Wallet,
+  clients: FileText,
+  rh: ClipboardList,
+  systeme: Settings,
 };
 
 /** Liens directs vers les modules maître-ouvrage (redistribution dashboard → modules) */
@@ -74,11 +71,13 @@ export function DashboardModulesBar() {
         {modules.map((app) => {
           const isActive = nav.mainCategory === app.id;
           const Icon = MODULE_ICONS[app.id];
+          const firstSub = dashboardNavigationConfig[app.id]?.children?.[0];
+          const firstSubId = firstSub?.id ?? null;
           return (
             <button
               key={app.id}
               type="button"
-              onClick={() => navigate(app.id, null, null)}
+              onClick={() => navigate(app.id, firstSubId, 'default')}
               className={cn(
                 'inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-all duration-200',
                 isActive

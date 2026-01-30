@@ -13,7 +13,7 @@ export function PwaRegistration() {
     }
 
     navigator.serviceWorker
-      .register('/sw-calendrier.js', { scope: '/' })
+      .register('/sw.js', { scope: '/' })
       .then((reg) => {
         if (process.env.NODE_ENV === 'development') {
           console.log('[PWA] Service worker enregistré', reg.scope);

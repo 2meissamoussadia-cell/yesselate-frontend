@@ -17,6 +17,7 @@ import { ChantierContextMenu } from './ChantierContextMenu';
 import { ChantierChatModal } from '../modals/ChantierChatModal';
 import { ChantierWhatsAppModal } from '../modals/ChantierWhatsAppModal';
 import { ChantierMediaModal } from '../modals/ChantierMediaModal';
+import { ChantierDetailModal } from '../modals/ChantierDetailModal';
 import { colors } from '../../utils/dashboardDesignTokens';
 import { useLiveChantiers } from '../../hooks/useLiveChantiers';
 import { useCockpitFps } from '../../hooks/useCockpitFps';
@@ -123,6 +124,16 @@ export function LiveHealthSpheres({
   const [chatChantier, setChatChantier] = useState<ChantierMock | null>(null);
   const [whatsappChantier, setWhatsappChantier] = useState<ChantierMock | null>(null);
   const [mediaChantier, setMediaChantier] = useState<ChantierMock | null>(null);
+  const [detailChantier, setDetailChantier] = useState<ChantierMock | null>(null);
+
+  const handleDrilldownInternal = useCallback(
+    (id: string) => {
+      const ch = list.find((c) => c.id === id) ?? null;
+      setDetailChantier(ch);
+      onDrilldown?.(id);
+    },
+    [list, onDrilldown]
+  );
 
   const handleContextMenu = useCallback(
     (chantier: ChantierMock, event: { clientX: number; clientY: number }) => {
@@ -199,7 +210,7 @@ export function LiveHealthSpheres({
               <LiveCanvasContent
                 list={list}
                 quality={quality}
-                onDrilldown={onDrilldown}
+                onDrilldown={handleDrilldownInternal}
                 onContextMenu={handleContextMenu}
               />
             </Canvas>
@@ -224,6 +235,7 @@ export function LiveHealthSpheres({
       {chatChantier && <ChantierChatModal chantier={chatChantier} onClose={() => setChatChantier(null)} />}
       {whatsappChantier && <ChantierWhatsAppModal chantier={whatsappChantier} onClose={() => setWhatsappChantier(null)} />}
       {mediaChantier && <ChantierMediaModal chantier={mediaChantier} onClose={() => setMediaChantier(null)} />}
+      {detailChantier && <ChantierDetailModal chantier={detailChantier} onClose={() => setDetailChantier(null)} />}
     </div>
   );
 }

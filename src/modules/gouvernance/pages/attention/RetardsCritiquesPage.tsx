@@ -22,7 +22,7 @@ export default function RetardsCritiquesPage() {
       <GouvernanceHeader
         title="Retards critiques"
         subtitle="Jalons en retard nécessitant une intervention urgente"
-        onExport={() => console.log('Export retards critiques')}
+        onExport={() => { /* TODO: export retards critiques */ }}
       />
 
       {isLoading ? (
@@ -51,7 +51,7 @@ export default function RetardsCritiquesPage() {
                     prévue : {jalon.date_prevue ? new Date(jalon.date_prevue).toLocaleDateString('fr-FR') : '-'}
                   </div>
                 </div>
-                <button className="rounded-xl bg-amber-500/20 px-3 py-1.5 text-xs font-medium text-amber-200 ring-1 ring-amber-500/30 hover:bg-amber-500/30">
+                <button type="button" aria-label="Voir le retard" className="rounded-xl bg-amber-500/20 px-3 py-2 min-h-[44px] text-xs font-medium text-amber-200 ring-1 ring-amber-500/30 hover:bg-amber-500/30 focus-visible:outline focus-visible:ring-2 focus-visible:ring-amber-500">
                   Traiter
                 </button>
               </div>

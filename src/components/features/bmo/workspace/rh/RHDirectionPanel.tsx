@@ -280,7 +280,7 @@ export function RHDirectionPanel({ onAction, className }: Props) {
             </div>
             <div>
               <h3 className="font-bold text-lg">Tableau de bord Direction</h3>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-slate-400">
                 Dernière mise à jour : {new Date(stats.lastUpdated).toLocaleTimeString('fr-FR')}
               </p>
             </div>
@@ -293,7 +293,7 @@ export function RHDirectionPanel({ onAction, className }: Props) {
                 'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors',
                 viewMode === 'kpis'
                   ? 'bg-white dark:bg-slate-700 shadow-sm'
-                  : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+                  : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
               )}
               type="button"
             >
@@ -305,7 +305,7 @@ export function RHDirectionPanel({ onAction, className }: Props) {
                 'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-2',
                 viewMode === 'alerts'
                   ? 'bg-white dark:bg-slate-700 shadow-sm'
-                  : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+                  : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
               )}
               type="button"
             >
@@ -326,7 +326,7 @@ export function RHDirectionPanel({ onAction, className }: Props) {
           <div className="space-y-6">
             {/* High priority KPIs */}
             <div>
-              <h4 className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-3">
+              <h4 className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-3">
                 Indicateurs prioritaires
               </h4>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -353,14 +353,14 @@ export function RHDirectionPanel({ onAction, className }: Props) {
                       <div className="flex items-end justify-between gap-2">
                         <div className="flex items-baseline gap-1">
                           <span className="text-2xl font-bold">{kpi.value}</span>
-                          {kpi.unit && <span className="text-sm text-slate-500">{kpi.unit}</span>}
+                          {kpi.unit && <span className="text-sm text-slate-400">{kpi.unit}</span>}
                         </div>
 
                         {kpi.trend && kpi.trendValue !== undefined && (
                           <div
                             className={cn(
                               'flex items-center gap-0.5 text-xs font-medium',
-                              kpi.trend === 'up' ? 'text-emerald-600' : kpi.trend === 'down' ? 'text-rose-600' : 'text-slate-500'
+                              kpi.trend === 'up' ? 'text-emerald-600' : kpi.trend === 'down' ? 'text-rose-600' : 'text-slate-400'
                             )}
                           >
                             {kpi.trend === 'up' ? (
@@ -380,7 +380,7 @@ export function RHDirectionPanel({ onAction, className }: Props) {
 
             {/* Other KPIs */}
             <div>
-              <h4 className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-3">
+              <h4 className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-3">
                 Autres indicateurs
               </h4>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -395,11 +395,11 @@ export function RHDirectionPanel({ onAction, className }: Props) {
                     >
                       <div className="flex items-center gap-2">
                         <Icon className={cn('w-4 h-4', colors.text)} />
-                        <span className="text-xs text-slate-500 truncate">{kpi.label}</span>
+                        <span className="text-xs text-slate-400 truncate">{kpi.label}</span>
                       </div>
                       <div className="mt-1 flex items-baseline gap-1">
                         <span className="text-lg font-semibold">{kpi.value}</span>
-                        {kpi.unit && <span className="text-xs text-slate-500">{kpi.unit}</span>}
+                        {kpi.unit && <span className="text-xs text-slate-400">{kpi.unit}</span>}
                       </div>
                     </div>
                   );
@@ -410,7 +410,7 @@ export function RHDirectionPanel({ onAction, className }: Props) {
         ) : (
           <div className="space-y-3">
             {stats.alerts.length === 0 ? (
-              <div className="text-center py-8 text-slate-500">
+              <div className="text-center py-8 text-slate-400">
                 <CheckCircle2 className="w-12 h-12 mx-auto mb-3 opacity-30" />
                 <p>Aucune alerte active</p>
               </div>

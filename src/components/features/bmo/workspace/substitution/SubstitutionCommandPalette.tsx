@@ -29,6 +29,7 @@ import {
   Command,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/utils/logger';
 import { useSubstitutionWorkspaceStore } from '@/lib/stores/substitutionWorkspaceStore';
 
 interface CommandPaletteProps {
@@ -62,7 +63,7 @@ export function SubstitutionCommandPalette({ open, onClose }: CommandPaletteProp
       shortcut: '⌘N',
       category: 'actions',
       action: () => {
-        console.log('Create substitution');
+        logger.debug('Create substitution', { component: 'SubstitutionCommandPalette' });
         onClose();
       },
     },
@@ -74,7 +75,7 @@ export function SubstitutionCommandPalette({ open, onClose }: CommandPaletteProp
       shortcut: '⌘A',
       category: 'actions',
       action: () => {
-        console.log('Assign substitute');
+        logger.debug('Assign substitute', { component: 'SubstitutionCommandPalette' });
         onClose();
       },
     },
@@ -108,7 +109,7 @@ export function SubstitutionCommandPalette({ open, onClose }: CommandPaletteProp
       shortcut: '⌘E',
       category: 'actions',
       action: () => {
-        console.log('Export data');
+        logger.debug('Export data', { component: 'SubstitutionCommandPalette' });
         onClose();
       },
     },
@@ -211,7 +212,7 @@ export function SubstitutionCommandPalette({ open, onClose }: CommandPaletteProp
       icon: <AlertTriangle className="w-4 h-4" />,
       category: 'filters',
       action: () => {
-        console.log('Filter by urgency');
+        logger.debug('Filter by urgency', { component: 'SubstitutionCommandPalette' });
         onClose();
       },
     },
@@ -222,7 +223,7 @@ export function SubstitutionCommandPalette({ open, onClose }: CommandPaletteProp
       icon: <CheckCircle className="w-4 h-4" />,
       category: 'filters',
       action: () => {
-        console.log('Filter by status');
+        logger.debug('Filter by status', { component: 'SubstitutionCommandPalette' });
         onClose();
       },
     },
@@ -235,7 +236,7 @@ export function SubstitutionCommandPalette({ open, onClose }: CommandPaletteProp
       icon: <Settings className="w-4 h-4" />,
       category: 'settings',
       action: () => {
-        console.log('Open settings');
+        logger.debug('Open settings', { component: 'SubstitutionCommandPalette' });
         onClose();
       },
     },
@@ -321,7 +322,7 @@ export function SubstitutionCommandPalette({ open, onClose }: CommandPaletteProp
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Rechercher une commande..."
-            className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent text-white placeholder:text-slate-500"
+            className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent text-white placeholder:text-slate-400"
             autoFocus
           />
           <Badge variant="outline" className="text-slate-400 border-slate-600 flex items-center gap-1">
@@ -333,7 +334,7 @@ export function SubstitutionCommandPalette({ open, onClose }: CommandPaletteProp
         {/* Liste des commandes */}
         <div className="max-h-[500px] overflow-y-auto p-2">
           {filteredCommands.length === 0 ? (
-            <div className="py-12 text-center text-slate-500">
+            <div className="py-12 text-center text-slate-400">
               <Search className="w-12 h-12 mx-auto mb-3 opacity-30" />
               <p className="font-medium">Aucune commande trouvée</p>
               <p className="text-sm mt-1">Essayez une autre recherche</p>
@@ -344,7 +345,7 @@ export function SubstitutionCommandPalette({ open, onClose }: CommandPaletteProp
 
               return (
                 <div key={category} className="mb-4 last:mb-0">
-                  <div className="px-3 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                  <div className="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">
                     {getCategoryLabel(category)}
                   </div>
                   <div className="space-y-1">
@@ -372,7 +373,7 @@ export function SubstitutionCommandPalette({ open, onClose }: CommandPaletteProp
                           <div className="flex-1 min-w-0">
                             <div className="font-medium">{command.label}</div>
                             {command.description && (
-                              <div className="text-xs text-slate-500">{command.description}</div>
+                              <div className="text-xs text-slate-400">{command.description}</div>
                             )}
                           </div>
                           {command.shortcut && (
@@ -394,7 +395,7 @@ export function SubstitutionCommandPalette({ open, onClose }: CommandPaletteProp
         </div>
 
         {/* Footer */}
-        <div className="px-4 py-3 border-t border-slate-700 flex items-center justify-between text-xs text-slate-500">
+        <div className="px-4 py-3 border-t border-slate-700 flex items-center justify-between text-xs text-slate-400">
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1">
               <kbd className="px-1.5 py-0.5 bg-slate-800 border border-slate-700 rounded">↑</kbd>

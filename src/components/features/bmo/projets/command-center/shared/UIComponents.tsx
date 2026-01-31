@@ -78,7 +78,7 @@ export function StatCard({
           {value}
         </span>
         {suffix && (
-          <span className="text-sm text-slate-500">{suffix}</span>
+          <span className="text-sm text-slate-400">{suffix}</span>
         )}
       </div>
 
@@ -87,13 +87,13 @@ export function StatCard({
           {trend && (
             <span className={cn(
               'font-medium',
-              trend === 'up' ? 'text-emerald-400' : trend === 'down' ? 'text-rose-400' : 'text-slate-500'
+              trend === 'up' ? 'text-emerald-400' : trend === 'down' ? 'text-rose-400' : 'text-slate-400'
             )}>
               {trend === 'up' ? '↑' : trend === 'down' ? '↓' : '→'}
             </span>
           )}
           {trendValue && (
-            <span className="text-slate-500">{trendValue}</span>
+            <span className="text-slate-400">{trendValue}</span>
           )}
         </div>
       )}
@@ -163,7 +163,7 @@ export function QuickActionButton({
       
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-slate-200 truncate">{title}</p>
-        <p className="text-xs text-slate-500 truncate">{description}</p>
+        <p className="text-xs text-slate-400 truncate">{description}</p>
       </div>
 
       {badge !== undefined && (
@@ -232,10 +232,10 @@ export function EmptyState({ icon: Icon, title, description, action }: EmptyStat
   return (
     <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
       <div className="p-4 rounded-2xl bg-slate-800/50 border border-slate-700/50 mb-4">
-        <Icon className="w-12 h-12 text-slate-500" />
+        <Icon className="w-12 h-12 text-slate-400" />
       </div>
       <h3 className="text-lg font-medium text-slate-300 mb-2">{title}</h3>
-      <p className="text-sm text-slate-500 max-w-md mb-6">{description}</p>
+      <p className="text-sm text-slate-400 max-w-md mb-6">{description}</p>
       {action && (
         <button
           onClick={action.onClick}

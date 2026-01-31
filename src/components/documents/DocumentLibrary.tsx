@@ -63,7 +63,7 @@ export function DocumentLibrary({
       <div className="rounded-xl border border-slate-800/60 bg-slate-950/60 overflow-hidden">
         <header className="px-4 py-2 border-b border-slate-800/60 flex items-center justify-between">
           <span className="text-xs text-slate-400">Plans, DOE, PV, contrats</span>
-          <span className="text-xs text-slate-500">Version, date, statut</span>
+          <span className="text-xs text-slate-400">Version, date, statut</span>
         </header>
         <div className="p-2 space-y-0">
           {documents.map((doc) => (

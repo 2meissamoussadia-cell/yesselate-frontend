@@ -191,7 +191,7 @@ export function KPIDetailModal({ open, onClose, kpiId, kpiData }: KPIDetailModal
               {/* Current Value */}
               <div className="grid grid-cols-3 gap-4">
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <div className="flex items-center gap-2 text-slate-500 mb-2">
+                  <div className="flex items-center gap-2 text-slate-400 mb-2">
                     <Target className="w-4 h-4" />
                     <span className="text-xs">Valeur actuelle</span>
                   </div>
@@ -200,7 +200,7 @@ export function KPIDetailModal({ open, onClose, kpiId, kpiData }: KPIDetailModal
 
                 {kpiData?.target && (
                   <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                    <div className="flex items-center gap-2 text-slate-500 mb-2">
+                    <div className="flex items-center gap-2 text-slate-400 mb-2">
                       <Target className="w-4 h-4" />
                       <span className="text-xs">Objectif</span>
                     </div>
@@ -210,7 +210,7 @@ export function KPIDetailModal({ open, onClose, kpiId, kpiData }: KPIDetailModal
 
                 {kpiData?.trend !== undefined && (
                   <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                    <div className="flex items-center gap-2 text-slate-500 mb-2">
+                    <div className="flex items-center gap-2 text-slate-400 mb-2">
                       <Activity className="w-4 h-4" />
                       <span className="text-xs">Tendance</span>
                     </div>
@@ -242,7 +242,7 @@ export function KPIDetailModal({ open, onClose, kpiId, kpiData }: KPIDetailModal
                             title={`${point.date}: ${point.value}`}
                           />
                           {i % 5 === 0 && (
-                            <span className="text-[8px] text-slate-500 mt-1 rotate-45">{point.date}</span>
+                            <span className="text-[8px] text-slate-400 mt-1 rotate-45">{point.date}</span>
                           )}
                         </div>
                       );
@@ -305,7 +305,7 @@ export function KPIDetailModal({ open, onClose, kpiId, kpiData }: KPIDetailModal
                   ))}
                 </div>
               ) : (
-                <p className="text-center text-slate-500 py-8">Aucune donnée disponible</p>
+                <p className="text-center text-slate-400 py-8">Aucune donnée disponible</p>
               )}
             </div>
           )}
@@ -347,13 +347,13 @@ export function KPIDetailModal({ open, onClose, kpiId, kpiData }: KPIDetailModal
               {/* Historical Stats */}
               <div className="grid grid-cols-3 gap-4">
                 <div className="p-3 rounded-lg bg-slate-800/30">
-                  <span className="text-xs text-slate-500">Min (30j)</span>
+                  <span className="text-xs text-slate-400">Min (30j)</span>
                   <p className="text-lg font-bold text-slate-200">
                     {historicalData.length > 0 ? Math.min(...historicalData.map(d => d.value)) : '-'}
                   </p>
                 </div>
                 <div className="p-3 rounded-lg bg-slate-800/30">
-                  <span className="text-xs text-slate-500">Moyenne</span>
+                  <span className="text-xs text-slate-400">Moyenne</span>
                   <p className="text-lg font-bold text-slate-200">
                     {historicalData.length > 0
                       ? Math.round(historicalData.reduce((sum, d) => sum + d.value, 0) / historicalData.length)
@@ -361,7 +361,7 @@ export function KPIDetailModal({ open, onClose, kpiId, kpiData }: KPIDetailModal
                   </p>
                 </div>
                 <div className="p-3 rounded-lg bg-slate-800/30">
-                  <span className="text-xs text-slate-500">Max (30j)</span>
+                  <span className="text-xs text-slate-400">Max (30j)</span>
                   <p className="text-lg font-bold text-slate-200">
                     {historicalData.length > 0 ? Math.max(...historicalData.map(d => d.value)) : '-'}
                   </p>
@@ -413,7 +413,7 @@ export function KPIDetailModal({ open, onClose, kpiId, kpiData }: KPIDetailModal
 
         {/* Footer */}
         <div className="px-6 py-4 border-t border-slate-800 bg-slate-900/50 flex justify-between items-center">
-          <div className="flex items-center gap-4 text-xs text-slate-500">
+          <div className="flex items-center gap-4 text-xs text-slate-400">
             <div className="flex items-center gap-1">
               <Calendar className="w-3 w-3" />
               <span>Mise à jour : il y a 5 min</span>

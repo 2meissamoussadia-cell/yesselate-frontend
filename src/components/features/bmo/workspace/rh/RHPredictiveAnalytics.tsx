@@ -159,7 +159,7 @@ export function RHPredictiveAnalytics({ open, onClose }: RHPredictiveAnalyticsPr
       case 'low':
         return 'text-blue-500 bg-blue-500/10 border-blue-500/20';
       default:
-        return 'text-slate-500 bg-slate-500/10 border-slate-500/20';
+        return 'text-slate-400 bg-slate-500/10 border-slate-500/20';
     }
   };
 
@@ -255,7 +255,7 @@ export function RHPredictiveAnalytics({ open, onClose }: RHPredictiveAnalyticsPr
                     </Badge>
                   </div>
 
-                  <div className="flex items-center gap-4 text-sm text-slate-500 mb-3">
+                  <div className="flex items-center gap-4 text-sm text-slate-400 mb-3">
                     <div className="flex items-center gap-1">
                       <Target className="w-4 h-4" />
                       Confiance: {prediction.confidence}%
@@ -276,7 +276,7 @@ export function RHPredictiveAnalytics({ open, onClose }: RHPredictiveAnalyticsPr
                         key={idx}
                         className="rounded-lg border border-slate-200 dark:border-slate-700 p-3 bg-slate-50/50 dark:bg-slate-800/50"
                       >
-                        <p className="text-xs text-slate-500 mb-1">{metric.label}</p>
+                        <p className="text-xs text-slate-400 mb-1">{metric.label}</p>
                         <div className="flex items-baseline gap-2">
                           <span className="text-lg font-bold">
                             {metric.predicted.toLocaleString('fr-FR')}
@@ -323,7 +323,7 @@ export function RHPredictiveAnalytics({ open, onClose }: RHPredictiveAnalyticsPr
 
         {/* Légende */}
         <div className="rounded-lg border border-slate-200 dark:border-slate-700 p-4 bg-slate-50/50 dark:bg-slate-800/50">
-          <p className="text-xs text-slate-500 mb-2 font-medium">💡 À propos des prédictions</p>
+          <p className="text-xs text-slate-400 mb-2 font-medium">💡 À propos des prédictions</p>
           <p className="text-xs text-slate-600 dark:text-slate-400">
             Les prédictions sont générées par analyse de l'historique des 24 derniers mois, des tendances
             saisonnières, et des facteurs externes. Le taux de confiance indique la fiabilité de la prédiction

@@ -28,7 +28,7 @@ const RACI_COLORS: Record<string, string> = {
   'A': 'bg-blue-400/80 text-white',
   'C': 'bg-amber-400/80 text-white',
   'I': 'bg-slate-400/80 text-white',
-  '-': 'bg-slate-700/30 text-slate-500',
+  '-': 'bg-slate-700/30 text-slate-400',
 };
 
 const RACI_LABELS: Record<string, string> = {

@@ -220,7 +220,7 @@ export function PaiementsEcheancierView({ className }: PaiementsEcheancierViewPr
           <div className="text-2xl font-bold text-white">
             {(stats.totalMontant / 1000000).toFixed(1)}M
           </div>
-          <div className="text-xs text-slate-500">{filteredPaiements.length} paiements</div>
+          <div className="text-xs text-slate-400">{filteredPaiements.length} paiements</div>
         </div>
 
         <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-4">
@@ -229,7 +229,7 @@ export function PaiementsEcheancierView({ className }: PaiementsEcheancierViewPr
             <span>En Retard</span>
           </div>
           <div className="text-2xl font-bold text-red-400">{stats.enRetard}</div>
-          <div className="text-xs text-slate-500">échéances dépassées</div>
+          <div className="text-xs text-slate-400">échéances dépassées</div>
         </div>
 
         <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-4">
@@ -238,7 +238,7 @@ export function PaiementsEcheancierView({ className }: PaiementsEcheancierViewPr
             <span>Critiques</span>
           </div>
           <div className="text-2xl font-bold text-orange-400">{stats.critical}</div>
-          <div className="text-xs text-slate-500">haute priorité</div>
+          <div className="text-xs text-slate-400">haute priorité</div>
         </div>
 
         <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-4">
@@ -247,7 +247,7 @@ export function PaiementsEcheancierView({ className }: PaiementsEcheancierViewPr
             <span>Planifiés</span>
           </div>
           <div className="text-2xl font-bold text-blue-400">{stats.planifies}</div>
-          <div className="text-xs text-slate-500">avec date d'exécution</div>
+          <div className="text-xs text-slate-400">avec date d'exécution</div>
         </div>
       </div>
 
@@ -391,7 +391,7 @@ export function PaiementsEcheancierView({ className }: PaiementsEcheancierViewPr
                       </div>
                     ))}
                     {day.paiements.length > 2 && (
-                      <div className="text-[10px] text-slate-500 text-center pt-0.5">
+                      <div className="text-[10px] text-slate-400 text-center pt-0.5">
                         +{day.paiements.length - 2} autre{day.paiements.length - 2 > 1 ? 's' : ''}
                       </div>
                     )}
@@ -445,7 +445,7 @@ export function PaiementsEcheancierView({ className }: PaiementsEcheancierViewPr
                     <div className="text-lg font-bold text-white">
                       {(p.montant / 1000000).toFixed(2)}M
                     </div>
-                    <div className="text-xs text-slate-500">FCFA</div>
+                    <div className="text-xs text-slate-400">FCFA</div>
                   </div>
                 </div>
               </div>

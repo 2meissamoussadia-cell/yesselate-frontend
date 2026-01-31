@@ -155,7 +155,7 @@ export function AlertsKPIBar({
             variant="ghost"
             size="sm"
             onClick={onRefresh}
-            className="h-6 w-6 p-0 text-slate-500 hover:text-slate-300"
+            className="h-6 w-6 p-0 text-slate-400 hover:text-slate-300"
           >
             <RefreshCw className={cn('h-3 w-3', isRefreshing && 'animate-spin')} />
           </Button>
@@ -163,7 +163,7 @@ export function AlertsKPIBar({
             variant="ghost"
             size="sm"
             onClick={onToggleCollapse}
-            className="h-6 w-6 p-0 text-slate-500 hover:text-slate-300"
+            className="h-6 w-6 p-0 text-slate-400 hover:text-slate-300"
           >
             {collapsed ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
           </Button>
@@ -196,7 +196,7 @@ function KPICard({ kpi }: { kpi: AlertsKPIItem }) {
   const trendColors = {
     up: kpi.status === 'critical' ? 'text-red-400' : 'text-emerald-400',
     down: kpi.status === 'critical' ? 'text-emerald-400' : 'text-emerald-400',
-    stable: 'text-slate-500',
+    stable: 'text-slate-400',
   };
 
   return (
@@ -206,7 +206,7 @@ function KPICard({ kpi }: { kpi: AlertsKPIItem }) {
     >
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0 flex-1">
-          <p className="text-xs text-slate-500 truncate mb-0.5 group-hover:text-slate-400 transition-colors">
+          <p className="text-xs text-slate-400 truncate mb-0.5 group-hover:text-slate-400 transition-colors">
             {kpi.label}
           </p>
           <div className="flex items-baseline gap-2">

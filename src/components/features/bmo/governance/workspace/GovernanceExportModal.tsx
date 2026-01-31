@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/utils/logger';
 import {
   FileSpreadsheet,
   FileJson,
@@ -83,7 +84,7 @@ export function GovernanceExportModal({ open, onClose }: Props) {
       const filename = `governance-${new Date().toISOString().split('T')[0]}.${selectedFormat}`;
       
       // TODO: Remplacer par vraie génération de fichier
-      console.log(`Exporting to ${filename}`);
+      logger.debug(`Exporting to ${filename}`, { component: 'GovernanceExportModal', action: 'export' });
 
       setSuccess(true);
       
@@ -93,7 +94,7 @@ export function GovernanceExportModal({ open, onClose }: Props) {
       }, 2000);
     } catch (err) {
       setError('Erreur lors de l\'export');
-      console.error(err);
+      logger.error('Export failed', err instanceof Error ? err : undefined, { component: 'GovernanceExportModal' });
     } finally {
       setExporting(false);
     }
@@ -138,7 +139,7 @@ export function GovernanceExportModal({ open, onClose }: Props) {
                   <div className="font-semibold text-slate-900 dark:text-white">
                     {format.label}
                   </div>
-                  <div className="text-sm text-slate-500 dark:text-slate-400">
+                  <div className="text-sm text-slate-400 dark:text-slate-400">
                     {format.description}
                   </div>
                 </div>

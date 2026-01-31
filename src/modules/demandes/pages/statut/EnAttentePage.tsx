@@ -342,7 +342,7 @@ function DemandeCard({ demande, isSelected, onSelect, onClick }: DemandeCardProp
           {demande.description && (
             <p className="text-sm text-slate-400 mb-3 line-clamp-2">{demande.description}</p>
           )}
-          <div className="flex items-center gap-4 text-xs text-slate-500">
+          <div className="flex items-center gap-4 text-xs text-slate-400">
             <div className="flex items-center gap-1">
               <User className="h-3 w-3" />
               <span>{demande.createdBy}</span>

@@ -319,7 +319,7 @@ function CommunicationItem({
         </Badge>
       </div>
       <p className="text-sm text-slate-300">{message}</p>
-      <div className="text-xs text-slate-500 mt-2">{date}</div>
+      <div className="text-xs text-slate-400 mt-2">{date}</div>
     </div>
   );
 }
@@ -350,7 +350,7 @@ function TimelineItem({
       </div>
       <div className="flex-1 pb-4">
         <div className="text-sm font-medium text-slate-200">{action}</div>
-        <div className="text-xs text-slate-500 mt-1">
+        <div className="text-xs text-slate-400 mt-1">
           {user} • {date}
         </div>
       </div>

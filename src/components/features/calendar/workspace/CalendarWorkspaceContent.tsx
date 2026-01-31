@@ -73,7 +73,7 @@ export function CalendarWorkspaceContent() {
         <h2 className="text-2xl font-bold text-slate-700 dark:text-slate-200 mb-2">
           Gestion du Calendrier
         </h2>
-        <p className="text-slate-500 mb-6 max-w-md">
+        <p className="text-slate-400 mb-6 max-w-md">
           Organisez les événements, réunions, visites de sites et dates limites. 
           Détectez les conflits et gérez les SLA en temps réel.
         </p>
@@ -288,7 +288,7 @@ export function CalendarWorkspaceContent() {
           <h3 className="text-xl font-bold text-slate-700 dark:text-slate-200 mb-2">
             Scénario de planification
           </h3>
-          <p className="text-slate-500 mb-4">
+          <p className="text-slate-400 mb-4">
             Fonctionnalité en cours de développement
           </p>
           <FluentButton
@@ -312,7 +312,7 @@ export function CalendarWorkspaceContent() {
           <h3 className="text-xl font-bold text-slate-700 dark:text-slate-200 mb-2">
             Rapport
           </h3>
-          <p className="text-slate-500 mb-4">
+          <p className="text-slate-400 mb-4">
             ID: {activeTab.data?.reportId ?? 'inconnu'}
           </p>
           <FluentButton
@@ -335,7 +335,7 @@ export function CalendarWorkspaceContent() {
         <h3 className="text-xl font-bold text-slate-700 dark:text-slate-200 mb-2">
           Vue non reconnue
         </h3>
-        <p className="text-slate-500 mb-4">
+        <p className="text-slate-400 mb-4">
           Type: {activeTab.type}
         </p>
         <FluentButton
@@ -395,7 +395,7 @@ function CalendarEventViewer({ tabId, eventId, onOpenModal }: CalendarEventViewe
       <div className="flex items-center justify-center h-full bg-slate-50 dark:bg-slate-900/50">
         <div className="flex flex-col items-center gap-3">
           <RefreshCw className="w-8 h-8 text-blue-500 animate-spin" />
-          <span className="text-slate-500">Chargement...</span>
+          <span className="text-slate-400">Chargement...</span>
         </div>
       </div>
     );
@@ -432,7 +432,7 @@ function CalendarEventViewer({ tabId, eventId, onOpenModal }: CalendarEventViewe
 
   const statusBadge = {
     completed: { label: 'Terminé', bg: 'bg-emerald-100 dark:bg-emerald-900/30', text: 'text-emerald-700 dark:text-emerald-300' },
-    cancelled: { label: 'Annulé', bg: 'bg-slate-100 dark:bg-slate-800', text: 'text-slate-500' },
+    cancelled: { label: 'Annulé', bg: 'bg-slate-100 dark:bg-slate-800', text: 'text-slate-400' },
     in_progress: { label: 'En cours', bg: 'bg-blue-100 dark:bg-blue-900/30', text: 'text-blue-700' },
   }[event.status?.toLowerCase()] || { label: 'Planifié', bg: 'bg-indigo-100 dark:bg-indigo-900/30', text: 'text-indigo-700' };
 
@@ -462,7 +462,7 @@ function CalendarEventViewer({ tabId, eventId, onOpenModal }: CalendarEventViewe
                 </span>
               )}
             </div>
-            <p className="text-slate-500">
+            <p className="text-slate-400">
               {event.description || 'Aucune description'}
             </p>
           </div>
@@ -479,7 +479,7 @@ function CalendarEventViewer({ tabId, eventId, onOpenModal }: CalendarEventViewe
         {/* Info cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
-            <h3 className="text-sm font-medium text-slate-500 mb-3">Date & Heure</h3>
+            <h3 className="text-sm font-medium text-slate-400 mb-3">Date & Heure</h3>
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-slate-700 dark:text-slate-200">
                 <Calendar className="w-4 h-4 text-blue-500" />
@@ -498,7 +498,7 @@ function CalendarEventViewer({ tabId, eventId, onOpenModal }: CalendarEventViewe
           </div>
 
           <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
-            <h3 className="text-sm font-medium text-slate-500 mb-3">Lieu & Bureau</h3>
+            <h3 className="text-sm font-medium text-slate-400 mb-3">Lieu & Bureau</h3>
             <div className="space-y-2">
               {event.location && (
                 <div className="flex items-center gap-2 text-slate-700 dark:text-slate-200">
@@ -552,7 +552,7 @@ function CalendarEventViewer({ tabId, eventId, onOpenModal }: CalendarEventViewe
         {/* Participants */}
         {event.attendees && event.attendees.length > 0 && (
           <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
-            <h3 className="text-sm font-medium text-slate-500 mb-3 flex items-center gap-2">
+            <h3 className="text-sm font-medium text-slate-400 mb-3 flex items-center gap-2">
               <Users className="w-4 h-4" />
               Participants ({event.attendees.length})
             </h3>
@@ -570,7 +570,7 @@ function CalendarEventViewer({ tabId, eventId, onOpenModal }: CalendarEventViewe
         {/* Links */}
         {event.links && event.links.length > 0 && (
           <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
-            <h3 className="text-sm font-medium text-slate-500 mb-3 flex items-center gap-2">
+            <h3 className="text-sm font-medium text-slate-400 mb-3 flex items-center gap-2">
               <ExternalLink className="w-4 h-4" />
               Éléments liés ({event.links.length})
             </h3>
@@ -596,7 +596,7 @@ function CalendarEventViewer({ tabId, eventId, onOpenModal }: CalendarEventViewe
                   </span>
                   <div className="flex-1">
                     <div className="font-medium text-sm">{link.title || link.ref}</div>
-                    <div className="text-xs text-slate-500">{link.type} • {link.ref}</div>
+                    <div className="text-xs text-slate-400">{link.type} • {link.ref}</div>
                   </div>
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </button>
@@ -652,7 +652,7 @@ function EditEventForm({ eventId, onSuccess, onCancel }: ModalFormProps) {
         </div>
       )}
       <div>
-        <label className="text-sm text-slate-500">Titre *</label>
+        <label className="text-sm text-slate-400">Titre *</label>
         <input
           type="text"
           className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
@@ -663,7 +663,7 @@ function EditEventForm({ eventId, onSuccess, onCancel }: ModalFormProps) {
         />
       </div>
       <div>
-        <label className="text-sm text-slate-500">Description</label>
+        <label className="text-sm text-slate-400">Description</label>
         <textarea
           className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
           rows={3}
@@ -706,7 +706,7 @@ function RescheduleEventForm({ eventId, onSuccess, onCancel }: ModalFormProps) {
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="text-sm text-slate-500">Nouvelle date *</label>
+          <label className="text-sm text-slate-400">Nouvelle date *</label>
           <input
             type="date"
             className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
@@ -716,7 +716,7 @@ function RescheduleEventForm({ eventId, onSuccess, onCancel }: ModalFormProps) {
           />
         </div>
         <div>
-          <label className="text-sm text-slate-500">Nouvelle heure *</label>
+          <label className="text-sm text-slate-400">Nouvelle heure *</label>
           <input
             type="time"
             className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
@@ -727,7 +727,7 @@ function RescheduleEventForm({ eventId, onSuccess, onCancel }: ModalFormProps) {
         </div>
       </div>
       <div>
-        <label className="text-sm text-slate-500">Motif (optionnel)</label>
+        <label className="text-sm text-slate-400">Motif (optionnel)</label>
         <textarea
           className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
           rows={2}
@@ -773,7 +773,7 @@ function CancelEventForm({ eventId, onSuccess, onCancel }: ModalFormProps) {
         </p>
       </div>
       <div>
-        <label className="text-sm text-slate-500">Motif d&apos;annulation *</label>
+        <label className="text-sm text-slate-400">Motif d&apos;annulation *</label>
         <textarea
           className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
           rows={3}
@@ -829,7 +829,7 @@ function AddParticipantForm({ eventId, onSuccess, onCancel }: ModalFormProps) {
   return (
     <div className="space-y-4">
       <div>
-        <label className="text-sm text-slate-500">Personne *</label>
+        <label className="text-sm text-slate-400">Personne *</label>
         <input
           type="text"
           className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
@@ -839,7 +839,7 @@ function AddParticipantForm({ eventId, onSuccess, onCancel }: ModalFormProps) {
         />
       </div>
       <div>
-        <label className="text-sm text-slate-500">Rôle</label>
+        <label className="text-sm text-slate-400">Rôle</label>
         <select
           className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
           value={role}
@@ -881,11 +881,11 @@ function ExportEventForm({ eventId, onSuccess, onCancel }: ModalFormProps) {
 
   return (
     <div className="space-y-4">
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-400">
         Télécharger les détails de cet événement.
       </p>
       <div>
-        <label className="text-sm text-slate-500">Format</label>
+        <label className="text-sm text-slate-400">Format</label>
         <select
           className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
           value={format}

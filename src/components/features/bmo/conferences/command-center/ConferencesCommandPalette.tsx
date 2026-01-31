@@ -185,7 +185,7 @@ export function ConferencesCommandPalette() {
                 setSelectedIndex(0);
               }}
               placeholder="Rechercher une conférence ou une action..."
-              className="flex-1 bg-transparent text-slate-200 placeholder:text-slate-500 outline-none"
+              className="flex-1 bg-transparent text-slate-200 placeholder:text-slate-400 outline-none"
             />
             <button
               onClick={toggleCommandPalette}
@@ -198,13 +198,13 @@ export function ConferencesCommandPalette() {
           {/* Commands List */}
           <div className="max-h-96 overflow-y-auto">
             {filteredCommands.length === 0 ? (
-              <div className="px-4 py-8 text-center text-slate-500">
+              <div className="px-4 py-8 text-center text-slate-400">
                 Aucun résultat trouvé
               </div>
             ) : (
               Object.entries(groupedCommands).map(([category, items]) => (
                 <div key={category}>
-                  <div className="px-4 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wide bg-slate-800/30">
+                  <div className="px-4 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wide bg-slate-800/30">
                     {category}
                   </div>
                   {items.map((cmd, idx) => {
@@ -229,7 +229,7 @@ export function ConferencesCommandPalette() {
                             {cmd.label}
                           </div>
                           {cmd.description && (
-                            <div className="text-xs text-slate-500 mt-0.5">
+                            <div className="text-xs text-slate-400 mt-0.5">
                               {cmd.description}
                             </div>
                           )}
@@ -244,7 +244,7 @@ export function ConferencesCommandPalette() {
           </div>
 
           {/* Footer */}
-          <div className="px-4 py-2 border-t border-slate-800/50 bg-slate-900/50 flex items-center justify-between text-xs text-slate-500">
+          <div className="px-4 py-2 border-t border-slate-800/50 bg-slate-900/50 flex items-center justify-between text-xs text-slate-400">
             <div className="flex items-center gap-4">
               <span>↑↓ Naviguer</span>
               <span>↵ Sélectionner</span>

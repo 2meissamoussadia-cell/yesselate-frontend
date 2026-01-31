@@ -40,7 +40,7 @@ export function BaseDomainView({
         <div className="text-center">
           <BarChart3 className="w-16 h-16 text-slate-600 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-slate-300 mb-2">Domaine introuvable</h3>
-          <p className="text-slate-500 text-sm">Le domaine "{domainId}" n'existe pas.</p>
+          <p className="text-slate-400 text-sm">Le domaine "{domainId}" n'existe pas.</p>
         </div>
       </div>
     );
@@ -122,7 +122,7 @@ function DomainOverview({ domain }: { domain: AnalyticsDomain }) {
             {mod.label}
           </h3>
           {mod.description && (
-            <p className="text-slate-500 text-xs mb-3 line-clamp-2">{mod.description}</p>
+            <p className="text-slate-400 text-xs mb-3 line-clamp-2">{mod.description}</p>
           )}
           <div className="flex items-center justify-between">
             <div className="text-xs text-slate-400">
@@ -150,7 +150,7 @@ function ModuleContent({
       <div className="mb-4">
         <h2 className="text-lg font-medium text-slate-300 mb-2">{module.label}</h2>
         {module.description && (
-          <p className="text-slate-500 text-sm mb-4">{module.description}</p>
+          <p className="text-slate-400 text-sm mb-4">{module.description}</p>
         )}
       </div>
 
@@ -162,7 +162,7 @@ function ModuleContent({
           >
             <h3 className="text-sm font-medium text-slate-300 mb-1">{subMod.label}</h3>
             {subMod.description && (
-              <p className="text-slate-500 text-xs line-clamp-2">{subMod.description}</p>
+              <p className="text-slate-400 text-xs line-clamp-2">{subMod.description}</p>
             )}
           </div>
         ))}
@@ -187,7 +187,7 @@ function SubModuleContent({
       <div className="mb-4">
         <h3 className="text-md font-medium text-slate-300 mb-2">{subModule.label}</h3>
         {subModule.description && (
-          <p className="text-slate-500 text-sm mb-4">{subModule.description}</p>
+          <p className="text-slate-400 text-sm mb-4">{subModule.description}</p>
         )}
       </div>
 
@@ -201,7 +201,7 @@ function SubModuleContent({
             </p>
             {subModule.features && subModule.features.length > 0 && (
               <div className="mt-4 text-left">
-                <p className="text-xs text-slate-500 mb-2">Fonctionnalités prévues :</p>
+                <p className="text-xs text-slate-400 mb-2">Fonctionnalités prévues :</p>
                 <ul className="text-xs text-slate-400 space-y-1">
                   {subModule.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-2">

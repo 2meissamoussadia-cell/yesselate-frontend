@@ -88,14 +88,14 @@ export function DemandesPendingView() {
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl font-bold text-slate-200">En attente de validation</h1>
-          <p className="text-sm text-slate-500 mt-0.5">
+          <p className="text-sm text-slate-400 mt-0.5">
             {filteredDemandes.length} demande(s) en attente de traitement
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <Input
               placeholder="Rechercher..."
               value={searchQuery}
@@ -208,7 +208,7 @@ export function DemandesPendingView() {
               {/* Content */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs font-mono text-slate-500">{demande.id}</span>
+                  <span className="text-xs font-mono text-slate-400">{demande.id}</span>
                   <Badge variant="default" className="text-xs border-slate-700 text-slate-400">
                     {demande.type.toUpperCase()}
                   </Badge>
@@ -228,7 +228,7 @@ export function DemandesPendingView() {
 
               {/* Delay */}
               <div className="flex items-center gap-1.5 text-sm">
-                <Clock className="w-4 h-4 text-slate-500" />
+                <Clock className="w-4 h-4 text-slate-400" />
                 <span
                   className={cn(
                     demande.delay > 5
@@ -247,7 +247,7 @@ export function DemandesPendingView() {
                 variant="ghost"
                 size="sm"
                 onClick={() => openModal('demande-detail', { demandeId: demande.id })}
-                className="h-8 w-8 p-0 text-slate-500 hover:text-slate-300"
+                className="h-8 w-8 p-0 text-slate-400 hover:text-slate-300"
               >
                 <ArrowRight className="h-4 w-4" />
               </Button>

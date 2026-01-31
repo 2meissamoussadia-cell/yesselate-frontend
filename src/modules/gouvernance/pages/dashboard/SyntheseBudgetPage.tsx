@@ -23,7 +23,7 @@ export default function SyntheseBudgetPage() {
       <GouvernanceHeader
         title="Synthèse budget"
         subtitle="Vue d'ensemble des budgets par projet avec consommation et tendances"
-        onExport={() => console.log('Export synthèse budget')}
+        onExport={() => { /* TODO: export synthèse budget */ }}
       />
 
       {isLoading ? (

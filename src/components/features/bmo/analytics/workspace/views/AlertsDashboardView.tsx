@@ -477,7 +477,7 @@ export function AlertsDashboardView({ subCategory = 'all' }: AlertsDashboardView
                       {alert.severity || alert.status}
                     </Badge>
                   </div>
-                  <div className="flex items-center gap-4 text-xs text-slate-500 mt-3">
+                  <div className="flex items-center gap-4 text-xs text-slate-400 mt-3">
                     {alert.category && <span>Catégorie: {alert.category}</span>}
                     {alert.affectedBureaux && Array.isArray(alert.affectedBureaux) && alert.affectedBureaux.length > 0 && (
                       <span>Bureaux: {alert.affectedBureaux.join(', ')}</span>

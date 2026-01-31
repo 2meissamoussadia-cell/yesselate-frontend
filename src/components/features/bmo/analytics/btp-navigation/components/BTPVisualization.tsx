@@ -234,7 +234,7 @@ export function BTPVisualization({
       default:
         return (
           <div className="flex items-center justify-center h-full">
-            <p className="text-slate-500 text-sm">
+            <p className="text-slate-400 text-sm">
               Type de graphique "{visualization.type}" non supporté
             </p>
           </div>

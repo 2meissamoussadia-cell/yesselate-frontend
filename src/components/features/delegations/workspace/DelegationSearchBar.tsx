@@ -124,14 +124,14 @@ export function DelegationSearchBar({ delegationId, onResultClick, className }: 
           />
           <div className="absolute top-full mt-2 w-full z-20 rounded-xl border border-slate-200/70 bg-white dark:bg-slate-800 dark:border-slate-700 shadow-lg max-h-[400px] overflow-auto">
             {loading ? (
-              <div className="p-4 flex items-center justify-center gap-2 text-slate-500">
+              <div className="p-4 flex items-center justify-center gap-2 text-slate-400">
                 <Loader2 className="w-4 h-4 animate-spin" />
                 Recherche...
               </div>
             ) : results && allResults.length > 0 ? (
               <>
                 {/* Summary */}
-                <div className="p-3 border-b border-slate-200/70 dark:border-slate-700 text-xs text-slate-500">
+                <div className="p-3 border-b border-slate-200/70 dark:border-slate-700 text-xs text-slate-400">
                   {results.counts.total} résultat{results.counts.total > 1 ? 's' : ''} 
                   {' '}({results.counts.events} événements, {results.counts.usages} usages, {results.counts.actors} acteurs)
                 </div>
@@ -151,7 +151,7 @@ export function DelegationSearchBar({ delegationId, onResultClick, className }: 
                         
                         <div className="flex-1 min-w-0">
                           <div className="font-medium text-sm truncate">{result.title}</div>
-                          <div className="text-xs text-slate-500 truncate">{result.subtitle}</div>
+                          <div className="text-xs text-slate-400 truncate">{result.subtitle}</div>
                           {result.date && (
                             <div className="text-xs text-slate-400 mt-0.5">
                               {new Date(result.date).toLocaleDateString('fr-FR')}
@@ -164,7 +164,7 @@ export function DelegationSearchBar({ delegationId, onResultClick, className }: 
                 </div>
               </>
             ) : query.length >= 2 ? (
-              <div className="p-4 text-center text-sm text-slate-500">
+              <div className="p-4 text-center text-sm text-slate-400">
                 Aucun résultat pour &quot;{query}&quot;
               </div>
             ) : null}

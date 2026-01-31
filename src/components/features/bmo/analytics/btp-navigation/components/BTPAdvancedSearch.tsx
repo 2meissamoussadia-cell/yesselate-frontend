@@ -244,7 +244,7 @@ export function BTPAdvancedSearch({
             setSelectedIndex(0);
           }}
           onFocus={() => setIsOpen(true)}
-          className="pl-9 pr-20 bg-slate-900/50 border-slate-700 text-slate-300 placeholder:text-slate-500 focus:border-blue-500"
+          className="pl-9 pr-20 bg-slate-900/50 border-slate-700 text-slate-300 placeholder:text-slate-400 focus:border-blue-500"
         />
         <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
           {query && (
@@ -308,7 +308,7 @@ export function BTPAdvancedSearch({
                     <div className="flex items-center gap-1 mt-1">
                       {result.path.map((segment, idx) => (
                         <React.Fragment key={idx}>
-                          <span className="text-xs text-slate-500">{segment}</span>
+                          <span className="text-xs text-slate-400">{segment}</span>
                           {idx < result.path.length - 1 && (
                             <span className="text-xs text-slate-600">/</span>
                           )}
@@ -326,9 +326,9 @@ export function BTPAdvancedSearch({
             </div>
           ) : query.trim() ? (
             <div className="p-8 text-center">
-              <Search className="h-8 w-8 text-slate-500 mx-auto mb-2" />
+              <Search className="h-8 w-8 text-slate-400 mx-auto mb-2" />
               <p className="text-sm text-slate-400">Aucun résultat trouvé</p>
-              <p className="text-xs text-slate-500 mt-1">Essayez avec d'autres mots-clés</p>
+              <p className="text-xs text-slate-400 mt-1">Essayez avec d'autres mots-clés</p>
             </div>
           ) : (
             <div className="p-4">

@@ -255,7 +255,7 @@ export function CalendarView() {
               </div>
             ))}
             {dayEvents.length > 3 && (
-              <div className="text-xs text-slate-500 pl-1.5">
+              <div className="text-xs text-slate-400 pl-1.5">
                 +{dayEvents.length - 3} autre{dayEvents.length - 3 > 1 ? 's' : ''}
               </div>
             )}
@@ -395,7 +395,7 @@ export function CalendarView() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-12 text-slate-500">
+          <div className="text-center py-12 text-slate-400">
             <CalendarIcon className="h-12 w-12 mx-auto mb-3 opacity-50" />
             <p>Aucun événement pour cette journée</p>
           </div>

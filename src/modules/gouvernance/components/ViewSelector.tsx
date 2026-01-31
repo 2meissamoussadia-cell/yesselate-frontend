@@ -33,15 +33,16 @@ export function ViewSelector({ className }: ViewSelectorProps) {
             key={option.value}
             type="button"
             onClick={() => setVue(option.value)}
+            aria-label={`Vue ${option.label}`}
             className={cn(
-              'inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition',
+              'inline-flex items-center gap-1.5 rounded-lg px-3 py-2 min-h-[44px] text-xs font-medium transition focus-visible:outline focus-visible:ring-2 focus-visible:ring-sky-500',
               vue === option.value
                 ? 'bg-white/10 text-white'
                 : 'text-slate-300 hover:bg-white/5 hover:text-white'
             )}
             title={option.label}
           >
-            <Icon className="h-3.5 w-3.5" />
+            <Icon className="h-3.5 w-3.5" aria-hidden />
             {option.label}
           </button>
         );

@@ -115,7 +115,7 @@ export function isPostgresRetryable(error: any): boolean {
     return true;
   }
   
-  // Messages d'erreur retryables
+  // Messages d'erreur retryables (comparaison insensible à la casse)
   const retryableMessages = [
     'connection',
     'timeout',
@@ -124,8 +124,8 @@ export function isPostgresRetryable(error: any): boolean {
     'ETIMEDOUT',
     'ENOTFOUND',
   ];
-  
-  return retryableMessages.some((msg) => message.toLowerCase().includes(msg));
+  const lower = message.toLowerCase();
+  return retryableMessages.some((msg) => lower.includes(msg.toLowerCase()));
 }
 
 /**
@@ -146,5 +146,6 @@ export function isRedisRetryable(error: any): boolean {
     'READONLY',
   ];
   
-  return retryableMessages.some((msg) => message.toLowerCase().includes(msg));
+  const lower = message.toLowerCase();
+  return retryableMessages.some((msg) => lower.includes(msg.toLowerCase()));
 }

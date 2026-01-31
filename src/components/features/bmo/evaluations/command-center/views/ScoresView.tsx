@@ -129,7 +129,7 @@ export function ScoresView({ subCategory }: ScoresViewProps) {
                   )}>
                     {evalItem.scoreGlobal}/100
                   </p>
-                  <p className="text-xs text-slate-500">{evalItem.date}</p>
+                  <p className="text-xs text-slate-400">{evalItem.date}</p>
                 </div>
               </div>
             ))}

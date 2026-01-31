@@ -141,7 +141,7 @@ export function BTPDataTable<T extends Record<string, any>>({
           <tbody className="divide-y divide-slate-700">
             {filteredData.length === 0 ? (
               <tr>
-                <td colSpan={columns.length} className="px-4 py-8 text-center text-slate-500 text-sm">
+                <td colSpan={columns.length} className="px-4 py-8 text-center text-slate-400 text-sm">
                   Aucune donnée trouvée
                 </td>
               </tr>
@@ -170,7 +170,7 @@ export function BTPDataTable<T extends Record<string, any>>({
       </div>
 
       {/* Footer */}
-      <div className="px-4 py-3 border-t border-slate-700 text-xs text-slate-500">
+      <div className="px-4 py-3 border-t border-slate-700 text-xs text-slate-400">
         {filteredData.length} résultat{filteredData.length > 1 ? 's' : ''} sur {data.length}
       </div>
     </div>

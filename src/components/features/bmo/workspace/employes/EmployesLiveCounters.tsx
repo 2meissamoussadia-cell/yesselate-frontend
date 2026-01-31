@@ -22,7 +22,7 @@ export function EmployesLiveCounters({ onOpenQueue }: Props) {
     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
       {counters.map((c) => { const Icon = c.icon; return (
         <button key={c.key} onClick={c.action} className={cn("p-4 rounded-xl border text-left transition-all hover:shadow-md", `bg-${c.color}-500/10 border-${c.color}-500/30`)}>
-          <div className="flex items-center gap-2 mb-2"><Icon className={cn("w-4 h-4", c.color === 'teal' ? 'text-teal-500' : c.color === 'red' ? 'text-red-500' : c.color === 'blue' ? 'text-blue-500' : c.color === 'amber' ? 'text-amber-500' : c.color === 'emerald' ? 'text-emerald-500' : c.color === 'indigo' ? 'text-indigo-500' : 'text-slate-400')} /><span className="text-xs text-slate-500 font-medium truncate">{c.label}</span></div>
+          <div className="flex items-center gap-2 mb-2"><Icon className={cn("w-4 h-4", c.color === 'teal' ? 'text-teal-500' : c.color === 'red' ? 'text-red-500' : c.color === 'blue' ? 'text-blue-500' : c.color === 'amber' ? 'text-amber-500' : c.color === 'emerald' ? 'text-emerald-500' : c.color === 'indigo' ? 'text-indigo-500' : 'text-slate-400')} /><span className="text-xs text-slate-400 font-medium truncate">{c.label}</span></div>
           <p className="text-xl font-bold text-slate-900 dark:text-slate-100">{c.value}</p>
         </button>
       ); })}

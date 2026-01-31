@@ -102,7 +102,7 @@ export function AlertesKPICard({
         <div className="space-y-1">
           <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">{title}</p>
           <p className={cn('text-2xl font-bold', colors.value)}>{value}</p>
-          {subtitle && <p className="text-xs text-slate-500 mt-2">{subtitle}</p>}
+          {subtitle && <p className="text-xs text-slate-400 mt-2">{subtitle}</p>}
         </div>
       </CardContent>
     </Card>

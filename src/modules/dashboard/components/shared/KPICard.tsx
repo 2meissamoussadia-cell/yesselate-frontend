@@ -21,7 +21,8 @@ export interface KPICardData {
 
 interface KPICardProps {
   kpi: KPICardData;
-  size?: 'sm' | 'md' | 'lg';
+  /** Spec audit : XL = KPIs critiques (CA, Trésorerie), L = importants, M = secondaires, S = détails */
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
 }
 
@@ -34,10 +35,17 @@ const accentByColor: Record<NonNullable<KPICardData['color']>, string> = {
   cyan: 'bg-cyan-500',
 };
 
+/** Affiche "—" pour valeurs invalides (audit KPI NaN/undefined/null). Exporté pour tests P4. */
+export function sanitizeKpiValue(value: string | number): string | number {
+  if (value === undefined || value === null || (typeof value === 'number' && Number.isNaN(value)) || value === '') return '—';
+  return value;
+}
+
 const sizeTokens = {
   sm: { root: 'p-3', label: 'text-[11px]', value: 'text-lg', icon: 'h-3 w-3' },
   md: { root: 'p-4', label: 'text-xs', value: 'text-xl', icon: 'h-3.5 w-3.5' },
   lg: { root: 'p-5', label: 'text-sm', value: 'text-2xl', icon: 'h-3.5 w-3.5' },
+  xl: { root: 'p-5 sm:p-6', label: 'text-xs sm:text-sm', value: 'text-2xl sm:text-3xl', icon: 'h-4 w-4' },
 } as const;
 
 export const KPICard = memo(function KPICard({ kpi, size = 'md', className }: KPICardProps) {
@@ -50,27 +58,19 @@ export const KPICard = memo(function KPICard({ kpi, size = 'md', className }: KP
   const trendColor = useMemo(() => getTrendColor(kpi.trendType, kpi.trend), [kpi.trendType, kpi.trend]);
 
   const clickable = Boolean(kpi.onClick);
+  const ariaLabel = kpi.description ? `${kpi.label} — ${kpi.description}` : kpi.label;
+  const surfaceClass = cn(
+    'relative w-full text-left rounded-2xl border bg-slate-950/35 backdrop-blur',
+    'border-slate-800/70 shadow-[0_10px_30px_-20px_rgba(0,0,0,0.8)] transition-colors overflow-hidden',
+    clickable ? 'hover:border-slate-700/80 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60' : 'cursor-default',
+    tokens.root,
+    className
+  );
 
-  const Card = (
-    <button
-      type="button"
-      onClick={kpi.onClick}
-      className={cn(
-        // surface
-        'relative w-full text-left rounded-2xl border bg-slate-950/35 backdrop-blur',
-        'border-slate-800/70 hover:border-slate-700/80',
-        'shadow-[0_10px_30px_-20px_rgba(0,0,0,0.8)]',
-        'transition-colors',
-        'overflow-hidden', // Empêcher le débordement
-        clickable ? 'cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60' : 'cursor-default',
-        tokens.root,
-        className
-      )}
-      aria-label={kpi.description ? `${kpi.label} — ${kpi.description}` : kpi.label}
-      disabled={!clickable}
-    >
-      {/* Accent bar */}
-      <span className={cn('absolute left-0 top-0 bottom-0 w-[3px] opacity-80', accent)} />
+  const CardContent = (
+    <>
+      {/* Accent bar (décoratif) */}
+      <span className={cn('absolute left-0 top-0 bottom-0 w-[3px] opacity-80', accent)} aria-hidden />
 
       <div className="flex items-start justify-between gap-3 relative z-10">
         <div className="min-w-0 flex-1">
@@ -78,7 +78,7 @@ export const KPICard = memo(function KPICard({ kpi, size = 'md', className }: KP
             {kpi.label}
           </div>
           <div className={cn('mt-1 font-semibold text-slate-50 leading-none', tokens.value)}>
-            {kpi.value}
+            {sanitizeKpiValue(kpi.value)}
           </div>
 
           <div className="mt-2 flex items-center gap-2 flex-wrap">
@@ -88,10 +88,10 @@ export const KPICard = memo(function KPICard({ kpi, size = 'md', className }: KP
                 {kpi.trend > 0 ? `+${kpi.trend}%` : `${kpi.trend}%`}
               </span>
             ) : (
-              <span className="text-xs text-slate-500">—</span>
+              <span className="text-xs text-slate-400">—</span>
             )}
             {kpi.description ? (
-              <span className="text-xs text-slate-500 truncate">• {kpi.description}</span>
+              <span className="text-xs text-slate-300 truncate">• {kpi.description}</span>
             ) : null}
           </div>
         </div>
@@ -102,7 +102,17 @@ export const KPICard = memo(function KPICard({ kpi, size = 'md', className }: KP
           </div>
         </div>
       </div>
+    </>
+  );
+
+  const Card = clickable ? (
+    <button type="button" onClick={kpi.onClick} className={surfaceClass} aria-label={ariaLabel}>
+      {CardContent}
     </button>
+  ) : (
+    <div role="group" className={surfaceClass} aria-label={ariaLabel}>
+      {CardContent}
+    </div>
   );
 
   if (!kpi.description) return Card;

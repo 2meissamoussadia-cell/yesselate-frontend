@@ -228,7 +228,7 @@ export function DelegationBatchActions({ open, action, delegations, onClose, onC
             )} />
             <div>
               <div className="font-semibold">{selected.size} délégation(s) sélectionnée(s)</div>
-              <div className="text-sm text-slate-500">
+              <div className="text-sm text-slate-400">
                 {action === 'extend' && `Prolongation de ${extensionDays} jours`}
                 {action === 'revoke' && 'Cette action est irréversible'}
                 {action === 'suspend' && 'Les délégations pourront être réactivées'}
@@ -287,11 +287,11 @@ export function DelegationBatchActions({ open, action, delegations, onClose, onC
         {/* Liste des délégations */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-slate-500">Délégations</span>
+            <span className="text-sm text-slate-400">Délégations</span>
             <div className="flex gap-2">
               <button onClick={selectAll} className="text-xs text-blue-600 hover:underline">Tout</button>
               <span className="text-slate-300">|</span>
-              <button onClick={selectNone} className="text-xs text-slate-500 hover:underline">Aucun</button>
+              <button onClick={selectNone} className="text-xs text-slate-400 hover:underline">Aucun</button>
             </div>
           </div>
 
@@ -312,7 +312,7 @@ export function DelegationBatchActions({ open, action, delegations, onClose, onC
                 />
                 <div className="flex-1 min-w-0">
                   <div className="font-mono text-xs truncate">{d.code || d.id}</div>
-                  <div className="text-xs text-slate-500 truncate">
+                  <div className="text-xs text-slate-400 truncate">
                     {d.bureau} • {d.agentName}
                   </div>
                 </div>
@@ -348,7 +348,7 @@ export function DelegationBatchActions({ open, action, delegations, onClose, onC
                   <div key={r.id} className="flex items-center gap-2 text-rose-600">
                     <XCircle className="w-3 h-3 flex-none" />
                     <span className="font-mono">{r.id}</span>
-                    <span className="text-slate-500">{r.message}</span>
+                    <span className="text-slate-400">{r.message}</span>
                   </div>
                 ))}
               </div>

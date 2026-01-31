@@ -27,7 +27,7 @@ const STATUS_CONFIG = {
   acknowledged: { label: 'Acquittée', color: 'text-purple-500', bgColor: 'bg-purple-500/10' },
   resolved: { label: 'Résolue', color: 'text-emerald-500', bgColor: 'bg-emerald-500/10' },
   escalated: { label: 'Escaladée', color: 'text-orange-500', bgColor: 'bg-orange-500/10' },
-  ignored: { label: 'Ignorée', color: 'text-slate-500', bgColor: 'bg-slate-500/10' },
+  ignored: { label: 'Ignorée', color: 'text-slate-400', bgColor: 'bg-slate-500/10' },
 };
 
 export function AlertDetailView({ alertId }: AlertDetailViewProps) {
@@ -38,7 +38,7 @@ export function AlertDetailView({ alertId }: AlertDetailViewProps) {
     return (
       <div className="rounded-2xl border border-slate-200/70 bg-white/80 dark:border-slate-800 dark:bg-[#1f1f1f]/70 p-8 flex flex-col items-center justify-center">
         <AlertCircle className="w-12 h-12 text-slate-400 mb-3" />
-        <p className="text-slate-500">Alerte introuvable</p>
+        <p className="text-slate-400">Alerte introuvable</p>
       </div>
     );
   }
@@ -117,7 +117,7 @@ export function AlertDetailView({ alertId }: AlertDetailViewProps) {
             <div className="flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-slate-400 mt-0.5" />
               <div>
-                <p className="text-xs text-slate-500 mb-1">Sévérité</p>
+                <p className="text-xs text-slate-400 mb-1">Sévérité</p>
                 <p className={cn("font-medium capitalize", severityConfig.color)}>{alert.severity}</p>
               </div>
             </div>
@@ -125,7 +125,7 @@ export function AlertDetailView({ alertId }: AlertDetailViewProps) {
             <div className="flex items-start gap-3">
               <Activity className="w-5 h-5 text-slate-400 mt-0.5" />
               <div>
-                <p className="text-xs text-slate-500 mb-1">Type</p>
+                <p className="text-xs text-slate-400 mb-1">Type</p>
                 <p className="font-medium text-slate-700 dark:text-slate-200 capitalize">{alert.type}</p>
               </div>
             </div>
@@ -133,7 +133,7 @@ export function AlertDetailView({ alertId }: AlertDetailViewProps) {
             <div className="flex items-start gap-3">
               <TrendingUp className="w-5 h-5 text-slate-400 mt-0.5" />
               <div>
-                <p className="text-xs text-slate-500 mb-1">Impact</p>
+                <p className="text-xs text-slate-400 mb-1">Impact</p>
                 <p className="font-medium text-slate-700 dark:text-slate-200 capitalize">{alert.impact}</p>
               </div>
             </div>
@@ -141,7 +141,7 @@ export function AlertDetailView({ alertId }: AlertDetailViewProps) {
             <div className="flex items-start gap-3">
               <Calendar className="w-5 h-5 text-slate-400 mt-0.5" />
               <div>
-                <p className="text-xs text-slate-500 mb-1">Créée le</p>
+                <p className="text-xs text-slate-400 mb-1">Créée le</p>
                 <p className="font-medium text-slate-700 dark:text-slate-200">{formatDate(alert.createdAt)}</p>
               </div>
             </div>
@@ -150,7 +150,7 @@ export function AlertDetailView({ alertId }: AlertDetailViewProps) {
               <div className="flex items-start gap-3">
                 <Building2 className="w-5 h-5 text-slate-400 mt-0.5" />
                 <div>
-                  <p className="text-xs text-slate-500 mb-1">Bureau</p>
+                  <p className="text-xs text-slate-400 mb-1">Bureau</p>
                   <p className="font-medium text-slate-700 dark:text-slate-200">{alert.bureau}</p>
                 </div>
               </div>
@@ -160,7 +160,7 @@ export function AlertDetailView({ alertId }: AlertDetailViewProps) {
               <div className="flex items-start gap-3">
                 <User className="w-5 h-5 text-slate-400 mt-0.5" />
                 <div>
-                  <p className="text-xs text-slate-500 mb-1">Responsable</p>
+                  <p className="text-xs text-slate-400 mb-1">Responsable</p>
                   <p className="font-medium text-slate-700 dark:text-slate-200">{alert.responsible}</p>
                 </div>
               </div>
@@ -170,7 +170,7 @@ export function AlertDetailView({ alertId }: AlertDetailViewProps) {
               <div className="flex items-start gap-3">
                 <DollarSign className="w-5 h-5 text-slate-400 mt-0.5" />
                 <div>
-                  <p className="text-xs text-slate-500 mb-1">Montant</p>
+                  <p className="text-xs text-slate-400 mb-1">Montant</p>
                   <p className="font-medium text-slate-700 dark:text-slate-200">{formatAmount(alert.amount)}</p>
                 </div>
               </div>
@@ -180,7 +180,7 @@ export function AlertDetailView({ alertId }: AlertDetailViewProps) {
               <div className="flex items-start gap-3">
                 <Clock className="w-5 h-5 text-rose-500 mt-0.5" />
                 <div>
-                  <p className="text-xs text-slate-500 mb-1">Bloqué depuis</p>
+                  <p className="text-xs text-slate-400 mb-1">Bloqué depuis</p>
                   <p className="font-medium text-rose-600 dark:text-rose-400">{alert.daysBlocked} jours</p>
                 </div>
               </div>
@@ -211,7 +211,7 @@ export function AlertDetailView({ alertId }: AlertDetailViewProps) {
                       <p className="text-xs text-slate-400">{formatDate(event.timestamp)}</p>
                     </div>
                     <p className="text-sm text-slate-600 dark:text-slate-300">{event.message}</p>
-                    <p className="text-xs text-slate-500 mt-1">Par {event.user}</p>
+                    <p className="text-xs text-slate-400 mt-1">Par {event.user}</p>
                   </div>
                 </div>
               ))}
@@ -255,7 +255,7 @@ export function AlertDetailView({ alertId }: AlertDetailViewProps) {
                 <FileText className="w-4 h-4 text-purple-500" />
                 <div>
                   <p className="text-sm font-medium text-slate-700 dark:text-slate-200">{alert.relatedId}</p>
-                  <p className="text-xs text-slate-500 capitalize">{alert.relatedType}</p>
+                  <p className="text-xs text-slate-400 capitalize">{alert.relatedType}</p>
                 </div>
               </div>
               <ExternalLink className="w-4 h-4 text-purple-500 group-hover:translate-x-0.5 transition-transform" />
@@ -289,14 +289,14 @@ export function AlertDetailView({ alertId }: AlertDetailViewProps) {
             <div className="space-y-3">
               {alert.responseTime && (
                 <div>
-                  <p className="text-xs text-slate-500 mb-1">Temps de réponse</p>
+                  <p className="text-xs text-slate-400 mb-1">Temps de réponse</p>
                   <p className="text-lg font-bold text-slate-700 dark:text-slate-200">{alert.responseTime}min</p>
                 </div>
               )}
               
               {alert.resolutionTime && (
                 <div>
-                  <p className="text-xs text-slate-500 mb-1">Temps de résolution</p>
+                  <p className="text-xs text-slate-400 mb-1">Temps de résolution</p>
                   <p className="text-lg font-bold text-slate-700 dark:text-slate-200">{Math.round(alert.resolutionTime / 60)}h</p>
                 </div>
               )}

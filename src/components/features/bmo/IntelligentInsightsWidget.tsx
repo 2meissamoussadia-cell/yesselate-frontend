@@ -232,7 +232,7 @@ export function IntelligentInsightsWidget({
                 </div>
                 <p className="text-[10px] text-slate-400 mb-1">{insight.description}</p>
                 {insight.recommendation && (
-                  <p className="text-[10px] text-slate-500 italic">
+                  <p className="text-[10px] text-slate-400 italic">
                     💡 {insight.recommendation}
                   </p>
                 )}

@@ -178,7 +178,7 @@ function KPICard({ kpi }: { kpi: KPIData }) {
           )}>
             {kpi.evolution > 0 ? '+' : ''}{kpi.evolution}%
           </span>
-          <span className="text-slate-500">{kpi.evolutionPeriode}</span>
+          <span className="text-slate-400">{kpi.evolutionPeriode}</span>
         </div>
       )}
     </div>

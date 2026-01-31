@@ -231,22 +231,22 @@ export function ProjetsSensiblesView() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-slate-800/50">
-                  <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">
+                  <th className="px-4 py-2 text-left text-xs font-medium text-slate-400 uppercase">
                     Projet
                   </th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">
+                  <th className="px-4 py-2 text-left text-xs font-medium text-slate-400 uppercase">
                     Retard
                   </th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">
+                  <th className="px-4 py-2 text-left text-xs font-medium text-slate-400 uppercase">
                     Avancement
                   </th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">
+                  <th className="px-4 py-2 text-left text-xs font-medium text-slate-400 uppercase">
                     Budget
                   </th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">
+                  <th className="px-4 py-2 text-left text-xs font-medium text-slate-400 uppercase">
                     Statut
                   </th>
-                  <th className="px-4 py-2 text-right text-xs font-medium text-slate-500 uppercase">
+                  <th className="px-4 py-2 text-right text-xs font-medium text-slate-400 uppercase">
                     Actions
                   </th>
                 </tr>
@@ -309,7 +309,7 @@ export function ProjetsSensiblesView() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-7 px-2 text-slate-500 hover:text-slate-300"
+                        className="h-7 px-2 text-slate-400 hover:text-slate-300"
                         onClick={(e) => {
                           e.stopPropagation();
                           openModal('project-detail', project);
@@ -353,7 +353,7 @@ export function ProjetsSensiblesView() {
                       </Badge>
                     </div>
                     <div className="flex items-center gap-3 mt-1">
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs text-slate-400">
                         Budget total: {project.budgetTotal}
                       </span>
                       <span className="text-xs text-slate-600">•</span>
@@ -413,7 +413,7 @@ export function ProjetsSensiblesView() {
                       </Badge>
                     </div>
                     <div className="flex items-center gap-3 mt-1">
-                      <span className="text-xs text-slate-500">Budget: {project.budget}</span>
+                      <span className="text-xs text-slate-400">Budget: {project.budget}</span>
                       <span className="text-xs text-slate-600">•</span>
                       <span className="text-xs text-slate-400">
                         Avancement: {project.progress}%
@@ -469,7 +469,7 @@ export function ProjetsSensiblesView() {
                       </Badge>
                     </div>
                     <div className="flex items-center gap-3 mt-1">
-                      <span className="text-xs text-slate-500">Budget: {project.budget}</span>
+                      <span className="text-xs text-slate-400">Budget: {project.budget}</span>
                       <span className="text-xs text-slate-600">•</span>
                       <span className="text-xs text-red-400">
                         Enjeu: {project.litigationAmount}

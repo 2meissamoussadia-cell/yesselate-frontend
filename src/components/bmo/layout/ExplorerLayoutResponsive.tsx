@@ -76,7 +76,7 @@ export function ExplorerLayoutResponsive({
                   <X className="h-4 w-4" aria-hidden />
                 </button>
               </div>
-              <div className="flex-1 overflow-y-auto">{nav}</div>
+              <div className="flex-1 min-w-0 overflow-x-hidden overflow-y-auto">{nav}</div>
             </div>
             <div className="flex-1 bg-black/60" aria-hidden />
           </div>

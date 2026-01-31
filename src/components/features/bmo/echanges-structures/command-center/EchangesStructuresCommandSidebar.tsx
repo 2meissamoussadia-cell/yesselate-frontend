@@ -216,7 +216,7 @@ export const EchangesStructuresCommandSidebar = React.memo(function EchangesStru
       {/* Footer */}
       <div className="border-t border-slate-700/50 p-3">
         {!collapsed && (
-          <div className="text-xs text-slate-500 text-center">
+          <div className="text-xs text-slate-400 text-center">
             Échanges Structurés v3.0
           </div>
         )}

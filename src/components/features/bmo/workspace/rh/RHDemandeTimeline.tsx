@@ -50,7 +50,7 @@ export function RHDemandeTimeline({ demand }: Props) {
           timestamp: doc.date,
           details: `Document ajouté: ${doc.name}`,
           icon: FileText,
-          color: 'text-slate-500',
+          color: 'text-slate-400',
         });
       });
     }
@@ -118,7 +118,7 @@ export function RHDemandeTimeline({ demand }: Props) {
         </h2>
         
         {events.length === 0 ? (
-          <div className="text-center py-8 text-slate-500">
+          <div className="text-center py-8 text-slate-400">
             <Clock className="w-12 h-12 mx-auto mb-3 opacity-30" />
             <p>Aucun événement enregistré</p>
           </div>
@@ -159,7 +159,7 @@ export function RHDemandeTimeline({ demand }: Props) {
                         <div className="flex-1">
                           {getEventBadge(event.type)}
                         </div>
-                        <div className="text-xs text-slate-500">
+                        <div className="text-xs text-slate-400">
                           {event.timestamp}
                         </div>
                       </div>
@@ -171,7 +171,7 @@ export function RHDemandeTimeline({ demand }: Props) {
                       {event.actor && (
                         <div className="flex items-center gap-2 mt-2 pt-2 border-t border-slate-200 dark:border-slate-700">
                           <User className="w-3 h-3 text-slate-400" />
-                          <span className="text-xs text-slate-500">
+                          <span className="text-xs text-slate-400">
                             {event.actor}
                             {event.actorRole && ` · ${event.actorRole}`}
                           </span>
@@ -188,7 +188,7 @@ export function RHDemandeTimeline({ demand }: Props) {
         {/* Indicateur temps écoulé */}
         {events.length > 0 && (
           <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-700">
-            <div className="flex items-center justify-between text-xs text-slate-500">
+            <div className="flex items-center justify-between text-xs text-slate-400">
               <span>Créée il y a {getDaysAgo(events[events.length - 1].timestamp)} jours</span>
               {demand.status === 'pending' && (
                 <span className="flex items-center gap-1">

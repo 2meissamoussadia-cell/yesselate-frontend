@@ -33,10 +33,10 @@ type DelegationRow = {
 };
 
 const QUEUE_CONFIG: Record<string, { label: string; icon: typeof Key; color: string }> = {
-  all: { label: 'Toutes', icon: Key, color: 'text-slate-500' },
+  all: { label: 'Toutes', icon: Key, color: 'text-slate-400' },
   active: { label: 'Actives', icon: Shield, color: 'text-emerald-500' },
   expiring_soon: { label: 'Expirent bientôt', icon: Clock, color: 'text-amber-500' },
-  expired: { label: 'Expirées', icon: Calendar, color: 'text-slate-500' },
+  expired: { label: 'Expirées', icon: Calendar, color: 'text-slate-400' },
   revoked: { label: 'Révoquées', icon: XCircle, color: 'text-rose-500' },
   suspended: { label: 'Suspendues', icon: Pause, color: 'text-amber-600' },
 };
@@ -184,14 +184,14 @@ export function DelegationInboxView({ tab }: { tab: DelegationTab }) {
               </div>
               <div>
                 <h2 className="text-lg font-semibold">{queueConfig.label}</h2>
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-slate-400">
                   {filteredItems.length} délégation{filteredItems.length > 1 ? 's' : ''}
                 </p>
               </div>
             </div>
             
             <button 
-              className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/60 text-slate-500" 
+              className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/60 text-slate-400" 
               onClick={() => {
                 refresh();
                 toast.info('Actualisation', 'Rechargement des données...');
@@ -264,7 +264,7 @@ export function DelegationInboxView({ tab }: { tab: DelegationTab }) {
               <div className="p-3 rounded-xl border border-slate-200/70 bg-slate-50/50 dark:border-slate-800 dark:bg-slate-900/30">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
                   <div>
-                    <label className="text-xs text-slate-500 mb-1 block">Bureau</label>
+                    <label className="text-xs text-slate-400 mb-1 block">Bureau</label>
                     <select
                       value={bureauFilter}
                       onChange={(e) => setBureauFilter(e.target.value)}
@@ -279,7 +279,7 @@ export function DelegationInboxView({ tab }: { tab: DelegationTab }) {
                   </div>
                   
                   <div>
-                    <label className="text-xs text-slate-500 mb-1 block">Type</label>
+                    <label className="text-xs text-slate-400 mb-1 block">Type</label>
                     <input
                       type="text"
                       placeholder="Ex: Signature..."
@@ -291,7 +291,7 @@ export function DelegationInboxView({ tab }: { tab: DelegationTab }) {
                   </div>
                   
                   <div>
-                    <label className="text-xs text-slate-500 mb-1 block">Date fin (de)</label>
+                    <label className="text-xs text-slate-400 mb-1 block">Date fin (de)</label>
                     <input
                       type="date"
                       value={dateFromFilter}
@@ -302,7 +302,7 @@ export function DelegationInboxView({ tab }: { tab: DelegationTab }) {
                   </div>
                   
                   <div>
-                    <label className="text-xs text-slate-500 mb-1 block">Date fin (à)</label>
+                    <label className="text-xs text-slate-400 mb-1 block">Date fin (à)</label>
                     <input
                       type="date"
                       value={dateToFilter}
@@ -337,7 +337,7 @@ export function DelegationInboxView({ tab }: { tab: DelegationTab }) {
         </div>
         
         {/* Table header */}
-        <div className="grid grid-cols-[1fr_100px_80px_100px_80px] gap-2 px-4 py-2 border-b border-slate-200/70 dark:border-slate-800 text-xs font-medium text-slate-500 uppercase bg-slate-50/50 dark:bg-slate-900/30">
+        <div className="grid grid-cols-[1fr_100px_80px_100px_80px] gap-2 px-4 py-2 border-b border-slate-200/70 dark:border-slate-800 text-xs font-medium text-slate-400 uppercase bg-slate-50/50 dark:bg-slate-900/30">
           <button onClick={() => handleSort('type')} className="flex items-center gap-1 hover:text-slate-700 dark:hover:text-slate-300 text-left">
             Délégation {sortKey === 'type' && <ArrowUpDown className="w-3 h-3" />}
           </button>
@@ -356,14 +356,14 @@ export function DelegationInboxView({ tab }: { tab: DelegationTab }) {
         {/* Liste */}
         <div className="max-h-[calc(100vh-380px)] overflow-auto">
           {loading && (
-            <div className="p-8 text-center text-slate-500">
+            <div className="p-8 text-center text-slate-400">
               <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2" />
               Chargement...
             </div>
           )}
           
           {!loading && filteredItems.length === 0 && (
-            <div className="p-8 text-center text-slate-500">
+            <div className="p-8 text-center text-slate-400">
               <Key className="w-12 h-12 mx-auto mb-3 opacity-30" />
               <p className="font-medium">{search ? 'Aucun résultat.' : 'Aucune délégation dans cette file.'}</p>
               {search && (
@@ -398,7 +398,7 @@ export function DelegationInboxView({ tab }: { tab: DelegationTab }) {
                 <div className="flex-1 min-w-0">
                   <div className="font-mono text-xs text-purple-400">{d.id}</div>
                   <div className="font-semibold truncate">{d.type}</div>
-                  <div className="text-xs text-slate-500 flex items-center gap-1">
+                  <div className="text-xs text-slate-400 flex items-center gap-1">
                     <User className="w-3 h-3" />
                     {d.agentName}
                     {d.agentRole && <span className="text-slate-400">({d.agentRole})</span>}
@@ -423,7 +423,7 @@ export function DelegationInboxView({ tab }: { tab: DelegationTab }) {
               <div className="flex items-center">
                 <span className={cn(
                   "text-sm",
-                  d.expiringSoon ? "text-amber-500 font-semibold" : "text-slate-500"
+                  d.expiringSoon ? "text-amber-500 font-semibold" : "text-slate-400"
                 )}>
                   {formatDate(d.endDate)}
                   {d.expiringSoon && <AlertTriangle className="w-3 h-3 inline ml-1" />}
@@ -481,7 +481,7 @@ export function DelegationInboxView({ tab }: { tab: DelegationTab }) {
                       className="h-2 bg-purple-500/30 rounded-full" 
                       style={{ width: `${Math.min(100, (count / stats.total) * 100)}px` }}
                     />
-                    <span className="text-sm font-mono text-slate-500 w-8 text-right">{count}</span>
+                    <span className="text-sm font-mono text-slate-400 w-8 text-right">{count}</span>
                   </div>
                 </div>
               ))}
@@ -495,7 +495,7 @@ export function DelegationInboxView({ tab }: { tab: DelegationTab }) {
             <Hash className="w-4 h-4" />
             Traçabilité
           </h3>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-400">
             Chaque délégation génère une décision hashée SHA3-256 pour garantir 
             l&apos;intégrité et l&apos;anti-contestation.
           </p>

@@ -111,7 +111,7 @@ export function AlertNotifications() {
         );
       })}
       {alerts.length > 5 && (
-        <div className="text-xs text-slate-500 text-center pt-2">
+        <div className="text-xs text-slate-400 text-center pt-2">
           {alerts.length - 5} autre{alerts.length - 5 > 1 ? 's' : ''} alerte{alerts.length - 5 > 1 ? 's' : ''} masquée{alerts.length - 5 > 1 ? 's' : ''}
         </div>
       )}

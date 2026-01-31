@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCalendrierStore } from '@/lib/stores/calendrierStore';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/utils/logger';
 import { EmptyState } from '../components/EmptyState';
 import type { SLA } from '@/lib/types/calendrier.types';
 import { TraiterSLAModal } from '../modals/TraiterSLAModal';
@@ -285,7 +286,7 @@ export function SLARetardsView({ filterType, view }: SLARetardsViewProps = {}) {
             dateActuelle={selectedSLA.echeancePrevue}
             onSave={(data) => {
               // TODO: Appeler API pour replanifier
-              console.log('Replanification:', data);
+              logger.debug('Replanification', { component: 'SLARetardsView', data });
               setShowReplanifierModal(false);
               setSelectedSLA(null);
             }}

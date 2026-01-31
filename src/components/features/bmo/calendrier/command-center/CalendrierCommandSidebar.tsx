@@ -295,7 +295,7 @@ export const CalendrierCommandSidebar = React.memo(function CalendrierCommandSid
                             {section.hint && (
                               <span className={cn(
                                 'text-xs block mt-0.5',
-                                isSectionActive ? 'text-blue-400/70' : 'text-slate-500'
+                                isSectionActive ? 'text-blue-400/70' : 'text-slate-400'
                               )}>
                                 {section.hint}
                               </span>
@@ -330,7 +330,7 @@ export const CalendrierCommandSidebar = React.memo(function CalendrierCommandSid
       {/* Footer */}
       <div className="border-t border-slate-700/50 p-3">
         {!collapsed && (
-          <div className="text-xs text-slate-500 text-center">
+          <div className="text-xs text-slate-400 text-center">
             Calendrier v3.0
           </div>
         )}

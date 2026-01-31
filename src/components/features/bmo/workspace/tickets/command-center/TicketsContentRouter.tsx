@@ -452,7 +452,7 @@ function OverviewView({
                 </div>
                 <div className="mt-3">
                   <p className="text-2xl font-bold text-slate-200">{kpi.value}</p>
-                  <p className="text-sm text-slate-500 mt-0.5">{kpi.label}</p>
+                  <p className="text-sm text-slate-400 mt-0.5">{kpi.label}</p>
                 </div>
               </button>
             );
@@ -485,13 +485,13 @@ function OverviewView({
                   <div className="w-2 h-2 rounded-full bg-rose-500 animate-pulse flex-shrink-0" />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-mono text-slate-500">{ticket.reference}</span>
+                      <span className="text-xs font-mono text-slate-400">{ticket.reference}</span>
                       {ticket.client.vip && (
                         <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30 text-xs">VIP</Badge>
                       )}
                     </div>
                     <p className="text-sm font-medium text-slate-200 truncate">{ticket.title}</p>
-                    <p className="text-xs text-slate-500 truncate">{ticket.client.name}</p>
+                    <p className="text-xs text-slate-400 truncate">{ticket.client.name}</p>
                   </div>
                   <div className="flex items-center gap-2">
                     {ticket.slaBreached && (
@@ -871,7 +871,7 @@ function InboxView({
           <div className="flex flex-col items-center justify-center py-12 text-center">
             <Inbox className="w-12 h-12 text-slate-600 mb-4" />
             <p className="text-lg font-medium text-slate-400">Aucun ticket</p>
-            <p className="text-sm text-slate-500">Cette file d'attente est vide</p>
+            <p className="text-sm text-slate-400">Cette file d'attente est vide</p>
           </div>
         )}
       </div>
@@ -972,7 +972,7 @@ function CriticalView({
             <div className="px-4 py-12 text-center">
               <CheckCircle2 className="w-12 h-12 mx-auto mb-3 text-emerald-400" />
               <p className="text-lg font-medium text-slate-300">Aucun ticket critique</p>
-              <p className="text-sm text-slate-500">Tous les tickets sont sous contrôle</p>
+              <p className="text-sm text-slate-400">Tous les tickets sont sous contrôle</p>
             </div>
           )}
         </div>
@@ -1234,13 +1234,13 @@ function AnalyticsView({ subCategory }: { subCategory: string }) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="rounded-xl border border-slate-700/50 bg-slate-800/30 p-6 h-80">
           <h3 className="text-sm font-medium text-slate-300 mb-4">Volume par jour</h3>
-          <div className="flex items-center justify-center h-full text-slate-500">
+          <div className="flex items-center justify-center h-full text-slate-400">
             Graphique des volumes
           </div>
         </div>
         <div className="rounded-xl border border-slate-700/50 bg-slate-800/30 p-6 h-80">
           <h3 className="text-sm font-medium text-slate-300 mb-4">Distribution par catégorie</h3>
-          <div className="flex items-center justify-center h-full text-slate-500">
+          <div className="flex items-center justify-center h-full text-slate-400">
             Graphique des catégories
           </div>
         </div>
@@ -1303,12 +1303,12 @@ function ClientsView({
                     <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30 text-xs">VIP</Badge>
                   )}
                 </div>
-                <p className="text-xs text-slate-500">{client.company || client.email}</p>
+                <p className="text-xs text-slate-400">{client.company || client.email}</p>
               </div>
               <div className="flex items-center gap-4">
                 <div className="text-right">
                   <p className="text-sm font-medium text-slate-300">{client.tickets.length}</p>
-                  <p className="text-xs text-slate-500">tickets</p>
+                  <p className="text-xs text-slate-400">tickets</p>
                 </div>
                 <ArrowRight className="w-4 h-4 text-slate-600" />
               </div>
@@ -1409,7 +1409,7 @@ function QuickActionButton({
       </div>
       <div className="text-left">
         <p className="text-sm font-medium text-slate-200">{title}</p>
-        <p className="text-xs text-slate-500">{description}</p>
+        <p className="text-xs text-slate-400">{description}</p>
       </div>
     </button>
   );
@@ -1496,7 +1496,7 @@ function TicketRow({
       <div className={cn('w-2 h-2 rounded-full flex-shrink-0', priorityColors[ticket.priority])} />
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-0.5">
-          <span className="text-xs font-mono text-slate-500">{ticket.reference}</span>
+          <span className="text-xs font-mono text-slate-400">{ticket.reference}</span>
           <Badge variant="outline" className={cn('text-xs', statusColors[ticket.status])}>
             {ticket.status === 'open' ? 'Ouvert' : 
              ticket.status === 'in_progress' ? 'En cours' :
@@ -1508,16 +1508,16 @@ function TicketRow({
           )}
         </div>
         <p className="text-sm font-medium text-slate-200 truncate">{ticket.title}</p>
-        <p className="text-xs text-slate-500 truncate">{ticket.client.name}</p>
+        <p className="text-xs text-slate-400 truncate">{ticket.client.name}</p>
       </div>
       <div className="flex items-center gap-3">
         {ticket.messages > 0 && (
-          <div className="flex items-center gap-1 text-slate-500">
+          <div className="flex items-center gap-1 text-slate-400">
             <MessageSquare className="w-3 h-3" />
             <span className="text-xs">{ticket.messages}</span>
           </div>
         )}
-        <span className="text-xs text-slate-500 whitespace-nowrap">{formatTime(ticket.createdAt)}</span>
+        <span className="text-xs text-slate-400 whitespace-nowrap">{formatTime(ticket.createdAt)}</span>
         <ArrowRight className="w-4 h-4 text-slate-600" />
       </div>
     </button>
@@ -1558,7 +1558,7 @@ function TicketRowSelectable({
         <div className={cn('w-2 h-2 rounded-full flex-shrink-0', priorityColors[ticket.priority])} />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-0.5">
-            <span className="text-xs font-mono text-slate-500">{ticket.reference}</span>
+            <span className="text-xs font-mono text-slate-400">{ticket.reference}</span>
             {ticket.slaBreached && (
               <Badge variant="destructive" className="text-xs">SLA</Badge>
             )}
@@ -1567,11 +1567,11 @@ function TicketRowSelectable({
             )}
           </div>
           <p className="text-sm font-medium text-slate-200 truncate">{ticket.title}</p>
-          <p className="text-xs text-slate-500">{ticket.client.name} • {ticket.category}</p>
+          <p className="text-xs text-slate-400">{ticket.client.name} • {ticket.category}</p>
         </div>
         <div className="flex items-center gap-4 text-right">
           {ticket.assignee && (
-            <div className="text-xs text-slate-500">
+            <div className="text-xs text-slate-400">
               {ticket.assignee.name}
             </div>
           )}
@@ -1615,7 +1615,7 @@ function TicketRowDetailed({
       )} />
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
-          <span className="text-xs font-mono text-slate-500">{ticket.reference}</span>
+          <span className="text-xs font-mono text-slate-400">{ticket.reference}</span>
           <Badge
             variant={ticket.priority === 'critical' ? 'destructive' : ticket.priority === 'high' ? 'warning' : 'default'}
             className="text-xs"
@@ -1627,7 +1627,7 @@ function TicketRowDetailed({
           )}
         </div>
         <p className="text-sm font-semibold text-slate-200">{ticket.title}</p>
-        <p className="text-xs text-slate-500 mt-0.5 truncate">{ticket.description}</p>
+        <p className="text-xs text-slate-400 mt-0.5 truncate">{ticket.description}</p>
         <div className="flex items-center gap-3 mt-2 text-xs text-slate-600">
           <span>{ticket.client.name}</span>
           <span>•</span>
@@ -1641,7 +1641,7 @@ function TicketRowDetailed({
         </div>
       </div>
       <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2 text-slate-500">
+        <div className="flex items-center gap-2 text-slate-400">
           <MessageSquare className="w-4 h-4" />
           <span className="text-xs">{ticket.messages}</span>
         </div>
@@ -1684,7 +1684,7 @@ function AnalyticsCard({
 
   return (
     <div className="p-4 rounded-xl border border-slate-700/50 bg-slate-800/30">
-      <p className="text-xs text-slate-500 mb-2">{title}</p>
+      <p className="text-xs text-slate-400 mb-2">{title}</p>
       <div className="flex items-baseline gap-2 mb-3">
         <span className={cn('text-2xl font-bold', colorClasses[color])}>{value}</span>
         <span className={cn(
@@ -1734,14 +1734,14 @@ function ConversationCard({
               <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30 text-xs">VIP</Badge>
             )}
           </div>
-          <p className="text-xs text-slate-500">{ticket.reference}</p>
+          <p className="text-xs text-slate-400">{ticket.reference}</p>
         </div>
         <Badge variant="outline" className="text-xs">
           {ticket.messages} messages
         </Badge>
       </div>
       <p className="text-sm text-slate-300 mb-3">{ticket.title}</p>
-      <div className="flex items-center justify-between text-xs text-slate-500">
+      <div className="flex items-center justify-between text-xs text-slate-400">
         <span>Dernière activité: il y a 15min</span>
         <ArrowRight className="w-4 h-4" />
       </div>
@@ -1765,7 +1765,7 @@ function SettingsCard({
       </div>
       <div className="flex-1">
         <p className="text-sm font-semibold text-slate-200">{title}</p>
-        <p className="text-xs text-slate-500">{description}</p>
+        <p className="text-xs text-slate-400">{description}</p>
       </div>
       <ChevronRight className="w-4 h-4 text-slate-600" />
     </button>

@@ -209,7 +209,7 @@ export function ConducteurTravauxPage() {
                         </div>
                       </div>
                       <ChevronRight className={cn(
-                        'h-5 w-5 text-slate-500 transition-transform',
+                        'h-5 w-5 text-slate-400 transition-transform',
                         selectedProjet === projet.id && 'rotate-90'
                       )} />
                     </div>
@@ -229,7 +229,7 @@ export function ConducteurTravauxPage() {
                           <Activity className="h-4 w-4 text-blue-400" />
                           <span className="text-sm font-medium text-slate-200">Voir détails complets</span>
                         </div>
-                        <ChevronRight className="h-4 w-4 text-slate-500" />
+                        <ChevronRight className="h-4 w-4 text-slate-400" />
                       </button>
                     </div>
                   )}
@@ -291,7 +291,7 @@ export function ConducteurTravauxPage() {
                             <div className="text-xs text-slate-400 mt-1 line-clamp-2">
                               {evenement.description}
                             </div>
-                            <div className="flex items-center gap-3 mt-2 text-xs text-slate-500">
+                            <div className="flex items-center gap-3 mt-2 text-xs text-slate-400">
                               <div className="flex items-center gap-1">
                                 <Building2 className="h-3 w-3" />
                                 {evenement.projet} • {evenement.bureau}

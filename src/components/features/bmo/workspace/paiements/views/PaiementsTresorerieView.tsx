@@ -287,7 +287,7 @@ export function PaiementsTresorerieView({ className }: PaiementsTresorerieViewPr
           <div className="text-2xl font-bold text-white mb-1">
             {formatMontant(stats.entreesTotales)}
           </div>
-          <div className="text-xs text-slate-500">Recettes et encaissements</div>
+          <div className="text-xs text-slate-400">Recettes et encaissements</div>
         </div>
 
         {/* Sorties totales */}
@@ -299,7 +299,7 @@ export function PaiementsTresorerieView({ className }: PaiementsTresorerieViewPr
           <div className="text-2xl font-bold text-white mb-1">
             {formatMontant(stats.sortiesTotales)}
           </div>
-          <div className="text-xs text-slate-500">Paiements effectués</div>
+          <div className="text-xs text-slate-400">Paiements effectués</div>
         </div>
 
         {/* Prévision 30j */}
@@ -317,7 +317,7 @@ export function PaiementsTresorerieView({ className }: PaiementsTresorerieViewPr
             ) : (
               <span className="text-red-400">{stats.variationPrevisionnelle.toFixed(1)}%</span>
             )}
-            <span className="text-slate-500">tendance</span>
+            <span className="text-slate-400">tendance</span>
           </div>
         </div>
       </div>
@@ -566,7 +566,7 @@ export function PaiementsTresorerieView({ className }: PaiementsTresorerieViewPr
             )}>
               {stats.fluxNet >= 0 ? '+' : ''}{formatMontant(stats.fluxNet)}
             </div>
-            <div className="text-xs text-slate-500 mt-1">
+            <div className="text-xs text-slate-400 mt-1">
               {stats.fluxNet >= 0 ? 'Excédent' : 'Déficit'} sur la période
             </div>
           </div>
@@ -576,7 +576,7 @@ export function PaiementsTresorerieView({ className }: PaiementsTresorerieViewPr
             <div className="text-2xl font-bold text-white">
               {formatMontant(stats.soldeMoyenne)}
             </div>
-            <div className="text-xs text-slate-500 mt-1">
+            <div className="text-xs text-slate-400 mt-1">
               Moyenne sur 30 jours
             </div>
           </div>
@@ -589,7 +589,7 @@ export function PaiementsTresorerieView({ className }: PaiementsTresorerieViewPr
             )}>
               {stats.variation >= 0 ? '+' : ''}{stats.variation.toFixed(1)}%
             </div>
-            <div className="text-xs text-slate-500 mt-1">
+            <div className="text-xs text-slate-400 mt-1">
               Évolution du solde
             </div>
           </div>

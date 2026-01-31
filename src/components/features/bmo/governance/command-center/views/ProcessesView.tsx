@@ -163,17 +163,17 @@ function WorkflowsView({ data }: { data: typeof workflows }) {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-slate-300">{workflow.name}</p>
-                  <p className="text-xs text-slate-500">{workflow.type}</p>
+                  <p className="text-xs text-slate-400">{workflow.type}</p>
                 </div>
               </div>
               <div className="flex items-center gap-6">
                 <div className="text-center">
                   <p className="text-lg font-bold text-slate-200">{workflow.instances}</p>
-                  <p className="text-xs text-slate-500">instances</p>
+                  <p className="text-xs text-slate-400">instances</p>
                 </div>
                 <div className="text-center">
                   <p className="text-lg font-bold text-slate-200">{workflow.avgTime}</p>
-                  <p className="text-xs text-slate-500">temps moy.</p>
+                  <p className="text-xs text-slate-400">temps moy.</p>
                 </div>
                 <Badge variant="default" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/30 text-xs">
                   Actif
@@ -238,7 +238,7 @@ function DelegationsView({ data }: { data: typeof delegations }) {
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center">
-                      <User className="h-4 w-4 text-slate-500" />
+                      <User className="h-4 w-4 text-slate-400" />
                     </div>
                     <div className="text-sm">
                       <p className="text-slate-400">{delegation.from}</p>
@@ -255,7 +255,7 @@ function DelegationsView({ data }: { data: typeof delegations }) {
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="text-right text-xs text-slate-500">
+                  <div className="text-right text-xs text-slate-400">
                     <p>{delegation.startDate} - {delegation.endDate}</p>
                     <p className="text-slate-400">{delegation.type}</p>
                   </div>
@@ -284,19 +284,19 @@ function RACIView({ data }: { data: typeof raciMatrix }) {
         <div className="flex items-center gap-4 text-xs">
           <div className="flex items-center gap-1">
             <div className="w-6 h-6 rounded bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">R</div>
-            <span className="text-slate-500">Responsable</span>
+            <span className="text-slate-400">Responsable</span>
           </div>
           <div className="flex items-center gap-1">
             <div className="w-6 h-6 rounded bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">A</div>
-            <span className="text-slate-500">Approbateur</span>
+            <span className="text-slate-400">Approbateur</span>
           </div>
           <div className="flex items-center gap-1">
             <div className="w-6 h-6 rounded bg-amber-500/20 flex items-center justify-center text-amber-400 font-bold">C</div>
-            <span className="text-slate-500">Consulté</span>
+            <span className="text-slate-400">Consulté</span>
           </div>
           <div className="flex items-center gap-1">
             <div className="w-6 h-6 rounded bg-slate-500/20 flex items-center justify-center text-slate-400 font-bold">I</div>
-            <span className="text-slate-500">Informé</span>
+            <span className="text-slate-400">Informé</span>
           </div>
         </div>
       </div>
@@ -305,11 +305,11 @@ function RACIView({ data }: { data: typeof raciMatrix }) {
         <table className="w-full">
           <thead>
             <tr className="border-b border-slate-800/50">
-              <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Activité</th>
-              <th className="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase">R</th>
-              <th className="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase">A</th>
-              <th className="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase">C</th>
-              <th className="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase">I</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-400 uppercase">Activité</th>
+              <th className="px-4 py-3 text-center text-xs font-medium text-slate-400 uppercase">R</th>
+              <th className="px-4 py-3 text-center text-xs font-medium text-slate-400 uppercase">A</th>
+              <th className="px-4 py-3 text-center text-xs font-medium text-slate-400 uppercase">C</th>
+              <th className="px-4 py-3 text-center text-xs font-medium text-slate-400 uppercase">I</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-800/50">
@@ -373,11 +373,11 @@ function ProceduresView() {
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center">
-                  <BookOpen className="h-5 w-5 text-slate-500" />
+                  <BookOpen className="h-5 w-5 text-slate-400" />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-slate-300">{proc.name}</p>
-                  <p className="text-xs text-slate-500">{proc.version} • Màj {proc.lastUpdate}</p>
+                  <p className="text-xs text-slate-400">{proc.version} • Màj {proc.lastUpdate}</p>
                 </div>
               </div>
               <Badge
@@ -414,7 +414,7 @@ function StatCard({
     <div className="bg-slate-900/60 rounded-lg p-3 border border-slate-800/50">
       <div className="flex items-center gap-2 mb-2">
         <Icon className={cn('h-4 w-4', iconColor)} />
-        <span className="text-xs text-slate-500">{label}</span>
+        <span className="text-xs text-slate-400">{label}</span>
       </div>
       <span className="text-xl font-bold text-slate-200">{value}</span>
     </div>

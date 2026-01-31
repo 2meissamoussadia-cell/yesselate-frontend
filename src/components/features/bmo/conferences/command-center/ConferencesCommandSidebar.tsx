@@ -246,7 +246,7 @@ export const ConferencesCommandSidebar = React.memo(function ConferencesCommandS
       {/* Footer */}
       <div className="border-t border-slate-700/50 p-3">
         {!collapsed && (
-          <div className="text-xs text-slate-500 text-center">
+          <div className="text-xs text-slate-400 text-center">
             Conférences v2.0
           </div>
         )}

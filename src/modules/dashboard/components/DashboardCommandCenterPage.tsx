@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { DynamicSidebar } from './DynamicSidebar';
 import { DynamicSubnav } from './DynamicSubnav';
 import { DashboardBreadcrumbs } from './DashboardBreadcrumbs';
@@ -18,9 +18,24 @@ import { useAuthHeaders } from '../utils/getAuthHeaders';
 
 export function DashboardCommandCenterPage() {
   const nav = useDashboardCommandCenterStore((s) => s.navigation);
+  const openModal = useDashboardCommandCenterStore((s) => s.openModal);
   const { locale, currency } = useI18n();
   const authHeaders = useAuthHeaders();
   const { notifications, dismissNotification, markAsRead } = useDashboardNotifications();
+
+  // ? ouvre l'aide Raccourcis (hors champs de saisie)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== '?' || e.ctrlKey || e.metaKey || e.altKey) return;
+      const target = e.target as HTMLElement;
+      const tag = target?.tagName?.toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || tag === 'select' || target?.getAttribute?.('contenteditable') === 'true') return;
+      e.preventDefault();
+      openModal('shortcuts');
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [openModal]);
 
   const onExport = useCallback(async (format: 'csv' | 'json' | 'pdf' | 'excel') => {
     // Phase P12.b: Mapper 'excel' vers 'xlsx' pour le format natif

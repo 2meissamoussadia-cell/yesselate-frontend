@@ -120,7 +120,7 @@ export function ContratsInboxView({ tabId, data }: Props) {
              queue === 'critical' ? 'Contrats urgents' :
              'Tous les contrats'}
           </h2>
-          <p className="text-sm text-slate-500">{filteredContrats.length} contrat(s)</p>
+          <p className="text-sm text-slate-400">{filteredContrats.length} contrat(s)</p>
         </div>
 
         <div className="flex items-center gap-3">
@@ -163,7 +163,7 @@ export function ContratsInboxView({ tabId, data }: Props) {
           <button className="px-3 py-1.5 rounded-lg bg-red-500 text-white text-sm font-medium hover:bg-red-600">
             Rejeter
           </button>
-          <button onClick={clearSelection} className="text-sm text-slate-500 hover:text-slate-700">
+          <button onClick={clearSelection} className="text-sm text-slate-400 hover:text-slate-700">
             Annuler
           </button>
         </div>
@@ -177,7 +177,7 @@ export function ContratsInboxView({ tabId, data }: Props) {
           ))}
         </div>
       ) : filteredContrats.length === 0 ? (
-        <div className="py-12 text-center text-slate-500">
+        <div className="py-12 text-center text-slate-400">
           <FileText className="w-12 h-12 mx-auto mb-3 opacity-30" />
           <p className="font-medium">Aucun contrat trouvé</p>
           <p className="text-sm mt-1">Essayez de modifier vos filtres</p>
@@ -226,11 +226,11 @@ export function ContratsInboxView({ tabId, data }: Props) {
                         <span className={cn("text-xs font-medium px-2 py-0.5 rounded", style.badge)}>
                           {contrat.urgency.toUpperCase()}
                         </span>
-                        <span className="text-xs text-slate-500 flex items-center gap-1">
+                        <span className="text-xs text-slate-400 flex items-center gap-1">
                           <StatusIcon className="w-3 h-3" />
                           {contratsApiService.getStatusLabel(contrat.status)}
                         </span>
-                        <span className="text-xs text-slate-500">
+                        <span className="text-xs text-slate-400">
                           {contratsApiService.getTypeLabel(contrat.type)}
                         </span>
                       </div>
@@ -239,7 +239,7 @@ export function ContratsInboxView({ tabId, data }: Props) {
                         {contrat.title}
                       </p>
 
-                      <div className="flex items-center gap-4 mt-2 text-xs text-slate-500">
+                      <div className="flex items-center gap-4 mt-2 text-xs text-slate-400">
                         <span className="flex items-center gap-1">
                           <Building2 className="w-3 h-3" />
                           {contrat.fournisseur.name}
@@ -293,21 +293,21 @@ export function ContratsInboxView({ tabId, data }: Props) {
                   <div className="px-4 pb-4 pt-0 border-t border-slate-200/70 dark:border-slate-800">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-4">
                       <div>
-                        <p className="text-xs text-slate-500 mb-1">Bureau responsable</p>
+                        <p className="text-xs text-slate-400 mb-1">Bureau responsable</p>
                         <p className="font-medium text-slate-900 dark:text-slate-100">{contrat.bureau}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-slate-500 mb-1">Responsable</p>
+                        <p className="text-xs text-slate-400 mb-1">Responsable</p>
                         <p className="font-medium text-slate-900 dark:text-slate-100">{contrat.responsible}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-slate-500 mb-1">Date début</p>
+                        <p className="text-xs text-slate-400 mb-1">Date début</p>
                         <p className="font-medium text-slate-900 dark:text-slate-100">
                           {new Date(contrat.dateDebut).toLocaleDateString('fr-FR')}
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-slate-500 mb-1">Date fin</p>
+                        <p className="text-xs text-slate-400 mb-1">Date fin</p>
                         <p className="font-medium text-slate-900 dark:text-slate-100">
                           {new Date(contrat.dateFin).toLocaleDateString('fr-FR')}
                         </p>
@@ -316,7 +316,7 @@ export function ContratsInboxView({ tabId, data }: Props) {
 
                     {/* Validations */}
                     <div className="mb-4">
-                      <p className="text-xs text-slate-500 mb-2">Validations requises</p>
+                      <p className="text-xs text-slate-400 mb-2">Validations requises</p>
                       <div className="flex items-center gap-2">
                         {Object.entries(contrat.validations).map(([key, done]) => (
                           <span
@@ -368,7 +368,7 @@ export function ContratsInboxView({ tabId, data }: Props) {
           >
             Précédent
           </button>
-          <span className="text-sm text-slate-500">
+          <span className="text-sm text-slate-400">
             Page {page} / {totalPages}
           </span>
           <button

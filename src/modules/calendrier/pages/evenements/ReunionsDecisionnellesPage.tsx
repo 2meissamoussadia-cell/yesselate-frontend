@@ -66,7 +66,7 @@ export function ReunionsDecisionnellesPage() {
                       <div className="text-sm text-slate-400 mb-1">{event.description}</div>
                     )}
                     {event.date_debut && event.date_fin && (
-                      <div className="text-sm text-slate-500">
+                      <div className="text-sm text-slate-400">
                         {new Date(event.date_debut).toLocaleDateString()} -{' '}
                         {new Date(event.date_fin).toLocaleDateString()}
                       </div>

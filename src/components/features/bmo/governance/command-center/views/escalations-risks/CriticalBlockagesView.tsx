@@ -58,7 +58,7 @@ export function CriticalBlockagesView() {
                 </div>
                 <div className="space-y-2 text-sm mb-3">
                   <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-slate-500" />
+                    <Calendar className="h-4 w-4 text-slate-400" />
                     <span className="text-slate-400">Jalon impacté:</span>
                     <span className="text-slate-300">{blockage.contractMilestone}</span>
                   </div>

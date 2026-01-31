@@ -23,7 +23,7 @@ export default function SyntheseValidationsPage() {
       <GouvernanceHeader
         title="Synthèse validations"
         subtitle="Liste des validations en attente, bloquantes et validées"
-        onExport={() => console.log('Export synthèse validations')}
+        onExport={() => { /* TODO: export synthèse validations */ }}
       />
 
       {isLoading ? (

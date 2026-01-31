@@ -93,28 +93,28 @@ export function DetailModal() {
                 {modal.title || modal.data?.title || 'Détails'}
               </DialogTitle>
               {modal.data?.subtitle && (
-                <p className="text-sm text-slate-500 mt-1">{modal.data.subtitle}</p>
+                <p className="text-sm text-slate-400 mt-1">{modal.data.subtitle}</p>
               )}
             </div>
             <div className="flex items-center gap-1">
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-8 w-8 p-0 text-slate-500 hover:text-slate-300"
+                className="h-8 w-8 p-0 text-slate-400 hover:text-slate-300"
               >
                 <Edit className="h-4 w-4" />
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-8 w-8 p-0 text-slate-500 hover:text-slate-300"
+                className="h-8 w-8 p-0 text-slate-400 hover:text-slate-300"
               >
                 <ExternalLink className="h-4 w-4" />
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-8 w-8 p-0 text-slate-500 hover:text-slate-300"
+                className="h-8 w-8 p-0 text-slate-400 hover:text-slate-300"
                 onClick={closeModal}
               >
                 <X className="h-4 w-4" />
@@ -136,7 +136,7 @@ export function DetailModal() {
                   'flex items-center gap-1.5 px-3 py-1.5 rounded text-sm transition-colors',
                   isActive
                     ? 'bg-slate-800 text-slate-200'
-                    : 'text-slate-500 hover:text-slate-400 hover:bg-slate-800/50'
+                    : 'text-slate-400 hover:text-slate-400 hover:bg-slate-800/50'
                 )}
               >
                 <Icon className="h-3.5 w-3.5" />
@@ -205,7 +205,7 @@ function InfoTabContent({ data }: { data: Record<string, any> }) {
 
       {/* Description */}
       <div>
-        <h4 className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-2">
+        <h4 className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-2">
           Description
         </h4>
         <p className="text-sm text-slate-400 leading-relaxed">
@@ -215,7 +215,7 @@ function InfoTabContent({ data }: { data: Record<string, any> }) {
 
       {/* Métriques */}
       <div>
-        <h4 className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-3">
+        <h4 className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-3">
           Indicateurs
         </h4>
         <div className="grid grid-cols-3 gap-4">
@@ -228,7 +228,7 @@ function InfoTabContent({ data }: { data: Record<string, any> }) {
       {/* Impact */}
       {data?.impact && (
         <div>
-          <h4 className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-2">
+          <h4 className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-2">
             Impact
           </h4>
           <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
@@ -253,11 +253,11 @@ function TimelineTabContent({ data }: { data: Record<string, any> }) {
       {events.map((event: any, index: number) => (
         <div key={index} className="flex items-start gap-3">
           <div className="flex-shrink-0 w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center">
-            <Clock className="h-4 w-4 text-slate-500" />
+            <Clock className="h-4 w-4 text-slate-400" />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm text-slate-300">{event.action}</p>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-400">
               {event.user} • {event.date}
             </p>
           </div>
@@ -270,13 +270,13 @@ function TimelineTabContent({ data }: { data: Record<string, any> }) {
 function CommentsTabContent({ data }: { data: Record<string, any> }) {
   return (
     <div className="space-y-4">
-      <div className="text-center py-8 text-slate-500 text-sm">
+      <div className="text-center py-8 text-slate-400 text-sm">
         Aucun commentaire pour le moment.
       </div>
       <div className="pt-4 border-t border-slate-800">
         <textarea
           placeholder="Ajouter un commentaire..."
-          className="w-full h-20 px-3 py-2 bg-slate-800/50 border border-slate-700/50 rounded-lg text-sm text-slate-300 placeholder:text-slate-500 resize-none focus:outline-none focus:ring-1 focus:ring-blue-500/50"
+          className="w-full h-20 px-3 py-2 bg-slate-800/50 border border-slate-700/50 rounded-lg text-sm text-slate-300 placeholder:text-slate-400 resize-none focus:outline-none focus:ring-1 focus:ring-blue-500/50"
         />
         <div className="flex justify-end mt-2">
           <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
@@ -290,7 +290,7 @@ function CommentsTabContent({ data }: { data: Record<string, any> }) {
 
 function AttachmentsTabContent({ data }: { data: Record<string, any> }) {
   return (
-    <div className="text-center py-8 text-slate-500 text-sm">
+    <div className="text-center py-8 text-slate-400 text-sm">
       Aucune pièce jointe.
     </div>
   );
@@ -301,7 +301,7 @@ function RelatedTabContent({ data }: { data: Record<string, any> }) {
   
   if (related.length === 0) {
     return (
-      <div className="text-center py-8 text-slate-500 text-sm">
+      <div className="text-center py-8 text-slate-400 text-sm">
         Aucun élément lié.
       </div>
     );
@@ -316,11 +316,11 @@ function RelatedTabContent({ data }: { data: Record<string, any> }) {
         >
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded bg-slate-700/50 flex items-center justify-center">
-              <FolderKanban className="h-4 w-4 text-slate-500" />
+              <FolderKanban className="h-4 w-4 text-slate-400" />
             </div>
             <div>
               <p className="text-sm text-slate-300">{item.title}</p>
-              <p className="text-xs text-slate-500">{item.type}</p>
+              <p className="text-xs text-slate-400">{item.type}</p>
             </div>
           </div>
           <ChevronRight className="h-4 w-4 text-slate-600" />
@@ -346,10 +346,10 @@ function InfoField({
   return (
     <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-800/30">
       <div className="flex-shrink-0 w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center">
-        <Icon className="h-4 w-4 text-slate-500" />
+        <Icon className="h-4 w-4 text-slate-400" />
       </div>
       <div className="min-w-0">
-        <p className="text-xs text-slate-500">{label}</p>
+        <p className="text-xs text-slate-400">{label}</p>
         {badge ? (
           <span className={cn('inline-block px-2 py-0.5 rounded text-xs font-medium mt-0.5', badgeColor)}>
             {value}
@@ -366,7 +366,7 @@ function MetricCard({ label, value }: { label: string; value: string | number })
   return (
     <div className="p-3 rounded-lg bg-slate-800/30 text-center">
       <p className="text-lg font-semibold text-slate-200">{value}</p>
-      <p className="text-xs text-slate-500">{label}</p>
+      <p className="text-xs text-slate-400">{label}</p>
     </div>
   );
 }

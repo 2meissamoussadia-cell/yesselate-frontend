@@ -88,7 +88,7 @@ export function DashboardSubNavigation() {
                 'flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap',
                 isActive
                   ? 'bg-slate-800/80 text-slate-200'
-                  : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800/40'
+                  : 'text-slate-400 hover:text-slate-300 hover:bg-slate-800/40'
               )}
             >
               <span>{sub.label}</span>

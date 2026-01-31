@@ -144,7 +144,7 @@ function ModalWrapper({
             <div>
               <h2 className="text-lg font-semibold text-slate-200">{title}</h2>
               {subtitle && (
-                <p className="text-sm text-slate-500">{subtitle}</p>
+                <p className="text-sm text-slate-400">{subtitle}</p>
               )}
             </div>
           </div>
@@ -228,15 +228,15 @@ function StatsModal() {
           <div className="p-4 rounded-xl border border-slate-700/50 bg-slate-800/30">
             <div className="flex items-center gap-2 mb-2">
               <Wallet className="w-4 h-4 text-emerald-400" />
-              <span className="text-xs text-slate-500">Budget Total</span>
+              <span className="text-xs text-slate-400">Budget Total</span>
             </div>
             <p className="text-xl font-bold text-slate-200">{formatCurrency(stats?.totalBudget ?? 0)}</p>
-            <p className="text-xs text-slate-500 mt-1">FCFA</p>
+            <p className="text-xs text-slate-400 mt-1">FCFA</p>
           </div>
           <div className="p-4 rounded-xl border border-slate-700/50 bg-slate-800/30">
             <div className="flex items-center gap-2 mb-2">
               <DollarSign className="w-4 h-4 text-amber-400" />
-              <span className="text-xs text-slate-500">Consommé</span>
+              <span className="text-xs text-slate-400">Consommé</span>
             </div>
             <p className="text-xl font-bold text-slate-200">{formatCurrency(stats?.budgetConsumed ?? 0)}</p>
             <p className="text-xs text-amber-400 mt-1">{stats?.avgBudgetUsage}%</p>
@@ -244,10 +244,10 @@ function StatsModal() {
           <div className="p-4 rounded-xl border border-slate-700/50 bg-slate-800/30">
             <div className="flex items-center gap-2 mb-2">
               <Users className="w-4 h-4 text-purple-400" />
-              <span className="text-xs text-slate-500">Équipes</span>
+              <span className="text-xs text-slate-400">Équipes</span>
             </div>
             <p className="text-xl font-bold text-slate-200">{stats?.teamSize ?? 0}</p>
-            <p className="text-xs text-slate-500 mt-1">Personnes mobilisées</p>
+            <p className="text-xs text-slate-400 mt-1">Personnes mobilisées</p>
           </div>
         </div>
 
@@ -395,7 +395,7 @@ function ProjectDetailModal() {
                   'flex items-center gap-2 px-4 py-2.5 text-sm font-medium transition-all border-b-2 -mb-px',
                   activeTab === tab.id
                     ? 'text-emerald-400 border-emerald-400'
-                    : 'text-slate-500 border-transparent hover:text-slate-300'
+                    : 'text-slate-400 border-transparent hover:text-slate-300'
                 )}
               >
                 <Icon className="w-4 h-4" />
@@ -459,11 +459,11 @@ function ProjectDetailModal() {
                 </h4>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <p className="text-xs text-slate-500">Alloué</p>
+                    <p className="text-xs text-slate-400">Alloué</p>
                     <p className="text-lg font-bold text-slate-200">{formatCurrency(project.budget?.current || project.budget)}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-slate-500">Consommé</p>
+                    <p className="text-xs text-slate-400">Consommé</p>
                     <p className={cn(
                       'text-lg font-bold',
                       budgetPercent > 90 ? 'text-rose-400' : budgetPercent > 75 ? 'text-amber-400' : 'text-emerald-400'
@@ -480,13 +480,13 @@ function ProjectDetailModal() {
                 </h4>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <p className="text-xs text-slate-500">Début</p>
+                    <p className="text-xs text-slate-400">Début</p>
                     <p className="text-sm font-medium text-slate-200">
                       {new Date(project.startDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-slate-500">Fin prévue</p>
+                    <p className="text-xs text-slate-400">Fin prévue</p>
                     <p className="text-sm font-medium text-slate-200">
                       {new Date(project.endDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
                     </p>
@@ -541,11 +541,11 @@ function ProjectDetailModal() {
                       </div>
                       <div>
                         <p className="text-sm font-medium text-slate-200">{m.title}</p>
-                        <p className="text-xs text-slate-500 mt-0.5">{m.description}</p>
+                        <p className="text-xs text-slate-400 mt-0.5">{m.description}</p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-slate-400">
                         {new Date(m.plannedDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })}
                       </p>
                       <Badge
@@ -561,7 +561,7 @@ function ProjectDetailModal() {
             ) : (
               <div className="text-center py-8">
                 <Milestone className="w-10 h-10 text-slate-600 mx-auto mb-3" />
-                <p className="text-sm text-slate-500">Aucun jalon défini pour ce projet</p>
+                <p className="text-sm text-slate-400">Aucun jalon défini pour ce projet</p>
               </div>
             )}
           </div>
@@ -570,7 +570,7 @@ function ProjectDetailModal() {
         {activeTab === 'team' && (
           <div className="text-center py-8">
             <Users className="w-10 h-10 text-slate-600 mx-auto mb-3" />
-            <p className="text-sm text-slate-500">{project.teamSize || project.team || 0} membres affectés</p>
+            <p className="text-sm text-slate-400">{project.teamSize || project.team || 0} membres affectés</p>
             <Button 
               variant="outline" 
               size="sm" 
@@ -586,7 +586,7 @@ function ProjectDetailModal() {
         {activeTab === 'budget' && (
           <div className="text-center py-8">
             <Wallet className="w-10 h-10 text-slate-600 mx-auto mb-3" />
-            <p className="text-sm text-slate-500">Budget: {formatCurrency(project.budget?.current || project.budget)} FCFA</p>
+            <p className="text-sm text-slate-400">Budget: {formatCurrency(project.budget?.current || project.budget)} FCFA</p>
             <p className="text-xs text-slate-600 mt-1">Consommé: {budgetPercent}%</p>
           </div>
         )}
@@ -594,7 +594,7 @@ function ProjectDetailModal() {
         {activeTab === 'documents' && (
           <div className="text-center py-8">
             <FileText className="w-10 h-10 text-slate-600 mx-auto mb-3" />
-            <p className="text-sm text-slate-500">{project.documentsCount || 0} documents</p>
+            <p className="text-sm text-slate-400">{project.documentsCount || 0} documents</p>
           </div>
         )}
       </div>
@@ -668,7 +668,7 @@ function NewProjectModal() {
                 </div>
                 <span className={cn(
                   'text-sm hidden sm:block',
-                  step >= s.id ? 'text-slate-200' : 'text-slate-500'
+                  step >= s.id ? 'text-slate-200' : 'text-slate-400'
                 )}>
                   {s.label}
                 </span>
@@ -769,10 +769,10 @@ function NewProjectModal() {
             </div>
             <div>
               <label className="text-sm font-medium text-slate-300 block mb-2">Membres de l'équipe</label>
-              <p className="text-xs text-slate-500 mb-3">Vous pourrez ajouter des membres après la création du projet.</p>
+              <p className="text-xs text-slate-400 mb-3">Vous pourrez ajouter des membres après la création du projet.</p>
               <div className="p-4 rounded-lg border border-dashed border-slate-700 text-center">
                 <UserPlus className="w-8 h-8 text-slate-600 mx-auto mb-2" />
-                <p className="text-sm text-slate-500">Aucun membre ajouté</p>
+                <p className="text-sm text-slate-400">Aucun membre ajouté</p>
               </div>
             </div>
           </div>
@@ -789,15 +789,15 @@ function NewProjectModal() {
             </div>
             <div className="p-4 rounded-lg border border-slate-700/50 bg-slate-800/30 space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-slate-500">Titre:</span>
+                <span className="text-slate-400">Titre:</span>
                 <span className="text-slate-200">Nouveau projet</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-slate-500">Bureau:</span>
+                <span className="text-slate-400">Bureau:</span>
                 <span className="text-slate-200">-</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-slate-500">Type:</span>
+                <span className="text-slate-400">Type:</span>
                 <span className="text-slate-200">-</span>
               </div>
             </div>
@@ -920,19 +920,19 @@ function MilestoneModal() {
         <div className="grid grid-cols-4 gap-3">
           <div className="p-3 rounded-lg border border-slate-700/50 bg-slate-800/30 text-center">
             <p className="text-xl font-bold text-slate-200">{milestones.length}</p>
-            <p className="text-xs text-slate-500">Total</p>
+            <p className="text-xs text-slate-400">Total</p>
           </div>
           <div className="p-3 rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-center">
             <p className="text-xl font-bold text-emerald-400">{milestones.filter(m => m.status === 'completed').length}</p>
-            <p className="text-xs text-slate-500">Complétés</p>
+            <p className="text-xs text-slate-400">Complétés</p>
           </div>
           <div className="p-3 rounded-lg border border-blue-500/30 bg-blue-500/10 text-center">
             <p className="text-xl font-bold text-blue-400">{milestones.filter(m => m.status === 'in-progress').length}</p>
-            <p className="text-xs text-slate-500">En cours</p>
+            <p className="text-xs text-slate-400">En cours</p>
           </div>
           <div className="p-3 rounded-lg border border-rose-500/30 bg-rose-500/10 text-center">
             <p className="text-xl font-bold text-rose-400">{milestones.filter(m => m.status === 'delayed').length}</p>
-            <p className="text-xs text-slate-500">En retard</p>
+            <p className="text-xs text-slate-400">En retard</p>
           </div>
         </div>
 
@@ -962,10 +962,10 @@ function MilestoneModal() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-slate-200 truncate">{m.title}</p>
-                <p className="text-xs text-slate-500">{m.owner} • {m.category}</p>
+                <p className="text-xs text-slate-400">{m.owner} • {m.category}</p>
               </div>
               <div className="text-right">
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-400">
                   {new Date(m.plannedDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })}
                 </p>
                 <div className="w-16 h-1.5 bg-slate-700/50 rounded-full mt-1 overflow-hidden">
@@ -980,7 +980,7 @@ function MilestoneModal() {
                   />
                 </div>
               </div>
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-slate-500 hover:text-slate-300">
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-slate-400 hover:text-slate-300">
                 <Edit3 className="w-4 h-4" />
               </Button>
             </div>
@@ -1033,7 +1033,7 @@ function TeamAssignModal() {
       <div className="space-y-4">
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <Input
             placeholder="Rechercher un membre..."
             value={searchQuery}
@@ -1058,7 +1058,7 @@ function TeamAssignModal() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-slate-200">{m.firstName} {m.lastName}</p>
-                  <p className="text-xs text-slate-500">{m.roleLabel} • {m.department}</p>
+                  <p className="text-xs text-slate-400">{m.roleLabel} • {m.department}</p>
                 </div>
                 <div className="text-right">
                   <Badge variant="default" className={cn(
@@ -1296,7 +1296,7 @@ function SettingsModal() {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm font-medium text-slate-200">Rafraîchissement auto</p>
-            <p className="text-xs text-slate-500">Mettre à jour les données automatiquement</p>
+            <p className="text-xs text-slate-400">Mettre à jour les données automatiquement</p>
           </div>
           <button
             onClick={() => setAutoRefresh(!autoRefresh)}
@@ -1364,7 +1364,7 @@ function StatKPI({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon className={cn('w-4 h-4', colorClasses[color])} />
-          <span className="text-xs text-slate-500">{label}</span>
+          <span className="text-xs text-slate-400">{label}</span>
         </div>
         {trend !== undefined && trend !== 0 && (
           <div className="flex items-center gap-1 text-xs">
@@ -1391,8 +1391,8 @@ function MetricCard({ icon: Icon, label, value }: { icon: React.ElementType; lab
   return (
     <div className="p-3 rounded-lg border border-slate-700/50 bg-slate-800/20">
       <div className="flex items-center gap-2 mb-1">
-        <Icon className="w-3 h-3 text-slate-500" />
-        <span className="text-xs text-slate-500">{label}</span>
+        <Icon className="w-3 h-3 text-slate-400" />
+        <span className="text-xs text-slate-400">{label}</span>
       </div>
       <p className="text-sm font-medium text-slate-200">{value}</p>
     </div>

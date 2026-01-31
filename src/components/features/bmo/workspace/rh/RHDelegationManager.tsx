@@ -143,7 +143,7 @@ export function RHDelegationManager({ open, onClose }: RHDelegationManagerProps)
                 <CheckCircle className="w-5 h-5 text-green-500" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">Délégations actives</p>
+                <p className="text-sm text-slate-400">Délégations actives</p>
                 <p className="text-2xl font-bold">{activeDelegations.length}</p>
               </div>
             </div>
@@ -155,7 +155,7 @@ export function RHDelegationManager({ open, onClose }: RHDelegationManagerProps)
                 <Clock className="w-5 h-5 text-amber-500" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">En attente</p>
+                <p className="text-sm text-slate-400">En attente</p>
                 <p className="text-2xl font-bold">{pendingDelegations.length}</p>
               </div>
             </div>
@@ -167,7 +167,7 @@ export function RHDelegationManager({ open, onClose }: RHDelegationManagerProps)
                 <Users className="w-5 h-5 text-blue-500" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">Demandes traitées</p>
+                <p className="text-sm text-slate-400">Demandes traitées</p>
                 <p className="text-2xl font-bold">
                   {delegations.reduce((sum, d) => sum + d.requestsHandled, 0)}
                 </p>
@@ -210,12 +210,12 @@ export function RHDelegationManager({ open, onClose }: RHDelegationManagerProps)
                         ? 'En attente'
                         : 'Expirée'}
                     </Badge>
-                    <span className="text-xs text-slate-500">{delegation.reason}</span>
+                    <span className="text-xs text-slate-400">{delegation.reason}</span>
                   </div>
 
                   {/* Délégant */}
                   <div className="mb-2">
-                    <p className="text-xs text-slate-500 mb-1">Délégant:</p>
+                    <p className="text-xs text-slate-400 mb-1">Délégant:</p>
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white text-xs font-bold">
                         {delegation.delegatorName
@@ -225,14 +225,14 @@ export function RHDelegationManager({ open, onClose }: RHDelegationManagerProps)
                       </div>
                       <div>
                         <p className="font-semibold text-sm">{delegation.delegatorName}</p>
-                        <p className="text-xs text-slate-500">{delegation.delegatorRole}</p>
+                        <p className="text-xs text-slate-400">{delegation.delegatorRole}</p>
                       </div>
                     </div>
                   </div>
 
                   {/* Délégataire */}
                   <div className="mb-3">
-                    <p className="text-xs text-slate-500 mb-1">Délégataire:</p>
+                    <p className="text-xs text-slate-400 mb-1">Délégataire:</p>
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
                         {delegation.delegateName
@@ -242,7 +242,7 @@ export function RHDelegationManager({ open, onClose }: RHDelegationManagerProps)
                       </div>
                       <div>
                         <p className="font-semibold text-sm">{delegation.delegateName}</p>
-                        <p className="text-xs text-slate-500">{delegation.delegateRole}</p>
+                        <p className="text-xs text-slate-400">{delegation.delegateRole}</p>
                       </div>
                     </div>
                   </div>
@@ -265,7 +265,7 @@ export function RHDelegationManager({ open, onClose }: RHDelegationManagerProps)
 
                   {/* Permissions */}
                   <div>
-                    <p className="text-xs text-slate-500 mb-1.5 flex items-center gap-1">
+                    <p className="text-xs text-slate-400 mb-1.5 flex items-center gap-1">
                       <Shield className="w-3 h-3" />
                       Permissions déléguées:
                     </p>

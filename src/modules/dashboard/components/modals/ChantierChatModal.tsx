@@ -115,7 +115,7 @@ export function ChantierChatModal({
               <h2 id="chantier-chat-title" className="text-base font-semibold text-slate-100 truncate">
                 Chat — {chantier.id}
               </h2>
-              <p className="text-xs text-slate-500 truncate">
+              <p className="text-xs text-slate-400 truncate">
                 DG ↔ Chef chantier • {chantier.prestation} • Phase {chantier.phase}
               </p>
             </div>
@@ -157,7 +157,7 @@ export function ChantierChatModal({
                   )}
                 >
                   <span className="font-medium truncate block">{t.subject}</span>
-                  <span className="text-[10px] text-slate-500 truncate block">{t.lastMessagePreview || '—'}</span>
+                  <span className="text-[10px] text-slate-400 truncate block">{t.lastMessagePreview || '—'}</span>
                 </button>
               ))}
             </div>
@@ -174,7 +174,7 @@ export function ChantierChatModal({
                     value={newSubject}
                     onChange={(e) => setNewSubject(e.target.value)}
                     placeholder="Ex. Pourquoi Phase 4 bloquée ?"
-                    className="flex-1 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-sm text-slate-200 placeholder:text-slate-500"
+                    className="flex-1 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-sm text-slate-200 placeholder:text-slate-400"
                     onKeyDown={(e) => e.key === 'Enter' && handleNewThread()}
                   />
                   <Button size="sm" onClick={handleNewThread} className="shrink-0">
@@ -184,7 +184,7 @@ export function ChantierChatModal({
                     Annuler
                   </Button>
                 </div>
-                <p className="text-xs text-slate-500">Ou choisir :</p>
+                <p className="text-xs text-slate-400">Ou choisir :</p>
                 <div className="flex flex-wrap gap-1">
                   {DEFAULT_SUBJECTS.map((s) => (
                     <button
@@ -208,11 +208,11 @@ export function ChantierChatModal({
               <>
                 <div className="px-4 py-2 border-b border-slate-800/50">
                   <p className="text-sm font-medium text-slate-200">{activeThread.subject}</p>
-                  <p className="text-xs text-slate-500">{activeThread.messageCount} message(s)</p>
+                  <p className="text-xs text-slate-400">{activeThread.messageCount} message(s)</p>
                 </div>
                 <div className="flex-1 overflow-y-auto p-4 space-y-3">
                   {messages.length === 0 && (
-                    <p className="text-sm text-slate-500 text-center py-6">
+                    <p className="text-sm text-slate-400 text-center py-6">
                       Aucun message. Écrivez « Pourquoi Phase 4 bloquée ? » pour démarrer.
                     </p>
                   )}
@@ -237,7 +237,7 @@ export function ChantierChatModal({
                             : 'bg-slate-800/80 text-slate-200 border border-slate-700/60'
                         )}
                       >
-                        <p className="text-xs text-slate-500 mb-0.5">
+                        <p className="text-xs text-slate-400 mb-0.5">
                           {msg.role === 'dg' ? 'DG' : 'Chef chantier'} • {formatTime(msg.createdAt)}
                         </p>
                         <p className="whitespace-pre-wrap">{msg.content}</p>
@@ -258,7 +258,7 @@ export function ChantierChatModal({
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Écrire un message…"
-                    className="flex-1 px-3 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-sm text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                    className="flex-1 px-3 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-sm text-slate-200 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
@@ -278,7 +278,7 @@ export function ChantierChatModal({
                 </div>
               </>
             ) : (
-              <div className="flex-1 flex items-center justify-center p-8 text-slate-500 text-sm">
+              <div className="flex-1 flex items-center justify-center p-8 text-slate-400 text-sm">
                 Sélectionnez un sujet ou créez un nouveau thread.
               </div>
             )}

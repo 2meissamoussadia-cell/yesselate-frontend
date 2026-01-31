@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCalendrierStore } from '@/lib/stores/calendrierStore';
+import { logger } from '@/lib/utils/logger';
 import type { Conflit } from '@/lib/types/calendrier.types';
 import { ResoudreConflitModal } from '../modals/ResoudreConflitModal';
 
@@ -134,7 +135,7 @@ export function ConflitsView() {
           conflit={selectedConflit}
           onSave={(data) => {
             // TODO: Appeler API pour résoudre le conflit
-            console.log('Résolution conflit:', data);
+            logger.debug('Résolution conflit', { component: 'ConflitsView', data });
             setShowResoudreModal(false);
             setSelectedConflit(null);
           }}

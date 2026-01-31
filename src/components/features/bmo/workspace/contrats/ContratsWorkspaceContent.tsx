@@ -12,7 +12,7 @@ export function ContratsWorkspaceContent() {
 
   if (!activeTab) {
     return (
-      <div className="flex items-center justify-center h-64 text-slate-500">
+      <div className="flex items-center justify-center h-64 text-slate-400">
         <div className="text-center">
           <FileText className="w-12 h-12 mx-auto mb-3 opacity-30" />
           <p>Aucun onglet sélectionné</p>
@@ -49,7 +49,7 @@ export function ContratsWorkspaceContent() {
     
     default:
       return (
-        <div className="flex items-center justify-center h-64 text-slate-500">
+        <div className="flex items-center justify-center h-64 text-slate-400">
           <div className="text-center">
             <FileText className="w-12 h-12 mx-auto mb-3 opacity-30" />
             <p>Type de vue non supporté</p>
@@ -61,7 +61,7 @@ export function ContratsWorkspaceContent() {
 
 function PlaceholderView({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
   return (
-    <div className="flex items-center justify-center h-64 text-slate-500">
+    <div className="flex items-center justify-center h-64 text-slate-400">
       <div className="text-center">
         <div className="mx-auto mb-4 opacity-30">{icon}</div>
         <p className="font-semibold">{title}</p>

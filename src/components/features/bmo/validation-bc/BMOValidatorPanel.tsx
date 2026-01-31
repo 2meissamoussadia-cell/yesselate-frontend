@@ -220,7 +220,7 @@ export function BMOValidatorPanel({ context, item, onAction }: BMOValidatorPanel
                       </div>
                       <p className="text-xs text-slate-400 mb-1">{check.description}</p>
                       {check.details && (
-                        <p className="text-xs text-slate-500 italic">{check.details}</p>
+                        <p className="text-xs text-slate-400 italic">{check.details}</p>
                       )}
                     </div>
                   </div>

@@ -252,14 +252,14 @@ export function BlockedDecisionCenter({ open, onClose }: Props) {
             </div>
             <div>
               <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">Centre de décision BMO</h2>
-              <p className="text-sm text-slate-500">Arbitrage, escalade et substitution</p>
+              <p className="text-sm text-slate-400">Arbitrage, escalade et substitution</p>
             </div>
           </div>
           <button
             onClick={onClose}
             className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
           >
-            <X className="w-5 h-5 text-slate-500" />
+            <X className="w-5 h-5 text-slate-400" />
           </button>
         </div>
 
@@ -300,7 +300,7 @@ export function BlockedDecisionCenter({ open, onClose }: Props) {
           {loading && (
             <div className="flex items-center justify-center py-12">
               <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
-              <span className="ml-3 text-slate-500">Chargement des dossiers...</span>
+              <span className="ml-3 text-slate-400">Chargement des dossiers...</span>
             </div>
           )}
 
@@ -319,7 +319,7 @@ export function BlockedDecisionCenter({ open, onClose }: Props) {
                         <p className="font-semibold text-slate-900 dark:text-slate-100">
                           {stats.totalCritical} blocage(s) critique(s)
                         </p>
-                        <p className="text-sm text-slate-500">
+                        <p className="text-sm text-slate-400">
                           Action immédiate requise - Impact business élevé
                         </p>
                       </div>
@@ -343,7 +343,7 @@ export function BlockedDecisionCenter({ open, onClose }: Props) {
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <AlertCircle className="w-5 h-5 text-red-500" />
-                    <span className="text-sm text-slate-500">Critiques</span>
+                    <span className="text-sm text-slate-400">Critiques</span>
                   </div>
                   <p className="text-3xl font-bold text-slate-900 dark:text-slate-100">{stats.totalCritical}</p>
                 </button>
@@ -357,7 +357,7 @@ export function BlockedDecisionCenter({ open, onClose }: Props) {
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <AlertTriangle className="w-5 h-5 text-amber-500" />
-                    <span className="text-sm text-slate-500">Impact élevé</span>
+                    <span className="text-sm text-slate-400">Impact élevé</span>
                   </div>
                   <p className="text-3xl font-bold text-slate-900 dark:text-slate-100">{stats.totalHigh}</p>
                 </button>
@@ -371,7 +371,7 @@ export function BlockedDecisionCenter({ open, onClose }: Props) {
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <Clock className="w-5 h-5 text-orange-500" />
-                    <span className="text-sm text-slate-500">Hors délai (&gt;14j)</span>
+                    <span className="text-sm text-slate-400">Hors délai (&gt;14j)</span>
                   </div>
                   <p className="text-3xl font-bold text-slate-900 dark:text-slate-100">{stats.totalOverdue}</p>
                 </button>
@@ -452,11 +452,11 @@ export function BlockedDecisionCenter({ open, onClose }: Props) {
                           <span className="font-mono text-xs px-2 py-0.5 rounded bg-red-500/20 text-red-600">
                             {dossier.id}
                           </span>
-                          <span className="text-xs text-slate-500">{dossier.type}</span>
+                          <span className="text-xs text-slate-400">{dossier.type}</span>
                         </div>
                         <p className="font-medium">{dossier.subject}</p>
-                        <p className="text-sm text-slate-500 mt-1">{dossier.reason}</p>
-                        <div className="flex items-center gap-3 mt-2 text-xs text-slate-500">
+                        <p className="text-sm text-slate-400 mt-1">{dossier.reason}</p>
+                        <div className="flex items-center gap-3 mt-2 text-xs text-slate-400">
                           <span className="flex items-center gap-1">
                             <Building2 className="w-3 h-3" />
                             {dossier.bureau}
@@ -469,7 +469,7 @@ export function BlockedDecisionCenter({ open, onClose }: Props) {
                       </div>
                       <div className="text-right">
                         <p className="font-mono font-bold text-amber-600">{dossier.amount}</p>
-                        <p className="text-xs text-slate-500 mt-1">Priorité: {computePriority(dossier)}</p>
+                        <p className="text-xs text-slate-400 mt-1">Priorité: {computePriority(dossier)}</p>
                       </div>
                     </div>
                   </div>
@@ -511,7 +511,7 @@ export function BlockedDecisionCenter({ open, onClose }: Props) {
                     Escalade au CODIR
                   </h3>
                 </div>
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-slate-400">
                   Les dossiers sélectionnés seront escaladés au comité de direction avec une notification immédiate.
                 </p>
               </div>
@@ -523,7 +523,7 @@ export function BlockedDecisionCenter({ open, onClose }: Props) {
                     <div className="space-y-2 max-h-40 overflow-y-auto">
                       {selectedDossiers.map(d => (
                         <div key={d.id} className="flex items-center justify-between text-sm">
-                          <span className="font-mono text-xs text-slate-500">{d.id}</span>
+                          <span className="font-mono text-xs text-slate-400">{d.id}</span>
                           <span className="truncate flex-1 mx-2">{d.subject}</span>
                           <span className="text-xs text-amber-600">J+{d.delay}</span>
                         </div>
@@ -552,7 +552,7 @@ export function BlockedDecisionCenter({ open, onClose }: Props) {
                   </button>
                 </>
               ) : (
-                <div className="text-center py-8 text-slate-500">
+                <div className="text-center py-8 text-slate-400">
                   <AlertTriangle className="w-12 h-12 mx-auto mb-3 opacity-30" />
                   <p>Aucun dossier sélectionné</p>
                   <button
@@ -576,7 +576,7 @@ export function BlockedDecisionCenter({ open, onClose }: Props) {
                     Pouvoir de substitution BMO
                   </h3>
                 </div>
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-slate-400">
                   Le Directeur Général exerce son autorité de substitution pour débloquer les situations critiques.
                   Cette action est tracée et auditable.
                 </p>
@@ -589,7 +589,7 @@ export function BlockedDecisionCenter({ open, onClose }: Props) {
                     <div className="space-y-2 max-h-40 overflow-y-auto">
                       {selectedDossiers.map(d => (
                         <div key={d.id} className="flex items-center justify-between text-sm">
-                          <span className="font-mono text-xs text-slate-500">{d.id}</span>
+                          <span className="font-mono text-xs text-slate-400">{d.id}</span>
                           <span className="truncate flex-1 mx-2">{d.subject}</span>
                           <span className="text-xs text-purple-600">{d.bureau}</span>
                         </div>
@@ -618,7 +618,7 @@ export function BlockedDecisionCenter({ open, onClose }: Props) {
                   </button>
                 </>
               ) : (
-                <div className="text-center py-8 text-slate-500">
+                <div className="text-center py-8 text-slate-400">
                   <Shield className="w-12 h-12 mx-auto mb-3 opacity-30" />
                   <p>Aucun dossier sélectionné</p>
                   <button
@@ -639,7 +639,7 @@ export function BlockedDecisionCenter({ open, onClose }: Props) {
                 <h3 className="font-semibold">{stats.totalSelected} dossier(s) sélectionné(s)</h3>
                 <button
                   onClick={() => clearSelection()}
-                  className="text-sm text-slate-500 hover:text-slate-700"
+                  className="text-sm text-slate-400 hover:text-slate-700"
                 >
                   Vider la sélection
                 </button>
@@ -653,7 +653,7 @@ export function BlockedDecisionCenter({ open, onClose }: Props) {
                   >
                     <ArrowUpRight className="w-8 h-8 text-orange-500 mx-auto mb-2" />
                     <p className="font-medium text-slate-900 dark:text-slate-100">Escalader</p>
-                    <p className="text-xs text-slate-500 mt-1">Remonter au CODIR</p>
+                    <p className="text-xs text-slate-400 mt-1">Remonter au CODIR</p>
                   </button>
 
                   <button
@@ -662,7 +662,7 @@ export function BlockedDecisionCenter({ open, onClose }: Props) {
                   >
                     <Shield className="w-8 h-8 text-purple-500 mx-auto mb-2" />
                     <p className="font-medium text-slate-900 dark:text-slate-100">Substituer</p>
-                    <p className="text-xs text-slate-500 mt-1">Pouvoir BMO</p>
+                    <p className="text-xs text-slate-400 mt-1">Pouvoir BMO</p>
                   </button>
                 </div>
               )}
@@ -672,7 +672,7 @@ export function BlockedDecisionCenter({ open, onClose }: Props) {
 
         {/* Footer */}
         <div className="px-6 py-4 border-t border-slate-200/70 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30">
-          <div className="flex items-center justify-between text-xs text-slate-500">
+          <div className="flex items-center justify-between text-xs text-slate-400">
             <div className="flex items-center gap-4">
               <span>Utilisateur: {currentUser.name}</span>
               <span>•</span>

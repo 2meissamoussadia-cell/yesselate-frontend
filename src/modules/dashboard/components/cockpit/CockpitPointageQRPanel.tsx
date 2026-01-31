@@ -73,29 +73,29 @@ export function CockpitPointageQRPanel() {
           </div>
           <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-sm">
             <div className="flex items-center gap-2">
-              <UserCheck className="h-4 w-4 text-slate-500 shrink-0" />
+              <UserCheck className="h-4 w-4 text-slate-400 shrink-0" />
               <span className="text-slate-400 shrink-0">Ouvrier</span>
               <span className="text-slate-200 font-medium">{result.ouvrierId} — {result.nom}</span>
             </div>
             <div className="flex items-center gap-2">
-              <Building2 className="h-4 w-4 text-slate-500 shrink-0" />
+              <Building2 className="h-4 w-4 text-slate-400 shrink-0" />
               <span className="text-slate-400 shrink-0">Chantier</span>
               <span className="text-slate-200 font-medium">{result.chantierId}</span>
             </div>
             <div className="flex items-center gap-2 sm:col-span-2">
-              <Clock className="h-4 w-4 text-slate-500 shrink-0" />
+              <Clock className="h-4 w-4 text-slate-400 shrink-0" />
               <span className="text-slate-400 shrink-0">Heure</span>
               <span className="text-slate-200 font-medium">{result.heure} · {result.date}</span>
             </div>
           </dl>
-          <p className="mt-2 text-xs text-slate-500">{result.chantierLabel}</p>
+          <p className="mt-2 text-xs text-slate-400">{result.chantierLabel}</p>
         </div>
       )}
 
       {!result && !scanning && (
         <div className={cn('rounded-xl border border-dashed py-8 flex flex-col items-center justify-center', colors.border.default)}>
           <QrCode className="h-10 w-10 text-slate-600 mb-2" />
-          <p className="text-sm text-slate-500">Aucun pointage récent. Cliquez sur « Scanner QR pointage ».</p>
+          <p className="text-sm text-slate-400">Aucun pointage récent. Cliquez sur « Scanner QR pointage ».</p>
         </div>
       )}
     </div>

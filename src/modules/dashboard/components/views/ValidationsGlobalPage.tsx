@@ -323,7 +323,7 @@ export const ValidationsGlobalPage = memo(function ValidationsGlobalPage() {
         >
           <FileCheck className="h-3.5 w-3.5" />
           Validation BC / Factures
-          <ExternalLink className="h-3 w-3 text-slate-500" />
+          <ExternalLink className="h-3 w-3 text-slate-400" />
         </Link>
         <Link
           href="/maitre-ouvrage/validation-contrats"
@@ -331,12 +331,12 @@ export const ValidationsGlobalPage = memo(function ValidationsGlobalPage() {
         >
           <Building2 className="h-3.5 w-3.5" />
           Validation contrats
-          <ExternalLink className="h-3 w-3 text-slate-500" />
+          <ExternalLink className="h-3 w-3 text-slate-400" />
         </Link>
       </div>
       <DashboardPageLayout maxWidth="xl" padding="md">
         {/* Logique métier (Odoo-style) : App → Modèle → Workflow */}
-        <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+        <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-slate-400">
           <span className="inline-flex items-center gap-1.5 rounded-md border border-slate-800/60 bg-slate-900/40 px-2 py-1">
             <span className="font-medium text-slate-400">App</span>
             <span>{appMeta.name}</span>

@@ -282,7 +282,7 @@ export function KPIAlertsSystem({ kpis, onAlert }: KPIAlertsSystemProps) {
                             {alert.kpiLabel}
                           </p>
                           <p className="text-xs text-slate-400">{alert.message}</p>
-                          <p className="text-[10px] text-slate-500 mt-1">
+                          <p className="text-[10px] text-slate-400 mt-1">
                             {alert.timestamp.toLocaleTimeString('fr-FR')}
                           </p>
                         </div>
@@ -305,7 +305,7 @@ export function KPIAlertsSystem({ kpis, onAlert }: KPIAlertsSystemProps) {
                   Seuils configurés ({thresholds.length})
                 </h4>
                 {thresholds.length === 0 ? (
-                  <p className="text-xs text-slate-500 text-center py-4">
+                  <p className="text-xs text-slate-400 text-center py-4">
                     Aucun seuil configuré. Cliquez sur "Ajouter un seuil" pour commencer.
                   </p>
                 ) : (
@@ -333,7 +333,7 @@ export function KPIAlertsSystem({ kpis, onAlert }: KPIAlertsSystemProps) {
                                 'p-1 rounded transition-colors',
                                 threshold.enabled
                                   ? 'text-emerald-400 hover:text-emerald-300'
-                                  : 'text-slate-500 hover:text-slate-400'
+                                  : 'text-slate-400 hover:text-slate-400'
                               )}
                               aria-label={threshold.enabled ? 'Désactiver' : 'Activer'}
                             >
@@ -345,7 +345,7 @@ export function KPIAlertsSystem({ kpis, onAlert }: KPIAlertsSystemProps) {
                             </button>
                             <button
                               onClick={() => removeThreshold(threshold.kpiId)}
-                              className="p-1 rounded text-slate-500 hover:text-red-400 transition-colors"
+                              className="p-1 rounded text-slate-400 hover:text-red-400 transition-colors"
                               aria-label="Supprimer"
                             >
                               <X className="h-3 w-3" />

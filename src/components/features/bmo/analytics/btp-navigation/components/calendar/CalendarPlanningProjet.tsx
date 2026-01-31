@@ -118,7 +118,7 @@ export function CalendarPlanningProjet({ isOpen, onClose }: CalendarPlanningProj
                       <span className="text-sm font-medium text-slate-200">{milestone.title}</span>
                     </div>
                     <div className="text-xs text-slate-400 mb-2">Projet: {milestone.project}</div>
-                    <div className="flex items-center gap-4 text-xs text-slate-500">
+                    <div className="flex items-center gap-4 text-xs text-slate-400">
                       <div className="flex items-center gap-1">
                         <Calendar className="h-3 w-3" />
                         {milestone.date}
@@ -128,7 +128,7 @@ export function CalendarPlanningProjet({ isOpen, onClose }: CalendarPlanningProj
                 </div>
 
                 <div className="mt-3 pt-3 border-t border-slate-700">
-                  <div className="text-xs text-slate-500 mb-2">Livrables :</div>
+                  <div className="text-xs text-slate-400 mb-2">Livrables :</div>
                   <div className="flex flex-wrap gap-2 mb-3">
                     {milestone.deliverables.map((deliverable, idx) => (
                       <Badge key={idx} variant="default" className="text-xs">
@@ -137,7 +137,7 @@ export function CalendarPlanningProjet({ isOpen, onClose }: CalendarPlanningProj
                       </Badge>
                     ))}
                   </div>
-                  <div className="text-xs text-slate-500 mb-1">Équipes :</div>
+                  <div className="text-xs text-slate-400 mb-1">Équipes :</div>
                   <div className="flex flex-wrap gap-2">
                     {milestone.team.map((team, idx) => (
                       <Badge key={idx} variant="default" className="text-xs">

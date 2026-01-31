@@ -159,8 +159,8 @@ export function DashboardPage() {
                   <div className="text-sm font-medium text-slate-200 mb-1">{demande.title}</div>
                   <div className="text-xs text-slate-400 mb-2">{demande.reference}</div>
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-slate-500">{demande.service}</span>
-                    <span className="text-slate-500">{demande.createdAt.toLocaleDateString('fr-FR')}</span>
+                    <span className="text-slate-400">{demande.service}</span>
+                    <span className="text-slate-400">{demande.createdAt.toLocaleDateString('fr-FR')}</span>
                   </div>
                 </div>
               </div>

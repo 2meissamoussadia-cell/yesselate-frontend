@@ -8,7 +8,9 @@
 import React, { useState, useCallback } from 'react';
 import { BmoSidebar } from '@/components/bmo/navigation/BmoSidebar';
 import { BmoTopbar } from '@/components/bmo/navigation/BmoTopbar';
+import { SkipLink } from '@/components/ui/skip-link';
 import { cn } from '@/lib/utils';
+import { useAppStore } from '@/lib/stores/app-store';
 
 export interface BmoLayoutShellProps {
   children: React.ReactNode;
@@ -24,29 +26,26 @@ export function BmoLayoutShell({
   className,
 }: BmoLayoutShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const darkMode = useAppStore((s) => s.darkMode);
   const toggleSidebar = useCallback(() => setSidebarOpen((o) => !o), []);
   const closeSidebar = useCallback(() => setSidebarOpen(false), []);
 
   return (
     <div
       className={cn(
-        'flex h-screen w-screen bg-slate-950 text-slate-100 overflow-hidden',
+        'flex h-screen w-screen overflow-hidden transition-colors',
+        darkMode ? 'bg-slate-950 text-slate-100' : 'bg-gray-50 text-slate-900',
         className
       )}
     >
-      {/* Lien « Aller au contenu » : hors du main pour ne pas recevoir le focus après une nav (ex. clic sub-sidebar) */}
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[9999] focus:rounded focus:bg-black focus:px-3 focus:py-2 focus:text-white"
-      >
-        Aller au contenu
-      </a>
+      {/* Lien « Aller au contenu » : navigation clavier WCAG 2.4.1 (Bypass Blocks) */}
+      <SkipLink href="#main-content">Aller au contenu</SkipLink>
       {/* Overlay : clic ferme la sidebar */}
       {sidebarOpen && (
         <button
           type="button"
           aria-label="Fermer le menu"
-          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-[2px] transition-opacity"
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-[2px] transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
           onClick={closeSidebar}
         />
       )}
@@ -54,7 +53,8 @@ export function BmoLayoutShell({
       {/* Sidebar en tiroir : cachée par défaut, slide au clic sur hamburger */}
       <div
         className={cn(
-          'fixed left-0 top-0 bottom-0 z-50 w-56 flex flex-col bg-slate-950 border-r border-slate-800/70 shadow-xl transition-transform duration-300 ease-out',
+          'fixed left-0 top-0 bottom-0 z-50 w-56 flex flex-col border-r shadow-xl transition-all duration-300 ease-out',
+          darkMode ? 'bg-slate-950 border-slate-800/70' : 'bg-white border-slate-200',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >
@@ -75,7 +75,7 @@ export function BmoLayoutShell({
             if (typeof document !== 'undefined') document.dispatchEvent(event);
           }}
         />
-        <main className="flex-1 min-h-0 min-w-0 overflow-auto scrollbar-dashboard" id="main-content" role="main" tabIndex={-1}>
+        <main className="flex-1 min-h-0 min-w-0 max-w-full overflow-x-hidden overflow-y-auto scrollbar-dashboard" id="main-content" role="main" tabIndex={-1}>
           {children}
         </main>
       </div>

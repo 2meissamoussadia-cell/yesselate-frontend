@@ -1,6 +1,7 @@
 'use client';
 
 import { create } from 'zustand';
+import { logger } from '@/lib/utils/logger';
 import { devtools } from 'zustand/middleware';
 
 // ============================================
@@ -421,9 +422,7 @@ export const useDashboardCommandCenterStore = create<DashboardCommandCenterStore
 
       // Quick actions pour futures extensions
       quickAction: (action: string, payload?: any) => {
-        if (process.env.NODE_ENV === 'development') {
-          console.log('⚡ [Store] Quick Action:', action, payload);
-        }
+        logger.debug('Quick Action', { component: 'dashboardCommandCenterStore', action, payload });
         // Logique des actions rapides ici
       },
 

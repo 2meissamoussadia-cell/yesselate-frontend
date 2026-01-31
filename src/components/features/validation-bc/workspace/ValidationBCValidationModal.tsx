@@ -91,7 +91,7 @@ function StepIndicator({ steps, currentStep }: { steps: ValidationStep[]; curren
             </div>
             <div className="text-xs text-center mt-2 max-w-[80px]">
               <div className="font-medium">{step.title}</div>
-              <div className="text-slate-500 truncate">{step.approver}</div>
+              <div className="text-slate-400 truncate">{step.approver}</div>
             </div>
           </div>
           
@@ -148,7 +148,7 @@ function ThreeWayMatchPanel({ items }: { items: ThreeWayMatchDetail[] }) {
               {item.status === 'missing' && <FileText className="w-4 h-4 text-slate-400" />}
               <div>
                 <div className="text-sm font-medium">{item.document}</div>
-                <div className="text-xs text-slate-500">{item.reference}</div>
+                <div className="text-xs text-slate-400">{item.reference}</div>
               </div>
             </div>
             <div className="text-right">
@@ -232,7 +232,7 @@ export function ValidationBCValidationModal({
                 'flex-1 px-3 py-1.5 rounded text-sm font-medium transition-colors',
                 currentView === tab.id
                   ? 'bg-white dark:bg-slate-700 shadow text-slate-900 dark:text-slate-100'
-                  : 'text-slate-500 hover:text-slate-700'
+                  : 'text-slate-400 hover:text-slate-700'
               )}
             >
               {tab.label}
@@ -246,28 +246,28 @@ export function ValidationBCValidationModal({
             {/* Document info */}
             <div className="grid grid-cols-2 gap-4">
               <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-                <div className="text-xs text-slate-500 mb-1">Fournisseur</div>
+                <div className="text-xs text-slate-400 mb-1">Fournisseur</div>
                 <div className="font-medium flex items-center gap-2">
                   <Building2 className="w-4 h-4 text-slate-400" />
                   {document.supplier}
                 </div>
               </div>
               <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-                <div className="text-xs text-slate-500 mb-1">Montant</div>
+                <div className="text-xs text-slate-400 mb-1">Montant</div>
                 <div className="font-medium flex items-center gap-2">
                   <DollarSign className="w-4 h-4 text-slate-400" />
                   {new Intl.NumberFormat('fr-FR').format(document.amount)} {document.currency}
                 </div>
               </div>
               <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-                <div className="text-xs text-slate-500 mb-1">Soumis par</div>
+                <div className="text-xs text-slate-400 mb-1">Soumis par</div>
                 <div className="font-medium flex items-center gap-2">
                   <User className="w-4 h-4 text-slate-400" />
                   {document.submittedBy}
                 </div>
               </div>
               <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-                <div className="text-xs text-slate-500 mb-1">Échéance</div>
+                <div className="text-xs text-slate-400 mb-1">Échéance</div>
                 <div className="font-medium flex items-center gap-2">
                   <Calendar className="w-4 h-4 text-slate-400" />
                   {new Date(document.dueDate).toLocaleDateString('fr-FR')}
@@ -290,7 +290,7 @@ export function ValidationBCValidationModal({
                   <div className="font-medium text-sm">
                     3-Way Match: {document.threeWayStatus === 'matched' ? 'Conforme' : 'Écarts détectés'}
                   </div>
-                  <div className="text-xs text-slate-500">
+                  <div className="text-xs text-slate-400">
                     BC ↔ BL ↔ Facture
                   </div>
                 </div>
@@ -308,7 +308,7 @@ export function ValidationBCValidationModal({
               <div className="flex items-center justify-between">
                 <div>
                   <div className="font-medium text-sm">Niveau de validation actuel</div>
-                  <div className="text-xs text-slate-500">
+                  <div className="text-xs text-slate-400">
                     {document.currentLevel} sur {document.maxLevel}
                   </div>
                 </div>
@@ -346,7 +346,7 @@ export function ValidationBCValidationModal({
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="font-medium text-sm">{step.title}</div>
-                      <div className="text-xs text-slate-500">{step.approver} • {step.role}</div>
+                      <div className="text-xs text-slate-400">{step.approver} • {step.role}</div>
                     </div>
                     {step.status === 'approved' && (
                       <span className="text-xs text-emerald-600 font-medium">
@@ -384,9 +384,9 @@ export function ValidationBCValidationModal({
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <span className="font-medium text-sm">{event.action}</span>
-                    <span className="text-xs text-slate-500">{event.date}</span>
+                    <span className="text-xs text-slate-400">{event.date}</span>
                   </div>
-                  <div className="text-xs text-slate-500">{event.user}</div>
+                  <div className="text-xs text-slate-400">{event.user}</div>
                   {event.comment && (
                     <div className="text-xs text-slate-600 mt-1 italic">"{event.comment}"</div>
                   )}
@@ -411,7 +411,7 @@ export function ValidationBCValidationModal({
             >
               <CheckCircle2 className="w-5 h-5 text-emerald-600 mb-1" />
               <div className="font-medium text-sm">Valider</div>
-              <div className="text-xs text-slate-500">Approuver ce niveau</div>
+              <div className="text-xs text-slate-400">Approuver ce niveau</div>
             </button>
             <button
               onClick={() => setAction('reject')}
@@ -424,7 +424,7 @@ export function ValidationBCValidationModal({
             >
               <XCircle className="w-5 h-5 text-rose-600 mb-1" />
               <div className="font-medium text-sm">Rejeter</div>
-              <div className="text-xs text-slate-500">Refuser avec motif</div>
+              <div className="text-xs text-slate-400">Refuser avec motif</div>
             </button>
             <button
               onClick={() => setAction('request_info')}
@@ -437,7 +437,7 @@ export function ValidationBCValidationModal({
             >
               <MessageSquare className="w-5 h-5 text-amber-600 mb-1" />
               <div className="font-medium text-sm">Complément</div>
-              <div className="text-xs text-slate-500">Demander des infos</div>
+              <div className="text-xs text-slate-400">Demander des infos</div>
             </button>
             <button
               onClick={() => setAction('escalate')}
@@ -450,7 +450,7 @@ export function ValidationBCValidationModal({
             >
               <ArrowUpCircle className="w-5 h-5 text-purple-600 mb-1" />
               <div className="font-medium text-sm">Escalader</div>
-              <div className="text-xs text-slate-500">Niveau supérieur</div>
+              <div className="text-xs text-slate-400">Niveau supérieur</div>
             </button>
           </div>
 

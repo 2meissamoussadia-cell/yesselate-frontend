@@ -243,7 +243,7 @@ export function RHSmartSearch({
         >
           <div className="p-2">
             {value.trim() && (
-              <div className="px-3 py-2 text-xs text-slate-500 font-medium">
+              <div className="px-3 py-2 text-xs text-slate-400 font-medium">
                 {suggestions.length} résultat{suggestions.length > 1 ? 's' : ''}
               </div>
             )}
@@ -276,14 +276,14 @@ export function RHSmartSearch({
                       suggestion.type === 'demand' && "text-blue-500",
                       suggestion.type === 'agent' && "text-purple-500",
                       suggestion.type === 'bureau' && "text-emerald-500",
-                      suggestion.type === 'keyword' && "text-slate-500"
+                      suggestion.type === 'keyword' && "text-slate-400"
                     )} />
                   </div>
                   
                   <div className="flex-1 min-w-0">
                     <div className="font-medium truncate">{suggestion.label}</div>
                     {suggestion.subtitle && (
-                      <div className="text-xs text-slate-500 truncate">{suggestion.subtitle}</div>
+                      <div className="text-xs text-slate-400 truncate">{suggestion.subtitle}</div>
                     )}
                   </div>
                   

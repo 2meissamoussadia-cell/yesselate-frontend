@@ -205,15 +205,15 @@ export function DashboardDGLayout({ content }: DashboardDGLayoutProps = {}) {
               <EnterpriseBadge variant="info" size="sm">NICE RÉNOVATION • DG</EnterpriseBadge>
             </div>
             <p className="text-xs text-slate-400">
-              Vue synthèse NICE RÉNOVATION • Portefeuille chantiers, finance, risques et satisfaction clients.
+              Vue finances – DG NICE RÉNOVATION • Portefeuille chantiers, budget, risques et satisfaction clients.
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <button type="button" className="inline-flex items-center gap-1 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-1 text-[11px] text-slate-200 hover:border-emerald-500/60 transition-colors">
-              <span className="h-1.5 w-1.5 rounded-full bg-amber-400" /> Activer briefing IA
+            <button type="button" aria-label="Activer le briefing IA" className="inline-flex items-center gap-1 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-2 min-h-[44px] text-[11px] text-slate-200 hover:border-emerald-500/60 transition-colors focus-visible:outline focus-visible:ring-2 focus-visible:ring-sky-500">
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-400" aria-hidden /> Activer briefing IA
             </button>
-            <button type="button" className="rounded-full border border-slate-700 bg-slate-900/70 px-3 py-1 text-[11px] text-slate-300 hover:border-slate-500 transition-colors">Export PDF</button>
-            <button type="button" className="rounded-full border border-slate-700 bg-slate-900/70 px-3 py-1 text-[11px] text-slate-300 hover:border-violet-500/60 transition-colors">Mode 3D</button>
+            <button type="button" aria-label="Exporter en PDF" className="rounded-full border border-slate-700 bg-slate-900/70 px-3 py-2 min-h-[44px] text-[11px] text-slate-300 hover:border-slate-400 transition-colors focus-visible:outline focus-visible:ring-2 focus-visible:ring-sky-500">Export PDF</button>
+            <button type="button" aria-label="Passer en mode 3D" className="rounded-full border border-slate-700 bg-slate-900/70 px-3 py-2 min-h-[44px] text-[11px] text-slate-300 hover:border-violet-500/60 transition-colors focus-visible:outline focus-visible:ring-2 focus-visible:ring-sky-500">Mode 3D</button>
           </div>
         </header>
       )}
@@ -271,9 +271,9 @@ export function DashboardDGLayout({ content }: DashboardDGLayoutProps = {}) {
             <SynthesisBlock
               title="Performance financière"
               items={[
-                { label: 'CA cumulé', value: '18M XOF' },
-                { label: 'Marge nette moyenne', value: '23%' },
-                { label: 'Budget consommé', value: '84%' },
+                { label: 'CA cumulé 2026 (tous chantiers)', value: '18 M XOF' },
+                { label: 'Marge nette moyenne', value: '23 %' },
+                { label: 'Budget consommé', value: '84 %' },
               ]}
             />
             <SynthesisBlock

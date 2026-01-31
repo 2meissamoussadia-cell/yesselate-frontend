@@ -37,7 +37,7 @@ export function IntegratedAnalytics({
           />
         ) : (
           <div
-            className="flex flex-col items-center justify-center gap-3 text-slate-500 text-sm"
+            className="flex flex-col items-center justify-center gap-3 text-slate-400 text-sm"
             style={{ minHeight: `${height}px` }}
             aria-hidden
           >
@@ -45,7 +45,7 @@ export function IntegratedAnalytics({
             <p className="font-medium text-slate-400">
               Analytics intégrés (Power BI, SAP Analytics Cloud, Qlik…)
             </p>
-            <p className="text-xs text-slate-500 max-w-sm text-center">
+            <p className="text-xs text-slate-400 max-w-sm text-center">
               Configurez l’URL du rapport BI pour afficher les dashboards dynamiques, KPIs financiers et supply chain.
             </p>
           </div>

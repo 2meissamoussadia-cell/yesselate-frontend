@@ -139,7 +139,7 @@ export function AnnotationDetailModal({
       }}
       footer={
         <div className="flex items-center justify-between">
-          <div className="text-xs text-slate-500">
+          <div className="text-xs text-slate-400">
             Navigation: ← → | Fermer: ESC
           </div>
           <div className="flex items-center gap-2">
@@ -255,7 +255,7 @@ export function AnnotationDetailModal({
             </p>
             {annotation.createdBy && (
               <div className="flex items-center gap-2 mt-2 pt-2 border-t border-slate-700/30">
-                <User className="w-3 h-3 text-slate-500" />
+                <User className="w-3 h-3 text-slate-400" />
                 <span className="text-xs text-slate-400">
                   Par: {annotation.createdBy}
                 </span>

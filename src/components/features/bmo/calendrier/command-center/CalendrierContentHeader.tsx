@@ -57,7 +57,7 @@ export const CalendrierContentHeader = React.memo(function CalendrierContentHead
           {/* Views */}
           {hasViews && (
             <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide">
-              <span className="text-xs text-slate-500 mr-2 whitespace-nowrap">Vue:</span>
+              <span className="text-xs text-slate-400 mr-2 whitespace-nowrap">Vue:</span>
               {availableViews.map((viewOption) => {
                 const isActive = view === viewOption.id;
 
@@ -69,7 +69,7 @@ export const CalendrierContentHeader = React.memo(function CalendrierContentHead
                       'flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium transition-all whitespace-nowrap',
                       isActive
                         ? 'bg-slate-700/60 text-slate-200 border border-slate-600/50'
-                        : 'text-slate-500 hover:text-slate-400 hover:bg-slate-800/40 border border-transparent'
+                        : 'text-slate-400 hover:text-slate-400 hover:bg-slate-800/40 border border-transparent'
                     )}
                   >
                     <span>{viewOption.label}</span>
@@ -82,7 +82,7 @@ export const CalendrierContentHeader = React.memo(function CalendrierContentHead
           {/* Period Selector */}
           {hasPeriod && (
             <div className="flex items-center gap-1 ml-auto">
-              <span className="text-xs text-slate-500 mr-2 whitespace-nowrap">Période:</span>
+              <span className="text-xs text-slate-400 mr-2 whitespace-nowrap">Période:</span>
               {(['week', 'month', 'quarter'] as const).map((periodOption) => {
                 const isActive = period === periodOption;
 
@@ -94,7 +94,7 @@ export const CalendrierContentHeader = React.memo(function CalendrierContentHead
                       'flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium transition-all whitespace-nowrap',
                       isActive
                         ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
-                        : 'text-slate-500 hover:text-slate-400 hover:bg-slate-800/40 border border-transparent'
+                        : 'text-slate-400 hover:text-slate-400 hover:bg-slate-800/40 border border-transparent'
                     )}
                   >
                     <span>

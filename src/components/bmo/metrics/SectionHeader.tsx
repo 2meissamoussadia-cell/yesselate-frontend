@@ -22,7 +22,7 @@ export const SectionHeader = memo(function SectionHeader({
     <div className={cn('space-y-0.5', className)}>
       <h2 className="text-sm font-semibold text-slate-200">{title}</h2>
       {description && (
-        <p className="text-xs text-slate-500">{description}</p>
+        <p className="text-xs text-slate-400">{description}</p>
       )}
     </div>
   );

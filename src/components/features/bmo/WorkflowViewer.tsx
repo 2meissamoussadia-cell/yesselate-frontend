@@ -138,7 +138,7 @@ export function WorkflowViewer({ instanceId, onComplete, className }: Props) {
   if (!instance) {
     return (
       <div className={cn('p-8 rounded-xl bg-slate-800/30 border border-slate-700/50 text-center', className)}>
-        <AlertCircle className="w-12 h-12 text-slate-500 mx-auto mb-3" />
+        <AlertCircle className="w-12 h-12 text-slate-400 mx-auto mb-3" />
         <p className="text-slate-400">Workflow non trouvé</p>
       </div>
     );
@@ -337,7 +337,7 @@ export function WorkflowViewer({ instanceId, onComplete, className }: Props) {
                     </div>
                   </div>
 
-                  <span className="text-xs text-slate-500">
+                  <span className="text-xs text-slate-400">
                     {new Date(entry.date).toLocaleString('fr-FR')}
                   </span>
                 </div>
@@ -388,14 +388,14 @@ function WorkflowStepCard({
           <div className="flex-1">
             <div className="flex items-center gap-2">
               <h5 className="font-semibold text-slate-200">{etape.titre}</h5>
-              <span className="text-xs text-slate-500">Étape {etape.ordre}</span>
+              <span className="text-xs text-slate-400">Étape {etape.ordre}</span>
             </div>
 
             {etape.description && (
               <p className="text-sm text-slate-400 mt-1">{etape.description}</p>
             )}
 
-            <div className="flex items-center gap-4 mt-3 text-xs text-slate-500">
+            <div className="flex items-center gap-4 mt-3 text-xs text-slate-400">
               <span className="flex items-center gap-1">
                 <User className="w-3 h-3" />
                 {etape.approbateurRole}
@@ -416,7 +416,7 @@ function WorkflowStepCard({
             )}
 
             {etape.dateAction && (
-              <p className="text-xs text-slate-500 mt-2">
+              <p className="text-xs text-slate-400 mt-2">
                 {new Date(etape.dateAction).toLocaleString('fr-FR')}
               </p>
             )}

@@ -276,7 +276,7 @@ function PaiementsValidationModal({ onClose, data }: { onClose: () => void; data
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Commentaires, observations..."
-            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-200 placeholder:text-slate-500 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 resize-none"
+            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-200 placeholder:text-slate-400 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 resize-none"
             rows={4}
           />
         </div>
@@ -420,7 +420,7 @@ function PaiementsRejectionModal({ onClose, data }: { onClose: () => void; data?
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Précisions, actions à entreprendre..."
-            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-200 placeholder:text-slate-500 focus:border-red-500 focus:ring-1 focus:ring-red-500 resize-none"
+            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-200 placeholder:text-slate-400 focus:border-red-500 focus:ring-1 focus:ring-red-500 resize-none"
             rows={4}
           />
         </div>
@@ -563,7 +563,7 @@ function PaiementsDetailModal({ onClose, data }: { onClose: () => void; data?: a
                   <Clock className="w-4 h-4 text-slate-400 flex-shrink-0 mt-0.5" />
                   <div className="flex-1">
                     <p className="text-sm text-slate-200">{h.details}</p>
-                    <p className="text-xs text-slate-500 mt-1">
+                    <p className="text-xs text-slate-400 mt-1">
                       {h.by} • {new Date(h.at).toLocaleString('fr-FR')}
                     </p>
                   </div>

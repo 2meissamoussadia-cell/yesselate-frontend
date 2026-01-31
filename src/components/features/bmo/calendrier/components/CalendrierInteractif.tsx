@@ -245,7 +245,7 @@ export function CalendrierInteractif({
                       className={cn(
                         'text-sm font-medium',
                         isToday(day) && 'text-blue-400 font-bold',
-                        !isCurrent && 'text-slate-500',
+                        !isCurrent && 'text-slate-400',
                         isCurrent && !isToday(day) && 'text-slate-300'
                       )}
                     >
@@ -286,7 +286,7 @@ export function CalendrierInteractif({
                       onClick={(e) => handleCreateEvent(day, e)}
                       className="mt-1 w-full opacity-0 group-hover:opacity-100 hover:opacity-100 transition-opacity"
                     >
-                      <Plus className="h-3 w-3 text-slate-500 hover:text-blue-400" />
+                      <Plus className="h-3 w-3 text-slate-400 hover:text-blue-400" />
                     </button>
                   )}
                 </div>

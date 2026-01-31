@@ -45,7 +45,7 @@ export const PaiementsStatusBar = React.memo(function PaiementsStatusBar({
             <RefreshCw
               className={cn(
                 'h-3 w-3',
-                autoRefresh ? 'text-emerald-400 animate-spin-slow' : 'text-slate-500'
+                autoRefresh ? 'text-emerald-400 animate-spin-slow' : 'text-slate-400'
               )}
             />
             <span className="text-slate-400">
@@ -55,7 +55,7 @@ export const PaiementsStatusBar = React.memo(function PaiementsStatusBar({
 
           {/* Stats Summary */}
           {stats && (
-            <div className="flex items-center gap-3 text-slate-500">
+            <div className="flex items-center gap-3 text-slate-400">
               <span>Total: <span className="text-slate-300 font-medium">{stats.total}</span></span>
               <span className="text-slate-700">•</span>
               <span>En attente: <span className="text-amber-400 font-medium">{stats.pending}</span></span>

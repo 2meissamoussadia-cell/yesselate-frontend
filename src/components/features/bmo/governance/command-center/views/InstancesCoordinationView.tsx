@@ -212,7 +212,7 @@ export function InstancesCoordinationView() {
             <Button
               variant="ghost"
               size="sm"
-              className="text-xs text-slate-500 hover:text-slate-300"
+              className="text-xs text-slate-400 hover:text-slate-300"
               onClick={() => openModal('action-plan' as any, {})}
             >
               <UserPlus className="h-3 w-3 mr-1" />
@@ -246,7 +246,7 @@ export function InstancesCoordinationView() {
                       </Badge>
                     </div>
                     <div className="flex items-center gap-3 mt-1">
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs text-slate-400">
                         <Clock className="h-3 w-3 inline mr-1" />
                         {conference.date}
                       </span>
@@ -308,7 +308,7 @@ export function InstancesCoordinationView() {
                       )}
                     </div>
                     <div className="flex items-center gap-3 mt-1">
-                      <span className="text-xs text-slate-500">Source: {exchange.source}</span>
+                      <span className="text-xs text-slate-400">Source: {exchange.source}</span>
                       <span className="text-xs text-slate-600">•</span>
                       <span className="text-xs text-slate-400">Date: {exchange.date}</span>
                     </div>
@@ -370,7 +370,7 @@ export function InstancesCoordinationView() {
                       </Badge>
                     </div>
                     <div className="flex items-center gap-3 mt-1">
-                      <span className="text-xs text-slate-500">Expéditeur: {message.sender}</span>
+                      <span className="text-xs text-slate-400">Expéditeur: {message.sender}</span>
                       <span className="text-xs text-slate-600">•</span>
                       <span className="text-xs text-slate-400">Date: {message.date}</span>
                       {message.amount && (

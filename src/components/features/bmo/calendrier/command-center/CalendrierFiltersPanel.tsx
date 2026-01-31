@@ -91,7 +91,7 @@ export function CalendrierFiltersPanel({
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="h-7 w-7 p-0 text-slate-500 hover:text-slate-300"
+              className="h-7 w-7 p-0 text-slate-400 hover:text-slate-300"
               aria-label="Fermer les filtres"
             >
               <X className="h-4 w-4" />
@@ -135,7 +135,7 @@ export function CalendrierFiltersPanel({
                   </button>
                 ))
               ) : (
-                <p className="text-xs text-slate-500 px-3 py-2">Aucun chantier disponible</p>
+                <p className="text-xs text-slate-400 px-3 py-2">Aucun chantier disponible</p>
               )}
             </div>
           </div>
@@ -174,7 +174,7 @@ export function CalendrierFiltersPanel({
                   </button>
                 ))
               ) : (
-                <p className="text-xs text-slate-500 px-3 py-2">Aucune équipe disponible</p>
+                <p className="text-xs text-slate-400 px-3 py-2">Aucune équipe disponible</p>
               )}
             </div>
           </div>
@@ -213,7 +213,7 @@ export function CalendrierFiltersPanel({
                   </button>
                 ))
               ) : (
-                <p className="text-xs text-slate-500 px-3 py-2">Aucun type disponible</p>
+                <p className="text-xs text-slate-400 px-3 py-2">Aucun type disponible</p>
               )}
             </div>
           </div>

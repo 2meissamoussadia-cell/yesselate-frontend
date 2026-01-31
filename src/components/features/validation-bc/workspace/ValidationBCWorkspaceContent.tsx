@@ -123,7 +123,7 @@ function InboxContent({ queue }: { queue: string }) {
           </CardHeader>
           <CardContent className="space-y-2">
             <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{doc.objet}</p>
-            <div className="flex items-center justify-between text-xs text-slate-500">
+            <div className="flex items-center justify-between text-xs text-slate-400">
               <span>{doc.fournisseur}</span>
               <span className="font-semibold text-purple-600 dark:text-purple-400">
                 {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(doc.montantTTC)}
@@ -225,7 +225,7 @@ function DocumentContent({ documentId }: { documentId: string }) {
           <div className="flex items-start justify-between">
             <div>
               <CardTitle className="text-2xl">{document.id}</CardTitle>
-              <p className="text-sm text-slate-500 mt-1">
+              <p className="text-sm text-slate-400 mt-1">
                 {document.type === 'bc' ? 'Bon de commande' : document.type === 'facture' ? 'Facture' : 'Avenant'}
               </p>
             </div>
@@ -254,25 +254,25 @@ function DocumentContent({ documentId }: { documentId: string }) {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-xs text-slate-500 uppercase">Fournisseur</label>
+              <label className="text-xs text-slate-400 uppercase">Fournisseur</label>
               <p className="font-medium">{document.fournisseur}</p>
             </div>
             <div>
-              <label className="text-xs text-slate-500 uppercase">Bureau</label>
+              <label className="text-xs text-slate-400 uppercase">Bureau</label>
               <p className="font-medium">{document.bureau}</p>
             </div>
             <div className="col-span-2">
-              <label className="text-xs text-slate-500 uppercase">Objet</label>
+              <label className="text-xs text-slate-400 uppercase">Objet</label>
               <p className="font-medium">{document.objet}</p>
             </div>
             <div>
-              <label className="text-xs text-slate-500 uppercase">Montant HT</label>
+              <label className="text-xs text-slate-400 uppercase">Montant HT</label>
               <p className="font-medium text-lg">
                 {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(document.montantHT)}
               </p>
             </div>
             <div>
-              <label className="text-xs text-slate-500 uppercase">Montant TTC</label>
+              <label className="text-xs text-slate-400 uppercase">Montant TTC</label>
               <p className="font-medium text-lg text-purple-600">
                 {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(document.montantTTC)}
               </p>
@@ -339,7 +339,7 @@ function DocumentContent({ documentId }: { documentId: string }) {
                   <div className="w-1.5 h-1.5 rounded-full bg-purple-500 mt-2" />
                   <div className="flex-1">
                     <p className="font-medium">{event.action}</p>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-slate-400">
                       {event.actorName} • {new Date(event.timestamp).toLocaleString('fr-FR')}
                     </p>
                     {event.details && <p className="text-xs text-slate-600 mt-1">{event.details}</p>}
@@ -361,7 +361,7 @@ export function ValidationBCWorkspaceContent() {
 
   if (!activeTab) {
     return (
-      <div className="flex flex-col items-center justify-center h-[400px] text-slate-500">
+      <div className="flex flex-col items-center justify-center h-[400px] text-slate-400">
         <FileText className="w-16 h-16 mb-4 opacity-30" />
         <p className="text-lg font-medium">Aucun onglet sélectionné</p>
         <p className="text-sm">Ouvrez un BC, une facture ou un avenant pour commencer</p>
@@ -395,7 +395,7 @@ export function ValidationBCWorkspaceContent() {
     <div className="space-y-4">
       <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-6 dark:border-slate-800 dark:bg-[#1f1f1f]/70">
         <h3 className="text-lg font-semibold mb-2">{activeTab.title}</h3>
-        <p className="text-sm text-slate-500">Type: {activeTab.type}</p>
+        <p className="text-sm text-slate-400">Type: {activeTab.type}</p>
         {activeTab.data && (
           <pre className="mt-4 p-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg text-xs overflow-auto">
             {JSON.stringify(activeTab.data, null, 2)}

@@ -249,7 +249,7 @@ export function PaiementsFiltersPanel({
           <FilterSection title="Montant (FCFA)" icon="💰">
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">Minimum</label>
+                <label className="text-xs text-slate-400 mb-1 block">Minimum</label>
                 <input
                   type="number"
                   placeholder="0"
@@ -262,7 +262,7 @@ export function PaiementsFiltersPanel({
                 />
               </div>
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">Maximum</label>
+                <label className="text-xs text-slate-400 mb-1 block">Maximum</label>
                 <input
                   type="number"
                   placeholder="∞"
@@ -281,7 +281,7 @@ export function PaiementsFiltersPanel({
           <FilterSection title="Période" icon="📅">
             <div className="space-y-2">
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">Date de début</label>
+                <label className="text-xs text-slate-400 mb-1 block">Date de début</label>
                 <input
                   type="date"
                   value={filters.dateRange?.start || ''}
@@ -293,7 +293,7 @@ export function PaiementsFiltersPanel({
                 />
               </div>
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">Date de fin</label>
+                <label className="text-xs text-slate-400 mb-1 block">Date de fin</label>
                 <input
                   type="date"
                   value={filters.dateRange?.end || ''}

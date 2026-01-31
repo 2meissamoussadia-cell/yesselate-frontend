@@ -105,7 +105,7 @@ export function DelegationsBatchActionsBar({
             variant="ghost"
             size="sm"
             onClick={clearSelection}
-            className="h-8 w-8 p-0 text-slate-500 hover:text-slate-300"
+            className="h-8 w-8 p-0 text-slate-400 hover:text-slate-300"
           >
             <X className="h-4 w-4" />
           </Button>

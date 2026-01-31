@@ -366,7 +366,7 @@ export function AnalyticsCommandPalette() {
     {
       id: 'export:print',
       label: 'Imprimer',
-      icon: <Printer className="w-4 h-4 text-slate-500" />,
+      icon: <Printer className="w-4 h-4 text-slate-400" />,
       category: '📥 Export',
       action: () => {
         window.print();
@@ -528,7 +528,7 @@ export function AnalyticsCommandPalette() {
             autoFocus
           />
           {search && (
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500">
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400">
               {filteredCommands.length} résultat(s)
             </span>
           )}
@@ -538,7 +538,7 @@ export function AnalyticsCommandPalette() {
         <div className="max-h-[400px] overflow-y-auto space-y-4">
           {Object.keys(groupedCommands).length === 0 ? (
             <FadeIn>
-              <div className="text-center py-8 text-slate-500">
+              <div className="text-center py-8 text-slate-400">
                 <Search className="w-10 h-10 mx-auto mb-3 opacity-30" />
                 <p>Aucune commande trouvée pour "{debouncedSearch}"</p>
                 <p className="text-xs mt-1">Essayez un autre terme de recherche</p>
@@ -547,13 +547,13 @@ export function AnalyticsCommandPalette() {
           ) : (
             <>
               {debouncedSearch && (
-                <div className="px-2 py-1 text-xs text-slate-500">
+                <div className="px-2 py-1 text-xs text-slate-400">
                   {filteredCommands.length} résultat{filteredCommands.length > 1 ? 's' : ''} trouvé{filteredCommands.length > 1 ? 's' : ''}
                 </div>
               )}
               {Object.entries(groupedCommands).map(([category, cmds]) => (
               <div key={category}>
-                <div className="text-xs font-semibold text-slate-500 mb-2 px-2">
+                <div className="text-xs font-semibold text-slate-400 mb-2 px-2">
                   {category}
                 </div>
                 <div className="space-y-1">
@@ -600,7 +600,7 @@ export function AnalyticsCommandPalette() {
                             </kbd>
                           )}
                           {isSelected && (
-                            <div className="text-xs text-slate-500">↵</div>
+                            <div className="text-xs text-slate-400">↵</div>
                           )}
                         </div>
                       </button>
@@ -614,7 +614,7 @@ export function AnalyticsCommandPalette() {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-3 border-t border-slate-200 dark:border-slate-700 text-xs text-slate-500">
+        <div className="flex items-center justify-between pt-3 border-t border-slate-200 dark:border-slate-700 text-xs text-slate-400">
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1">
               <kbd className="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-700">↑</kbd>

@@ -5,6 +5,7 @@ import { FluentModal } from '@/components/ui/fluent-modal';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { User, Search, CheckCircle, X, Mail, Building2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/utils/logger';
 import { useAnalyticsToast } from './AnalyticsToast';
 
 interface AssignResponsibleModalProps {
@@ -65,17 +66,16 @@ export function AssignResponsibleModal({ open, onClose, data }: AssignResponsibl
 
     try {
       // Ici, on pourrait envoyer l'assignation à l'API
-      if (process.env.NODE_ENV === 'development') {
-        console.log('Assignation de responsable:', {
-          userId: selectedUser,
-          userName: user?.name,
-          userEmail: user?.email,
-          role,
-          notes,
-          kpiId: data?.kpiId,
-          kpiName: data?.kpiName,
-        });
-      }
+      logger.debug('Assignation de responsable', {
+        component: 'AssignResponsibleModal',
+        userId: selectedUser,
+        userName: user?.name,
+        userEmail: user?.email,
+        role,
+        notes,
+        kpiId: data?.kpiId,
+        kpiName: data?.kpiName,
+      });
 
       // Simuler un appel API
       await new Promise(resolve => setTimeout(resolve, 500));
@@ -107,7 +107,7 @@ export function AssignResponsibleModal({ open, onClose, data }: AssignResponsibl
             <p className="text-xs text-slate-400 mb-1">KPI associé</p>
             <p className="text-sm font-medium text-slate-200">{data.kpiName}</p>
             {data.kpiId && (
-              <p className="text-xs text-slate-500 mt-1">ID: {data.kpiId}</p>
+              <p className="text-xs text-slate-400 mt-1">ID: {data.kpiId}</p>
             )}
           </div>
         )}
@@ -168,12 +168,12 @@ export function AssignResponsibleModal({ open, onClose, data }: AssignResponsibl
                           <Mail className="w-3 h-3" />
                           {user.email}
                         </span>
-                        <span className="text-xs text-slate-500 flex items-center gap-1">
+                        <span className="text-xs text-slate-400 flex items-center gap-1">
                           <Building2 className="w-3 h-3" />
                           {user.bureau}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-500 mt-1">{user.role}</p>
+                      <p className="text-xs text-slate-400 mt-1">{user.role}</p>
                     </div>
                   </div>
                   {selectedUser === user.id && (

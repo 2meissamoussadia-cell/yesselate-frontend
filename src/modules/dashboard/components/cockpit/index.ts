@@ -1,3 +1,4 @@
+export { ActionRapideButton, type ActionRapideType, type ActionRapideButtonProps } from './ActionRapideButton';
 export { AutoPilotPanel } from './AutoPilotPanel';
 export { ChantierSphere } from './ChantierSphere';
 export { GpsPhotosOrbits } from './GpsPhotosOrbits';

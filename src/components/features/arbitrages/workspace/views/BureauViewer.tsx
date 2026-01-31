@@ -72,7 +72,7 @@ export function BureauViewer({ bureauCode }: { bureauCode: string }) {
     return (
       <div className="flex items-center justify-center py-12">
         <RefreshCw className="w-6 h-6 animate-spin text-slate-400" />
-        <span className="ml-2 text-slate-500">Chargement...</span>
+        <span className="ml-2 text-slate-400">Chargement...</span>
       </div>
     );
   }
@@ -82,7 +82,7 @@ export function BureauViewer({ bureauCode }: { bureauCode: string }) {
       <div className="p-8 text-center">
         <AlertTriangle className="w-12 h-12 text-rose-500 mx-auto mb-4" />
         <h3 className="font-semibold text-lg mb-2">Erreur de chargement</h3>
-        <p className="text-sm text-slate-500 mb-4">{error || 'Bureau introuvable'}</p>
+        <p className="text-sm text-slate-400 mb-4">{error || 'Bureau introuvable'}</p>
         <FluentButton onClick={loadData}>Réessayer</FluentButton>
       </div>
     );
@@ -179,7 +179,7 @@ export function BureauViewer({ bureauCode }: { bureauCode: string }) {
           <div className="text-2xl font-bold text-purple-600">
             {data.budgetUsed}
           </div>
-          <div className="text-xs text-slate-500 mt-1">
+          <div className="text-xs text-slate-400 mt-1">
             sur {data.budget}
           </div>
         </div>
@@ -211,21 +211,21 @@ export function BureauViewer({ bureauCode }: { bureauCode: string }) {
       {data.projets && (
         <div className="rounded-2xl border border-slate-200/70 bg-white/80 dark:border-slate-800 dark:bg-[#1f1f1f]/70 p-6">
           <h3 className="font-semibold mb-4 flex items-center gap-2">
-            <Target className="w-5 h-5 text-slate-500" />
+            <Target className="w-5 h-5 text-slate-400" />
             Projets
           </h3>
           <div className="grid grid-cols-3 gap-4">
             <div className="text-center p-4 rounded-xl bg-blue-50 dark:bg-blue-900/10">
               <div className="text-2xl font-bold text-blue-600">{data.projets.actifs}</div>
-              <div className="text-xs text-slate-500 mt-1">Actifs</div>
+              <div className="text-xs text-slate-400 mt-1">Actifs</div>
             </div>
             <div className="text-center p-4 rounded-xl bg-rose-50 dark:bg-rose-900/10">
               <div className="text-2xl font-bold text-rose-600">{data.projets.enRetard}</div>
-              <div className="text-xs text-slate-500 mt-1">En retard</div>
+              <div className="text-xs text-slate-400 mt-1">En retard</div>
             </div>
             <div className="text-center p-4 rounded-xl bg-slate-50 dark:bg-slate-900">
               <div className="text-2xl font-bold text-slate-600 dark:text-slate-300">{data.projets.total}</div>
-              <div className="text-xs text-slate-500 mt-1">Total</div>
+              <div className="text-xs text-slate-400 mt-1">Total</div>
             </div>
           </div>
         </div>
@@ -235,17 +235,17 @@ export function BureauViewer({ bureauCode }: { bureauCode: string }) {
       {data.decisions && (
         <div className="rounded-2xl border border-slate-200/70 bg-white/80 dark:border-slate-800 dark:bg-[#1f1f1f]/70 p-6">
           <h3 className="font-semibold mb-4 flex items-center gap-2">
-            <Zap className="w-5 h-5 text-slate-500" />
+            <Zap className="w-5 h-5 text-slate-400" />
             Décisions
           </h3>
           <div className="grid grid-cols-2 gap-4">
             <div className="text-center p-4 rounded-xl bg-emerald-50 dark:bg-emerald-900/10">
               <div className="text-2xl font-bold text-emerald-600">{data.decisions.prises}</div>
-              <div className="text-xs text-slate-500 mt-1">Prises</div>
+              <div className="text-xs text-slate-400 mt-1">Prises</div>
             </div>
             <div className="text-center p-4 rounded-xl bg-amber-50 dark:bg-amber-900/10">
               <div className="text-2xl font-bold text-amber-600">{data.decisions.enAttente}</div>
-              <div className="text-xs text-slate-500 mt-1">En attente</div>
+              <div className="text-xs text-slate-400 mt-1">En attente</div>
             </div>
           </div>
         </div>
@@ -255,13 +255,13 @@ export function BureauViewer({ bureauCode }: { bureauCode: string }) {
       {data.kpis && data.kpis.length > 0 && (
         <div className="rounded-2xl border border-slate-200/70 bg-white/80 dark:border-slate-800 dark:bg-[#1f1f1f]/70 p-6">
           <h3 className="font-semibold mb-4 flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-slate-500" />
+            <TrendingUp className="w-5 h-5 text-slate-400" />
             Indicateurs
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {data.kpis.map((kpi, idx) => (
               <div key={idx} className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800">
-                <div className="text-xs text-slate-500 mb-1">{kpi.label}</div>
+                <div className="text-xs text-slate-400 mb-1">{kpi.label}</div>
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-bold">
                     {kpi.value}{kpi.unit}

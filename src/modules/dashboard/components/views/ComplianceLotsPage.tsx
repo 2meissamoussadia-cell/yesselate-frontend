@@ -66,7 +66,7 @@ export const ComplianceLotsPage = memo(function ComplianceLotsPage() {
       const colors = { critique: 'bg-rose-500/20 text-rose-300 border-rose-500/30', normal: 'bg-amber-500/20 text-amber-300 border-amber-500/30', 'en-attente': 'bg-blue-500/20 text-blue-300 border-blue-500/30' };
       return <div className="flex items-center gap-2">{icons[v]}<span className={cn('px-2 py-1 rounded-full text-xs font-medium border', colors[v])}>{v}</span></div>;
     }},
-    { key: 'valeur', label: 'Valeur', sortable: true, align: 'right' as const, render: (v: number | undefined) => v != null ? <span className="font-semibold tabular-nums text-slate-200">{formatMoneyEUR(v)}</span> : <span className="text-slate-500">-</span> },
+    { key: 'valeur', label: 'Valeur', sortable: true, align: 'right' as const, render: (v: number | undefined) => v != null ? <span className="font-semibold tabular-nums text-slate-200">{formatMoneyEUR(v)}</span> : <span className="text-slate-400">-</span> },
     { key: 'dateCreation', label: 'Création', sortable: true, render: (v: string) => <span className="text-slate-300 text-sm">{new Date(v).toLocaleDateString('fr-FR')}</span> },
   ], []);
   

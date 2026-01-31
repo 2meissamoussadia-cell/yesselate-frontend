@@ -33,7 +33,7 @@ export class ClientErrorBoundary extends React.Component<Props, State> {
           <div className="text-sm font-medium text-slate-200">
             {this.props.title ?? 'Une erreur est survenue'}
           </div>
-          <div className="mt-2 text-xs text-slate-500">
+          <div className="mt-2 text-xs text-slate-400">
             La page a rencontré un problème inattendu. Rechargez, ou réessayez l'action.
           </div>
           <div className="mt-4 flex gap-2">

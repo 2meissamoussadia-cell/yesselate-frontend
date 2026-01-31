@@ -107,7 +107,7 @@ export function ArbitragesStatsModal({ open, onClose }: Props) {
               <div className="p-4 rounded-xl bg-gradient-to-br from-red-500/10 to-orange-500/10 border border-red-200/50 dark:border-red-800/30">
                 <div className="flex items-center gap-2 mb-2">
                   <Scale className="w-5 h-5 text-red-500" />
-                  <span className="text-sm text-slate-500">Total</span>
+                  <span className="text-sm text-slate-400">Total</span>
                 </div>
                 <div className="text-3xl font-bold text-red-700 dark:text-red-400">{formatNumber(stats.total)}</div>
               </div>
@@ -115,7 +115,7 @@ export function ArbitragesStatsModal({ open, onClose }: Props) {
               <div className="p-4 rounded-xl bg-amber-50/50 dark:bg-amber-900/20 border border-amber-200/50 dark:border-amber-800/30">
                 <div className="flex items-center gap-2 mb-2">
                   <Clock className="w-5 h-5 text-amber-500" />
-                  <span className="text-sm text-slate-500">Ouverts</span>
+                  <span className="text-sm text-slate-400">Ouverts</span>
                 </div>
                 <div className="text-3xl font-bold text-amber-700 dark:text-amber-400">{formatNumber(stats.ouverts)}</div>
               </div>
@@ -123,7 +123,7 @@ export function ArbitragesStatsModal({ open, onClose }: Props) {
               <div className="p-4 rounded-xl bg-rose-50/50 dark:bg-rose-900/20 border border-rose-200/50 dark:border-rose-800/30">
                 <div className="flex items-center gap-2 mb-2">
                   <AlertTriangle className="w-5 h-5 text-rose-500" />
-                  <span className="text-sm text-slate-500">Critiques</span>
+                  <span className="text-sm text-slate-400">Critiques</span>
                 </div>
                 <div className="text-3xl font-bold text-rose-700 dark:text-rose-400">{formatNumber(stats.critiques)}</div>
               </div>
@@ -131,7 +131,7 @@ export function ArbitragesStatsModal({ open, onClose }: Props) {
               <div className="p-4 rounded-xl bg-emerald-50/50 dark:bg-emerald-900/20 border border-emerald-200/50 dark:border-emerald-800/30">
                 <div className="flex items-center gap-2 mb-2">
                   <CheckCircle2 className="w-5 h-5 text-emerald-500" />
-                  <span className="text-sm text-slate-500">Tranchés</span>
+                  <span className="text-sm text-slate-400">Tranchés</span>
                 </div>
                 <div className="text-3xl font-bold text-emerald-700 dark:text-emerald-400">{formatNumber(stats.tranches)}</div>
               </div>
@@ -147,7 +147,7 @@ export function ArbitragesStatsModal({ open, onClose }: Props) {
                 <div className="text-2xl font-bold text-purple-700 dark:text-purple-400">
                   {formatAmount(stats.expositionTotale)}
                 </div>
-                <div className="text-sm text-slate-500 mt-1">Montant total en arbitrage</div>
+                <div className="text-sm text-slate-400 mt-1">Montant total en arbitrage</div>
               </div>
 
               <div className="p-4 rounded-xl border border-slate-200/70 dark:border-slate-700/50 bg-white/50 dark:bg-slate-800/30">
@@ -158,7 +158,7 @@ export function ArbitragesStatsModal({ open, onClose }: Props) {
                 <div className="text-2xl font-bold text-blue-700 dark:text-blue-400">
                   {stats.avgResolutionTime} jours
                 </div>
-                <div className="text-sm text-slate-500 mt-1">Délai moyen de traitement</div>
+                <div className="text-sm text-slate-400 mt-1">Délai moyen de traitement</div>
               </div>
             </div>
 
@@ -170,7 +170,7 @@ export function ArbitragesStatsModal({ open, onClose }: Props) {
               </div>
               <div className="grid grid-cols-3 gap-4">
                 <div className="text-center">
-                  <div className="text-sm text-slate-500 mb-1">Jour</div>
+                  <div className="text-sm text-slate-400 mb-1">Jour</div>
                   <div className={cn(
                     'text-xl font-bold flex items-center justify-center gap-1',
                     (stats.trends?.daily ?? 0) > 0 ? 'text-rose-600' : 'text-emerald-600'
@@ -184,7 +184,7 @@ export function ArbitragesStatsModal({ open, onClose }: Props) {
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-sm text-slate-500 mb-1">Semaine</div>
+                  <div className="text-sm text-slate-400 mb-1">Semaine</div>
                   <div className={cn(
                     'text-xl font-bold flex items-center justify-center gap-1',
                     (stats.trends?.weekly ?? 0) > 0 ? 'text-rose-600' : 'text-emerald-600'
@@ -198,7 +198,7 @@ export function ArbitragesStatsModal({ open, onClose }: Props) {
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-sm text-slate-500 mb-1">Mois</div>
+                  <div className="text-sm text-slate-400 mb-1">Mois</div>
                   <div className={cn(
                     'text-xl font-bold flex items-center justify-center gap-1',
                     (stats.trends?.monthly ?? 0) > 0 ? 'text-rose-600' : 'text-emerald-600'

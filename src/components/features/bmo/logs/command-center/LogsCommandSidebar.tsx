@@ -213,7 +213,7 @@ export const LogsCommandSidebar = React.memo(function LogsCommandSidebar({
       {/* Footer */}
       <div className="border-t border-slate-700/50 p-3">
         {!collapsed && (
-          <div className="text-xs text-slate-500 text-center">
+          <div className="text-xs text-slate-400 text-center">
             Logs v2.0
           </div>
         )}

@@ -170,7 +170,7 @@ export function MultiBureauComparatorWidget({
           <div className="h-64 p-4 rounded-lg bg-slate-800/30 flex items-center justify-center">
             <div className="text-center">
               <p className="text-xs text-slate-400 mb-2">Graphique radar</p>
-              <p className="text-[10px] text-slate-500">
+              <p className="text-[10px] text-slate-400">
                 Visualisation comparée des performances par bureau
               </p>
               <div className="mt-4 space-y-1">

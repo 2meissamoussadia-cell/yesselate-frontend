@@ -46,7 +46,7 @@ export function AutoPilotPanel({ decisions, onApprove, className }: AutoPilotPan
       </div>
       <div className="flex-1 overflow-y-auto p-3 space-y-3">
         {pending.length === 0 && executed.length === 0 && (
-          <p className="text-xs text-slate-500">Aucune décision pour l’instant.</p>
+          <p className="text-xs text-slate-400">Aucune décision pour l’instant.</p>
         )}
         {pending.map((d) => (
           <div
@@ -63,7 +63,7 @@ export function AutoPilotPanel({ decisions, onApprove, className }: AutoPilotPan
                 <p className="text-xs font-medium text-slate-200 line-clamp-2">
                   {d.insight.prediction}
                 </p>
-                <p className="text-[10px] text-slate-500 mt-1">
+                <p className="text-[10px] text-slate-400 mt-1">
                   {d.insight.chantier_id} • {d.insight.confidence}% conf.
                 </p>
                 <p className="text-[10px] text-slate-400 mt-0.5">

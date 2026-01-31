@@ -304,16 +304,16 @@ function DashboardCommandPaletteInner({
         >
           {/* Header */}
           <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-800/50">
-            <Command className="w-5 h-5 text-slate-500" />
+            <Command className="w-5 h-5 text-slate-400" />
             <Input
               autoFocus
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Rechercher une commande..."
-              className="flex-1 bg-transparent border-0 text-slate-200 placeholder:text-slate-500 focus-visible:ring-0"
+              className="flex-1 bg-transparent border-0 text-slate-200 placeholder:text-slate-400 focus-visible:ring-0"
             />
-            <kbd className="px-2 py-1 rounded bg-slate-800 text-xs text-slate-500 font-mono">
+            <kbd className="px-2 py-1 rounded bg-slate-800 text-xs text-slate-400 font-mono">
               ESC
             </kbd>
           </div>
@@ -321,7 +321,7 @@ function DashboardCommandPaletteInner({
           {/* Liste des commandes */}
           <div className="max-h-80 overflow-y-auto">
             {filteredCommands.length === 0 ? (
-              <div className="px-4 py-8 text-center text-slate-500">
+              <div className="px-4 py-8 text-center text-slate-400">
                 Aucune commande trouvée
               </div>
             ) : (
@@ -352,7 +352,7 @@ function DashboardCommandPaletteInner({
                         <Icon
                           className={cn(
                             'w-4 h-4',
-                            isSelected ? 'text-blue-400' : 'text-slate-500'
+                            isSelected ? 'text-blue-400' : 'text-slate-400'
                           )}
                         />
                       </div>
@@ -366,15 +366,15 @@ function DashboardCommandPaletteInner({
                           {cmd.label}
                         </p>
                         {cmd.hint && (
-                          <p className="text-xs text-slate-500 truncate">{cmd.hint}</p>
+                          <p className="text-xs text-slate-400 truncate">{cmd.hint}</p>
                         )}
                       </div>
                       {cmd.shortcut && (
-                        <kbd className="px-1.5 py-0.5 rounded bg-slate-800 text-xs text-slate-500 font-mono">
+                        <kbd className="px-1.5 py-0.5 rounded bg-slate-800 text-xs text-slate-400 font-mono">
                           {cmd.shortcut}
                         </kbd>
                       )}
-                      {isSelected && <ArrowRight className="w-4 h-4 text-slate-500" />}
+                      {isSelected && <ArrowRight className="w-4 h-4 text-slate-400" />}
                     </button>
                   );
                 })}
@@ -413,4 +413,3 @@ export function DashboardCommandPalette(props: DashboardCommandPaletteProps = {}
   }
   return <DashboardCommandPaletteWithKpiFetch />;
 }
-

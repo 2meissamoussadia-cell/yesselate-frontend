@@ -382,14 +382,14 @@ export const DemandesKpiPage = memo(function DemandesKpiPage({ data: apiData }: 
       <TooltipProvider delayDuration={200}>
         <DashboardPageLayout maxWidth="xl" padding="md">
         {/* Logique métier (Odoo-style) : App → Modèle → Workflow */}
-        <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+        <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-slate-400">
           <span className="inline-flex items-center gap-1.5 rounded-md border border-slate-800/60 bg-slate-900/40 px-2 py-1">
             <span className="font-medium text-slate-400">App</span>
             <span>{appMeta.name}</span>
           </span>
           <span className="text-slate-600">•</span>
           <span className="inline-flex items-center gap-1.5 rounded-md border border-slate-800/60 bg-slate-900/40 px-2 py-1">
-            <span className="font-medium text-slate-400">Modèle</span>
+            <span className="font-medium text-slate-300">Modèle</span>
             <span>Demande</span>
           </span>
           <span className="text-slate-600">•</span>
@@ -405,7 +405,7 @@ export const DemandesKpiPage = memo(function DemandesKpiPage({ data: apiData }: 
             <h1 className="text-slate-50 font-semibold text-xl sm:text-2xl">
               KPIs Flux & Demandes
             </h1>
-            <p className="text-slate-400 text-sm mt-1">
+            <p className="text-slate-300 text-sm mt-1">
               Suivi du volume, validation, temps moyen, goulets et blocages (règles domaine: demandes)
             </p>
           </div>

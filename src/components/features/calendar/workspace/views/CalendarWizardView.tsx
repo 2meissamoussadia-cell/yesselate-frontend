@@ -418,7 +418,7 @@ export function CalendarWizardView({ tabId, action, eventId, prefillDate }: Cale
                       )} />
                       <div>
                         <div className="font-medium">{prio.label}</div>
-                        <div className="text-xs text-slate-500">{prio.description}</div>
+                        <div className="text-xs text-slate-400">{prio.description}</div>
                       </div>
                     </div>
                     {formData.priority === prio.id && (
@@ -438,7 +438,7 @@ export function CalendarWizardView({ tabId, action, eventId, prefillDate }: Cale
             <div className="flex items-center justify-between p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
               <div>
                 <div className="font-medium">Journée entière</div>
-                <div className="text-sm text-slate-500">Cet événement dure toute la journée</div>
+                <div className="text-sm text-slate-400">Cet événement dure toute la journée</div>
               </div>
               <button
                 type="button"
@@ -648,10 +648,10 @@ export function CalendarWizardView({ tabId, action, eventId, prefillDate }: Cale
             {/* Notifications */}
             <div className="flex items-center justify-between p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
               <div className="flex items-center gap-3">
-                <Bell className="w-5 h-5 text-slate-500" />
+                <Bell className="w-5 h-5 text-slate-400" />
                 <div>
                   <div className="font-medium">Notifications</div>
-                  <div className="text-sm text-slate-500">Envoyer des rappels aux participants</div>
+                  <div className="text-sm text-slate-400">Envoyer des rappels aux participants</div>
                 </div>
               </div>
               <button
@@ -684,7 +684,7 @@ export function CalendarWizardView({ tabId, action, eventId, prefillDate }: Cale
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="font-medium truncate">{att.name}</div>
-                      <div className="text-sm text-slate-500 truncate">{att.email || 'Pas d\'email'}</div>
+                      <div className="text-sm text-slate-400 truncate">{att.email || 'Pas d\'email'}</div>
                     </div>
                     <span className="text-xs px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600">
                       {att.role === 'organizer' ? 'Organisateur' : 'Participant'}
@@ -739,7 +739,7 @@ export function CalendarWizardView({ tabId, action, eventId, prefillDate }: Cale
             </div>
 
             {formData.attendees.length === 0 && (
-              <div className="text-center py-8 text-slate-500">
+              <div className="text-center py-8 text-slate-400">
                 <Users className="w-12 h-12 mx-auto mb-3 text-slate-300" />
                 <p>Aucun participant ajouté</p>
                 <p className="text-sm">Les participants recevront une invitation par email</p>
@@ -761,7 +761,7 @@ export function CalendarWizardView({ tabId, action, eventId, prefillDate }: Cale
                       <span className="text-xl">{linkType?.icon || '🔗'}</span>
                       <div className="flex-1 min-w-0">
                         <div className="font-medium truncate">{link.title}</div>
-                        <div className="text-sm text-slate-500 truncate">
+                        <div className="text-sm text-slate-400 truncate">
                           {linkType?.label} • {link.ref}
                         </div>
                       </div>
@@ -841,7 +841,7 @@ export function CalendarWizardView({ tabId, action, eventId, prefillDate }: Cale
                   <CheckCircle2 className="w-10 h-10 text-emerald-500" />
                 </div>
                 <h3 className="text-xl font-bold text-emerald-700 dark:text-emerald-300">Événement créé !</h3>
-                <p className="text-slate-500 mt-2">L&apos;événement a été ajouté à votre calendrier</p>
+                <p className="text-slate-400 mt-2">L&apos;événement a été ajouté à votre calendrier</p>
               </div>
             ) : (
               <>
@@ -854,7 +854,7 @@ export function CalendarWizardView({ tabId, action, eventId, prefillDate }: Cale
                     <div className="flex-1">
                       <h3 className="text-xl font-bold">{formData.title || 'Sans titre'}</h3>
                       {formData.description && (
-                        <p className="text-slate-500 mt-1">{formData.description}</p>
+                        <p className="text-slate-400 mt-1">{formData.description}</p>
                       )}
                     </div>
                   </div>
@@ -994,7 +994,7 @@ export function CalendarWizardView({ tabId, action, eventId, prefillDate }: Cale
               <h1 className="text-lg font-bold">
                 {action === 'create' ? 'Nouvel événement' : 'Modifier l\'événement'}
               </h1>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-slate-400">
                 Étape {currentStepIndex + 1} sur {STEPS.length} • {STEPS[currentStepIndex].label}
               </p>
             </div>
@@ -1023,7 +1023,7 @@ export function CalendarWizardView({ tabId, action, eventId, prefillDate }: Cale
                       ? "bg-blue-500 text-white"
                       : isPast
                       ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
-                      : "bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700"
+                      : "bg-slate-100 dark:bg-slate-800 text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"
                   )}
                   onClick={() => goToStep(step.id)}
                 >

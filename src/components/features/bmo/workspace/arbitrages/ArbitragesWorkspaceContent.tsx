@@ -65,7 +65,7 @@ export function ArbitragesWorkspaceContent() {
     watchlist.includes(arbId) ? removeFromWatchlist(arbId) : addToWatchlist(arbId);
   };
 
-  if (!activeTab) return <div className="flex items-center justify-center h-64 text-slate-500"><div className="text-center"><Scale className="w-12 h-12 mx-auto mb-3 opacity-30" /><p>Aucun onglet</p></div></div>;
+  if (!activeTab) return <div className="flex items-center justify-center h-64 text-slate-400"><div className="text-center"><Scale className="w-12 h-12 mx-auto mb-3 opacity-30" /><p>Aucun onglet</p></div></div>;
 
   if (activeTab.type === 'goulots') return <PlaceholderView icon={<GitBranch className="w-12 h-12" />} title="Goulots d'étranglement" />;
   if (activeTab.type === 'conflits') return <PlaceholderView icon={<Users className="w-12 h-12" />} title="Conflits inter-bureaux" />;
@@ -80,7 +80,7 @@ export function ArbitragesWorkspaceContent() {
           <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
             {queue === 'critical' ? 'Critiques' : queue === 'escalated' ? 'Escaladés' : queue === 'pending' ? 'En attente' : queue === 'in_progress' ? 'En cours' : queue === 'resolved' ? 'Résolus' : queue === 'goulot' ? 'Goulots' : queue === 'conflit' ? 'Conflits' : 'Tous les arbitrages'}
           </h2>
-          <p className="text-sm text-slate-500">{arbitrages.length} arbitrage(s)</p>
+          <p className="text-sm text-slate-400">{arbitrages.length} arbitrage(s)</p>
         </div>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -91,7 +91,7 @@ export function ArbitragesWorkspaceContent() {
       {loading ? (
         <div className="space-y-3">{[...Array(5)].map((_, i) => <div key={i} className="h-32 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />)}</div>
       ) : arbitrages.length === 0 ? (
-        <div className="py-12 text-center text-slate-500"><Scale className="w-12 h-12 mx-auto mb-3 opacity-30" /><p className="font-medium">Aucun arbitrage trouvé</p></div>
+        <div className="py-12 text-center text-slate-400"><Scale className="w-12 h-12 mx-auto mb-3 opacity-30" /><p className="font-medium">Aucun arbitrage trouvé</p></div>
       ) : (
         <div className="space-y-2">
           {arbitrages.map(arb => {
@@ -115,8 +115,8 @@ export function ArbitragesWorkspaceContent() {
                         <span className={cn("text-xs font-medium px-2 py-0.5 rounded flex items-center gap-1", typeStyle.badge)}><TypeIcon className="w-3 h-3" />{arbitragesApiService.getTypeLabel(arb.type)}</span>
                       </div>
                       <p className="font-medium text-slate-900 dark:text-slate-100">{arb.titre}</p>
-                      <p className="text-sm text-slate-500 mt-1 line-clamp-1">{arb.description}</p>
-                      <div className="flex items-center gap-4 mt-2 text-xs text-slate-500">
+                      <p className="text-sm text-slate-400 mt-1 line-clamp-1">{arb.description}</p>
+                      <div className="flex items-center gap-4 mt-2 text-xs text-slate-400">
                         <span className="flex items-center gap-1"><User className="w-3 h-3" />{arb.initiateur.name}</span>
                         <span className="flex items-center gap-1"><Building2 className="w-3 h-3" />{arb.bureaux.map(b => b.id).join(' vs ')}</span>
                         <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{arb.delaiJours}j</span>
@@ -144,7 +144,7 @@ export function ArbitragesWorkspaceContent() {
                         {arb.bureaux.map(b => (
                           <div key={b.id} className="px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-sm">
                             <span className="font-medium">{b.id}</span>
-                            <span className="text-slate-500 ml-2">({b.position})</span>
+                            <span className="text-slate-400 ml-2">({b.position})</span>
                           </div>
                         ))}
                       </div>
@@ -190,6 +190,6 @@ export function ArbitragesWorkspaceContent() {
 }
 
 function PlaceholderView({ icon, title }: { icon: React.ReactNode; title: string }) {
-  return <div className="flex items-center justify-center h-64 text-slate-500"><div className="text-center"><div className="mx-auto mb-4 opacity-30">{icon}</div><p className="font-semibold">{title}</p><p className="text-xs mt-4 text-slate-400">En cours de développement</p></div></div>;
+  return <div className="flex items-center justify-center h-64 text-slate-400"><div className="text-center"><div className="mx-auto mb-4 opacity-30">{icon}</div><p className="font-semibold">{title}</p><p className="text-xs mt-4 text-slate-400">En cours de développement</p></div></div>;
 }
 

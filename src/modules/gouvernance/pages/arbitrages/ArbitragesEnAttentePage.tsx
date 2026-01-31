@@ -38,7 +38,7 @@ export default function ArbitragesEnAttentePage() {
       <GouvernanceHeader
         title="Arbitrages en attente"
         subtitle="Arbitrages nécessitant une décision urgente"
-        onExport={() => console.log('Export arbitrages')}
+        onExport={() => { /* TODO: export arbitrages */ }}
       />
 
       {!isLoading && arbitrages.length > 0 && (
@@ -109,7 +109,11 @@ export default function ArbitragesEnAttentePage() {
                     </div>
                   )}
                 </div>
-                <button className="rounded-xl bg-amber-500/20 px-3 py-1.5 text-xs font-medium text-amber-200 ring-1 ring-amber-500/30 hover:bg-amber-500/30">
+                <button
+                  type="button"
+                  aria-label="Traiter l'arbitrage"
+                  className="rounded-xl bg-amber-500/20 px-3 py-2 min-h-[44px] text-xs font-medium text-amber-200 ring-1 ring-amber-500/30 hover:bg-amber-500/30 focus-visible:outline focus-visible:ring-2 focus-visible:ring-amber-500"
+                >
                   Traiter
                 </button>
               </div>

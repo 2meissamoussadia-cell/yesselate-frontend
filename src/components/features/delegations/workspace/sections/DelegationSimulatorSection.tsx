@@ -109,7 +109,7 @@ function TestSimulator({ delegationId, delegation }: { delegationId: string; del
           <FlaskConical className="w-5 h-5 text-purple-500" />
           Simulateur d&apos;acte
         </h2>
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-slate-400">
           Testez si une action serait autorisée par cette délégation avant de l&apos;exécuter réellement.
         </p>
       </div>
@@ -119,7 +119,7 @@ function TestSimulator({ delegationId, delegation }: { delegationId: string; del
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Action */}
           <div>
-            <label className="text-sm text-slate-500">Action à tester *</label>
+            <label className="text-sm text-slate-400">Action à tester *</label>
             <select
               className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               value={action}
@@ -133,7 +133,7 @@ function TestSimulator({ delegationId, delegation }: { delegationId: string; del
 
           {/* Bureau */}
           <div>
-            <label className="text-sm text-slate-500">Bureau *</label>
+            <label className="text-sm text-slate-400">Bureau *</label>
             <input
               type="text"
               className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
@@ -145,7 +145,7 @@ function TestSimulator({ delegationId, delegation }: { delegationId: string; del
 
           {/* Montant */}
           <div>
-            <label className="text-sm text-slate-500">Montant (XOF) *</label>
+            <label className="text-sm text-slate-400">Montant (XOF) *</label>
             <input
               type="number"
               className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
@@ -157,7 +157,7 @@ function TestSimulator({ delegationId, delegation }: { delegationId: string; del
 
           {/* Projet */}
           <div>
-            <label className="text-sm text-slate-500">Projet (optionnel)</label>
+            <label className="text-sm text-slate-400">Projet (optionnel)</label>
             <input
               type="text"
               className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
@@ -169,7 +169,7 @@ function TestSimulator({ delegationId, delegation }: { delegationId: string; del
 
           {/* Fournisseur */}
           <div>
-            <label className="text-sm text-slate-500">Fournisseur (optionnel)</label>
+            <label className="text-sm text-slate-400">Fournisseur (optionnel)</label>
             <input
               type="text"
               className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
@@ -181,7 +181,7 @@ function TestSimulator({ delegationId, delegation }: { delegationId: string; del
 
           {/* Catégorie */}
           <div>
-            <label className="text-sm text-slate-500">Catégorie (optionnel)</label>
+            <label className="text-sm text-slate-400">Catégorie (optionnel)</label>
             <input
               type="text"
               className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
@@ -243,7 +243,7 @@ function TestSimulator({ delegationId, delegation }: { delegationId: string; del
                 {result.result === 'PENDING_CONTROL' && 'EN ATTENTE DE CONTRÔLE'}
                 {result.result === 'DENIED' && 'REFUSÉ'}
               </div>
-              <div className="text-sm text-slate-500">
+              <div className="text-sm text-slate-400">
                 Niveau de risque : <strong>{result.riskLevel}</strong>
               </div>
             </div>
@@ -389,7 +389,7 @@ function ScenariosView({ delegationId, delegation }: { delegationId: string; del
           <LayoutList className="w-5 h-5 text-indigo-500" />
           Scénarios prédéfinis
         </h2>
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-slate-400">
           Testez rapidement des cas d&apos;usage courants.
         </p>
       </div>
@@ -412,7 +412,7 @@ function ScenariosView({ delegationId, delegation }: { delegationId: string; del
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <div className="font-medium">{scenario.name}</div>
-                  <div className="text-sm text-slate-500">{scenario.description}</div>
+                  <div className="text-sm text-slate-400">{scenario.description}</div>
                   <div className="text-xs text-slate-400 mt-1">
                     {scenario.action} • {new Intl.NumberFormat('fr-FR').format(scenario.amount)} XOF
                   </div>
@@ -448,7 +448,7 @@ function ScenariosView({ delegationId, delegation }: { delegationId: string; del
               {/* Résultat détaillé */}
               {result && result.reasons.length > 0 && (
                 <div className="mt-3 pt-3 border-t border-slate-200/50 dark:border-slate-700/50">
-                  <div className="text-xs text-slate-500">
+                  <div className="text-xs text-slate-400">
                     {result.reasons[0]}
                   </div>
                 </div>

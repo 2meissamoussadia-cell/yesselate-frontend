@@ -104,7 +104,7 @@ export function EmployesDetailPanel() {
               variant="ghost"
               size="sm"
               onClick={closeDetailPanel}
-              className="h-7 w-7 p-0 text-slate-500 hover:text-slate-300"
+              className="h-7 w-7 p-0 text-slate-400 hover:text-slate-300"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -199,17 +199,17 @@ function EmployeeDetailContent({
 
       {/* Contact Info */}
       <div className="space-y-3">
-        <h5 className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Contact</h5>
+        <h5 className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Contact</h5>
         <div className="space-y-2">
           {employee.email && (
             <div className="flex items-center gap-3 text-sm">
-              <Mail className="w-4 h-4 text-slate-500" />
+              <Mail className="w-4 h-4 text-slate-400" />
               <span className="text-slate-300">{employee.email}</span>
             </div>
           )}
           {employee.phone && (
             <div className="flex items-center gap-3 text-sm">
-              <Phone className="w-4 h-4 text-slate-500" />
+              <Phone className="w-4 h-4 text-slate-400" />
               <span className="text-slate-300">{employee.phone}</span>
             </div>
           )}
@@ -218,17 +218,17 @@ function EmployeeDetailContent({
 
       {/* Professional Info */}
       <div className="space-y-3">
-        <h5 className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Professionnel</h5>
+        <h5 className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Professionnel</h5>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
+            <div className="flex items-center gap-2 text-xs text-slate-400 mb-1">
               <Briefcase className="w-3 h-3" />
               Contrat
             </div>
             <div className="text-sm text-slate-200">{employee.contrat}</div>
           </div>
           <div>
-            <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
+            <div className="flex items-center gap-2 text-xs text-slate-400 mb-1">
               <Calendar className="w-3 h-3" />
               Date embauche
             </div>
@@ -237,7 +237,7 @@ function EmployeeDetailContent({
             </div>
           </div>
           <div>
-            <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
+            <div className="flex items-center gap-2 text-xs text-slate-400 mb-1">
               <DollarSign className="w-3 h-3" />
               Salaire
             </div>
@@ -245,7 +245,7 @@ function EmployeeDetailContent({
           </div>
           {employee.scoreEvaluation && (
             <div>
-              <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
+              <div className="flex items-center gap-2 text-xs text-slate-400 mb-1">
                 <Star className="w-3 h-3" />
                 Score
               </div>
@@ -287,7 +287,7 @@ function EmployeeDetailContent({
       {/* Skills */}
       {employee.competences && employee.competences.length > 0 && (
         <div className="space-y-3">
-          <h5 className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Compétences</h5>
+          <h5 className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Compétences</h5>
           <div className="flex flex-wrap gap-2">
             {employee.competences.map((skill, idx) => (
               <Badge key={idx} variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/30 text-xs">
@@ -301,11 +301,11 @@ function EmployeeDetailContent({
       {/* Quick Stats */}
       <div className="grid grid-cols-2 gap-3 pt-3 border-t border-slate-800/50">
         <div className="text-center p-3 rounded-lg bg-slate-800/30">
-          <div className="text-xs text-slate-500 mb-1">Congés restants</div>
+          <div className="text-xs text-slate-400 mb-1">Congés restants</div>
           <div className="text-lg font-bold text-slate-200">{employee.congesRestants}</div>
         </div>
         <div className="text-center p-3 rounded-lg bg-slate-800/30">
-          <div className="text-xs text-slate-500 mb-1">Matricule</div>
+          <div className="text-xs text-slate-400 mb-1">Matricule</div>
           <div className="text-sm font-mono text-slate-300">{employee.matricule}</div>
         </div>
       </div>

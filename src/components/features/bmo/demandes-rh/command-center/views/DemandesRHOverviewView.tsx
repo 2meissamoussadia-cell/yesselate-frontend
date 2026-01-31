@@ -214,7 +214,7 @@ export function DemandesRHOverviewView() {
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="p-4 rounded-xl border border-slate-700/50 bg-slate-800/30">
-            <p className="text-xs text-slate-500 mb-1">Total</p>
+            <p className="text-xs text-slate-400 mb-1">Total</p>
             <p className="text-2xl font-bold text-slate-200">{stats.total}</p>
           </div>
           <div className="p-4 rounded-xl border border-amber-500/30 bg-amber-500/10">

@@ -181,7 +181,7 @@ export function DelegationsTab() {
                         <div className="font-medium text-white">{delegation.fromUser.name}</div>
                         <div className="text-sm text-slate-400">{delegation.fromUser.role}</div>
                       </div>
-                      <div className="text-slate-500">→</div>
+                      <div className="text-slate-400">→</div>
                       <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-teal-500 flex items-center justify-center text-white font-semibold">
                         {delegation.toUser.name.charAt(0)}
                       </div>
@@ -217,7 +217,7 @@ export function DelegationsTab() {
                       </span>
                     ))}
                     {delegation.permissions.length > 5 && (
-                      <span className="px-2 py-1 text-xs text-slate-500">
+                      <span className="px-2 py-1 text-xs text-slate-400">
                         +{delegation.permissions.length - 5} autres
                       </span>
                     )}
@@ -259,11 +259,11 @@ export function DelegationsTab() {
 
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     <div>
-                      <div className="text-slate-500">De</div>
+                      <div className="text-slate-400">De</div>
                       <div className="text-white">{rule.fromRole || 'Tous'}</div>
                     </div>
                     <div>
-                      <div className="text-slate-500">Vers</div>
+                      <div className="text-slate-400">Vers</div>
                       <div className="text-white">{rule.toRole || 'Tous'}</div>
                     </div>
                   </div>
@@ -280,7 +280,7 @@ export function DelegationsTab() {
                   </div>
 
                   {rule.conditions?.maxDuration && (
-                    <div className="mt-2 text-xs text-slate-500 flex items-center gap-1">
+                    <div className="mt-2 text-xs text-slate-400 flex items-center gap-1">
                       <AlertCircle className="w-3 h-3" />
                       Durée maximale: {rule.conditions.maxDuration} jours
                     </div>

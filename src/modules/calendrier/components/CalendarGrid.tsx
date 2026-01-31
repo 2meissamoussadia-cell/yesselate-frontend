@@ -222,7 +222,7 @@ export function CalendarGrid({
                   {(events.jalons.length > 2 ||
                     events.evenements.length > 1 ||
                     events.absences.length > 1) && (
-                    <div className="text-xs text-slate-500">
+                    <div className="text-xs text-slate-400">
                       +{events.jalons.length +
                         events.evenements.length +
                         events.absences.length -

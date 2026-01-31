@@ -53,7 +53,7 @@ export function CockpitSpheresLoadingSkeleton({ className }: { className?: strin
             />
           ))}
         </div>
-        <p className="text-center text-slate-500 text-sm">Chargement du portfolio 3D…</p>
+        <p className="text-center text-slate-400 text-sm">Chargement du portfolio 3D…</p>
       </div>
     </div>
   );

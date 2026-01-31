@@ -294,24 +294,24 @@ function DetailsTab({ decision }: { decision: Decision }) {
           <h3 className="text-sm font-semibold text-slate-300 mb-4">Informations principales</h3>
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
-              <span className="text-slate-500">Type</span>
+              <span className="text-slate-400">Type</span>
               <p className="text-slate-200 font-medium">
                 {decisionsApiService.getTypeLabel(decision.type)}
               </p>
             </div>
             <div>
-              <span className="text-slate-500">Niveau</span>
+              <span className="text-slate-400">Niveau</span>
               <p className="text-slate-200 font-medium">
                 {decisionsApiService.getNiveauLabel(decision.niveau)}
               </p>
             </div>
             <div>
-              <span className="text-slate-500">Impact</span>
+              <span className="text-slate-400">Impact</span>
               <p className="text-slate-200 font-medium capitalize">{decision.impact}</p>
             </div>
             {decision.montantImpact && (
               <div>
-                <span className="text-slate-500">Montant</span>
+                <span className="text-slate-400">Montant</span>
                 <p className="text-emerald-400 font-semibold">
                   {decisionsApiService.formatMontant(decision.montantImpact)} FCFA
                 </p>
@@ -328,7 +328,7 @@ function DetailsTab({ decision }: { decision: Decision }) {
           </h3>
           <div className="space-y-3 text-sm">
             <div className="flex justify-between">
-              <span className="text-slate-500">Date de création</span>
+              <span className="text-slate-400">Date de création</span>
               <span className="text-slate-300">
                 {new Date(decision.dateCreation).toLocaleDateString('fr-FR', {
                   day: 'numeric',
@@ -339,7 +339,7 @@ function DetailsTab({ decision }: { decision: Decision }) {
             </div>
             {decision.dateDecision && (
               <div className="flex justify-between">
-                <span className="text-slate-500">Date de décision</span>
+                <span className="text-slate-400">Date de décision</span>
                 <span className="text-slate-300">
                   {new Date(decision.dateDecision).toLocaleDateString('fr-FR', {
                     day: 'numeric',
@@ -351,7 +351,7 @@ function DetailsTab({ decision }: { decision: Decision }) {
             )}
             {decision.dateExecution && (
               <div className="flex justify-between">
-                <span className="text-slate-500">Date d'exécution</span>
+                <span className="text-slate-400">Date d'exécution</span>
                 <span className="text-slate-300">
                   {new Date(decision.dateExecution).toLocaleDateString('fr-FR', {
                     day: 'numeric',
@@ -375,7 +375,7 @@ function DetailsTab({ decision }: { decision: Decision }) {
           </h4>
           <div>
             <p className="text-sm font-medium text-slate-200">{decision.auteur.name}</p>
-            <p className="text-xs text-slate-500">{decision.auteur.role}</p>
+            <p className="text-xs text-slate-400">{decision.auteur.role}</p>
           </div>
         </div>
 
@@ -391,7 +391,7 @@ function DetailsTab({ decision }: { decision: Decision }) {
                 <div>
                   <p className="text-xs font-medium text-slate-200">{approbateur.name}</p>
                   {approbateur.date && (
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-slate-400">
                       {new Date(approbateur.date).toLocaleDateString('fr-FR')}
                     </p>
                   )}
@@ -506,7 +506,7 @@ function TimelineTab({ decision }: { decision: Decision }) {
               <div className="flex-1 pb-6">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-sm font-medium text-slate-200">{event.label}</span>
-                  <span className="text-xs text-slate-500">
+                  <span className="text-xs text-slate-400">
                     {new Date(event.date).toLocaleDateString('fr-FR', {
                       day: 'numeric',
                       month: 'short',
@@ -517,7 +517,7 @@ function TimelineTab({ decision }: { decision: Decision }) {
                   </span>
                 </div>
                 <p className="text-xs text-slate-400">{event.description}</p>
-                <p className="text-xs text-slate-500 mt-1">Par {event.author}</p>
+                <p className="text-xs text-slate-400 mt-1">Par {event.author}</p>
               </div>
             </div>
           ))}
@@ -564,7 +564,7 @@ function DocumentsTab({ decision }: { decision: Decision }) {
       {documents.length === 0 ? (
         <div className="text-center py-12 border border-dashed border-slate-700 rounded-lg">
           <FileText className="h-12 w-12 text-slate-600 mx-auto mb-4" />
-          <p className="text-sm text-slate-500">Aucun document attaché</p>
+          <p className="text-sm text-slate-400">Aucun document attaché</p>
         </div>
       ) : (
         <div className="space-y-2">
@@ -579,7 +579,7 @@ function DocumentsTab({ decision }: { decision: Decision }) {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-slate-200">{doc.name}</p>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-slate-400">
                     {doc.size} • {new Date(doc.uploadedAt).toLocaleDateString('fr-FR')} •{' '}
                     {doc.uploadedBy}
                   </p>
@@ -648,7 +648,7 @@ function DiscussionTab({
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-sm font-medium text-slate-200">{c.author}</span>
-                  <span className="text-xs text-slate-500">{c.role}</span>
+                  <span className="text-xs text-slate-400">{c.role}</span>
                   <span className="text-xs text-slate-600">
                     {new Date(c.date).toLocaleDateString('fr-FR', {
                       day: 'numeric',
@@ -776,7 +776,7 @@ function ActionsTab({ decision }: { decision: Decision }) {
                   />
                   <span className="text-sm font-medium text-slate-200">{action.label}</span>
                 </div>
-                <p className="text-xs text-slate-500">{action.description}</p>
+                <p className="text-xs text-slate-400">{action.description}</p>
               </button>
             );
           })}

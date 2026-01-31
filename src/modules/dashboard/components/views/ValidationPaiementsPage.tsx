@@ -200,7 +200,7 @@ function PaiementActions({
   const handleHuissier = useCallback(() => onEnvoyerHuissier?.(paiement), [paiement, onEnvoyerHuissier]);
 
   if (paiement.statut !== 'En attente') {
-    return <span className="text-[10px] text-slate-500">{paiement.statut}</span>;
+    return <span className="text-[10px] text-slate-400">{paiement.statut}</span>;
   }
 
   return (
@@ -280,18 +280,17 @@ export function ValidationPaiementsPage({ data: apiData }: ValidationPaiementsPa
     setSegmentFilter('Tous');
   }, []);
 
-  const handleValider = useCallback((p: PaiementRow) => {
-    // TODO: appel API
-    console.log('Valider', p.id);
+  const handleValider = useCallback((_p: PaiementRow) => {
+    // TODO: appel API validation
   }, []);
-  const handleRefuser = useCallback((p: PaiementRow) => {
-    console.log('Refuser', p.id);
+  const handleRefuser = useCallback((_p: PaiementRow) => {
+    // TODO: appel API refus
   }, []);
-  const handleDemanderPieces = useCallback((p: PaiementRow) => {
-    console.log('Demander pièces', p.id);
+  const handleDemanderPieces = useCallback((_p: PaiementRow) => {
+    // TODO: appel API demande pièces
   }, []);
-  const handleEnvoyerHuissier = useCallback((p: PaiementRow) => {
-    console.log('Envoyer à l\'huissier', p.id);
+  const handleEnvoyerHuissier = useCallback((_p: PaiementRow) => {
+    // TODO: appel API envoi huissier
   }, []);
 
   const formatMontantTotal = (n: number) =>
@@ -389,7 +388,7 @@ export function ValidationPaiementsPage({ data: apiData }: ValidationPaiementsPa
             <tbody>
               {filteredPaiements.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="py-8 px-3 text-center text-slate-500">
+                  <td colSpan={9} className="py-8 px-3 text-center text-slate-400">
                     Aucun paiement ne correspond aux filtres.
                   </td>
                 </tr>

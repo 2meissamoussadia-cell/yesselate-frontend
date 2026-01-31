@@ -284,7 +284,7 @@ export function ValidationBCMultiLevelValidation({
                 <TrendingUp className="w-5 h-5 text-blue-500" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">En cours</p>
+                <p className="text-sm text-slate-400">En cours</p>
                 <p className="text-2xl font-bold">{stats.inProgress}</p>
               </div>
             </div>
@@ -304,7 +304,7 @@ export function ValidationBCMultiLevelValidation({
                 <CheckCircle className="w-5 h-5 text-emerald-500" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">Approuvés</p>
+                <p className="text-sm text-slate-400">Approuvés</p>
                 <p className="text-2xl font-bold">{stats.approved}</p>
               </div>
             </div>
@@ -324,7 +324,7 @@ export function ValidationBCMultiLevelValidation({
                 <XCircle className="w-5 h-5 text-red-500" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">Rejetés</p>
+                <p className="text-sm text-slate-400">Rejetés</p>
                 <p className="text-2xl font-bold">{stats.rejected}</p>
               </div>
             </div>
@@ -386,7 +386,7 @@ export function ValidationBCMultiLevelValidation({
                         {doc.overallStatus === 'approved' ? 'Approuvé' : doc.overallStatus === 'rejected' ? 'Rejeté' : 'En cours'}
                       </span>
                     </div>
-                    <div className="flex items-center gap-4 text-sm text-slate-500 mt-1">
+                    <div className="flex items-center gap-4 text-sm text-slate-400 mt-1">
                       <span className="flex items-center gap-1">
                         <User className="w-3 h-3" />
                         {doc.submittedBy}
@@ -402,7 +402,7 @@ export function ValidationBCMultiLevelValidation({
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs text-slate-500 mb-1">Progression</p>
+                    <p className="text-xs text-slate-400 mb-1">Progression</p>
                     <p className="text-2xl font-bold text-blue-600">
                       {doc.currentLevel}/{doc.totalLevels}
                     </p>
@@ -454,7 +454,7 @@ export function ValidationBCMultiLevelValidation({
                           <div className="flex items-center justify-between">
                             <div>
                               <p className="font-medium text-sm">{level.name}</p>
-                              <p className="text-xs text-slate-500">{level.role}</p>
+                              <p className="text-xs text-slate-400">{level.role}</p>
                             </div>
                             {level.requiredAmount && (
                               <span className="text-xs px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800">
@@ -474,7 +474,7 @@ export function ValidationBCMultiLevelValidation({
 
                           {/* Required conditions */}
                           {level.requiredConditions && level.status === 'pending' && (
-                            <div className="mt-2 text-xs text-slate-500">
+                            <div className="mt-2 text-xs text-slate-400">
                               <p className="font-medium mb-1">Conditions :</p>
                               <ul className="space-y-0.5">
                                 {level.requiredConditions.map((c, i) => (
@@ -535,7 +535,7 @@ export function ValidationBCMultiLevelValidation({
           })}
 
           {filteredDocuments.length === 0 && (
-            <div className="text-center py-12 text-slate-500">
+            <div className="text-center py-12 text-slate-400">
               <Shield className="w-12 h-12 mx-auto mb-3 opacity-30" />
               <p>Aucun document trouvé</p>
             </div>

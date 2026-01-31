@@ -18,7 +18,7 @@ export default function TendancesPage() {
       <GouvernanceHeader
         title="Tendances mensuelles"
         subtitle="Évolution des indicateurs clés sur les derniers mois"
-        onExport={() => console.log('Export tendances')}
+        onExport={() => { /* TODO: export tendances */ }}
       />
 
       <div className="space-y-6">

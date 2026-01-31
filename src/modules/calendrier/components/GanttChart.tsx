@@ -44,20 +44,6 @@ export function GanttChart({
       : evenements;
   }, [evenements, chantierId]);
 
-  // Debug: vérifier les données reçues (uniquement en développement)
-  React.useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('GanttChart - Props reçues:', {
-        jalons: jalons.length,
-        evenements: evenements.length,
-        chantiers: chantiers.length,
-        chantierId,
-        filteredJalons: filteredJalons.length,
-        filteredEvenements: filteredEvenements.length,
-      });
-    }
-  }, [jalons.length, evenements.length, chantiers.length, chantierId, filteredJalons.length, filteredEvenements.length]);
-
   // Obtenir le nom du chantier si disponible
   const chantierNom = chantierId && chantiers.length > 0
     ? chantiers.find((c) => c.id === chantierId)?.nom
@@ -111,7 +97,7 @@ export function GanttChart({
                 >
                   <span className="font-medium flex-1">{jalon.libelle}</span>
                   {jalon.date_debut && jalon.date_fin && (
-                    <span className="text-slate-500 whitespace-nowrap">
+                    <span className="text-slate-400 whitespace-nowrap">
                       {new Date(jalon.date_debut).toLocaleDateString('fr-FR')} -{' '}
                       {new Date(jalon.date_fin).toLocaleDateString('fr-FR')}
                     </span>
@@ -146,7 +132,7 @@ export function GanttChart({
                 >
                   <span className="font-medium flex-1">{event.titre || 'Événement'}</span>
                   {event.date_debut && event.date_fin && (
-                    <span className="text-slate-500 whitespace-nowrap">
+                    <span className="text-slate-400 whitespace-nowrap">
                       {new Date(event.date_debut).toLocaleDateString('fr-FR')} -{' '}
                       {new Date(event.date_fin).toLocaleDateString('fr-FR')}
                     </span>
@@ -167,11 +153,11 @@ export function GanttChart({
           <div className="text-center py-8 text-slate-400">
             <p className="text-sm">Aucune donnée à afficher</p>
             {chantierId ? (
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-slate-400 mt-1">
                 Aucun jalon ou événement pour ce chantier (ID: {chantierId})
               </p>
             ) : (
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-slate-400 mt-1">
                 Aucun jalon ou événement disponible
               </p>
             )}
@@ -181,7 +167,7 @@ export function GanttChart({
                 <p>Debug: jalons={jalons.length}, evenements={evenements.length}, chantiers={chantiers.length}</p>
                 <p>Filtrés: jalons={filteredJalons.length}, evenements={filteredEvenements.length}</p>
                 {jalons.length > 0 && (
-                  <p className="text-slate-500">Premier jalon: {jalons[0]?.libelle} (chantier_id: {jalons[0]?.chantier_id})</p>
+                  <p className="text-slate-400">Premier jalon: {jalons[0]?.libelle} (chantier_id: {jalons[0]?.chantier_id})</p>
                 )}
               </div>
             )}

@@ -88,7 +88,7 @@ export function CalendarViewer({ tabId, eventId, onOpenModal }: Props) {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-slate-500">Chargement...</div>
+        <div className="text-slate-400">Chargement...</div>
       </div>
     );
   }
@@ -96,7 +96,7 @@ export function CalendarViewer({ tabId, eventId, onOpenModal }: Props) {
   if (!event) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-slate-500">Événement introuvable</div>
+        <div className="text-slate-400">Événement introuvable</div>
       </div>
     );
   }
@@ -114,7 +114,7 @@ export function CalendarViewer({ tabId, eventId, onOpenModal }: Props) {
               onClick={toggleExplorer}
               className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded"
             >
-              <PanelLeftClose className="w-4 h-4 text-slate-500" />
+              <PanelLeftClose className="w-4 h-4 text-slate-400" />
             </button>
           </div>
 
@@ -172,7 +172,7 @@ export function CalendarViewer({ tabId, eventId, onOpenModal }: Props) {
             onClick={toggleExplorer}
             className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800"
           >
-            <PanelLeft className="w-4 h-4 text-slate-500" />
+            <PanelLeft className="w-4 h-4 text-slate-400" />
           </button>
         )}
 
@@ -183,7 +183,7 @@ export function CalendarViewer({ tabId, eventId, onOpenModal }: Props) {
               <h2 className="text-xl font-bold text-slate-700 dark:text-slate-200">
                 {event.title}
               </h2>
-              <p className="text-sm text-slate-500 mt-1">{event.description}</p>
+              <p className="text-sm text-slate-400 mt-1">{event.description}</p>
             </div>
             <div className="flex gap-2">
               <FluentButton size="sm" variant="secondary" onClick={() => onOpenModal?.('edit')}>
@@ -272,21 +272,21 @@ function SectionRouter({
           <h3 className="font-semibold mb-4">Vue d&apos;ensemble</h3>
           <div className="space-y-3 text-sm">
             <div>
-              <span className="text-slate-500">Type:</span> {event.kind}
+              <span className="text-slate-400">Type:</span> {event.kind}
             </div>
             <div>
-              <span className="text-slate-500">Bureau:</span> {event.bureau}
+              <span className="text-slate-400">Bureau:</span> {event.bureau}
             </div>
             <div>
-              <span className="text-slate-500">Début:</span>{' '}
+              <span className="text-slate-400">Début:</span>{' '}
               {new Date(event.start).toLocaleString('fr-FR')}
             </div>
             <div>
-              <span className="text-slate-500">Fin:</span>{' '}
+              <span className="text-slate-400">Fin:</span>{' '}
               {new Date(event.end).toLocaleString('fr-FR')}
             </div>
             <div>
-              <span className="text-slate-500">Statut:</span> {event.status}
+              <span className="text-slate-400">Statut:</span> {event.status}
             </div>
           </div>
         </div>
@@ -296,7 +296,7 @@ function SectionRouter({
       return (
         <div>
           <h3 className="font-semibold mb-4">Détails</h3>
-          <p className="text-sm text-slate-500">Section détails à implémenter</p>
+          <p className="text-sm text-slate-400">Section détails à implémenter</p>
         </div>
       );
 
@@ -304,7 +304,7 @@ function SectionRouter({
       return (
         <div>
           <h3 className="font-semibold mb-4">Participants</h3>
-          <p className="text-sm text-slate-500">Liste des participants à implémenter</p>
+          <p className="text-sm text-slate-400">Liste des participants à implémenter</p>
           <FluentButton
             size="sm"
             variant="secondary"
@@ -320,7 +320,7 @@ function SectionRouter({
       return (
         <div>
           <h3 className="font-semibold mb-4">Logistique</h3>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-400">
             Lieu, équipement, budget à implémenter
           </p>
         </div>
@@ -330,7 +330,7 @@ function SectionRouter({
       return (
         <div>
           <h3 className="font-semibold mb-4">Conflits</h3>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-400">
             Détection des conflits de planification
           </p>
         </div>
@@ -340,7 +340,7 @@ function SectionRouter({
       return (
         <div>
           <h3 className="font-semibold mb-4">SLA</h3>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-400">
             Suivi des échéances et alertes
           </p>
         </div>
@@ -350,14 +350,14 @@ function SectionRouter({
       return (
         <div>
           <h3 className="font-semibold mb-4">Historique</h3>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-400">
             Historique des modifications et traçabilité
           </p>
         </div>
       );
 
     default:
-      return <div className="text-slate-500 text-center py-8">Section inconnue</div>;
+      return <div className="text-slate-400 text-center py-8">Section inconnue</div>;
   }
 }
 

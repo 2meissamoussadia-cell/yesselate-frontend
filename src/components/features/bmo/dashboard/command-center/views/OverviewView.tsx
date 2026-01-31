@@ -928,7 +928,7 @@ export function OverviewView() {
                   />
                 ))
               ) : (
-                <div className="text-center py-6 text-slate-500 text-xs">
+                <div className="text-center py-6 text-slate-400 text-xs">
                   Aucun événement prévu
                 </div>
               )}
@@ -945,7 +945,7 @@ export function OverviewView() {
               </div>
               <div>
                 <div className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Demain</div>
-                <div className="text-[11px] text-slate-500 mt-0.5">
+                <div className="text-[11px] text-slate-400 mt-0.5">
                   {new Date(Date.now() + 86400000).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
                 </div>
               </div>
@@ -960,7 +960,7 @@ export function OverviewView() {
                   />
                 ))
               ) : (
-                <div className="text-center py-6 text-slate-500 text-xs">
+                <div className="text-center py-6 text-slate-400 text-xs">
                   Aucun événement prévu
                 </div>
               )}
@@ -975,7 +975,7 @@ export function OverviewView() {
               </div>
               <div>
                 <div className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Semaine prochaine</div>
-                <div className="text-[11px] text-slate-500 mt-0.5">
+                <div className="text-[11px] text-slate-400 mt-0.5">
                   Prochains événements
                 </div>
               </div>
@@ -992,7 +992,7 @@ export function OverviewView() {
                   ))
                 )
               ) : (
-                <div className="text-center py-6 text-slate-500 text-xs">
+                <div className="text-center py-6 text-slate-400 text-xs">
                   Aucun événement prévu
                 </div>
               )}
@@ -1130,7 +1130,7 @@ export function OverviewView() {
                 </p>
                 <div className="flex items-center justify-between pt-3 border-t border-slate-700/50">
                   {decision.demandeur != null && (decision.demandeur.nom != null || decision.demandeur.bureau != null) && (
-                    <span className="text-xs text-slate-500">
+                    <span className="text-xs text-slate-400">
                       {decision.demandeur.nom ?? '—'} ({decision.demandeur.bureau ?? '—'})
                     </span>
                   )}

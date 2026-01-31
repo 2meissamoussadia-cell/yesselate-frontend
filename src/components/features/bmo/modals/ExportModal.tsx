@@ -76,7 +76,7 @@ export function ExportModal({ open, onOpenChange }: { open: boolean; onOpenChang
                 }`}
               >
                 <div className="font-medium text-sm">{q.label}</div>
-                <div className="text-xs text-slate-500 mt-0.5 line-clamp-1">{q.description}</div>
+                <div className="text-xs text-slate-400 mt-0.5 line-clamp-1">{q.description}</div>
               </button>
             ))}
           </div>
@@ -98,10 +98,10 @@ export function ExportModal({ open, onOpenChange }: { open: boolean; onOpenChang
                       : 'border-slate-200 hover:border-slate-300 dark:border-slate-700 dark:hover:border-slate-600'
                   }`}
                 >
-                  <Icon className="w-6 h-6 text-slate-500 flex-none mt-0.5" />
+                  <Icon className="w-6 h-6 text-slate-400 flex-none mt-0.5" />
                   <div>
                     <div className="font-medium">{f.label}</div>
-                    <div className="text-xs text-slate-500 mt-0.5">{f.description}</div>
+                    <div className="text-xs text-slate-400 mt-0.5">{f.description}</div>
                   </div>
                 </button>
               );
@@ -116,7 +116,7 @@ export function ExportModal({ open, onOpenChange }: { open: boolean; onOpenChang
             <div className="font-mono text-sm truncate">
               demandes_{queue}_{new Date().toISOString().slice(0, 10)}.{format}
             </div>
-            <div className="text-xs text-slate-500">
+            <div className="text-xs text-slate-400">
               {selectedQueue?.label} • Format {selectedFormat?.label}
             </div>
           </div>

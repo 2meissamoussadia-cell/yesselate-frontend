@@ -104,7 +104,7 @@ function Metric({
 }) {
   return (
     <div className="flex items-center gap-2">
-      <span className="text-slate-400 dark:text-slate-500">{label}</span>
+      <span className="text-slate-400 dark:text-slate-400">{label}</span>
       <span className={cn(
         'font-medium',
         status === 'good' && 'text-emerald-600 dark:text-emerald-400',

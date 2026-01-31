@@ -391,7 +391,7 @@ export function DelegationDetailModal({
                         <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-3">
                           <div className="flex items-start justify-between mb-1">
                             <h4 className="font-medium text-white">{event.type}</h4>
-                            <span className="text-xs text-slate-500">{formatRelativeTime(event.createdAt)}</span>
+                            <span className="text-xs text-slate-400">{formatRelativeTime(event.createdAt)}</span>
                           </div>
                           {event.description && <p className="text-sm text-slate-400">{event.description}</p>}
                         </div>
@@ -409,7 +409,7 @@ export function DelegationDetailModal({
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   placeholder="Ajouter un commentaire..."
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white placeholder:text-slate-500 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white placeholder:text-slate-400 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
                   rows={3}
                 />
                 <div className="flex justify-end mt-3">
@@ -439,7 +439,7 @@ export function DelegationDetailModal({
                             <div className="text-xs text-slate-400">{comment.user.role}</div>
                           </div>
                         </div>
-                        <span className="text-xs text-slate-500">{formatRelativeTime(comment.createdAt)}</span>
+                        <span className="text-xs text-slate-400">{formatRelativeTime(comment.createdAt)}</span>
                       </div>
                       <p className="text-slate-300">{comment.content}</p>
                     </div>

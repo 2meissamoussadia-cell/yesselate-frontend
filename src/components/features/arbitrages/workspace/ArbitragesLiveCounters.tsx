@@ -159,7 +159,7 @@ export function ArbitragesLiveCounters({ compact = false }: { compact?: boolean 
     <div className="rounded-2xl border border-slate-200/60 bg-white/70 p-4 dark:border-slate-700/50 dark:bg-[#1f1f1f]/60 backdrop-blur-sm">
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-semibold flex items-center gap-2 text-slate-700 dark:text-slate-300">
-          <Scale className="w-4 h-4 text-slate-500" />
+          <Scale className="w-4 h-4 text-slate-400" />
           Compteurs live
         </h3>
         <button
@@ -193,7 +193,7 @@ export function ArbitragesLiveCounters({ compact = false }: { compact?: boolean 
               <div className={cn("text-2xl font-bold", c.textClass)}>
                 {typeof value === 'number' ? value : 0}
               </div>
-              <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">
+              <div className="text-[10px] text-slate-400 dark:text-slate-400 mt-0.5">
                 {c.label}
               </div>
             </button>

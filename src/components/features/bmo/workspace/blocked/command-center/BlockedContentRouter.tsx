@@ -307,7 +307,7 @@ function OverviewView() {
                 </div>
                 <div className="mt-3">
                   <p className="text-2xl font-bold text-slate-200">{kpi.value}</p>
-                  <p className="text-sm text-slate-500 mt-0.5">{kpi.label}</p>
+                  <p className="text-sm text-slate-400 mt-0.5">{kpi.label}</p>
                 </div>
               </button>
             );
@@ -348,7 +348,7 @@ function OverviewView() {
                   <div className="w-2 h-2 rounded-full bg-rose-500 animate-pulse flex-shrink-0" />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-slate-200 truncate">{dossier.subject}</p>
-                    <p className="text-xs text-slate-500 truncate">{dossier.type}</p>
+                    <p className="text-xs text-slate-400 truncate">{dossier.type}</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge variant="default" className="text-xs border-slate-700 text-slate-400">
@@ -478,7 +478,7 @@ function OverviewView() {
                 />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-slate-200 truncate">{dossier.subject}</p>
-                  <p className="text-xs text-slate-500 truncate">{dossier.reason}</p>
+                  <p className="text-xs text-slate-400 truncate">{dossier.reason}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant="default" className="text-xs border-slate-700 text-slate-400">
@@ -688,12 +688,12 @@ function QueueView() {
                       {impactLabels[dossier.impact]}
                     </Badge>
                   </div>
-                  <p className="text-xs text-slate-500 mt-0.5">{dossier.reason}</p>
+                  <p className="text-xs text-slate-400 mt-0.5">{dossier.reason}</p>
                 </div>
                 <div className="flex items-center gap-4 text-right">
                   <div>
                     <p className="text-sm font-medium text-slate-300">{dossier.bureau}</p>
-                    <p className="text-xs text-slate-500">{dossier.type}</p>
+                    <p className="text-xs text-slate-400">{dossier.type}</p>
                   </div>
                   <div className="text-right">
                     <p
@@ -704,7 +704,7 @@ function QueueView() {
                     >
                       {dossier.delay}j
                     </p>
-                    <p className="text-xs text-slate-500">délai</p>
+                    <p className="text-xs text-slate-400">délai</p>
                   </div>
                   <ArrowRight className="w-4 h-4 text-slate-600" />
                 </div>
@@ -714,7 +714,7 @@ function QueueView() {
             <div className="px-4 py-12 text-center">
               <CheckCircle2 className="w-12 h-12 mx-auto mb-3 text-emerald-400" />
               <p className="text-lg font-medium text-slate-300">Aucun dossier</p>
-              <p className="text-sm text-slate-500">Cette file d'attente est vide</p>
+              <p className="text-sm text-slate-400">Cette file d'attente est vide</p>
             </div>
           )}
         </div>
@@ -829,7 +829,7 @@ function CriticalView() {
                 <div className="w-3 h-3 rounded-full bg-rose-500 animate-pulse flex-shrink-0" />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-slate-200">{dossier.subject}</p>
-                  <p className="text-xs text-slate-500 mt-0.5">{dossier.reason}</p>
+                  <p className="text-xs text-slate-400 mt-0.5">{dossier.reason}</p>
                 </div>
                 <div className="flex items-center gap-4">
                   <Badge variant="default" className="text-xs border-slate-700 text-slate-400">
@@ -837,7 +837,7 @@ function CriticalView() {
                   </Badge>
                   <div className="text-right">
                     <p className="text-sm font-bold text-rose-400">+{dossier.delay}j</p>
-                    <p className="text-xs text-slate-500">délai</p>
+                    <p className="text-xs text-slate-400">délai</p>
                   </div>
                   <ArrowRight className="w-4 h-4 text-slate-600" />
                 </div>
@@ -847,7 +847,7 @@ function CriticalView() {
             <div className="px-4 py-12 text-center">
               <CheckCircle2 className="w-12 h-12 mx-auto mb-3 text-emerald-400" />
               <p className="text-lg font-medium text-slate-300">Aucun blocage critique</p>
-              <p className="text-sm text-slate-500">Tous les dossiers sont en cours de traitement</p>
+              <p className="text-sm text-slate-400">Tous les dossiers sont en cours de traitement</p>
             </div>
           )}
         </div>
@@ -1057,28 +1057,28 @@ function MatrixView() {
               <p className="text-2xl font-bold text-slate-200">
                 {matrixData.critical.high + matrixData.high.high + matrixData.critical.medium}
               </p>
-              <p className="text-xs text-slate-500">Action immédiate</p>
+              <p className="text-xs text-slate-400">Action immédiate</p>
             </div>
             <div className="p-4 rounded-xl border border-amber-500/30 bg-amber-500/10">
               <p className="text-xs text-amber-400 mb-1">Zone urgente</p>
               <p className="text-2xl font-bold text-slate-200">
                 {matrixData.critical.low + matrixData.high.medium + matrixData.medium.high}
               </p>
-              <p className="text-xs text-slate-500">Cette semaine</p>
+              <p className="text-xs text-slate-400">Cette semaine</p>
             </div>
             <div className="p-4 rounded-xl border border-blue-500/30 bg-blue-500/10">
               <p className="text-xs text-blue-400 mb-1">Zone normale</p>
               <p className="text-2xl font-bold text-slate-200">
                 {matrixData.high.low + matrixData.medium.medium + matrixData.low.high}
               </p>
-              <p className="text-xs text-slate-500">Planifié</p>
+              <p className="text-xs text-slate-400">Planifié</p>
             </div>
             <div className="p-4 rounded-xl border border-slate-700/50 bg-slate-800/30">
               <p className="text-xs text-slate-400 mb-1">Zone basse</p>
               <p className="text-2xl font-bold text-slate-200">
                 {matrixData.medium.low + matrixData.low.medium + matrixData.low.low}
               </p>
-              <p className="text-xs text-slate-500">Surveillance</p>
+              <p className="text-xs text-slate-400">Surveillance</p>
             </div>
           </div>
 
@@ -1149,7 +1149,7 @@ function BureauxView() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-slate-200">{bureau}</p>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-400">
                   {counts.total} blocage{counts.total > 1 ? 's' : ''}
                 </p>
               </div>
@@ -1245,7 +1245,7 @@ function TimelineView() {
                       {dossier.impact}
                     </Badge>
                   </div>
-                  <p className="text-xs text-slate-500">{dossier.reason}</p>
+                  <p className="text-xs text-slate-400">{dossier.reason}</p>
                   <div className="flex items-center gap-3 mt-2 text-xs text-slate-600">
                     <span>{dossier.bureau}</span>
                     <span>•</span>
@@ -1472,7 +1472,7 @@ function DecisionsView() {
                       <span className="text-sm font-medium text-slate-200">
                         {getActionLabel(decision.action)}
                       </span>
-                      <span className="text-xs font-mono text-slate-500">{decision.dossierId}</span>
+                      <span className="text-xs font-mono text-slate-400">{decision.dossierId}</span>
                     </div>
                     <p className="text-xs text-slate-400 truncate">
                       {decision.details || decision.dossierSubject}
@@ -1501,7 +1501,7 @@ function DecisionsView() {
           <div className="px-4 py-12 text-center">
             <Scale className="w-12 h-12 mx-auto mb-3 text-slate-600" />
             <p className="text-lg font-medium text-slate-400">Aucune décision enregistrée</p>
-            <p className="text-sm text-slate-500">Les décisions prises apparaîtront ici</p>
+            <p className="text-sm text-slate-400">Les décisions prises apparaîtront ici</p>
             <Button
               onClick={() => openModal('decision-center')}
               className="mt-4 bg-purple-500 hover:bg-purple-600"
@@ -1632,14 +1632,14 @@ function AuditView() {
         <div className="p-4 rounded-xl border border-slate-700/50 bg-slate-800/30">
           <div className="flex items-center gap-2 mb-2">
             <Activity className="w-4 h-4 text-cyan-400" />
-            <span className="text-xs text-slate-500">Actions totales</span>
+            <span className="text-xs text-slate-400">Actions totales</span>
           </div>
           <p className="text-2xl font-bold text-slate-200">{allEntries.length}</p>
         </div>
         <div className="p-4 rounded-xl border border-slate-700/50 bg-slate-800/30">
           <div className="flex items-center gap-2 mb-2">
             <ArrowUpRight className="w-4 h-4 text-orange-400" />
-            <span className="text-xs text-slate-500">Escalades</span>
+            <span className="text-xs text-slate-400">Escalades</span>
           </div>
           <p className="text-2xl font-bold text-slate-200">
             {allEntries.filter(e => e.action === 'escalation' || e.action === 'escalated').length}
@@ -1648,7 +1648,7 @@ function AuditView() {
         <div className="p-4 rounded-xl border border-slate-700/50 bg-slate-800/30">
           <div className="flex items-center gap-2 mb-2">
             <Shield className="w-4 h-4 text-purple-400" />
-            <span className="text-xs text-slate-500">Substitutions</span>
+            <span className="text-xs text-slate-400">Substitutions</span>
           </div>
           <p className="text-2xl font-bold text-slate-200">
             {allEntries.filter(e => e.action === 'substitution' || e.action === 'substituted').length}
@@ -1657,7 +1657,7 @@ function AuditView() {
         <div className="p-4 rounded-xl border border-slate-700/50 bg-slate-800/30">
           <div className="flex items-center gap-2 mb-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-            <span className="text-xs text-slate-500">Résolutions</span>
+            <span className="text-xs text-slate-400">Résolutions</span>
           </div>
           <p className="text-2xl font-bold text-slate-200">
             {allEntries.filter(e => e.action === 'resolution' || e.action === 'resolved').length}
@@ -1702,7 +1702,7 @@ function AuditView() {
                         {entry.action}
                       </span>
                       <span className="text-xs text-slate-600">•</span>
-                      <span className="text-xs font-mono text-slate-500">{entry.dossierId}</span>
+                      <span className="text-xs font-mono text-slate-400">{entry.dossierId}</span>
                     </div>
                     <p className="text-xs text-slate-400 truncate">{entry.details || entry.dossierSubject}</p>
                     <div className="flex items-center gap-3 mt-2 text-xs text-slate-600">
@@ -1728,7 +1728,7 @@ function AuditView() {
             <div className="px-4 py-12 text-center">
               <Shield className="w-12 h-12 mx-auto mb-3 text-slate-600" />
               <p className="text-lg font-medium text-slate-400">Aucune action enregistrée</p>
-              <p className="text-sm text-slate-500">L'historique d'audit est vide</p>
+              <p className="text-sm text-slate-400">L'historique d'audit est vide</p>
             </div>
           )}
         </div>
@@ -1743,7 +1743,7 @@ function AuditView() {
             </div>
             <div>
               <h3 className="text-sm font-semibold text-slate-200">Chaîne de hash intègre</h3>
-              <p className="text-xs text-slate-500">Dernière vérification: maintenant</p>
+              <p className="text-xs text-slate-400">Dernière vérification: maintenant</p>
             </div>
           </div>
           <p className="text-slate-400 text-sm">
@@ -1759,7 +1759,7 @@ function AuditView() {
             </div>
             <div>
               <h3 className="text-sm font-semibold text-slate-200">Conformité</h3>
-              <p className="text-xs text-slate-500">Normes d'audit respectées</p>
+              <p className="text-xs text-slate-400">Normes d'audit respectées</p>
             </div>
           </div>
           <p className="text-slate-400 text-sm">
@@ -1850,7 +1850,7 @@ function QuickActionButton({ icon: Icon, title, description, color, onClick }: Q
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-slate-200">{title}</p>
-        <p className="text-xs text-slate-500">{description}</p>
+        <p className="text-xs text-slate-400">{description}</p>
       </div>
       <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-slate-400 transition-colors" />
     </button>

@@ -89,7 +89,7 @@ export function WorkspaceShell({
               {icon}
               <h1 className="text-2xl font-bold text-[rgb(var(--text))] truncate">{title}</h1>
             </div>
-            {subtitle && <p className="text-sm text-slate-500 mt-1">{subtitle}</p>}
+            {subtitle && <p className="text-sm text-slate-400 mt-1">{subtitle}</p>}
 
             {badges.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">

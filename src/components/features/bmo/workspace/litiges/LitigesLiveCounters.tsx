@@ -47,9 +47,9 @@ export function LitigesLiveCounters({ onOpenQueue }: Props) {
           <button key={counter.key} onClick={counter.action} className={cn("p-4 rounded-xl border text-left transition-all hover:shadow-md", hasValue && counter.color !== 'slate' ? `bg-${counter.color}-500/10 border-${counter.color}-500/30` : "bg-slate-50 dark:bg-slate-900/50 border-slate-200/50 dark:border-slate-800/50")}>
             <div className="flex items-center gap-2 mb-2">
               <Icon className={cn("w-4 h-4", hasValue && counter.color !== 'slate' ? counter.color === 'red' ? 'text-red-500' : counter.color === 'amber' ? 'text-amber-500' : counter.color === 'blue' ? 'text-blue-500' : counter.color === 'purple' ? 'text-purple-500' : counter.color === 'emerald' ? 'text-emerald-500' : 'text-slate-400' : 'text-slate-400')} />
-              <span className="text-xs text-slate-500 font-medium">{counter.label}</span>
+              <span className="text-xs text-slate-400 font-medium">{counter.label}</span>
             </div>
-            <p className="text-xl font-bold text-slate-900 dark:text-slate-100">{counter.value}{counter.suffix && <span className="text-xs font-normal text-slate-500 ml-1">{counter.suffix}</span>}</p>
+            <p className="text-xl font-bold text-slate-900 dark:text-slate-100">{counter.value}{counter.suffix && <span className="text-xs font-normal text-slate-400 ml-1">{counter.suffix}</span>}</p>
           </button>
         );
       })}

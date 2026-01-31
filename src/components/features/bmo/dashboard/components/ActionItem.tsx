@@ -137,7 +137,7 @@ export const ActionItem = memo(function ActionItem({
           )}
         </div>
         {onClick && (
-          <ArrowRight className="text-slate-500" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />
+          <ArrowRight className="text-slate-400" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />
         )}
       </div>
 
@@ -163,12 +163,12 @@ export const ActionItem = memo(function ActionItem({
       {/* Footer: Deadline + Responsable */}
       <div className="flex items-center justify-between pt-3 border-t border-slate-700/50 min-w-0">
         <div className="flex items-center gap-2 min-w-0 flex-1">
-          <Clock className="text-slate-500 flex-shrink-0" style={{ width: 'clamp(0.75rem, 0.875vw, 0.875rem)', height: 'clamp(0.75rem, 0.875vw, 0.875rem)', minWidth: '0.75rem', minHeight: '0.75rem' }} />
+          <Clock className="text-slate-400 flex-shrink-0" style={{ width: 'clamp(0.75rem, 0.875vw, 0.875rem)', height: 'clamp(0.75rem, 0.875vw, 0.875rem)', minWidth: '0.75rem', minHeight: '0.75rem' }} />
           <span className="text-slate-400 truncate" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{action.deadline}</span>
         </div>
         {action.responsable && (
           <div className="flex items-center gap-1 flex-shrink-0 ml-2">
-            <User className="text-slate-500 flex-shrink-0" style={{ width: 'clamp(0.75rem, 0.875vw, 0.875rem)', height: 'clamp(0.75rem, 0.875vw, 0.875rem)', minWidth: '0.75rem', minHeight: '0.75rem' }} />
+            <User className="text-slate-400 flex-shrink-0" style={{ width: 'clamp(0.75rem, 0.875vw, 0.875rem)', height: 'clamp(0.75rem, 0.875vw, 0.875rem)', minWidth: '0.75rem', minHeight: '0.75rem' }} />
             <span className="text-slate-400 truncate" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>{action.responsable.nom}</span>
           </div>
         )}

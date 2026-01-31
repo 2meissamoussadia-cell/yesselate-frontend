@@ -230,7 +230,7 @@ export function CalendrierCommandPalette({
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="h-7 w-7 p-0 text-slate-500 hover:text-slate-300"
+              className="h-7 w-7 p-0 text-slate-400 hover:text-slate-300"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -242,7 +242,7 @@ export function CalendrierCommandPalette({
           {Object.entries(groupedCommands).length > 0 ? (
             Object.entries(groupedCommands).map(([category, cmds]) => (
               <div key={category} className="mb-4">
-                <div className="px-3 py-1.5 text-xs font-semibold text-slate-500 uppercase tracking-wide">
+                <div className="px-3 py-1.5 text-xs font-semibold text-slate-400 uppercase tracking-wide">
                   {category}
                 </div>
                 <div className="space-y-1">
@@ -266,7 +266,7 @@ export function CalendrierCommandPalette({
                             {cmd.label}
                           </div>
                           {cmd.description && (
-                            <div className="text-xs text-slate-500 mt-0.5">
+                            <div className="text-xs text-slate-400 mt-0.5">
                               {cmd.description}
                             </div>
                           )}
@@ -288,7 +288,7 @@ export function CalendrierCommandPalette({
         </div>
 
         {/* Footer */}
-        <div className="p-3 border-t border-slate-800/50 flex items-center justify-between text-xs text-slate-500">
+        <div className="p-3 border-t border-slate-800/50 flex items-center justify-between text-xs text-slate-400">
           <div className="flex items-center gap-4">
             <span>↑↓ Naviguer</span>
             <span>↵ Sélectionner</span>

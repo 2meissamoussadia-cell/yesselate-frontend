@@ -77,7 +77,7 @@ export function EscaladesPage() {
                 <p className="text-sm text-slate-400 mb-2">
                   Raison: {escalade.raison}
                 </p>
-                <div className="flex items-center gap-4 text-xs text-slate-500">
+                <div className="flex items-center gap-4 text-xs text-slate-400">
                   <span>
                     Escaladée: {escalade.dateEscalade.toLocaleDateString('fr-FR')}
                   </span>
@@ -96,7 +96,7 @@ export function EscaladesPage() {
           </div>
         ))}
         {escalades.length === 0 && (
-          <div className="text-center py-8 text-slate-500">
+          <div className="text-center py-8 text-slate-400">
             Aucune escalade enregistrée
           </div>
         )}

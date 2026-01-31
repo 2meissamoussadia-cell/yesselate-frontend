@@ -123,7 +123,7 @@ export function ValidationBCFavoritesPanel({ onOpenDocument }: { onOpenDocument:
       <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-8 text-center dark:border-slate-800 dark:bg-[#1f1f1f]/70">
         <Star className="w-12 h-12 mx-auto mb-3 text-slate-300" />
         <div className="font-medium text-slate-600 dark:text-slate-400 mb-1">Aucun favori</div>
-        <div className="text-sm text-slate-500">
+        <div className="text-sm text-slate-400">
           Cliquez sur l'étoile dans un document pour l'ajouter aux favoris
         </div>
       </div>
@@ -150,7 +150,7 @@ export function ValidationBCFavoritesPanel({ onOpenDocument }: { onOpenDocument:
                   className="flex-1 min-w-0 text-left"
                 >
                   <div className="font-medium text-sm truncate">{fav.title}</div>
-                  <div className="text-xs text-slate-500 mt-0.5">
+                  <div className="text-xs text-slate-400 mt-0.5">
                     {fav.type === 'bc' ? '📄 BC' : fav.type === 'facture' ? '🧾 Facture' : '📝 Avenant'}
                   </div>
                 </button>
@@ -194,7 +194,7 @@ export function ValidationBCFavoritesPanel({ onOpenDocument }: { onOpenDocument:
                   className="flex-1 min-w-0 text-left"
                 >
                   <div className="font-medium text-sm truncate">{fav.title}</div>
-                  <div className="text-xs text-slate-500 mt-0.5">
+                  <div className="text-xs text-slate-400 mt-0.5">
                     {fav.type === 'bc' ? '📄 BC' : fav.type === 'facture' ? '🧾 Facture' : '📝 Avenant'}
                   </div>
                 </button>
@@ -233,7 +233,7 @@ export function ValidationBCQuickFavorites({ onOpenDocument }: { onOpenDocument:
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-xs text-slate-500">Favoris :</span>
+      <span className="text-xs text-slate-400">Favoris :</span>
       {pinnedFavorites.map((fav) => (
         <button
           key={fav.id}

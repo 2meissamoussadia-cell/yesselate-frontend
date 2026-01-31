@@ -185,7 +185,7 @@ export function AnomalyDetectionWidget({
                     </Badge>
                   </div>
                   <p className="text-[10px] text-slate-400 mb-1">{anomaly.description}</p>
-                  <div className="flex items-center gap-2 text-[9px] text-slate-500">
+                  <div className="flex items-center gap-2 text-[9px] text-slate-400">
                     <span>{anomaly.date}</span>
                     {anomaly.expected !== undefined && (
                       <span>

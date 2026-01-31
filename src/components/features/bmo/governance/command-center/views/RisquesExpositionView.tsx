@@ -353,7 +353,7 @@ export function RisquesExpositionView() {
                       )}
                     </div>
                     <div className="flex items-center gap-3 mt-1">
-                      <span className="text-xs text-slate-500">Projet: {risk.project}</span>
+                      <span className="text-xs text-slate-400">Projet: {risk.project}</span>
                       <span className="text-xs text-slate-600">•</span>
                       <Badge
                         variant="default"
@@ -501,7 +501,7 @@ export function RisquesExpositionView() {
                       </Badge>
                     </div>
                     <div className="flex items-center gap-3 mt-1">
-                      <span className="text-xs text-slate-500">Type: {incident.type}</span>
+                      <span className="text-xs text-slate-400">Type: {incident.type}</span>
                       <span className="text-xs text-slate-600">•</span>
                       <span className="text-xs text-slate-400">Date: {incident.date}</span>
                       {incident.requiresAudit && (
@@ -581,7 +581,7 @@ export function RisquesExpositionView() {
                       </Badge>
                     </div>
                     <div className="flex items-center gap-3 mt-1">
-                      <span className="text-xs text-slate-500">Type: {incident.type}</span>
+                      <span className="text-xs text-slate-400">Type: {incident.type}</span>
                       <span className="text-xs text-slate-600">•</span>
                       <span className="text-xs text-slate-400">Date: {incident.date}</span>
                       <span className="text-xs text-slate-600">•</span>

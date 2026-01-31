@@ -57,7 +57,7 @@ export function BlockedDetailView({ tabId, data }: Props) {
 
   if (!dossier) {
     return (
-      <div className="flex items-center justify-center h-64 text-slate-500">
+      <div className="flex items-center justify-center h-64 text-slate-400">
         <div className="text-center">
           <AlertCircle className="w-12 h-12 mx-auto mb-3 opacity-30" />
           <p>Dossier non trouvé</p>
@@ -94,15 +94,15 @@ export function BlockedDetailView({ tabId, data }: Props) {
               <span className={cn("px-3 py-1 rounded text-sm font-medium", style.bg, style.text)}>
                 {dossier.impact.toUpperCase()}
               </span>
-              <span className="text-sm text-slate-500">{dossier.type}</span>
+              <span className="text-sm text-slate-400">{dossier.type}</span>
             </div>
             <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">{dossier.subject}</h1>
-            <p className="text-slate-500 mt-1">{dossier.reason}</p>
+            <p className="text-slate-400 mt-1">{dossier.reason}</p>
           </div>
 
           <div className="text-right">
             <p className="text-2xl font-mono font-bold text-amber-600 dark:text-amber-400">{dossier.amount}</p>
-            <p className="text-sm text-slate-500 mt-1">
+            <p className="text-sm text-slate-400 mt-1">
               Priorité: <span className={cn("font-bold", priority > 5000 ? "text-red-500" : "text-amber-500")}>{priority}</span>
             </p>
           </div>
@@ -111,21 +111,21 @@ export function BlockedDetailView({ tabId, data }: Props) {
         {/* Métadonnées */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-6 border-t border-slate-200/70 dark:border-slate-800">
           <div>
-            <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
+            <div className="flex items-center gap-2 text-xs text-slate-400 mb-1">
               <Building2 className="w-3 h-3" />
               Bureau
             </div>
             <p className="font-medium">{dossier.bureau}</p>
           </div>
           <div>
-            <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
+            <div className="flex items-center gap-2 text-xs text-slate-400 mb-1">
               <User className="w-3 h-3" />
               Responsable
             </div>
             <p className="font-medium">{dossier.responsible || '—'}</p>
           </div>
           <div>
-            <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
+            <div className="flex items-center gap-2 text-xs text-slate-400 mb-1">
               <Clock className="w-3 h-3" />
               Délai
             </div>
@@ -137,7 +137,7 @@ export function BlockedDetailView({ tabId, data }: Props) {
             </p>
           </div>
           <div>
-            <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
+            <div className="flex items-center gap-2 text-xs text-slate-400 mb-1">
               <FileText className="w-3 h-3" />
               Projet
             </div>
@@ -164,7 +164,7 @@ export function BlockedDetailView({ tabId, data }: Props) {
                 "flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 -mb-px transition-colors",
                 isActive
                   ? "border-orange-500 text-orange-600 dark:text-orange-400"
-                  : "border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                  : "border-transparent text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
               )}
             >
               <Icon className="w-4 h-4" />
@@ -186,7 +186,7 @@ export function BlockedDetailView({ tabId, data }: Props) {
                 </div>
                 <div>
                   <p className="font-semibold text-slate-900 dark:text-slate-100">Blocage critique</p>
-                  <p className="text-sm text-slate-500">Ce dossier nécessite une action immédiate du BMO</p>
+                  <p className="text-sm text-slate-400">Ce dossier nécessite une action immédiate du BMO</p>
                 </div>
               </div>
             )}
@@ -202,15 +202,15 @@ export function BlockedDetailView({ tabId, data }: Props) {
               <h3 className="font-semibold mb-3">Analyse d'impact</h3>
               <div className="grid grid-cols-3 gap-4">
                 <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-                  <p className="text-xs text-slate-500 mb-1">Impact financier</p>
+                  <p className="text-xs text-slate-400 mb-1">Impact financier</p>
                   <p className="text-lg font-bold">{dossier.amount}</p>
                 </div>
                 <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-                  <p className="text-xs text-slate-500 mb-1">Retard accumulé</p>
+                  <p className="text-xs text-slate-400 mb-1">Retard accumulé</p>
                   <p className="text-lg font-bold">{dossier.delay}j</p>
                 </div>
                 <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-                  <p className="text-xs text-slate-500 mb-1">Score priorité</p>
+                  <p className="text-xs text-slate-400 mb-1">Score priorité</p>
                   <p className="text-lg font-bold">{priority}</p>
                 </div>
               </div>
@@ -226,7 +226,7 @@ export function BlockedDetailView({ tabId, data }: Props) {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium">{dossier.project}</p>
-                    <p className="text-sm text-slate-500">Bureau: {dossier.bureau}</p>
+                    <p className="text-sm text-slate-400">Bureau: {dossier.bureau}</p>
                   </div>
                   <Link 
                     href={`/maitre-ouvrage/projets-en-cours?id=${dossier.project}`}
@@ -242,7 +242,7 @@ export function BlockedDetailView({ tabId, data }: Props) {
             <div>
               <h3 className="font-semibold mb-2">Workflow de validation</h3>
               <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-slate-400">
                   Ce dossier est bloqué dans le processus de validation {dossier.type}.
                 </p>
               </div>
@@ -261,7 +261,7 @@ export function BlockedDetailView({ tabId, data }: Props) {
               >
                 <ArrowUpRight className="w-6 h-6 text-orange-500 mb-2" />
                 <p className="font-medium text-slate-900 dark:text-slate-100">Escalader au CODIR</p>
-                <p className="text-sm text-slate-500 mt-1">Remonter le blocage au comité de direction</p>
+                <p className="text-sm text-slate-400 mt-1">Remonter le blocage au comité de direction</p>
               </button>
 
               <button
@@ -270,19 +270,19 @@ export function BlockedDetailView({ tabId, data }: Props) {
               >
                 <Shield className="w-6 h-6 text-purple-500 mb-2" />
                 <p className="font-medium text-slate-900 dark:text-slate-100">Substitution BMO</p>
-                <p className="text-sm text-slate-500 mt-1">Exercer le pouvoir de substitution</p>
+                <p className="text-sm text-slate-400 mt-1">Exercer le pouvoir de substitution</p>
               </button>
 
               <button className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-left bg-white dark:bg-slate-900/50">
                 <FileText className="w-6 h-6 text-slate-400 mb-2" />
                 <p className="font-medium text-slate-900 dark:text-slate-100">Demander pièce</p>
-                <p className="text-sm text-slate-500 mt-1">Solliciter un document complémentaire</p>
+                <p className="text-sm text-slate-400 mt-1">Solliciter un document complémentaire</p>
               </button>
 
               <button className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-left bg-white dark:bg-slate-900/50">
                 <CheckCircle2 className="w-6 h-6 text-emerald-500 mb-2" />
                 <p className="font-medium text-slate-900 dark:text-slate-100">Résoudre</p>
-                <p className="text-sm text-slate-500 mt-1">Marquer comme résolu avec justification</p>
+                <p className="text-sm text-slate-400 mt-1">Marquer comme résolu avec justification</p>
               </button>
             </div>
           </div>
@@ -292,7 +292,7 @@ export function BlockedDetailView({ tabId, data }: Props) {
           <div className="space-y-4">
             <h3 className="font-semibold mb-4">Historique des actions</h3>
             
-            <div className="text-center py-8 text-slate-500">
+            <div className="text-center py-8 text-slate-400">
               <History className="w-12 h-12 mx-auto mb-3 opacity-30" />
               <p>Aucune action enregistrée</p>
               <p className="text-sm mt-1">Les futures actions seront tracées ici</p>

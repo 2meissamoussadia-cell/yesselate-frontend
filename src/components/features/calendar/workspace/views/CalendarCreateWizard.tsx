@@ -122,7 +122,7 @@ export function CalendarCreateWizard({ tab }: Props) {
           <h2 className="text-xl font-bold text-slate-700 dark:text-slate-200">
             Nouvel événement
           </h2>
-          <span className="text-sm text-slate-500">
+          <span className="text-sm text-slate-400">
             Étape {currentStepIndex + 1}/{steps.length}
           </span>
         </div>
@@ -141,7 +141,7 @@ export function CalendarCreateWizard({ tab }: Props) {
                     'flex items-center gap-2 px-3 py-2 rounded-lg transition-all text-sm font-medium w-full',
                     isActive && 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400',
                     isCompleted && 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400',
-                    !isActive && !isCompleted && 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800'
+                    !isActive && !isCompleted && 'text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
                   )}
                   onClick={() => idx <= currentStepIndex && setCurrentStep(step.id)}
                   disabled={idx > currentStepIndex}
@@ -465,7 +465,7 @@ function ParticipantsStep({ formData, onChange }: {
           ))}
         </div>
       ) : (
-        <div className="text-center py-8 text-slate-500">
+        <div className="text-center py-8 text-slate-400">
           <Users className="w-12 h-12 mx-auto mb-2 opacity-30" />
           <p className="text-sm">Aucun participant ajouté</p>
         </div>
@@ -598,7 +598,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 function InfoItem({ label, value }: { label: string; value: any }) {
   return (
     <div className="flex justify-between text-sm">
-      <span className="text-slate-500">{label}:</span>
+      <span className="text-slate-400">{label}:</span>
       <span className="font-medium text-slate-700 dark:text-slate-300">{value}</span>
     </div>
   );

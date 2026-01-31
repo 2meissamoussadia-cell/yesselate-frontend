@@ -214,7 +214,7 @@ export function ValidationBCNotificationPanel({
           <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
             <Bell className="w-12 h-12 text-slate-600 mb-3 opacity-30" />
             <p className="text-sm text-slate-400">Aucune notification</p>
-            <p className="text-xs text-slate-500 mt-1">Les notifications apparaîtront ici</p>
+            <p className="text-xs text-slate-400 mt-1">Les notifications apparaîtront ici</p>
           </div>
         ) : (
           <div className="divide-y divide-slate-800/50">
@@ -258,7 +258,7 @@ export function ValidationBCNotificationPanel({
                         {notification.documentId && (
                           <div className="flex items-center gap-1.5 mb-1">
                             {getDocumentIcon(notification.documentType)}
-                            <span className="text-xs font-mono text-slate-500">
+                            <span className="text-xs font-mono text-slate-400">
                               {notification.documentId}
                             </span>
                           </div>
@@ -270,7 +270,7 @@ export function ValidationBCNotificationPanel({
                     </div>
 
                     <div className="flex items-center justify-between mt-2">
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs text-slate-400">
                         {formatTime(notification.timestamp)}
                       </span>
                       {notification.actionLabel && (
@@ -299,7 +299,7 @@ export function ValidationBCNotificationPanel({
       {/* Footer */}
       {notifications.length > 0 && (
         <div className="px-4 py-2 border-t border-slate-700/50 bg-slate-900/50">
-          <p className="text-xs text-slate-500 text-center">
+          <p className="text-xs text-slate-400 text-center">
             {notifications.length} notification{notifications.length > 1 ? 's' : ''} • {unreadCount} non lu{unreadCount > 1 ? 'es' : 'e'}
           </p>
         </div>

@@ -34,7 +34,7 @@ export const gouvernanceNavigation: GouvernanceNavDomain[] = [
       {
         id: 'executive-dashboard',
         label: 'Tableau de bord exécutif',
-        route: '/maitre-ouvrage/governance/dashboard',
+        route: '/maitre-ouvrage/dashboard?main=pilotage&sub=gouvernance',
         defaultView: 'dashboard',
       },
       {

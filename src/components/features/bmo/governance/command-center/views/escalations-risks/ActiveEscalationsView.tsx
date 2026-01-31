@@ -68,17 +68,17 @@ export function ActiveEscalationsView() {
                 <h3 className="text-base font-semibold text-slate-200 mb-3">{escalation.title}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                   <div className="flex items-center gap-2">
-                    <User className="h-4 w-4 text-slate-500" />
+                    <User className="h-4 w-4 text-slate-400" />
                     <span className="text-slate-400">Escaladé à:</span>
                     <span className="text-slate-300">{escalation.escalatedTo}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4 text-slate-500" />
+                    <Clock className="h-4 w-4 text-slate-400" />
                     <span className="text-slate-400">Ouvert depuis:</span>
                     <span className="text-slate-300">{escalation.daysOpen} jours</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-slate-500" />
+                    <Calendar className="h-4 w-4 text-slate-400" />
                     <span className="text-slate-400">Échéance:</span>
                     <span className="text-slate-300">{escalation.deadline}</span>
                   </div>

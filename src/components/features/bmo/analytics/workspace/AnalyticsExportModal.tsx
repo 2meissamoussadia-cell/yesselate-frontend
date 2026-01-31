@@ -174,7 +174,7 @@ export function AnalyticsExportModal({ open, onClose }: AnalyticsExportModalProp
                   {format.icon}
                   <span className="font-medium text-sm">{format.label}</span>
                 </div>
-                <p className="text-xs text-slate-500">{format.description}</p>
+                <p className="text-xs text-slate-400">{format.description}</p>
               </button>
             ))}
           </div>
@@ -294,7 +294,7 @@ export function AnalyticsExportModal({ open, onClose }: AnalyticsExportModalProp
               <p className="text-sm font-medium text-slate-200">
                 Résumé de l'export
               </p>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-slate-400 mt-1">
                 {FORMAT_OPTIONS.find(f => f.id === config.format)?.label} • 
                 {config.scope.includes('all') ? ' Toutes données' : ` ${config.scope.length} catégorie(s)`} • 
                 {DATE_RANGE_OPTIONS.find(r => r.id === config.dateRange)?.label}

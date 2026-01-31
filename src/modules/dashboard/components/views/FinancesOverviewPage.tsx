@@ -67,7 +67,7 @@ export function FinancesOverviewPage() {
                         <td className="py-3 px-4">
                           <span className="font-medium text-slate-200">{row.chantierId}</span>
                           {row.chantierNom && (
-                            <span className="text-slate-500 text-xs block">{row.chantierNom}</span>
+                            <span className="text-slate-400 text-xs block">{row.chantierNom}</span>
                           )}
                         </td>
                         <td className="py-3 px-4 text-right text-slate-300">

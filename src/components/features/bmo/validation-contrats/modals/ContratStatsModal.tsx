@@ -175,7 +175,7 @@ export function ContratStatsModal({ open, onClose }: ContratStatsModalProps) {
 function StatCard({ label, value, trend, trendUp }: { label: string; value: string | number; trend: string; trendUp: boolean }) {
   return (
     <div className="bg-slate-800/40 rounded-lg p-4 border border-slate-700/50">
-      <p className="text-xs text-slate-500 mb-1">{label}</p>
+      <p className="text-xs text-slate-400 mb-1">{label}</p>
       <p className="text-2xl font-bold text-slate-200 mb-1">{value}</p>
       <div className="flex items-center gap-1">
         {trendUp ? (
@@ -222,7 +222,7 @@ function ProgressBar({ label, value, total, color }: { label: string; value: num
 function MetricCard({ label, value }: { label: string; value: string }) {
   return (
     <div className="bg-slate-800/40 rounded-lg p-4 border border-slate-700/50">
-      <p className="text-xs text-slate-500 mb-1">{label}</p>
+      <p className="text-xs text-slate-400 mb-1">{label}</p>
       <p className="text-lg font-bold text-slate-200">{value}</p>
     </div>
   );

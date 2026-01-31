@@ -178,11 +178,11 @@ function TypesSection() {
             <p className="text-sm text-slate-300 mb-3">{docType.description}</p>
             <div className="grid grid-cols-2 gap-3 text-xs">
               <div>
-                <span className="text-slate-500">Validation:</span>
+                <span className="text-slate-400">Validation:</span>
                 <span className="ml-2 text-slate-300">{docType.validation}</span>
               </div>
               <div>
-                <span className="text-slate-500">Urgence:</span>
+                <span className="text-slate-400">Urgence:</span>
                 <span className="ml-2 text-slate-300">{docType.urgency}</span>
               </div>
             </div>

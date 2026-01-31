@@ -185,7 +185,7 @@ export const ClientsFiltersPanel = React.memo(function ClientsFiltersPanel({
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="h-8 w-8 p-0 text-slate-500 hover:text-slate-300"
+            className="h-8 w-8 p-0 text-slate-400 hover:text-slate-300"
           >
             <X className="h-4 w-4" />
           </Button>
@@ -200,7 +200,7 @@ export const ClientsFiltersPanel = React.memo(function ClientsFiltersPanel({
             return (
               <div key={group.id} className="space-y-3">
                 <div className="flex items-center gap-2">
-                  <Icon className="h-4 w-4 text-slate-500" />
+                  <Icon className="h-4 w-4 text-slate-400" />
                   <h4 className="text-sm font-medium text-slate-300">{group.label}</h4>
                 </div>
                 <div className="space-y-1.5">

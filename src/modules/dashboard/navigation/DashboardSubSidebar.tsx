@@ -79,6 +79,7 @@ export const DashboardSubSidebar = memo(function DashboardSubSidebar() {
                 onClick={() => handleSubClick(subCat.id)}
                 className={cn(
                   'w-full flex items-center gap-2 rounded-lg py-2 text-left text-sm transition-colors min-h-[36px]',
+                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950',
                   expanded ? 'px-3 justify-start' : 'px-2 justify-center',
                   active
                     ? 'bg-sky-500/15 text-sky-100 border-l-2 border-sky-500'

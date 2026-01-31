@@ -279,7 +279,7 @@ function ToastItem({
         </div>
         <button
           onClick={handleRemove}
-          className="p-1 rounded-lg hover:bg-slate-800/50 transition-colors text-slate-500 hover:text-slate-300"
+          className="p-1 rounded-lg hover:bg-slate-800/50 transition-colors text-slate-400 hover:text-slate-300"
         >
           <X className="w-4 h-4" />
         </button>

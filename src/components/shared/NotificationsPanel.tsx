@@ -115,7 +115,7 @@ export function NotificationsPanel({
               size="sm"
               onClick={refresh}
               disabled={isLoading}
-              className="h-7 w-7 p-0 text-slate-500 hover:text-slate-300"
+              className="h-7 w-7 p-0 text-slate-400 hover:text-slate-300"
               title="Actualiser"
             >
               <RefreshCw className={cn('h-3.5 w-3.5', isLoading && 'animate-spin')} />
@@ -124,7 +124,7 @@ export function NotificationsPanel({
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="h-7 w-7 p-0 text-slate-500 hover:text-slate-300"
+              className="h-7 w-7 p-0 text-slate-400 hover:text-slate-300"
             >
               <X className="h-3.5 w-3.5" />
             </Button>
@@ -208,7 +208,7 @@ export function NotificationsPanel({
                       </p>
                     )}
                     <div className="flex items-center justify-between mt-2">
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs text-slate-400">
                         {formatDate(notif.createdAt)}
                       </span>
                       <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">

@@ -116,7 +116,7 @@ export function RecommendationsView({ subCategory, onOpenEvaluation }: Recommend
                           </div>
                         ))}
                         {recommendations.length > 2 && (
-                          <div className="text-xs text-slate-500">+{recommendations.length - 2} autre(s)</div>
+                          <div className="text-xs text-slate-400">+{recommendations.length - 2} autre(s)</div>
                         )}
                       </div>
                     </div>

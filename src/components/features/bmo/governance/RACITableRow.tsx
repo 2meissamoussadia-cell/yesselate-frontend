@@ -15,7 +15,7 @@ const RACI_COLORS: Record<string, string> = {
   'A': 'bg-blue-400/80 text-white',
   'C': 'bg-amber-400/80 text-white',
   'I': 'bg-slate-400/80 text-white',
-  '-': 'bg-slate-700/30 text-slate-500',
+  '-': 'bg-slate-700/30 text-slate-400',
 };
 
 interface RACITableRowProps {
@@ -126,7 +126,7 @@ export const RACITableRow = memo(function RACITableRow({
             <ScreenReaderOnly>: Verrouillée</ScreenReaderOnly>
           </span>
         ) : (
-          <span className="text-slate-500" aria-label="Non verrouillée">
+          <span className="text-slate-400" aria-label="Non verrouillée">
             🔓
             <ScreenReaderOnly>: Non verrouillée</ScreenReaderOnly>
           </span>

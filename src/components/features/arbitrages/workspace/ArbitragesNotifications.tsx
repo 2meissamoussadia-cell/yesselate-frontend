@@ -166,7 +166,7 @@ export function ArbitragesNotifications({ onOpenArbitrage, compact = false }: Pr
         )}
         title={`${unreadCount} notification(s) non lue(s)`}
       >
-        <Bell className={cn('w-5 h-5', unreadCount > 0 ? 'text-amber-600' : 'text-slate-500')} />
+        <Bell className={cn('w-5 h-5', unreadCount > 0 ? 'text-amber-600' : 'text-slate-400')} />
         {unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-rose-500 text-white text-xs flex items-center justify-center">
             {unreadCount}
@@ -204,7 +204,7 @@ export function ArbitragesNotifications({ onOpenArbitrage, compact = false }: Pr
             className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
             title="Actualiser"
           >
-            <RefreshCw className={cn('w-4 h-4 text-slate-500', loading && 'animate-spin')} />
+            <RefreshCw className={cn('w-4 h-4 text-slate-400', loading && 'animate-spin')} />
           </button>
         </div>
       </div>
@@ -216,7 +216,7 @@ export function ArbitragesNotifications({ onOpenArbitrage, compact = false }: Pr
       )}
 
       {notifications.length === 0 && !loading && (
-        <div className="p-6 text-center text-slate-500">
+        <div className="p-6 text-center text-slate-400">
           <BellOff className="w-8 h-8 mx-auto mb-2 text-slate-300" />
           <p className="text-sm">Aucune notification</p>
         </div>

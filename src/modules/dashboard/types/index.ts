@@ -50,6 +50,17 @@ export {
   isKpisBudgetData,
 } from './dashboardDataTypes';
 
+// Types domaine (chantiers, contacts, créances, validations, alertes, export, notifications)
+export type {
+  Contact,
+  Chantier,
+  Creance,
+  Validation,
+  KPIAlert,
+  ExportConfig,
+  Notification,
+} from './dashboardDomain';
+
 // Ré-export des types Read Models (Phase 2)
 export type {
   Main as ReadModelMain,

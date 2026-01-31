@@ -243,7 +243,7 @@ export function DelegationCreateWizard({ tab }: { tab: DelegationTab }) {
   // ================================
   const renderTypeStep = () => (
     <div className="space-y-4">
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-400">
         Sélectionnez le type de délégation de pouvoir à créer.
       </p>
       
@@ -261,7 +261,7 @@ export function DelegationCreateWizard({ tab }: { tab: DelegationTab }) {
             onClick={() => updateField('type', t.value)}
           >
             <div className="font-semibold text-sm">{t.label}</div>
-            <div className="text-xs text-slate-500 mt-1">{t.description}</div>
+            <div className="text-xs text-slate-400 mt-1">{t.description}</div>
           </button>
         ))}
       </div>
@@ -285,7 +285,7 @@ export function DelegationCreateWizard({ tab }: { tab: DelegationTab }) {
 
   const renderAgentStep = () => (
     <div className="space-y-4">
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-400">
         Identifiez l'agent qui recevra cette délégation de pouvoir.
       </p>
       
@@ -376,7 +376,7 @@ export function DelegationCreateWizard({ tab }: { tab: DelegationTab }) {
 
   const renderScopeStep = () => (
     <div className="space-y-4">
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-400">
         Définissez le périmètre exact de cette délégation.
       </p>
       
@@ -431,7 +431,7 @@ export function DelegationCreateWizard({ tab }: { tab: DelegationTab }) {
 
   const renderPeriodStep = () => (
     <div className="space-y-4">
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-400">
         Définissez la période de validité de cette délégation.
       </p>
       
@@ -464,7 +464,7 @@ export function DelegationCreateWizard({ tab }: { tab: DelegationTab }) {
       
       {/* Raccourcis de durée */}
       <div className="flex flex-wrap gap-2">
-        <span className="text-sm text-slate-500">Durées rapides:</span>
+        <span className="text-sm text-slate-400">Durées rapides:</span>
         {[
           { label: '3 mois', months: 3 },
           { label: '6 mois', months: 6 },
@@ -515,25 +515,25 @@ export function DelegationCreateWizard({ tab }: { tab: DelegationTab }) {
             <Shield className="w-5 h-5 text-purple-500" />
             <h3 className="font-semibold text-purple-600 dark:text-purple-400">Récapitulatif de la délégation</h3>
           </div>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-400">
             Vérifiez les informations avant validation. Un hash SHA3-256 sera généré pour garantir l'intégrité.
           </p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800/50">
-            <div className="text-xs text-slate-500 mb-1">Type de délégation</div>
+            <div className="text-xs text-slate-400 mb-1">Type de délégation</div>
             <div className="font-semibold">{finalType}</div>
           </div>
           
           <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800/50">
-            <div className="text-xs text-slate-500 mb-1">Agent délégataire</div>
+            <div className="text-xs text-slate-400 mb-1">Agent délégataire</div>
             <div className="font-semibold">{form.agentName}</div>
             <div className="text-xs text-slate-400">{form.agentRole || '—'} • {form.bureau}</div>
           </div>
           
           <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800/50 md:col-span-2">
-            <div className="text-xs text-slate-500 mb-1">Périmètre</div>
+            <div className="text-xs text-slate-400 mb-1">Périmètre</div>
             <div className="text-sm">{form.scope}</div>
             {form.maxAmount && (
               <div className="mt-1 text-xs text-purple-500 font-mono">
@@ -543,7 +543,7 @@ export function DelegationCreateWizard({ tab }: { tab: DelegationTab }) {
           </div>
           
           <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800/50">
-            <div className="text-xs text-slate-500 mb-1">Période de validité</div>
+            <div className="text-xs text-slate-400 mb-1">Période de validité</div>
             <div className="font-semibold">
               {startDate.toLocaleDateString('fr-FR')} → {endDate.toLocaleDateString('fr-FR')}
             </div>
@@ -551,7 +551,7 @@ export function DelegationCreateWizard({ tab }: { tab: DelegationTab }) {
           </div>
           
           <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800/50">
-            <div className="text-xs text-slate-500 mb-1">Délégant</div>
+            <div className="text-xs text-slate-400 mb-1">Délégant</div>
             <div className="font-semibold">{form.delegatorName}</div>
           </div>
         </div>

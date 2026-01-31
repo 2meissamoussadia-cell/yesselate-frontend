@@ -425,7 +425,7 @@ export const ProjetKpiPage = memo(function ProjetKpiPage({ data: apiData }: Proj
             <p className="text-amber-400" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>Action requise</p>
           )}
           {projet.litiges === 0 && (
-            <p className="text-slate-500" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>Aucun litige</p>
+            <p className="text-slate-400" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.75rem)' }}>Aucun litige</p>
           )}
         </div>
       </div>

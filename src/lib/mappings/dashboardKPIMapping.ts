@@ -12,6 +12,8 @@ import {
   Clock,
   Activity,
   TrendingUp,
+  BarChart3,
+  Leaf,
 } from 'lucide-react';
 
 // ============================================
@@ -338,6 +340,196 @@ export const DASHBOARD_KPI_MAPPINGS: Record<string, KPIMapping> = {
         tone: value >= 95 ? 'ok' : value >= 90 ? 'warn' : 'crit',
         trend: trend > 0 ? 'up' : trend < 0 ? 'down' : 'neutral',
         icon: TrendingUp,
+      };
+    },
+  },
+
+  /** Phase 2 — Productivité €/h MO */
+  productivite: {
+    display: {
+      label: 'Productivité (€/h MO)',
+      value: '42',
+      delta: '+2',
+      tone: 'ok',
+      trend: 'up',
+      icon: Activity,
+    },
+    metadata: {
+      id: 'productivite',
+      apiKey: 'productivite',
+      category: 'performance',
+      unit: '€/h',
+      description: 'Productivité main d’œuvre (euros par heure MO)',
+      formula: 'CA / heures_MO',
+      target: 45,
+      drillDownEnabled: true,
+      comparisonEnabled: true,
+      alertEnabled: true,
+      exportEnabled: true,
+    },
+    apiEndpoint: '/api/dashboard/stats',
+    transform: (data: any) => {
+      const value = data.kpis?.productivite?.value ?? 42;
+      const trend = data.kpis?.productivite?.trend ?? 0;
+      return {
+        label: 'Productivité (€/h MO)',
+        value: String(value),
+        delta: trend > 0 ? `+${trend}` : trend < 0 ? `${trend}` : '—',
+        tone: value >= 40 ? 'ok' : value >= 35 ? 'warn' : 'crit',
+        trend: trend > 0 ? 'up' : trend < 0 ? 'down' : 'neutral',
+        icon: Activity,
+      };
+    },
+  },
+
+  /** Phase 2 — ROI moyen */
+  roiMoyen: {
+    display: {
+      label: 'ROI moyen',
+      value: '1.24',
+      delta: '+0.05',
+      tone: 'ok',
+      trend: 'up',
+      icon: TrendingUp,
+    },
+    metadata: {
+      id: 'roi-moyen',
+      apiKey: 'roiMoyen',
+      category: 'financial',
+      unit: '',
+      description: 'Return on investment moyen (par type chantier)',
+      formula: 'Bénéfice net / Investissement',
+      target: 1.2,
+      drillDownEnabled: true,
+      comparisonEnabled: true,
+      alertEnabled: true,
+      exportEnabled: true,
+    },
+    apiEndpoint: '/api/dashboard/stats',
+    transform: (data: any) => {
+      const value = data.kpis?.roiMoyen?.value ?? 1.24;
+      const trend = data.kpis?.roiMoyen?.trend ?? 0;
+      return {
+        label: 'ROI moyen',
+        value: String(Number(value).toFixed(2)),
+        delta: trend > 0 ? `+${Number(trend).toFixed(2)}` : trend < 0 ? `${Number(trend).toFixed(2)}` : '—',
+        tone: value >= 1.2 ? 'ok' : value >= 1.0 ? 'warn' : 'crit',
+        trend: trend > 0 ? 'up' : trend < 0 ? 'down' : 'neutral',
+        icon: TrendingUp,
+      };
+    },
+  },
+
+  /** Phase 2 — Délai moyen paiement clients (j) */
+  delaiPaiement: {
+    display: {
+      label: 'Délai paiement',
+      value: '42 j',
+      delta: '-3 j',
+      tone: 'ok',
+      trend: 'down',
+      icon: Clock,
+    },
+    metadata: {
+      id: 'delai-paiement',
+      apiKey: 'delaiPaiement',
+      category: 'financial',
+      unit: 'j',
+      description: 'Délai moyen de paiement clients (jours)',
+      formula: 'Moyenne(DATE_PAIEMENT - DATE_FACTURE)',
+      target: 45,
+      drillDownEnabled: true,
+      comparisonEnabled: true,
+      alertEnabled: true,
+      exportEnabled: true,
+    },
+    apiEndpoint: '/api/dashboard/stats',
+    transform: (data: any) => {
+      const value = data.kpis?.delaiPaiement?.value ?? 42;
+      const trend = data.kpis?.delaiPaiement?.trend ?? 0;
+      return {
+        label: 'Délai paiement',
+        value: `${value} j`,
+        delta: trend !== 0 ? `${trend > 0 ? '+' : ''}${trend} j` : '—',
+        tone: value <= 45 ? 'ok' : value <= 60 ? 'warn' : 'crit',
+        trend: trend < 0 ? 'down' : trend > 0 ? 'up' : 'neutral',
+        icon: Clock,
+      };
+    },
+  },
+
+  /** Phase 2 — Taux d'utilisation (ressources) */
+  tauxUtilisation: {
+    display: {
+      label: 'Taux utilisation',
+      value: '78%',
+      delta: '+2%',
+      tone: 'warn',
+      trend: 'up',
+      icon: BarChart3,
+    },
+    metadata: {
+      id: 'taux-utilisation',
+      apiKey: 'tauxUtilisation',
+      category: 'performance',
+      unit: '%',
+      description: 'Taux d\'utilisation des ressources (heures facturées / heures disponibles)',
+      formula: 'Heures_facturées / Heures_disponibles',
+      target: 80,
+      drillDownEnabled: true,
+      comparisonEnabled: true,
+      alertEnabled: true,
+      exportEnabled: true,
+    },
+    apiEndpoint: '/api/dashboard/stats',
+    transform: (data: any) => {
+      const value = data.kpis?.tauxUtilisation?.value ?? 78;
+      const trend = data.kpis?.tauxUtilisation?.trend ?? 0;
+      return {
+        label: 'Taux utilisation',
+        value: `${value}%`,
+        delta: trend !== 0 ? `${trend > 0 ? '+' : ''}${trend}%` : '—',
+        tone: value >= 80 ? 'ok' : value >= 70 ? 'warn' : 'crit',
+        trend: trend > 0 ? 'up' : trend < 0 ? 'down' : 'neutral',
+        icon: BarChart3,
+      };
+    },
+  },
+
+  /** Phase 2 — Bilan carbone (tCO₂e) */
+  bilanCarbone: {
+    display: {
+      label: 'Bilan carbone',
+      value: '124',
+      delta: '-8',
+      tone: 'ok',
+      trend: 'down',
+      icon: Leaf,
+    },
+    metadata: {
+      id: 'bilan-carbone',
+      apiKey: 'bilanCarbone',
+      category: 'compliance',
+      unit: 'tCO₂e',
+      description: 'Bilan carbone portefeuille (tonnes équivalent CO₂)',
+      formula: 'Somme(émissions par chantier)',
+      target: 150,
+      drillDownEnabled: true,
+      comparisonEnabled: true,
+      alertEnabled: true,
+      exportEnabled: true,
+    },
+    apiEndpoint: '/api/dashboard/stats',
+    transform: (data: any) => {
+      const value = data.kpis?.bilanCarbone?.value ?? 124;
+      const trend = data.kpis?.bilanCarbone?.trend ?? 0;
+      return {
+        label: 'Bilan carbone',
+        value: String(value),
+        delta: trend !== 0 ? `${trend > 0 ? '+' : ''}${trend}` : '—',
+        tone: value <= 150 ? 'ok' : value <= 200 ? 'warn' : 'crit',
+        trend: trend < 0 ? 'down' : trend > 0 ? 'up' : 'neutral',
+        icon: Leaf,
       };
     },
   },

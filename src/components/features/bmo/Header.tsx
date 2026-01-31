@@ -324,7 +324,7 @@ export function BMOHeader() {
               className={cn(
                 'flex-1 min-w-0 bg-transparent outline-none text-sm placeholder:text-xs',
                 darkMode
-                  ? 'text-white placeholder:text-slate-500'
+                  ? 'text-white placeholder:text-slate-400'
                   : 'text-gray-900 placeholder:text-gray-400'
               )}
             />

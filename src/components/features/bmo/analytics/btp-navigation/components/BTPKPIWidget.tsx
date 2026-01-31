@@ -78,7 +78,7 @@ export function BTPKPIWidget({
             <span className="text-sm font-medium text-slate-300">{label}</span>
           </div>
           {description && (
-            <p className="text-xs text-slate-500 mt-1">{description}</p>
+            <p className="text-xs text-slate-400 mt-1">{description}</p>
           )}
         </div>
       </div>
@@ -90,7 +90,7 @@ export function BTPKPIWidget({
             {unit && <span className="text-sm font-normal text-slate-400 ml-1">{unit}</span>}
           </div>
           {target && (
-            <div className="text-xs text-slate-500">
+            <div className="text-xs text-slate-400">
               Objectif : {target.toLocaleString()} {unit}
             </div>
           )}

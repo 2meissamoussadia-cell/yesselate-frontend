@@ -240,7 +240,7 @@ const CockpitDGPageComponent = function CockpitDGPage() {
               <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 {topRisks.length > 0 && (
                   <div>
-                    <span className="text-slate-500 font-medium">Top 3 risques :</span>
+                    <span className="text-slate-400 font-medium">Top 3 risques :</span>
                     <ul className="mt-1 space-y-0.5 text-rose-300/90">
                       {topRisks.slice(0, 3).map((r, i) => (
                         <li key={i} className="flex items-start gap-1.5">
@@ -253,7 +253,7 @@ const CockpitDGPageComponent = function CockpitDGPage() {
                 )}
                 {opportunities.length > 0 && (
                   <div>
-                    <span className="text-slate-500 font-medium">Opportunités :</span>
+                    <span className="text-slate-400 font-medium">Opportunités :</span>
                     <ul className="mt-1 space-y-0.5 text-emerald-300/90">
                       {opportunities.slice(0, 3).map((o, i) => (
                         <li key={i} className="flex items-start gap-1.5">
@@ -267,7 +267,7 @@ const CockpitDGPageComponent = function CockpitDGPage() {
               </div>
             )}
             {!briefingLoading && topRisks.length === 0 && opportunities.length === 0 && briefing && (
-              <p className="mt-2 text-xs text-slate-500">Aucun risque ni opportunité identifié.</p>
+              <p className="mt-2 text-xs text-slate-400">Aucun risque ni opportunité identifié.</p>
             )}
           </div>
           <div className="flex items-center gap-2 shrink-0 flex-wrap">
@@ -286,7 +286,7 @@ const CockpitDGPageComponent = function CockpitDGPage() {
               title="V5 Ultimate — FPS et qualité adaptative"
             >
               <span className="font-mono font-semibold text-blue-400">{typeof fps === 'number' && fps > 0 ? fps : '—'} FPS</span>
-              <span className="text-slate-500">·</span>
+              <span className="text-slate-400">·</span>
               <span className="capitalize">{quality}</span>
             </span>
           </div>
@@ -304,7 +304,7 @@ const CockpitDGPageComponent = function CockpitDGPage() {
         <div className="flex items-center justify-between gap-2">
           <span className="text-xs text-slate-400">Risque retard</span>
           {predictionsLoading && retardRisk === null ? (
-            <span className="text-slate-500 text-sm">—</span>
+            <span className="text-slate-400 text-sm">—</span>
           ) : (
             <span
               className={cn(
@@ -319,7 +319,7 @@ const CockpitDGPageComponent = function CockpitDGPage() {
         <div className="flex items-center justify-between gap-2">
           <span className="text-xs text-slate-400">Risque budget</span>
           {predictionsLoading && budgetRisk === null ? (
-            <span className="text-slate-500 text-sm">—</span>
+            <span className="text-slate-400 text-sm">—</span>
           ) : (
             <span
               className={cn(
@@ -334,7 +334,7 @@ const CockpitDGPageComponent = function CockpitDGPage() {
         <div className="flex items-center justify-between gap-2">
           <span className="text-xs text-slate-400">Score qualité</span>
           {predictionsLoading && qualityScore === null ? (
-            <span className="text-slate-500 text-sm">—</span>
+            <span className="text-slate-400 text-sm">—</span>
           ) : (
             <span
               className={cn(
@@ -349,7 +349,7 @@ const CockpitDGPageComponent = function CockpitDGPage() {
         <div className="flex items-center justify-between gap-2">
           <span className="text-xs text-slate-400">Satisfaction client</span>
           {predictionsLoading && satisfactionClient === null ? (
-            <span className="text-slate-500 text-sm">—</span>
+            <span className="text-slate-400 text-sm">—</span>
           ) : (
             <span className="text-sm font-semibold text-violet-400">
               {satisfactionClient ?? 0}
@@ -357,7 +357,7 @@ const CockpitDGPageComponent = function CockpitDGPage() {
           )}
         </div>
         {predictionsSource && (
-          <span className="col-span-2 sm:col-span-4 text-[10px] text-slate-500">
+          <span className="col-span-2 sm:col-span-4 text-[10px] text-slate-400">
             Prédictions {predictionsSource === 'ml' ? 'ML' : 'mock'} · mise à jour 5 min
           </span>
         )}
@@ -477,7 +477,7 @@ const CockpitDGPageComponent = function CockpitDGPage() {
                 )}
               >
                 {phase}
-                <span className="ml-1 text-slate-500">12</span>
+                <span className="ml-1 text-slate-400">12</span>
               </button>
             ))}
           </div>
@@ -520,7 +520,7 @@ const CockpitDGPageComponent = function CockpitDGPage() {
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-800/60">
                     <Icon className="h-5 w-5 text-slate-200" />
                   </div>
-                  <ChevronRight className="h-4 w-4 text-slate-500 shrink-0 mt-0.5" />
+                  <ChevronRight className="h-4 w-4 text-slate-400 shrink-0 mt-0.5" />
                 </div>
                 <h4 className="mt-3 text-sm font-semibold text-slate-100">{card.title}</h4>
                 <p className="mt-1 text-xs text-slate-400 line-clamp-2">{card.description}</p>

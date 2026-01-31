@@ -136,7 +136,7 @@ function StatsModal({ onClose }: { onClose: () => void }) {
             </div>
             <div>
               <h2 className="text-lg font-bold text-slate-100">Statistiques Détaillées</h2>
-              <p className="text-sm text-slate-500">Analyse complète des tickets clients</p>
+              <p className="text-sm text-slate-400">Analyse complète des tickets clients</p>
             </div>
           </div>
           <button onClick={onClose} className="p-2 rounded-lg hover:bg-slate-800">
@@ -228,7 +228,7 @@ function StatsModal({ onClose }: { onClose: () => void }) {
               </div>
             </div>
           ) : (
-            <div className="text-center py-12 text-slate-500">
+            <div className="text-center py-12 text-slate-400">
               Impossible de charger les statistiques
             </div>
           )}
@@ -310,7 +310,7 @@ function ExportModal({ onClose }: { onClose: () => void }) {
               <span className="text-2xl">{icon}</span>
               <div>
                 <p className="text-sm font-medium text-slate-200">{format.toUpperCase()}</p>
-                <p className="text-xs text-slate-500">{desc}</p>
+                <p className="text-xs text-slate-400">{desc}</p>
               </div>
               {exporting && selectedFormat === format && (
                 <Loader2 className="w-4 h-4 animate-spin text-purple-400 ml-auto" />
@@ -418,7 +418,7 @@ function SettingsModal({ onClose }: { onClose: () => void }) {
           <div className="flex items-center justify-between p-3 rounded-lg border border-slate-700/50 bg-slate-800/30">
             <div>
               <p className="text-sm font-medium text-slate-200">Actualisation automatique</p>
-              <p className="text-xs text-slate-500">Rafraîchir les données périodiquement</p>
+              <p className="text-xs text-slate-400">Rafraîchir les données périodiquement</p>
             </div>
             <button
               onClick={() => setAutoRefresh(!autoRefresh)}
@@ -454,7 +454,7 @@ function SettingsModal({ onClose }: { onClose: () => void }) {
           <div className="flex items-center justify-between p-3 rounded-lg border border-slate-700/50 bg-slate-800/30">
             <div>
               <p className="text-sm font-medium text-slate-200">Sons de notification</p>
-              <p className="text-xs text-slate-500">Alertes sonores pour nouveaux tickets</p>
+              <p className="text-xs text-slate-400">Alertes sonores pour nouveaux tickets</p>
             </div>
             <button
               onClick={() => setSoundNotifications(!soundNotifications)}
@@ -474,7 +474,7 @@ function SettingsModal({ onClose }: { onClose: () => void }) {
           <div className="flex items-center justify-between p-3 rounded-lg border border-slate-700/50 bg-slate-800/30">
             <div>
               <p className="text-sm font-medium text-slate-200">Notifications bureau</p>
-              <p className="text-xs text-slate-500">Alertes système</p>
+              <p className="text-xs text-slate-400">Alertes système</p>
             </div>
             <button
               onClick={() => setDesktopNotifications(!desktopNotifications)}
@@ -494,7 +494,7 @@ function SettingsModal({ onClose }: { onClose: () => void }) {
           <div className="flex items-center justify-between p-3 rounded-lg border border-slate-700/50 bg-slate-800/30">
             <div>
               <p className="text-sm font-medium text-slate-200">Vue compacte</p>
-              <p className="text-xs text-slate-500">Affichage condensé des listes</p>
+              <p className="text-xs text-slate-400">Affichage condensé des listes</p>
             </div>
             <button
               onClick={() => setCompactView(!compactView)}
@@ -591,7 +591,7 @@ function TicketDetailModal({ onClose, data }: { onClose: () => void; data: Recor
               <div className="flex items-start justify-between">
                 <div>
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="font-mono text-slate-500">{ticket.reference}</span>
+                    <span className="font-mono text-slate-400">{ticket.reference}</span>
                     <Badge className={priorityColors[ticket.priority]}>
                       {ticket.priority}
                     </Badge>
@@ -617,25 +617,25 @@ function TicketDetailModal({ onClose, data }: { onClose: () => void; data: Recor
               {/* Info Grid */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="p-3 rounded-lg border border-slate-700/50 bg-slate-800/30">
-                  <p className="text-xs text-slate-500 mb-1">Client</p>
+                  <p className="text-xs text-slate-400 mb-1">Client</p>
                   <p className="text-sm font-medium text-slate-200">{ticket.client.name}</p>
-                  <p className="text-xs text-slate-500">{ticket.client.email}</p>
+                  <p className="text-xs text-slate-400">{ticket.client.email}</p>
                 </div>
                 <div className="p-3 rounded-lg border border-slate-700/50 bg-slate-800/30">
-                  <p className="text-xs text-slate-500 mb-1">Assigné à</p>
+                  <p className="text-xs text-slate-400 mb-1">Assigné à</p>
                   <p className="text-sm font-medium text-slate-200">
                     {ticket.assignee?.name || 'Non assigné'}
                   </p>
                   {ticket.assignee && (
-                    <p className="text-xs text-slate-500">{ticket.assignee.department}</p>
+                    <p className="text-xs text-slate-400">{ticket.assignee.department}</p>
                   )}
                 </div>
                 <div className="p-3 rounded-lg border border-slate-700/50 bg-slate-800/30">
-                  <p className="text-xs text-slate-500 mb-1">Catégorie</p>
+                  <p className="text-xs text-slate-400 mb-1">Catégorie</p>
                   <p className="text-sm font-medium text-slate-200 capitalize">{ticket.category}</p>
                 </div>
                 <div className="p-3 rounded-lg border border-slate-700/50 bg-slate-800/30">
-                  <p className="text-xs text-slate-500 mb-1">Source</p>
+                  <p className="text-xs text-slate-400 mb-1">Source</p>
                   <p className="text-sm font-medium text-slate-200 capitalize">
                     {ticket.metadata?.source || 'N/A'}
                   </p>
@@ -652,7 +652,7 @@ function TicketDetailModal({ onClose, data }: { onClose: () => void; data: Recor
                       ? 'border-rose-500/30 bg-rose-500/10'
                       : 'border-emerald-500/30 bg-emerald-500/10'
                   )}>
-                    <p className="text-xs text-slate-500 mb-1">Première réponse</p>
+                    <p className="text-xs text-slate-400 mb-1">Première réponse</p>
                     <p className={cn(
                       'text-sm font-medium',
                       ticket.sla.firstResponseBreached ? 'text-rose-400' : 'text-emerald-400'
@@ -666,7 +666,7 @@ function TicketDetailModal({ onClose, data }: { onClose: () => void; data: Recor
                       ? 'border-rose-500/30 bg-rose-500/10'
                       : 'border-emerald-500/30 bg-emerald-500/10'
                   )}>
-                    <p className="text-xs text-slate-500 mb-1">Résolution</p>
+                    <p className="text-xs text-slate-400 mb-1">Résolution</p>
                     <p className={cn(
                       'text-sm font-medium',
                       ticket.sla.resolutionBreached ? 'text-rose-400' : 'text-emerald-400'
@@ -690,7 +690,7 @@ function TicketDetailModal({ onClose, data }: { onClose: () => void; data: Recor
                 </h3>
                 <div className="space-y-3 max-h-[200px] overflow-y-auto">
                   {ticket.messages.length === 0 ? (
-                    <p className="text-sm text-slate-500 text-center py-4">
+                    <p className="text-sm text-slate-400 text-center py-4">
                       Aucun message pour le moment
                     </p>
                   ) : (
@@ -736,7 +736,7 @@ function TicketDetailModal({ onClose, data }: { onClose: () => void; data: Recor
             </div>
           </>
         ) : (
-          <div className="text-center py-12 text-slate-500">
+          <div className="text-center py-12 text-slate-400">
             Ticket non trouvé
           </div>
         )}
@@ -850,7 +850,7 @@ function TemplatesModal({ onClose }: { onClose: () => void }) {
                       {template.category}
                     </Badge>
                   </div>
-                  <p className="text-xs text-slate-500 line-clamp-2">
+                  <p className="text-xs text-slate-400 line-clamp-2">
                     {template.content}
                   </p>
                   <p className="text-xs text-slate-600 mt-2">
@@ -875,7 +875,7 @@ function TemplatesModal({ onClose }: { onClose: () => void }) {
               </pre>
               {selectedTemplate.variables.length > 0 && (
                 <div className="flex items-center gap-2 mt-3">
-                  <span className="text-xs text-slate-500">Variables:</span>
+                  <span className="text-xs text-slate-400">Variables:</span>
                   {selectedTemplate.variables.map(v => (
                     <Badge key={v} variant="outline" className="text-xs">
                       {`{{${v}}}`}

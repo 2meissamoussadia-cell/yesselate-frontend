@@ -102,7 +102,7 @@ export const AnalyticsContentRouter = React.memo(function AnalyticsContentRouter
         <h3 className="text-lg font-semibold text-slate-300 mb-2">
           {category} - {subCategory}
         </h3>
-        <p className="text-slate-500">Contenu en cours de développement</p>
+        <p className="text-slate-400">Contenu en cours de développement</p>
       </div>
     </div>
   );
@@ -135,7 +135,7 @@ const OverviewDashboard = React.memo(function OverviewDashboard() {
         <div className="text-center">
           <AlertTriangle className="w-12 h-12 text-red-400 mx-auto mb-4" />
           <p className="text-slate-300 mb-2">Erreur de chargement</p>
-          <p className="text-sm text-slate-500">{error instanceof Error ? error.message : String(error)}</p>
+          <p className="text-sm text-slate-400">{error instanceof Error ? error.message : String(error)}</p>
         </div>
       </div>
     );
@@ -302,7 +302,7 @@ const OverviewDashboard = React.memo(function OverviewDashboard() {
                     <p className="text-sm font-medium text-slate-200 truncate">
                       {report.title}
                     </p>
-                    <p className="text-xs text-slate-500 mt-1">{report.date}</p>
+                    <p className="text-xs text-slate-400 mt-1">{report.date}</p>
                   </div>
                   <Badge
                     variant={report.status === 'success' ? 'default' : 'warning'}
@@ -324,7 +324,7 @@ const OverviewDashboard = React.memo(function OverviewDashboard() {
           </div>
           <div className="space-y-4">
             {displayTrends.length === 0 ? (
-              <p className="text-sm text-slate-500 text-center py-4">Aucune tendance disponible</p>
+              <p className="text-sm text-slate-400 text-center py-4">Aucune tendance disponible</p>
             ) : (
               displayTrends.map((trend) => {
                 const isPositive = trend.trend === 'up';
@@ -367,10 +367,10 @@ const OverviewDashboard = React.memo(function OverviewDashboard() {
                       <span className="text-2xl font-bold text-slate-200">
                         {trend.current}
                         {trend.unit && (
-                          <span className="text-sm text-slate-500 ml-1">{trend.unit}</span>
+                          <span className="text-sm text-slate-400 ml-1">{trend.unit}</span>
                         )}
                       </span>
-                      <span className="text-sm text-slate-500">
+                      <span className="text-sm text-slate-400">
                         vs {trend.previous}
                         {trend.unit}
                       </span>
@@ -629,7 +629,7 @@ const PerformanceView = React.memo(function PerformanceView({ subCategory }: { s
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredKPIs.length === 0 ? (
-          <div className="col-span-full p-8 text-center text-slate-500">
+          <div className="col-span-full p-8 text-center text-slate-400">
             Aucun KPI trouvé pour ce filtre
           </div>
         ) : (
@@ -675,10 +675,10 @@ const PerformanceView = React.memo(function PerformanceView({ subCategory }: { s
                 </div>
                 <div className="flex items-baseline gap-2 mb-3">
                   <span className="text-3xl font-bold text-slate-200">{kpi.value}</span>
-                  {kpi.unit && <span className="text-sm text-slate-500">{kpi.unit}</span>}
+                  {kpi.unit && <span className="text-sm text-slate-400">{kpi.unit}</span>}
                 </div>
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between text-xs text-slate-500">
+                  <div className="flex items-center justify-between text-xs text-slate-400">
                     <span>
                       Objectif: {target}
                       {kpi.unit}
@@ -881,7 +881,7 @@ const AlertsView = React.memo(function AlertsView({ subCategory }: { subCategory
                   {alert.severity}
                 </Badge>
               </div>
-              <div className="flex items-center gap-4 text-xs text-slate-500">
+              <div className="flex items-center gap-4 text-xs text-slate-400">
                 {(alert as any).category && <span>Catégorie: {(alert as any).category}</span>}
                 {(alert as any).createdAt && <span>{(alert as any).createdAt}</span>}
               </div>
@@ -992,9 +992,9 @@ const TrendsView = React.memo(function TrendsView({ subCategory }: { subCategory
                 <div className="flex items-baseline gap-2">
                   <span className="text-3xl font-bold text-slate-200">
                     {trend.current}
-                    {trend.unit && <span className="text-sm text-slate-500 ml-1">{trend.unit}</span>}
+                    {trend.unit && <span className="text-sm text-slate-400 ml-1">{trend.unit}</span>}
                   </span>
-                  <span className="text-sm text-slate-500">
+                  <span className="text-sm text-slate-400">
                     vs {trend.previous}
                     {trend.unit}
                   </span>
@@ -1050,7 +1050,7 @@ const ReportsView = React.memo(function ReportsView({ subCategory }: { subCatego
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
                 <h4 className="text-base font-semibold text-slate-200 mb-1">{report.title}</h4>
-                <p className="text-sm text-slate-500">{report.date}</p>
+                <p className="text-sm text-slate-400">{report.date}</p>
                 {report.category && (
                   <Badge variant="default" className="mt-2 text-xs">
                     {report.category}
@@ -1126,7 +1126,7 @@ const KPIsView = React.memo(function KPIsView({ subCategory }: { subCategory: st
               </div>
               <div className="flex items-baseline gap-2 mb-3">
                 <span className="text-3xl font-bold text-slate-200">{value}</span>
-                {kpi.unit && <span className="text-sm text-slate-500">{kpi.unit}</span>}
+                {kpi.unit && <span className="text-sm text-slate-400">{kpi.unit}</span>}
               </div>
             </div>
           );
@@ -1436,7 +1436,7 @@ const BureauxView = React.memo(function BureauxView({ subCategory }: { subCatego
                       />
                     </div>
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-slate-500">Résultat net</span>
+                      <span className="text-slate-400">Résultat net</span>
                       <span className={cn(
                         'font-medium',
                         financial.netResult >= 0 ? 'text-emerald-400' : 'text-red-400'

@@ -139,7 +139,7 @@ export function DocumentsKPIBar({
         {onToggleCollapse && (
           <button
             onClick={onToggleCollapse}
-            className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-400 transition-colors"
+            className="flex items-center gap-1 text-xs text-slate-400 hover:text-slate-400 transition-colors"
           >
             <span>{collapsed ? 'Afficher' : 'Masquer'}</span>
             {collapsed ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
@@ -165,10 +165,10 @@ export function DocumentsKPIBar({
                       kpi.status === 'success' && 'text-emerald-400',
                       kpi.status === 'warning' && 'text-amber-400',
                       kpi.status === 'critical' && 'text-rose-400',
-                      kpi.status === 'neutral' && 'text-slate-500'
+                      kpi.status === 'neutral' && 'text-slate-400'
                     )}
                   />
-                  <span className="text-xs text-slate-500 truncate">{kpi.label}</span>
+                  <span className="text-xs text-slate-400 truncate">{kpi.label}</span>
                 </div>
 
                 <div className="flex items-baseline gap-1">
@@ -183,7 +183,7 @@ export function DocumentsKPIBar({
                   >
                     {kpi.value}
                   </span>
-                  {kpi.suffix && <span className="text-xs text-slate-500">{kpi.suffix}</span>}
+                  {kpi.suffix && <span className="text-xs text-slate-400">{kpi.suffix}</span>}
                 </div>
 
                 {kpi.sparkline ? (
@@ -213,7 +213,7 @@ export function DocumentsKPIBar({
                         'h-3 w-3',
                         kpi.trend === 'up' && 'text-emerald-400',
                         kpi.trend === 'down' && 'text-rose-400',
-                        kpi.trend === 'stable' && 'text-slate-500'
+                        kpi.trend === 'stable' && 'text-slate-400'
                       )}
                     />
                   </div>

@@ -330,7 +330,7 @@ export function OverviewView({ subCategory, onOpenEvaluation }: OverviewViewProp
                     </div>
                     <div className="text-right">
                       <p className="text-sm text-slate-300">{evalItem.date}</p>
-                      <p className="text-xs text-slate-500">{evalItem.evaluatorName}</p>
+                      <p className="text-xs text-slate-400">{evalItem.evaluatorName}</p>
                     </div>
                   </div>
                 );

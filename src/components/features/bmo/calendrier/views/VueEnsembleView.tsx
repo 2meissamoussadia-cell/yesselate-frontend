@@ -7,6 +7,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/utils/logger';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { AlertTriangle } from 'lucide-react';
@@ -159,7 +160,7 @@ export function VueEnsembleView({ section = 'global', view = 'gantt' }: VueEnsem
                 onAction={handleAlertAction}
               />
             ) : (
-              <div className="text-center py-8 text-slate-500 text-sm">
+              <div className="text-center py-8 text-slate-400 text-sm">
                 Aucune alerte critique
               </div>
             )}
@@ -282,7 +283,7 @@ export function VueEnsembleView({ section = 'global', view = 'gantt' }: VueEnsem
                     </div>
                   ))}
                 </div>
-                <div className="mt-4 text-xs text-slate-500">
+                <div className="mt-4 text-xs text-slate-400">
                   Idée : barres par chantier/lot + jalons critiques + surbrillance des conflits
                 </div>
               </div>
@@ -296,14 +297,14 @@ export function VueEnsembleView({ section = 'global', view = 'gantt' }: VueEnsem
                     <div key={i} className="flex items-start gap-3 rounded-lg border border-slate-700 bg-slate-900/50 p-3">
                       <div className="mt-1 h-2.5 w-2.5 rounded-full bg-blue-400" />
                       <div className="flex-1">
-                        <div className="text-xs text-slate-500 mb-1">J-{7 - i}</div>
+                        <div className="text-xs text-slate-400 mb-1">J-{7 - i}</div>
                         <div className="text-sm font-medium text-slate-200">Événement / jalon #{i + 1}</div>
-                        <div className="text-xs text-slate-500 mt-1">Détail + action + lien</div>
+                        <div className="text-xs text-slate-400 mt-1">Détail + action + lien</div>
                       </div>
                     </div>
                   ))}
                 </div>
-                <div className="mt-4 text-xs text-slate-500">
+                <div className="mt-4 text-xs text-slate-400">
                   Idée : tri + regroupement + priorisation (SLA, jalons, réunions)
                 </div>
               </div>
@@ -338,7 +339,7 @@ export function VueEnsembleView({ section = 'global', view = 'gantt' }: VueEnsem
         dateInitiale={createModalDate}
         onSave={(data) => {
           // TODO: Sauvegarder l'événement via API
-          console.log('Événement créé:', data);
+          logger.debug('Événement créé', { component: 'VueEnsembleView', data });
           setShowCreateModal(false);
         }}
       />

@@ -144,7 +144,7 @@ export function ValidationContratsFiltersPanel({
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="h-7 w-7 p-0 text-slate-500 hover:text-slate-300"
+            className="h-7 w-7 p-0 text-slate-400 hover:text-slate-300"
           >
             <X className="h-4 w-4" />
           </Button>
@@ -457,7 +457,7 @@ export function ValidationContratsFiltersPanel({
           </div>
 
           {activeFilterCount > 0 && (
-            <p className="text-xs text-center text-slate-500">
+            <p className="text-xs text-center text-slate-400">
               {activeFilterCount} filtre{activeFilterCount > 1 ? 's' : ''} actif
               {activeFilterCount > 1 ? 's' : ''}
             </p>

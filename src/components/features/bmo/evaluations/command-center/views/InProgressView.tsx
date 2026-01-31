@@ -79,7 +79,7 @@ export function InProgressView({ subCategory, onOpenEvaluation }: InProgressView
                 </div>
                 <div className="text-right">
                   <p className="text-sm text-slate-300">{evalItem.date}</p>
-                  <p className="text-xs text-slate-500">{evalItem.evaluatorName}</p>
+                  <p className="text-xs text-slate-400">{evalItem.evaluatorName}</p>
                   <Eye className="h-4 w-4 text-slate-400 mt-2 ml-auto" />
                 </div>
               </div>

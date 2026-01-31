@@ -209,7 +209,7 @@ export function AdvancedExportModal({ isOpen, onClose, data }: AdvancedExportMod
             </div>
 
             <div className="pt-3 border-t border-slate-700">
-              <p className="text-[10px] text-slate-500">
+              <p className="text-[10px] text-slate-400">
                 Les fichiers seront téléchargés automatiquement une fois générés.
               </p>
             </div>

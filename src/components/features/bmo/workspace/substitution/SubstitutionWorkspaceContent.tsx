@@ -59,7 +59,7 @@ export function SubstitutionWorkspaceContent() {
     watchlist.includes(subId) ? removeFromWatchlist(subId) : addToWatchlist(subId);
   };
 
-  if (!activeTab) return <div className="flex items-center justify-center h-64 text-slate-500"><div className="text-center"><FileText className="w-12 h-12 mx-auto mb-3 opacity-30" /><p>Aucun onglet</p></div></div>;
+  if (!activeTab) return <div className="flex items-center justify-center h-64 text-slate-400"><div className="text-center"><FileText className="w-12 h-12 mx-auto mb-3 opacity-30" /><p>Aucun onglet</p></div></div>;
 
   if (activeTab.type === 'absences') return <PlaceholderView icon={<Calendar className="w-12 h-12" />} title="Absences planifiées" />;
   if (activeTab.type === 'delegations') return <PlaceholderView icon={<Users className="w-12 h-12" />} title="Délégations actives" />;
@@ -86,7 +86,7 @@ export function SubstitutionWorkspaceContent() {
           <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
             {queue === 'critical' ? 'Critiques' : queue === 'active' ? 'Actives' : queue === 'pending' ? 'En attente' : queue === 'completed' ? 'Terminées' : 'Toutes les substitutions'}
           </h2>
-          <p className="text-sm text-slate-500">{substitutions.length} substitution(s)</p>
+          <p className="text-sm text-slate-400">{substitutions.length} substitution(s)</p>
         </div>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -97,7 +97,7 @@ export function SubstitutionWorkspaceContent() {
       {loading ? (
         <div className="space-y-3">{[...Array(5)].map((_, i) => <div key={i} className="h-28 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />)}</div>
       ) : substitutions.length === 0 ? (
-        <div className="py-12 text-center text-slate-500"><RefreshCw className="w-12 h-12 mx-auto mb-3 opacity-30" /><p className="font-medium">Aucune substitution trouvée</p></div>
+        <div className="py-12 text-center text-slate-400"><RefreshCw className="w-12 h-12 mx-auto mb-3 opacity-30" /><p className="font-medium">Aucune substitution trouvée</p></div>
       ) : (
         <div className="space-y-2">
           {substitutions.map(sub => {
@@ -119,7 +119,7 @@ export function SubstitutionWorkspaceContent() {
                         <span className="text-xs px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-600">{substitutionApiService.getReasonLabel(sub.reason)}</span>
                       </div>
                       <p className="font-medium text-slate-900 dark:text-slate-100">{sub.description}</p>
-                      <div className="flex items-center gap-4 mt-2 text-xs text-slate-500">
+                      <div className="flex items-center gap-4 mt-2 text-xs text-slate-400">
                         <span className="flex items-center gap-1"><User className="w-3 h-3" />{sub.titulaire.name}</span>
                         <span className="flex items-center gap-1"><Building2 className="w-3 h-3" />{sub.bureau}</span>
                         <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{sub.delay}j retard</span>
@@ -139,10 +139,10 @@ export function SubstitutionWorkspaceContent() {
                 {isExpanded && (
                   <div className="px-4 pb-4 pt-0 border-t border-slate-200/70 dark:border-slate-800">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-4">
-                      <div><p className="text-xs text-slate-500 mb-1">Bureau</p><p className="font-medium text-slate-900 dark:text-slate-100">{sub.bureau}</p></div>
-                      <div><p className="text-xs text-slate-500 mb-1">Date début</p><p className="font-medium text-slate-900 dark:text-slate-100">{new Date(sub.dateDebut).toLocaleDateString('fr-FR')}</p></div>
-                      <div><p className="text-xs text-slate-500 mb-1">Date fin</p><p className="font-medium text-slate-900 dark:text-slate-100">{sub.dateFin ? new Date(sub.dateFin).toLocaleDateString('fr-FR') : 'Non définie'}</p></div>
-                      <div><p className="text-xs text-slate-500 mb-1">Projets liés</p><p className="font-medium text-slate-900 dark:text-slate-100">{sub.linkedProjects?.join(', ') || 'Aucun'}</p></div>
+                      <div><p className="text-xs text-slate-400 mb-1">Bureau</p><p className="font-medium text-slate-900 dark:text-slate-100">{sub.bureau}</p></div>
+                      <div><p className="text-xs text-slate-400 mb-1">Date début</p><p className="font-medium text-slate-900 dark:text-slate-100">{new Date(sub.dateDebut).toLocaleDateString('fr-FR')}</p></div>
+                      <div><p className="text-xs text-slate-400 mb-1">Date fin</p><p className="font-medium text-slate-900 dark:text-slate-100">{sub.dateFin ? new Date(sub.dateFin).toLocaleDateString('fr-FR') : 'Non définie'}</p></div>
+                      <div><p className="text-xs text-slate-400 mb-1">Projets liés</p><p className="font-medium text-slate-900 dark:text-slate-100">{sub.linkedProjects?.join(', ') || 'Aucun'}</p></div>
                     </div>
                     <div className="flex items-center gap-2 pt-2 border-t border-slate-200/70 dark:border-slate-800">
                       <button onClick={() => handleOpenDetail(sub)} className="flex-1 px-4 py-2 rounded-lg bg-indigo-500 text-white text-sm font-medium hover:bg-indigo-600">Voir le détail</button>
@@ -162,6 +162,6 @@ export function SubstitutionWorkspaceContent() {
 }
 
 function PlaceholderView({ icon, title }: { icon: React.ReactNode; title: string }) {
-  return <div className="flex items-center justify-center h-64 text-slate-500"><div className="text-center"><div className="mx-auto mb-4 opacity-30">{icon}</div><p className="font-semibold">{title}</p><p className="text-xs mt-4 text-slate-400">En cours de développement</p></div></div>;
+  return <div className="flex items-center justify-center h-64 text-slate-400"><div className="text-center"><div className="mx-auto mb-4 opacity-30">{icon}</div><p className="font-semibold">{title}</p><p className="text-xs mt-4 text-slate-400">En cours de développement</p></div></div>;
 }
 

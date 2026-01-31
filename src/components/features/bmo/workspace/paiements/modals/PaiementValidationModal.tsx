@@ -522,7 +522,7 @@ export function PaiementValidationModal({
                         {formErrors.comment && (
                           <p className="text-red-500 text-sm">{formErrors.comment}</p>
                         )}
-                        <p className="text-xs text-slate-500 ml-auto">
+                        <p className="text-xs text-slate-400 ml-auto">
                           {formData.comment?.length || 0} caractères
                         </p>
                       </div>

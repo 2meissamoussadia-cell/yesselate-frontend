@@ -32,7 +32,7 @@ export default function HistoriqueDecisionsPage() {
       <GouvernanceHeader
         title="Historique des décisions"
         subtitle="Timeline des décisions prises récemment"
-        onExport={() => console.log('Export historique')}
+        onExport={() => { /* TODO: export historique */ }}
       />
 
       {isLoading ? (

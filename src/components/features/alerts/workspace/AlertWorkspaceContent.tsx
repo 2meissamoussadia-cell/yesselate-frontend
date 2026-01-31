@@ -46,7 +46,7 @@ export function AlertWorkspaceContent() {
         <h2 className="text-2xl font-bold text-slate-700 dark:text-slate-200 mb-2">
           Alertes & Risques
         </h2>
-        <p className="text-slate-500 mb-6 max-w-md">
+        <p className="text-slate-400 mb-6 max-w-md">
           Surveillez et gérez les alertes système, dossiers bloqués, dépassements SLA et risques projet.
           Traçabilité complète et escalade automatique.
         </p>
@@ -172,7 +172,7 @@ export function AlertWorkspaceContent() {
             Heatmap des Risques
           </h3>
         </div>
-        <p className="text-slate-500 text-sm">
+        <p className="text-slate-400 text-sm">
           Carte de chaleur interactive des risques par bureau (à venir)
         </p>
       </div>
@@ -189,7 +189,7 @@ export function AlertWorkspaceContent() {
             Rapport d'Analyse
           </h3>
         </div>
-        <p className="text-slate-500 text-sm">
+        <p className="text-slate-400 text-sm">
           Rapport détaillé des alertes et tendances (à venir)
         </p>
       </div>
@@ -206,7 +206,7 @@ export function AlertWorkspaceContent() {
             Analytics & KPIs
           </h3>
         </div>
-        <p className="text-slate-500 text-sm">
+        <p className="text-slate-400 text-sm">
           Tableau de bord analytique complet (à venir)
         </p>
       </div>

@@ -264,7 +264,7 @@ function OverviewDashboard({ onViewClient, onEditClient, onDeleteClient }: Parti
                 </div>
                 <div className="mt-3">
                   <p className="text-2xl font-bold text-slate-200">{kpi.value}</p>
-                  <p className="text-sm text-slate-500 mt-0.5">{kpi.label}</p>
+                  <p className="text-sm text-slate-400 mt-0.5">{kpi.label}</p>
                 </div>
               </button>
             );
@@ -303,7 +303,7 @@ function OverviewDashboard({ onViewClient, onEditClient, onDeleteClient }: Parti
                     <p className="text-sm font-medium text-slate-200 truncate">{client.name}</p>
                     <Crown className="w-3 h-3 text-amber-400" />
                   </div>
-                  <p className="text-xs text-slate-500">{client.sector} • {client.city}</p>
+                  <p className="text-xs text-slate-400">{client.sector} • {client.city}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-sm font-bold text-cyan-400">{client.ca}</p>
@@ -334,7 +334,7 @@ function OverviewDashboard({ onViewClient, onEditClient, onDeleteClient }: Parti
             <div className="grid grid-cols-2 gap-3">
               <div className="p-3 rounded-lg bg-slate-900/50 border border-slate-700/50">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs text-slate-500">Satisfaction</span>
+                  <span className="text-xs text-slate-400">Satisfaction</span>
                   <Star className="w-4 h-4 text-amber-400" />
                 </div>
                 <div className="flex items-baseline gap-2">
@@ -344,7 +344,7 @@ function OverviewDashboard({ onViewClient, onEditClient, onDeleteClient }: Parti
               </div>
               <div className="p-3 rounded-lg bg-slate-900/50 border border-slate-700/50">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs text-slate-500">Rétention</span>
+                  <span className="text-xs text-slate-400">Rétention</span>
                   <Shield className="w-4 h-4 text-blue-400" />
                 </div>
                 <div className="flex items-baseline gap-2">
@@ -434,7 +434,7 @@ function OverviewDashboard({ onViewClient, onEditClient, onDeleteClient }: Parti
                 )} />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-slate-200 truncate">{client.name}</p>
-                  <p className="text-xs text-slate-500">{client.sector}</p>
+                  <p className="text-xs text-slate-400">{client.sector}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant="default" className="text-xs border-slate-700 text-slate-400">
@@ -634,7 +634,7 @@ function ProspectsView({ subCategory, onViewClient, onEditClient, onDeleteClient
                     {prospect.status === 'hot' ? '🔥 Chaud' : prospect.status === 'warm' ? '☀️ Tiède' : '❄️ Froid'}
                   </Badge>
                 </div>
-                <div className="flex items-center gap-4 text-xs text-slate-500">
+                <div className="flex items-center gap-4 text-xs text-slate-400">
                   <span className="flex items-center gap-1">
                     <Users className="w-3 h-3" />
                     {prospect.contact}
@@ -653,7 +653,7 @@ function ProspectsView({ subCategory, onViewClient, onEditClient, onDeleteClient
               {/* Progress */}
               <div className="w-32">
                 <div className="flex items-center justify-between text-xs mb-1">
-                  <span className="text-slate-500">Progression</span>
+                  <span className="text-slate-400">Progression</span>
                   <span className="text-slate-300">{prospect.progress}%</span>
                 </div>
                 <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
@@ -672,7 +672,7 @@ function ProspectsView({ subCategory, onViewClient, onEditClient, onDeleteClient
               {/* Value */}
               <div className="text-right">
                 <p className="text-lg font-bold text-cyan-400">{prospect.value}</p>
-                <p className="text-xs text-slate-500">Potentiel</p>
+                <p className="text-xs text-slate-400">Potentiel</p>
               </div>
 
               <ArrowRight className="w-4 h-4 text-slate-600" />
@@ -755,7 +755,7 @@ function PremiumView({ subCategory, onViewClient, onEditClient, onDeleteClient }
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-slate-200">{client.name}</h3>
-                  <p className="text-sm text-slate-500">{client.sector} • Client depuis {client.since}</p>
+                  <p className="text-sm text-slate-400">{client.sector} • Client depuis {client.since}</p>
                 </div>
               </div>
               <div className="flex items-center gap-1">
@@ -768,17 +768,17 @@ function PremiumView({ subCategory, onViewClient, onEditClient, onDeleteClient }
               <div className="text-center p-3 rounded-lg bg-slate-800/50">
                 <DollarSign className="w-5 h-5 text-emerald-400 mx-auto mb-1" />
                 <p className="text-lg font-bold text-slate-200">{client.ca}</p>
-                <p className="text-xs text-slate-500">CA Annuel</p>
+                <p className="text-xs text-slate-400">CA Annuel</p>
               </div>
               <div className="text-center p-3 rounded-lg bg-slate-800/50">
                 <MessageSquare className="w-5 h-5 text-blue-400 mx-auto mb-1" />
                 <p className="text-lg font-bold text-slate-200">{client.contacts}</p>
-                <p className="text-xs text-slate-500">Contacts</p>
+                <p className="text-xs text-slate-400">Contacts</p>
               </div>
               <div className="text-center p-3 rounded-lg bg-slate-800/50">
                 <MapPin className="w-5 h-5 text-cyan-400 mx-auto mb-1" />
                 <p className="text-sm font-medium text-slate-200">{client.city}</p>
-                <p className="text-xs text-slate-500">Localisation</p>
+                <p className="text-xs text-slate-400">Localisation</p>
               </div>
             </div>
           </div>
@@ -872,7 +872,7 @@ function LitigesView({ subCategory }: { subCategory: string }) {
                     {litige.status === 'open' ? 'Ouvert' : litige.status === 'in_progress' ? 'En cours' : 'Résolu'}
                   </Badge>
                 </div>
-                <p className="text-xs text-slate-500">{litige.subject}</p>
+                <p className="text-xs text-slate-400">{litige.subject}</p>
                 {litige.daysOpen > 0 && (
                   <p className="text-xs text-slate-600 mt-1">Ouvert depuis {litige.daysOpen} jour(s)</p>
                 )}
@@ -884,7 +884,7 @@ function LitigesView({ subCategory }: { subCategory: string }) {
                 )}>
                   {litige.amount}
                 </p>
-                <p className="text-xs text-slate-500">Impact</p>
+                <p className="text-xs text-slate-400">Impact</p>
               </div>
               <ArrowRight className="w-4 h-4 text-slate-600" />
             </div>
@@ -1001,7 +1001,7 @@ function EntreprisesView({ subCategory, onViewClient, onEditClient, onDeleteClie
                   <h3 className="font-semibold text-slate-200 group-hover:text-cyan-400 transition-colors">
                     {client.name}
                   </h3>
-                  <p className="text-sm text-slate-500">{client.sector}</p>
+                  <p className="text-sm text-slate-400">{client.sector}</p>
                 </div>
               </div>
               <span className="text-lg font-bold text-cyan-400">{client.ca}</span>
@@ -1071,7 +1071,7 @@ function HistoriqueView({ subCategory }: { subCategory: string }) {
                       {item.client}
                     </Badge>
                   </div>
-                  <div className="flex items-center gap-3 text-xs text-slate-500">
+                  <div className="flex items-center gap-3 text-xs text-slate-400">
                     <span>{item.user}</span>
                     <span>•</span>
                     <span>{item.date}</span>
@@ -1229,7 +1229,7 @@ function QuickActionButton({ icon: Icon, title, description, color, onClick }: Q
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-slate-200">{title}</p>
-        <p className="text-xs text-slate-500">{description}</p>
+        <p className="text-xs text-slate-400">{description}</p>
       </div>
       <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-slate-400 transition-colors" />
     </button>

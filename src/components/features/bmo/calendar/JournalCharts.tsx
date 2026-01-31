@@ -140,7 +140,7 @@ export function JournalCharts({ actionLogs, journalFilters }: JournalChartsProps
         <CardContent className="p-8 text-center">
           <FileText className="w-12 h-12 mx-auto mb-3 text-slate-400" />
           <p className="text-sm text-slate-400">Aucune donnée à afficher</p>
-          <p className="text-xs text-slate-500 mt-1">Les graphiques apparaîtront avec des actions enregistrées</p>
+          <p className="text-xs text-slate-400 mt-1">Les graphiques apparaîtront avec des actions enregistrées</p>
         </CardContent>
       </Card>
     );

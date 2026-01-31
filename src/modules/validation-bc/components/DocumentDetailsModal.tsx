@@ -93,13 +93,11 @@ export function DocumentDetailsModal({
 
   const handleConfirmRequestInfo = async (message: string) => {
     // TODO: Implémenter l'envoi de la demande
-    console.log('Demande d\'informations:', message);
     onRequestInfo?.();
   };
 
   const handleConfirmValidation = async (comment?: string) => {
     // TODO: Implémenter la validation
-    console.log('Validation confirmée:', comment);
     setValidationModalOpen(false);
     onValidate?.();
     onClose();
@@ -107,7 +105,6 @@ export function DocumentDetailsModal({
 
   const handleConfirmReject = async (reason: string, comment?: string) => {
     // TODO: Implémenter le rejet
-    console.log('Rejet confirmé:', reason, comment);
     setRejectModalOpen(false);
     onReject?.();
     onClose();
@@ -339,7 +336,7 @@ export function DocumentDetailsModal({
                       </span>
                       {doc.validateur && (
                         <>
-                          <span className="text-slate-500">par</span>
+                          <span className="text-slate-400">par</span>
                           <span className="text-slate-200">{doc.validateur}</span>
                         </>
                       )}

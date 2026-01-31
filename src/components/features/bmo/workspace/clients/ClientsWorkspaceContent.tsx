@@ -62,7 +62,7 @@ export function ClientsWorkspaceContent() {
     watchlist.includes(clientId) ? removeFromWatchlist(clientId) : addToWatchlist(clientId);
   };
 
-  if (!activeTab) return <div className="flex items-center justify-center h-64 text-slate-500"><div className="text-center"><Users className="w-12 h-12 mx-auto mb-3 opacity-30" /><p>Aucun onglet</p></div></div>;
+  if (!activeTab) return <div className="flex items-center justify-center h-64 text-slate-400"><div className="text-center"><Users className="w-12 h-12 mx-auto mb-3 opacity-30" /><p>Aucun onglet</p></div></div>;
 
   if (activeTab.type === 'prospects') return <PlaceholderView icon={<UserPlus className="w-12 h-12" />} title="Gestion des prospects" />;
   if (activeTab.type === 'litiges') return <PlaceholderView icon={<AlertTriangle className="w-12 h-12" />} title="Clients en litige" />;
@@ -77,7 +77,7 @@ export function ClientsWorkspaceContent() {
           <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
             {queue === 'active' ? 'Clients actifs' : queue === 'litige' ? 'En litige' : queue === 'prospect' ? 'Prospects' : queue === 'premium' ? 'Premium' : 'Tous les clients'}
           </h2>
-          <p className="text-sm text-slate-500">{clients.length} client(s)</p>
+          <p className="text-sm text-slate-400">{clients.length} client(s)</p>
         </div>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -88,7 +88,7 @@ export function ClientsWorkspaceContent() {
       {loading ? (
         <div className="space-y-3">{[...Array(5)].map((_, i) => <div key={i} className="h-28 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />)}</div>
       ) : clients.length === 0 ? (
-        <div className="py-12 text-center text-slate-500"><Users className="w-12 h-12 mx-auto mb-3 opacity-30" /><p className="font-medium">Aucun client trouvé</p></div>
+        <div className="py-12 text-center text-slate-400"><Users className="w-12 h-12 mx-auto mb-3 opacity-30" /><p className="font-medium">Aucun client trouvé</p></div>
       ) : (
         <div className="space-y-2">
           {clients.map(client => {
@@ -102,7 +102,7 @@ export function ClientsWorkspaceContent() {
               <div key={client.id} className={cn("rounded-xl border-l-4 bg-white dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800 transition-all hover:shadow-md", statusStyle.border)} onClick={() => setExpandedId(isExpanded ? null : client.id)}>
                 <div className="p-4 cursor-pointer">
                   <div className="flex items-start gap-4">
-                    <div className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800"><TypeIcon className="w-5 h-5 text-slate-500" /></div>
+                    <div className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800"><TypeIcon className="w-5 h-5 text-slate-400" /></div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap mb-1">
                         <span className="font-mono text-xs px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600">{client.id}</span>
@@ -110,7 +110,7 @@ export function ClientsWorkspaceContent() {
                         <span className={cn("text-xs font-medium px-2 py-0.5 rounded flex items-center gap-1", segmentStyle.badge)}>{client.segment === 'premium' && <Crown className="w-3 h-3" />}{clientsApiService.getSegmentLabel(client.segment)}</span>
                       </div>
                       <p className="font-medium text-slate-900 dark:text-slate-100">{client.name}</p>
-                      <div className="flex items-center gap-4 mt-2 text-xs text-slate-500">
+                      <div className="flex items-center gap-4 mt-2 text-xs text-slate-400">
                         <span className="flex items-center gap-1"><TypeIcon className="w-3 h-3" />{clientsApiService.getTypeLabel(client.type)}</span>
                         {client.phone && <span className="flex items-center gap-1"><Phone className="w-3 h-3" />{client.phone}</span>}
                         <span className="flex items-center gap-1"><Building2 className="w-3 h-3" />{client.projetsEnCours} projet(s) en cours</span>
@@ -118,7 +118,7 @@ export function ClientsWorkspaceContent() {
                     </div>
                     <div className="text-right flex-none">
                       <p className="font-mono font-bold text-cyan-600 dark:text-cyan-400 flex items-center gap-1 justify-end"><DollarSign className="w-4 h-4" />{clientsApiService.formatMontant(client.chiffreAffaires)}</p>
-                      <p className="text-xs text-slate-500 mt-1">FCFA CA</p>
+                      <p className="text-xs text-slate-400 mt-1">FCFA CA</p>
                       <div className="flex items-center justify-end gap-2 mt-2">
                         <button onClick={e => handleToggleWatchlist(e, client.id)} className="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-700">{isInWatchlist ? <Star className="w-4 h-4 text-amber-500 fill-current" /> : <StarOff className="w-4 h-4 text-slate-400" />}</button>
                         <button onClick={e => { e.stopPropagation(); handleOpenDetail(client); }} className="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-700"><Eye className="w-4 h-4 text-slate-400" /></button>
@@ -130,12 +130,12 @@ export function ClientsWorkspaceContent() {
                 {isExpanded && (
                   <div className="px-4 pb-4 pt-0 border-t border-slate-200/70 dark:border-slate-800">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-4">
-                      <div><p className="text-xs text-slate-500 mb-1">Email</p><p className="text-sm font-medium">{client.email || 'N/A'}</p></div>
-                      <div><p className="text-xs text-slate-500 mb-1">Téléphone</p><p className="text-sm font-medium">{client.phone || 'N/A'}</p></div>
-                      <div><p className="text-xs text-slate-500 mb-1">Projets total</p><p className="text-sm font-medium">{client.projetsCount}</p></div>
-                      <div><p className="text-xs text-slate-500 mb-1">Dernier contact</p><p className="text-sm font-medium">{client.dernierContact ? new Date(client.dernierContact).toLocaleDateString('fr-FR') : 'N/A'}</p></div>
+                      <div><p className="text-xs text-slate-400 mb-1">Email</p><p className="text-sm font-medium">{client.email || 'N/A'}</p></div>
+                      <div><p className="text-xs text-slate-400 mb-1">Téléphone</p><p className="text-sm font-medium">{client.phone || 'N/A'}</p></div>
+                      <div><p className="text-xs text-slate-400 mb-1">Projets total</p><p className="text-sm font-medium">{client.projetsCount}</p></div>
+                      <div><p className="text-xs text-slate-400 mb-1">Dernier contact</p><p className="text-sm font-medium">{client.dernierContact ? new Date(client.dernierContact).toLocaleDateString('fr-FR') : 'N/A'}</p></div>
                     </div>
-                    {client.notes && <p className="text-sm text-slate-500 italic mb-4">{client.notes}</p>}
+                    {client.notes && <p className="text-sm text-slate-400 italic mb-4">{client.notes}</p>}
                     <div className="flex items-center gap-2 pt-2 border-t border-slate-200/70 dark:border-slate-800">
                       <button onClick={() => handleOpenDetail(client)} className="flex-1 px-4 py-2 rounded-lg bg-cyan-500 text-white text-sm font-medium hover:bg-cyan-600">Voir la fiche</button>
                       <button className="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800"><Mail className="w-4 h-4 inline mr-1" />Contacter</button>
@@ -152,6 +152,6 @@ export function ClientsWorkspaceContent() {
 }
 
 function PlaceholderView({ icon, title }: { icon: React.ReactNode; title: string }) {
-  return <div className="flex items-center justify-center h-64 text-slate-500"><div className="text-center"><div className="mx-auto mb-4 opacity-30">{icon}</div><p className="font-semibold">{title}</p><p className="text-xs mt-4 text-slate-400">En cours de développement</p></div></div>;
+  return <div className="flex items-center justify-center h-64 text-slate-400"><div className="text-center"><div className="mx-auto mb-4 opacity-30">{icon}</div><p className="font-semibold">{title}</p><p className="text-xs mt-4 text-slate-400">En cours de développement</p></div></div>;
 }
 

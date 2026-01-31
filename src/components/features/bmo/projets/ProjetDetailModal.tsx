@@ -244,7 +244,7 @@ function ObjectifItem({ status, text }: { status: 'completed' | 'in_progress' | 
       case 'in_progress':
         return <Activity className="w-4 h-4 text-blue-400 animate-pulse" />;
       case 'pending':
-        return <Clock className="w-4 h-4 text-slate-500" />;
+        return <Clock className="w-4 h-4 text-slate-400" />;
     }
   };
 
@@ -282,7 +282,7 @@ function TimelineItem({
       </div>
       <div className="flex-1 pb-4">
         <div className="text-sm font-medium text-slate-200">{action}</div>
-        <div className="text-xs text-slate-500 mt-1">
+        <div className="text-xs text-slate-400 mt-1">
           {user} • {date}
         </div>
       </div>

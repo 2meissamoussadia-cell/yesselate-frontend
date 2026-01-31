@@ -86,7 +86,7 @@ export function ClientsDashboard({ clientsGlobalStats, evolution }: ClientsDashb
               <div key={r.type} className="flex items-center justify-between">
                 <span className="text-slate-400">{r.type}</span>
                 <span className="font-semibold">
-                  {r.count} <span className="text-slate-500">({r.percentage}%)</span>
+                  {r.count} <span className="text-slate-400">({r.percentage}%)</span>
                 </span>
               </div>
             ))}

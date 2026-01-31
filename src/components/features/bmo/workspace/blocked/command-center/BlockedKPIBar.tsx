@@ -143,7 +143,7 @@ export function BlockedKPIBar({ onRefresh, isRefreshing = false }: BlockedKPIBar
             size="sm"
             onClick={onRefresh}
             disabled={isRefreshing}
-            className="h-6 w-6 p-0 text-slate-500 hover:text-slate-300"
+            className="h-6 w-6 p-0 text-slate-400 hover:text-slate-300"
           >
             <RefreshCw className={cn('h-3 w-3', isRefreshing && 'animate-spin')} />
           </Button>
@@ -151,7 +151,7 @@ export function BlockedKPIBar({ onRefresh, isRefreshing = false }: BlockedKPIBar
             variant="ghost"
             size="sm"
             onClick={() => setKPIConfig({ collapsed: !kpiConfig.collapsed })}
-            className="h-6 w-6 p-0 text-slate-500 hover:text-slate-300"
+            className="h-6 w-6 p-0 text-slate-400 hover:text-slate-300"
           >
             {kpiConfig.collapsed ? (
               <ChevronDown className="h-3 w-3" />
@@ -189,7 +189,7 @@ function KPICard({ kpi }: { kpi: KPIItem }) {
   const trendColors = {
     up: kpi.status === 'critical' ? 'text-red-400' : kpi.status === 'success' ? 'text-emerald-400' : 'text-amber-400',
     down: kpi.status === 'success' ? 'text-emerald-400' : 'text-amber-400',
-    stable: 'text-slate-500',
+    stable: 'text-slate-400',
   };
 
   return (
@@ -205,7 +205,7 @@ function KPICard({ kpi }: { kpi: KPIItem }) {
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5 mb-0.5">
             <Icon className={cn("h-3 w-3", statusColors[kpi.status])} />
-            <p className="text-xs text-slate-500 truncate group-hover:text-slate-400 transition-colors">
+            <p className="text-xs text-slate-400 truncate group-hover:text-slate-400 transition-colors">
               {kpi.label}
             </p>
           </div>

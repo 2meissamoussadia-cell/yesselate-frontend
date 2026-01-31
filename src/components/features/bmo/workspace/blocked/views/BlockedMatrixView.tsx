@@ -132,25 +132,25 @@ export function BlockedMatrixView({ tabId, data }: Props) {
           <TrendingUp className="w-5 h-5 text-orange-500" />
           Matrice d'urgence
         </h2>
-        <p className="text-sm text-slate-500">Impact × Délai - Priorisation visuelle des blocages</p>
+        <p className="text-sm text-slate-400">Impact × Délai - Priorisation visuelle des blocages</p>
       </div>
 
       {/* Stats rapides */}
       <div className="grid grid-cols-4 gap-4">
         <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30">
-          <p className="text-xs text-slate-500 mb-1">Zone critique</p>
+          <p className="text-xs text-slate-400 mb-1">Zone critique</p>
           <p className="text-2xl font-bold text-red-600 dark:text-red-400">{stats.urgent}</p>
         </div>
         <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
-          <p className="text-xs text-slate-500 mb-1">Attention requise</p>
+          <p className="text-xs text-slate-400 mb-1">Attention requise</p>
           <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">{stats.attention}</p>
         </div>
         <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30">
-          <p className="text-xs text-slate-500 mb-1">Normal</p>
+          <p className="text-xs text-slate-400 mb-1">Normal</p>
           <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{stats.normal}</p>
         </div>
         <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800/50 border border-slate-200/50 dark:border-slate-700/50">
-          <p className="text-xs text-slate-500 mb-1">Total</p>
+          <p className="text-xs text-slate-400 mb-1">Total</p>
           <p className="text-2xl font-bold">{stats.total}</p>
         </div>
       </div>
@@ -161,7 +161,7 @@ export function BlockedMatrixView({ tabId, data }: Props) {
           <table className="w-full border-collapse">
             <thead>
               <tr className="bg-slate-50 dark:bg-slate-900/50">
-                <th className="p-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider border-b border-slate-200/70 dark:border-slate-800">
+                <th className="p-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider border-b border-slate-200/70 dark:border-slate-800">
                   <div className="flex items-center gap-2">
                     <Clock className="w-4 h-4" />
                     Délai
@@ -221,7 +221,7 @@ export function BlockedMatrixView({ tabId, data }: Props) {
                             {count}
                           </span>
                           {count > 0 && hoveredCell === cellKey && (
-                            <span className="text-xs text-slate-500 mt-1">
+                            <span className="text-xs text-slate-400 mt-1">
                               Cliquer pour voir
                             </span>
                           )}
@@ -237,7 +237,7 @@ export function BlockedMatrixView({ tabId, data }: Props) {
       </div>
 
       {/* Légende */}
-      <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500">
+      <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400">
         <span className="font-medium">Légende:</span>
         <div className="flex items-center gap-2">
           <span className="w-4 h-4 rounded bg-red-500/20 border border-red-500/50" />

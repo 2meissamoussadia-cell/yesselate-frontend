@@ -233,7 +233,7 @@ export function CommandCenterSidebar() {
                     >
                       <ChevronDown
                         className={cn(
-                          'h-4 w-4 text-slate-500 transition-transform',
+                          'h-4 w-4 text-slate-400 transition-transform',
                           isDomainExpanded ? 'rotate-0' : '-rotate-90'
                         )}
                       />
@@ -261,7 +261,7 @@ export function CommandCenterSidebar() {
                             {SubIcon && (
                               <SubIcon className={cn(
                                 'h-4 w-4 flex-shrink-0',
-                                isSectionActive ? 'text-blue-400' : 'text-slate-500'
+                                isSectionActive ? 'text-blue-400' : 'text-slate-400'
                               )} />
                             )}
                             <span className="flex-1 text-left truncate">{sub.label}</span>
@@ -295,7 +295,7 @@ export function CommandCenterSidebar() {
       {/* Footer */}
       <div className="border-t border-slate-700/50 p-3">
         {!sidebarCollapsed && (
-          <div className="text-xs text-slate-500 text-center">
+          <div className="text-xs text-slate-400 text-center">
             Gouvernance v4.0
           </div>
         )}

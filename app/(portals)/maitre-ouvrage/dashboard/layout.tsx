@@ -8,7 +8,7 @@
 import React, { Suspense } from 'react';
 import { headers } from 'next/headers';
 import { ErrorBoundary } from '@/components/shared/ErrorBoundary';
-import { I18nProvider } from '@/lib/i18n/I18nProvider';
+import { DashboardI18nGate } from '@/modules/dashboard/components/DashboardI18nGate';
 import { resolveLocaleContext } from '@/lib/server/i18n';
 import { loadMessages } from '@/lib/server/i18n/loadMessages';
 import { extractContextFromHeaders } from '@lib-root/server/dashboard/context';
@@ -64,15 +64,16 @@ export default async function DashboardLayout({ children }: { children: React.Re
       messages = {};
     }
     
+    const initialBundle = {
+      locale: localeBundle.locale,
+      currency: localeBundle.currency,
+      timezone: localeBundle.timezone,
+      direction: localeBundle.direction,
+    };
+
     return (
       <ErrorBoundary fallback={<DashboardErrorFallback error={new Error('')} />}>
-        <I18nProvider
-          messages={messages}
-          locale={localeBundle.locale}
-          currency={localeBundle.currency}
-          timezone={localeBundle.timezone}
-          dir={localeBundle.direction}
-        >
+        <DashboardI18nGate initialBundle={initialBundle} initialMessages={messages}>
           <Suspense fallback={<DashboardLayoutFallback />}>
             <DashboardSyncClient />
           </Suspense>
@@ -83,7 +84,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
               </DashboardAlertProvider>
             </DashboardAuthGuard>
           </ErrorBoundary>
-        </I18nProvider>
+        </DashboardI18nGate>
       </ErrorBoundary>
     );
   } catch (error) {

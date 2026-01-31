@@ -36,7 +36,7 @@ const CRITICALITY_CONFIG: Record<string, { label: string; bgClass: string }> = {
 
 export function DelegationCommitmentsSection({ delegation, onAddEngagement }: Props) {
   if (!delegation) {
-    return <div className="text-slate-500 text-center py-8">Aucune donnée</div>;
+    return <div className="text-slate-400 text-center py-8">Aucune donnée</div>;
   }
 
   const engagements = delegation.engagements || [];
@@ -57,7 +57,7 @@ export function DelegationCommitmentsSection({ delegation, onAddEngagement }: Pr
             <ListChecks className="w-5 h-5 text-purple-500" />
             Engagements du délégataire
           </h2>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-400">
             Obligations, interdictions et règles à respecter.
           </p>
         </div>
@@ -90,7 +90,7 @@ export function DelegationCommitmentsSection({ delegation, onAddEngagement }: Pr
       {engagements.length === 0 && (
         <div className="text-center py-12 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
           <ListChecks className="w-12 h-12 mx-auto mb-3 text-slate-300" />
-          <p className="text-slate-500">Aucun engagement défini.</p>
+          <p className="text-slate-400">Aucun engagement défini.</p>
           <FluentButton size="sm" variant="secondary" className="mt-4" onClick={onAddEngagement}>
             <Plus className="w-3.5 h-3.5 mr-1" />
             Ajouter un engagement
@@ -143,7 +143,7 @@ function EngagementCard({ engagement }: { engagement: any }) {
           
           {/* Fréquence */}
           {engagement.frequency && (
-            <div className="mt-2 flex items-center gap-1 text-xs text-slate-500">
+            <div className="mt-2 flex items-center gap-1 text-xs text-slate-400">
               <Clock className="w-3 h-3" />
               Fréquence : {engagement.frequency}
             </div>
@@ -152,7 +152,7 @@ function EngagementCard({ engagement }: { engagement: any }) {
           {/* Documents requis */}
           {requiredDocs.length > 0 && (
             <div className="mt-3">
-              <div className="text-xs text-slate-500 mb-1">Documents requis :</div>
+              <div className="text-xs text-slate-400 mb-1">Documents requis :</div>
               <div className="flex flex-wrap gap-1">
                 {requiredDocs.map((doc: any, i: number) => (
                   <span

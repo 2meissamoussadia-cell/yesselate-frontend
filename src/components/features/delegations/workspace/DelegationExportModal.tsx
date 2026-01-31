@@ -128,7 +128,7 @@ export function DelegationExportModal({ open, onClose, onExport }: Props) {
                   <div className="font-semibold text-slate-900 dark:text-white">
                     {format.label}
                   </div>
-                  <div className="text-sm text-slate-500 dark:text-slate-400">
+                  <div className="text-sm text-slate-400 dark:text-slate-400">
                     {format.description}
                   </div>
                 </div>

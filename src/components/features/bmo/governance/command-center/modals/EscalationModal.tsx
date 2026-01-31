@@ -29,6 +29,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { useGovernanceCommandCenterStore } from '@/lib/stores/governanceCommandCenterStore';
+import { logger } from '@/lib/utils/logger';
 
 export function EscalationModal() {
   const { modal, closeModal } = useGovernanceCommandCenterStore();
@@ -78,13 +79,7 @@ export function EscalationModal() {
 
   const handleSubmit = () => {
     // TODO: Call API to submit escalation
-    console.log('Escalation submitted:', {
-      level: selectedLevel,
-      recipient: selectedRecipient,
-      urgency,
-      description,
-      source,
-    });
+    logger.debug('Escalation submitted', { component: 'EscalationModal', level: selectedLevel, recipient: selectedRecipient, urgency, description, source });
     closeModal();
   };
 
@@ -103,7 +98,7 @@ export function EscalationModal() {
                   {isNew ? 'Nouvelle escalade' : 'Escalader le problème'}
                 </DialogTitle>
                 {source && (
-                  <p className="text-xs text-slate-500 mt-0.5">
+                  <p className="text-xs text-slate-400 mt-0.5">
                     Source: {source.reference || source.designation}
                   </p>
                 )}
@@ -112,7 +107,7 @@ export function EscalationModal() {
             <Button
               variant="ghost"
               size="sm"
-              className="h-8 w-8 p-0 text-slate-500"
+              className="h-8 w-8 p-0 text-slate-400"
               onClick={closeModal}
             >
               <X className="h-4 w-4" />
@@ -126,8 +121,8 @@ export function EscalationModal() {
           {source && (
             <div className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/40">
               <div className="flex items-center gap-2 mb-2">
-                <FolderKanban className="h-4 w-4 text-slate-500" />
-                <span className="text-xs text-slate-500">Élément source</span>
+                <FolderKanban className="h-4 w-4 text-slate-400" />
+                <span className="text-xs text-slate-400">Élément source</span>
               </div>
               <p className="text-sm text-slate-300">{source.designation}</p>
               <div className="flex items-center gap-2 mt-1">
@@ -135,7 +130,7 @@ export function EscalationModal() {
                   {source.reference}
                 </Badge>
                 {source.project && (
-                  <span className="text-xs text-slate-500">{source.project}</span>
+                  <span className="text-xs text-slate-400">{source.project}</span>
                 )}
               </div>
             </div>
@@ -144,20 +139,20 @@ export function EscalationModal() {
           {/* Subject (if new) */}
           {isNew && (
             <div>
-              <label className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+              <label className="text-xs font-medium text-slate-400 uppercase tracking-wide">
                 Objet de l'escalade
               </label>
               <input
                 type="text"
                 placeholder="Titre du problème..."
-                className="mt-1 w-full px-3 py-2 bg-slate-800/50 border border-slate-700/50 rounded-lg text-sm text-slate-300 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500/50"
+                className="mt-1 w-full px-3 py-2 bg-slate-800/50 border border-slate-700/50 rounded-lg text-sm text-slate-300 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-500/50"
               />
             </div>
           )}
 
           {/* Escalation Level */}
           <div>
-            <label className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-3 block">
+            <label className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-3 block">
               Niveau d'escalade
             </label>
             <div className="grid grid-cols-3 gap-3">
@@ -179,7 +174,7 @@ export function EscalationModal() {
                     )}
                   >
                     <div className="flex items-center gap-2 mb-2">
-                      <Icon className={cn('h-4 w-4', isSelected ? 'text-amber-400' : 'text-slate-500')} />
+                      <Icon className={cn('h-4 w-4', isSelected ? 'text-amber-400' : 'text-slate-400')} />
                       <span className={cn(
                         'text-sm font-medium',
                         isSelected ? 'text-amber-400' : 'text-slate-400'
@@ -187,7 +182,7 @@ export function EscalationModal() {
                         {level.label}
                       </span>
                     </div>
-                    <p className="text-xs text-slate-500">{level.description}</p>
+                    <p className="text-xs text-slate-400">{level.description}</p>
                   </button>
                 );
               })}
@@ -196,7 +191,7 @@ export function EscalationModal() {
 
           {/* Recipient Selection */}
           <div>
-            <label className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-3 block">
+            <label className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-3 block">
               Destinataire
             </label>
             <div className="space-y-2">
@@ -218,7 +213,7 @@ export function EscalationModal() {
                     )}>
                       <User className={cn(
                         'h-4 w-4',
-                        selectedRecipient === recipient ? 'text-blue-400' : 'text-slate-500'
+                        selectedRecipient === recipient ? 'text-blue-400' : 'text-slate-400'
                       )} />
                     </div>
                     <span className={cn(
@@ -238,7 +233,7 @@ export function EscalationModal() {
 
           {/* Urgency */}
           <div>
-            <label className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-3 block">
+            <label className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-3 block">
               Urgence
             </label>
             <div className="flex gap-2">
@@ -248,7 +243,7 @@ export function EscalationModal() {
                   onClick={() => setUrgency(u.id)}
                   className={cn(
                     'flex-1 p-2 rounded-lg border text-center transition-all',
-                    urgency === u.id ? u.color : 'bg-slate-800/40 border-slate-700/50 text-slate-500'
+                    urgency === u.id ? u.color : 'bg-slate-800/40 border-slate-700/50 text-slate-400'
                   )}
                 >
                   <p className="text-sm font-medium">{u.label}</p>
@@ -260,21 +255,21 @@ export function EscalationModal() {
 
           {/* Description */}
           <div>
-            <label className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+            <label className="text-xs font-medium text-slate-400 uppercase tracking-wide">
               Description du problème <span className="text-red-400">*</span>
             </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Décrivez le problème et les actions déjà entreprises..."
-              className="mt-1 w-full h-28 px-3 py-2 bg-slate-800/50 border border-slate-700/50 rounded-lg text-sm text-slate-300 placeholder:text-slate-500 resize-none focus:outline-none focus:ring-1 focus:ring-blue-500/50"
+              className="mt-1 w-full h-28 px-3 py-2 bg-slate-800/50 border border-slate-700/50 rounded-lg text-sm text-slate-300 placeholder:text-slate-400 resize-none focus:outline-none focus:ring-1 focus:ring-blue-500/50"
             />
           </div>
         </div>
 
         {/* Footer */}
         <div className="flex items-center justify-between gap-4 p-4 border-t border-slate-700/50 bg-slate-900/80">
-          <div className="flex items-center gap-2 text-xs text-slate-500">
+          <div className="flex items-center gap-2 text-xs text-slate-400">
             <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
             L'escalade notifiera automatiquement le destinataire
           </div>

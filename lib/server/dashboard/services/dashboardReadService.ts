@@ -51,6 +51,40 @@ export class DashboardReadService {
       return this.repo.loadKpisFinance(ctx);
     }
 
+    // Pilotage (SubSidebar) : gouvernance, calendrier, analytics, hse — chargement dynamique via overview/summary
+    if (main === 'pilotage' && (sub === 'gouvernance' || sub === 'calendrier' || sub === 'analytics' || sub === 'hse')) {
+      const data = await this.repo.loadOverviewSummaryDashboard(ctx);
+      return OverviewSummaryDashboardSchema.parse(data);
+    }
+
+    // Phase P2: performance/kpis/* — mêmes données que overview (loaders front appellent performance/kpis/*)
+    if (main === 'performance' && sub === 'kpis' && leaf === 'projets') {
+      return this.repo.loadKpisProjets(ctx);
+    }
+    if (main === 'performance' && sub === 'kpis' && leaf === 'demandes') {
+      return this.repo.loadKpisDemandes(ctx);
+    }
+    if (main === 'performance' && sub === 'kpis' && leaf === 'budget') {
+      // Mock KpisBudgetData pour BudgetKpiPage (backend réel à brancher plus tard)
+      const total = 4_200_000_000;
+      const consomme = 3_100_000_000;
+      const reste = total - consomme;
+      const pourcentage = total > 0 ? Math.round((consomme / total) * 100) : 0;
+      return {
+        budget: { total, consomme, reste, pourcentage },
+        parCategorie: [
+          { categorie: 'Bâtiment', budget: 1_800_000_000, consomme: 1_350_000_000, pourcentage: 75, evolution: 2, alert: 'ok' as const },
+          { categorie: 'VRD', budget: 1_200_000_000, consomme: 980_000_000, pourcentage: 82, evolution: -1, alert: 'warning' as const },
+          { categorie: 'Équipements', budget: 1_200_000_000, consomme: 770_000_000, pourcentage: 64, evolution: 0, alert: 'ok' as const },
+        ],
+        parProjet: [
+          { projetId: 'p1', projetNom: 'Villa Diamniadio', budget: 36_400_000, consomme: 24_700_000, reste: 11_700_000, pourcentage: 68 },
+          { projetId: 'p2', projetNom: 'Complexe Résidentiel', budget: 28_200_000, consomme: 22_100_000, reste: 6_100_000, pourcentage: 78 },
+          { projetId: 'p3', projetNom: 'Infrastructure Route', budget: 45_800_000, consomme: 48_200_000, reste: 0, pourcentage: 105 },
+        ],
+      };
+    }
+
     // Phase P5: Modules ERP - Achats/Contrats
     if (main === 'performance' && sub === 'achats') {
       // Phase P10: Vérifier permission + feature flag

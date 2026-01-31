@@ -213,7 +213,7 @@ export function CockpitDG_V2Page() {
 
       {/* Toggle Vue 3D / Vue 4D / Live (Phase 5) */}
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-xs text-slate-500 font-medium">Vue :</span>
+        <span className="text-xs text-slate-400 font-medium">Vue :</span>
         <button
           type="button"
           onClick={() => setViewMode('3d')}
@@ -303,7 +303,7 @@ export function CockpitDG_V2Page() {
                 )}
               >
                 <p className="text-xs font-medium text-slate-200 line-clamp-2">{i.prediction}</p>
-                <p className="text-[10px] text-slate-500 mt-1">
+                <p className="text-[10px] text-slate-400 mt-1">
                   {i.chantier_id} • {i.confidence}% • {i.impact_financial.toLocaleString('fr-FR')} FCFA
                 </p>
               </div>
@@ -348,7 +348,7 @@ export function CockpitDG_V2Page() {
           </div>
           <div className="space-y-2 text-sm">
             <p className="text-slate-300">
-              <span className="text-slate-500">#042</span> Phase4 — Avancement 62 %
+              <span className="text-slate-400">#042</span> Phase4 — Avancement 62 %
             </p>
             <p className="text-slate-400 text-xs">GPS Thiès · Bureau Contrôle 1/3</p>
             <p className="text-amber-300 text-xs">Peinture stock bas</p>
@@ -385,7 +385,7 @@ export function CockpitDG_V2Page() {
                 )}
               >
                 {phase}
-                <span className="ml-1 text-slate-500">12</span>
+                <span className="ml-1 text-slate-400">12</span>
               </button>
             ))}
           </div>
@@ -414,7 +414,7 @@ export function CockpitDG_V2Page() {
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-800/60">
                     <Icon className="h-5 w-5 text-slate-200" />
                   </div>
-                  <ChevronRight className="h-4 w-4 text-slate-500 shrink-0 mt-0.5" />
+                  <ChevronRight className="h-4 w-4 text-slate-400 shrink-0 mt-0.5" />
                 </div>
                 <h4 className="mt-3 text-sm font-semibold text-slate-100">{card.title}</h4>
               </button>

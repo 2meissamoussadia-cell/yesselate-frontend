@@ -58,7 +58,7 @@ export function TrendsPage() {
           <h3 className="text-sm font-semibold text-slate-300 mb-1">
             Évolution sur 7 derniers jours
           </h3>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-400">
             Nombre de documents par statut sur la période
           </p>
         </div>

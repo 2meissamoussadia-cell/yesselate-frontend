@@ -70,7 +70,7 @@ export function HistoriqueRejetsPage() {
           {sortedDocuments.map((doc) => (
             <div key={doc.id} className="relative">
               {doc.dateRejet && (
-                <div className="flex items-center gap-2 text-xs text-slate-500 mb-2">
+                <div className="flex items-center gap-2 text-xs text-slate-400 mb-2">
                   <Calendar className="h-3 w-3" />
                   <span>
                     Rejeté le {new Date(doc.dateRejet).toLocaleDateString('fr-FR', {

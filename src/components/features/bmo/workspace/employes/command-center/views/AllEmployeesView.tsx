@@ -123,7 +123,7 @@ export function AllEmployeesView({ subCategory }: AllEmployeesViewProps) {
       {/* Search Bar */}
       <div className="flex items-center gap-2">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <input
             type="text"
             placeholder="Rechercher par nom, matricule, poste..."
@@ -222,7 +222,7 @@ export function AllEmployeesView({ subCategory }: AllEmployeesViewProps) {
                           </div>
                           <div className="min-w-0">
                             <div className="text-sm font-medium text-slate-200 truncate">{employee.name}</div>
-                            <div className="text-xs text-slate-500 truncate">{employee.matricule}</div>
+                            <div className="text-xs text-slate-400 truncate">{employee.matricule}</div>
                           </div>
                         </div>
                       </td>
@@ -246,10 +246,10 @@ export function AllEmployeesView({ subCategory }: AllEmployeesViewProps) {
                         {employee.scoreEvaluation ? (
                           <div className="flex items-center gap-1">
                             <span className="text-sm font-medium text-slate-200">{employee.scoreEvaluation.toFixed(1)}</span>
-                            <span className="text-xs text-slate-500">/5</span>
+                            <span className="text-xs text-slate-400">/5</span>
                           </div>
                         ) : (
-                          <span className="text-xs text-slate-500">-</span>
+                          <span className="text-xs text-slate-400">-</span>
                         )}
                       </td>
                       <td className="px-4 py-3">

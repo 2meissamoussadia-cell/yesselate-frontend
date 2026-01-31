@@ -100,7 +100,7 @@ export function JalonsAVenirPage() {
                       </div>
                     )}
                     {jalon.statut && (
-                      <div className="text-sm text-slate-500 mt-1">Statut: {jalon.statut}</div>
+                      <div className="text-sm text-slate-400 mt-1">Statut: {jalon.statut}</div>
                     )}
                   </div>
                 </div>

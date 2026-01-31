@@ -247,8 +247,8 @@ export function IntelligentInsights({
                   <p className="text-xs text-slate-400 mb-2">{insight.description}</p>
                   <div className="space-y-1">
                     <div className="flex items-center gap-2 text-xs">
-                      <Target className="w-3 h-3 text-slate-500" />
-                      <span className="text-slate-500">Impact:</span>
+                      <Target className="w-3 h-3 text-slate-400" />
+                      <span className="text-slate-400">Impact:</span>
                       <span className="font-medium">{insight.impact}</span>
                     </div>
                     {insight.recommendation && (

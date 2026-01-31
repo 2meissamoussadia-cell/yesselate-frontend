@@ -87,7 +87,7 @@ export function AbsencesParEquipePage() {
                   </Button>
                 ))
               ) : (
-                <span className="text-sm text-slate-500">Aucune équipe disponible</span>
+                <span className="text-sm text-slate-400">Aucune équipe disponible</span>
               )}
             </div>
           </div>

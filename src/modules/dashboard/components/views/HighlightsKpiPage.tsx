@@ -6,32 +6,34 @@
 'use client';
 
 import React, { useCallback, memo, useMemo, useState } from 'react';
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  AlertTriangle, 
-  CheckCircle, 
-  Award, 
-  Target, 
+import { useQuery } from '@tanstack/react-query';
+import {
+  TrendingUp,
+  TrendingDown,
+  AlertTriangle,
+  CheckCircle,
+  Award,
+  Target,
   Activity,
   AlertCircle,
   BarChart3,
   Zap,
   Globe,
-  Building2
+  Building2,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
+import { dashboardAPI } from '@/lib/api/pilotage/dashboardClient';
 import { AnimatedBadge } from '../shared/AnimatedBadge';
 import { EnterpriseBadge } from '../shared/EnterpriseBadge';
 import { ExportButton } from '../shared/ExportButton';
 import { toneToColor, parseTrendPercent } from '@lib-root/dashboard/kpi';
-import { 
-  DashboardPageLayout, 
-  DashboardSection, 
-  DashboardGrid, 
+import {
+  DashboardPageLayout,
+  DashboardSection,
+  DashboardGrid,
   DashboardPanel,
   KPICard,
   type KPICardData,
@@ -156,37 +158,33 @@ export const HighlightsKpiPage = memo(function HighlightsKpiPage() {
     },
   ], []);
 
-  // Risques identifiés
-  const risks: Risk[] = useMemo(() => [
-    {
-      id: 'r1',
-      label: 'Retards projets',
-      severity: 'high',
-      count: 3,
-      trend: '-1',
-    },
-    {
-      id: 'r2',
-      label: 'Dépassements budget',
-      severity: 'high',
-      count: 2,
-      trend: 'stable',
-    },
-    {
-      id: 'r3',
-      label: 'Blocages processus',
-      severity: 'medium',
-      count: 5,
-      trend: '-2',
-    },
-    {
-      id: 'r4',
-      label: 'Goulets d\'étranglement',
-      severity: 'medium',
-      count: 4,
-      trend: '+1',
-    },
-  ], []);
+  // Risques : API dashboard (Phase 2) avec repli sur mock
+  const fallbackRisks: Risk[] = useMemo(
+    () => [
+      { id: 'r1', label: 'Retards projets', severity: 'high', count: 3, trend: '-1' },
+      { id: 'r2', label: 'Dépassements budget', severity: 'high', count: 2, trend: 'stable' },
+      { id: 'r3', label: 'Blocages processus', severity: 'medium', count: 5, trend: '-2' },
+      { id: 'r4', label: "Goulets d'étranglement", severity: 'medium', count: 4, trend: '+1' },
+    ],
+    []
+  );
+  const { data: risksData } = useQuery({
+    queryKey: ['dashboard', 'risks'],
+    queryFn: () => dashboardAPI.getRisks({ limit: 20 }),
+    staleTime: 60_000,
+  });
+  const risks: Risk[] = useMemo(() => {
+    const raw = risksData?.risks;
+    if (!raw?.length) return fallbackRisks;
+    const severityMap = { critical: 'high' as const, warning: 'medium' as const };
+    return raw.map((r) => ({
+      id: r.id,
+      label: r.title,
+      severity: severityMap[r.severity as keyof typeof severityMap] ?? 'low',
+      count: 1,
+      trend: r.trend === 'up' ? '+1' : r.trend === 'down' ? '-1' : 'stable',
+    }));
+  }, [risksData?.risks, fallbackRisks]);
 
   // Classements
   const rankings: Ranking[] = useMemo(() => [

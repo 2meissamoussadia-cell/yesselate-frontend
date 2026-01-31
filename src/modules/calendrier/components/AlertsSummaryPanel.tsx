@@ -64,6 +64,7 @@ function AlertCard({
             'p-2 rounded-lg bg-slate-700/50',
             iconStyles[variant]
           )}
+          aria-hidden
         >
           <Icon className="h-5 w-5" />
         </div>
@@ -89,11 +90,13 @@ function AlertCard({
             <p className="text-xs text-slate-400 mb-2">{description}</p>
           )}
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={() => router.push(ctaLink)}
+            aria-label={ctaLabel}
             className={cn(
-              'h-7 px-2 text-xs font-medium',
+              'min-h-[44px] px-3 text-xs font-medium focus-visible:outline focus-visible:ring-2 focus-visible:ring-sky-500',
               variant === 'critical'
                 ? 'text-red-400 hover:text-red-300 hover:bg-red-500/10'
                 : variant === 'warning'
@@ -102,7 +105,7 @@ function AlertCard({
             )}
           >
             {ctaLabel}
-            <ArrowRight className="h-3 w-3 ml-1" />
+            <ArrowRight className="h-3 w-3 ml-1" aria-hidden />
           </Button>
         </div>
       </div>

@@ -213,7 +213,7 @@ export const TicketsCommandSidebar = React.memo(function TicketsCommandSidebar({
       {/* Footer */}
       <div className="border-t border-slate-700/50 p-3">
         {!collapsed && (
-          <div className="text-xs text-slate-500 text-center">
+          <div className="text-xs text-slate-400 text-center">
             Tickets v2.0
           </div>
         )}

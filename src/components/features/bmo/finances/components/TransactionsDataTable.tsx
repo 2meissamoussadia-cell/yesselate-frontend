@@ -269,7 +269,7 @@ export function TransactionsDataTable({
             <tbody className="divide-y divide-slate-800/50">
               {paginatedTransactions.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="px-4 py-12 text-center text-slate-500">
+                  <td colSpan={8} className="px-4 py-12 text-center text-slate-400">
                     Aucune transaction trouvée
                   </td>
                 </tr>
@@ -314,7 +314,7 @@ export function TransactionsDataTable({
                         <p className="text-sm font-medium text-slate-200 truncate">
                           {transaction.description}
                         </p>
-                        <p className="text-xs text-slate-500 truncate">
+                        <p className="text-xs text-slate-400 truncate">
                           {transaction.category}
                         </p>
                       </div>

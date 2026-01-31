@@ -218,7 +218,7 @@ export function RHFavoritesPanel({ onOpenDemand }: FavoritesPanelProps) {
         <CardContent className="p-6 text-center">
           <Star className="w-12 h-12 mx-auto mb-3 text-slate-300 dark:text-slate-600" />
           <h3 className="font-semibold mb-1">Aucun favori</h3>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-400">
             Ajoutez des demandes en favoris pour y accéder rapidement
           </p>
         </CardContent>
@@ -254,7 +254,7 @@ export function RHFavoritesPanel({ onOpenDemand }: FavoritesPanelProps) {
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs text-slate-500">{demand.id}</span>
+                    <span className="font-mono text-xs text-slate-400">{demand.id}</span>
                     {demand.favorite.isPinned && (
                       <Pin className="w-3 h-3 text-amber-500" />
                     )}
@@ -274,7 +274,7 @@ export function RHFavoritesPanel({ onOpenDemand }: FavoritesPanelProps) {
 
                   <div className="font-medium text-sm mt-0.5">{demand.agent}</div>
                   
-                  <div className="flex items-center gap-2 mt-1 text-xs text-slate-500">
+                  <div className="flex items-center gap-2 mt-1 text-xs text-slate-400">
                     <span>{demand.type}</span>
                     <span>•</span>
                     <span className="flex items-center gap-1">
@@ -387,7 +387,7 @@ export function RHQuickFavorites({ onOpenDemand }: { onOpenDemand?: (id: string)
 
   return (
     <div className="flex items-center gap-2 flex-wrap">
-      <span className="text-xs text-slate-500 flex items-center gap-1">
+      <span className="text-xs text-slate-400 flex items-center gap-1">
         <Pin className="w-3 h-3" /> Épinglés:
       </span>
       {pinnedFavorites.map(fav => {

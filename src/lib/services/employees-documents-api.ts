@@ -13,6 +13,7 @@ import type {
   WorkloadData,
   Document,
 } from '@/lib/types/substitution.types';
+import { logger } from '@/lib/utils/logger';
 import { formatFileSize as formatFileSizeUtil } from '@/lib/data/timeline-documents-mock-data';
 
 // ================================
@@ -226,7 +227,7 @@ class DocumentsApiService {
       metadata: {},
     };
 
-    console.log('[API] Document uploaded:', doc);
+    logger.debug('Document uploaded', { component: 'employees-documents-api', docId: doc.id });
     return doc;
   }
 
@@ -246,7 +247,7 @@ class DocumentsApiService {
       metadata: {},
     }));
 
-    console.log('[API] Multiple documents uploaded:', docs.length);
+    logger.debug('Multiple documents uploaded', { component: 'employees-documents-api', count: docs.length });
     return docs;
   }
 
@@ -254,7 +255,7 @@ class DocumentsApiService {
     await this.delay(500);
     // Mock blob
     const blob = new Blob(['Mock document content'], { type: 'application/pdf' });
-    console.log('[API] Document downloaded:', documentId);
+    logger.debug('Document downloaded', { component: 'employees-documents-api', documentId });
     return blob;
   }
 
@@ -269,7 +270,7 @@ class DocumentsApiService {
 
   async delete(documentId: string): Promise<void> {
     await this.delay(300);
-    console.log('[API] Document deleted:', documentId);
+    logger.debug('Document deleted', { component: 'employees-documents-api', documentId });
   }
 
   async getByEntity(entityType: string, entityId: string): Promise<Document[]> {
@@ -293,7 +294,7 @@ class DocumentsApiService {
       },
     };
 
-    console.log('[API] Document metadata updated:', updated);
+    logger.debug('Document metadata updated', { component: 'employees-documents-api', documentId: updated.id });
     return updated;
   }
 

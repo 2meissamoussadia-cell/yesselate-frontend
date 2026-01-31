@@ -25,6 +25,7 @@ import {
   Loader2,
 } from 'lucide-react';
 import { useGovernanceCommandCenterStore } from '@/lib/stores/governanceCommandCenterStore';
+import { logger } from '@/lib/utils/logger';
 import { Checkbox } from '@/components/ui/checkbox';
 
 type ExportFormat = 'excel' | 'pdf' | 'csv';
@@ -94,7 +95,7 @@ export function ExportModal() {
     await new Promise(resolve => setTimeout(resolve, 2000));
     
     // TODO: Call actual export API
-    console.log('Export:', { format, scope, columns: selectedColumns, navigation });
+    logger.debug('Export', { component: 'ExportModal', format, scope, columns: selectedColumns, navigation });
     
     setIsExporting(false);
     closeModal();
@@ -115,7 +116,7 @@ export function ExportModal() {
             <Button
               variant="ghost"
               size="sm"
-              className="h-8 w-8 p-0 text-slate-500"
+              className="h-8 w-8 p-0 text-slate-400"
               onClick={closeModal}
             >
               <X className="h-4 w-4" />
@@ -127,7 +128,7 @@ export function ExportModal() {
         <div className="p-4 space-y-5">
           {/* Format Selection */}
           <div>
-            <label className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-3 block">
+            <label className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-3 block">
               Format
             </label>
             <div className="grid grid-cols-3 gap-3">
@@ -142,7 +143,7 @@ export function ExportModal() {
                       'flex flex-col items-center gap-2 p-3 rounded-lg border transition-all',
                       isSelected
                         ? 'bg-blue-500/20 border-blue-500/50 text-blue-400'
-                        : 'border-slate-700/50 text-slate-500 hover:border-slate-600'
+                        : 'border-slate-700/50 text-slate-400 hover:border-slate-600'
                     )}
                   >
                     <Icon className="h-6 w-6" />
@@ -156,7 +157,7 @@ export function ExportModal() {
 
           {/* Scope Selection */}
           <div>
-            <label className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-3 block">
+            <label className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-3 block">
               Périmètre
             </label>
             <div className="space-y-2">
@@ -180,7 +181,7 @@ export function ExportModal() {
                       <p className={cn('text-sm font-medium', isSelected ? 'text-slate-200' : 'text-slate-400')}>
                         {s.label}
                       </p>
-                      <p className="text-xs text-slate-500">{s.description}</p>
+                      <p className="text-xs text-slate-400">{s.description}</p>
                     </div>
                     {isSelected && (
                       <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
@@ -197,7 +198,7 @@ export function ExportModal() {
           {format !== 'pdf' && (
             <div>
               <div className="flex items-center justify-between mb-3">
-                <label className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                <label className="text-xs font-medium text-slate-400 uppercase tracking-wide">
                   Colonnes
                 </label>
                 <button
@@ -237,7 +238,7 @@ export function ExportModal() {
 
         {/* Footer */}
         <div className="flex items-center justify-between gap-4 p-4 border-t border-slate-700/50 bg-slate-900/80">
-          <div className="text-xs text-slate-500">
+          <div className="text-xs text-slate-400">
             {selectedColumns.length} colonnes sélectionnées
           </div>
           <div className="flex items-center gap-2">

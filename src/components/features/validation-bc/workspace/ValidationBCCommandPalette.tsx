@@ -105,7 +105,7 @@ export function ValidationBCCommandPalette() {
         <div className="max-h-[400px] overflow-y-auto space-y-4">
           {categories.map((category) => (
             <div key={category}>
-              <div className="text-xs font-semibold text-slate-500 uppercase mb-2 px-2">{category}</div>
+              <div className="text-xs font-semibold text-slate-400 uppercase mb-2 px-2">{category}</div>
               <div className="space-y-1">
                 {filteredCommands
                   .filter((cmd) => cmd.category === category)
@@ -117,7 +117,7 @@ export function ValidationBCCommandPalette() {
                     >
                       <div className="flex-1 min-w-0">
                         <div className="font-medium text-sm">{cmd.label}</div>
-                        {cmd.description && <div className="text-xs text-slate-500 mt-0.5">{cmd.description}</div>}
+                        {cmd.description && <div className="text-xs text-slate-400 mt-0.5">{cmd.description}</div>}
                       </div>
                       {cmd.hotkey && (
                         <kbd className="flex-none px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 text-xs font-mono text-slate-600 dark:text-slate-400">
@@ -131,7 +131,7 @@ export function ValidationBCCommandPalette() {
           ))}
 
           {filteredCommands.length === 0 && (
-            <div className="text-center py-8 text-slate-500">
+            <div className="text-center py-8 text-slate-400">
               <Command className="w-12 h-12 mx-auto mb-2 opacity-30" />
               <p>Aucune commande trouvée</p>
             </div>

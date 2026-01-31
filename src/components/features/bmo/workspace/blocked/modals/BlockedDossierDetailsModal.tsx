@@ -627,7 +627,7 @@ export function BlockedDossierDetailsModal({
                     <div className="flex items-center gap-2">
                       <Timer className="h-4 w-4 text-orange-400" />
                       <span className="text-white font-medium">{dossier.delay} jours</span>
-                      <span className="text-sm text-slate-500">
+                      <span className="text-sm text-slate-400">
                         (depuis {new Date(dossier.blockedSince).toLocaleDateString('fr-FR')})
                       </span>
                     </div>
@@ -699,7 +699,7 @@ export function BlockedDossierDetailsModal({
                       <div className="text-white font-medium">
                         {dossier.parties.responsable.name}
                       </div>
-                      <div className="text-xs text-slate-500">
+                      <div className="text-xs text-slate-400">
                         {dossier.parties.responsable.role}
                       </div>
                     </div>
@@ -712,7 +712,7 @@ export function BlockedDossierDetailsModal({
                       {dossier.parties.validateurs.map((v, idx) => (
                         <div key={idx} className="text-sm text-white mb-1">
                           {v.name}
-                          <span className="text-xs text-slate-500 ml-1">({v.role})</span>
+                          <span className="text-xs text-slate-400 ml-1">({v.role})</span>
                         </div>
                       ))}
                     </div>
@@ -725,7 +725,7 @@ export function BlockedDossierDetailsModal({
                       {dossier.parties.observateurs.map((o, idx) => (
                         <div key={idx} className="text-sm text-white mb-1">
                           {o.name}
-                          <span className="text-xs text-slate-500 ml-1">({o.role})</span>
+                          <span className="text-xs text-slate-400 ml-1">({o.role})</span>
                         </div>
                       ))}
                     </div>
@@ -777,7 +777,7 @@ export function BlockedDossierDetailsModal({
                                 ? 'bg-green-500/20 text-green-400'
                                 : step.status === 'current'
                                 ? 'bg-blue-500/20 text-blue-400'
-                                : 'bg-slate-700 text-slate-500'
+                                : 'bg-slate-700 text-slate-400'
                             )}
                           >
                             {step.status === 'completed' ? (
@@ -945,7 +945,7 @@ export function BlockedDossierDetailsModal({
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h3 className="text-sm font-medium text-slate-400 mb-1">Ajouter un document</h3>
-                    <p className="text-xs text-slate-500">Glissez-déposez ou cliquez pour parcourir</p>
+                    <p className="text-xs text-slate-400">Glissez-déposez ou cliquez pour parcourir</p>
                   </div>
                   <Select
                     value={documentCategory}
@@ -987,7 +987,7 @@ export function BlockedDossierDetailsModal({
                       <span className="text-sm text-slate-400">
                         Cliquez pour sélectionner ou glissez-déposez
                       </span>
-                      <span className="text-xs text-slate-500 mt-1">
+                      <span className="text-xs text-slate-400 mt-1">
                         PDF, DOC, XLS, JPG, PNG (max 10MB)
                       </span>
                     </>
@@ -1074,7 +1074,7 @@ export function BlockedDossierDetailsModal({
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   placeholder="Ajouter un commentaire... (utilisez @ pour mentionner)"
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white placeholder:text-slate-500 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white placeholder:text-slate-400 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
                   rows={3}
                 />
                 <div className="flex items-center justify-between mt-3">
@@ -1115,7 +1115,7 @@ export function BlockedDossierDetailsModal({
                             <div className="text-xs text-slate-400">{comment.role}</div>
                           </div>
                         </div>
-                        <div className="text-xs text-slate-500">
+                        <div className="text-xs text-slate-400">
                           {formatRelativeTime(comment.createdAt)}
                         </div>
                       </div>
@@ -1213,12 +1213,12 @@ export function BlockedDossierDetailsModal({
                           <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-3">
                             <div className="flex items-start justify-between mb-1">
                               <h4 className="font-medium text-white">{event.title}</h4>
-                              <span className="text-xs text-slate-500">
+                              <span className="text-xs text-slate-400">
                                 {formatRelativeTime(event.timestamp)}
                               </span>
                             </div>
                             <p className="text-sm text-slate-400 mb-1">{event.description}</p>
-                            <div className="text-xs text-slate-500">Par {event.actor}</div>
+                            <div className="text-xs text-slate-400">Par {event.actor}</div>
                           </div>
                         </div>
                       );

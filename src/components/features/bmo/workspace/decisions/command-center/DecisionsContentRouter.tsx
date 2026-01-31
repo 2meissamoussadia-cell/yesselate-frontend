@@ -103,7 +103,7 @@ export const DecisionsContentRouter = React.memo(function DecisionsContentRouter
         <div className="text-center">
           <BarChart3 className="w-16 h-16 text-slate-600 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-slate-300 mb-2">Analytics</h3>
-          <p className="text-slate-500">Contenu en cours de développement</p>
+          <p className="text-slate-400">Contenu en cours de développement</p>
         </div>
       </div>
     );
@@ -117,7 +117,7 @@ export const DecisionsContentRouter = React.memo(function DecisionsContentRouter
         <h3 className="text-lg font-semibold text-slate-300 mb-2">
           {category} - {subCategory}
         </h3>
-        <p className="text-slate-500">Contenu en cours de développement</p>
+        <p className="text-slate-400">Contenu en cours de développement</p>
       </div>
     </div>
   );
@@ -215,7 +215,7 @@ function OverviewView() {
                   )}>
                     {decision.status === 'pending' ? 'En attente' : 'Approuvée'}
                   </span>
-                  <p className="text-xs text-slate-500 mt-1">{decision.time}</p>
+                  <p className="text-xs text-slate-400 mt-1">{decision.time}</p>
                 </div>
               </div>
             ))}

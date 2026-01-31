@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCalendrierStore } from '@/lib/stores/calendrierStore';
+import { logger } from '@/lib/utils/logger';
 import { CalendrierInteractif } from '../components/CalendrierInteractif';
 import { FiltresAvances } from '../components/FiltresAvances';
 
@@ -114,7 +115,7 @@ export function EcheancesOperationnellesView() {
           }}
           onCreateEvent={(date) => {
             // TODO: Ouvrir modal création événement
-            console.log('Créer événement pour:', date);
+            logger.debug('Créer événement pour', { component: 'EcheancesOperationnellesView', date });
           }}
         />
       )}

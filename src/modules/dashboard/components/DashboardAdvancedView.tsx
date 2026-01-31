@@ -216,6 +216,7 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
   return (
     <TooltipProvider>
       <div className="space-y-6 animate-fadeIn">
+        <h1 className="sr-only">Dashboard principal</h1>
         {/* Header avec actions */}
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
@@ -333,7 +334,7 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
                     value={filters.search}
                     onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
                     placeholder="Rechercher..."
-                    className="w-full pl-8 pr-3 py-2 bg-slate-900/50 border border-slate-700/50 rounded-lg text-sm text-slate-200 placeholder:text-slate-500"
+                    className="w-full pl-8 pr-3 py-2 bg-slate-900/50 border border-slate-700/50 rounded-lg text-sm text-slate-200 placeholder:text-slate-400"
                   />
                 </div>
               </div>
@@ -605,7 +606,7 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
                       style={{ width: `${item.percentage}%` }}
                     />
                   </div>
-                  <p className="text-xs text-slate-500 mt-1">{item.percentage}%</p>
+                  <p className="text-xs text-slate-400 mt-1">{item.percentage}%</p>
                 </div>
               ))}
             </div>

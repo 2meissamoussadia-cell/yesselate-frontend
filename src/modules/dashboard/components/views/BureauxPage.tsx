@@ -1781,9 +1781,9 @@ function BureauxPageInner() {
       {/* Grille des bureaux */}
       {sortedBureaux.length === 0 ? (
         <div className="bg-slate-900/50 border border-slate-800 rounded-xl text-center" role="status" aria-live="polite" style={{ padding: 'clamp(3rem, 4vw, 3.5rem)' }}>
-          <AlertCircle className="text-slate-500 mx-auto" aria-hidden="true" style={{ width: 'clamp(3rem, 3.5vw, 3rem)', height: 'clamp(3rem, 3.5vw, 3rem)', marginBottom: 'clamp(1rem, 1.5vw, 1.25rem)' }} />
+          <AlertCircle className="text-slate-400 mx-auto" aria-hidden="true" style={{ width: 'clamp(3rem, 3.5vw, 3rem)', height: 'clamp(3rem, 3.5vw, 3rem)', marginBottom: 'clamp(1rem, 1.5vw, 1.25rem)' }} />
           <p className="font-semibold text-slate-300" style={{ fontSize: 'clamp(1rem, 1.5vw, 1.125rem)', marginBottom: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>Aucun bureau trouvé</p>
-          <p className="text-slate-500" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>
+          <p className="text-slate-400" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>
             {searchQuery ? `Aucun résultat pour "${searchQuery}"` : 'Aucun bureau ne correspond aux filtres sélectionnés'}
           </p>
           {(searchQuery || statusFilter !== 'all') && (

@@ -166,7 +166,7 @@ export function CalendarStatsModal({ open, onClose }: CalendarStatsModalProps) {
             </div>
             <div className="text-3xl font-bold text-blue-600">{stats.total}</div>
             {evolution && (
-              <div className="text-xs text-slate-500 mt-1 flex items-center gap-1">
+              <div className="text-xs text-slate-400 mt-1 flex items-center gap-1">
                 {evolution.total > 0 ? (
                   <>
                     <TrendingUp className="w-3 h-3 text-emerald-500" />
@@ -190,7 +190,7 @@ export function CalendarStatsModal({ open, onClose }: CalendarStatsModalProps) {
             </div>
             <div className="text-3xl font-bold text-emerald-600">{stats.thisWeek}</div>
             {evolution && (
-              <div className="text-xs text-slate-500 mt-1 flex items-center gap-1">
+              <div className="text-xs text-slate-400 mt-1 flex items-center gap-1">
                 {evolution.thisWeek > 0 ? (
                   <>
                     <TrendingUp className="w-3 h-3 text-emerald-500" />
@@ -214,7 +214,7 @@ export function CalendarStatsModal({ open, onClose }: CalendarStatsModalProps) {
             </div>
             <div className="text-3xl font-bold text-amber-600">{stats.conflicts}</div>
             {evolution && (
-              <div className="text-xs text-slate-500 mt-1">
+              <div className="text-xs text-slate-400 mt-1">
                 {stats.total > 0 ? Math.round((stats.conflicts / stats.total) * 100) : 0}% du total
               </div>
             )}
@@ -226,7 +226,7 @@ export function CalendarStatsModal({ open, onClose }: CalendarStatsModalProps) {
               <span className="text-xs text-slate-600 dark:text-slate-400">Aujourd'hui</span>
             </div>
             <div className="text-3xl font-bold text-purple-600">{stats.today}</div>
-            <div className="text-xs text-slate-500 mt-1">
+            <div className="text-xs text-slate-400 mt-1">
               Occupation: {occupationRate}%
             </div>
           </div>
@@ -270,21 +270,21 @@ export function CalendarStatsModal({ open, onClose }: CalendarStatsModalProps) {
           {/* Détails score */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
             <div className="text-center p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-              <div className="text-xs text-slate-500 mb-1">Conformité SLA</div>
+              <div className="text-xs text-slate-400 mb-1">Conformité SLA</div>
               <div className="text-lg font-bold">{slaCompliance}%</div>
             </div>
             <div className="text-center p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-              <div className="text-xs text-slate-500 mb-1">Taux Complétion</div>
+              <div className="text-xs text-slate-400 mb-1">Taux Complétion</div>
               <div className="text-lg font-bold">{completionRate}%</div>
             </div>
             <div className="text-center p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-              <div className="text-xs text-slate-500 mb-1">Taux Conflits</div>
+              <div className="text-xs text-slate-400 mb-1">Taux Conflits</div>
               <div className="text-lg font-bold">
                 {stats.total > 0 ? Math.round((stats.conflicts / stats.total) * 100) : 0}%
               </div>
             </div>
             <div className="text-center p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-              <div className="text-xs text-slate-500 mb-1">Occupation</div>
+              <div className="text-xs text-slate-400 mb-1">Occupation</div>
               <div className="text-lg font-bold">{occupationRate}%</div>
             </div>
           </div>
@@ -422,7 +422,7 @@ export function CalendarStatsModal({ open, onClose }: CalendarStatsModalProps) {
         )}
 
         {/* Footer avec timestamp */}
-        <div className="text-center text-xs text-slate-500 pt-4 border-t border-slate-200 dark:border-slate-700">
+        <div className="text-center text-xs text-slate-400 pt-4 border-t border-slate-200 dark:border-slate-700">
           Dernière mise à jour: {new Date().toLocaleString('fr-FR')}
         </div>
       </div>

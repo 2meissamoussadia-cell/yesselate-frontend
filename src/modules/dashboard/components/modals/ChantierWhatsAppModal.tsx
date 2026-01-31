@@ -83,7 +83,7 @@ export function ChantierWhatsAppModal({ chantier, onClose }: ChantierWhatsAppMod
               <h2 id="whatsapp-modal-title" className="text-base font-semibold text-slate-100 truncate">
                 Envoyer message WhatsApp
               </h2>
-              <p className="text-xs text-slate-500 truncate">
+              <p className="text-xs text-slate-400 truncate">
                 {chantier.id} • Client / Chef chantier
               </p>
             </div>
@@ -105,7 +105,7 @@ export function ChantierWhatsAppModal({ chantier, onClose }: ChantierWhatsAppMod
           </p>
 
           <div>
-            <p className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-2">Modèles</p>
+            <p className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">Modèles</p>
             <div className="space-y-2">
               {WHATSAPP_TEMPLATES.map((t) => (
                 <button
@@ -118,20 +118,20 @@ export function ChantierWhatsAppModal({ chantier, onClose }: ChantierWhatsAppMod
                   )}
                 >
                   <span className="font-medium">{t.label}</span>
-                  <p className="text-xs text-slate-500 mt-0.5 line-clamp-2">{t.text(chantier).slice(0, 80)}…</p>
+                  <p className="text-xs text-slate-400 mt-0.5 line-clamp-2">{t.text(chantier).slice(0, 80)}…</p>
                 </button>
               ))}
             </div>
           </div>
 
           <div>
-            <p className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-2">Message personnalisé</p>
+            <p className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">Message personnalisé</p>
             <textarea
               value={customMessage}
               onChange={(e) => setCustomMessage(e.target.value)}
               placeholder="Écrire un message client…"
               rows={3}
-              className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-sm text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 resize-none"
+              className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-sm text-slate-200 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 resize-none"
             />
             <Button
               size="sm"

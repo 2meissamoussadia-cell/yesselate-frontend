@@ -186,7 +186,7 @@ export function EmployesFiltersPanel({
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="h-7 w-7 p-0 text-slate-500 hover:text-slate-300"
+            className="h-7 w-7 p-0 text-slate-400 hover:text-slate-300"
           >
             <X className="h-4 w-4" />
           </Button>
@@ -201,7 +201,7 @@ export function EmployesFiltersPanel({
             return (
               <div key={section.id} className="space-y-3">
                 <div className="flex items-center gap-2">
-                  <Icon className="h-4 w-4 text-slate-500" />
+                  <Icon className="h-4 w-4 text-slate-400" />
                   <h4 className="text-sm font-medium text-slate-300">{section.label}</h4>
                   {selected.length > 0 && (
                     <Badge variant="outline" className="bg-blue-500/20 text-blue-400 border-blue-500/30 text-xs">

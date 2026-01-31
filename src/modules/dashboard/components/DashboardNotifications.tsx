@@ -143,7 +143,7 @@ export function DashboardNotifications({
                     <p className="text-xs text-slate-400">
                       {notification.message}
                     </p>
-                    <p className="text-xs text-slate-500 mt-2">
+                    <p className="text-xs text-slate-400 mt-2">
                       {formatTimeAgo(notification.timestamp)}
                     </p>
                     {notification.action && (
@@ -177,7 +177,7 @@ export function DashboardNotifications({
       {/* Message si aucune notification */}
       {notifications.length === 0 && (
         <div className="bg-slate-900/95 backdrop-blur-xl rounded-lg border border-slate-700/50 p-4 text-center">
-          <Bell className="w-6 h-6 text-slate-500 mx-auto mb-2 opacity-50" />
+          <Bell className="w-6 h-6 text-slate-400 mx-auto mb-2 opacity-50" />
           <p className="text-sm text-slate-400">Aucune notification</p>
         </div>
       )}

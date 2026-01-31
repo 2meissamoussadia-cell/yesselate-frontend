@@ -45,7 +45,7 @@ export function SubstitutionLiveCounters({ onOpenQueue }: Props) {
           <button key={counter.key} onClick={counter.action} className={cn("p-4 rounded-xl border text-left transition-all hover:shadow-md", `bg-${counter.color}-500/10 border-${counter.color}-500/30`)}>
             <div className="flex items-center gap-2 mb-2">
               <Icon className={cn("w-4 h-4", counter.color === 'indigo' ? 'text-indigo-500' : counter.color === 'red' ? 'text-red-500' : counter.color === 'blue' ? 'text-blue-500' : counter.color === 'amber' ? 'text-amber-500' : counter.color === 'emerald' ? 'text-emerald-500' : counter.color === 'purple' ? 'text-purple-500' : counter.color === 'cyan' ? 'text-cyan-500' : 'text-slate-400')} />
-              <span className="text-xs text-slate-500 font-medium truncate">{counter.label}</span>
+              <span className="text-xs text-slate-400 font-medium truncate">{counter.label}</span>
             </div>
             <p className="text-xl font-bold text-slate-900 dark:text-slate-100">{counter.value}</p>
           </button>

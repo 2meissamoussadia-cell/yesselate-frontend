@@ -8,7 +8,8 @@
       "gouvernance": { "label": "Gouvernance & décisions", "leaf": { "default": { "label": "Gouvernance", "component": "SummaryDashboardPage" } } },
       "calendrier": { "label": "Calendrier & échéances", "leaf": { "default": { "label": "Calendrier", "component": "SummaryDashboardPage" } } },
       "analytics": { "label": "Analytics & rapports", "leaf": { "default": { "label": "Analytics", "component": "SummaryDashboardPage" } } },
-      "alertes": { "label": "Centre d'alertes", "leaf": { "default": { "label": "Alertes", "component": "AlertsActivesPage" } } }
+      "alertes": { "label": "Centre d'alertes", "leaf": { "default": { "label": "Alertes", "component": "AlertsActivesPage" } } },
+      "hse": { "label": "HSE & Conformité", "leaf": { "default": { "label": "HSE", "component": "HSEConformiteView" } } }
     }
   },
   "chantiers": {

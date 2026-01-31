@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, createContext, useContext, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/utils/logger';
 import { 
   CheckCircle2, XCircle, AlertTriangle, Info, X, 
   Bell, Clock, FileText, Users, Zap 
@@ -187,7 +188,7 @@ function RHNotificationToast({
         <div className="flex-1 min-w-0">
           <div className="font-semibold text-sm">{notification.title}</div>
           {notification.message && (
-            <div className="text-sm text-slate-500 mt-0.5">{notification.message}</div>
+            <div className="text-sm text-slate-400 mt-0.5">{notification.message}</div>
           )}
           {notification.action && (
             <button
@@ -287,7 +288,7 @@ export function useRHToast() {
         message: `${type} - ${demandId}`,
         action: {
           label: 'Traiter maintenant',
-          onClick: () => console.log('Open demand', demandId),
+          onClick: () => logger.debug('Open demand', { component: 'RHNotifications', demandId }),
         },
       }),
     
@@ -378,7 +379,7 @@ export function RHAlertsPanel({ onDismiss }: { onDismiss?: (id: string) => void 
   const priorityBadge = {
     high: 'bg-red-500/20 text-red-500',
     medium: 'bg-amber-500/20 text-amber-500',
-    low: 'bg-slate-500/20 text-slate-500',
+    low: 'bg-slate-500/20 text-slate-400',
   };
 
   return (
@@ -417,7 +418,7 @@ export function RHAlertsPanel({ onDismiss }: { onDismiss?: (id: string) => void 
 
       <div className="max-h-[300px] overflow-y-auto">
         {filteredAlerts.length === 0 ? (
-          <div className="p-8 text-center text-slate-500">
+          <div className="p-8 text-center text-slate-400">
             <Bell className="w-12 h-12 mx-auto mb-3 opacity-30" />
             <p>Aucune alerte</p>
           </div>
@@ -437,7 +438,7 @@ export function RHAlertsPanel({ onDismiss }: { onDismiss?: (id: string) => void 
                     "p-2 rounded-lg",
                     alert.priority === 'high' && "bg-red-500/10 text-red-500",
                     alert.priority === 'medium' && "bg-amber-500/10 text-amber-500",
-                    alert.priority === 'low' && "bg-slate-500/10 text-slate-500"
+                    alert.priority === 'low' && "bg-slate-500/10 text-slate-400"
                   )}>
                     {typeIcons[alert.type]}
                   </div>
@@ -452,7 +453,7 @@ export function RHAlertsPanel({ onDismiss }: { onDismiss?: (id: string) => void 
                         {alert.priority === 'high' ? 'Urgent' : alert.priority === 'medium' ? 'Moyen' : 'Faible'}
                       </span>
                     </div>
-                    <div className="text-sm text-slate-500 mt-0.5">{alert.message}</div>
+                    <div className="text-sm text-slate-400 mt-0.5">{alert.message}</div>
                     <div className="text-xs text-slate-400 mt-1">{alert.createdAt}</div>
                   </div>
 
@@ -479,7 +480,7 @@ export function RHAlertsPanel({ onDismiss }: { onDismiss?: (id: string) => void 
         <div className="p-3 border-t border-slate-200/70 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30">
           <button
             onClick={() => setAlerts([])}
-            className="w-full py-2 rounded-lg text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
+            className="w-full py-2 rounded-lg text-sm text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
           >
             Tout marquer comme lu
           </button>

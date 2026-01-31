@@ -22,7 +22,7 @@ export default function RessourcesIndispoPage() {
       <GouvernanceHeader
         title="Ressources indisponibles"
         subtitle="Ressources critiques indisponibles impactant les projets"
-        onExport={() => console.log('Export ressources indispo')}
+        onExport={() => { /* TODO: export ressources indispo */ }}
       />
 
       {isLoading ? (
@@ -51,7 +51,7 @@ export default function RessourcesIndispoPage() {
                     Impact : {ressource.impact}
                   </div>
                 </div>
-                <button className="rounded-xl bg-yellow-500/20 px-3 py-1.5 text-xs font-medium text-yellow-200 ring-1 ring-yellow-500/30 hover:bg-yellow-500/30">
+                <button type="button" aria-label="Voir le détail" className="rounded-xl bg-yellow-500/20 px-3 py-2 min-h-[44px] text-xs font-medium text-yellow-200 ring-1 ring-yellow-500/30 hover:bg-yellow-500/30 focus-visible:outline focus-visible:ring-2 focus-visible:ring-yellow-500">
                   Traiter
                 </button>
               </div>

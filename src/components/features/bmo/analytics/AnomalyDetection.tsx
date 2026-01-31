@@ -158,7 +158,7 @@ export function AnomalyDetection({ performanceData, enrichedData }: AnomalyDetec
           <div className="text-center py-8">
             <Zap className="w-12 h-12 text-emerald-400 mx-auto mb-2" />
             <p className="text-sm text-slate-400">Aucune anomalie détectée</p>
-            <p className="text-xs text-slate-500 mt-1">Les données suivent les tendances attendues</p>
+            <p className="text-xs text-slate-400 mt-1">Les données suivent les tendances attendues</p>
           </div>
         ) : (
           <div className="space-y-3">

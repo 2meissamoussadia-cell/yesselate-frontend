@@ -22,7 +22,7 @@ export default function ReunionsDGPage() {
       <GouvernanceHeader
         title="Réunions DG"
         subtitle="Calendrier des réunions de direction générale"
-        onExport={() => console.log('Export réunions DG')}
+        onExport={() => { /* TODO: export réunions DG */ }}
       />
 
       {isLoading ? (
@@ -57,7 +57,7 @@ export default function ReunionsDGPage() {
                     )}
                   </div>
                 </div>
-                <button className="rounded-xl bg-blue-500/15 px-3 py-1.5 text-xs font-medium text-blue-200 ring-1 ring-blue-500/30 hover:bg-blue-500/25">
+                <button type="button" aria-label="Voir la réunion" className="rounded-xl bg-blue-500/15 px-3 py-2 min-h-[44px] text-xs font-medium text-blue-200 ring-1 ring-blue-500/30 hover:bg-blue-500/25 focus-visible:outline focus-visible:ring-2 focus-visible:ring-blue-500">
                   Voir détails
                 </button>
               </div>

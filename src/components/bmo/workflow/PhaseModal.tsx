@@ -144,7 +144,7 @@ export function PhaseModal({ open, onClose, project }: PhaseModalProps) {
           </div>
         </Tabs>
 
-        <p className="text-[10px] text-slate-500 mt-2">
+        <p className="text-[10px] text-slate-400 mt-2">
           Phases 6–10 : préparation chantier, gros œuvre, second œuvre, réceptions, exploitation.
         </p>
       </DialogContent>

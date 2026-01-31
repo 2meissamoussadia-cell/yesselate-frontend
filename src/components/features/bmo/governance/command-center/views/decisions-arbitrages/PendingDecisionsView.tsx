@@ -102,7 +102,7 @@ export function PendingDecisionsView() {
               </div>
             </div>
             <div className="flex items-center justify-between pt-3 border-t border-slate-700/30">
-              <div className="flex items-center gap-4 text-xs text-slate-500">
+              <div className="flex items-center gap-4 text-xs text-slate-400">
                 <div className="flex items-center gap-1">
                   <Calendar className="h-3 w-3" />
                   <span>Échéance: {decision.deadline}</span>

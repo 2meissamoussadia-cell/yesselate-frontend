@@ -165,7 +165,7 @@ export const CalendrierSubNavigation = React.memo(function CalendrierSubNavigati
     <div className="bg-slate-900/60 border-b border-slate-700/50">
       {/* Breadcrumb */}
       <div className="px-4 py-2 flex items-center gap-2 text-sm border-b border-slate-800/50">
-        <span className="text-slate-500">Calendrier</span>
+        <span className="text-slate-400">Calendrier</span>
         <ChevronRight className="h-3 w-3 text-slate-600" />
         <span className="text-slate-300 font-medium">{domainLabel}</span>
         {section && activeSection && (
@@ -177,7 +177,7 @@ export const CalendrierSubNavigation = React.memo(function CalendrierSubNavigati
         {view && activeView && (
           <>
             <ChevronRight className="h-3 w-3 text-slate-600" />
-            <span className="text-slate-500 text-xs">{activeView.label}</span>
+            <span className="text-slate-400 text-xs">{activeView.label}</span>
           </>
         )}
       </div>
@@ -225,7 +225,7 @@ export const CalendrierSubNavigation = React.memo(function CalendrierSubNavigati
         {/* Views */}
         {activeSection?.views && activeSection.views.length > 0 && onViewChange && (
           <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide">
-            <span className="text-xs text-slate-500 mr-2 whitespace-nowrap">Vue:</span>
+            <span className="text-xs text-slate-400 mr-2 whitespace-nowrap">Vue:</span>
             {activeSection.views.map((viewOption) => {
               const isActive = view === viewOption.id;
 
@@ -237,7 +237,7 @@ export const CalendrierSubNavigation = React.memo(function CalendrierSubNavigati
                     'flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium transition-all whitespace-nowrap',
                     isActive
                       ? 'bg-slate-700/60 text-slate-200 border border-slate-600/50'
-                      : 'text-slate-500 hover:text-slate-400 hover:bg-slate-800/40 border border-transparent'
+                      : 'text-slate-400 hover:text-slate-400 hover:bg-slate-800/40 border border-transparent'
                   )}
                 >
                   <span>{viewOption.label}</span>
@@ -250,7 +250,7 @@ export const CalendrierSubNavigation = React.memo(function CalendrierSubNavigati
         {/* Period Selector */}
         {onPeriodChange && (
           <div className="flex items-center gap-1 ml-auto">
-            <span className="text-xs text-slate-500 mr-2 whitespace-nowrap">Période:</span>
+            <span className="text-xs text-slate-400 mr-2 whitespace-nowrap">Période:</span>
             {(['week', 'month', 'quarter'] as const).map((periodOption) => {
               const isActive = period === periodOption;
 
@@ -262,7 +262,7 @@ export const CalendrierSubNavigation = React.memo(function CalendrierSubNavigati
                     'flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium transition-all whitespace-nowrap',
                     isActive
                       ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
-                      : 'text-slate-500 hover:text-slate-400 hover:bg-slate-800/40 border border-transparent'
+                      : 'text-slate-400 hover:text-slate-400 hover:bg-slate-800/40 border border-transparent'
                   )}
                 >
                   <span>

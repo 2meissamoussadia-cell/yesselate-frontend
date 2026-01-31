@@ -291,7 +291,7 @@ export function SubstitutionDetailTab({ substitutionId }: SubstitutionDetailTabP
                       <div className="flex-1 pb-4">
                         <div className="flex items-start justify-between mb-1">
                           <div className="font-medium text-white">{event.description ?? '—'}</div>
-                          <div className="text-xs text-slate-500">
+                          <div className="text-xs text-slate-400">
                             {new Date(event.createdAt).toLocaleString('fr-FR')}
                           </div>
                         </div>
@@ -299,7 +299,7 @@ export function SubstitutionDetailTab({ substitutionId }: SubstitutionDetailTabP
                           <p className="text-sm text-slate-400">{event.description}</p>
                         )}
                         {event.user && (
-                          <p className="text-xs text-slate-500 mt-1">Par {event.user.name}</p>
+                          <p className="text-xs text-slate-400 mt-1">Par {event.user.name}</p>
                         )}
                       </div>
                     </div>
@@ -370,7 +370,7 @@ export function SubstitutionDetailTab({ substitutionId }: SubstitutionDetailTabP
                     <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
                       <div className="flex items-center justify-between mb-2">
                         <span className="font-medium text-white">{comment.user.name}</span>
-                        <span className="text-xs text-slate-500">
+                        <span className="text-xs text-slate-400">
                           {new Date(comment.createdAt).toLocaleString('fr-FR')}
                         </span>
                       </div>

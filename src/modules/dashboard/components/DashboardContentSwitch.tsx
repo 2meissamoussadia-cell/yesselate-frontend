@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, memo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -52,6 +53,8 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
   const [error, setError] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  /** Message annoncé aux lecteurs d'écran à la fin du chargement (WCAG aria-live). */
+  const [liveStatusMessage, setLiveStatusMessage] = useState<string | null>(null);
   const maxRetries = 3;
 
   useEffect(() => {
@@ -61,6 +64,7 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
     const run = async (retryAttempt = 0) => {
       setError(null);
       setIsTransitioning(true);
+      setLiveStatusMessage(null);
 
       if (!view) {
         setData(null);
@@ -72,6 +76,7 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
       if (!view.loader) {
         setData(null);
         setIsTransitioning(false);
+        setLiveStatusMessage(view.title ?? 'Vue chargée');
         return;
       }
 
@@ -87,6 +92,7 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
       if (isFresh) {
         setData(cached.data);
         setIsTransitioning(false);
+        setLiveStatusMessage(view.title ?? 'Vue chargée');
         return;
       }
 
@@ -118,6 +124,8 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
         setCacheFn(key, { data: resUnknown.data, fetchedAt: resUnknown.fetchedAt, ttl });
         setRetryCount(0);
         setIsTransitioning(false);
+        setLoading(false);
+        setLiveStatusMessage(view.title ?? 'Vue chargée');
       } catch (e: unknown) {
         if (cancelled) return;
         if (timeoutId) {
@@ -143,6 +151,10 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
         setError(error.message);
         setRetryCount(0);
         setIsTransitioning(false);
+        if (retryAttempt >= maxRetries) {
+          setLoading(false);
+          toast.error('Erreur de chargement', { description: error.message });
+        }
       } finally {
         if (!cancelled && retryAttempt >= maxRetries) {
           setLoading(false);
@@ -183,10 +195,18 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
     );
   }
 
+  const showSkeleton = loading || (isTransitioning && !!view?.loader);
+
   return (
-    <div className="relative min-h-[300px] min-w-0 max-w-full">
-      {/* Loading overlay : squelettes animés + progress bar (Procore-style) */}
-      {loading && (
+    <div className="relative min-h-[300px] min-w-0 max-w-full" aria-busy={showSkeleton} aria-live="polite">
+      {/* Annonce lecteurs d'écran à la fin du chargement (WCAG) */}
+      {liveStatusMessage && (
+        <div className="sr-only" role="status" aria-live="polite">
+          {liveStatusMessage}
+        </div>
+      )}
+      {/* Loading overlay : squelettes animés + progress bar (Procore-style) — affiché dès la transition si la vue a un loader */}
+      {showSkeleton && (
         <div className="absolute inset-0 z-10 animate-fadeIn overflow-auto">
           <div className="min-h-full bg-slate-950/80 backdrop-blur-sm p-4 sm:p-6">
             <DashboardLoadingFallback
@@ -202,13 +222,17 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
 
       {/* Error display amélioré avec retry */}
       {error && !loading && (
-        <div className={cn(
-          "p-6 m-4 rounded-xl border animate-fadeIn",
-          "bg-red-500/10 border-red-500/30 backdrop-blur-sm"
-        )}>
+        <div
+          className={cn(
+            "p-6 m-4 rounded-xl border animate-fadeIn",
+            "bg-red-500/10 border-red-500/30 backdrop-blur-sm"
+          )}
+          role="alert"
+          aria-live="assertive"
+        >
           <div className="flex items-start gap-4">
             <div className="flex-shrink-0">
-              <AlertCircle className="h-6 w-6 text-red-400" />
+              <AlertCircle className="h-6 w-6 text-red-400" aria-hidden />
             </div>
             <div className="flex-1 min-w-0">
               <div className="font-medium text-red-300 mb-1">Erreur de chargement</div>
@@ -220,7 +244,8 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
                       onClick={handleRetry}
                       variant="outline"
                       size="sm"
-                      className="bg-red-500/10 border-red-500/30 text-red-300 hover:bg-red-500/20 hover:text-red-200"
+                      className="bg-red-500/10 border-red-500/30 text-red-300 hover:bg-red-500/20 hover:text-red-200 focus-visible:ring-sky-500/60"
+                      aria-label="Réessayer le chargement de la vue"
                     >
                       <RefreshCw className="h-4 w-4 mr-2" />
                       Réessayer

@@ -63,6 +63,7 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
       { id: 'gouvernance', label: 'Gouvernance & décisions', icon: Building2, badge: 7, badgeType: 'warning' },
       { id: 'calendrier', label: 'Calendrier & échéances', icon: Calendar },
       { id: 'analytics', label: 'Analytics & rapports', icon: LineChart },
+      { id: 'hse', label: 'HSE & Conformité', icon: ShieldCheck },
     ],
   },
   chantiers: {

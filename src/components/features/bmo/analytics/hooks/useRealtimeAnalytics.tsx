@@ -12,6 +12,7 @@ import {
   RealtimeEventType,
 } from '@/lib/services/analyticsRealtime';
 import { useAnalyticsToast } from '../workspace/AnalyticsToast';
+import { logger } from '@/lib/utils/logger';
 
 interface UseRealtimeAnalyticsOptions {
   /** Active la connexion automatique au montage */
@@ -68,9 +69,7 @@ export function useRealtimeAnalytics(options: UseRealtimeAnalyticsOptions = {}) 
 
     // Abonnement aux événements
     const handleEvent = (event: RealtimeEvent) => {
-      if (process.env.NODE_ENV === 'development') {
-        console.log('📡 Realtime event received:', event);
-      }
+      logger.debug('Realtime event received', { component: 'useRealtimeAnalytics', eventType: event.type, event });
 
       // Afficher les toasts si activé
       if (showToasts) {

@@ -102,7 +102,7 @@ function TimelineView({ delegation }: { delegation: any }) {
                       </span>
                       
                       {event.targetDoc?.ref && (
-                        <span className="text-xs text-slate-500">
+                        <span className="text-xs text-slate-400">
                           {event.targetDoc.ref}
                         </span>
                       )}
@@ -132,7 +132,7 @@ function TimelineView({ delegation }: { delegation: any }) {
           ))}
           
           {events.length === 0 && (
-            <div className="text-center py-8 text-slate-500">
+            <div className="text-center py-8 text-slate-400">
               Aucun événement enregistré.
             </div>
           )}
@@ -172,10 +172,10 @@ function HashChainView({ delegationId, delegation }: { delegationId: string; del
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold flex items-center gap-2">
-            <Hash className="w-5 h-5 text-slate-500" />
+            <Hash className="w-5 h-5 text-slate-400" />
             Chaîne de hash
           </h2>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-400">
             Vérification cryptographique de l&apos;intégrité du journal.
           </p>
         </div>
@@ -210,7 +210,7 @@ function HashChainView({ delegationId, delegation }: { delegationId: string; del
               {verification.message}
             </span>
           </div>
-          <div className="mt-2 text-xs text-slate-500">
+          <div className="mt-2 text-xs text-slate-400">
             Algorithme : {verification.algorithm} • {verification.eventsChecked} événements vérifiés
           </div>
         </div>
@@ -220,13 +220,13 @@ function HashChainView({ delegationId, delegation }: { delegationId: string; del
       <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <div className="text-xs text-slate-500 mb-1">Hash décision (racine)</div>
+            <div className="text-xs text-slate-400 mb-1">Hash décision (racine)</div>
             <div className="font-mono text-xs bg-white dark:bg-slate-700 px-2 py-1 rounded break-all">
               {delegation?.decisionHash || '—'}
             </div>
           </div>
           <div>
-            <div className="text-xs text-slate-500 mb-1">Hash tête de chaîne (actuel)</div>
+            <div className="text-xs text-slate-400 mb-1">Hash tête de chaîne (actuel)</div>
             <div className="font-mono text-xs bg-white dark:bg-slate-700 px-2 py-1 rounded break-all">
               {delegation?.headHash || '—'}
             </div>
@@ -249,11 +249,11 @@ function HashChainView({ delegationId, delegation }: { delegationId: string; del
             </div>
             <div className="mt-2 grid grid-cols-2 gap-2 text-xs">
               <div>
-                <span className="text-slate-500">Prev:</span>
+                <span className="text-slate-400">Prev:</span>
                 <span className="font-mono ml-1">{shortHash(event.hashes?.previousFull || event.previousHash)}</span>
               </div>
               <div>
-                <span className="text-slate-500">Hash:</span>
+                <span className="text-slate-400">Hash:</span>
                 <span className="font-mono ml-1">{shortHash(event.hashes?.currentFull || event.eventHash)}</span>
               </div>
             </div>
@@ -275,7 +275,7 @@ function ExportsView({ delegationId }: { delegationId: string }) {
         <Download className="w-5 h-5 text-blue-500" />
         Exports
       </h2>
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-400">
         Télécharger le journal d&apos;audit dans différents formats.
       </p>
       
@@ -317,7 +317,7 @@ function ExportCard({ title, description, format, delegationId }: {
   return (
     <div className="p-4 rounded-xl border border-slate-200/70 dark:border-slate-700 hover:border-blue-300 transition-colors">
       <h4 className="font-medium">{title}</h4>
-      <p className="text-sm text-slate-500 mb-3">{description}</p>
+      <p className="text-sm text-slate-400 mb-3">{description}</p>
       <FluentButton size="sm" variant="secondary" onClick={handleExport}>
         <Download className="w-3.5 h-3.5 mr-1" />
         Télécharger
@@ -343,7 +343,7 @@ function AnomaliesView({ delegationId, delegation }: { delegationId: string; del
         <AlertTriangle className="w-5 h-5 text-amber-500" />
         Anomalies détectées
       </h2>
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-400">
         Comportements inhabituels ou violations de règles.
       </p>
       
@@ -377,7 +377,7 @@ function AnomaliesView({ delegationId, delegation }: { delegationId: string; del
         ))}
         
         {anomalies.length === 0 && (
-          <div className="text-center py-8 text-slate-500 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl">
+          <div className="text-center py-8 text-slate-400 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl">
             <CheckCircle2 className="w-8 h-8 mx-auto mb-2 text-emerald-400" />
             Aucune anomalie détectée
           </div>

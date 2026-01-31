@@ -72,7 +72,7 @@ export function LogsDetailPanel() {
               variant="ghost"
               size="sm"
               onClick={closeDetailPanel}
-              className="h-7 w-7 p-0 text-slate-500 hover:text-slate-300"
+              className="h-7 w-7 p-0 text-slate-400 hover:text-slate-300"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -140,7 +140,7 @@ function LogDetailContent({ data }: { data: Record<string, unknown> }) {
         <div className="flex items-baseline gap-2">
           <span className="text-2xl font-bold text-slate-100">{String(data.value)}</span>
           {data.label ? (
-            <span className="text-sm text-slate-500">{String(data.label)}</span>
+            <span className="text-sm text-slate-400">{String(data.label)}</span>
           ) : null}
         </div>
         {data.trendValue ? (
@@ -184,7 +184,7 @@ function LogDetailContent({ data }: { data: Record<string, unknown> }) {
       {data.module && (
         <div className="space-y-2 text-sm">
           <div className="flex justify-between items-center">
-            <span className="text-slate-500 flex items-center gap-2">
+            <span className="text-slate-400 flex items-center gap-2">
               <FileText className="h-3 w-3" />
               Module
             </span>
@@ -197,7 +197,7 @@ function LogDetailContent({ data }: { data: Record<string, unknown> }) {
       {data.timestamp && (
         <div className="space-y-2 text-sm">
           <div className="flex justify-between items-center">
-            <span className="text-slate-500 flex items-center gap-2">
+            <span className="text-slate-400 flex items-center gap-2">
               <Clock className="h-3 w-3" />
               Timestamp
             </span>
@@ -210,7 +210,7 @@ function LogDetailContent({ data }: { data: Record<string, unknown> }) {
       {data.id && (
         <div className="space-y-2 text-sm">
           <div className="flex justify-between items-center">
-            <span className="text-slate-500 flex items-center gap-2">
+            <span className="text-slate-400 flex items-center gap-2">
               <Hash className="h-3 w-3" />
               ID
             </span>
@@ -232,11 +232,11 @@ function LogDetailContent({ data }: { data: Record<string, unknown> }) {
       {/* Metadata */}
       {data.metadata && typeof data.metadata === 'object' && (
         <div className="space-y-2">
-          <p className="text-xs font-medium text-slate-500 uppercase">Métadonnées</p>
+          <p className="text-xs font-medium text-slate-400 uppercase">Métadonnées</p>
           <div className="space-y-1.5 text-sm">
             {Object.entries(data.metadata as Record<string, unknown>).map(([key, value]) => (
               <div key={key} className="flex justify-between">
-                <span className="text-slate-500">{key}</span>
+                <span className="text-slate-400">{key}</span>
                 <span className="text-slate-300 font-mono text-xs">{String(value)}</span>
               </div>
             ))}

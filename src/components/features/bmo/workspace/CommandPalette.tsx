@@ -236,7 +236,7 @@ export function CommandPalette({ open, onClose, onOpenStats, onOpenExport }: Pro
           {/* Results */}
           <div className="max-h-[400px] overflow-auto p-2">
             {filteredCommands.length === 0 && (
-              <div className="px-4 py-8 text-center text-slate-500">
+              <div className="px-4 py-8 text-center text-slate-400">
                 <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
                 <p>Aucun résultat pour &quot;{query}&quot;</p>
               </div>
@@ -244,7 +244,7 @@ export function CommandPalette({ open, onClose, onOpenStats, onOpenExport }: Pro
 
             {Object.entries(groupedCommands).map(([category, items]) => (
               <div key={category} className="mb-2">
-                <div className="px-3 py-1.5 text-xs font-semibold text-slate-500 uppercase">
+                <div className="px-3 py-1.5 text-xs font-semibold text-slate-400 uppercase">
                   {categoryLabels[category] ?? category}
                 </div>
                 {items.map((cmd) => {
@@ -267,14 +267,14 @@ export function CommandPalette({ open, onClose, onOpenStats, onOpenExport }: Pro
                     >
                       <div className={cn(
                         "w-8 h-8 rounded-lg flex items-center justify-center flex-none",
-                        isSelected ? "bg-blue-500/20 text-blue-500" : "bg-slate-100 dark:bg-slate-800 text-slate-500"
+                        isSelected ? "bg-blue-500/20 text-blue-500" : "bg-slate-100 dark:bg-slate-800 text-slate-400"
                       )}>
                         <Icon className="w-4 h-4" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="font-medium truncate">{cmd.label}</div>
                         {cmd.description && (
-                          <div className="text-sm text-slate-500 truncate">{cmd.description}</div>
+                          <div className="text-sm text-slate-400 truncate">{cmd.description}</div>
                         )}
                       </div>
                       {cmd.shortcut && (

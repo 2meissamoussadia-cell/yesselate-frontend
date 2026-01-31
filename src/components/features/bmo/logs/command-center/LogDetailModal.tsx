@@ -127,7 +127,7 @@ export function LogDetailModal({ open, onClose, logId }: LogDetailModalProps) {
                               <SourceIcon className="h-3 w-3 mr-1" />
                               {logsApiService.getSourceLabel(log.source)}
                             </Badge>
-                            <span className="text-xs text-slate-500">{log.module}</span>
+                            <span className="text-xs text-slate-400">{log.module}</span>
                           </div>
                         </div>
                       </>
@@ -293,7 +293,7 @@ function MetadataTab({ log }: { log: LogEntry }) {
           ))}
         </div>
       ) : (
-        <p className="text-slate-500 text-center py-8">Aucune métadonnée disponible</p>
+        <p className="text-slate-400 text-center py-8">Aucune métadonnée disponible</p>
       )}
     </div>
   );
@@ -330,7 +330,7 @@ function ContextTab({ log }: { log: LogEntry }) {
     return (
       <div className="space-y-4">
         <h3 className="text-sm font-semibold text-slate-400 uppercase mb-3">Contexte</h3>
-        <p className="text-slate-500 text-center py-8">Aucun contexte disponible</p>
+        <p className="text-slate-400 text-center py-8">Aucun contexte disponible</p>
       </div>
     );
   }
@@ -342,7 +342,7 @@ function ContextTab({ log }: { log: LogEntry }) {
       {/* Logs précédents */}
       {context.previous.length > 0 && (
         <div>
-          <h4 className="text-xs font-medium text-slate-500 mb-2">Logs précédents ({context.previous.length})</h4>
+          <h4 className="text-xs font-medium text-slate-400 mb-2">Logs précédents ({context.previous.length})</h4>
           <div className="space-y-2">
             {context.previous.map((prevLog) => (
               <LogContextItem key={prevLog.id} log={prevLog} />
@@ -353,7 +353,7 @@ function ContextTab({ log }: { log: LogEntry }) {
 
       {/* Log actuel */}
       <div>
-        <h4 className="text-xs font-medium text-slate-500 mb-2">Log actuel</h4>
+        <h4 className="text-xs font-medium text-slate-400 mb-2">Log actuel</h4>
         <div className="p-3 rounded-lg bg-blue-500/10 border border-blue-500/30">
           <LogContextItem log={context.current} isCurrent />
         </div>
@@ -362,7 +362,7 @@ function ContextTab({ log }: { log: LogEntry }) {
       {/* Logs suivants */}
       {context.next.length > 0 && (
         <div>
-          <h4 className="text-xs font-medium text-slate-500 mb-2">Logs suivants ({context.next.length})</h4>
+          <h4 className="text-xs font-medium text-slate-400 mb-2">Logs suivants ({context.next.length})</h4>
           <div className="space-y-2">
             {context.next.map((nextLog) => (
               <LogContextItem key={nextLog.id} log={nextLog} />
@@ -372,7 +372,7 @@ function ContextTab({ log }: { log: LogEntry }) {
       )}
 
       {context.previous.length === 0 && context.next.length === 0 && (
-        <p className="text-slate-500 text-center py-8">Aucun log lié trouvé</p>
+        <p className="text-slate-400 text-center py-8">Aucun log lié trouvé</p>
       )}
     </div>
   );
@@ -399,7 +399,7 @@ function LogContextItem({ log, isCurrent = false }: { log: LogEntry; isCurrent?:
             <span className={cn('text-xs font-medium', levelColors[log.level as keyof typeof levelColors] || levelColors.info)}>
               {logsApiService.getLevelLabel(log.level)}
             </span>
-            <span className="text-xs text-slate-500">{log.module}</span>
+            <span className="text-xs text-slate-400">{log.module}</span>
             <span className="text-xs text-slate-600">
               {new Date(log.timestamp).toLocaleTimeString('fr-FR')}
             </span>
@@ -458,7 +458,7 @@ function HistoryTab({ log }: { log: LogEntry }) {
     return (
       <div className="space-y-4">
         <h3 className="text-sm font-semibold text-slate-400 uppercase mb-3">Historique</h3>
-        <p className="text-slate-500 text-center py-8">Aucun historique disponible</p>
+        <p className="text-slate-400 text-center py-8">Aucun historique disponible</p>
       </div>
     );
   }
@@ -480,7 +480,7 @@ function HistoryTab({ log }: { log: LogEntry }) {
                     {actionLabels[entry.action] || entry.action}
                   </span>
                   {entry.userName && (
-                    <span className="text-xs text-slate-500">par {entry.userName}</span>
+                    <span className="text-xs text-slate-400">par {entry.userName}</span>
                   )}
                 </div>
                 {entry.details && (
@@ -504,7 +504,7 @@ function HistoryTab({ log }: { log: LogEntry }) {
 function InfoCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: React.ReactNode }) {
   return (
     <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
-      <div className="flex items-center gap-2 mb-1 text-slate-500 text-xs">
+      <div className="flex items-center gap-2 mb-1 text-slate-400 text-xs">
         {icon}
         <span>{label}</span>
       </div>

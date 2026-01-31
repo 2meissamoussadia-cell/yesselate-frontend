@@ -100,7 +100,7 @@ export function CockpitPlanARPanel() {
           </div>
         </div>
 
-        <p className="px-4 py-2 text-[10px] text-slate-500 border-t border-slate-800/60">
+        <p className="px-4 py-2 text-[10px] text-slate-400 border-t border-slate-800/60">
           Glissez la poignée pour comparer Plan (gauche) et Photo réelle (droite). Données mock — Phase 6.
         </p>
       </div>

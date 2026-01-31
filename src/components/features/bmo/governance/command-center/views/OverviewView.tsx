@@ -73,7 +73,7 @@ export function OverviewView() {
             <Button
               variant="ghost"
               size="sm"
-              className="text-xs text-slate-500 hover:text-slate-300"
+              className="text-xs text-slate-400 hover:text-slate-300"
               onClick={() => navigate('decisions-arbitrages', 'pending-decisions')}
             >
               Voir tout
@@ -95,9 +95,9 @@ export function OverviewView() {
                   <div className="min-w-0">
                     <p className="text-sm text-slate-300 truncate">{decision.title}</p>
                     <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-xs text-slate-500">{decision.ref}</span>
+                      <span className="text-xs text-slate-400">{decision.ref}</span>
                       <span className="text-xs text-slate-600">•</span>
-                      <span className="text-xs text-slate-500">{decision.type}</span>
+                      <span className="text-xs text-slate-400">{decision.type}</span>
                     </div>
                   </div>
                 </div>
@@ -138,7 +138,7 @@ export function OverviewView() {
             <Button
               variant="ghost"
               size="sm"
-              className="text-xs text-slate-500 hover:text-slate-300"
+              className="text-xs text-slate-400 hover:text-slate-300"
               onClick={() => navigate('escalations-risks', 'active-escalations')}
             >
               Voir tout
@@ -159,9 +159,9 @@ export function OverviewView() {
                   <div className="min-w-0">
                     <p className="text-sm text-slate-300 truncate">{esc.title}</p>
                     <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-xs text-slate-500">{esc.ref}</span>
+                      <span className="text-xs text-slate-400">{esc.ref}</span>
                       <span className="text-xs text-slate-600">•</span>
-                      <span className="text-xs text-slate-500">Origine: {esc.origin}</span>
+                      <span className="text-xs text-slate-400">Origine: {esc.origin}</span>
                     </div>
                   </div>
                 </div>
@@ -174,7 +174,7 @@ export function OverviewView() {
               </div>
             ))}
             {activeEscalations.length === 0 && (
-              <div className="px-4 py-6 text-center text-sm text-slate-500">
+              <div className="px-4 py-6 text-center text-sm text-slate-400">
                 Aucune escalade active
               </div>
             )}
@@ -192,7 +192,7 @@ export function OverviewView() {
           <Button
             variant="ghost"
             size="sm"
-            className="text-xs text-slate-500 hover:text-slate-300"
+            className="text-xs text-slate-400 hover:text-slate-300"
             onClick={() => navigate('instances-coordination', 'sensitive-projects')}
           >
             Portefeuille complet
@@ -203,12 +203,12 @@ export function OverviewView() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-slate-800/50">
-                <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">Projet</th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">Avancement</th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">Statut</th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">Budget</th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">Écart délai</th>
-                <th className="px-4 py-2 text-right text-xs font-medium text-slate-500 uppercase">Actions</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-slate-400 uppercase">Projet</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-slate-400 uppercase">Avancement</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-slate-400 uppercase">Statut</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-slate-400 uppercase">Budget</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-slate-400 uppercase">Écart délai</th>
+                <th className="px-4 py-2 text-right text-xs font-medium text-slate-400 uppercase">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800/50">
@@ -267,7 +267,7 @@ export function OverviewView() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-7 px-2 text-slate-500 hover:text-slate-300"
+                      className="h-7 px-2 text-slate-400 hover:text-slate-300"
                     >
                       <ChevronRight className="h-4 w-4" />
                     </Button>
@@ -289,7 +289,7 @@ export function OverviewView() {
           <Button
             variant="ghost"
             size="sm"
-            className="text-xs text-slate-500 hover:text-slate-300"
+            className="text-xs text-slate-400 hover:text-slate-300"
             onClick={() => navigate('escalations-risks', 'major-risks')}
           >
             Toutes les alertes
@@ -312,7 +312,7 @@ export function OverviewView() {
                 <p className="text-sm text-slate-400 truncate">{alert.message}</p>
               </div>
               <div className="flex items-center gap-2 flex-shrink-0">
-                <Badge variant="default" className="text-xs bg-slate-800 text-slate-500 border-slate-700">
+                <Badge variant="default" className="text-xs bg-slate-800 text-slate-400 border-slate-700">
                   {alert.project}
                 </Badge>
                 <span className="text-xs text-slate-600">{alert.time}</span>

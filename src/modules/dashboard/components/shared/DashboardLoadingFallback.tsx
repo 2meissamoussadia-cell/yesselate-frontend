@@ -53,7 +53,7 @@ function IndeterminateProgress() {
   return (
     <div className="w-full max-w-md mx-auto space-y-2">
       <Progress value={progress} className="h-2" />
-      <p className="text-center text-xs text-slate-500">Chargement des données…</p>
+      <p className="text-center text-xs text-slate-400">Chargement des données…</p>
     </div>
   );
 }
@@ -67,7 +67,13 @@ export function DashboardLoadingFallback({
   className,
 }: DashboardLoadingFallbackProps = {}) {
   return (
-    <div className={cn('space-y-6 animate-fadeIn', className)}>
+    <div
+      className={cn('space-y-6 animate-fadeIn', className)}
+      role="status"
+      aria-live="polite"
+      aria-label="Chargement des données en cours"
+    >
+      <span className="sr-only">Chargement des données en cours</span>
       {/* Barre de progression en tête (Procore-style) */}
       {showProgress && (
         <div className="rounded-xl border border-slate-800/60 bg-slate-900/40 p-4">

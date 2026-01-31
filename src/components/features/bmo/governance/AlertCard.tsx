@@ -107,7 +107,7 @@ export const AlertCard = memo(function AlertCard({
             <h3 id={`${alertId}-title`} className="text-xs sm:text-sm font-semibold mb-1">{alert.title}</h3>
             <p id={`${alertId}-description`} className="text-[10px] sm:text-xs text-slate-400">{alert.description}</p>
             {alert.createdAt && (
-              <p className="text-[9px] sm:text-[10px] text-slate-500 mt-1">
+              <p className="text-[9px] sm:text-[10px] text-slate-400 mt-1">
                 {new Date(alert.createdAt).toLocaleDateString('fr-FR', {
                   day: '2-digit',
                   month: '2-digit',

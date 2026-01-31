@@ -93,7 +93,7 @@ export function MinutesFollowupView() {
                       )}
                     </Badge>
                   </div>
-                  <div className="flex items-center gap-4 text-xs text-slate-500">
+                  <div className="flex items-center gap-4 text-xs text-slate-400">
                     <span>Assigné à: {decision.assignee}</span>
                     <span>•</span>
                     <span>Échéance: {decision.deadline}</span>

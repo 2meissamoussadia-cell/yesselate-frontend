@@ -31,7 +31,7 @@ const COUNTERS: CounterConfig[] = [
   { key: 'urgent', label: 'Urgentes', icon: AlertTriangle, color: 'text-rose-500', bgColor: 'bg-rose-500/10', critical: true },
   { key: 'overdue', label: 'En retard', icon: Clock, color: 'text-orange-500', bgColor: 'bg-orange-500/10', critical: true },
   { key: 'validated', label: 'Validées', icon: CheckCircle2, color: 'text-emerald-500', bgColor: 'bg-emerald-500/10' },
-  { key: 'rejected', label: 'Rejetées', icon: XCircle, color: 'text-slate-500', bgColor: 'bg-slate-500/10' },
+  { key: 'rejected', label: 'Rejetées', icon: XCircle, color: 'text-slate-400', bgColor: 'bg-slate-500/10' },
 ];
 
 type Props = {
@@ -172,7 +172,7 @@ export function LiveCounters({ onOpenQueue, compact = false }: Props) {
             <div className={cn("text-2xl font-bold tabular-nums", c.color)}>
               {value}
             </div>
-            <div className="text-xs text-slate-500 mt-1">{c.label}</div>
+            <div className="text-xs text-slate-400 mt-1">{c.label}</div>
           </button>
         );
       })}

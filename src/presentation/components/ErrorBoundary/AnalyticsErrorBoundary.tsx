@@ -231,7 +231,7 @@ function ErrorFallback({
             {error?.message || 'Une erreur inattendue s\'est produite dans le module Analytics'}
           </p>
           {errorId && (
-            <p className="text-xs text-slate-500 mt-2">
+            <p className="text-xs text-slate-400 mt-2">
               ID d'erreur: <code className="bg-slate-800 px-2 py-1 rounded">{errorId}</code>
             </p>
           )}

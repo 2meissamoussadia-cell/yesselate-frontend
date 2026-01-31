@@ -22,7 +22,7 @@ export default function SyntheseProjetsPage() {
       <GouvernanceHeader
         title="Synthèse projets"
         subtitle="Vue d'ensemble de tous les projets avec indicateurs clés"
-        onExport={() => console.log('Export synthèse projets')}
+        onExport={() => { /* TODO: export synthèse projets */ }}
       />
 
       {isLoading ? (

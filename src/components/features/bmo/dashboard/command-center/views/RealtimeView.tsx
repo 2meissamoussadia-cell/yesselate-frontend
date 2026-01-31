@@ -283,7 +283,7 @@ export function RealtimeView() {
               <div className="flex-1 min-w-0">
                 <p className="text-sm text-slate-200 truncate">{activity.message}</p>
               </div>
-              <span className="text-xs text-slate-500 flex-shrink-0">{activity.time}</span>
+              <span className="text-xs text-slate-400 flex-shrink-0">{activity.time}</span>
             </div>
           ))}
         </div>

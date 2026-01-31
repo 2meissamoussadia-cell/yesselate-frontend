@@ -30,10 +30,10 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // Log l'erreur (à remplacer par un service de logging en production)
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
-    
-    // Appel du callback optionnel
+    // P6: En production, utiliser onError pour envoyer au monitoring (Sentry/LogRocket/API)
+    if (process.env.NODE_ENV === 'development') {
+      console.error('ErrorBoundary caught an error:', error, errorInfo);
+    }
     this.props.onError?.(error, errorInfo);
   }
 
@@ -68,6 +68,7 @@ export class ErrorBoundary extends Component<Props, State> {
             <div className="flex items-center gap-3">
               <span className="text-2xl" aria-hidden="true">⚠️</span>
               <div>
+                <h1 className="sr-only">Erreur</h1>
                 <h2 className="text-lg font-bold text-red-300">Erreur de rendu</h2>
                 <p className="text-sm text-slate-400 mt-1">
                   Une erreur s'est produite lors du chargement de cette section.

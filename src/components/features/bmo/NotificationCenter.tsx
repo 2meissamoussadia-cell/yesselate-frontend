@@ -184,7 +184,7 @@ export function NotificationCenter({
                             {notification.message}
                           </p>
                           <div className="flex items-center gap-2">
-                            <span className="text-[9px] text-slate-500">
+                            <span className="text-[9px] text-slate-400">
                               {notification.timestamp.toLocaleTimeString('fr-FR', {
                                 hour: '2-digit',
                                 minute: '2-digit',

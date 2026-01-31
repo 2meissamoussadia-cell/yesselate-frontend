@@ -270,14 +270,14 @@ export function ValidatorsView({ subCategory = 'all' }: ValidatorsViewProps) {
                     {/* Stats Grid */}
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                       <div>
-                        <p className="text-xs text-slate-500 mb-1">Total Traités</p>
+                        <p className="text-xs text-slate-400 mb-1">Total Traités</p>
                         <p className="text-lg font-semibold text-slate-200">
                           {validator.stats.total}
                         </p>
                       </div>
 
                       <div>
-                        <p className="text-xs text-slate-500 mb-1">Validés</p>
+                        <p className="text-xs text-slate-400 mb-1">Validés</p>
                         <p className="text-lg font-semibold text-emerald-400 flex items-center gap-1">
                           <CheckCircle className="h-4 w-4" />
                           {validator.stats.validated}
@@ -285,7 +285,7 @@ export function ValidatorsView({ subCategory = 'all' }: ValidatorsViewProps) {
                       </div>
 
                       <div>
-                        <p className="text-xs text-slate-500 mb-1">Rejetés</p>
+                        <p className="text-xs text-slate-400 mb-1">Rejetés</p>
                         <p className="text-lg font-semibold text-red-400 flex items-center gap-1">
                           <XCircle className="h-4 w-4" />
                           {validator.stats.rejected}
@@ -293,7 +293,7 @@ export function ValidatorsView({ subCategory = 'all' }: ValidatorsViewProps) {
                       </div>
 
                       <div>
-                        <p className="text-xs text-slate-500 mb-1">Délai Moyen</p>
+                        <p className="text-xs text-slate-400 mb-1">Délai Moyen</p>
                         <p className="text-lg font-semibold text-blue-400 flex items-center gap-1">
                           <Clock className="h-4 w-4" />
                           {validator.stats.avgDelay}j
@@ -301,7 +301,7 @@ export function ValidatorsView({ subCategory = 'all' }: ValidatorsViewProps) {
                       </div>
 
                       <div>
-                        <p className="text-xs text-slate-500 mb-1">Performance</p>
+                        <p className="text-xs text-slate-400 mb-1">Performance</p>
                         <p className="text-lg font-semibold text-purple-400 flex items-center gap-1">
                           <Zap className="h-4 w-4" />
                           {validator.stats.performance}%

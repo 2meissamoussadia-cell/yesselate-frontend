@@ -81,7 +81,7 @@ export const KPINotifications = memo(function KPINotifications({
                 {notification.label}
               </div>
               <div className="text-xs text-slate-400">
-                <span className="line-through text-slate-500 mr-1.5" aria-label={`Ancienne valeur: ${notification.oldValue}`}>
+                <span className="line-through text-slate-400 mr-1.5" aria-label={`Ancienne valeur: ${notification.oldValue}`}>
                   {notification.oldValue}
                 </span>
                 <span 
@@ -101,7 +101,7 @@ export const KPINotifications = memo(function KPINotifications({
                 e.stopPropagation();
                 handleDismiss(notification.id);
               }}
-              className="text-slate-500 hover:text-slate-300 transition-colors duration-200 flex-shrink-0"
+              className="text-slate-400 hover:text-slate-300 transition-colors duration-200 flex-shrink-0"
               aria-label="Fermer la notification"
             >
               <X className="h-3.5 w-3.5" />
@@ -110,7 +110,7 @@ export const KPINotifications = memo(function KPINotifications({
         );
       })}
       {notifications.length > 5 && (
-        <div className="text-xs text-slate-500 text-center pt-2">
+        <div className="text-xs text-slate-400 text-center pt-2">
           {notifications.length - 5} autre{notifications.length - 5 > 1 ? 's' : ''} notification{notifications.length - 5 > 1 ? 's' : ''} masquée{notifications.length - 5 > 1 ? 's' : ''}
         </div>
       )}

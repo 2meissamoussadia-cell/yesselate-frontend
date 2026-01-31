@@ -103,7 +103,7 @@ export function DecisionsDetailPanel() {
               variant="ghost"
               size="sm"
               onClick={closeDetailPanel}
-              className="h-7 w-7 p-0 text-slate-500 hover:text-slate-300"
+              className="h-7 w-7 p-0 text-slate-400 hover:text-slate-300"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -146,7 +146,7 @@ export function DecisionsDetailPanel() {
                 <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
                   <div className="flex items-center gap-2 mb-1">
                     <Zap className="h-3 w-3 text-rose-400" />
-                    <span className="text-xs text-slate-500">Impact</span>
+                    <span className="text-xs text-slate-400">Impact</span>
                   </div>
                   <Badge variant="outline" className={cn('text-xs', impactColors[decision.impact])}>
                     {decision.impact}
@@ -156,7 +156,7 @@ export function DecisionsDetailPanel() {
                 <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
                   <div className="flex items-center gap-2 mb-1">
                     <Target className="h-3 w-3 text-blue-400" />
-                    <span className="text-xs text-slate-500">Type</span>
+                    <span className="text-xs text-slate-400">Type</span>
                   </div>
                   <span className="text-xs text-slate-300">
                     {decisionsApiService.getTypeLabel(decision.type)}
@@ -167,7 +167,7 @@ export function DecisionsDetailPanel() {
                   <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50 col-span-2">
                     <div className="flex items-center gap-2 mb-1">
                       <DollarSign className="h-3 w-3 text-emerald-400" />
-                      <span className="text-xs text-slate-500">Montant</span>
+                      <span className="text-xs text-slate-400">Montant</span>
                     </div>
                     <span className="text-sm font-semibold text-emerald-400">
                       {decisionsApiService.formatMontant(decision.montantImpact)}
@@ -184,7 +184,7 @@ export function DecisionsDetailPanel() {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-slate-200">{decision.auteur.name}</p>
-                  <p className="text-xs text-slate-500">{decision.auteur.role}</p>
+                  <p className="text-xs text-slate-400">{decision.auteur.role}</p>
                 </div>
               </div>
 
@@ -225,14 +225,14 @@ export function DecisionsDetailPanel() {
                 </div>
                 <div className="space-y-1 text-xs">
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Création</span>
+                    <span className="text-slate-400">Création</span>
                     <span className="text-slate-300">
                       {new Date(decision.dateCreation).toLocaleDateString('fr-FR')}
                     </span>
                   </div>
                   {decision.dateDecision && (
                     <div className="flex justify-between">
-                      <span className="text-slate-500">Décision</span>
+                      <span className="text-slate-400">Décision</span>
                       <span className="text-slate-300">
                         {new Date(decision.dateDecision).toLocaleDateString('fr-FR')}
                       </span>
@@ -240,7 +240,7 @@ export function DecisionsDetailPanel() {
                   )}
                   {decision.dateExecution && (
                     <div className="flex justify-between">
-                      <span className="text-slate-500">Exécution</span>
+                      <span className="text-slate-400">Exécution</span>
                       <span className="text-slate-300">
                         {new Date(decision.dateExecution).toLocaleDateString('fr-FR')}
                       </span>
@@ -252,7 +252,7 @@ export function DecisionsDetailPanel() {
           ) : (
             <div className="text-center py-8">
               <AlertCircle className="h-8 w-8 text-slate-600 mx-auto mb-2" />
-              <p className="text-sm text-slate-500">Décision non trouvée</p>
+              <p className="text-sm text-slate-400">Décision non trouvée</p>
             </div>
           )}
         </div>

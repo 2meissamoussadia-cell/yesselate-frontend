@@ -117,7 +117,7 @@ const PRIORITY_CONFIG = {
   urgent: { label: 'Urgent', color: 'bg-rose-500/20 text-rose-400 border-rose-500/30', icon: AlertTriangle },
   high: { label: 'Élevée', color: 'bg-amber-500/20 text-amber-400 border-amber-500/30', icon: AlertTriangle },
   normal: { label: 'Normale', color: 'bg-slate-500/20 text-slate-400 border-slate-500/30', icon: Tag },
-  low: { label: 'Basse', color: 'bg-slate-500/10 text-slate-500 border-slate-500/20', icon: Tag },
+  low: { label: 'Basse', color: 'bg-slate-500/10 text-slate-400 border-slate-500/20', icon: Tag },
 };
 
 const STATUS_CONFIG = {
@@ -271,7 +271,7 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
   // Erreur si pas d'ID
   if (!demandId) {
     return (
-      <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-6 text-slate-500 dark:border-slate-800 dark:bg-[#1f1f1f]/70">
+      <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-6 text-slate-400 dark:border-slate-800 dark:bg-[#1f1f1f]/70">
         <AlertTriangle className="w-8 h-8 mx-auto mb-2 text-amber-500" />
         <div className="text-center">Demande introuvable (id manquant).</div>
       </div>
@@ -311,7 +311,7 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
         <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-4 dark:border-slate-800 dark:bg-[#1f1f1f]/70">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2 text-sm text-slate-500">
+              <div className="flex items-center gap-2 text-sm text-slate-400">
                 <FileText className="w-4 h-4" />
                 <span className="font-mono">{demandId}</span>
                 {data && (
@@ -340,7 +340,7 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
 
             <div className="flex flex-wrap items-center gap-2">
               <button 
-                className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/60 text-slate-500" 
+                className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/60 text-slate-400" 
                 onClick={load}
                 disabled={loading}
                 title="Rafraîchir"
@@ -398,7 +398,7 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
           <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-8 dark:border-slate-800 dark:bg-[#1f1f1f]/70">
             <div className="flex items-center justify-center">
               <RefreshCw className="w-6 h-6 animate-spin text-slate-400" />
-              <span className="ml-2 text-slate-500">Chargement...</span>
+              <span className="ml-2 text-slate-400">Chargement...</span>
             </div>
           </div>
         )}
@@ -432,7 +432,7 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
             {/* ============================================ */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/50">
-                <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
+                <div className="flex items-center gap-2 text-xs text-slate-400 mb-1">
                   <Building2 className="w-3 h-3" />
                   Bureau
                 </div>
@@ -440,7 +440,7 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
               </div>
               
               <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/50">
-                <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
+                <div className="flex items-center gap-2 text-xs text-slate-400 mb-1">
                   <DollarSign className="w-3 h-3" />
                   Montant demandé
                 </div>
@@ -448,7 +448,7 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
               </div>
               
               <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/50">
-                <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
+                <div className="flex items-center gap-2 text-xs text-slate-400 mb-1">
                   <Clock className="w-3 h-3" />
                   Délai
                 </div>
@@ -458,7 +458,7 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
               </div>
               
               <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/50" data-testid="risk-score">
-                <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
+                <div className="flex items-center gap-2 text-xs text-slate-400 mb-1">
                   <Shield className="w-3 h-3" />
                   Risque global
                 </div>
@@ -496,7 +496,7 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
                     </div>
                     <div>
                       <div className="font-semibold">{data.requester.name}</div>
-                      <div className="text-sm text-slate-500">{data.requester.service}</div>
+                      <div className="text-sm text-slate-400">{data.requester.service}</div>
                     </div>
                   </div>
                   {data.requester.email && (
@@ -534,7 +534,7 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
                 <div className="px-4 pb-4 space-y-4">
                   {data.description && (
                     <div>
-                      <div className="text-xs font-medium text-slate-500 mb-1 flex items-center gap-1">
+                      <div className="text-xs font-medium text-slate-400 mb-1 flex items-center gap-1">
                         <FileText className="w-3 h-3" />
                         Description
                       </div>
@@ -554,7 +554,7 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
                   
                   {data.objectives && (
                     <div>
-                      <div className="text-xs font-medium text-slate-500 mb-1 flex items-center gap-1">
+                      <div className="text-xs font-medium text-slate-400 mb-1 flex items-center gap-1">
                         <Target className="w-3 h-3" />
                         Objectifs
                       </div>
@@ -564,7 +564,7 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
                   
                   {data.beneficiaries && (
                     <div>
-                      <div className="text-xs font-medium text-slate-500 mb-1 flex items-center gap-1">
+                      <div className="text-xs font-medium text-slate-400 mb-1 flex items-center gap-1">
                         <Users className="w-3 h-3" />
                         Bénéficiaires
                       </div>
@@ -614,19 +614,19 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
                 <div className="px-4 pb-4">
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/50">
-                      <div className="text-xs text-slate-500 mb-1">Montant demandé</div>
+                      <div className="text-xs text-slate-400 mb-1">Montant demandé</div>
                       <div className="font-semibold font-mono">{formatCurrency(data.amount)}</div>
                     </div>
                     <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/50">
-                      <div className="text-xs text-slate-500 mb-1">Budget disponible</div>
+                      <div className="text-xs text-slate-400 mb-1">Budget disponible</div>
                       <div className="font-semibold font-mono">{formatCurrency(data.budget.available)}</div>
                     </div>
                     <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/50">
-                      <div className="text-xs text-slate-500 mb-1">Code budgétaire</div>
+                      <div className="text-xs text-slate-400 mb-1">Code budgétaire</div>
                       <div className="font-mono text-sm">{data.budget.code ?? '—'}</div>
                     </div>
                     <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/50">
-                      <div className="text-xs text-slate-500 mb-1">Ligne budgétaire</div>
+                      <div className="text-xs text-slate-400 mb-1">Ligne budgétaire</div>
                       <div className="text-sm">{data.budget.line ?? '—'}</div>
                     </div>
                   </div>
@@ -645,7 +645,7 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
                         />
                       </div>
                       {budgetMetrics && (
-                        <div className="flex justify-between text-xs text-slate-500">
+                        <div className="flex justify-between text-xs text-slate-400">
                           <span>Utilisé: {budgetUsage.toFixed(1)}%</span>
                           {budgetRemaining !== null && (
                             <span>Restant: {budgetRemaining.toLocaleString()} FCFA</span>
@@ -680,21 +680,21 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/50">
-                  <div className="text-xs text-slate-500 mb-1 flex items-center gap-1">
+                  <div className="text-xs text-slate-400 mb-1 flex items-center gap-1">
                     <Calendar className="w-3 h-3" />
                     Date demande
                   </div>
                   <div className="font-semibold text-sm">{formatDate(data.createdAt)}</div>
                 </div>
                 <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/50">
-                  <div className="text-xs text-slate-500 mb-1">Date souhaitée</div>
+                  <div className="text-xs text-slate-400 mb-1">Date souhaitée</div>
                   <div className="font-semibold text-sm">{formatDate(data.expectedDate)}</div>
                 </div>
                 <div className={cn(
                   "p-3 rounded-xl",
                   data.deadline && new Date(data.deadline) < new Date() ? "bg-rose-500/10" : "bg-slate-100 dark:bg-slate-800/50"
                 )}>
-                  <div className="text-xs text-slate-500 mb-1">Date limite</div>
+                  <div className="text-xs text-slate-400 mb-1">Date limite</div>
                   <div className={cn(
                     "font-semibold text-sm",
                     data.deadline && new Date(data.deadline) < new Date() && "text-rose-500"
@@ -703,7 +703,7 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
                   </div>
                 </div>
                 <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/50">
-                  <div className="text-xs text-slate-500 mb-1">Assignée à</div>
+                  <div className="text-xs text-slate-400 mb-1">Assignée à</div>
                   <div className="font-semibold text-sm">{data.assignedToName ?? '—'}</div>
                 </div>
               </div>
@@ -719,7 +719,7 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
                   onClick={() => toggleSection('documents')}
                 >
                   <h3 className="font-semibold flex items-center gap-2">
-                    <Paperclip className="w-4 h-4 text-slate-500" />
+                    <Paperclip className="w-4 h-4 text-slate-400" />
                     Documents joints
                     <span className="text-xs px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700">
                       {data.documents.length}
@@ -739,7 +739,7 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
                           <span className="text-2xl">{DOC_ICONS[doc.type] ?? DOC_ICONS.default}</span>
                           <div className="flex-1 min-w-0">
                             <div className="font-medium text-sm truncate">{doc.name}</div>
-                            {doc.size && <div className="text-xs text-slate-500">{doc.size}</div>}
+                            {doc.size && <div className="text-xs text-slate-400">{doc.size}</div>}
                           </div>
                           <ExternalLink className="w-4 h-4 text-slate-400" />
                         </div>
@@ -830,13 +830,13 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
                 <div key={s.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/30">
                   <div className={cn(
                     "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold",
-                    s.required ? "bg-blue-500/20 text-blue-500" : "bg-slate-200 dark:bg-slate-700 text-slate-500"
+                    s.required ? "bg-blue-500/20 text-blue-500" : "bg-slate-200 dark:bg-slate-700 text-slate-400"
                   )}>
                     {s.personName.split(' ').map(n => n[0]).join('')}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="font-medium text-sm truncate">{s.personName}</div>
-                    <div className="text-xs text-slate-500">{ROLE_LABELS[s.role] ?? s.role}</div>
+                    <div className="text-xs text-slate-400">{ROLE_LABELS[s.role] ?? s.role}</div>
                   </div>
                   {s.required && (
                     <span className="text-xs px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-500">Requis</span>
@@ -854,14 +854,14 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
               <History className="w-4 h-4" />
               Journal d&apos;audit
             </h3>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-slate-400 mt-1">
               {data?.audit?.length ?? 0} événement{(data?.audit?.length ?? 0) > 1 ? 's' : ''}
             </p>
           </div>
 
           <div className="max-h-[400px] overflow-auto p-4 space-y-3">
             {!data?.audit?.length && (
-              <div className="text-center text-slate-500 py-8">
+              <div className="text-center text-slate-400 py-8">
                 <History className="w-8 h-8 mx-auto mb-2 opacity-50" />
                 Aucun événement.
               </div>
@@ -887,7 +887,7 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
                   <div className="rounded-xl border border-slate-200/70 p-3 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30">
                     <div className="flex items-center justify-between gap-2 mb-1">
                       <div className="flex items-center gap-2">
-                        <Icon className="w-4 h-4 text-slate-500" />
+                        <Icon className="w-4 h-4 text-slate-400" />
                         <span className="text-sm font-semibold capitalize">{e.type.replace(/_/g, ' ')}</span>
                       </div>
                       <span className="text-xs text-slate-400">
@@ -896,7 +896,7 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
                     </div>
                     <div className="text-sm text-slate-600 dark:text-slate-300">
                       <span className="font-medium">{e.actorName}</span>
-                      {e.message && <span className="text-slate-500"> — {e.message}</span>}
+                      {e.message && <span className="text-slate-400"> — {e.message}</span>}
                     </div>
                   </div>
                 </div>
@@ -917,7 +917,7 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
         onClose={() => setComplementOpen(false)}
       >
         <div className="space-y-4">
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-400">
             Précisez les informations ou documents manquants pour traiter cette demande.
           </p>
           
@@ -977,11 +977,11 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center">
-                      <User className="w-5 h-5 text-slate-500" />
+                      <User className="w-5 h-5 text-slate-400" />
                     </div>
                     <div>
                       <div className="font-semibold">{emp.name}</div>
-                      <div className="text-sm text-slate-500">{emp.role}</div>
+                      <div className="text-sm text-slate-400">{emp.role}</div>
                     </div>
                   </div>
                 </button>

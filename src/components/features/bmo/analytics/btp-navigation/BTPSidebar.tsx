@@ -190,9 +190,9 @@ export function BTPSidebar({ collapsed = false, onToggleCollapse }: BTPSidebarPr
                               className="p-0.5 hover:bg-slate-700 rounded cursor-pointer"
                             >
                               {isModuleExpanded ? (
-                                <ChevronDown className="h-3 w-3 text-slate-500" />
+                                <ChevronDown className="h-3 w-3 text-slate-400" />
                               ) : (
-                                <ChevronRight className="h-3 w-3 text-slate-500" />
+                                <ChevronRight className="h-3 w-3 text-slate-400" />
                               )}
                             </div>
                           </button>
@@ -214,7 +214,7 @@ export function BTPSidebar({ collapsed = false, onToggleCollapse }: BTPSidebarPr
                                       'w-full px-3 py-1.5 rounded-lg transition-all duration-200 text-left text-xs',
                                       isSubModuleActive
                                         ? 'bg-blue-500/10 text-blue-300'
-                                        : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800/20'
+                                        : 'text-slate-400 hover:text-slate-300 hover:bg-slate-800/20'
                                     )}
                                   >
                                     {subModule.label}

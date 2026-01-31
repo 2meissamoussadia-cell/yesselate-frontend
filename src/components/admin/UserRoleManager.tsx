@@ -55,7 +55,7 @@ export function UserRoleManager({
           <span className="text-xs text-slate-400">
             Utilisateurs et rôles
           </span>
-          <span className="text-xs text-slate-500">Actions</span>
+          <span className="text-xs text-slate-400">Actions</span>
         </header>
         <div className="p-4 space-y-0">
           {users.map((u) => (

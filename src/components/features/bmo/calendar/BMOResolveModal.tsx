@@ -201,7 +201,7 @@ export function BMOResolveModal({
                     <span className="text-slate-400 min-w-[80px]">{entry.date}</span>
                     <Badge variant="default" className="text-[9px]">{entry.action}</Badge>
                     <span className="text-slate-400">par {entry.user}</span>
-                    <span className="text-slate-500">• {entry.details}</span>
+                    <span className="text-slate-400">• {entry.details}</span>
                   </div>
                 ))}
               </div>

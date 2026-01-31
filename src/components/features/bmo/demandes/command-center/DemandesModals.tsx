@@ -37,34 +37,34 @@ export function DemandesModals() {
         <div className="p-6 space-y-6">
           <div className="grid grid-cols-3 gap-4">
             <div className="p-4 rounded-xl bg-slate-800/50 border border-slate-700/50">
-              <p className="text-xs text-slate-500 mb-1">Total</p>
+              <p className="text-xs text-slate-400 mb-1">Total</p>
               <p className="text-2xl font-bold text-slate-200">{liveStats.total || 453}</p>
             </div>
             <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
-              <p className="text-xs text-slate-500 mb-1">En attente</p>
+              <p className="text-xs text-slate-400 mb-1">En attente</p>
               <p className="text-2xl font-bold text-amber-400">{liveStats.pending || 45}</p>
             </div>
             <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-              <p className="text-xs text-slate-500 mb-1">Validées</p>
+              <p className="text-xs text-slate-400 mb-1">Validées</p>
               <p className="text-2xl font-bold text-emerald-400">{liveStats.validated || 378}</p>
             </div>
             <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20">
-              <p className="text-xs text-slate-500 mb-1">Urgentes</p>
+              <p className="text-xs text-slate-400 mb-1">Urgentes</p>
               <p className="text-2xl font-bold text-rose-400">{liveStats.urgent || 12}</p>
             </div>
             <div className="p-4 rounded-xl bg-slate-800/50 border border-slate-700/50">
-              <p className="text-xs text-slate-500 mb-1">Rejetées</p>
+              <p className="text-xs text-slate-400 mb-1">Rejetées</p>
               <p className="text-2xl font-bold text-slate-400">{liveStats.rejected || 15}</p>
             </div>
             <div className="p-4 rounded-xl bg-orange-500/10 border border-orange-500/20">
-              <p className="text-xs text-slate-500 mb-1">En retard</p>
+              <p className="text-xs text-slate-400 mb-1">En retard</p>
               <p className="text-2xl font-bold text-orange-400">{liveStats.overdue || 8}</p>
             </div>
           </div>
 
           <div className="pt-4 border-t border-slate-700/50">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-slate-500">Délai moyen de traitement</span>
+              <span className="text-slate-400">Délai moyen de traitement</span>
               <span className="font-medium text-slate-200">{liveStats.avgDelay || 2.3} jours</span>
             </div>
           </div>
@@ -96,7 +96,7 @@ export function DemandesModals() {
               <span className="text-2xl">{item.icon}</span>
               <div>
                 <p className="font-medium text-slate-200">{item.format}</p>
-                <p className="text-sm text-slate-500">{item.desc}</p>
+                <p className="text-sm text-slate-400">{item.desc}</p>
               </div>
             </button>
           ))}
@@ -183,7 +183,7 @@ export function DemandesModals() {
               <h3 className="text-lg font-semibold text-slate-200">
                 BC Fournitures Bureau
               </h3>
-              <p className="text-sm text-slate-500 mt-1">
+              <p className="text-sm text-slate-400 mt-1">
                 Demande de bon de commande pour fournitures de bureau
               </p>
             </div>
@@ -192,19 +192,19 @@ export function DemandesModals() {
 
           <div className="grid grid-cols-2 gap-4">
             <div className="p-4 rounded-xl bg-slate-800/30 border border-slate-700/50">
-              <p className="text-xs text-slate-500 mb-1">Montant</p>
+              <p className="text-xs text-slate-400 mb-1">Montant</p>
               <p className="text-lg font-semibold text-slate-200">2 500 000 FCFA</p>
             </div>
             <div className="p-4 rounded-xl bg-slate-800/30 border border-slate-700/50">
-              <p className="text-xs text-slate-500 mb-1">Bureau émetteur</p>
+              <p className="text-xs text-slate-400 mb-1">Bureau émetteur</p>
               <p className="text-lg font-semibold text-slate-200">Service Achats</p>
             </div>
             <div className="p-4 rounded-xl bg-slate-800/30 border border-slate-700/50">
-              <p className="text-xs text-slate-500 mb-1">Date de création</p>
+              <p className="text-xs text-slate-400 mb-1">Date de création</p>
               <p className="text-lg font-semibold text-slate-200">05/01/2024</p>
             </div>
             <div className="p-4 rounded-xl bg-slate-800/30 border border-slate-700/50">
-              <p className="text-xs text-slate-500 mb-1">Délai</p>
+              <p className="text-xs text-slate-400 mb-1">Délai</p>
               <p className="text-lg font-semibold text-rose-400">5 jours</p>
             </div>
           </div>

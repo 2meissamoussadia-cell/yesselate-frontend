@@ -45,7 +45,7 @@ export const BreadcrumbItem = React.memo(function BreadcrumbItem({
       )}
       {!isLast && (
         <ChevronRight
-          className="w-4 h-4 text-slate-500 shrink-0"
+          className="w-4 h-4 text-slate-400 shrink-0"
           aria-hidden
         />
       )}

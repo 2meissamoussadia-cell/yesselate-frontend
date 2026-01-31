@@ -11,6 +11,7 @@
 
 import React, { useMemo } from 'react';
 import { GenericDetailModal, type TabConfig, type ActionButton } from '@/components/ui/GenericDetailModal';
+import { logger } from '@/lib/utils/logger';
 import {
   Brain,
   BarChart3,
@@ -166,7 +167,7 @@ export function IAModuleDetailModal({
       variant: 'ghost',
       onClick: () => {
         // TODO: Implémenter export
-        console.log('Export', module.id);
+        logger.debug('Export', { component: 'IAModuleDetailModal', moduleId: module.id });
       },
     });
 
@@ -189,18 +190,18 @@ export function IAModuleDetailModal({
             <h3 className="text-sm font-semibold text-slate-300 mb-4">Informations générales</h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">ID</label>
+                <label className="text-xs text-slate-400 mb-1 block">ID</label>
                 <p className="text-sm text-slate-200 font-mono">{module.id}</p>
               </div>
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">Type</label>
+                <label className="text-xs text-slate-400 mb-1 block">Type</label>
                 <div className="flex items-center gap-2">
                   <span className="text-xl">{getTypeIcon(module.type)}</span>
                   <Badge variant="default" className="capitalize">{module.type}</Badge>
                 </div>
               </div>
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">Statut</label>
+                <label className="text-xs text-slate-400 mb-1 block">Statut</label>
                 <Badge 
                   variant={
                     getStatusBadgeVariant(module.status) === 'critical' 
@@ -217,7 +218,7 @@ export function IAModuleDetailModal({
                 </Badge>
               </div>
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">Version</label>
+                <label className="text-xs text-slate-400 mb-1 block">Version</label>
                 <p className="text-sm text-slate-200">{module.version}</p>
               </div>
             </div>
@@ -225,7 +226,7 @@ export function IAModuleDetailModal({
 
           {/* Description */}
           <div>
-            <label className="text-xs text-slate-500 mb-1 block">Description</label>
+            <label className="text-xs text-slate-400 mb-1 block">Description</label>
             <p className="text-sm text-slate-300">{module.description}</p>
           </div>
 
@@ -235,7 +236,7 @@ export function IAModuleDetailModal({
             <div className="grid grid-cols-2 gap-4">
               {module.lastRun && (
                 <div>
-                  <label className="text-xs text-slate-500 mb-1 block flex items-center gap-1">
+                  <label className="text-xs text-slate-400 mb-1 block flex items-center gap-1">
                     <Clock className="h-3 w-3" />
                     Dernière exécution
                   </label>
@@ -244,7 +245,7 @@ export function IAModuleDetailModal({
               )}
               {module.nextScheduled && (
                 <div>
-                  <label className="text-xs text-slate-500 mb-1 block flex items-center gap-1">
+                  <label className="text-xs text-slate-400 mb-1 block flex items-center gap-1">
                     <Clock className="h-3 w-3" />
                     Prochaine planifiée
                   </label>
@@ -284,7 +285,7 @@ export function IAModuleDetailModal({
                   style={{ width: `${module.accuracy}%` }}
                 />
               </div>
-              <p className="text-xs text-slate-500 mt-2">
+              <p className="text-xs text-slate-400 mt-2">
                 {module.accuracy >= 90
                   ? 'Excellente précision'
                   : module.accuracy >= 75
@@ -299,11 +300,11 @@ export function IAModuleDetailModal({
             <h3 className="text-sm font-semibold text-slate-300 mb-4">Statistiques</h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                <label className="text-xs text-slate-500 mb-1 block">Sources de données</label>
+                <label className="text-xs text-slate-400 mb-1 block">Sources de données</label>
                 <p className="text-2xl font-bold text-slate-200">{module.dataSourcesCount}</p>
               </div>
               <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                <label className="text-xs text-slate-500 mb-1 block">Exécutions (7j)</label>
+                <label className="text-xs text-slate-400 mb-1 block">Exécutions (7j)</label>
                 <p className="text-2xl font-bold text-slate-200">
                   {moduleHistory.filter(h => h.status === 'completed').length}
                 </p>
@@ -323,11 +324,11 @@ export function IAModuleDetailModal({
             <h3 className="text-sm font-semibold text-slate-300 mb-4">Paramètres du module</h3>
             <div className="space-y-3">
               <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                <label className="text-xs text-slate-500 mb-1 block">Version</label>
+                <label className="text-xs text-slate-400 mb-1 block">Version</label>
                 <p className="text-sm text-slate-200">{module.version}</p>
               </div>
               <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                <label className="text-xs text-slate-500 mb-1 block flex items-center gap-1">
+                <label className="text-xs text-slate-400 mb-1 block flex items-center gap-1">
                   <Database className="h-3 w-3" />
                   Sources de données
                 </label>
@@ -341,7 +342,7 @@ export function IAModuleDetailModal({
             <div>
               <h3 className="text-sm font-semibold text-slate-300 mb-4">Planification</h3>
               <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                <label className="text-xs text-slate-500 mb-1 block">Prochaine exécution planifiée</label>
+                <label className="text-xs text-slate-400 mb-1 block">Prochaine exécution planifiée</label>
                 <p className="text-sm text-slate-200">{module.nextScheduled}</p>
               </div>
             </div>
@@ -357,7 +358,7 @@ export function IAModuleDetailModal({
       content: (
         <div className="space-y-3">
           {moduleHistory.length === 0 ? (
-            <div className="text-center py-8 text-slate-500">
+            <div className="text-center py-8 text-slate-400">
               <History className="h-12 w-12 mx-auto mb-4 opacity-50" />
               <p>Aucune exécution récente</p>
             </div>
@@ -390,14 +391,14 @@ export function IAModuleDetailModal({
                       {analysis.status}
                     </Badge>
                   </div>
-                  <p className="text-xs text-slate-500">{analysis.requestedAt}</p>
+                  <p className="text-xs text-slate-400">{analysis.requestedAt}</p>
                 </div>
                 {analysis.result && (
                   <p className="text-sm text-slate-300 mt-2 line-clamp-2">{analysis.result.summary}</p>
                 )}
                 {analysis.hash && (
                   <div className="mt-2 p-2 rounded bg-slate-800/50">
-                    <p className="text-[10px] text-slate-500 mb-1">Hash</p>
+                    <p className="text-[10px] text-slate-400 mb-1">Hash</p>
                     <p className="font-mono text-xs text-slate-400 truncate">{analysis.hash}</p>
                   </div>
                 )}
@@ -441,13 +442,13 @@ export function IAModuleDetailModal({
                     <div key={analysis.id} className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
                       <div className="flex items-start justify-between mb-2">
                         <p className="text-xs font-mono text-slate-400">{analysis.id}</p>
-                        <p className="text-xs text-slate-500">{analysis.requestedAt}</p>
+                        <p className="text-xs text-slate-400">{analysis.requestedAt}</p>
                       </div>
-                      <p className="text-xs text-slate-500 mb-1">Hash SHA3-256</p>
+                      <p className="text-xs text-slate-400 mb-1">Hash SHA3-256</p>
                       <p className="font-mono text-xs text-slate-400 truncate">{analysis.hash}</p>
                       {analysis.inputs && analysis.inputs.length > 0 && (
                         <div className="mt-2">
-                          <p className="text-xs text-slate-500 mb-1">Inputs ({analysis.inputs.length})</p>
+                          <p className="text-xs text-slate-400 mb-1">Inputs ({analysis.inputs.length})</p>
                           <div className="flex flex-wrap gap-1">
                             {analysis.inputs.slice(0, 3).map((input, idx) => (
                               <Badge key={idx} variant="default" className="text-xs">

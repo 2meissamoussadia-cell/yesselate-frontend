@@ -178,7 +178,7 @@ export function ArbitragesInboxView({ tab }: { tab: ArbitragesTab }) {
             )}
             {tab.title}
           </h2>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-400">
             {data ? `${filteredItems.length} résultat${filteredItems.length > 1 ? 's' : ''}` : 'Chargement...'}
           </p>
         </div>
@@ -226,7 +226,7 @@ export function ArbitragesInboxView({ tab }: { tab: ArbitragesTab }) {
           {type === 'arbitrages' ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">Niveau de risque</label>
+                <label className="text-xs text-slate-400 mb-1 block">Niveau de risque</label>
                 <select
                   value={filters.riskLevel}
                   onChange={(e) => setFilters({ ...filters, riskLevel: e.target.value })}
@@ -240,7 +240,7 @@ export function ArbitragesInboxView({ tab }: { tab: ArbitragesTab }) {
                 </select>
               </div>
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">Statut</label>
+                <label className="text-xs text-slate-400 mb-1 block">Statut</label>
                 <select
                   value={filters.status}
                   onChange={(e) => setFilters({ ...filters, status: e.target.value })}
@@ -257,7 +257,7 @@ export function ArbitragesInboxView({ tab }: { tab: ArbitragesTab }) {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">Charge minimum (%)</label>
+                <label className="text-xs text-slate-400 mb-1 block">Charge minimum (%)</label>
                 <input
                   type="number"
                   value={filters.minCharge}
@@ -294,7 +294,7 @@ export function ArbitragesInboxView({ tab }: { tab: ArbitragesTab }) {
       {loading && !data && (
         <div className="flex items-center justify-center py-12">
           <RefreshCw className="w-6 h-6 animate-spin text-slate-400" />
-          <span className="ml-2 text-slate-500">Chargement...</span>
+          <span className="ml-2 text-slate-400">Chargement...</span>
         </div>
       )}
 
@@ -302,7 +302,7 @@ export function ArbitragesInboxView({ tab }: { tab: ArbitragesTab }) {
       {data && (
         <div className="space-y-2">
           {filteredItems.length === 0 ? (
-            <div className="p-8 text-center text-slate-500 rounded-xl border border-slate-200/70 dark:border-slate-800">
+            <div className="p-8 text-center text-slate-400 rounded-xl border border-slate-200/70 dark:border-slate-800">
               Aucun résultat
             </div>
           ) : (
@@ -366,7 +366,7 @@ function ArbitrageCard({ item, formatMoney }: { item: ArbitrageItem; formatMoney
           {item.subject}
         </h3>
 
-        <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500">
+        <div className="flex flex-wrap items-center gap-3 text-xs text-slate-400">
           {isVivant && item.context?.linkedEntity && (
             <span>
               🔗 {item.context.linkedEntity.type}: {item.context.linkedEntity.label}
@@ -396,7 +396,7 @@ function ArbitrageCard({ item, formatMoney }: { item: ArbitrageItem; formatMoney
             <div className="text-xl font-bold text-amber-600 dark:text-amber-400">
               {item.timing.daysRemaining}
             </div>
-            <div className="text-[10px] text-slate-500">jour{(item.timing.daysRemaining ?? 0) > 1 ? 's' : ''}</div>
+            <div className="text-[10px] text-slate-400">jour{(item.timing.daysRemaining ?? 0) > 1 ? 's' : ''}</div>
           </div>
         )}
         <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-blue-500 transition-colors" />
@@ -418,7 +418,7 @@ function BureauCard({ item }: { item: BureauItem }) {
           )}
         </div>
 
-        <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500 mb-2">
+        <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400 mb-2">
           <span>👥 {item.agents} agents</span>
           <span>💼 Charge: <span className={cn(
             'font-semibold',

@@ -106,7 +106,7 @@ export function RecouvrementsContentRouter({
         <h3 className="text-lg font-semibold text-slate-300 mb-2">
           {category} {subCategory && `- ${subCategory}`}
         </h3>
-        <p className="text-slate-500">Contenu en cours de développement</p>
+        <p className="text-slate-400">Contenu en cours de développement</p>
       </div>
     </div>
   );
@@ -304,7 +304,7 @@ function QuickActionCard({
 function StatCard({ label, value }: { label: string; value: string }) {
   return (
     <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
-      <div className="text-xs text-slate-500 mb-1">{label}</div>
+      <div className="text-xs text-slate-400 mb-1">{label}</div>
       <div className="text-lg font-bold text-slate-200">{value}</div>
     </div>
   );
@@ -408,7 +408,7 @@ function RelancesView({ subCategory }: { subCategory: string }) {
         <h3 className="text-lg font-semibold text-slate-300 mb-2">
           Suivi des relances
         </h3>
-        <p className="text-slate-500">Contenu en cours de développement</p>
+        <p className="text-slate-400">Contenu en cours de développement</p>
       </div>
     </div>
   );
@@ -425,7 +425,7 @@ function ContentieuxView({ subCategory }: { subCategory: string }) {
         <h3 className="text-lg font-semibold text-slate-300 mb-2">
           Dossiers contentieux
         </h3>
-        <p className="text-slate-500">Contenu en cours de développement</p>
+        <p className="text-slate-400">Contenu en cours de développement</p>
       </div>
     </div>
   );
@@ -450,19 +450,19 @@ function StatistiquesView({
           <p className="text-3xl font-bold text-amber-400">
             {stats ? formatMontant(stats.montantTotal) : '0'}
           </p>
-          <p className="text-sm text-slate-500 mt-2">Total créances</p>
+          <p className="text-sm text-slate-400 mt-2">Total créances</p>
         </div>
         <div className="p-6 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-center">
           <p className="text-3xl font-bold text-emerald-400">
             {stats ? `${stats.tauxRecouvrement}%` : '0%'}
           </p>
-          <p className="text-sm text-slate-500 mt-2">Taux recouvrement</p>
+          <p className="text-sm text-slate-400 mt-2">Taux recouvrement</p>
         </div>
         <div className="p-6 rounded-xl bg-rose-500/10 border border-rose-500/20 text-center">
           <p className="text-3xl font-bold text-rose-400">
             {stats ? formatMontant(stats.montantEnRetard) : '0'}
           </p>
-          <p className="text-sm text-slate-500 mt-2">En retard</p>
+          <p className="text-sm text-slate-400 mt-2">En retard</p>
         </div>
       </div>
 

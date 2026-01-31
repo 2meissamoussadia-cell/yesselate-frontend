@@ -36,6 +36,7 @@ export * from './hooks/usePresentationMode';
 // Types
 export * from './types/dashboardNavigationTypes';
 export * from './types/dashboardDataTypes';
+export * from './types/dashboardDomain';
 
 // Registry hooks (nouveau)
 export * from './hooks/useDashboardRegistry';

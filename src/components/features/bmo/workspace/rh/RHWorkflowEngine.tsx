@@ -229,7 +229,7 @@ export function RHWorkflowEngine({ open, onClose }: RHWorkflowEngineProps) {
                 <Workflow className="w-5 h-5 text-purple-500" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">Workflows actifs</p>
+                <p className="text-sm text-slate-400">Workflows actifs</p>
                 <p className="text-2xl font-bold">{activeCount}/{workflows.length}</p>
               </div>
             </div>
@@ -241,7 +241,7 @@ export function RHWorkflowEngine({ open, onClose }: RHWorkflowEngineProps) {
                 <Zap className="w-5 h-5 text-blue-500" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">Exécutions totales</p>
+                <p className="text-sm text-slate-400">Exécutions totales</p>
                 <p className="text-2xl font-bold">{totalExecutions}</p>
               </div>
             </div>
@@ -253,7 +253,7 @@ export function RHWorkflowEngine({ open, onClose }: RHWorkflowEngineProps) {
                 <CheckCircle className="w-5 h-5 text-green-500" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">Taux de succès moyen</p>
+                <p className="text-sm text-slate-400">Taux de succès moyen</p>
                 <p className="text-2xl font-bold">
                   {(workflows.reduce((sum, wf) => sum + wf.stats.successRate, 0) / workflows.length).toFixed(1)}%
                 </p>
@@ -390,7 +390,7 @@ export function RHWorkflowEngine({ open, onClose }: RHWorkflowEngineProps) {
                   <span>{workflow.actions.length} action(s)</span>
                 </div>
 
-                <div className="flex items-center gap-4 text-xs text-slate-500 pt-2 border-t border-slate-200 dark:border-slate-700">
+                <div className="flex items-center gap-4 text-xs text-slate-400 pt-2 border-t border-slate-200 dark:border-slate-700">
                   <div className="flex items-center gap-1">
                     <Zap className="w-3 h-3" />
                     {workflow.stats.executionCount} exécutions

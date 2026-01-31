@@ -102,12 +102,14 @@ export function BTPIntelligentModal({
                 <div className="flex-1">
                   <h2 className="text-lg font-semibold text-slate-200 mb-1">{title}</h2>
                   {description && (
-                    <p className="text-sm text-slate-400">{description}</p>
+                    <p className="text-sm text-slate-300">{description}</p>
                   )}
                 </div>
                 <button
+                  type="button"
                   onClick={onClose}
-                  className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition-colors ml-4"
+                  className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition-colors ml-4 focus-visible:outline focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
+                  aria-label="Fermer"
                 >
                   <X className="h-5 w-5" />
                 </button>

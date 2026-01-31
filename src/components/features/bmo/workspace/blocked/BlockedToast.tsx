@@ -168,7 +168,7 @@ function BlockedToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () =>
           <p className="text-xs mt-1 text-slate-600 dark:text-slate-400">{toast.message}</p>
         )}
         {toast.hash && (
-          <p className="text-[10px] mt-2 font-mono text-slate-500 truncate" title={toast.hash}>
+          <p className="text-[10px] mt-2 font-mono text-slate-400 truncate" title={toast.hash}>
             🔐 {toast.hash.slice(0, 24)}...
           </p>
         )}
@@ -180,7 +180,7 @@ function BlockedToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () =>
         type="button"
         aria-label="Fermer"
       >
-        <X className="w-4 h-4 text-slate-500" />
+        <X className="w-4 h-4 text-slate-400" />
       </button>
     </div>
   );

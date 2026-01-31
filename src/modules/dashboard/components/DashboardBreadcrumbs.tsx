@@ -37,7 +37,7 @@ export const DashboardBreadcrumbs = memo(function DashboardBreadcrumbs({ classNa
   };
 
   const crumbButtonClass = cn(
-    'rounded-md px-2 py-1.5 min-h-[32px] inline-flex items-center',
+    'rounded-md px-2 py-1.5 min-h-[44px] inline-flex items-center',
     'text-slate-200 transition-colors duration-150',
     'hover:bg-slate-800/50 hover:text-slate-100',
     'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950',
@@ -50,7 +50,7 @@ export const DashboardBreadcrumbs = memo(function DashboardBreadcrumbs({ classNa
         type="button"
         onClick={() => go({ main: 'pilotage', sub: 'dashboard', leaf: 'default' })}
         className={cn(
-          'group inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 min-h-[32px]',
+          'group inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 min-h-[44px]',
           'text-slate-400 transition-colors duration-150 hover:bg-slate-800/50 hover:text-slate-200',
           'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950'
         )}
@@ -79,7 +79,7 @@ export const DashboardBreadcrumbs = memo(function DashboardBreadcrumbs({ classNa
       {leafLabel ? (
         <>
           <ChevronRight className="h-3 w-3 text-slate-600 flex-shrink-0" aria-hidden />
-          <span className="rounded-md px-2 py-1.5 min-h-[32px] inline-flex items-center font-medium text-slate-100 truncate min-w-0">
+          <span className="rounded-md px-2 py-1.5 min-h-[44px] inline-flex items-center font-medium text-slate-100 truncate min-w-0">
             {t(leafLabel)}
           </span>
         </>

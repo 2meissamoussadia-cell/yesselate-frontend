@@ -120,7 +120,7 @@ export function MonthlySummaryView() {
             >
               <div className="flex-1">
                 <p className="text-sm font-medium text-slate-200">{point.title}</p>
-                <p className="text-xs text-slate-500 mt-1">Impact: {point.impact}</p>
+                <p className="text-xs text-slate-400 mt-1">Impact: {point.impact}</p>
               </div>
               <Badge
                 variant={point.priority === 'critical' ? 'destructive' : 'warning'}

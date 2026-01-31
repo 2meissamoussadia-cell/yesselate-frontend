@@ -34,7 +34,7 @@ export function TicketsStatsModal({ open, onClose }: Props) {
         <div className="p-6 border-b border-slate-200/70 dark:border-slate-800 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-xl bg-purple-500/10"><BarChart3 className="w-5 h-5 text-purple-500" /></div>
-            <div><h2 className="text-lg font-bold">Statistiques Tickets</h2><p className="text-sm text-slate-500">Analyse du support client</p></div>
+            <div><h2 className="text-lg font-bold">Statistiques Tickets</h2><p className="text-sm text-slate-400">Analyse du support client</p></div>
           </div>
           <button onClick={onClose} className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"><X className="w-5 h-5" /></button>
         </div>
@@ -48,22 +48,22 @@ export function TicketsStatsModal({ open, onClose }: Props) {
                 <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/20 text-center">
                   <Ticket className="w-6 h-6 mx-auto mb-2 text-purple-500" />
                   <p className="text-3xl font-bold text-purple-600">{stats.total}</p>
-                  <p className="text-sm text-slate-500">Total</p>
+                  <p className="text-sm text-slate-400">Total</p>
                 </div>
                 <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-center">
                   <Zap className="w-6 h-6 mx-auto mb-2 text-red-500" />
                   <p className="text-3xl font-bold text-red-600">{stats.critical}</p>
-                  <p className="text-sm text-slate-500">Critiques</p>
+                  <p className="text-sm text-slate-400">Critiques</p>
                 </div>
                 <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20 text-center">
                   <AlertTriangle className="w-6 h-6 mx-auto mb-2 text-blue-500" />
                   <p className="text-3xl font-bold text-blue-600">{stats.open}</p>
-                  <p className="text-sm text-slate-500">Ouverts</p>
+                  <p className="text-sm text-slate-400">Ouverts</p>
                 </div>
                 <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-center">
                   <CheckCircle className="w-6 h-6 mx-auto mb-2 text-emerald-500" />
                   <p className="text-3xl font-bold text-emerald-600">{stats.resolved}</p>
-                  <p className="text-sm text-slate-500">Résolus</p>
+                  <p className="text-sm text-slate-400">Résolus</p>
                 </div>
               </div>
 
@@ -71,12 +71,12 @@ export function TicketsStatsModal({ open, onClose }: Props) {
                 <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-center">
                   <Clock className="w-6 h-6 mx-auto mb-2 text-amber-500" />
                   <p className="text-2xl font-bold text-amber-600">{stats.avgResolutionTime}h</p>
-                  <p className="text-sm text-slate-500">Temps moyen résolution</p>
+                  <p className="text-sm text-slate-400">Temps moyen résolution</p>
                 </div>
                 <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-center">
                   <XCircle className="w-6 h-6 mx-auto mb-2 text-red-500" />
                   <p className="text-2xl font-bold text-red-600">{stats.slaBreached}</p>
-                  <p className="text-sm text-slate-500">SLA dépassés</p>
+                  <p className="text-sm text-slate-400">SLA dépassés</p>
                 </div>
               </div>
 

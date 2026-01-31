@@ -181,7 +181,7 @@ export function DirecteurTravauxPage() {
                     <div className="text-xs text-slate-400">Vue détaillée</div>
                   </div>
                 </div>
-                <ArrowRight className="h-4 w-4 text-slate-500" />
+                <ArrowRight className="h-4 w-4 text-slate-400" />
               </button>
 
               <button
@@ -197,7 +197,7 @@ export function DirecteurTravauxPage() {
                     <div className="text-xs text-slate-400">Vue détaillée</div>
                   </div>
                 </div>
-                <ArrowRight className="h-4 w-4 text-slate-500" />
+                <ArrowRight className="h-4 w-4 text-slate-400" />
               </button>
 
               <button
@@ -213,7 +213,7 @@ export function DirecteurTravauxPage() {
                     <div className="text-xs text-slate-400">Vue détaillée</div>
                   </div>
                 </div>
-                <ArrowRight className="h-4 w-4 text-slate-500" />
+                <ArrowRight className="h-4 w-4 text-slate-400" />
               </button>
             </div>
           </DashboardPanel>
@@ -252,7 +252,7 @@ export function DirecteurTravauxPage() {
                     )}>
                       +{retard.retardJours}j
                     </div>
-                    <div className="text-xs text-slate-500">Retard</div>
+                    <div className="text-xs text-slate-400">Retard</div>
                   </div>
                 </div>
               ))}
@@ -290,7 +290,7 @@ export function DirecteurTravauxPage() {
                     )}>
                       {budget.pourcentage}%
                     </div>
-                    <div className="text-xs text-slate-500">Consommé</div>
+                    <div className="text-xs text-slate-400">Consommé</div>
                   </div>
                 </div>
               ))}
@@ -333,7 +333,7 @@ export function DirecteurTravauxPage() {
                       )}>
                         {(conformite.conformite * 100).toFixed(0)}%
                       </div>
-                      <div className="text-xs text-slate-500">Conformité</div>
+                      <div className="text-xs text-slate-400">Conformité</div>
                     </div>
                   </div>
                 );

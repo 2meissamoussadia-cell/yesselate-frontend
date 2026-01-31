@@ -244,7 +244,7 @@ export function DecisionsSidebar({
       {/* Footer */}
       {!collapsed && (
         <div className="border-t border-slate-700/50 p-3">
-          <div className="text-xs text-slate-500 text-center">
+          <div className="text-xs text-slate-400 text-center">
             Décisions v2.0
           </div>
         </div>

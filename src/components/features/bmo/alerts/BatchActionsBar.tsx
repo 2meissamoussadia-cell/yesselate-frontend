@@ -63,7 +63,7 @@ export function BatchActionsBar({
             
             <button
               onClick={onClear}
-              className="text-xs text-slate-500 hover:text-slate-300 transition-colors flex items-center gap-1"
+              className="text-xs text-slate-400 hover:text-slate-300 transition-colors flex items-center gap-1"
             >
               <X className="h-3 w-3" />
               Désélectionner tout
@@ -136,7 +136,7 @@ export function BatchActionsBar({
           {/* Right: Close button */}
           <button
             onClick={onClear}
-            className="h-8 w-8 rounded-lg flex items-center justify-center hover:bg-slate-800/50 transition-colors text-slate-500 hover:text-slate-300"
+            className="h-8 w-8 rounded-lg flex items-center justify-center hover:bg-slate-800/50 transition-colors text-slate-400 hover:text-slate-300"
             title="Fermer"
           >
             <XCircle className="h-5 w-5" />

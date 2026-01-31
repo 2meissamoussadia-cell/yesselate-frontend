@@ -410,7 +410,7 @@ export function PerformanceView() {
                 onClick={() => openModal('kpi-drilldown', { kpiId: metric.id })}
               >
                 <div className="mt-3">
-                  <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+                  <div className="flex items-center justify-between text-xs text-slate-400 mb-1">
                     <span>Objectif: {metric.target}{metric.unit}</span>
                     <span>{Math.min(100, targetProgress).toFixed(0)}%</span>
                   </div>
@@ -447,12 +447,12 @@ export function PerformanceView() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-slate-800/50">
-                <th className="text-left text-xs font-medium text-slate-500 uppercase px-4 py-3">Bureau</th>
-                <th className="text-center text-xs font-medium text-slate-500 uppercase px-4 py-3">Score</th>
-                <th className="text-center text-xs font-medium text-slate-500 uppercase px-4 py-3">Tendance</th>
-                <th className="text-center text-xs font-medium text-slate-500 uppercase px-4 py-3">Validations</th>
-                <th className="text-center text-xs font-medium text-slate-500 uppercase px-4 py-3">Blocages</th>
-                <th className="text-right text-xs font-medium text-slate-500 uppercase px-4 py-3">Actions</th>
+                <th className="text-left text-xs font-medium text-slate-400 uppercase px-4 py-3">Bureau</th>
+                <th className="text-center text-xs font-medium text-slate-400 uppercase px-4 py-3">Score</th>
+                <th className="text-center text-xs font-medium text-slate-400 uppercase px-4 py-3">Tendance</th>
+                <th className="text-center text-xs font-medium text-slate-400 uppercase px-4 py-3">Validations</th>
+                <th className="text-center text-xs font-medium text-slate-400 uppercase px-4 py-3">Blocages</th>
+                <th className="text-right text-xs font-medium text-slate-400 uppercase px-4 py-3">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800/50">
@@ -488,7 +488,7 @@ export function PerformanceView() {
                     ) : bureau.trend === 'down' ? (
                       <TrendingDown className="w-4 h-4 text-rose-400 mx-auto" />
                     ) : (
-                      <Minus className="w-4 h-4 text-slate-500 mx-auto" />
+                      <Minus className="w-4 h-4 text-slate-400 mx-auto" />
                     )}
                   </td>
                   <td className="px-4 py-3 text-center">

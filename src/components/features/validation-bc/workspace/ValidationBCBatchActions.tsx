@@ -72,7 +72,7 @@ export function ValidationBCBatchActions({ open, documents, onClose, onComplete 
             >
               <CheckCircle className="w-6 h-6 text-emerald-500 mb-2" />
               <div className="font-semibold text-sm">Valider tout</div>
-              <div className="text-xs text-slate-500">Validation en masse</div>
+              <div className="text-xs text-slate-400">Validation en masse</div>
             </button>
 
             <button
@@ -81,7 +81,7 @@ export function ValidationBCBatchActions({ open, documents, onClose, onComplete 
             >
               <X className="w-6 h-6 text-rose-500 mb-2" />
               <div className="font-semibold text-sm">Rejeter tout</div>
-              <div className="text-xs text-slate-500">Rejet en masse</div>
+              <div className="text-xs text-slate-400">Rejet en masse</div>
             </button>
 
             <button
@@ -90,7 +90,7 @@ export function ValidationBCBatchActions({ open, documents, onClose, onComplete 
             >
               <Pause className="w-6 h-6 text-amber-500 mb-2" />
               <div className="font-semibold text-sm">Suspendre</div>
-              <div className="text-xs text-slate-500">Suspension temporaire</div>
+              <div className="text-xs text-slate-400">Suspension temporaire</div>
             </button>
 
             <button
@@ -99,7 +99,7 @@ export function ValidationBCBatchActions({ open, documents, onClose, onComplete 
             >
               <Play className="w-6 h-6 text-blue-500 mb-2" />
               <div className="font-semibold text-sm">Réactiver</div>
-              <div className="text-xs text-slate-500">Reprise du traitement</div>
+              <div className="text-xs text-slate-400">Reprise du traitement</div>
             </button>
           </div>
         ) : (
@@ -108,7 +108,7 @@ export function ValidationBCBatchActions({ open, documents, onClose, onComplete 
               <div className="font-semibold mb-2">
                 Action: <span className="text-purple-600">{action}</span>
               </div>
-              <div className="text-sm text-slate-500 mb-3">
+              <div className="text-sm text-slate-400 mb-3">
                 {documents.length} document(s) seront traités
               </div>
 

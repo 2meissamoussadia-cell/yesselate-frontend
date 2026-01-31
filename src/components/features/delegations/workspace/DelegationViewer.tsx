@@ -274,7 +274,7 @@ export function DelegationViewer({ tabId, delegationId, onOpenModal }: Props) {
     return (
       <div className="flex items-center justify-center h-[500px]">
         <RefreshCw className="w-6 h-6 animate-spin text-slate-400" />
-        <span className="ml-2 text-slate-500">Chargement...</span>
+        <span className="ml-2 text-slate-400">Chargement...</span>
       </div>
     );
   }
@@ -343,7 +343,7 @@ export function DelegationViewer({ tabId, delegationId, onOpenModal }: Props) {
                   )}
                   
                   <div className="min-w-0">
-                    <div className="text-xs text-slate-500 truncate">{breadcrumbs}</div>
+                    <div className="text-xs text-slate-400 truncate">{breadcrumbs}</div>
                     <div className="font-semibold truncate">
                       {delegation?.title || 'Délégation'}
                     </div>
@@ -398,7 +398,7 @@ export function DelegationViewer({ tabId, delegationId, onOpenModal }: Props) {
               {loading ? (
                 <div className="flex items-center justify-center py-12">
                   <RefreshCw className="w-6 h-6 animate-spin text-slate-400" />
-                  <span className="ml-3 text-slate-500">Chargement de la délégation...</span>
+                  <span className="ml-3 text-slate-400">Chargement de la délégation...</span>
                 </div>
               ) : (
                 <SectionRouter
@@ -462,7 +462,7 @@ function ExplorerNodeComponent({
       >
         {/* Chevron pour les groupes */}
         {hasChildren ? (
-          <span className="w-4 h-4 flex items-center justify-center text-slate-400 dark:text-slate-500">
+          <span className="w-4 h-4 flex items-center justify-center text-slate-400 dark:text-slate-400">
             {expanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
           </span>
         ) : (
@@ -472,7 +472,7 @@ function ExplorerNodeComponent({
         {/* Icône */}
         {node.icon && (
           <span className={cn(
-            isActive ? 'text-slate-700 dark:text-slate-300' : 'text-slate-400 dark:text-slate-500'
+            isActive ? 'text-slate-700 dark:text-slate-300' : 'text-slate-400 dark:text-slate-400'
           )}>
             {node.icon}
           </span>
@@ -492,7 +492,7 @@ function ExplorerNodeComponent({
                 'flex items-center gap-2 px-2 py-1.5 rounded-lg cursor-pointer transition-colors',
                 currentSection === child.section && currentSub === child.sub
                   ? 'bg-slate-200/60 text-slate-900 dark:bg-slate-700/50 dark:text-slate-100'
-                  : 'text-slate-500 hover:bg-slate-100/80 dark:text-slate-400 dark:hover:bg-slate-800/50'
+                  : 'text-slate-400 hover:bg-slate-100/80 dark:text-slate-400 dark:hover:bg-slate-800/50'
               )}
               onClick={() => onNavigate(child.section, child.sub)}
             >
@@ -500,7 +500,7 @@ function ExplorerNodeComponent({
                 <span className={cn(
                   currentSection === child.section && currentSub === child.sub
                     ? 'text-slate-700 dark:text-slate-300'
-                    : 'text-slate-400 dark:text-slate-500'
+                    : 'text-slate-400 dark:text-slate-400'
                 )}>
                   {child.icon}
                 </span>
@@ -549,7 +549,7 @@ function SectionRouter({
     case 'simulator':
       return <DelegationSimulatorSection delegationId={delegationId} delegation={delegation} sub={sub} />;
     default:
-      return <div className="text-slate-500 text-center py-8">Section inconnue</div>;
+      return <div className="text-slate-400 text-center py-8">Section inconnue</div>;
   }
 }
 

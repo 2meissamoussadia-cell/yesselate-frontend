@@ -11,6 +11,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -252,7 +253,7 @@ export function DemandesRHDetailModal({
                   </div>
                   <p className="text-sm text-slate-200">{demande.agent.nom}</p>
                   <p className="text-xs text-slate-400">{demande.agent.poste}</p>
-                  <p className="text-xs text-slate-500 mt-1">
+                  <p className="text-xs text-slate-400 mt-1">
                     {demande.agent.matricule} • {demande.agent.bureau}
                   </p>
                 </div>
@@ -333,7 +334,7 @@ export function DemandesRHDetailModal({
                             Niveau {validation.niveau} - {validation.valideur}
                           </p>
                           {validation.date && (
-                            <span className="text-xs text-slate-500">
+                            <span className="text-xs text-slate-400">
                               {new Date(validation.date).toLocaleDateString('fr-FR')}
                             </span>
                           )}
@@ -411,7 +412,7 @@ export function DemandesRHDetailModal({
                         className="bg-emerald-600 hover:bg-emerald-700 text-white"
                         onClick={() => {
                           // TODO: Implémenter validation
-                          console.log('Valider', demande.id);
+                          logger.debug('Valider', { component: 'DemandesRHDetailModal', id: demande.id });
                         }}
                       >
                         <CheckCircle className="h-4 w-4 mr-2" />
@@ -422,7 +423,7 @@ export function DemandesRHDetailModal({
                         size="sm"
                         onClick={() => {
                           // TODO: Implémenter rejet
-                          console.log('Rejeter', demande.id);
+                          logger.debug('Rejeter', { component: 'DemandesRHDetailModal', id: demande.id });
                         }}
                       >
                         <XCircle className="h-4 w-4 mr-2" />

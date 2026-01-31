@@ -134,7 +134,7 @@ export function DemandesSidebar() {
                 <Icon
                   className={cn(
                     'h-5 w-5 transition-colors flex-shrink-0',
-                    isActive ? category.color : 'text-slate-500'
+                    isActive ? category.color : 'text-slate-400'
                   )}
                 />
                 {!sidebarCollapsed && (
@@ -179,7 +179,7 @@ export function DemandesSidebar() {
       {/* Footer */}
       <div className="border-t border-slate-700/50 p-3">
         {!sidebarCollapsed && (
-          <div className="text-xs text-slate-500 text-center">
+          <div className="text-xs text-slate-400 text-center">
             Demandes BMO v3.0
           </div>
         )}

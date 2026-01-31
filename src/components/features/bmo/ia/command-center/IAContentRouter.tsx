@@ -234,7 +234,7 @@ export const IAContentRouter = React.memo(function IAContentRouter({
           <CardContent className="p-8 text-center">
             <Brain className="w-16 h-16 text-purple-400 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-slate-300 mb-2">Paramètres IA</h3>
-            <p className="text-slate-500">Paramètres en cours de développement</p>
+            <p className="text-slate-400">Paramètres en cours de développement</p>
           </CardContent>
         </Card>
       </div>

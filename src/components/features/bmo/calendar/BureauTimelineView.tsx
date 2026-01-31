@@ -197,7 +197,7 @@ export function BureauTimelineView({ activities, weekDays }: BureauTimelineViewP
                             </div>
                           )}
                           {dayEvents.length === 0 && (
-                            <div className="text-[8px] text-center text-slate-500">
+                            <div className="text-[8px] text-center text-slate-400">
                               —
                             </div>
                           )}

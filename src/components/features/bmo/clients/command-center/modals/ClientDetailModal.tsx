@@ -272,7 +272,7 @@ export function ClientDetailModal({
 
         {/* Footer */}
         <div className="flex items-center justify-between px-6 py-4 border-t border-slate-800/50 bg-slate-900/60">
-          <div className="text-sm text-slate-500">
+          <div className="text-sm text-slate-400">
             Dernière mise à jour: {client.lastInteraction ? new Date(client.lastInteraction).toLocaleDateString('fr-FR') : 'N/A'}
           </div>
           <div className="flex items-center gap-2">
@@ -302,14 +302,14 @@ function OverviewTab({ client }: { client: Client }) {
         <div className="p-4 rounded-xl border border-slate-700/50 bg-slate-800/30">
           <div className="flex items-center gap-2 mb-2">
             <DollarSign className="w-4 h-4 text-emerald-400" />
-            <span className="text-xs text-slate-500">CA Annuel</span>
+            <span className="text-xs text-slate-400">CA Annuel</span>
           </div>
           <p className="text-2xl font-bold text-slate-200">{client.ca}</p>
         </div>
         <div className="p-4 rounded-xl border border-slate-700/50 bg-slate-800/30">
           <div className="flex items-center gap-2 mb-2">
             <Star className="w-4 h-4 text-amber-400" />
-            <span className="text-xs text-slate-500">Satisfaction</span>
+            <span className="text-xs text-slate-400">Satisfaction</span>
           </div>
           <div className="flex items-baseline gap-2">
             <p className="text-2xl font-bold text-slate-200">{client.satisfaction}%</p>
@@ -321,14 +321,14 @@ function OverviewTab({ client }: { client: Client }) {
         <div className="p-4 rounded-xl border border-slate-700/50 bg-slate-800/30">
           <div className="flex items-center gap-2 mb-2">
             <FileText className="w-4 h-4 text-blue-400" />
-            <span className="text-xs text-slate-500">Projets</span>
+            <span className="text-xs text-slate-400">Projets</span>
           </div>
           <p className="text-2xl font-bold text-slate-200">{client.projects || 0}</p>
         </div>
         <div className="p-4 rounded-xl border border-slate-700/50 bg-slate-800/30">
           <div className="flex items-center gap-2 mb-2">
             <Users className="w-4 h-4 text-cyan-400" />
-            <span className="text-xs text-slate-500">Contacts</span>
+            <span className="text-xs text-slate-400">Contacts</span>
           </div>
           <p className="text-2xl font-bold text-slate-200">{client.contacts}</p>
         </div>
@@ -344,16 +344,16 @@ function OverviewTab({ client }: { client: Client }) {
           </h3>
           <div className="space-y-3 text-sm">
             <div className="flex justify-between">
-              <span className="text-slate-500">Secteur</span>
+              <span className="text-slate-400">Secteur</span>
               <span className="text-slate-300">{client.sector}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">Effectif</span>
+              <span className="text-slate-400">Effectif</span>
               <span className="text-slate-300">{client.employees || 'N/A'} employés</span>
             </div>
             {client.website && (
               <div className="flex justify-between items-center">
-                <span className="text-slate-500">Site web</span>
+                <span className="text-slate-400">Site web</span>
                 <a href={`https://${client.website}`} className="text-cyan-400 hover:underline flex items-center gap-1">
                   <Globe className="w-3 h-3" />
                   {client.website}
@@ -361,7 +361,7 @@ function OverviewTab({ client }: { client: Client }) {
               </div>
             )}
             <div className="flex justify-between">
-              <span className="text-slate-500">Adresse</span>
+              <span className="text-slate-400">Adresse</span>
               <span className="text-slate-300 text-right">
                 {client.address}<br />
                 {client.postalCode} {client.city}
@@ -378,7 +378,7 @@ function OverviewTab({ client }: { client: Client }) {
           </h3>
           <div className="space-y-3 text-sm">
             <div className="flex justify-between">
-              <span className="text-slate-500">Type</span>
+              <span className="text-slate-400">Type</span>
               <Badge className={cn(
                 'text-xs',
                 client.type === 'premium' ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' :
@@ -388,22 +388,22 @@ function OverviewTab({ client }: { client: Client }) {
               </Badge>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">Manager</span>
+              <span className="text-slate-400">Manager</span>
               <span className="text-slate-300">{client.manager || 'Non assigné'}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">Client depuis</span>
+              <span className="text-slate-400">Client depuis</span>
               <span className="text-slate-300">{new Date(client.since).toLocaleDateString('fr-FR')}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">Dernière interaction</span>
+              <span className="text-slate-400">Dernière interaction</span>
               <span className="text-slate-300">
                 {client.lastInteraction ? new Date(client.lastInteraction).toLocaleDateString('fr-FR') : 'N/A'}
               </span>
             </div>
             {client.nextAction && (
               <div className="pt-2 mt-2 border-t border-slate-700/50">
-                <span className="text-slate-500 block mb-1">Prochaine action</span>
+                <span className="text-slate-400 block mb-1">Prochaine action</span>
                 <span className="text-cyan-400">{client.nextAction}</span>
               </div>
             )}
@@ -462,7 +462,7 @@ function ContactsTab({ contacts }: { contacts: Contact[] }) {
               <h4 className="font-semibold text-slate-200">
                 {contact.firstName} {contact.lastName}
               </h4>
-              <p className="text-sm text-slate-500">{contact.role}</p>
+              <p className="text-sm text-slate-400">{contact.role}</p>
               {contact.isPrimary && (
                 <Badge className="mt-1 bg-cyan-500/20 text-cyan-400 border-cyan-500/30 text-xs">
                   Contact principal
@@ -529,7 +529,7 @@ function InteractionsTab({ interactions }: { interactions: Interaction[] }) {
               </div>
               <div>
                 <h4 className="font-semibold text-slate-200">{interaction.subject}</h4>
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-slate-400">
                   {new Date(interaction.date).toLocaleString('fr-FR')}
                   {interaction.duration && ` • ${interaction.duration} min`}
                 </p>
@@ -580,7 +580,7 @@ function ContractsTab({ contracts }: { contracts: Contract[] }) {
           <div className="flex items-start justify-between mb-3">
             <div>
               <h4 className="font-semibold text-slate-200">{contract.type}</h4>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-slate-400">
                 {new Date(contract.startDate).toLocaleDateString('fr-FR')} → {new Date(contract.endDate).toLocaleDateString('fr-FR')}
               </p>
             </div>
@@ -599,11 +599,11 @@ function ContractsTab({ contracts }: { contracts: Contract[] }) {
           </div>
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
-              <span className="text-slate-500">Valeur</span>
+              <span className="text-slate-400">Valeur</span>
               <p className="text-slate-200 font-semibold">{(contract.value / 1000).toFixed(0)}K€</p>
             </div>
             <div>
-              <span className="text-slate-500">Renouvellement</span>
+              <span className="text-slate-400">Renouvellement</span>
               <p className="text-slate-200">{contract.autoRenewal ? 'Automatique' : 'Manuel'}</p>
             </div>
           </div>
@@ -618,21 +618,21 @@ function FinancialsTab({ client }: { client: Client }) {
     <div className="space-y-6">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="p-4 rounded-xl border border-slate-700/50 bg-slate-800/30">
-          <div className="text-xs text-slate-500 mb-1">CA Annuel</div>
+          <div className="text-xs text-slate-400 mb-1">CA Annuel</div>
           <div className="text-2xl font-bold text-slate-200">{client.ca}</div>
         </div>
         <div className="p-4 rounded-xl border border-slate-700/50 bg-slate-800/30">
-          <div className="text-xs text-slate-500 mb-1">CA Moyen/mois</div>
+          <div className="text-xs text-slate-400 mb-1">CA Moyen/mois</div>
           <div className="text-2xl font-bold text-slate-200">
             {(client.caNumeric / 12 / 1000).toFixed(0)}K€
           </div>
         </div>
         <div className="p-4 rounded-xl border border-slate-700/50 bg-slate-800/30">
-          <div className="text-xs text-slate-500 mb-1">Contrats actifs</div>
+          <div className="text-xs text-slate-400 mb-1">Contrats actifs</div>
           <div className="text-2xl font-bold text-slate-200">{client.contracts || 0}</div>
         </div>
         <div className="p-4 rounded-xl border border-slate-700/50 bg-slate-800/30">
-          <div className="text-xs text-slate-500 mb-1">Projets en cours</div>
+          <div className="text-xs text-slate-400 mb-1">Projets en cours</div>
           <div className="text-2xl font-bold text-slate-200">{client.projects || 0}</div>
         </div>
       </div>
@@ -653,7 +653,7 @@ function LitigesTab({ litiges }: { litiges: Litige[] }) {
       <div className="text-center py-12">
         <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-3" />
         <p className="text-slate-400">Aucun litige enregistré</p>
-        <p className="text-sm text-slate-500 mt-1">Excellent! Ce client n'a aucun litige.</p>
+        <p className="text-sm text-slate-400 mt-1">Excellent! Ce client n'a aucun litige.</p>
       </div>
     );
   }
@@ -680,7 +680,7 @@ function LitigesTab({ litiges }: { litiges: Litige[] }) {
               )} />
               <div>
                 <h4 className="font-semibold text-slate-200">{litige.subject}</h4>
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-slate-400">
                   Ouvert le {new Date(litige.date).toLocaleDateString('fr-FR')}
                   {litige.daysOpen > 0 && ` • ${litige.daysOpen} jour(s)`}
                 </p>
@@ -728,7 +728,7 @@ function HistoryTab({ clientId }: { clientId: string }) {
           <div className="flex-1">
             <div className="flex items-center justify-between mb-1">
               <h4 className="font-medium text-slate-200">{item.action}</h4>
-              <span className="text-xs text-slate-500">{new Date(item.date).toLocaleDateString('fr-FR')}</span>
+              <span className="text-xs text-slate-400">{new Date(item.date).toLocaleDateString('fr-FR')}</span>
             </div>
             <p className="text-sm text-slate-400">{item.details}</p>
             <p className="text-xs text-slate-600 mt-1">Par {item.user}</p>

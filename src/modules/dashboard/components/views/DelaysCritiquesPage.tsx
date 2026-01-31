@@ -155,7 +155,7 @@ export const DelaysCritiquesPage = memo(function DelaysCritiquesPage() {
       render: (value) => value ? (
         <span className="text-slate-300">{value}</span>
       ) : (
-        <span className="text-slate-500">-</span>
+        <span className="text-slate-400">-</span>
       ),
     },
     {
@@ -201,7 +201,7 @@ export const DelaysCritiquesPage = memo(function DelaysCritiquesPage() {
       render: (value) => value ? (
         <span className="font-semibold tabular-nums text-amber-400">{value}</span>
       ) : (
-        <span className="text-slate-500">-</span>
+        <span className="text-slate-400">-</span>
       ),
     },
   ], []);
@@ -234,7 +234,7 @@ export const DelaysCritiquesPage = memo(function DelaysCritiquesPage() {
         >
           <Clock className="h-3.5 w-3.5" />
           Centre d&apos;alertes — Retards projets
-          <ExternalLink className="h-3 w-3 text-slate-500" />
+          <ExternalLink className="h-3 w-3 text-slate-400" />
         </Link>
       </div>
       <DashboardSection title="Retards Critiques" description="Retards nécessitant une intervention immédiate">

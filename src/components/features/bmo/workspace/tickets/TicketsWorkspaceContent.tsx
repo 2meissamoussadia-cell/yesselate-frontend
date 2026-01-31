@@ -61,7 +61,7 @@ export function TicketsWorkspaceContent() {
     watchlist.includes(ticketId) ? removeFromWatchlist(ticketId) : addToWatchlist(ticketId);
   };
 
-  if (!activeTab) return <div className="flex items-center justify-center h-64 text-slate-500"><FileText className="w-12 h-12 opacity-30" /></div>;
+  if (!activeTab) return <div className="flex items-center justify-center h-64 text-slate-400"><FileText className="w-12 h-12 opacity-30" /></div>;
 
   if (activeTab.type === 'urgent') return <PlaceholderView icon={<AlertTriangle className="w-12 h-12" />} title="Tickets urgents" />;
   if (activeTab.type === 'assignes') return <PlaceholderView icon={<User className="w-12 h-12" />} title="Mes tickets assignés" />;
@@ -76,7 +76,7 @@ export function TicketsWorkspaceContent() {
           <h2 className="text-lg font-bold">
             {queue === 'open' ? 'Ouverts' : queue === 'in_progress' ? 'En cours' : queue === 'pending' ? 'En attente' : queue === 'resolved' ? 'Résolus' : queue === 'critical' ? 'Critiques' : 'Tous les tickets'}
           </h2>
-          <p className="text-sm text-slate-500">{tickets.length} ticket(s)</p>
+          <p className="text-sm text-slate-400">{tickets.length} ticket(s)</p>
         </div>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -87,7 +87,7 @@ export function TicketsWorkspaceContent() {
       {loading ? (
         <div className="space-y-3">{[...Array(5)].map((_, i) => <div key={i} className="h-28 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />)}</div>
       ) : tickets.length === 0 ? (
-        <div className="py-12 text-center text-slate-500"><FileText className="w-12 h-12 mx-auto mb-3 opacity-30" /><p className="font-medium">Aucun ticket trouvé</p></div>
+        <div className="py-12 text-center text-slate-400"><FileText className="w-12 h-12 mx-auto mb-3 opacity-30" /><p className="font-medium">Aucun ticket trouvé</p></div>
       ) : (
         <div className="space-y-2">
           {tickets.map(ticket => {
@@ -112,7 +112,7 @@ export function TicketsWorkspaceContent() {
                         {slaBreached && <span className="text-xs px-2 py-0.5 rounded bg-red-500/20 text-red-600 flex items-center gap-1"><XCircle className="w-3 h-3" />SLA</span>}
                       </div>
                       <p className="font-medium text-slate-900 dark:text-slate-100">{ticket.title}</p>
-                      <div className="flex items-center gap-4 mt-2 text-xs text-slate-500">
+                      <div className="flex items-center gap-4 mt-2 text-xs text-slate-400">
                         <span className="flex items-center gap-1"><Building2 className="w-3 h-3" />{ticket.client.name}</span>
                         {ticket.assignee && <span className="flex items-center gap-1"><User className="w-3 h-3" />{ticket.assignee.name}</span>}
                         <span className="flex items-center gap-1"><MessageSquare className="w-3 h-3" />{ticket.messages.length}</span>
@@ -121,7 +121,7 @@ export function TicketsWorkspaceContent() {
                     </div>
                     <div className="text-right flex-none">
                       <div className="mb-2">
-                        <div className="text-xs text-slate-500 mb-1">SLA: résolution {ticket.sla.resolutionDeadline}</div>
+                        <div className="text-xs text-slate-400 mb-1">SLA: résolution {ticket.sla.resolutionDeadline}</div>
                         <div className="w-20 h-1.5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
                           <div className={cn("h-full rounded-full", slaPercent >= 100 ? "bg-red-500" : slaPercent >= 80 ? "bg-amber-500" : "bg-emerald-500")} style={{ width: `${slaPercent}%` }} />
                         </div>
@@ -153,6 +153,6 @@ export function TicketsWorkspaceContent() {
 }
 
 function PlaceholderView({ icon, title }: { icon: React.ReactNode; title: string }) {
-  return <div className="flex items-center justify-center h-64 text-slate-500"><div className="text-center"><div className="mx-auto mb-4 opacity-30">{icon}</div><p className="font-semibold">{title}</p><p className="text-xs mt-4 text-slate-400">En cours de développement</p></div></div>;
+  return <div className="flex items-center justify-center h-64 text-slate-400"><div className="text-center"><div className="mx-auto mb-4 opacity-30">{icon}</div><p className="font-semibold">{title}</p><p className="text-xs mt-4 text-slate-400">En cours de développement</p></div></div>;
 }
 

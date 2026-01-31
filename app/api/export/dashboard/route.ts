@@ -3,8 +3,11 @@
 // Phase P12: Support séparateurs localisés
 // Phase P12.b: XLSX natif et PDF riche
 // Phase P15: Chiffrement E2E pour exports sensibles
+// P6/P9: Logging structuré (logger au lieu de console)
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import { logger } from '@lib-root/server/logging';
+import { safeCell, sanitizeFilename } from '@/modules/dashboard/utils/exportHelpers';
 import { extractContextFromHeaders } from '@lib-root/server/dashboard/context';
 import { hydrateContext } from '@lib-root/server/dashboard/context_ext';
 import { can } from '@lib-root/server/security/policy';
@@ -35,15 +38,6 @@ const Query = z.object({
   filename: z.string().optional()
 });
 
-function sanitizeFilename(name: string) {
-  return name.replace(/[^a-zA-Z0-9_\-\.]+/g, '_').slice(0, 120);
-}
-function safeCell(v: unknown): string {
-  let s = v == null ? '' : String(v);
-  if (/^[=\-+@]/.test(s)) s = `'${s}`;       // anti CSV injection
-  s = s.replace(/"/g, '""');                 // escape quotes
-  return `"${s}"`;
-}
 function inferRows(data: any): any[] {
   if (Array.isArray(data)) return data;
   if (Array.isArray(data?.rows)) return data.rows;
@@ -231,8 +225,7 @@ export async function GET(req: NextRequest) {
       success,
       errorMessage,
     }).catch((err) => {
-      // Non-bloquant
-      console.warn('[Export] Audit logging failed', err);
+      logger.warn({ err }, '[Export] Audit logging failed');
     });
   };
 
@@ -330,7 +323,7 @@ export async function GET(req: NextRequest) {
           return createEncryptedResponse(encrypted, metadata, `${baseName}_${now}.xlsx`);
         } catch (encError) {
           const errorMsg = encError instanceof Error ? encError.message : 'Encryption failed';
-          console.error('[Export XLSX Encryption] Error:', encError);
+          logger.error({ err: encError }, '[Export XLSX Encryption] Error');
           await logExport(buffer.length, '', false, `Encryption error: ${errorMsg}`);
           return NextResponse.json(
             { error: 'Encryption failed', details: errorMsg },
@@ -356,7 +349,7 @@ export async function GET(req: NextRequest) {
       });
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : 'Unknown error';
-      console.error('[Export XLSX] Error:', error);
+      logger.error({ err: error }, '[Export XLSX] Error');
       await logExport(0, '', false, errorMsg);
       return NextResponse.json(
         { error: 'Failed to generate XLSX', details: errorMsg },
@@ -399,7 +392,7 @@ export async function GET(req: NextRequest) {
           return createEncryptedResponse(encrypted, metadata, `${baseName}_${now}.pdf`);
         } catch (encError) {
           const errorMsg = encError instanceof Error ? encError.message : 'Encryption failed';
-          console.error('[Export PDF Encryption] Error:', encError);
+          logger.error({ err: encError }, '[Export PDF Encryption] Error');
           await logExport(buffer.length, '', false, `Encryption error: ${errorMsg}`);
           return NextResponse.json(
             { error: 'Encryption failed', details: errorMsg },
@@ -426,7 +419,7 @@ export async function GET(req: NextRequest) {
       });
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : 'Unknown error';
-      console.error('[Export PDF] Error:', error);
+      logger.error({ err: error }, '[Export PDF] Error');
       await logExport(0, '', false, errorMsg);
       
       // Fallback : retourner un PDF minimal en cas d'erreur

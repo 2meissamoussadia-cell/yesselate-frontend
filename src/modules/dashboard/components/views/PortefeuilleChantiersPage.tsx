@@ -11,12 +11,13 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { cn } from '@/lib/utils';
-import { Download, Plus, Eye, AlertTriangle, Ban, FileText } from 'lucide-react';
+import { Download, Plus, Eye, AlertTriangle, Ban, FileText, ChevronUp, ChevronDown } from 'lucide-react';
 import { ChantierDetailModal } from '../modals/ChantierDetailModal';
 import type { ChantierMock } from '../../data/chantiersMock';
 import { FilterBar, ErpButton } from '@/components/erp';
 import type { ErpFilters } from '@/components/erp';
 import { useAlertToast } from '@/components/ui/toast';
+import { toast } from 'sonner';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -35,6 +36,8 @@ interface ChantierRow {
   retardJours: number;
   risque: RisqueLevel;
 }
+
+type SortKey = keyof ChantierRow;
 
 type SummaryTone = 'neutral' | 'good' | 'bad';
 
@@ -178,13 +181,44 @@ function SummaryCard({
 function Th({
   children,
   className = '',
+  sortKey,
+  currentSortBy,
+  currentSortDir,
+  onSort,
 }: {
   children: React.ReactNode;
   className?: string;
+  sortKey?: SortKey;
+  currentSortBy?: SortKey | null;
+  currentSortDir?: 'asc' | 'desc';
+  onSort?: (key: SortKey) => void;
 }) {
+  const isSorted = sortKey != null && currentSortBy === sortKey;
+  const content = (
+    <>
+      {children}
+      {sortKey != null && onSort && (
+        <span className="inline-flex ml-1 opacity-70" aria-hidden>
+          {isSorted ? (currentSortDir === 'asc' ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />) : <ChevronUp className="h-3 w-3 opacity-50" />}
+        </span>
+      )}
+    </>
+  );
+  if (sortKey != null && onSort) {
+    return (
+      <th
+        role="columnheader"
+        aria-sort={isSorted ? (currentSortDir === 'asc' ? 'ascending' : 'descending') : undefined}
+        className={cn('text-left py-2 px-3 font-medium text-slate-400 text-[11px] cursor-pointer select-none hover:text-slate-300 hover:bg-slate-800/50 transition-colors', className)}
+        onClick={() => onSort(sortKey)}
+      >
+        {content}
+      </th>
+    );
+  }
   return (
     <th className={cn('text-left py-2 px-3 font-medium text-slate-400 text-[11px]', className)}>
-      {children}
+      {content}
     </th>
   );
 }
@@ -291,14 +325,29 @@ const INITIAL_FILTERS: ErpFilters = {
   gravite: '',
 };
 
+const RISQUE_ORDER: Record<RisqueLevel, number> = { Aucun: 0, Moyen: 1, Critique: 2 };
+
 export function PortefeuilleChantiersPage() {
   const [filters, setFilters] = useState<ErpFilters>(INITIAL_FILTERS);
+  const [sortBy, setSortBy] = useState<SortKey | null>(null);
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
   const [selectedChantier, setSelectedChantier] = useState<ChantierRow | null>(null);
   const [confirmAction, setConfirmAction] = useState<{
     type: ConfirmActionType;
     chantierId: string;
   } | null>(null);
   const [exporting, setExporting] = useState(false);
+
+  const toggleSort = useCallback((key: SortKey) => {
+    setSortBy((prev) => {
+      if (prev === key) {
+        setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
+        return key;
+      }
+      setSortDir('asc');
+      return key;
+    });
+  }, []);
 
   const onVoir = useCallback((id: string) => {
     const row = CHANTIERS_MOCK.find((c) => c.id === id) ?? null;
@@ -320,7 +369,6 @@ export function PortefeuilleChantiersPage() {
   const onConfirmAction = useCallback(() => {
     if (!confirmAction) return;
     // TODO: appels API réels (prioriser / bloquer / huissier)
-    console.log(confirmAction.type, confirmAction.chantierId);
     setConfirmAction(null);
   }, [confirmAction]);
 
@@ -355,6 +403,23 @@ export function PortefeuilleChantiersPage() {
     return true;
   });
 
+  // Tri côté client (audit : tri tableau chantiers)
+  const sortedRows = useMemo(() => {
+    if (!sortBy) return filtered;
+    const dir = sortDir === 'asc' ? 1 : -1;
+    return [...filtered].sort((a, b) => {
+      const va = a[sortBy];
+      const vb = b[sortBy];
+      if (sortBy === 'risque') {
+        const na = RISQUE_ORDER[(va as RisqueLevel) ?? 'Aucun'];
+        const nb = RISQUE_ORDER[(vb as RisqueLevel) ?? 'Aucun'];
+        return (na - nb) * dir;
+      }
+      if (typeof va === 'number' && typeof vb === 'number') return (va - vb) * dir;
+      return String(va ?? '').localeCompare(String(vb ?? ''), 'fr') * dir;
+    });
+  }, [filtered, sortBy, sortDir]);
+
   return (
     <div className="flex flex-col h-full bg-slate-950 text-slate-50">
       {/* HEADER */}
@@ -366,7 +431,12 @@ export function PortefeuilleChantiersPage() {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <ErpButton variant="default" size="sm" className="border border-slate-700">
+          <ErpButton
+            variant="default"
+            size="sm"
+            className="border border-slate-700"
+            onClick={() => toast.info('Nouveau chantier', { description: 'Formulaire de création à venir. En attendant, contactez l’équipe projet.' })}
+          >
             <Plus className="h-3.5 w-3.5" aria-hidden />
             Nouveau chantier
           </ErpButton>
@@ -436,20 +506,20 @@ export function PortefeuilleChantiersPage() {
             <table className="w-full text-[11px]">
               <thead className="bg-slate-900 sticky top-0 z-10">
                 <tr>
-                  <Th>Chantier</Th>
-                  <Th>Client</Th>
-                  <Th>Segment</Th>
-                  <Th>Prestation</Th>
-                  <Th>Phase</Th>
-                  <Th>Santé</Th>
-                  <Th>CA</Th>
-                  <Th>Retard</Th>
-                  <Th>Risque</Th>
+                  <Th sortKey="id" currentSortBy={sortBy} currentSortDir={sortDir} onSort={toggleSort}>Chantier</Th>
+                  <Th sortKey="client" currentSortBy={sortBy} currentSortDir={sortDir} onSort={toggleSort}>Client</Th>
+                  <Th sortKey="segment" currentSortBy={sortBy} currentSortDir={sortDir} onSort={toggleSort}>Segment</Th>
+                  <Th sortKey="prestation" currentSortBy={sortBy} currentSortDir={sortDir} onSort={toggleSort}>Prestation</Th>
+                  <Th sortKey="phase" currentSortBy={sortBy} currentSortDir={sortDir} onSort={toggleSort}>Phase</Th>
+                  <Th sortKey="sante" currentSortBy={sortBy} currentSortDir={sortDir} onSort={toggleSort}>Santé</Th>
+                  <Th sortKey="ca" currentSortBy={sortBy} currentSortDir={sortDir} onSort={toggleSort}>CA</Th>
+                  <Th sortKey="retardJours" currentSortBy={sortBy} currentSortDir={sortDir} onSort={toggleSort}>Retard</Th>
+                  <Th sortKey="risque" currentSortBy={sortBy} currentSortDir={sortDir} onSort={toggleSort}>Risque</Th>
                   <Th className="text-right">Actions</Th>
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((c) => (
+                {sortedRows.map((c) => (
                   <tr
                     key={c.id}
                     className="border-t border-slate-800/70 hover:bg-slate-900/80 transition-colors"

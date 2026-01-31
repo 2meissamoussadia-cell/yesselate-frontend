@@ -69,7 +69,7 @@ export function DelegationsDetailPanel() {
             variant="ghost"
             size="sm"
             onClick={closeDetailPanel}
-            className="h-7 w-7 p-0 text-slate-500 hover:text-slate-300"
+            className="h-7 w-7 p-0 text-slate-400 hover:text-slate-300"
           >
             <X className="h-4 w-4" />
           </Button>
@@ -128,7 +128,7 @@ function StatDetailContent({ data }: { data: Record<string, unknown> }) {
             {data.value as string | number}
           </span>
           {data.trendValue && (
-            <span className={cn('text-sm font-medium', data.trend === 'up' ? 'text-emerald-400' : data.trend === 'down' ? 'text-amber-400' : 'text-slate-500')}>
+            <span className={cn('text-sm font-medium', data.trend === 'up' ? 'text-emerald-400' : data.trend === 'down' ? 'text-amber-400' : 'text-slate-400')}>
               {data.trendValue as string}
             </span>
           )}
@@ -139,7 +139,7 @@ function StatDetailContent({ data }: { data: Record<string, unknown> }) {
         <div className="flex items-center gap-2">
           <TrendIcon className={cn(
             'h-4 w-4',
-            data.trend === 'up' ? 'text-emerald-400' : data.trend === 'down' ? 'text-amber-400' : 'text-slate-500'
+            data.trend === 'up' ? 'text-emerald-400' : data.trend === 'down' ? 'text-amber-400' : 'text-slate-400'
           )} />
           <span className="text-sm text-slate-400">
             {data.trend === 'up' ? 'En hausse' : data.trend === 'down' ? 'En baisse' : 'Stable'}

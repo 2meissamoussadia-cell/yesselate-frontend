@@ -229,7 +229,7 @@ function CalendarDomainContent({
             <History className="h-5 w-5 mr-2 text-blue-400" />
             <div className="text-left">
               <div className="font-medium text-slate-200">Timeline Globale</div>
-              <div className="text-xs text-slate-500">Vue temporelle complète</div>
+              <div className="text-xs text-slate-400">Vue temporelle complète</div>
             </div>
           </Button>
           
@@ -241,7 +241,7 @@ function CalendarDomainContent({
             <TrendingUp className="h-5 w-5 mr-2 text-purple-400" />
             <div className="text-left">
               <div className="font-medium text-slate-200">Heatmap des Charges</div>
-              <div className="text-xs text-slate-500">Analyse charge/disponibilité</div>
+              <div className="text-xs text-slate-400">Analyse charge/disponibilité</div>
             </div>
           </Button>
           
@@ -253,7 +253,7 @@ function CalendarDomainContent({
             <Users className="h-5 w-5 mr-2 text-emerald-400" />
             <div className="text-left">
               <div className="font-medium text-slate-200">Calendrier Multi-Ressources</div>
-              <div className="text-xs text-slate-500">Gestion des conflits</div>
+              <div className="text-xs text-slate-400">Gestion des conflits</div>
             </div>
           </Button>
           
@@ -265,7 +265,7 @@ function CalendarDomainContent({
             <AlertTriangle className="h-5 w-5 mr-2 text-amber-400" />
             <div className="text-left">
               <div className="font-medium text-slate-200">Vue Croisée SLA/Retards</div>
-              <div className="text-xs text-slate-500">SLA & conflits</div>
+              <div className="text-xs text-slate-400">SLA & conflits</div>
             </div>
           </Button>
           
@@ -277,7 +277,7 @@ function CalendarDomainContent({
             <Calendar className="h-5 w-5 mr-2 text-indigo-400" />
             <div className="text-left">
               <div className="font-medium text-slate-200">Planning Projet Intégré</div>
-              <div className="text-xs text-slate-500">Jalons & livrables</div>
+              <div className="text-xs text-slate-400">Jalons & livrables</div>
             </div>
           </Button>
         </div>
@@ -346,7 +346,7 @@ function CalendarDomainContent({
                     {mod.label}
                   </h3>
                   {mod.description && (
-                    <p className="text-slate-500 text-xs mb-2 line-clamp-2">{mod.description}</p>
+                    <p className="text-slate-400 text-xs mb-2 line-clamp-2">{mod.description}</p>
                   )}
                 </div>
               </div>

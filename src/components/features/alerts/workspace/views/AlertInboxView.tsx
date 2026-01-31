@@ -17,7 +17,7 @@ import { AlertInboxSkeleton } from '@/components/ui/alert-skeletons';
 import { useAlertQueue } from '@/lib/api/hooks';
 
 const QUEUE_CONFIG: Record<string, { label: string; icon: typeof AlertCircle; color: string }> = {
-  all: { label: 'Toutes', icon: AlertCircle, color: 'text-slate-500' },
+  all: { label: 'Toutes', icon: AlertCircle, color: 'text-slate-400' },
   critical: { label: 'Critiques', icon: AlertCircle, color: 'text-rose-500' },
   warning: { label: 'Avertissements', icon: AlertTriangle, color: 'text-amber-500' },
   info: { label: 'Informations', icon: Info, color: 'text-blue-500' },
@@ -30,7 +30,7 @@ const QUEUE_CONFIG: Record<string, { label: string; icon: typeof AlertCircle; co
   contract: { label: 'Contrats', icon: FileText, color: 'text-purple-500' },
   sla: { label: 'SLA dépassés', icon: Clock, color: 'text-rose-500' },
   budget: { label: 'Budgets', icon: TrendingUp, color: 'text-amber-500' },
-  system: { label: 'Système', icon: Info, color: 'text-slate-500' },
+  system: { label: 'Système', icon: Info, color: 'text-slate-400' },
 };
 
 const SEVERITY_COLORS: Record<string, string> = {
@@ -277,14 +277,14 @@ export function AlertInboxView({ tab }: { tab: AlertTab }) {
               </div>
               <div>
                 <h2 className="text-lg font-semibold text-slate-700 dark:text-slate-200">{queueConfig.label}</h2>
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-slate-400">
                   {filteredItems.length} alerte{filteredItems.length > 1 ? 's' : ''}
                 </p>
               </div>
             </div>
             
             <button 
-              className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/60 text-slate-500" 
+              className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/60 text-slate-400" 
               onClick={() => refetch()}
               disabled={loading}
               title="Rafraîchir"
@@ -368,7 +368,7 @@ export function AlertInboxView({ tab }: { tab: AlertTab }) {
               <div className="p-3 rounded-xl border border-slate-200/70 bg-slate-50/50 dark:border-slate-800 dark:bg-slate-900/30">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
                   <div>
-                    <label className="text-xs text-slate-500 mb-1 block">Sévérité</label>
+                    <label className="text-xs text-slate-400 mb-1 block">Sévérité</label>
                     <select
                       value={severityFilter}
                       onChange={(e) => setSeverityFilter(e.target.value)}
@@ -384,7 +384,7 @@ export function AlertInboxView({ tab }: { tab: AlertTab }) {
                   </div>
                   
                   <div>
-                    <label className="text-xs text-slate-500 mb-1 block">Statut</label>
+                    <label className="text-xs text-slate-400 mb-1 block">Statut</label>
                     <select
                       value={statusFilter}
                       onChange={(e) => setStatusFilter(e.target.value)}
@@ -400,7 +400,7 @@ export function AlertInboxView({ tab }: { tab: AlertTab }) {
                   </div>
                   
                   <div>
-                    <label className="text-xs text-slate-500 mb-1 block">Type</label>
+                    <label className="text-xs text-slate-400 mb-1 block">Type</label>
                     <select
                       value={typeFilter}
                       onChange={(e) => setTypeFilter(e.target.value)}
@@ -419,7 +419,7 @@ export function AlertInboxView({ tab }: { tab: AlertTab }) {
                   </div>
                   
                   <div>
-                    <label className="text-xs text-slate-500 mb-1 block">Bureau</label>
+                    <label className="text-xs text-slate-400 mb-1 block">Bureau</label>
                     <select
                       value={bureauFilter}
                       onChange={(e) => setBureauFilter(e.target.value)}
@@ -510,7 +510,7 @@ export function AlertInboxView({ tab }: { tab: AlertTab }) {
                 
                 <button
                   onClick={clearSelection}
-                  className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500"
+                  className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400"
                   title="Annuler la sélection"
                 >
                   <X className="w-4 h-4" />
@@ -590,7 +590,7 @@ export function AlertInboxView({ tab }: { tab: AlertTab }) {
                           <ChevronRight className="w-4 h-4 text-slate-400 shrink-0 group-hover:text-purple-500" />
                         </div>
                         
-                        <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mb-2">
+                        <p className="text-sm text-slate-400 dark:text-slate-400 line-clamp-2 mb-2">
                           {alert.description}
                         </p>
                         

@@ -274,7 +274,7 @@ function DocumentItem({ name, size, date }: { name: string; size: string; date: 
         </div>
         <div>
           <div className="text-sm font-medium text-slate-200">{name}</div>
-          <div className="text-xs text-slate-500">
+          <div className="text-xs text-slate-400">
             {size} • {date}
           </div>
         </div>
@@ -316,7 +316,7 @@ function TimelineItem({
       </div>
       <div className="flex-1 pb-4">
         <div className="text-sm text-slate-200 font-medium">{action}</div>
-        <div className="text-xs text-slate-500 mt-1">
+        <div className="text-xs text-slate-400 mt-1">
           {user} • {date}
         </div>
       </div>

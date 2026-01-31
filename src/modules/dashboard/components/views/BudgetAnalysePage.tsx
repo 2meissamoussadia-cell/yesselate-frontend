@@ -108,7 +108,7 @@ export const BudgetAnalysePage = memo(function BudgetAnalysePage() {
       render: (value) => value ? (
         <span className="text-slate-200 font-medium">{value}</span>
       ) : (
-        <span className="text-slate-500">-</span>
+        <span className="text-slate-400">-</span>
       ),
     },
     {

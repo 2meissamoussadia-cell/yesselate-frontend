@@ -252,7 +252,7 @@ export function AbsencesTab() {
 
                       <div className="text-sm text-slate-300">{absence.reason}</div>
                       {absence.description && (
-                        <div className="text-sm text-slate-500 mt-1">{absence.description}</div>
+                        <div className="text-sm text-slate-400 mt-1">{absence.description}</div>
                       )}
                     </div>
 

@@ -69,7 +69,7 @@ export function OperationalKPIModal({ kpiId, onClose }: KPISpecializedModalProps
             </div>
             <div>
               <h2 className="text-lg font-semibold text-slate-200">{displayData?.label}</h2>
-              <p className="text-xs text-slate-500">KPI Opérationnel</p>
+              <p className="text-xs text-slate-400">KPI Opérationnel</p>
             </div>
           </div>
           <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0">
@@ -101,15 +101,15 @@ export function OperationalKPIModal({ kpiId, onClose }: KPISpecializedModalProps
             <div className="space-y-6">
               <div className="grid grid-cols-4 gap-4">
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <p className="text-xs text-slate-500 mb-1">Total</p>
+                  <p className="text-xs text-slate-400 mb-1">Total</p>
                   <p className="text-2xl font-bold text-slate-200">{displayData?.value || 'N/A'}</p>
                 </div>
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <p className="text-xs text-slate-500 mb-1">Objectif</p>
+                  <p className="text-xs text-slate-400 mb-1">Objectif</p>
                   <p className="text-2xl font-bold text-slate-200">{detail?.target || metadata?.target || 'N/A'}</p>
                 </div>
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <p className="text-xs text-slate-500 mb-1">Variation</p>
+                  <p className="text-xs text-slate-400 mb-1">Variation</p>
                   <p className={cn(
                     'text-2xl font-bold flex items-center gap-1',
                     displayData?.trend === 'up' && displayData?.tone === 'ok' && 'text-emerald-400',
@@ -120,7 +120,7 @@ export function OperationalKPIModal({ kpiId, onClose }: KPISpecializedModalProps
                   </p>
                 </div>
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <p className="text-xs text-slate-500 mb-1">Statut</p>
+                  <p className="text-xs text-slate-400 mb-1">Statut</p>
                   <Badge variant={displayData?.tone === 'ok' ? 'default' : displayData?.tone === 'warn' ? 'warning' : 'destructive'}>
                     {displayData?.tone === 'ok' ? 'Normal' : displayData?.tone === 'warn' ? 'Attention' : 'Critique'}
                   </Badge>
@@ -129,7 +129,7 @@ export function OperationalKPIModal({ kpiId, onClose }: KPISpecializedModalProps
 
               {breakdownByType.length > 0 && (
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <p className="text-xs text-slate-500 mb-4">Répartition par type</p>
+                  <p className="text-xs text-slate-400 mb-4">Répartition par type</p>
                   <div className="space-y-3">
                     {breakdownByType.map((item: any, i: number) => (
                       <div key={i} className="space-y-1">
@@ -163,7 +163,7 @@ export function OperationalKPIModal({ kpiId, onClose }: KPISpecializedModalProps
                     <div className="text-right">
                       <p className="text-lg font-bold text-slate-200">{item.value}</p>
                       {item.percentage !== undefined && (
-                        <p className="text-xs text-slate-500">{item.percentage}%</p>
+                        <p className="text-xs text-slate-400">{item.percentage}%</p>
                       )}
                     </div>
                   </div>
@@ -182,7 +182,7 @@ export function OperationalKPIModal({ kpiId, onClose }: KPISpecializedModalProps
 
           {selectedView === 'timeline' && detail?.history && (
             <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-              <p className="text-xs text-slate-500 mb-4">Évolution dans le temps</p>
+              <p className="text-xs text-slate-400 mb-4">Évolution dans le temps</p>
               <div className="space-y-2">
                 {detail.history.slice().reverse().map((item: any, i: number) => (
                   <div key={i} className="flex items-center justify-between p-2 rounded bg-slate-900/50">
@@ -190,7 +190,7 @@ export function OperationalKPIModal({ kpiId, onClose }: KPISpecializedModalProps
                     <div className="flex items-center gap-4">
                       <span className="text-sm font-medium text-slate-200">{item.value}</span>
                       {item.target && (
-                        <span className="text-xs text-slate-500">Objectif: {item.target}</span>
+                        <span className="text-xs text-slate-400">Objectif: {item.target}</span>
                       )}
                     </div>
                   </div>
@@ -201,7 +201,7 @@ export function OperationalKPIModal({ kpiId, onClose }: KPISpecializedModalProps
         </div>
 
         <div className="flex items-center justify-between px-6 py-3 border-t border-slate-800/50">
-          <div className="text-xs text-slate-500">
+          <div className="text-xs text-slate-400">
             Dernière mise à jour: {detail?.timestamp ? new Date(detail.timestamp).toLocaleString('fr-FR') : 'N/A'}
           </div>
           <Button size="sm" variant="outline" onClick={onClose} className="border-slate-700">
@@ -241,7 +241,7 @@ export function FinancialKPIModal({ kpiId, onClose }: KPISpecializedModalProps) 
             </div>
             <div>
               <h2 className="text-lg font-semibold text-slate-200">{displayData?.label}</h2>
-              <p className="text-xs text-slate-500">KPI Financier</p>
+              <p className="text-xs text-slate-400">KPI Financier</p>
             </div>
           </div>
           <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0">
@@ -287,7 +287,7 @@ export function FinancialKPIModal({ kpiId, onClose }: KPISpecializedModalProps) 
                     style={{ width: `${Math.min(budgetConsumed, 100)}%` }}
                   />
                 </div>
-                <div className="flex items-center justify-between mt-2 text-xs text-slate-500">
+                <div className="flex items-center justify-between mt-2 text-xs text-slate-400">
                   <span>0%</span>
                   <span>Objectif: {detail?.target || metadata?.target || 'N/A'}</span>
                   <span>100%</span>
@@ -296,11 +296,11 @@ export function FinancialKPIModal({ kpiId, onClose }: KPISpecializedModalProps) 
 
               <div className="grid grid-cols-3 gap-4">
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <p className="text-xs text-slate-500 mb-1">Budget total</p>
+                  <p className="text-xs text-slate-400 mb-1">Budget total</p>
                   <p className="text-xl font-bold text-slate-200">{detail?.target || 'N/A'}</p>
                 </div>
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <p className="text-xs text-slate-500 mb-1">Restant</p>
+                  <p className="text-xs text-slate-400 mb-1">Restant</p>
                   <p className="text-xl font-bold text-slate-200">
                     {typeof detail?.target === 'number' && typeof detail?.currentValue === 'number'
                       ? `${(detail.target - detail.currentValue).toFixed(1)} ${metadata?.unit || ''}`
@@ -308,7 +308,7 @@ export function FinancialKPIModal({ kpiId, onClose }: KPISpecializedModalProps) 
                   </p>
                 </div>
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <p className="text-xs text-slate-500 mb-1">Tendance</p>
+                  <p className="text-xs text-slate-400 mb-1">Tendance</p>
                   <p className={cn(
                     'text-xl font-bold flex items-center gap-1',
                     displayData?.trend === 'up' && 'text-emerald-400',
@@ -326,7 +326,7 @@ export function FinancialKPIModal({ kpiId, onClose }: KPISpecializedModalProps) 
             <div className="space-y-4">
               {breakdownByCategory.length > 0 && (
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <p className="text-xs text-slate-500 mb-4">Répartition par catégorie</p>
+                  <p className="text-xs text-slate-400 mb-4">Répartition par catégorie</p>
                   <div className="space-y-3">
                     {breakdownByCategory.map((item: any, i: number) => (
                       <div key={i} className="space-y-1">
@@ -348,7 +348,7 @@ export function FinancialKPIModal({ kpiId, onClose }: KPISpecializedModalProps) 
 
               {breakdownByBureau.length > 0 && (
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <p className="text-xs text-slate-500 mb-4">Répartition par bureau</p>
+                  <p className="text-xs text-slate-400 mb-4">Répartition par bureau</p>
                   <div className="space-y-3">
                     {breakdownByBureau.map((item: any, i: number) => (
                       <div key={i} className="space-y-1">
@@ -372,7 +372,7 @@ export function FinancialKPIModal({ kpiId, onClose }: KPISpecializedModalProps) 
 
           {selectedView === 'forecast' && (
             <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-              <p className="text-xs text-slate-500 mb-4">Prévisions basées sur les tendances</p>
+              <p className="text-xs text-slate-400 mb-4">Prévisions basées sur les tendances</p>
               <div className="space-y-3">
                 {[1, 2, 3].map((month) => {
                   const date = new Date();
@@ -398,7 +398,7 @@ export function FinancialKPIModal({ kpiId, onClose }: KPISpecializedModalProps) 
         </div>
 
         <div className="flex items-center justify-between px-6 py-3 border-t border-slate-800/50">
-          <div className="text-xs text-slate-500">
+          <div className="text-xs text-slate-400">
             Dernière mise à jour: {detail?.timestamp ? new Date(detail.timestamp).toLocaleString('fr-FR') : 'N/A'}
           </div>
           <Button size="sm" variant="outline" onClick={onClose} className="border-slate-700">
@@ -448,7 +448,7 @@ export function PerformanceKPIModal({ kpiId, onClose }: KPISpecializedModalProps
             </div>
             <div>
               <h2 className="text-lg font-semibold text-slate-200">{displayData?.label}</h2>
-              <p className="text-xs text-slate-500">KPI de Performance</p>
+              <p className="text-xs text-slate-400">KPI de Performance</p>
             </div>
           </div>
           <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0">
@@ -513,22 +513,22 @@ export function PerformanceKPIModal({ kpiId, onClose }: KPISpecializedModalProps
                     )}>
                       {performanceScore.toFixed(0)}
                     </span>
-                    <span className="text-sm text-slate-500">{metadata?.unit || '%'}</span>
+                    <span className="text-sm text-slate-400">{metadata?.unit || '%'}</span>
                   </div>
                 </div>
               </div>
 
               <div className="grid grid-cols-3 gap-4">
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <p className="text-xs text-slate-500 mb-1">Valeur actuelle</p>
+                  <p className="text-xs text-slate-400 mb-1">Valeur actuelle</p>
                   <p className="text-xl font-bold text-slate-200">{displayData?.value || 'N/A'}</p>
                 </div>
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <p className="text-xs text-slate-500 mb-1">Objectif</p>
+                  <p className="text-xs text-slate-400 mb-1">Objectif</p>
                   <p className="text-xl font-bold text-slate-200">{detail?.target || metadata?.target || 'N/A'}</p>
                 </div>
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <p className="text-xs text-slate-500 mb-1">Écart</p>
+                  <p className="text-xs text-slate-400 mb-1">Écart</p>
                   <p className={cn(
                     'text-xl font-bold',
                     performanceScore >= (detail?.target || 0) ? 'text-emerald-400' : 'text-red-400'
@@ -575,7 +575,7 @@ export function PerformanceKPIModal({ kpiId, onClose }: KPISpecializedModalProps
 
           {selectedView === 'trends' && historicalData.length > 0 && (
             <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-              <p className="text-xs text-slate-500 mb-4">Évolution de la performance</p>
+              <p className="text-xs text-slate-400 mb-4">Évolution de la performance</p>
               <div className="h-64 flex items-end gap-2">
                 {historicalData.map((point: any, i: number) => {
                   const value = point.value || 0;
@@ -600,7 +600,7 @@ export function PerformanceKPIModal({ kpiId, onClose }: KPISpecializedModalProps
                           </div>
                         </div>
                       </div>
-                      <p className="text-xs text-slate-500 text-center truncate w-full">{point.period}</p>
+                      <p className="text-xs text-slate-400 text-center truncate w-full">{point.period}</p>
                     </div>
                   );
                 })}
@@ -610,7 +610,7 @@ export function PerformanceKPIModal({ kpiId, onClose }: KPISpecializedModalProps
         </div>
 
         <div className="flex items-center justify-between px-6 py-3 border-t border-slate-800/50">
-          <div className="text-xs text-slate-500">
+          <div className="text-xs text-slate-400">
             Dernière mise à jour: {detail?.timestamp ? new Date(detail.timestamp).toLocaleString('fr-FR') : 'N/A'}
           </div>
           <Button size="sm" variant="outline" onClick={onClose} className="border-slate-700">

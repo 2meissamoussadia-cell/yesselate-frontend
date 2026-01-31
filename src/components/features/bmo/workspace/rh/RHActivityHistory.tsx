@@ -179,7 +179,7 @@ export function RHActivityHistory() {
       case 'assignment':
         return { icon: User, color: 'text-teal-500', bg: 'bg-teal-500/10', label: 'Assignation' };
       default:
-        return { icon: History, color: 'text-slate-500', bg: 'bg-slate-500/10', label: 'Action' };
+        return { icon: History, color: 'text-slate-400', bg: 'bg-slate-500/10', label: 'Action' };
     }
   };
 
@@ -228,7 +228,7 @@ export function RHActivityHistory() {
             <History className="w-5 h-5 text-orange-500" />
             Historique des actions
           </h2>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-400">
             {stats.total} action{stats.total > 1 ? 's' : ''} • {stats.today} aujourd&apos;hui
           </p>
         </div>
@@ -250,7 +250,7 @@ export function RHActivityHistory() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800">
           <div className="text-2xl font-bold">{stats.total}</div>
-          <div className="text-xs text-slate-500">Total</div>
+          <div className="text-xs text-slate-400">Total</div>
         </div>
         <div className="p-3 rounded-xl bg-emerald-500/10">
           <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{stats.validations}</div>
@@ -317,7 +317,7 @@ export function RHActivityHistory() {
           {/* Dates */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-slate-500 mb-1">Date début</label>
+              <label className="block text-sm text-slate-400 mb-1">Date début</label>
               <input
                 type="date"
                 value={dateRange.start}
@@ -327,7 +327,7 @@ export function RHActivityHistory() {
               />
             </div>
             <div>
-              <label className="block text-sm text-slate-500 mb-1">Date fin</label>
+              <label className="block text-sm text-slate-400 mb-1">Date fin</label>
               <input
                 type="date"
                 value={dateRange.end}
@@ -344,7 +344,7 @@ export function RHActivityHistory() {
       <Card>
         <CardContent className="p-0">
           {filteredActivities.length === 0 ? (
-            <div className="p-8 text-center text-slate-500">
+            <div className="p-8 text-center text-slate-400">
               <History className="w-12 h-12 mx-auto mb-3 opacity-30" />
               <p>Aucune activité trouvée</p>
             </div>
@@ -377,7 +377,7 @@ export function RHActivityHistory() {
                           </Badge>
                         </div>
 
-                        <div className="text-sm text-slate-500 mt-1">
+                        <div className="text-sm text-slate-400 mt-1">
                           <span className="font-medium">{activity.agent}</span>
                           <span className="mx-1">•</span>
                           <span>par {activity.actor.name} ({activity.actor.role})</span>

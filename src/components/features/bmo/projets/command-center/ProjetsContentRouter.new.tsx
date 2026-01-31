@@ -252,11 +252,11 @@ function OverviewView() {
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-slate-200 truncate">{project.title}</p>
-                      <p className="text-sm text-slate-500">{project.client.name}</p>
+                      <p className="text-sm text-slate-400">{project.client.name}</p>
                     </div>
                     <div className="flex items-center gap-3 ml-4">
                       <div className="text-right">
-                        <p className="text-xs text-slate-500">Progression</p>
+                        <p className="text-xs text-slate-400">Progression</p>
                         <p className="text-sm font-medium text-emerald-400">{project.progress}%</p>
                       </div>
                       <div className="w-16 h-2 bg-slate-700 rounded-full overflow-hidden">
@@ -621,7 +621,7 @@ function KanbanView() {
             <div key={status} className="flex flex-col rounded-xl border border-slate-700/50 bg-slate-800/30">
               <div className="p-4 border-b border-slate-700/50">
                 <h3 className="font-medium text-slate-200 capitalize">{status}</h3>
-                <p className="text-xs text-slate-500 mt-1">{projects.length} projets</p>
+                <p className="text-xs text-slate-400 mt-1">{projects.length} projets</p>
               </div>
               <div className="flex-1 p-4 space-y-3 overflow-y-auto">
                 {projects.map((project) => (
@@ -631,7 +631,7 @@ function KanbanView() {
                     className="p-3 rounded-lg bg-slate-900/50 border border-slate-700/50 hover:border-emerald-500/50 cursor-pointer transition-all"
                   >
                     <p className="font-medium text-slate-200 text-sm mb-1">{project.title}</p>
-                    <p className="text-xs text-slate-500">{project.client.name}</p>
+                    <p className="text-xs text-slate-400">{project.client.name}</p>
                     <div className="mt-2 w-full h-1.5 bg-slate-700 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-emerald-500"
@@ -681,19 +681,19 @@ function ProjectCard({ project, onClick }: { project: any; onClick: () => void }
 
       <div className="grid grid-cols-4 gap-4 mb-4">
         <div>
-          <p className="text-xs text-slate-500 mb-1">Progression</p>
+          <p className="text-xs text-slate-400 mb-1">Progression</p>
           <p className={cn('text-sm font-medium', config.textColor)}>{project.progress}%</p>
         </div>
         <div>
-          <p className="text-xs text-slate-500 mb-1">Bureau</p>
+          <p className="text-xs text-slate-400 mb-1">Bureau</p>
           <p className="text-sm font-medium text-slate-300">{project.bureau}</p>
         </div>
         <div>
-          <p className="text-xs text-slate-500 mb-1">Équipe</p>
+          <p className="text-xs text-slate-400 mb-1">Équipe</p>
           <p className="text-sm font-medium text-slate-300">{project.teamSize || project.team} pers.</p>
         </div>
         <div>
-          <p className="text-xs text-slate-500 mb-1">Budget</p>
+          <p className="text-xs text-slate-400 mb-1">Budget</p>
           <p className="text-sm font-medium text-slate-300">{((project.budget?.current || project.budget) / 1000000).toFixed(1)}M€</p>
         </div>
       </div>

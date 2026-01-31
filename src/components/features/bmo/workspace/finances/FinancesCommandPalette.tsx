@@ -55,7 +55,7 @@ export function FinancesCommandPalette({ open, onClose, onOpenStats, onRefresh }
         <div className="max-h-[60vh] overflow-y-auto py-2">
           {groupedCommands.map(({ category, items }) => (
             <div key={category} className="mb-1">
-              <div className="px-4 py-2 text-xs font-semibold text-slate-500 uppercase">{categoryLabels[category]}</div>
+              <div className="px-4 py-2 text-xs font-semibold text-slate-400 uppercase">{categoryLabels[category]}</div>
               {items.map(cmd => {
                 const globalIdx = filteredCommands.indexOf(cmd);
                 const isSelected = globalIdx === selectedIndex;

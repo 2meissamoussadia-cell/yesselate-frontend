@@ -268,7 +268,7 @@ export function InvoiceFormModal({
                     >
                       <div className="grid grid-cols-12 gap-3">
                         <div className="col-span-5 space-y-1">
-                          <label className="text-xs text-slate-500">Description</label>
+                          <label className="text-xs text-slate-400">Description</label>
                           <input
                             type="text"
                             value={item.description}
@@ -280,7 +280,7 @@ export function InvoiceFormModal({
                           />
                         </div>
                         <div className="col-span-2 space-y-1">
-                          <label className="text-xs text-slate-500">Quantité</label>
+                          <label className="text-xs text-slate-400">Quantité</label>
                           <input
                             type="number"
                             value={item.quantity}
@@ -292,7 +292,7 @@ export function InvoiceFormModal({
                           />
                         </div>
                         <div className="col-span-2 space-y-1">
-                          <label className="text-xs text-slate-500">Prix unitaire</label>
+                          <label className="text-xs text-slate-400">Prix unitaire</label>
                           <input
                             type="number"
                             value={item.unitPrice}
@@ -304,7 +304,7 @@ export function InvoiceFormModal({
                           />
                         </div>
                         <div className="col-span-2 space-y-1">
-                          <label className="text-xs text-slate-500">Total</label>
+                          <label className="text-xs text-slate-400">Total</label>
                           <div className="px-3 py-2 bg-slate-900/50 border border-slate-700/50 rounded-lg text-slate-200 text-sm font-semibold">
                             {new Intl.NumberFormat('fr-FR').format(item.total)}
                           </div>

@@ -231,7 +231,7 @@ export function ValidationBCRequestJustificatif({
               >
                 <div className="flex items-center gap-2 mb-1">
                   <Clock className="w-4 h-4 text-amber-500" />
-                  <span className="text-sm text-slate-500">En attente</span>
+                  <span className="text-sm text-slate-400">En attente</span>
                 </div>
                 <p className="text-2xl font-bold">{stats.pending}</p>
               </button>
@@ -245,7 +245,7 @@ export function ValidationBCRequestJustificatif({
               >
                 <div className="flex items-center gap-2 mb-1">
                   <CheckCircle className="w-4 h-4 text-emerald-500" />
-                  <span className="text-sm text-slate-500">Reçus</span>
+                  <span className="text-sm text-slate-400">Reçus</span>
                 </div>
                 <p className="text-2xl font-bold">{stats.received}</p>
               </button>
@@ -259,7 +259,7 @@ export function ValidationBCRequestJustificatif({
               >
                 <div className="flex items-center gap-2 mb-1">
                   <AlertTriangle className="w-4 h-4 text-red-500" />
-                  <span className="text-sm text-slate-500">En retard</span>
+                  <span className="text-sm text-slate-400">En retard</span>
                 </div>
                 <p className="text-2xl font-bold">{stats.overdue}</p>
               </button>
@@ -319,7 +319,7 @@ export function ValidationBCRequestJustificatif({
                       </div>
                       {req.deadline && (
                         <div className="text-right">
-                          <p className="text-xs text-slate-500">Échéance</p>
+                          <p className="text-xs text-slate-400">Échéance</p>
                           <p className={cn('text-sm font-medium', req.status === 'overdue' && 'text-red-600')}>
                             {new Date(req.deadline).toLocaleDateString('fr-FR')}
                           </p>
@@ -329,7 +329,7 @@ export function ValidationBCRequestJustificatif({
 
                     <p className="text-sm text-slate-600 dark:text-slate-300 mb-3">{req.message}</p>
 
-                    <div className="flex items-center justify-between text-xs text-slate-500">
+                    <div className="flex items-center justify-between text-xs text-slate-400">
                       <div className="flex items-center gap-4">
                         <span className="flex items-center gap-1">
                           <User className="w-3 h-3" />
@@ -351,7 +351,7 @@ export function ValidationBCRequestJustificatif({
                     {/* Response */}
                     {req.response && (
                       <div className="mt-3 pt-3 border-t border-slate-200/50 dark:border-slate-700/50">
-                        <p className="text-xs font-medium text-slate-500 mb-1 flex items-center gap-1">
+                        <p className="text-xs font-medium text-slate-400 mb-1 flex items-center gap-1">
                           <MessageSquare className="w-3 h-3" />
                           Réponse
                         </p>
@@ -373,7 +373,7 @@ export function ValidationBCRequestJustificatif({
               })}
 
               {filteredRequests.length === 0 && (
-                <div className="text-center py-12 text-slate-500">
+                <div className="text-center py-12 text-slate-400">
                   <Paperclip className="w-12 h-12 mx-auto mb-3 opacity-30" />
                   <p>Aucune demande trouvée</p>
                 </div>
@@ -387,7 +387,7 @@ export function ValidationBCRequestJustificatif({
               <h3 className="text-lg font-semibold">Nouvelle demande de pièce</h3>
               <button
                 onClick={() => setView('list')}
-                className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                className="text-sm text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
               >
                 ← Retour à la liste
               </button>

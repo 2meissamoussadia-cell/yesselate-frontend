@@ -138,7 +138,7 @@ export function ProactiveAlerts({
         <div className="text-center py-4">
           <div className="text-2xl mb-2">✅</div>
           <p className="text-xs text-slate-400">Aucune alerte proactive pour le moment</p>
-          <p className="text-[10px] text-slate-500 mt-1">Tout semble normal</p>
+          <p className="text-[10px] text-slate-400 mt-1">Tout semble normal</p>
         </div>
       </DashboardCard>
     );

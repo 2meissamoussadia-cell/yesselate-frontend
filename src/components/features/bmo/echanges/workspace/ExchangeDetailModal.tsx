@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -63,7 +64,7 @@ export function ExchangeDetailModal({ open, onClose, exchangeId }: ExchangeDetai
   const handleSendMessage = () => {
     if (!exchange || !newMessage.trim()) return;
     // TODO: Implémenter l'envoi de message
-    console.log('Sending message:', newMessage);
+    logger.debug('Sending message', { component: 'ExchangeDetailModal', messageLength: newMessage.length });
     setNewMessage('');
   };
 
@@ -165,38 +166,38 @@ export function ExchangeDetailModal({ open, onClose, exchangeId }: ExchangeDetai
                   {/* Info Grid */}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="p-3 rounded-lg border border-slate-700/50 bg-slate-800/30">
-                      <p className="text-xs text-slate-500 mb-1 flex items-center gap-1">
+                      <p className="text-xs text-slate-400 mb-1 flex items-center gap-1">
                         <Building2 className="w-3 h-3" />
                         De
                       </p>
                       <p className="text-sm font-medium text-slate-200">{exchange.bureauFrom.name}</p>
-                      <p className="text-xs text-slate-500">{exchange.bureauFrom.code}</p>
+                      <p className="text-xs text-slate-400">{exchange.bureauFrom.code}</p>
                     </div>
                     <div className="p-3 rounded-lg border border-slate-700/50 bg-slate-800/30">
-                      <p className="text-xs text-slate-500 mb-1 flex items-center gap-1">
+                      <p className="text-xs text-slate-400 mb-1 flex items-center gap-1">
                         <Building2 className="w-3 h-3" />
                         Vers
                       </p>
                       <p className="text-sm font-medium text-slate-200">{exchange.bureauTo.name}</p>
-                      <p className="text-xs text-slate-500">{exchange.bureauTo.code}</p>
+                      <p className="text-xs text-slate-400">{exchange.bureauTo.code}</p>
                     </div>
                     <div className="p-3 rounded-lg border border-slate-700/50 bg-slate-800/30">
-                      <p className="text-xs text-slate-500 mb-1 flex items-center gap-1">
+                      <p className="text-xs text-slate-400 mb-1 flex items-center gap-1">
                         <User className="w-3 h-3" />
                         Auteur
                       </p>
                       <p className="text-sm font-medium text-slate-200">{exchange.auteur.name}</p>
-                      <p className="text-xs text-slate-500">{exchange.auteur.email}</p>
+                      <p className="text-xs text-slate-400">{exchange.auteur.email}</p>
                     </div>
                     <div className="p-3 rounded-lg border border-slate-700/50 bg-slate-800/30">
-                      <p className="text-xs text-slate-500 mb-1 flex items-center gap-1">
+                      <p className="text-xs text-slate-400 mb-1 flex items-center gap-1">
                         <Calendar className="w-3 h-3" />
                         Créé le
                       </p>
                       <p className="text-sm font-medium text-slate-200">
                         {new Date(exchange.dateCreation).toLocaleDateString('fr-FR')}
                       </p>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-slate-400">
                         {new Date(exchange.dateCreation).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                       </p>
                     </div>
@@ -210,7 +211,7 @@ export function ExchangeDetailModal({ open, onClose, exchangeId }: ExchangeDetai
                         <h3 className="text-sm font-semibold text-slate-300">Projet lié</h3>
                       </div>
                       <p className="text-sm text-slate-200">{exchange.project.name}</p>
-                      <p className="text-xs text-slate-500 mt-1">Code: {exchange.project.code}</p>
+                      <p className="text-xs text-slate-400 mt-1">Code: {exchange.project.code}</p>
                     </div>
                   )}
 
@@ -264,7 +265,7 @@ export function ExchangeDetailModal({ open, onClose, exchangeId }: ExchangeDetai
                         <div className="flex-1 pb-4">
                           <div className="flex items-center gap-2 mb-1">
                             <span className="text-sm font-medium text-slate-200">{event.user.name}</span>
-                            <span className="text-xs text-slate-500">
+                            <span className="text-xs text-slate-400">
                               {new Date(event.timestamp).toLocaleString('fr-FR')}
                             </span>
                           </div>
@@ -279,7 +280,7 @@ export function ExchangeDetailModal({ open, onClose, exchangeId }: ExchangeDetai
                 <TabsContent value="discussion" className="p-6 mt-0 flex flex-col h-full">
                   <div className="flex-1 space-y-4 mb-4 overflow-y-auto">
                     {exchange.responses.length === 0 ? (
-                      <div className="text-center py-12 text-slate-500">
+                      <div className="text-center py-12 text-slate-400">
                         <MessageSquare className="w-12 h-12 mx-auto mb-3 opacity-30" />
                         <p>Aucune réponse pour le moment</p>
                       </div>
@@ -300,7 +301,7 @@ export function ExchangeDetailModal({ open, onClose, exchangeId }: ExchangeDetai
                             </div>
                             <div>
                               <p className="text-sm font-medium text-slate-200">{response.author.name}</p>
-                              <p className="text-xs text-slate-500">
+                              <p className="text-xs text-slate-400">
                                 {new Date(response.createdAt).toLocaleString('fr-FR')}
                               </p>
                             </div>
@@ -343,7 +344,7 @@ export function ExchangeDetailModal({ open, onClose, exchangeId }: ExchangeDetai
                 <TabsContent value="documents" className="p-6 mt-0">
                   <div className="space-y-3">
                     {exchange.attachments.length === 0 ? (
-                      <div className="text-center py-12 text-slate-500">
+                      <div className="text-center py-12 text-slate-400">
                         <Paperclip className="w-12 h-12 mx-auto mb-3 opacity-30" />
                         <p>Aucun document</p>
                       </div>
@@ -359,7 +360,7 @@ export function ExchangeDetailModal({ open, onClose, exchangeId }: ExchangeDetai
                             </div>
                             <div className="flex-1 min-w-0">
                               <p className="text-sm font-medium text-slate-200 truncate">{attachment.name}</p>
-                              <div className="flex items-center gap-3 text-xs text-slate-500 mt-1">
+                              <div className="flex items-center gap-3 text-xs text-slate-400 mt-1">
                                 <span>{formatFileSize(attachment.size)}</span>
                                 <span>•</span>
                                 <span>{new Date(attachment.uploadedAt).toLocaleDateString('fr-FR')}</span>
@@ -420,7 +421,7 @@ export function ExchangeDetailModal({ open, onClose, exchangeId }: ExchangeDetai
             </Tabs>
           </>
         ) : (
-          <div className="text-center py-12 text-slate-500">
+          <div className="text-center py-12 text-slate-400">
             Échange non trouvé
           </div>
         )}

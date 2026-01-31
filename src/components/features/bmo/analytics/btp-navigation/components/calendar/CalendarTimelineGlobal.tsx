@@ -56,7 +56,7 @@ export function CalendarTimelineGlobal({ isOpen, onClose }: CalendarTimelineGlob
                 <p className="text-xs text-slate-400">Échéance critique - Demande urgente</p>
                 <div className="flex items-center gap-2 mt-2">
                   <Clock className="h-3 w-3 text-amber-400" />
-                  <span className="text-xs text-slate-500">SLA: 2h restantes</span>
+                  <span className="text-xs text-slate-400">SLA: 2h restantes</span>
                 </div>
               </div>
             </div>
@@ -87,7 +87,7 @@ export function CalendarTimelineGlobal({ isOpen, onClose }: CalendarTimelineGlob
                 <p className="text-xs text-slate-400">Réunion stratégique - Budget 2025</p>
                 <div className="flex items-center gap-2 mt-2">
                   <AlertTriangle className="h-3 w-3 text-amber-400" />
-                  <span className="text-xs text-slate-500">Conflit détecté avec réunion RH</span>
+                  <span className="text-xs text-slate-400">Conflit détecté avec réunion RH</span>
                 </div>
               </div>
             </div>

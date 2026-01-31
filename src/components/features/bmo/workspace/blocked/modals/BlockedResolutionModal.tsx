@@ -382,7 +382,7 @@ export function BlockedResolutionModal({
                       'h-8 w-8 rounded-full flex items-center justify-center font-medium transition-all',
                       currentStep >= step
                         ? 'bg-blue-500 text-white'
-                        : 'bg-slate-800 text-slate-500'
+                        : 'bg-slate-800 text-slate-400'
                     )}
                   >
                     {currentStep > step ? <CheckCircle className="h-5 w-5" /> : step}
@@ -440,7 +440,7 @@ export function BlockedResolutionModal({
                               <SelectItem value="user3">Ibrahima BA - Contrôleur Senior</SelectItem>
                             </SelectContent>
                           </Select>
-                          <p className="text-xs text-slate-500 mt-1">
+                          <p className="text-xs text-slate-400 mt-1">
                             Liste des validateurs disponibles et autorisés
                           </p>
                         </div>
@@ -460,7 +460,7 @@ export function BlockedResolutionModal({
                             placeholder="Expliquez la raison de la substitution (absence, indisponibilité, urgence...)"
                             className="bg-slate-800 border-slate-700 min-h-[100px]"
                           />
-                          <p className="text-xs text-slate-500 mt-1">
+                          <p className="text-xs text-slate-400 mt-1">
                             {substitutionData.justification.length}/500 caractères
                           </p>
                         </div>
@@ -517,7 +517,7 @@ export function BlockedResolutionModal({
                           placeholder="Précisez les conditions : seuils de montant, types de dossiers, validations requises..."
                           className="bg-slate-800 border-slate-700 min-h-[120px]"
                         />
-                        <p className="text-xs text-slate-500 mt-1">
+                        <p className="text-xs text-slate-400 mt-1">
                           Exemples : Montants &lt; 10M FCFA uniquement, Validation DAF requise
                           pour montants &gt; 5M
                         </p>
@@ -749,7 +749,7 @@ export function BlockedResolutionModal({
                           }
                           className="bg-slate-800 border-slate-700"
                         />
-                        <p className="text-xs text-slate-500 mt-1">
+                        <p className="text-xs text-slate-400 mt-1">
                           Date limite pour obtenir une réponse
                         </p>
                       </div>
@@ -891,7 +891,7 @@ export function BlockedResolutionModal({
                           placeholder="Listez les étapes précises pour débloquer le dossier..."
                           className="bg-slate-800 border-slate-700 min-h-[150px]"
                         />
-                        <p className="text-xs text-slate-500 mt-1">
+                        <p className="text-xs text-slate-400 mt-1">
                           Exemple : 1) Obtenir signature manquante 2) Valider documents 3) Notifier
                           parties prenantes
                         </p>

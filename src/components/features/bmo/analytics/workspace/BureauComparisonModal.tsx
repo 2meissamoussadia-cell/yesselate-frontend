@@ -160,7 +160,7 @@ export function BureauComparisonModal({ open, onClose, data }: BureauComparisonM
                       >
                         {perf.score}
                       </Badge>
-                      <span className="text-xs text-slate-500">{perf.totalDemands} dem.</span>
+                      <span className="text-xs text-slate-400">{perf.totalDemands} dem.</span>
                     </div>
                   )}
                 </button>
@@ -335,7 +335,7 @@ export function BureauComparisonModal({ open, onClose, data }: BureauComparisonM
                             <span>{bureaux.find(b => b.code === bureau.bureauCode)?.icon}</span>
                             <div>
                               <div className="text-sm font-medium text-slate-200">{bureau.bureauCode}</div>
-                              <div className="text-xs text-slate-500">{bureau.bureauName}</div>
+                              <div className="text-xs text-slate-400">{bureau.bureauName}</div>
                             </div>
                           </div>
                         </td>
@@ -427,7 +427,7 @@ export function BureauComparisonModal({ open, onClose, data }: BureauComparisonM
                             <span>{bureaux.find(b => b.code === bureau.bureauCode)?.icon}</span>
                             <div>
                               <div className="text-sm font-medium text-slate-200">{bureau.bureauCode}</div>
-                              <div className="text-xs text-slate-500">{bureau.bureauName}</div>
+                              <div className="text-xs text-slate-400">{bureau.bureauName}</div>
                             </div>
                           </div>
                         </td>

@@ -72,7 +72,7 @@ export function ProjetsInboxView({ tabId, data }: Props) {
              queue === 'completed' ? 'Projets terminés' :
              queue === 'pending' ? 'Projets en attente' : 'Tous les projets'}
           </h2>
-          <p className="text-sm text-slate-500">{projets.length} projet(s)</p>
+          <p className="text-sm text-slate-400">{projets.length} projet(s)</p>
         </div>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -83,7 +83,7 @@ export function ProjetsInboxView({ tabId, data }: Props) {
       {loading ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">{[...Array(6)].map((_, i) => <div key={i} className="h-48 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />)}</div>
       ) : projets.length === 0 ? (
-        <div className="py-12 text-center text-slate-500">
+        <div className="py-12 text-center text-slate-400">
           <Building2 className="w-12 h-12 mx-auto mb-3 opacity-30" />
           <p className="font-medium">Aucun projet trouvé</p>
         </div>
@@ -102,7 +102,7 @@ export function ProjetsInboxView({ tabId, data }: Props) {
                     <div>
                       <span className="font-mono text-xs text-orange-500">{projet.id}</span>
                       <h3 className="font-bold text-slate-900 dark:text-slate-100 line-clamp-1">{projet.name}</h3>
-                      <p className="text-xs text-slate-500">{projet.client}</p>
+                      <p className="text-xs text-slate-400">{projet.client}</p>
                     </div>
                     <span className={cn("px-2 py-1 rounded text-xs font-medium flex items-center gap-1", style.badge)}>
                       <StatusIcon className="w-3 h-3" />
@@ -112,15 +112,15 @@ export function ProjetsInboxView({ tabId, data }: Props) {
 
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-slate-500">Budget</span>
+                      <span className="text-slate-400">Budget</span>
                       <span className="font-semibold text-slate-900 dark:text-slate-100">{projet.budget} FCFA</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-500">Dépensé</span>
+                      <span className="text-slate-400">Dépensé</span>
                       <span className="font-semibold text-amber-600">{projet.spent} FCFA</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-500">Équipe</span>
+                      <span className="text-slate-400">Équipe</span>
                       <span className="flex items-center gap-1"><Users className="w-3 h-3" />{projet.team} agents</span>
                     </div>
 

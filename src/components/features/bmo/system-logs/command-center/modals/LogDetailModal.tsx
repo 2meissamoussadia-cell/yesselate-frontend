@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -181,7 +182,7 @@ export function LogDetailModal({
               size="sm"
               onClick={() => {
                 // TODO: Export evidence pack
-                console.log('Export evidence pack');
+                logger.debug('Export evidence pack', { component: 'LogDetailModal' });
               }}
               className="h-8 px-3 text-slate-400 hover:text-slate-200"
             >
@@ -223,14 +224,14 @@ export function LogDetailModal({
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-sm">
-                      <Clock className="h-4 w-4 text-slate-500" />
+                      <Clock className="h-4 w-4 text-slate-400" />
                       <span className="text-slate-400">Timestamp</span>
                     </div>
                     <p className="text-slate-200 font-mono text-sm">{log.timestamp}</p>
                   </div>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-sm">
-                      <Database className="h-4 w-4 text-slate-500" />
+                      <Database className="h-4 w-4 text-slate-400" />
                       <span className="text-slate-400">Source</span>
                     </div>
                     <p className="text-slate-200 font-mono text-sm">{log.source}</p>
@@ -238,7 +239,7 @@ export function LogDetailModal({
                   {log.userId && (
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 text-sm">
-                        <User className="h-4 w-4 text-slate-500" />
+                        <User className="h-4 w-4 text-slate-400" />
                         <span className="text-slate-400">Utilisateur</span>
                       </div>
                       <p className="text-slate-200 font-mono text-sm">{log.userId}</p>
@@ -247,7 +248,7 @@ export function LogDetailModal({
                   {log.ip && (
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 text-sm">
-                        <Globe className="h-4 w-4 text-slate-500" />
+                        <Globe className="h-4 w-4 text-slate-400" />
                         <span className="text-slate-400">IP</span>
                       </div>
                       <p className="text-slate-200 font-mono text-sm">{log.ip}</p>
@@ -285,7 +286,7 @@ export function LogDetailModal({
                   size="sm"
                   onClick={() => {
                     // TODO: Vérifier intégrité
-                    console.log('Verify integrity');
+                    logger.debug('Verify integrity', { component: 'LogDetailModal' });
                   }}
                   className="flex-1"
                 >

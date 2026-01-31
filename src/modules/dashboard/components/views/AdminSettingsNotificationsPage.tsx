@@ -64,17 +64,17 @@ export const AdminSettingsNotificationsPage = memo(function AdminSettingsNotific
 
           {data.length === 0 ? (
             <EmptyState
+              title="Vue en construction"
+              description="Connectez l'API pour afficher la configuration des notifications."
+              icon={FileText}
+              variant="comingSoon"
+            />
+          ) : (
+            <EmptyState
               title="Aucun élément"
               description="Il n'y a actuellement aucun élément disponible."
               icon={FileText}
               variant="info"
-            />
-          ) : (
-            <EmptyState
-              title="Contenu à venir"
-              description="Connectez l'API pour afficher les données."
-              icon={FileText}
-              variant="comingSoon"
             />
           )}
         </DashboardPanel>

@@ -86,7 +86,7 @@ export function CritiquesPaiementsBloques() {
                   <div className="flex items-center gap-2">
                     <DollarSign className="h-4 w-4 text-slate-400" />
                     <div>
-                      <p className="text-xs text-slate-500">Montant</p>
+                      <p className="text-xs text-slate-400">Montant</p>
                       <p className="text-sm font-medium text-slate-200">
                         {alerte.montant?.toLocaleString('fr-FR')} {alerte.devise}
                       </p>
@@ -95,7 +95,7 @@ export function CritiquesPaiementsBloques() {
                   <div className="flex items-center gap-2">
                     <User className="h-4 w-4 text-slate-400" />
                     <div>
-                      <p className="text-xs text-slate-500">Responsable</p>
+                      <p className="text-xs text-slate-400">Responsable</p>
                       <p className="text-sm font-medium text-slate-200">
                         {alerte.responsable || 'Non assigné'}
                       </p>
@@ -104,7 +104,7 @@ export function CritiquesPaiementsBloques() {
                   <div className="flex items-center gap-2">
                     <Clock className="h-4 w-4 text-slate-400" />
                     <div>
-                      <p className="text-xs text-slate-500">Bloqué depuis</p>
+                      <p className="text-xs text-slate-400">Bloqué depuis</p>
                       <p className="text-sm font-medium text-slate-200">
                         {daysSince} jour{daysSince > 1 ? 's' : ''}
                       </p>
@@ -112,7 +112,7 @@ export function CritiquesPaiementsBloques() {
                   </div>
                 </div>
                 <div className="mt-4 pt-4 border-t border-slate-700/50">
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-slate-400">
                     Créé le {formatDate(alerte.dateCreation)}
                   </p>
                 </div>

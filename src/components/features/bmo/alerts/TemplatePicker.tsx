@@ -161,7 +161,7 @@ export function TemplatePicker({ alert, onSelect, onCancel }: TemplatePickerProp
 
         {/* Prévisualisation */}
         <div className="p-4 rounded-lg border border-slate-700/50 bg-slate-900/30">
-          <p className="text-xs text-slate-500 mb-2 uppercase tracking-wide">
+          <p className="text-xs text-slate-400 mb-2 uppercase tracking-wide">
             Prévisualisation
           </p>
           <p className="text-sm text-slate-300 whitespace-pre-wrap">{preview}</p>
@@ -286,7 +286,7 @@ export function TemplatePicker({ alert, onSelect, onCancel }: TemplatePickerProp
                   <p className="text-sm text-slate-400 line-clamp-2">
                     {template.template}
                   </p>
-                  <div className="flex items-center gap-3 mt-2 text-xs text-slate-500">
+                  <div className="flex items-center gap-3 mt-2 text-xs text-slate-400">
                     <span className="flex items-center gap-1">
                       <Star className="h-3 w-3" />
                       {template.usageCount} utilisations

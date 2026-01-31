@@ -280,7 +280,7 @@ function ArchivesSettingsModal({ onClose }: { onClose: () => void }) {
               type="checkbox"
               checked={autoRefresh}
               onChange={(e) => setAutoRefresh(e.target.checked)}
-              className="w-4 h-4 rounded border-slate-600 text-slate-500 focus:ring-slate-500"
+              className="w-4 h-4 rounded border-slate-600 text-slate-400 focus:ring-slate-500"
             />
           </div>
           {autoRefresh && (
@@ -304,7 +304,7 @@ function ArchivesSettingsModal({ onClose }: { onClose: () => void }) {
             type="checkbox"
             checked={notifications}
             onChange={(e) => setNotifications(e.target.checked)}
-            className="w-4 h-4 rounded border-slate-600 text-slate-500 focus:ring-slate-500"
+            className="w-4 h-4 rounded border-slate-600 text-slate-400 focus:ring-slate-500"
           />
         </div>
 

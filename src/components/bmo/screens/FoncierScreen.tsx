@@ -62,7 +62,7 @@ export function FoncierScreen() {
         <ExplorerLayout
           nav={
             <div className="p-3 space-y-3">
-              <div className="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">
+              <div className="text-[10px] font-semibold tracking-wider text-slate-400 uppercase">
                 Vues
               </div>
               <ul className="space-y-0.5">
@@ -83,10 +83,10 @@ export function FoncierScreen() {
                   </li>
                 ))}
               </ul>
-              <div className="text-[10px] font-semibold tracking-wider text-slate-500 uppercase pt-2">
+              <div className="text-[10px] font-semibold tracking-wider text-slate-400 uppercase pt-2">
                 Filtres
               </div>
-              <p className="text-xs text-slate-500">Statut, type, risque…</p>
+              <p className="text-xs text-slate-400">Statut, type, risque…</p>
             </div>
           }
           content={
@@ -127,7 +127,7 @@ export function FoncierScreen() {
                   Ouvrir workflow phases
                 </button>
               </section>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-slate-400">
                 Tableau des dossiers fonciers (ErpDataTable) à brancher ici.
               </p>
             </div>

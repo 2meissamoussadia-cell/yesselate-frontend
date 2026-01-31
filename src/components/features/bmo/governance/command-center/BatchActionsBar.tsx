@@ -96,7 +96,7 @@ export function BatchActionsBar({
             variant="ghost"
             size="sm"
             onClick={clearSelection}
-            className="h-8 w-8 p-0 text-slate-500 hover:text-slate-300"
+            className="h-8 w-8 p-0 text-slate-400 hover:text-slate-300"
             title="Désélectionner tout"
           >
             <X className="h-4 w-4" />

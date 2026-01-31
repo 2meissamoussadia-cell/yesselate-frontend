@@ -361,7 +361,7 @@ export function ExportModal({ isOpen, onClose, onExport }: ExportModalProps) {
                       <p className="text-sm font-medium text-slate-200">
                         Inclure les détails complets
                       </p>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-slate-400">
                         Ajouter toutes les informations détaillées
                       </p>
                     </div>
@@ -386,7 +386,7 @@ export function ExportModal({ isOpen, onClose, onExport }: ExportModalProps) {
                       <p className="text-sm font-medium text-slate-200">
                         Inclure les pièces jointes
                       </p>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-slate-400">
                         Exporter avec les documents associés (PDF uniquement)
                       </p>
                     </div>
@@ -398,7 +398,7 @@ export function ExportModal({ isOpen, onClose, onExport }: ExportModalProps) {
 
           {/* Footer */}
           <div className="flex items-center justify-between px-6 py-4 border-t border-slate-800/50 bg-slate-900/60">
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-400">
               Export au format {config.format.toUpperCase()} • {config.dataType}
             </p>
             <div className="flex items-center gap-2">

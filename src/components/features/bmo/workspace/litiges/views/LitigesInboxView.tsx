@@ -59,7 +59,7 @@ export function LitigesInboxView({ tabId, data }: Props) {
           <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
             {queue === 'active' ? 'Litiges actifs' : queue === 'closed' ? 'Litiges clos' : queue === 'negotiation' ? 'En négociation' : queue === 'judgment' ? 'Jugements rendus' : queue === 'high-risk' ? 'Risque élevé' : 'Tous les litiges'}
           </h2>
-          <p className="text-sm text-slate-500">{litiges.length} litige(s)</p>
+          <p className="text-sm text-slate-400">{litiges.length} litige(s)</p>
         </div>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -70,7 +70,7 @@ export function LitigesInboxView({ tabId, data }: Props) {
       {loading ? (
         <div className="space-y-3">{[...Array(5)].map((_, i) => <div key={i} className="h-28 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />)}</div>
       ) : litiges.length === 0 ? (
-        <div className="py-12 text-center text-slate-500"><Scale className="w-12 h-12 mx-auto mb-3 opacity-30" /><p className="font-medium">Aucun litige trouvé</p></div>
+        <div className="py-12 text-center text-slate-400"><Scale className="w-12 h-12 mx-auto mb-3 opacity-30" /><p className="font-medium">Aucun litige trouvé</p></div>
       ) : (
         <div className="space-y-2">
           {litiges.map(litige => {
@@ -91,7 +91,7 @@ export function LitigesInboxView({ tabId, data }: Props) {
                         <span className={cn("text-xs font-medium px-2 py-0.5 rounded", riskColor === 'red' ? 'bg-red-500/20 text-red-600' : riskColor === 'amber' ? 'bg-amber-500/20 text-amber-600' : 'bg-emerald-500/20 text-emerald-600')}>{litige.risque === 'high' ? 'Risque élevé' : litige.risque === 'medium' ? 'Risque moyen' : 'Risque faible'}</span>
                       </div>
                       <p className="font-medium text-slate-900 dark:text-slate-100 line-clamp-1">{litige.objet}</p>
-                      <div className="flex items-center gap-4 mt-2 text-xs text-slate-500">
+                      <div className="flex items-center gap-4 mt-2 text-xs text-slate-400">
                         <span className="flex items-center gap-1"><Building2 className="w-3 h-3" />{litige.adversaire}</span>
                         <span className="flex items-center gap-1"><Scale className="w-3 h-3" />{litige.juridiction}</span>
                         {litige.prochainRDV && <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{new Date(litige.prochainRDV).toLocaleDateString('fr-FR')}</span>}
@@ -99,7 +99,7 @@ export function LitigesInboxView({ tabId, data }: Props) {
                     </div>
                     <div className="text-right flex-none">
                       <p className="font-mono font-bold text-red-600 dark:text-red-400">{litigesApiService.formatMontant(litige.exposure)} FCFA</p>
-                      <p className="text-xs text-slate-500 mt-1">Exposition</p>
+                      <p className="text-xs text-slate-400 mt-1">Exposition</p>
                       <div className="flex items-center justify-end gap-2 mt-2">
                         <button onClick={e => handleToggleWatchlist(e, litige.id)} className="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-700">{isInWatchlist ? <Star className="w-4 h-4 text-amber-500 fill-current" /> : <StarOff className="w-4 h-4 text-slate-400" />}</button>
                         <button onClick={e => { e.stopPropagation(); handleOpenDetail(litige); }} className="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-700"><Eye className="w-4 h-4 text-slate-400" /></button>
@@ -111,10 +111,10 @@ export function LitigesInboxView({ tabId, data }: Props) {
                 {isExpanded && (
                   <div className="px-4 pb-4 pt-0 border-t border-slate-200/70 dark:border-slate-800">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-4">
-                      <div><p className="text-xs text-slate-500 mb-1">Type</p><p className="font-medium text-slate-900 dark:text-slate-100">{litige.type}</p></div>
-                      <div><p className="text-xs text-slate-500 mb-1">Montant réclamé</p><p className="font-medium text-slate-900 dark:text-slate-100">{litigesApiService.formatMontant(litige.montant)} FCFA</p></div>
-                      <div><p className="text-xs text-slate-500 mb-1">Avocat</p><p className="font-medium text-slate-900 dark:text-slate-100">{litige.avocat}</p></div>
-                      <div><p className="text-xs text-slate-500 mb-1">Prochaine audience</p><p className="font-medium text-slate-900 dark:text-slate-100">{litige.prochainRDV ? new Date(litige.prochainRDV).toLocaleDateString('fr-FR') : 'N/A'}</p></div>
+                      <div><p className="text-xs text-slate-400 mb-1">Type</p><p className="font-medium text-slate-900 dark:text-slate-100">{litige.type}</p></div>
+                      <div><p className="text-xs text-slate-400 mb-1">Montant réclamé</p><p className="font-medium text-slate-900 dark:text-slate-100">{litigesApiService.formatMontant(litige.montant)} FCFA</p></div>
+                      <div><p className="text-xs text-slate-400 mb-1">Avocat</p><p className="font-medium text-slate-900 dark:text-slate-100">{litige.avocat}</p></div>
+                      <div><p className="text-xs text-slate-400 mb-1">Prochaine audience</p><p className="font-medium text-slate-900 dark:text-slate-100">{litige.prochainRDV ? new Date(litige.prochainRDV).toLocaleDateString('fr-FR') : 'N/A'}</p></div>
                     </div>
                     <div className="flex items-center gap-2 pt-2 border-t border-slate-200/70 dark:border-slate-800">
                       <button onClick={() => handleOpenDetail(litige)} className="flex-1 px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-medium hover:bg-red-600">Voir le détail</button>

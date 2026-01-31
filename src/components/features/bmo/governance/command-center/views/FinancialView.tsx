@@ -176,7 +176,7 @@ function CommitmentsView({
         <div className="mt-4 space-y-2">
           <div>
             <div className="flex items-center justify-between mb-1">
-              <span className="text-xs text-slate-500">Taux d'engagement</span>
+              <span className="text-xs text-slate-400">Taux d'engagement</span>
               <span className="text-xs text-slate-400">{engagementRate}%</span>
             </div>
             <div className="h-2 bg-slate-700/50 rounded-full overflow-hidden">
@@ -188,7 +188,7 @@ function CommitmentsView({
           </div>
           <div>
             <div className="flex items-center justify-between mb-1">
-              <span className="text-xs text-slate-500">Taux de consommation</span>
+              <span className="text-xs text-slate-400">Taux de consommation</span>
               <span className="text-xs text-slate-400">{consumptionRate}%</span>
             </div>
             <div className="h-2 bg-slate-700/50 rounded-full overflow-hidden">
@@ -244,32 +244,32 @@ function InvoicingView({ data }: { data: typeof invoices }) {
         <div className="p-4 rounded-lg bg-slate-900/60 border border-slate-800/50">
           <div className="flex items-center gap-2 mb-2">
             <Clock className="h-4 w-4 text-amber-400" />
-            <span className="text-xs text-slate-500">En attente</span>
+            <span className="text-xs text-slate-400">En attente</span>
           </div>
           <p className="text-xl font-bold text-slate-200">
             {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(pendingTotal)}
           </p>
-          <p className="text-xs text-slate-500 mt-1">{data.filter(i => i.status === 'pending').length} factures</p>
+          <p className="text-xs text-slate-400 mt-1">{data.filter(i => i.status === 'pending').length} factures</p>
         </div>
         <div className="p-4 rounded-lg bg-slate-900/60 border border-red-500/20">
           <div className="flex items-center gap-2 mb-2">
             <AlertTriangle className="h-4 w-4 text-red-400" />
-            <span className="text-xs text-slate-500">En retard</span>
+            <span className="text-xs text-slate-400">En retard</span>
           </div>
           <p className="text-xl font-bold text-red-400">
             {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(overdueTotal)}
           </p>
-          <p className="text-xs text-slate-500 mt-1">{data.filter(i => i.status === 'overdue').length} factures</p>
+          <p className="text-xs text-slate-400 mt-1">{data.filter(i => i.status === 'overdue').length} factures</p>
         </div>
         <div className="p-4 rounded-lg bg-slate-900/60 border border-slate-800/50">
           <div className="flex items-center gap-2 mb-2">
             <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-            <span className="text-xs text-slate-500">Payées ce mois</span>
+            <span className="text-xs text-slate-400">Payées ce mois</span>
           </div>
           <p className="text-xl font-bold text-slate-200">
             {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(32000)}
           </p>
-          <p className="text-xs text-slate-500 mt-1">1 facture</p>
+          <p className="text-xs text-slate-400 mt-1">1 facture</p>
         </div>
       </div>
 
@@ -285,11 +285,11 @@ function InvoicingView({ data }: { data: typeof invoices }) {
             >
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center">
-                  <Receipt className="h-5 w-5 text-slate-500" />
+                  <Receipt className="h-5 w-5 text-slate-400" />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-slate-300">{invoice.ref}</p>
-                  <p className="text-xs text-slate-500">{invoice.supplier}</p>
+                  <p className="text-xs text-slate-400">{invoice.supplier}</p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
@@ -297,7 +297,7 @@ function InvoicingView({ data }: { data: typeof invoices }) {
                   <p className="text-sm font-medium text-slate-300">
                     {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(invoice.amount)}
                   </p>
-                  <p className="text-xs text-slate-500">Éch. {invoice.dueDate}</p>
+                  <p className="text-xs text-slate-400">Éch. {invoice.dueDate}</p>
                 </div>
                 <Badge variant="default" className={cn('text-xs', status.color)}>
                   {status.label}
@@ -356,7 +356,7 @@ function VariancesView() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-300">{v.project}</p>
-                <div className="flex items-center gap-4 mt-1 text-xs text-slate-500">
+                <div className="flex items-center gap-4 mt-1 text-xs text-slate-400">
                   <span>Budget: {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(v.budget)}</span>
                   <span>Réel: {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(v.actual)}</span>
                 </div>
@@ -400,11 +400,11 @@ function CashflowView({ data }: { data: typeof cashflowData }) {
         <div className="flex items-center gap-4 text-xs">
           <div className="flex items-center gap-1">
             <div className="w-3 h-3 rounded bg-emerald-500" />
-            <span className="text-slate-500">Entrées</span>
+            <span className="text-slate-400">Entrées</span>
           </div>
           <div className="flex items-center gap-1">
             <div className="w-3 h-3 rounded bg-red-500" />
-            <span className="text-slate-500">Sorties</span>
+            <span className="text-slate-400">Sorties</span>
           </div>
         </div>
       </div>
@@ -423,7 +423,7 @@ function CashflowView({ data }: { data: typeof cashflowData }) {
                 style={{ height: `${(d.expenses / maxValue) * 100}%` }}
               />
             </div>
-            <span className="text-xs text-slate-500">{d.month}</span>
+            <span className="text-xs text-slate-400">{d.month}</span>
           </div>
         ))}
       </div>
@@ -431,7 +431,7 @@ function CashflowView({ data }: { data: typeof cashflowData }) {
       {/* Summary */}
       <div className="grid grid-cols-3 gap-4 pt-4 border-t border-slate-800/50">
         <div className="text-center">
-          <p className="text-xs text-slate-500">Total entrées</p>
+          <p className="text-xs text-slate-400">Total entrées</p>
           <p className="text-lg font-bold text-emerald-400">
             {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(
               data.reduce((sum, d) => sum + d.income, 0)
@@ -439,7 +439,7 @@ function CashflowView({ data }: { data: typeof cashflowData }) {
           </p>
         </div>
         <div className="text-center">
-          <p className="text-xs text-slate-500">Total sorties</p>
+          <p className="text-xs text-slate-400">Total sorties</p>
           <p className="text-lg font-bold text-red-400">
             {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(
               data.reduce((sum, d) => sum + d.expenses, 0)
@@ -447,7 +447,7 @@ function CashflowView({ data }: { data: typeof cashflowData }) {
           </p>
         </div>
         <div className="text-center">
-          <p className="text-xs text-slate-500">Solde</p>
+          <p className="text-xs text-slate-400">Solde</p>
           <p className="text-lg font-bold text-blue-400">
             {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(
               data.reduce((sum, d) => sum + d.income - d.expenses, 0)
@@ -481,10 +481,10 @@ function BudgetCard({
     )}>
       <div className="flex items-center gap-2 mb-1">
         <Icon className={cn('h-4 w-4', iconColor)} />
-        <span className="text-xs text-slate-500">{label}</span>
+        <span className="text-xs text-slate-400">{label}</span>
       </div>
       <p className="text-lg font-bold text-slate-200">{value}</p>
-      {subValue && <p className="text-xs text-slate-500">{subValue}</p>}
+      {subValue && <p className="text-xs text-slate-400">{subValue}</p>}
     </div>
   );
 }

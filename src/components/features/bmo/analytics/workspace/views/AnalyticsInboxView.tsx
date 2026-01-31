@@ -134,7 +134,7 @@ export function AnalyticsInboxView({ tab }: AnalyticsInboxViewProps) {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-2xl font-bold">{tab.title}</h2>
-            <p className="text-sm text-slate-500 mt-1">
+            <p className="text-sm text-slate-400 mt-1">
               {filteredItems.length} {data.type === 'kpis' ? 'indicateurs' : data.type === 'alerts' ? 'alertes' : 'bureaux'}
             </p>
           </div>
@@ -210,7 +210,7 @@ export function AnalyticsInboxView({ tab }: AnalyticsInboxViewProps) {
 
         {/* Contenu */}
         {filteredItems.length === 0 ? (
-          <div className="text-center py-12 text-slate-500">
+          <div className="text-center py-12 text-slate-400">
             <Activity className="w-12 h-12 mx-auto mb-3 opacity-30" />
             <p>Aucun résultat trouvé</p>
           </div>
@@ -350,16 +350,16 @@ function KPIListItem({ kpi }: { kpi: KPIMetric }) {
           <h3 className="font-semibold text-sm truncate">{kpi.name}</h3>
           <Badge variant="default" className="text-[10px]">{kpi.category}</Badge>
         </div>
-        <p className="text-xs text-slate-500 truncate">{kpi.description}</p>
+        <p className="text-xs text-slate-400 truncate">{kpi.description}</p>
       </div>
 
       <div className="flex items-center gap-4 flex-shrink-0">
         <div className="text-right">
           <div className="text-xl font-bold">
-            {kpi.value}<span className="text-sm font-normal text-slate-500">{kpi.unit}</span>
+            {kpi.value}<span className="text-sm font-normal text-slate-400">{kpi.unit}</span>
           </div>
           {kpi.target && (
-            <div className="text-xs text-slate-500">/ {kpi.target}{kpi.unit}</div>
+            <div className="text-xs text-slate-400">/ {kpi.target}{kpi.unit}</div>
           )}
         </div>
 
@@ -404,7 +404,7 @@ function AlertItem({ alert }: { alert: Alert }) {
             </Badge>
           </div>
           <p className="text-sm text-slate-300 mb-2">{alert.description}</p>
-          <div className="text-xs text-slate-500">
+          <div className="text-xs text-slate-400">
             {alert.metric}: <span className="font-semibold">{alert.value}</span> (seuil: {alert.threshold})
           </div>
         </div>
@@ -419,7 +419,7 @@ function BureauPerformanceCard({ bureau }: { bureau: BureauPerformance }) {
       <div className="flex items-start justify-between mb-4">
         <div>
           <h3 className="font-bold text-lg">{bureau.bureauName}</h3>
-          <p className="text-xs text-slate-500">{bureau.bureauCode}</p>
+          <p className="text-xs text-slate-400">{bureau.bureauCode}</p>
         </div>
         <div className="text-right">
           <div className={cn(
@@ -430,40 +430,40 @@ function BureauPerformanceCard({ bureau }: { bureau: BureauPerformance }) {
           )}>
             {bureau.score}
           </div>
-          <div className="text-xs text-slate-500">Score</div>
+          <div className="text-xs text-slate-400">Score</div>
         </div>
       </div>
 
       <div className="grid grid-cols-4 gap-3 mb-4">
         <div className="text-center p-2 rounded-lg bg-blue-500/10">
           <div className="text-lg font-bold">{bureau.totalDemands}</div>
-          <div className="text-xs text-slate-500">Total</div>
+          <div className="text-xs text-slate-400">Total</div>
         </div>
         <div className="text-center p-2 rounded-lg bg-emerald-500/10">
           <div className="text-lg font-bold text-emerald-600">{bureau.validated}</div>
-          <div className="text-xs text-slate-500">Validées</div>
+          <div className="text-xs text-slate-400">Validées</div>
         </div>
         <div className="text-center p-2 rounded-lg bg-amber-500/10">
           <div className="text-lg font-bold text-amber-600">{bureau.pending}</div>
-          <div className="text-xs text-slate-500">Attente</div>
+          <div className="text-xs text-slate-400">Attente</div>
         </div>
         <div className="text-center p-2 rounded-lg bg-red-500/10">
           <div className="text-lg font-bold text-red-600">{bureau.overdue}</div>
-          <div className="text-xs text-slate-500">Retard</div>
+          <div className="text-xs text-slate-400">Retard</div>
         </div>
       </div>
 
       <div className="grid grid-cols-3 gap-3">
         <div>
-          <div className="text-xs text-slate-500 mb-1">Validation</div>
+          <div className="text-xs text-slate-400 mb-1">Validation</div>
           <div className="text-sm font-bold">{bureau.validationRate}%</div>
         </div>
         <div>
-          <div className="text-xs text-slate-500 mb-1">SLA</div>
+          <div className="text-xs text-slate-400 mb-1">SLA</div>
           <div className="text-sm font-bold">{bureau.slaCompliance}%</div>
         </div>
         <div>
-          <div className="text-xs text-slate-500 mb-1">Délai moy.</div>
+          <div className="text-xs text-slate-400 mb-1">Délai moy.</div>
           <div className="text-sm font-bold">{bureau.avgDelay}j</div>
         </div>
       </div>

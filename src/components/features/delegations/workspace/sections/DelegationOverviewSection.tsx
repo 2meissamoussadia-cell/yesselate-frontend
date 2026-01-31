@@ -41,7 +41,7 @@ function formatDate(date: Date | string | undefined): string {
 
 export function DelegationOverviewSection({ delegation, onRefresh }: Props) {
   if (!delegation) {
-    return <div className="text-slate-500 text-center py-8">Aucune donnée</div>;
+    return <div className="text-slate-400 text-center py-8">Aucune donnée</div>;
   }
 
   const daysToExpiry = delegation.metrics?.daysToExpiry ?? 0;
@@ -53,13 +53,13 @@ export function DelegationOverviewSection({ delegation, onRefresh }: Props) {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="p-4 rounded-xl bg-purple-500/10 text-center">
           <div className="text-3xl font-bold text-purple-600">{delegation.usageCount ?? 0}</div>
-          <div className="text-xs text-slate-500">Utilisations</div>
+          <div className="text-xs text-slate-400">Utilisations</div>
         </div>
         <div className="p-4 rounded-xl bg-emerald-500/10 text-center">
           <div className="text-2xl font-bold text-emerald-600">
             {formatAmount(delegation.usageTotalAmount, delegation.currency)}
           </div>
-          <div className="text-xs text-slate-500">Montant cumulé</div>
+          <div className="text-xs text-slate-400">Montant cumulé</div>
         </div>
         <div className={cn(
           "p-4 rounded-xl text-center",
@@ -71,7 +71,7 @@ export function DelegationOverviewSection({ delegation, onRefresh }: Props) {
           )}>
             {daysToExpiry}j
           </div>
-          <div className="text-xs text-slate-500">Avant expiration</div>
+          <div className="text-xs text-slate-400">Avant expiration</div>
         </div>
         <div className={cn(
           "p-4 rounded-xl text-center",
@@ -83,7 +83,7 @@ export function DelegationOverviewSection({ delegation, onRefresh }: Props) {
           )}>
             {usageRate}%
           </div>
-          <div className="text-xs text-slate-500">Plafond utilisé</div>
+          <div className="text-xs text-slate-400">Plafond utilisé</div>
         </div>
       </div>
 
@@ -98,21 +98,21 @@ export function DelegationOverviewSection({ delegation, onRefresh }: Props) {
           
           <dl className="space-y-3 text-sm">
             <div className="flex justify-between">
-              <dt className="text-slate-500">ID</dt>
+              <dt className="text-slate-400">ID</dt>
               <dd className="font-mono">{delegation.id}</dd>
             </div>
             {delegation.code && (
               <div className="flex justify-between">
-                <dt className="text-slate-500">Code</dt>
+                <dt className="text-slate-400">Code</dt>
                 <dd className="font-mono">{delegation.code}</dd>
               </div>
             )}
             <div className="flex justify-between">
-              <dt className="text-slate-500">Catégorie</dt>
+              <dt className="text-slate-400">Catégorie</dt>
               <dd>{delegation.category}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-500">Statut</dt>
+              <dt className="text-slate-400">Statut</dt>
               <dd>
                 <span className={cn(
                   "px-2 py-0.5 rounded text-xs font-medium",
@@ -126,7 +126,7 @@ export function DelegationOverviewSection({ delegation, onRefresh }: Props) {
               </dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-500">Bureau</dt>
+              <dt className="text-slate-400">Bureau</dt>
               <dd>{delegation.bureau}</dd>
             </div>
           </dl>
@@ -141,9 +141,9 @@ export function DelegationOverviewSection({ delegation, onRefresh }: Props) {
           
           <div className="space-y-4">
             <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-              <div className="text-xs text-slate-500 mb-1">Délégant</div>
+              <div className="text-xs text-slate-400 mb-1">Délégant</div>
               <div className="font-medium">{delegation.grantor?.name || delegation.grantorName}</div>
-              <div className="text-sm text-slate-500">{delegation.grantor?.role || delegation.grantorRole}</div>
+              <div className="text-sm text-slate-400">{delegation.grantor?.role || delegation.grantorRole}</div>
             </div>
             
             <div className="flex justify-center">
@@ -153,7 +153,7 @@ export function DelegationOverviewSection({ delegation, onRefresh }: Props) {
             <div className="p-3 rounded-lg bg-purple-50 dark:bg-purple-900/20">
               <div className="text-xs text-purple-600 mb-1">Délégataire</div>
               <div className="font-medium">{delegation.delegate?.name || delegation.delegateName}</div>
-              <div className="text-sm text-slate-500">{delegation.delegate?.role || delegation.delegateRole}</div>
+              <div className="text-sm text-slate-400">{delegation.delegate?.role || delegation.delegateRole}</div>
             </div>
           </div>
         </div>
@@ -167,22 +167,22 @@ export function DelegationOverviewSection({ delegation, onRefresh }: Props) {
           
           <dl className="space-y-3 text-sm">
             <div className="flex justify-between">
-              <dt className="text-slate-500">Début</dt>
+              <dt className="text-slate-400">Début</dt>
               <dd>{formatDate(delegation.startsAt)}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-500">Fin</dt>
+              <dt className="text-slate-400">Fin</dt>
               <dd className={cn(daysToExpiry <= 7 && "text-amber-600 font-medium")}>
                 {formatDate(delegation.endsAt)}
               </dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-500">Prolongeable</dt>
+              <dt className="text-slate-400">Prolongeable</dt>
               <dd>{delegation.extendable ? 'Oui' : 'Non'}</dd>
             </div>
             {delegation.extendable && (
               <div className="flex justify-between">
-                <dt className="text-slate-500">Extensions max</dt>
+                <dt className="text-slate-400">Extensions max</dt>
                 <dd>{delegation.maxExtensions} × {delegation.extensionDays}j</dd>
               </div>
             )}
@@ -198,15 +198,15 @@ export function DelegationOverviewSection({ delegation, onRefresh }: Props) {
           
           <dl className="space-y-3 text-sm">
             <div className="flex justify-between">
-              <dt className="text-slate-500">Plafond/opération</dt>
+              <dt className="text-slate-400">Plafond/opération</dt>
               <dd className="font-medium">{formatAmount(delegation.maxAmount, delegation.currency)}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-500">Plafond cumulé</dt>
+              <dt className="text-slate-400">Plafond cumulé</dt>
               <dd className="font-medium">{formatAmount(delegation.maxTotalAmount, delegation.currency)}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-500">Restant</dt>
+              <dt className="text-slate-400">Restant</dt>
               <dd className={cn(
                 "font-medium",
                 usageRate >= 80 && "text-rose-600"
@@ -221,19 +221,19 @@ export function DelegationOverviewSection({ delegation, onRefresh }: Props) {
       {/* Traçabilité */}
       <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50">
         <h3 className="font-semibold mb-3 flex items-center gap-2">
-          <Hash className="w-4 h-4 text-slate-500" />
+          <Hash className="w-4 h-4 text-slate-400" />
           Traçabilité cryptographique
         </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <div>
-            <div className="text-xs text-slate-500 mb-1">Hash décision</div>
+            <div className="text-xs text-slate-400 mb-1">Hash décision</div>
             <div className="font-mono text-xs bg-white dark:bg-slate-700 px-2 py-1 rounded truncate">
               {delegation.decisionHash || '—'}
             </div>
           </div>
           <div>
-            <div className="text-xs text-slate-500 mb-1">Hash tête de chaîne</div>
+            <div className="text-xs text-slate-400 mb-1">Hash tête de chaîne</div>
             <div className="font-mono text-xs bg-white dark:bg-slate-700 px-2 py-1 rounded truncate">
               {delegation.headHash || '—'}
             </div>

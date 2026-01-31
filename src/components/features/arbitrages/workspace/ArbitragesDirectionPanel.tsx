@@ -17,7 +17,7 @@ export function ArbitragesDirectionPanel() {
               <Scale className="w-6 h-6 text-red-500" />
               Vue direction — Gouvernance & Décisions
             </h2>
-            <p className="text-slate-500 max-w-2xl mb-4">
+            <p className="text-slate-400 max-w-2xl mb-4">
               Tableau de bord stratégique pour gérer les arbitrages, suivre les indicateurs critiques et 
               surveiller la charge des bureaux de gouvernance.
             </p>
@@ -63,7 +63,7 @@ export function ArbitragesDirectionPanel() {
             </div>
             <div>
               <h3 className="font-semibold">Risques critiques</h3>
-              <p className="text-xs text-slate-500">Arbitrages à trancher en priorité</p>
+              <p className="text-xs text-slate-400">Arbitrages à trancher en priorité</p>
             </div>
           </div>
           <FluentButton
@@ -89,7 +89,7 @@ export function ArbitragesDirectionPanel() {
             </div>
             <div>
               <h3 className="font-semibold">Exposition financière</h3>
-              <p className="text-xs text-slate-500">Impact budgétaire total</p>
+              <p className="text-xs text-slate-400">Impact budgétaire total</p>
             </div>
           </div>
           <FluentButton
@@ -111,7 +111,7 @@ export function ArbitragesDirectionPanel() {
             </div>
             <div>
               <h3 className="font-semibold">Performance bureaux</h3>
-              <p className="text-xs text-slate-500">Charge & goulots identifiés</p>
+              <p className="text-xs text-slate-400">Charge & goulots identifiés</p>
             </div>
           </div>
           <FluentButton

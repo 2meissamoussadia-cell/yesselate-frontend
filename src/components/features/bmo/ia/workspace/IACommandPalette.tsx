@@ -332,7 +332,7 @@ export function IACommandPalette() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Rechercher un module, une catégorie ou une action..."
-            className="flex-1 bg-transparent border-0 outline-none text-slate-200 placeholder:text-slate-500 text-sm"
+            className="flex-1 bg-transparent border-0 outline-none text-slate-200 placeholder:text-slate-400 text-sm"
             autoFocus
           />
           <kbd className="hidden sm:inline-flex h-5 select-none items-center gap-1 rounded border border-slate-600 bg-slate-800 px-1.5 font-mono text-[10px] font-medium text-slate-400">
@@ -343,7 +343,7 @@ export function IACommandPalette() {
         {/* Results */}
         <div className="max-h-[60vh] overflow-y-auto">
           {Object.keys(groupedCommands).length === 0 ? (
-            <div className="p-8 text-center text-slate-500">
+            <div className="p-8 text-center text-slate-400">
               <Search className="h-12 w-12 mx-auto mb-4 opacity-50" />
               <p>Aucun résultat pour "{search}"</p>
             </div>
@@ -351,7 +351,7 @@ export function IACommandPalette() {
             Object.entries(groupedCommands).map(([category, categoryCommands]) => (
               <div key={category}>
                 {/* Category Header */}
-                <div className="px-4 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wide bg-slate-800/50 sticky top-0">
+                <div className="px-4 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wide bg-slate-800/50 sticky top-0">
                   {category}
                 </div>
                 {/* Commands */}
@@ -400,7 +400,7 @@ export function IACommandPalette() {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between px-4 py-2 border-t border-slate-700/50 bg-slate-800/30 text-xs text-slate-500">
+        <div className="flex items-center justify-between px-4 py-2 border-t border-slate-700/50 bg-slate-800/30 text-xs text-slate-400">
           <div className="flex items-center gap-4">
             <span>↑↓ Naviguer</span>
             <span>↵ Sélectionner</span>

@@ -55,7 +55,7 @@ export function ProjetsTrendChart({ data, height = 200 }: { data: TimeSeriesPoin
           <Activity className="w-4 h-4 text-emerald-400" />
           Évolution des projets
         </h3>
-        <div className="flex items-center gap-2 text-xs text-slate-500">
+        <div className="flex items-center gap-2 text-xs text-slate-400">
           <span>6 derniers mois</span>
         </div>
       </div>
@@ -140,7 +140,7 @@ export function ProjetsTrendChart({ data, height = 200 }: { data: TimeSeriesPoin
         </svg>
 
         {/* Labels */}
-        <div className="flex justify-between mt-2 text-xs text-slate-500">
+        <div className="flex justify-between mt-2 text-xs text-slate-400">
           {data.map((d, i) => (
             <span key={i} className="truncate">{d.label || d.date}</span>
           ))}
@@ -173,7 +173,7 @@ export function ProjetsStatusChart({ data }: { data: ChartDataPoint[] }) {
                 <span className="text-slate-400">{item.label}</span>
                 <div className="flex items-center gap-2">
                   <span className="text-slate-200 font-medium">{item.value}</span>
-                  <span className="text-slate-500 text-xs">{percentage.toFixed(0)}%</span>
+                  <span className="text-slate-400 text-xs">{percentage.toFixed(0)}%</span>
                 </div>
               </div>
               <div className="h-2 bg-slate-800/50 rounded-full overflow-hidden">
@@ -219,7 +219,7 @@ export function ProjetsBureauPerformanceChart({ data }: { data: { bureau: string
                 <div className="flex items-center gap-3">
                   <span className="text-slate-400">{item.count} projets</span>
                   <div className="flex items-center gap-1">
-                    <Clock className="w-3 h-3 text-slate-500" />
+                    <Clock className="w-3 h-3 text-slate-400" />
                     <span className={cn(
                       'text-xs font-medium',
                       item.onTime >= 85 ? 'text-emerald-400' : item.onTime >= 70 ? 'text-amber-400' : 'text-rose-400'
@@ -340,11 +340,11 @@ export function ProjetsBudgetHealthChart({
       {/* Stats Grid */}
       <div className="grid grid-cols-2 gap-3">
         <div className="p-3 rounded-lg bg-slate-800/30 border border-slate-700/50">
-          <div className="text-xs text-slate-500 mb-1">Budget alloué</div>
+          <div className="text-xs text-slate-400 mb-1">Budget alloué</div>
           <div className="text-lg font-bold text-slate-200">{formatCurrency(allocated)}</div>
         </div>
         <div className="p-3 rounded-lg bg-slate-800/30 border border-slate-700/50">
-          <div className="text-xs text-slate-500 mb-1">Prévision finale</div>
+          <div className="text-xs text-slate-400 mb-1">Prévision finale</div>
           <div className={cn(
             'text-lg font-bold',
             overBudget ? 'text-rose-400' : 'text-emerald-400'
@@ -451,7 +451,7 @@ export function ProjetsTimelineChart({
                 <div className="flex items-start justify-between mb-1">
                   <div>
                     <p className="text-sm font-medium text-slate-200">{milestone.title}</p>
-                    <p className="text-xs text-slate-500">{milestone.projectTitle}</p>
+                    <p className="text-xs text-slate-400">{milestone.projectTitle}</p>
                   </div>
                   <span className="text-xs text-slate-400">
                     {new Date(milestone.date).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })}
@@ -492,7 +492,7 @@ export function ProjetsTeamUtilizationChart({
               <div className="flex items-center justify-between text-sm">
                 <span className="text-slate-300">{team.name}</span>
                 <div className="flex items-center gap-3 text-xs">
-                  <span className="text-slate-500">{team.projects} projets</span>
+                  <span className="text-slate-400">{team.projects} projets</span>
                   <span className={cn(
                     'font-medium',
                     isOverloaded ? 'text-rose-400' : isUnderutilized ? 'text-amber-400' : 'text-emerald-400'
@@ -518,7 +518,7 @@ export function ProjetsTeamUtilizationChart({
               </div>
               
               {team.available > 0 && (
-                <div className="text-xs text-slate-500">
+                <div className="text-xs text-slate-400">
                   {team.available}% disponible
                 </div>
               )}

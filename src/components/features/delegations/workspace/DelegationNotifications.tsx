@@ -236,7 +236,7 @@ export function DelegationNotifications() {
       >
         <Bell className={cn(
           "w-5 h-5",
-          hasHighPriority ? "text-rose-500" : unreadCount > 0 ? "text-amber-500" : "text-slate-500"
+          hasHighPriority ? "text-rose-500" : unreadCount > 0 ? "text-amber-500" : "text-slate-400"
         )} />
         
         {unreadCount > 0 && (
@@ -255,7 +255,7 @@ export function DelegationNotifications() {
           {/* Header */}
           <div className="p-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Bell className="w-4 h-4 text-slate-500" />
+              <Bell className="w-4 h-4 text-slate-400" />
               <span className="font-semibold text-sm">Notifications</span>
               {unreadCount > 0 && (
                 <span className="px-1.5 py-0.5 rounded-full text-xs bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300">
@@ -286,7 +286,7 @@ export function DelegationNotifications() {
           {/* Notifications list */}
           <div className="max-h-[400px] overflow-auto">
             {notifications.length === 0 ? (
-              <div className="py-12 text-center text-slate-500">
+              <div className="py-12 text-center text-slate-400">
                 <Bell className="w-10 h-10 mx-auto mb-2 text-slate-300" />
                 <div>Aucune notification</div>
               </div>
@@ -332,7 +332,7 @@ export function DelegationNotifications() {
                             config.color === 'emerald' && "text-emerald-600",
                             config.color === 'amber' && "text-amber-600",
                             config.color === 'rose' && "text-rose-600",
-                            config.color === 'slate' && "text-slate-500"
+                            config.color === 'slate' && "text-slate-400"
                           )} />
                         </div>
 
@@ -341,7 +341,7 @@ export function DelegationNotifications() {
                             <span className="text-sm font-medium truncate">{notification.title}</span>
                             <span className="text-xs text-slate-400 flex-none">{formatTime(notification.createdAt)}</span>
                           </div>
-                          <div className="text-xs text-slate-500 mt-0.5">{notification.message}</div>
+                          <div className="text-xs text-slate-400 mt-0.5">{notification.message}</div>
                           <div className="flex items-center gap-2 mt-1">
                             <span className="font-mono text-xs text-purple-600 dark:text-purple-400">
                               {notification.delegationCode}

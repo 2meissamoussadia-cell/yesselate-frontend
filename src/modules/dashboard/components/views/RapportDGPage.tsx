@@ -85,7 +85,7 @@ export function RapportDGPage() {
     return (
       <DashboardPageLayout>
         <DashboardSection title="Rapport DG" subtitle="Chargement…">
-          <div className="py-12 text-center text-slate-500">Chargement du rapport…</div>
+          <div className="py-12 text-center text-slate-400">Chargement du rapport…</div>
         </DashboardSection>
       </DashboardPageLayout>
     );
@@ -136,10 +136,10 @@ export function RapportDGPage() {
       >
         <div className="space-y-6">
           <div className="rounded-xl border border-slate-800/60 bg-slate-900/40 p-4 flex items-start gap-3">
-            <Calendar className="h-5 w-5 text-slate-500 shrink-0 mt-0.5" />
+            <Calendar className="h-5 w-5 text-slate-400 shrink-0 mt-0.5" />
             <div>
               <p className="text-sm font-medium text-slate-200">Rapport auto-généré chaque lundi matin</p>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-slate-400 mt-1">
                 Contenu : Top 5 chantiers à risque, Budget vs Réel, graphiques d&apos;évolution.
               </p>
             </div>
@@ -151,21 +151,21 @@ export function RapportDGPage() {
                 <DashboardSection title="Budget vs Réel" icon={TrendingUp}>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     <div className="rounded-lg border border-slate-800/60 bg-slate-900/40 p-3">
-                      <p className="text-xs text-slate-500 uppercase tracking-wider">Budget</p>
+                      <p className="text-xs text-slate-400 uppercase tracking-wider">Budget</p>
                       <p className="text-lg font-semibold text-slate-200">{b.budget} {b.unit}</p>
                     </div>
                     <div className="rounded-lg border border-slate-800/60 bg-slate-900/40 p-3">
-                      <p className="text-xs text-slate-500 uppercase tracking-wider">Réel</p>
+                      <p className="text-xs text-slate-400 uppercase tracking-wider">Réel</p>
                       <p className="text-lg font-semibold text-slate-200">{b.reel} {b.unit}</p>
                     </div>
                     <div className="rounded-lg border border-slate-800/60 bg-slate-900/40 p-3">
-                      <p className="text-xs text-slate-500 uppercase tracking-wider">Écart</p>
+                      <p className="text-xs text-slate-400 uppercase tracking-wider">Écart</p>
                       <p className={cn('text-lg font-semibold', b.ecart >= 0 ? 'text-emerald-400' : 'text-amber-400')}>
                         {b.ecart} {b.unit}
                       </p>
                     </div>
                     <div className="rounded-lg border border-slate-800/60 bg-slate-900/40 p-3">
-                      <p className="text-xs text-slate-500 uppercase tracking-wider">Écart %</p>
+                      <p className="text-xs text-slate-400 uppercase tracking-wider">Écart %</p>
                       <p className={cn('text-lg font-semibold', b.ecartPct >= 0 ? 'text-emerald-400' : 'text-amber-400')}>
                         {b.ecartPct.toFixed(1)} %
                       </p>
@@ -184,7 +184,7 @@ export function RapportDGPage() {
                       >
                         <div className="min-w-0">
                           <p className="text-sm font-medium text-slate-200 truncate">{r.title}</p>
-                          <p className="text-xs text-slate-500 truncate">{r.detail}</p>
+                          <p className="text-xs text-slate-400 truncate">{r.detail}</p>
                         </div>
                         <div className="flex items-center gap-2 shrink-0">
                           <span
@@ -204,7 +204,7 @@ export function RapportDGPage() {
                 </DashboardSection>
               )}
 
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-400">
                 Généré le {data.generatedAt ? new Date(data.generatedAt).toLocaleString('fr-FR') : '—'}
               </p>
             </>

@@ -119,7 +119,7 @@ export function FiltersModal() {
             <Button
               variant="ghost"
               size="sm"
-              className="h-8 w-8 p-0 text-slate-500"
+              className="h-8 w-8 p-0 text-slate-400"
               onClick={closeModal}
             >
               <X className="h-4 w-4" />
@@ -131,20 +131,20 @@ export function FiltersModal() {
         <div className="p-4 space-y-6 max-h-[60vh] overflow-y-auto">
           {/* Date Range */}
           <div>
-            <label className="text-xs font-medium text-slate-500 uppercase tracking-wide flex items-center gap-2 mb-3">
+            <label className="text-xs font-medium text-slate-400 uppercase tracking-wide flex items-center gap-2 mb-3">
               <Calendar className="h-4 w-4" />
               Période
             </label>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">Date début</label>
+                <label className="text-xs text-slate-400 mb-1 block">Date début</label>
                 <input
                   type="date"
                   className="w-full px-3 py-2 bg-slate-800/50 border border-slate-700/50 rounded-lg text-sm text-slate-300 focus:outline-none focus:ring-1 focus:ring-blue-500/50"
                 />
               </div>
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">Date fin</label>
+                <label className="text-xs text-slate-400 mb-1 block">Date fin</label>
                 <input
                   type="date"
                   className="w-full px-3 py-2 bg-slate-800/50 border border-slate-700/50 rounded-lg text-sm text-slate-300 focus:outline-none focus:ring-1 focus:ring-blue-500/50"
@@ -155,7 +155,7 @@ export function FiltersModal() {
 
           {/* Priority */}
           <div>
-            <label className="text-xs font-medium text-slate-500 uppercase tracking-wide flex items-center gap-2 mb-3">
+            <label className="text-xs font-medium text-slate-400 uppercase tracking-wide flex items-center gap-2 mb-3">
               <AlertTriangle className="h-4 w-4" />
               Priorité
             </label>
@@ -170,7 +170,7 @@ export function FiltersModal() {
                       'flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-colors',
                       isSelected
                         ? 'bg-slate-800 border-slate-600 text-slate-200'
-                        : 'border-slate-700/50 text-slate-500 hover:border-slate-600'
+                        : 'border-slate-700/50 text-slate-400 hover:border-slate-600'
                     )}
                   >
                     <div className={cn('w-2 h-2 rounded-full', priority.color)} />
@@ -183,7 +183,7 @@ export function FiltersModal() {
 
           {/* Status */}
           <div>
-            <label className="text-xs font-medium text-slate-500 uppercase tracking-wide flex items-center gap-2 mb-3">
+            <label className="text-xs font-medium text-slate-400 uppercase tracking-wide flex items-center gap-2 mb-3">
               <CheckCircle2 className="h-4 w-4" />
               Statut
             </label>
@@ -199,7 +199,7 @@ export function FiltersModal() {
                       'flex items-center gap-2 px-3 py-2 rounded-lg border transition-colors text-left',
                       isSelected
                         ? 'bg-slate-800 border-slate-600 text-slate-200'
-                        : 'border-slate-700/50 text-slate-500 hover:border-slate-600'
+                        : 'border-slate-700/50 text-slate-400 hover:border-slate-600'
                     )}
                   >
                     <Icon className="h-4 w-4" />
@@ -212,7 +212,7 @@ export function FiltersModal() {
 
           {/* Projects */}
           <div>
-            <label className="text-xs font-medium text-slate-500 uppercase tracking-wide flex items-center gap-2 mb-3">
+            <label className="text-xs font-medium text-slate-400 uppercase tracking-wide flex items-center gap-2 mb-3">
               <FolderKanban className="h-4 w-4" />
               Projets
             </label>
@@ -245,7 +245,7 @@ export function FiltersModal() {
           {/* Saved Filters */}
           {savedFilters.length > 0 && (
             <div>
-              <label className="text-xs font-medium text-slate-500 uppercase tracking-wide flex items-center gap-2 mb-3">
+              <label className="text-xs font-medium text-slate-400 uppercase tracking-wide flex items-center gap-2 mb-3">
                 <Save className="h-4 w-4" />
                 Filtres sauvegardés
               </label>
@@ -265,7 +265,7 @@ export function FiltersModal() {
 
           {/* Save Current Filters */}
           <div className="pt-4 border-t border-slate-800">
-            <label className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-2 block">
+            <label className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-2 block">
               Sauvegarder ces filtres
             </label>
             <div className="flex gap-2">
@@ -274,7 +274,7 @@ export function FiltersModal() {
                 value={filterName}
                 onChange={(e) => setFilterName(e.target.value)}
                 placeholder="Nom du filtre..."
-                className="flex-1 px-3 py-2 bg-slate-800/50 border border-slate-700/50 rounded-lg text-sm text-slate-300 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500/50"
+                className="flex-1 px-3 py-2 bg-slate-800/50 border border-slate-700/50 rounded-lg text-sm text-slate-300 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-500/50"
               />
               <Button
                 size="sm"
@@ -293,7 +293,7 @@ export function FiltersModal() {
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-500 hover:text-slate-300"
+            className="text-slate-400 hover:text-slate-300"
             onClick={resetFilters}
           >
             <RotateCcw className="h-4 w-4 mr-1" />

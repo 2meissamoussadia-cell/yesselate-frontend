@@ -574,7 +574,7 @@ export function PaiementDetailsModal({
                             {etape.statut === 'rejected' && <XCircle className="h-5 w-5 text-red-400" />}
                           </div>
                           {etape.date && (
-                            <p className="text-xs text-slate-500 mb-1">
+                            <p className="text-xs text-slate-400 mb-1">
                               {formatDate(etape.date)}
                             </p>
                           )}
@@ -635,13 +635,13 @@ export function PaiementDetailsModal({
                               <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-1">
                                   <span className="font-medium text-slate-200">{comment.author}</span>
-                                  <span className="text-xs text-slate-500">{comment.role}</span>
+                                  <span className="text-xs text-slate-400">{comment.role}</span>
                                   {comment.private && (
                                     <Badge variant="outline" className="text-xs">Privé</Badge>
                                   )}
                                 </div>
                                 <p className="text-sm text-slate-300">{comment.content}</p>
-                                <p className="text-xs text-slate-500 mt-1">
+                                <p className="text-xs text-slate-400 mt-1">
                                   {formatDate(comment.timestamp)}
                                 </p>
                               </div>

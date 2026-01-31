@@ -162,7 +162,7 @@ export function AlertsPanel({ module, showStats = true, maxItems, className }: P
         <div className="p-8 rounded-xl bg-slate-800/30 border border-slate-700/50 text-center">
           <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-3" />
           <p className="text-slate-300 font-medium">Aucune alerte</p>
-          <p className="text-sm text-slate-500 mt-1">Tout va bien pour le moment</p>
+          <p className="text-sm text-slate-400 mt-1">Tout va bien pour le moment</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -255,7 +255,7 @@ function AlertCard({
           </div>
 
           {/* Métadonnées */}
-          <div className="flex items-center gap-4 mt-3 text-xs text-slate-500">
+          <div className="flex items-center gap-4 mt-3 text-xs text-slate-400">
             <span className="flex items-center gap-1">
               📦 {alert.module}
             </span>
@@ -304,7 +304,7 @@ function AlertCard({
 
               <button
                 onClick={() => onIgnore(alert.id)}
-                className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-700/30 transition-colors"
+                className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-700/30 transition-colors"
                 title="Ignorer"
               >
                 <EyeOff className="w-4 h-4" />
@@ -322,7 +322,7 @@ function AlertCard({
                 Résoudre
               </button>
 
-              <span className="text-xs text-slate-500">
+              <span className="text-xs text-slate-400">
                 Accusée par {alert.acknowledgedBy} {alert.acknowledgedAt && `le ${new Date(alert.acknowledgedAt).toLocaleString('fr-FR')}`}
               </span>
             </div>

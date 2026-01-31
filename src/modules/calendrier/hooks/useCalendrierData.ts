@@ -40,10 +40,7 @@ export function useCalendrierData(
     try {
       setLoading(true);
       setError(null);
-      if (process.env.NODE_ENV === 'development') {
-        console.log('useCalendrierData - Fetching avec filters:', filters);
-      }
-      
+
       // Ajouter un timeout de sécurité pour éviter un chargement infini
       const timeoutPromise = new Promise<CalendrierOverviewResponse>((_, reject) => {
         setTimeout(() => {
@@ -59,21 +56,11 @@ export function useCalendrierData(
       ]);
       
       if (!mountedRef.current) return;
-      
-      if (process.env.NODE_ENV === 'development') {
-        console.log('useCalendrierData - Résultat reçu:', {
-          jalons: result.jalons?.length || 0,
-          evenements: result.evenements?.length || 0,
-          chantiers: result.chantiers?.length || 0,
-        });
-      }
+
       setData(result);
     } catch (err) {
       if (!mountedRef.current) return;
-      
-      if (process.env.NODE_ENV === 'development') {
-        console.warn('useCalendrierData - Erreur ou timeout, utilisation des données mockées:', err);
-      }
+
       // En cas d'erreur ou timeout, charger immédiatement les données mockées
       setData(mockOverview);
       setError(null); // Ne pas afficher d'erreur si on a des données mockées

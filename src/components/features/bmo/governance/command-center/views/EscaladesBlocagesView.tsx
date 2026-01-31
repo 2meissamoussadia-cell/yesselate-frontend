@@ -264,9 +264,9 @@ export function EscaladesBlocagesView() {
                       </Badge>
                     </div>
                     <div className="flex items-center gap-3 mt-1">
-                      <span className="text-xs text-slate-500">{esc.ref}</span>
+                      <span className="text-xs text-slate-400">{esc.ref}</span>
                       <span className="text-xs text-slate-600">•</span>
-                      <span className="text-xs text-slate-500">{esc.origin}</span>
+                      <span className="text-xs text-slate-400">{esc.origin}</span>
                       <span className="text-xs text-slate-600">•</span>
                       <span
                         className={cn(

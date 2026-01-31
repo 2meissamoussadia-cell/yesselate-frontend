@@ -134,13 +134,13 @@ export const AlertsUrgentesPage = memo(function AlertsUrgentesPage() {
       key: 'bureau',
       label: 'Bureau',
       sortable: true,
-      render: (value) => value || <span className="text-slate-500">-</span>,
+      render: (value) => value || <span className="text-slate-400">-</span>,
     },
     {
       key: 'domain',
       label: 'Domaine',
       sortable: true,
-      render: (value) => value || <span className="text-slate-500">-</span>,
+      render: (value) => value || <span className="text-slate-400">-</span>,
     },
     {
       key: 'lastSeen',

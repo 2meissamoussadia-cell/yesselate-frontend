@@ -358,15 +358,15 @@ function KPIDrillDownModalLocal() {
           <div className="space-y-4">
             <div className="grid grid-cols-3 gap-4">
               <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                <p className="text-xs text-slate-500 mb-1">Valeur actuelle</p>
+                <p className="text-xs text-slate-400 mb-1">Valeur actuelle</p>
                 <p className="text-xl font-bold text-slate-200">{kpiData?.value || 'N/A'}</p>
               </div>
               <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                <p className="text-xs text-slate-500 mb-1">Objectif</p>
+                <p className="text-xs text-slate-400 mb-1">Objectif</p>
                 <p className="text-xl font-bold text-slate-200">{kpiInfo.target || 'N/A'}</p>
               </div>
               <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                <p className="text-xs text-slate-500 mb-1">Variation</p>
+                <p className="text-xs text-slate-400 mb-1">Variation</p>
                 <p className={cn(
                   'text-xl font-bold flex items-center gap-1',
                   kpiData?.trend === 'up' && kpiData?.tone === 'ok' && 'text-emerald-400',
@@ -383,7 +383,7 @@ function KPIDrillDownModalLocal() {
 
             {/* Mini graphique historique amélioré */}
             <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-              <p className="text-xs text-slate-500 mb-3">Évolution sur 30 jours</p>
+              <p className="text-xs text-slate-400 mb-3">Évolution sur 30 jours</p>
               <KPIHistoryChart
                 data={historicalData}
                 type="area"
@@ -400,7 +400,7 @@ function KPIDrillDownModalLocal() {
         {activeTab === 'history' && (
           <div className="space-y-4">
             <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-              <p className="text-xs text-slate-500 mb-4">Historique détaillé (30 derniers jours)</p>
+              <p className="text-xs text-slate-400 mb-4">Historique détaillé (30 derniers jours)</p>
               <KPIHistoryChart
                 data={historicalData}
                 type="area"
@@ -428,18 +428,18 @@ function KPIDrillDownModalLocal() {
           <div className="space-y-4">
             <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50 space-y-3">
               <div>
-                <p className="text-xs text-slate-500 mb-1">Description</p>
+                <p className="text-xs text-slate-400 mb-1">Description</p>
                 <p className="text-sm text-slate-300">{kpiInfo.description}</p>
               </div>
               {kpiInfo.formula && (
                 <div>
-                  <p className="text-xs text-slate-500 mb-1">Formule de calcul</p>
+                  <p className="text-xs text-slate-400 mb-1">Formule de calcul</p>
                   <code className="text-xs text-blue-400 bg-slate-900/50 px-2 py-1 rounded">{kpiInfo.formula}</code>
                 </div>
               )}
               {kpiInfo.target && (
                 <div>
-                  <p className="text-xs text-slate-500 mb-1">Objectif cible</p>
+                  <p className="text-xs text-slate-400 mb-1">Objectif cible</p>
                   <p className="text-sm font-medium text-slate-200">{kpiInfo.target}</p>
                 </div>
               )}
@@ -447,13 +447,13 @@ function KPIDrillDownModalLocal() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                <p className="text-xs text-slate-500 mb-1">Statut</p>
+                <p className="text-xs text-slate-400 mb-1">Statut</p>
                 <Badge variant={kpiData?.tone === 'ok' ? 'default' : kpiData?.tone === 'warn' ? 'warning' : 'destructive'}>
                   {kpiData?.tone === 'ok' ? 'Normal' : kpiData?.tone === 'warn' ? 'Attention' : kpiData?.tone === 'crit' ? 'Critique' : 'Info'}
                 </Badge>
               </div>
               <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                <p className="text-xs text-slate-500 mb-1">Tendance</p>
+                <p className="text-xs text-slate-400 mb-1">Tendance</p>
                 <div className={cn(
                   'flex items-center gap-1 text-sm font-medium',
                   kpiData?.trend === 'up' && kpiData?.tone === 'ok' && 'text-emerald-400',
@@ -510,42 +510,42 @@ function StatsModal() {
           <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
             <div className="flex items-center gap-2 mb-2">
               <FileText className="w-4 h-4 text-blue-400" />
-              <p className="text-xs text-slate-500">Total Demandes</p>
+              <p className="text-xs text-slate-400">Total Demandes</p>
             </div>
             <p className="text-2xl font-bold text-slate-200">{stats.totalDemandes}</p>
           </div>
           <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
             <div className="flex items-center gap-2 mb-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-              <p className="text-xs text-slate-500">Taux Validation</p>
+              <p className="text-xs text-slate-400">Taux Validation</p>
             </div>
             <p className="text-2xl font-bold text-slate-200">{stats.validations}%</p>
           </div>
           <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
             <div className="flex items-center gap-2 mb-2">
               <AlertTriangle className="w-4 h-4 text-amber-400" />
-              <p className="text-xs text-slate-500">Blocages</p>
+              <p className="text-xs text-slate-400">Blocages</p>
             </div>
             <p className="text-2xl font-bold text-slate-200">{stats.blocages}</p>
           </div>
           <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
             <div className="flex items-center gap-2 mb-2">
               <DollarSign className="w-4 h-4 text-purple-400" />
-              <p className="text-xs text-slate-500">Budget Consommé</p>
+              <p className="text-xs text-slate-400">Budget Consommé</p>
             </div>
             <p className="text-2xl font-bold text-slate-200">{stats.budgetConsomme}%</p>
           </div>
           <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
             <div className="flex items-center gap-2 mb-2">
               <Clock className="w-4 h-4 text-blue-400" />
-              <p className="text-xs text-slate-500">Délai Moyen</p>
+              <p className="text-xs text-slate-400">Délai Moyen</p>
             </div>
             <p className="text-2xl font-bold text-slate-200">{stats.delaiMoyen}j</p>
           </div>
           <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
             <div className="flex items-center gap-2 mb-2">
               <Activity className="w-4 h-4 text-emerald-400" />
-              <p className="text-xs text-slate-500">Conformité SLA</p>
+              <p className="text-xs text-slate-400">Conformité SLA</p>
             </div>
             <p className="text-2xl font-bold text-slate-200">{stats.conformiteSLA}%</p>
           </div>
@@ -692,8 +692,8 @@ function RiskDetailModal() {
       <div className="space-y-4">
         <div className="flex items-center gap-3">
           <Badge variant="destructive">Critique</Badge>
-          <span className="text-xs text-slate-500">{risk?.id || 'RISK-001'}</span>
-          <span className="text-xs text-slate-500 ml-auto">
+          <span className="text-xs text-slate-400">{risk?.id || 'RISK-001'}</span>
+          <span className="text-xs text-slate-400 ml-auto">
             {risk?.date || new Date().toLocaleDateString('fr-FR')}
           </span>
         </div>
@@ -707,11 +707,11 @@ function RiskDetailModal() {
 
         <div className="grid grid-cols-2 gap-4">
           <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
-            <p className="text-xs text-slate-500 mb-1">Niveau de criticité</p>
+            <p className="text-xs text-slate-400 mb-1">Niveau de criticité</p>
             <Badge variant="destructive">Critique</Badge>
           </div>
           <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
-            <p className="text-xs text-slate-500 mb-1">Impact potentiel</p>
+            <p className="text-xs text-slate-400 mb-1">Impact potentiel</p>
             <p className="text-sm font-medium text-slate-200">Élevé</p>
           </div>
         </div>
@@ -722,7 +722,7 @@ function RiskDetailModal() {
         </div>
 
         <div className="space-y-2">
-          <p className="text-xs text-slate-500">Actions suggérées</p>
+          <p className="text-xs text-slate-400">Actions suggérées</p>
           <ul className="space-y-1 ml-4">
             {[
               'Analyser la cause racine',
@@ -781,8 +781,8 @@ function ActionDetailModal() {
       <div className="space-y-4">
         <div className="flex items-center gap-3">
           <Badge variant="default">En attente</Badge>
-          <span className="text-xs text-slate-500">{action?.id || 'ACTION-001'}</span>
-          <span className="text-xs text-slate-500 ml-auto">
+          <span className="text-xs text-slate-400">{action?.id || 'ACTION-001'}</span>
+          <span className="text-xs text-slate-400 ml-auto">
             {action?.date || new Date().toLocaleDateString('fr-FR')}
           </span>
         </div>
@@ -798,18 +798,18 @@ function ActionDetailModal() {
 
         {action?.amount && (
           <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-            <p className="text-xs text-slate-500 mb-1">Montant concerné</p>
+            <p className="text-xs text-slate-400 mb-1">Montant concerné</p>
             <p className="text-2xl font-bold text-slate-200">{action.amount}</p>
           </div>
         )}
 
         <div className="grid grid-cols-2 gap-4">
           <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
-            <p className="text-xs text-slate-500 mb-1">Priorité</p>
+            <p className="text-xs text-slate-400 mb-1">Priorité</p>
             <Badge variant="warning">Haute</Badge>
           </div>
           <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
-            <p className="text-xs text-slate-500 mb-1">Échéance</p>
+            <p className="text-xs text-slate-400 mb-1">Échéance</p>
             <p className="text-sm font-medium text-slate-200">
               {action?.dueDate || 'Sous 48h'}
             </p>
@@ -865,14 +865,14 @@ function DecisionDetailModal() {
           <Badge variant={decision?.status === 'executed' ? 'default' : 'warning'}>
             {decision?.status === 'executed' ? 'Exécutée' : 'En attente'}
           </Badge>
-          <span className="text-xs text-slate-500">{decision?.id || 'DEC-001'}</span>
-          <span className="text-xs text-slate-500 ml-auto">
+          <span className="text-xs text-slate-400">{decision?.id || 'DEC-001'}</span>
+          <span className="text-xs text-slate-400 ml-auto">
             {decision?.date || new Date().toLocaleDateString('fr-FR')}
           </span>
         </div>
 
         <div>
-          <p className="text-sm text-slate-500">{decision?.type || 'Type de décision'}</p>
+          <p className="text-sm text-slate-400">{decision?.type || 'Type de décision'}</p>
           <h3 className="text-lg font-medium text-slate-200 mt-1">
             {decision?.subject || 'Sujet de la décision'}
           </h3>
@@ -883,11 +883,11 @@ function DecisionDetailModal() {
 
         <div className="grid grid-cols-2 gap-3">
           <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
-            <p className="text-xs text-slate-500 mb-1">Auteur</p>
+            <p className="text-xs text-slate-400 mb-1">Auteur</p>
             <p className="text-sm text-slate-200">{decision?.author || 'N/A'}</p>
           </div>
           <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
-            <p className="text-xs text-slate-500 mb-1">Date de création</p>
+            <p className="text-xs text-slate-400 mb-1">Date de création</p>
             <p className="text-sm text-slate-200">{decision?.date || 'N/A'}</p>
           </div>
         </div>
@@ -974,7 +974,7 @@ function ExportModal() {
 
         <div className="space-y-3">
           <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
-            <p className="text-xs text-slate-500 mb-2">Options d'export</p>
+            <p className="text-xs text-slate-400 mb-2">Options d'export</p>
             <div className="space-y-2">
               <label className="flex items-center gap-2 text-xs text-slate-400">
                 <input
@@ -998,7 +998,7 @@ function ExportModal() {
           </div>
 
           <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
-            <p className="text-xs text-slate-500 mb-2">Période</p>
+            <p className="text-xs text-slate-400 mb-2">Période</p>
             <select
               value={period}
               onChange={(e) => setPeriod(e.target.value as any)}
@@ -1046,6 +1046,15 @@ function ShareLinkModal() {
 
   const handleCreate = async () => {
     setError(null);
+    if (role === 'client' && chantierIdsRaw.trim()) {
+      const ids = chantierIdsRaw.split(/[\s,]+/).map((s) => s.trim()).filter(Boolean);
+      const validPattern = /^[#A-Za-z0-9\-_]+$/;
+      const invalid = ids.find((id) => !validPattern.test(id) || id.length < 2);
+      if (invalid) {
+        setError('Format d\'ID chantier invalide (ex. CH-001, #042). Utilisez des virgules pour séparer.');
+        return;
+      }
+    }
     setLoading(true);
     try {
       const chantierIds = role === 'client' && chantierIdsRaw.trim()
@@ -1092,7 +1101,7 @@ function ShareLinkModal() {
         </p>
 
         <div className="space-y-2">
-          <p className="text-xs text-slate-500 font-medium uppercase tracking-wider">Rôle du destinataire</p>
+          <p className="text-xs text-slate-400 font-medium uppercase tracking-wider">Rôle du destinataire</p>
           <div className="flex gap-4">
             <label className="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
               <input
@@ -1119,13 +1128,13 @@ function ShareLinkModal() {
 
         {role === 'client' && (
           <div className="space-y-1">
-            <label className="text-xs text-slate-500">IDs chantiers (optionnel, séparés par des virgules)</label>
+            <label className="text-xs text-slate-400">IDs chantiers (optionnel, séparés par des virgules)</label>
             <input
               type="text"
               value={chantierIdsRaw}
               onChange={(e) => setChantierIdsRaw(e.target.value)}
               placeholder="CH-001, CH-002"
-              className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-sm text-slate-200 placeholder:text-slate-500"
+              className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-sm text-slate-200 placeholder:text-slate-400"
             />
           </div>
         )}
@@ -1136,7 +1145,7 @@ function ShareLinkModal() {
 
         {created ? (
           <div className="space-y-2 p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
-            <p className="text-xs text-slate-500">Lien valide jusqu&apos;au {new Date(created.expiresAt).toLocaleDateString('fr-FR', { dateStyle: 'medium' })}</p>
+            <p className="text-xs text-slate-400">Lien valide jusqu&apos;au {new Date(created.expiresAt).toLocaleDateString('fr-FR', { dateStyle: 'medium' })}</p>
             <div className="flex gap-2">
               <input
                 type="text"
@@ -1336,7 +1345,7 @@ function CalendarModal() {
                 <div className="w-2 h-2 rounded-full bg-blue-400" />
                 <div className="flex-1">
                   <p className="text-sm font-medium text-slate-200">{event.title}</p>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-slate-400">
                     {event.date.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
                   </p>
                 </div>
@@ -1400,7 +1409,7 @@ function AgendaDetailsModal() {
           <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
             <div className="flex items-center gap-2 mb-1">
               <Calendar className="w-4 h-4 text-blue-400" />
-              <p className="text-xs text-slate-500">Date</p>
+              <p className="text-xs text-slate-400">Date</p>
             </div>
             <p className="text-sm font-medium text-slate-200">
               {event.date.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
@@ -1409,7 +1418,7 @@ function AgendaDetailsModal() {
           <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
             <div className="flex items-center gap-2 mb-1">
               <Clock className="w-4 h-4 text-amber-400" />
-              <p className="text-xs text-slate-500">Heure</p>
+              <p className="text-xs text-slate-400">Heure</p>
             </div>
             <p className="text-sm font-medium text-slate-200">{event.time}</p>
           </div>
@@ -1419,7 +1428,7 @@ function AgendaDetailsModal() {
           <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
             <div className="flex items-center gap-2 mb-1">
               <MapPin className="w-4 h-4 text-emerald-400" />
-              <p className="text-xs text-slate-500">Lieu</p>
+              <p className="text-xs text-slate-400">Lieu</p>
             </div>
             <p className="text-sm font-medium text-slate-200">{event.location}</p>
           </div>
@@ -1429,12 +1438,12 @@ function AgendaDetailsModal() {
           <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
             <div className="flex items-center gap-2 mb-2">
               <Users className="w-4 h-4 text-purple-400" />
-              <p className="text-xs text-slate-500">Participants</p>
+              <p className="text-xs text-slate-400">Participants</p>
             </div>
             <div className="space-y-1">
               {event.participants.map((participant, i) => (
                 <div key={i} className="flex items-center gap-2 text-sm text-slate-300">
-                  <User className="w-3 h-3 text-slate-500" />
+                  <User className="w-3 h-3 text-slate-400" />
                   {participant}
                 </div>
               ))}
@@ -1491,7 +1500,7 @@ function BureauDetailModal() {
           </div>
           <div className="text-right">
             <p className="text-3xl font-bold text-emerald-400">{bureauData.score}</p>
-            <p className="text-xs text-slate-500">Score de performance</p>
+            <p className="text-xs text-slate-400">Score de performance</p>
           </div>
         </div>
 
@@ -1500,14 +1509,14 @@ function BureauDetailModal() {
           <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
             <div className="flex items-center gap-2 mb-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-              <p className="text-xs text-slate-500">Validations</p>
+              <p className="text-xs text-slate-400">Validations</p>
             </div>
             <p className="text-2xl font-bold text-slate-200">{bureauData.validations}</p>
           </div>
           <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
             <div className="flex items-center gap-2 mb-2">
               <AlertTriangle className="w-4 h-4 text-amber-400" />
-              <p className="text-xs text-slate-500">Blocages</p>
+              <p className="text-xs text-slate-400">Blocages</p>
             </div>
             <p className="text-2xl font-bold text-slate-200">{bureauData.blocages}</p>
           </div>
@@ -1518,9 +1527,9 @@ function BureauDetailModal() {
               ) : bureauData.trend === 'down' ? (
                 <TrendingDown className="w-4 h-4 text-rose-400" />
               ) : (
-                <Minus className="w-4 h-4 text-slate-500" />
+                <Minus className="w-4 h-4 text-slate-400" />
               )}
-              <p className="text-xs text-slate-500">Tendance</p>
+              <p className="text-xs text-slate-400">Tendance</p>
             </div>
             <p className="text-sm font-medium text-slate-200">
               {bureauData.trend === 'up' ? 'En hausse' : bureauData.trend === 'down' ? 'En baisse' : 'Stable'}
@@ -1533,19 +1542,19 @@ function BureauDetailModal() {
           <h4 className="text-sm font-semibold text-slate-200 mb-3">Informations de contact</h4>
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-sm text-slate-300">
-              <User className="w-4 h-4 text-slate-500" />
+              <User className="w-4 h-4 text-slate-400" />
               <span>{bureauData.responsable}</span>
             </div>
             <div className="flex items-center gap-2 text-sm text-slate-300">
-              <Mail className="w-4 h-4 text-slate-500" />
+              <Mail className="w-4 h-4 text-slate-400" />
               <span>{bureauData.email}</span>
             </div>
             <div className="flex items-center gap-2 text-sm text-slate-300">
-              <Phone className="w-4 h-4 text-slate-500" />
+              <Phone className="w-4 h-4 text-slate-400" />
               <span>{bureauData.phone}</span>
             </div>
             <div className="flex items-center gap-2 text-sm text-slate-300">
-              <MapPin className="w-4 h-4 text-slate-500" />
+              <MapPin className="w-4 h-4 text-slate-400" />
               <span>{bureauData.address}</span>
             </div>
           </div>

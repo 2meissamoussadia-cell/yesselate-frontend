@@ -146,7 +146,7 @@ export function CalendarSidebar({
                   onClick={() => onDateSelect(date)}
                   className={cn(
                     'h-7 rounded text-[10px] font-medium transition-all relative',
-                    !isCurrentMonth && 'text-slate-500',
+                    !isCurrentMonth && 'text-slate-400',
                     isSelectedDay && 'bg-orange-500 text-white font-bold',
                     !isSelectedDay && isTodayDay && 'bg-blue-500/20 text-blue-400 font-semibold',
                     !isSelectedDay && !isTodayDay && inSelectedWeek && 'bg-slate-700/30',

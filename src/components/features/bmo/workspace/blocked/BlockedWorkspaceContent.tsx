@@ -18,7 +18,7 @@ export function BlockedWorkspaceContent() {
 
   if (!activeTab) {
     return (
-      <div className="flex items-center justify-center h-64 text-slate-500">
+      <div className="flex items-center justify-center h-64 text-slate-400">
         <div className="text-center">
           <AlertCircle className="w-12 h-12 mx-auto mb-3 opacity-30" />
           <p>Aucun onglet sélectionné</p>
@@ -82,7 +82,7 @@ export function BlockedWorkspaceContent() {
     
     default:
       return (
-        <div className="flex items-center justify-center h-64 text-slate-500">
+        <div className="flex items-center justify-center h-64 text-slate-400">
           <div className="text-center">
             <AlertCircle className="w-12 h-12 mx-auto mb-3 opacity-30" />
             <p>Type de vue non supporté</p>
@@ -95,7 +95,7 @@ export function BlockedWorkspaceContent() {
 
 function PlaceholderView({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
   return (
-    <div className="flex items-center justify-center h-64 text-slate-500">
+    <div className="flex items-center justify-center h-64 text-slate-400">
       <div className="text-center">
         <div className="mx-auto mb-4 opacity-30">
           {icon}

@@ -18,7 +18,7 @@ const chantierIds = Array.from(new Set(photosGps.map((p) => p.chantierId))).sort
 function ImagePlaceholder({ label }: { label: string }) {
   return (
     <div
-      className="h-full w-full flex flex-col items-center justify-center bg-slate-800/80 text-slate-500"
+      className="h-full w-full flex flex-col items-center justify-center bg-slate-800/80 text-slate-400"
       aria-hidden
     >
       <ImageIcon className="h-8 w-8 sm:h-10 sm:w-10 mb-1" />
@@ -154,7 +154,7 @@ export function CockpitPhotosGpsPanel() {
 
       {filtered.length === 0 && (
         <div className="flex flex-col items-center justify-center py-12 rounded-xl border border-dashed border-slate-700/60 bg-slate-900/30">
-          <ImageIcon className="h-10 w-10 text-slate-500 mb-2" />
+          <ImageIcon className="h-10 w-10 text-slate-400 mb-2" />
           <p className="text-sm text-slate-400">Aucune photo pour ce chantier</p>
         </div>
       )}

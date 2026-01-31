@@ -58,13 +58,13 @@ export function DemandesValidatedView() {
             <CheckCircle className="w-5 h-5 text-emerald-400" />
             Demandes Validées
           </h1>
-          <p className="text-sm text-slate-500 mt-0.5">
+          <p className="text-sm text-slate-400 mt-0.5">
             {filtered.length} demande(s) validée(s) récemment
           </p>
         </div>
 
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <Input
             placeholder="Rechercher..."
             value={searchQuery}
@@ -96,7 +96,7 @@ export function DemandesValidatedView() {
             {/* Content */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-xs font-mono text-slate-500">{demande.id}</span>
+                <span className="text-xs font-mono text-slate-400">{demande.id}</span>
                 <Badge variant="success" className="text-xs">
                   Validé
                 </Badge>
@@ -115,13 +115,13 @@ export function DemandesValidatedView() {
             </div>
 
             {/* Validated by */}
-            <div className="flex items-center gap-1.5 text-xs text-slate-500">
+            <div className="flex items-center gap-1.5 text-xs text-slate-400">
               <User className="w-3.5 h-3.5" />
               <span>{demande.validatedBy}</span>
             </div>
 
             {/* Validated at */}
-            <div className="flex items-center gap-1.5 text-xs text-slate-500">
+            <div className="flex items-center gap-1.5 text-xs text-slate-400">
               <Calendar className="w-3.5 h-3.5" />
               <span>{demande.validatedAt}</span>
             </div>
@@ -131,7 +131,7 @@ export function DemandesValidatedView() {
               variant="ghost"
               size="sm"
               onClick={() => openModal('demande-detail', { demandeId: demande.id })}
-              className="h-8 w-8 p-0 text-slate-500 hover:text-slate-300"
+              className="h-8 w-8 p-0 text-slate-400 hover:text-slate-300"
             >
               <ArrowRight className="h-4 w-4" />
             </Button>
@@ -139,7 +139,7 @@ export function DemandesValidatedView() {
         )}
         />
       ) : (
-        <div className="p-8 text-center text-slate-500 rounded-xl border border-slate-700/50 bg-slate-800/30">
+        <div className="p-8 text-center text-slate-400 rounded-xl border border-slate-700/50 bg-slate-800/30">
           <p className="text-sm">Aucune demande validée trouvée</p>
         </div>
       )}

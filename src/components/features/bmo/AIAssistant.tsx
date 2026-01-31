@@ -181,7 +181,7 @@ export function AIAssistant() {
       {/* Suggestions */}
       {aiMessages.length <= 2 && (
         <div className="px-3 pb-2">
-          <p className="text-[10px] text-slate-500 mb-1">Suggestions :</p>
+          <p className="text-[10px] text-slate-400 mb-1">Suggestions :</p>
           <div className="flex flex-wrap gap-1">
             {suggestions.map((s, i) => (
               <button
@@ -216,7 +216,7 @@ export function AIAssistant() {
             className={cn(
               'flex-1 px-3 py-2 rounded-lg text-xs outline-none',
               darkMode
-                ? 'bg-slate-700 placeholder:text-slate-500'
+                ? 'bg-slate-700 placeholder:text-slate-400'
                 : 'bg-gray-100 placeholder:text-gray-400'
             )}
           />

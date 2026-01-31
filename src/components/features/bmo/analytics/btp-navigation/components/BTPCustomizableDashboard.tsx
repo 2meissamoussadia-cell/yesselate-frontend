@@ -204,7 +204,7 @@ export function BTPCustomizableDashboard({
                     className="p-3 bg-slate-800/50 rounded-lg border border-slate-700 hover:border-blue-500/50 transition-colors text-left"
                   >
                     <p className="text-sm font-medium text-slate-300">{kpi.label}</p>
-                    <p className="text-xs text-slate-500 mt-1">{kpi.unit}</p>
+                    <p className="text-xs text-slate-400 mt-1">{kpi.unit}</p>
                   </button>
                 ))}
               </div>
@@ -222,7 +222,7 @@ export function BTPCustomizableDashboard({
                     <p className="text-sm font-medium text-slate-300">
                       {viz.dataSource.replace(/-/g, ' ')}
                     </p>
-                    <p className="text-xs text-slate-500 mt-1">{viz.type}</p>
+                    <p className="text-xs text-slate-400 mt-1">{viz.type}</p>
                   </button>
                 ))}
               </div>

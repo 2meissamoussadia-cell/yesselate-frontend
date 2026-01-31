@@ -48,7 +48,7 @@ export const EmployesContentRouter = React.memo(function EmployesContentRouter({
           {employesCategories.find((c) => c.id === category)?.label || category}
           {subCategory && subCategory !== 'all' && ` - ${subCategory}`}
         </h3>
-        <p className="text-slate-500">Contenu en cours de développement</p>
+        <p className="text-slate-400">Contenu en cours de développement</p>
       </div>
     </div>
   );
@@ -63,19 +63,19 @@ const OverviewDashboard = React.memo(function OverviewDashboard() {
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="p-4 rounded-lg border border-slate-700/50 bg-slate-800/30">
-          <div className="text-sm text-slate-500 mb-1">Total Employés</div>
+          <div className="text-sm text-slate-400 mb-1">Total Employés</div>
           <div className="text-2xl font-bold text-slate-200">124</div>
         </div>
         <div className="p-4 rounded-lg border border-slate-700/50 bg-slate-800/30">
-          <div className="text-sm text-slate-500 mb-1">Actifs</div>
+          <div className="text-sm text-slate-400 mb-1">Actifs</div>
           <div className="text-2xl font-bold text-emerald-400">118</div>
         </div>
         <div className="p-4 rounded-lg border border-slate-700/50 bg-slate-800/30">
-          <div className="text-sm text-slate-500 mb-1">Taux Présence</div>
+          <div className="text-sm text-slate-400 mb-1">Taux Présence</div>
           <div className="text-2xl font-bold text-blue-400">94%</div>
         </div>
         <div className="p-4 rounded-lg border border-slate-700/50 bg-slate-800/30">
-          <div className="text-sm text-slate-500 mb-1">SPOF</div>
+          <div className="text-sm text-slate-400 mb-1">SPOF</div>
           <div className="text-2xl font-bold text-red-400">3</div>
         </div>
       </div>

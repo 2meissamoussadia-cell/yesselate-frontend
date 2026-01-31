@@ -250,7 +250,7 @@ export function DelegationTimeline({ delegationId, open, onClose }: Props) {
               })}
             </select>
 
-            <span className="text-xs text-slate-500">{filteredEvents.length} événement(s)</span>
+            <span className="text-xs text-slate-400">{filteredEvents.length} événement(s)</span>
           </div>
 
           <div className="flex items-center gap-2">
@@ -269,7 +269,7 @@ export function DelegationTimeline({ delegationId, open, onClose }: Props) {
             <RefreshCw className="w-8 h-8 animate-spin text-slate-400" />
           </div>
         ) : error ? (
-          <div className="text-center py-12 text-slate-500">
+          <div className="text-center py-12 text-slate-400">
             <AlertTriangle className="w-10 h-10 mx-auto mb-2 text-rose-300" />
             <div>{error}</div>
             <FluentButton size="sm" variant="secondary" onClick={loadEvents} className="mt-4">
@@ -277,7 +277,7 @@ export function DelegationTimeline({ delegationId, open, onClose }: Props) {
             </FluentButton>
           </div>
         ) : groupedEvents.length === 0 ? (
-          <div className="text-center py-12 text-slate-500">
+          <div className="text-center py-12 text-slate-400">
             <History className="w-10 h-10 mx-auto mb-2 text-slate-300" />
             <div>Aucun événement</div>
           </div>
@@ -346,7 +346,7 @@ export function DelegationTimeline({ delegationId, open, onClose }: Props) {
                                 config.color === 'purple' && "text-purple-600",
                                 config.color === 'amber' && "text-amber-600",
                                 config.color === 'rose' && "text-rose-600",
-                                config.color === 'slate' && "text-slate-500"
+                                config.color === 'slate' && "text-slate-400"
                               )} />
                             </div>
 
@@ -366,7 +366,7 @@ export function DelegationTimeline({ delegationId, open, onClose }: Props) {
                                 <span className="font-mono text-xs text-purple-600 dark:text-purple-400">{event.delegationCode}</span>
                               </div>
                               <div className="text-sm mt-1">{event.summary}</div>
-                              <div className="flex items-center gap-3 mt-1 text-xs text-slate-500">
+                              <div className="flex items-center gap-3 mt-1 text-xs text-slate-400">
                                 <span className="flex items-center gap-1">
                                   <User className="w-3 h-3" />
                                   {event.actorName}
@@ -417,7 +417,7 @@ export function DelegationTimeline({ delegationId, open, onClose }: Props) {
 
         {/* Footer */}
         <div className="flex justify-between items-center pt-4 border-t border-slate-200 dark:border-slate-700">
-          <div className="text-xs text-slate-500 flex items-center gap-2">
+          <div className="text-xs text-slate-400 flex items-center gap-2">
             <Shield className="w-3.5 h-3.5" />
             Historique cryptographiquement signé
           </div>

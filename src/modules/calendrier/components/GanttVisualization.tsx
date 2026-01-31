@@ -156,7 +156,7 @@ export function GanttVisualization({
       <div className={cn('bg-slate-800/50 rounded-lg border border-slate-700/50 p-8 min-h-[400px] flex items-center justify-center', className)}>
         <div className="text-center space-y-2">
           <div className="text-slate-400 text-sm">Aucune donnée à afficher</div>
-          <div className="text-slate-500 text-xs">Ajoutez des jalons ou événements avec des dates</div>
+          <div className="text-slate-400 text-xs">Ajoutez des jalons ou événements avec des dates</div>
         </div>
       </div>
     );
@@ -186,13 +186,14 @@ export function GanttVisualization({
         </div>
 
         {/* Graphique Gantt */}
-        <div className="relative overflow-x-auto">
+        <div className="relative overflow-x-auto" role="img" aria-label="Diagramme de Gantt des jalons et événements par chantier">
           <svg
             width="100%"
             height={chartHeight}
             className="min-w-full"
             viewBox={`0 0 ${svgWidth} ${chartHeight}`}
             preserveAspectRatio="xMidYMid meet"
+            aria-hidden
           >
             {/* Ligne de séparation pour les labels */}
             <line

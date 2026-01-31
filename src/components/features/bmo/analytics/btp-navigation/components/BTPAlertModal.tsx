@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/utils/logger';
 import type { AlertDefinition } from '@/lib/config/analyticsDisplayLogic';
 
 interface BTPAlertModalProps {
@@ -108,8 +109,8 @@ export function BTPAlertModal({ isOpen, onClose, alert }: BTPAlertModalProps) {
         },
       ]}
     >
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-6">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full" aria-label="Détail de l'alerte">
+        <TabsList className="grid w-full grid-cols-6" aria-label="Sections du détail alerte">
           <TabsTrigger value="info">Informations</TabsTrigger>
           <TabsTrigger value="impact">Impact</TabsTrigger>
           <TabsTrigger value="causes">Causes</TabsTrigger>
@@ -122,7 +123,7 @@ export function BTPAlertModal({ isOpen, onClose, alert }: BTPAlertModalProps) {
         <TabsContent value="info" className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
-              <p className="text-xs text-slate-400 mb-1">Type</p>
+              <p className="text-xs text-slate-300 mb-1">Type</p>
               <Badge variant={getTypeColor(alert.type)} className="text-xs">
                 {alert.type}
               </Badge>
@@ -135,7 +136,7 @@ export function BTPAlertModal({ isOpen, onClose, alert }: BTPAlertModalProps) {
               </div>
             </div>
             <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
-              <p className="text-xs text-slate-400 mb-1">Date de détection</p>
+              <p className="text-xs text-slate-300 mb-1">Date de détection</p>
               <p className="text-sm text-slate-300">{alert.detectedAt}</p>
             </div>
             <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
@@ -147,7 +148,7 @@ export function BTPAlertModal({ isOpen, onClose, alert }: BTPAlertModalProps) {
           </div>
 
           <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
-            <p className="text-xs text-slate-400 mb-2">Description</p>
+            <p className="text-xs text-slate-300 mb-2">Description</p>
             <p className="text-sm text-slate-300">{alert.description}</p>
           </div>
         </TabsContent>
@@ -253,7 +254,7 @@ export function BTPAlertModal({ isOpen, onClose, alert }: BTPAlertModalProps) {
                       {rec.impact}
                     </Badge>
                   </div>
-                  <div className="flex items-center gap-4 text-xs text-slate-500">
+                  <div className="flex items-center gap-4 text-xs text-slate-400">
                     {rec.cost !== undefined && <span>Coût: {rec.cost.toLocaleString()} FCFA</span>}
                     {rec.duration && <span>Durée: {rec.duration}</span>}
                     {rec.responsible && (
@@ -311,7 +312,7 @@ export function BTPAlertModal({ isOpen, onClose, alert }: BTPAlertModalProps) {
                   variant="default"
                   size="sm"
                   onClick={() => {
-                    console.log('Resolve alert');
+                    logger.debug('Resolve alert', { component: 'BTPAlertModal' });
                     onClose();
                   }}
                   className="text-xs"
@@ -343,9 +344,9 @@ export function BTPAlertModal({ isOpen, onClose, alert }: BTPAlertModalProps) {
                 <div className="flex-1">
                   <p className="text-sm text-slate-300">{event.event}</p>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="text-xs text-slate-500">{event.date}</span>
-                    <span className="text-xs text-slate-500">•</span>
-                    <span className="text-xs text-slate-500 flex items-center gap-1">
+                    <span className="text-xs text-slate-400">{event.date}</span>
+                    <span className="text-xs text-slate-400">•</span>
+                    <span className="text-xs text-slate-400 flex items-center gap-1">
                       <User className="h-3 w-3" />
                       {event.user}
                     </span>

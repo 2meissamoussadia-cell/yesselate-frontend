@@ -135,7 +135,7 @@ export const RiskScoreCard = memo(function RiskScoreCard({
           <p className={cn('font-bold leading-none', scoreColor)} style={{ fontSize: 'clamp(1.5rem, 2.5vw, 1.875rem)' }}>
             {risk.score}
           </p>
-          <p className="text-slate-500 text-[10px] uppercase tracking-wider mt-0.5">Score</p>
+          <p className="text-slate-400 text-[10px] uppercase tracking-wider mt-0.5">Score</p>
         </div>
       </div>
 
@@ -145,20 +145,20 @@ export const RiskScoreCard = memo(function RiskScoreCard({
       </h3>
 
       {/* Description */}
-      <p className="text-[11px] text-slate-500 mb-4 line-clamp-2 leading-relaxed min-w-0">
+      <p className="text-[11px] text-slate-400 mb-4 line-clamp-2 leading-relaxed min-w-0">
         {risk.description}
       </p>
 
       {/* Footer: Probabilité + Age */}
       <div className="flex items-center justify-between pt-3 border-t border-slate-800/50 mt-auto">
         <div className="flex items-center gap-1.5">
-          <span className="text-slate-500 text-[10px]">Probabilité:</span>
+          <span className="text-slate-400 text-[10px]">Probabilité:</span>
           <span className={cn('font-semibold text-xs', probability.color)}>
             {probability.label}
           </span>
         </div>
         {risk.age !== undefined && (
-          <span className="text-slate-500 text-[10px] font-medium">
+          <span className="text-slate-400 text-[10px] font-medium">
             {risk.age}j
           </span>
         )}

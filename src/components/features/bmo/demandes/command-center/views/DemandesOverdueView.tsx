@@ -41,7 +41,7 @@ export function DemandesOverdueView() {
             <TimerOff className="w-5 h-5 text-orange-400" />
             Demandes en Retard
           </h1>
-          <p className="text-sm text-slate-500 mt-0.5">
+          <p className="text-sm text-slate-400 mt-0.5">
             {mockOverdue.length} demande(s) ayant dépassé le SLA
           </p>
         </div>
@@ -60,7 +60,7 @@ export function DemandesOverdueView() {
             <p className="text-sm font-medium text-slate-200">
               Ces demandes sont en retard par rapport au SLA défini
             </p>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-slate-400 mt-0.5">
               Une action corrective est nécessaire pour éviter les pénalités
             </p>
           </div>
@@ -93,7 +93,7 @@ export function DemandesOverdueView() {
                 {/* Content */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-mono text-slate-500">{demande.id}</span>
+                    <span className="text-xs font-mono text-slate-400">{demande.id}</span>
                     <Badge variant="warning" className="text-xs">
                       +{overdueBy}j retard
                     </Badge>
@@ -117,7 +117,7 @@ export function DemandesOverdueView() {
                     <Clock className="w-4 h-4 text-orange-400" />
                     <span className="text-orange-400 font-medium">{demande.delay}j</span>
                   </div>
-                  <span className="text-xs text-slate-500">SLA: {demande.slaLimit}j</span>
+                  <span className="text-xs text-slate-400">SLA: {demande.slaLimit}j</span>
                 </div>
 
                 {/* Action */}
@@ -125,7 +125,7 @@ export function DemandesOverdueView() {
                   variant="ghost"
                   size="sm"
                   onClick={() => openModal('demande-detail', { demandeId: demande.id })}
-                  className="h-8 w-8 p-0 text-slate-500 hover:text-slate-300"
+                  className="h-8 w-8 p-0 text-slate-400 hover:text-slate-300"
                 >
                   <ArrowRight className="h-4 w-4" />
                 </Button>

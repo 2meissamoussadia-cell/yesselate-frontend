@@ -22,7 +22,7 @@ import { enforceQuota, recordDenial, recordUsage, inferRowCount } from '@lib-roo
 export const revalidate = 0; // défaut
 
 const Params = z.object({
-  main: z.enum(['overview','performance','actions','risks','decisions','realtime','administration']),
+  main: z.enum(['overview','performance','actions','risks','decisions','realtime','administration','pilotage']),
   sub: z.string().nullable().optional(),
   leaf: z.string().nullable().optional(),
 });

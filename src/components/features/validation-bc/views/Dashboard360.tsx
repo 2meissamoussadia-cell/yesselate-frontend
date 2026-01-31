@@ -390,7 +390,7 @@ export function Dashboard360() {
                       </div>
                       <p className="text-sm text-slate-400 truncate">{doc.objet}</p>
                       <div className="flex items-center gap-4 mt-1">
-                        <span className="text-xs text-slate-500">{doc.fournisseur}</span>
+                        <span className="text-xs text-slate-400">{doc.fournisseur}</span>
                         <span className="text-xs font-medium text-blue-400">
                           {formatCurrency(doc.montantTTC)}
                         </span>

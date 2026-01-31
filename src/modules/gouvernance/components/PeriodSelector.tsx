@@ -30,8 +30,9 @@ export function PeriodSelector({ className }: PeriodSelectorProps) {
           key={option.value}
           type="button"
           onClick={() => setPeriode(option.value)}
+          aria-label={`Période : ${option.label}`}
           className={cn(
-            'rounded-lg px-3 py-1.5 text-xs font-medium transition',
+            'rounded-lg px-3 py-2 min-h-[44px] text-xs font-medium transition focus-visible:outline focus-visible:ring-2 focus-visible:ring-sky-500',
             periode === option.value
               ? 'bg-white/10 text-white'
               : 'text-slate-300 hover:bg-white/5 hover:text-white'

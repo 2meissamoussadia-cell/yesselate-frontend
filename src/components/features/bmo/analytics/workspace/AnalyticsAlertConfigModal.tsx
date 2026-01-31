@@ -218,7 +218,7 @@ export function AnalyticsAlertConfigModal({ open, onClose }: AnalyticsAlertConfi
               <p className="text-sm font-medium text-slate-200">
                 {activeRulesCount} alerte(s) active(s)
               </p>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-400">
                 sur {rules.length} règle(s) configurée(s)
               </p>
             </div>
@@ -252,7 +252,7 @@ export function AnalyticsAlertConfigModal({ open, onClose }: AnalyticsAlertConfi
                       'p-2 rounded-lg transition-colors',
                       rule.enabled
                         ? 'bg-emerald-500/10 text-emerald-400'
-                        : 'bg-slate-700 text-slate-500'
+                        : 'bg-slate-700 text-slate-400'
                     )}
                   >
                     {rule.enabled ? <Bell className="w-4 h-4" /> : <BellOff className="w-4 h-4" />}
@@ -270,7 +270,7 @@ export function AnalyticsAlertConfigModal({ open, onClose }: AnalyticsAlertConfi
                         {rule.severity}
                       </Badge>
                     </div>
-                    <p className="text-xs text-slate-500 mt-1">
+                    <p className="text-xs text-slate-400 mt-1">
                       {METRIC_OPTIONS.find(m => m.id === rule.metric)?.label}{' '}
                       {CONDITION_OPTIONS.find(c => c.id === rule.condition)?.label?.toLowerCase()}{' '}
                       {rule.threshold}{rule.metric.includes('rate') || rule.metric.includes('compliance') || rule.metric.includes('consumption') ? '%' : ''}
@@ -347,7 +347,7 @@ export function AnalyticsAlertConfigModal({ open, onClose }: AnalyticsAlertConfi
 
                   {/* Sévérité */}
                   <div>
-                    <label className="text-xs font-medium text-slate-500 mb-2 block">Sévérité</label>
+                    <label className="text-xs font-medium text-slate-400 mb-2 block">Sévérité</label>
                     <div className="flex gap-2">
                       {SEVERITY_OPTIONS.map(s => (
                         <button
@@ -369,7 +369,7 @@ export function AnalyticsAlertConfigModal({ open, onClose }: AnalyticsAlertConfi
 
                   {/* Canaux */}
                   <div>
-                    <label className="text-xs font-medium text-slate-500 mb-2 block">Canaux de notification</label>
+                    <label className="text-xs font-medium text-slate-400 mb-2 block">Canaux de notification</label>
                     <div className="flex gap-2">
                       {CHANNEL_OPTIONS.map(c => (
                         <button

@@ -110,7 +110,7 @@ export function ArbitrageViewer({ arbitrageId, onOpenModal }: {
     return (
       <div className="flex items-center justify-center py-12">
         <RefreshCw className="w-6 h-6 animate-spin text-slate-400" />
-        <span className="ml-2 text-slate-500">Chargement...</span>
+        <span className="ml-2 text-slate-400">Chargement...</span>
       </div>
     );
   }
@@ -120,7 +120,7 @@ export function ArbitrageViewer({ arbitrageId, onOpenModal }: {
       <div className="p-8 text-center">
         <AlertTriangle className="w-12 h-12 text-rose-500 mx-auto mb-4" />
         <h3 className="font-semibold text-lg mb-2">Erreur de chargement</h3>
-        <p className="text-sm text-slate-500 mb-4">{error || 'Arbitrage introuvable'}</p>
+        <p className="text-sm text-slate-400 mb-4">{error || 'Arbitrage introuvable'}</p>
         <FluentButton onClick={loadData}>Réessayer</FluentButton>
       </div>
     );
@@ -261,7 +261,7 @@ export function ArbitrageViewer({ arbitrageId, onOpenModal }: {
                   )}>
                     {data.timing.isOverdue ? '⏰' : data.timing.daysRemaining}
                   </div>
-                  <div className="text-xs text-slate-500">
+                  <div className="text-xs text-slate-400">
                     {data.timing.isOverdue ? 'En retard' : 'jour(s)'}
                   </div>
                 </div>
@@ -277,7 +277,7 @@ export function ArbitrageViewer({ arbitrageId, onOpenModal }: {
                   </span>
                 </div>
                 <p className="text-sm mb-2">{data.decision.motif}</p>
-                <div className="text-xs text-slate-500">
+                <div className="text-xs text-slate-400">
                   Par {data.decision.decidedBy} • {data.decision.decisionId}
                 </div>
               </div>
@@ -373,7 +373,7 @@ function ContexteSection({ data, formatMoney }: { data: ArbitrageData; formatMon
       <div className="grid grid-cols-2 gap-4">
         {data.context?.riskLevel && (
           <div>
-            <div className="text-xs text-slate-500 mb-1">Niveau de risque</div>
+            <div className="text-xs text-slate-400 mb-1">Niveau de risque</div>
             <Badge variant={data.context.riskLevel === 'critique' ? 'urgent' : 'warning'}>
               {data.context.riskLevel}
             </Badge>
@@ -381,7 +381,7 @@ function ContexteSection({ data, formatMoney }: { data: ArbitrageData; formatMon
         )}
         {data.context?.financialExposure && (
           <div>
-            <div className="text-xs text-slate-500 mb-1">Exposition financière</div>
+            <div className="text-xs text-slate-400 mb-1">Exposition financière</div>
             <div className="font-semibold text-amber-600">
               {formatMoney(data.context.financialExposure)}
             </div>
@@ -410,7 +410,7 @@ function ContexteSection({ data, formatMoney }: { data: ArbitrageData; formatMon
 function OptionsSection({ data, onSelectOption }: { data: ArbitrageData; onSelectOption: (id: string) => void }) {
   if (!data.decisionOptions || data.decisionOptions.length === 0) {
     return (
-      <div className="text-center py-8 text-slate-500">
+      <div className="text-center py-8 text-slate-400">
         Aucune option disponible
       </div>
     );
@@ -483,7 +483,7 @@ function OptionsSection({ data, onSelectOption }: { data: ArbitrageData; onSelec
 function PartiesSection({ data }: { data: ArbitrageData }) {
   if (!data.parties || data.parties.length === 0) {
     return (
-      <div className="text-center py-8 text-slate-500">
+      <div className="text-center py-8 text-slate-400">
         Aucune partie enregistrée
       </div>
     );
@@ -509,7 +509,7 @@ function PartiesSection({ data }: { data: ArbitrageData }) {
               {party.bureau}
             </div>
             {party.position && (
-              <div className="mt-2 text-sm italic text-slate-500">
+              <div className="mt-2 text-sm italic text-slate-400">
                 "{party.position}"
               </div>
             )}
@@ -523,7 +523,7 @@ function PartiesSection({ data }: { data: ArbitrageData }) {
 function DocumentsSection({ data }: { data: ArbitrageData }) {
   if (!data.documents || data.documents.length === 0) {
     return (
-      <div className="text-center py-8 text-slate-500">
+      <div className="text-center py-8 text-slate-400">
         Aucun document attaché
       </div>
     );
@@ -542,7 +542,7 @@ function DocumentsSection({ data }: { data: ArbitrageData }) {
             <FileText className="w-5 h-5 text-blue-500 flex-none" />
             <div className="flex-1 min-w-0">
               <div className="font-medium truncate">{doc.title}</div>
-              <div className="text-xs text-slate-500">
+              <div className="text-xs text-slate-400">
                 {doc.type} • {doc.uploadedBy}
               </div>
             </div>
@@ -558,7 +558,7 @@ function TimelineSection({ arbitrageId }: { arbitrageId: string }) {
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold mb-4">Timeline</h3>
-      <div className="text-center py-8 text-slate-500">
+      <div className="text-center py-8 text-slate-400">
         Timeline à implémenter (événements, actions, modifications)
       </div>
     </div>
@@ -600,7 +600,7 @@ function TrancherModal({ open, onClose, arbitrageId, options, onSuccess }: any) 
       <div className="space-y-4">
         {options && options.length > 0 && (
           <div>
-            <label className="text-sm text-slate-500 mb-2 block">Option choisie (optionnel)</label>
+            <label className="text-sm text-slate-400 mb-2 block">Option choisie (optionnel)</label>
             <select
               value={selectedOption}
               onChange={(e) => setSelectedOption(e.target.value)}
@@ -617,7 +617,7 @@ function TrancherModal({ open, onClose, arbitrageId, options, onSuccess }: any) 
         )}
 
         <div>
-          <label className="text-sm text-slate-500 mb-2 block">Motif de la décision *</label>
+          <label className="text-sm text-slate-400 mb-2 block">Motif de la décision *</label>
           <textarea
             value={motif}
             onChange={(e) => setMotif(e.target.value)}
@@ -680,7 +680,7 @@ function ReporterModal({ open, onClose, arbitrageId, onSuccess }: any) {
     <FluentModal open={open} title="Reporter l'arbitrage" onClose={onClose}>
       <div className="space-y-4">
         <div>
-          <label className="text-sm text-slate-500 mb-2 block">Nouvelle échéance *</label>
+          <label className="text-sm text-slate-400 mb-2 block">Nouvelle échéance *</label>
           <input
             type="date"
             value={newDeadline}
@@ -692,7 +692,7 @@ function ReporterModal({ open, onClose, arbitrageId, onSuccess }: any) {
         </div>
 
         <div>
-          <label className="text-sm text-slate-500 mb-2 block">Justification *</label>
+          <label className="text-sm text-slate-400 mb-2 block">Justification *</label>
           <textarea
             value={reason}
             onChange={(e) => setReason(e.target.value)}
@@ -755,7 +755,7 @@ function ComplementModal({ open, onClose, arbitrageId, onSuccess }: any) {
     <FluentModal open={open} title="Demander des compléments" onClose={onClose}>
       <div className="space-y-4">
         <div>
-          <label className="text-sm text-slate-500 mb-2 block">Demandé à *</label>
+          <label className="text-sm text-slate-400 mb-2 block">Demandé à *</label>
           <input
             type="text"
             value={requestedFrom}
@@ -767,7 +767,7 @@ function ComplementModal({ open, onClose, arbitrageId, onSuccess }: any) {
         </div>
 
         <div>
-          <label className="text-sm text-slate-500 mb-2 block">Questions / Informations nécessaires *</label>
+          <label className="text-sm text-slate-400 mb-2 block">Questions / Informations nécessaires *</label>
           <textarea
             value={questions}
             onChange={(e) => setQuestions(e.target.value)}

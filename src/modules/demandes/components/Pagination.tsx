@@ -100,7 +100,7 @@ export function Pagination({
               return (
                 <React.Fragment key={page}>
                   {showEllipsis && (
-                    <span className="px-2 text-slate-500">...</span>
+                    <span className="px-2 text-slate-400">...</span>
                   )}
                   <Button
                     variant={currentPage === page ? 'default' : 'ghost'}

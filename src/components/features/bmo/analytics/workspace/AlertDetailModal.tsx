@@ -22,6 +22,7 @@ import {
   Send, Paperclip, MoreHorizontal, ExternalLink, Loader2, Info
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/utils/logger';
 import { useAlertDetail } from '@/lib/api/hooks/useAnalytics';
 import type { Alert } from '@/domain/analytics/schemas/AlertSchema';
 
@@ -233,9 +234,7 @@ export function AlertDetailModal({ open, onClose, alertId }: AlertDetailModalPro
     
     // Simuler API call
     commentTimerRef.current = setTimeout(() => {
-      if (process.env.NODE_ENV === 'development') {
-        console.log('Comment added:', comment);
-      }
+      logger.debug('Comment added', { component: 'AlertDetailModal', commentLength: comment.length });
       setComment('');
       setIsSubmitting(false);
       commentTimerRef.current = null;
@@ -265,15 +264,11 @@ export function AlertDetailModal({ open, onClose, alertId }: AlertDetailModalPro
   };
 
   const handleSnooze = () => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Alert snoozed');
-    }
+    logger.debug('Alert snoozed', { component: 'AlertDetailModal' });
   };
 
   const handleEscalate = () => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Alert escalated');
-    }
+    logger.debug('Alert escalated', { component: 'AlertDetailModal' });
   };
 
   return (
@@ -296,7 +291,7 @@ export function AlertDetailModal({ open, onClose, alertId }: AlertDetailModalPro
                 {alert.severity}
               </Badge>
             </div>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-400">
               Alerte #{alert.id} • Créée {new Date(alert.createdAt).toLocaleDateString('fr-FR')}
             </p>
           </div>
@@ -310,7 +305,7 @@ export function AlertDetailModal({ open, onClose, alertId }: AlertDetailModalPro
         <div className="flex items-center justify-between p-4 rounded-xl bg-slate-800/50 border border-slate-700/50">
           <div className="flex items-center gap-6">
             <div>
-              <p className="text-xs text-slate-500">Statut</p>
+              <p className="text-xs text-slate-400">Statut</p>
               <Badge variant={
                 alert.status === 'resolved' ? 'success' :
                 alert.status === 'snoozed' ? 'default' :
@@ -322,18 +317,18 @@ export function AlertDetailModal({ open, onClose, alertId }: AlertDetailModalPro
               </Badge>
             </div>
             <div>
-              <p className="text-xs text-slate-500">Assignée à</p>
+              <p className="text-xs text-slate-400">Assignée à</p>
               <div className="flex items-center gap-2 mt-1">
                 <User className="w-4 h-4 text-slate-400" />
                 <span className="text-sm font-medium">{alert.assignedTo || 'Non assignée'}</span>
               </div>
             </div>
             <div>
-              <p className="text-xs text-slate-500">Bureau affecté</p>
+              <p className="text-xs text-slate-400">Bureau affecté</p>
               <span className="text-sm font-medium">{alert.bureauName}</span>
             </div>
             <div>
-              <p className="text-xs text-slate-500">Priorité</p>
+              <p className="text-xs text-slate-400">Priorité</p>
               <Badge variant={
                 alert.priority === 'high' ? 'urgent' :
                 alert.priority === 'medium' ? 'warning' :
@@ -396,19 +391,19 @@ export function AlertDetailModal({ open, onClose, alertId }: AlertDetailModalPro
               {/* Métriques */}
               <div className="grid grid-cols-3 gap-4">
                 <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 text-center">
-                  <p className="text-xs text-slate-500 mb-1">Valeur actuelle</p>
+                  <p className="text-xs text-slate-400 mb-1">Valeur actuelle</p>
                   <p className="text-2xl font-bold text-red-600">
                     {alert.currentValue}{alert.unit}
                   </p>
                 </div>
                 <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 text-center">
-                  <p className="text-xs text-slate-500 mb-1">Objectif</p>
+                  <p className="text-xs text-slate-400 mb-1">Objectif</p>
                   <p className="text-2xl font-bold text-green-600">
                     {alert.targetValue}{alert.unit}
                   </p>
                 </div>
                 <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 text-center">
-                  <p className="text-xs text-slate-500 mb-1">Écart</p>
+                  <p className="text-xs text-slate-400 mb-1">Écart</p>
                   <p className="text-2xl font-bold text-orange-600">
                     -{alert.targetValue - alert.currentValue}{alert.unit}
                   </p>
@@ -422,7 +417,7 @@ export function AlertDetailModal({ open, onClose, alertId }: AlertDetailModalPro
                     <div className="flex items-center gap-3">
                       <Target className="w-5 h-5 text-blue-600" />
                       <div>
-                        <p className="text-xs text-slate-500">KPI concerné</p>
+                        <p className="text-xs text-slate-400">KPI concerné</p>
                         <p className="font-semibold">{alert.kpiName}</p>
                       </div>
                     </div>
@@ -501,7 +496,7 @@ export function AlertDetailModal({ open, onClose, alertId }: AlertDetailModalPro
                   <div className="flex-1 pb-4">
                     <div className="flex items-center justify-between mb-1">
                       <p className="font-semibold text-sm">{event.user}</p>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-slate-400">
                         {new Date(event.timestamp).toLocaleString('fr-FR')}
                       </p>
                     </div>
@@ -534,7 +529,7 @@ export function AlertDetailModal({ open, onClose, alertId }: AlertDetailModalPro
                         </div>
                         <span className="font-semibold text-sm">{comment.user}</span>
                       </div>
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs text-slate-400">
                         {new Date(comment.timestamp).toLocaleString('fr-FR')}
                       </span>
                     </div>

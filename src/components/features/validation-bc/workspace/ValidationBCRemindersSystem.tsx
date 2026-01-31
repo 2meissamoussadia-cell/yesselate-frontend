@@ -93,7 +93,7 @@ export function ValidationBCRemindersSystem({ open, onClose }: Props) {
       case 'recurring':
         return <RefreshCw className="w-4 h-4 text-amber-500" />;
       default:
-        return <Bell className="w-4 h-4 text-slate-500" />;
+        return <Bell className="w-4 h-4 text-slate-400" />;
     }
   };
 
@@ -127,7 +127,7 @@ export function ValidationBCRemindersSystem({ open, onClose }: Props) {
     if (hours < 4) return 'text-rose-600 font-bold';
     if (hours < 8) return 'text-rose-500';
     if (hours < 24) return 'text-amber-600';
-    return 'text-slate-500';
+    return 'text-slate-400';
   };
 
   const filteredReminders = reminders.filter(r => {
@@ -203,7 +203,7 @@ export function ValidationBCRemindersSystem({ open, onClose }: Props) {
             </FluentButton>
           </div>
         ) : filteredReminders.length === 0 ? (
-          <div className="text-center py-12 text-slate-500">
+          <div className="text-center py-12 text-slate-400">
             <CheckCircle2 className="w-10 h-10 mx-auto mb-2 text-emerald-300" />
             <div>Aucun rappel {filter !== 'all' ? 'pour ce filtre' : ''}</div>
           </div>
@@ -232,7 +232,7 @@ export function ValidationBCRemindersSystem({ open, onClose }: Props) {
                             {reminder.documentId}
                           </span>
                           {reminder.documentType && (
-                            <span className="text-xs text-slate-500">{reminder.documentType}</span>
+                            <span className="text-xs text-slate-400">{reminder.documentType}</span>
                           )}
                         </div>
                       )}
@@ -245,10 +245,10 @@ export function ValidationBCRemindersSystem({ open, onClose }: Props) {
                       )}
                       
                       {reminder.notes && (
-                        <div className="text-xs text-slate-500 mt-1">{reminder.notes}</div>
+                        <div className="text-xs text-slate-400 mt-1">{reminder.notes}</div>
                       )}
                       
-                      <div className="flex items-center gap-3 mt-2 text-xs text-slate-500">
+                      <div className="flex items-center gap-3 mt-2 text-xs text-slate-400">
                         <span className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
                           {new Date(reminder.dueAt).toLocaleDateString('fr-FR')}
@@ -300,7 +300,7 @@ export function ValidationBCRemindersSystem({ open, onClose }: Props) {
 
         {/* Footer */}
         <div className="flex justify-between items-center pt-4 border-t border-slate-200 dark:border-slate-700">
-          <div className="text-xs text-slate-500">
+          <div className="text-xs text-slate-400">
             {filteredReminders.length} rappel{filteredReminders.length > 1 ? 's' : ''} affiché{filteredReminders.length > 1 ? 's' : ''}
           </div>
           <FluentButton size="sm" variant="secondary" onClick={onClose}>

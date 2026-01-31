@@ -9,6 +9,7 @@
 
 import { useState } from 'react';
 import { X, Download, FileText, FileSpreadsheet, FileJson, Calendar, Filter, Loader2, CheckCircle } from 'lucide-react';
+import { logger } from '@/lib/utils/logger';
 
 interface ExportModalProps {
   isOpen: boolean;
@@ -62,18 +63,18 @@ export function ExportModal({ isOpen, onClose, currentFilter }: ExportModalProps
         timestamp: new Date().toISOString(),
       };
 
-      console.log('[Export]', exportData);
+      logger.debug('Export', { component: 'ExportModal', exportData });
       
       // Simulate file download
       const filename = `substitutions_export_${new Date().toISOString().split('T')[0]}.${format}`;
-      console.log('[Export] Fichier généré:', filename);
+      logger.debug('Export file generated', { component: 'ExportModal', filename });
       
       setSuccess(true);
       setTimeout(() => {
         handleClose();
       }, 1500);
     } catch (error) {
-      console.error('Export error:', error);
+      logger.error('Export error', error instanceof Error ? error : undefined, { component: 'ExportModal' });
     } finally {
       setLoading(false);
     }

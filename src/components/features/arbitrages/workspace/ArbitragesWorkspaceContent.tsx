@@ -35,7 +35,7 @@ export function ArbitragesWorkspaceContent() {
         <h2 className="text-2xl font-bold text-slate-700 dark:text-slate-200 mb-2">
           Gouvernance & Décisions
         </h2>
-        <p className="text-slate-500 mb-6 max-w-md">
+        <p className="text-slate-400 mb-6 max-w-md">
           Gérez les arbitrages et décisions stratégiques avec une traçabilité complète. 
           Chaque décision génère un hash SHA3-256 pour anti-contestation.
         </p>
@@ -158,7 +158,7 @@ export function ArbitragesWorkspaceContent() {
     // Wizard (création/modification)
     if (activeTab.data?.action === 'create') {
     return (
-      <div className="p-6 text-center text-slate-500">
+      <div className="p-6 text-center text-slate-400">
         <Plus className="w-12 h-12 text-purple-400 mx-auto mb-4" />
         <h3 className="font-semibold text-lg mb-2">{activeTab.title}</h3>
         <p className="text-sm">
@@ -187,7 +187,7 @@ export function ArbitragesWorkspaceContent() {
   // Report - Utiliser 'analytics' pour les rapports
   if (activeTab.type === 'analytics' && activeTab.data?.reportId) {
     return (
-      <div className="p-6 text-center text-slate-500">
+      <div className="p-6 text-center text-slate-400">
         <FileText className="w-12 h-12 text-indigo-400 mx-auto mb-4" />
         <h3 className="font-semibold text-lg mb-2">{activeTab.title}</h3>
         <p className="text-sm">
@@ -203,7 +203,7 @@ export function ArbitragesWorkspaceContent() {
   }
 
   // Fallback
-  return <div className="p-8 text-center text-slate-500">Vue non gérée: {activeTab.type}</div>;
+  return <div className="p-8 text-center text-slate-400">Vue non gérée: {activeTab.type}</div>;
 }
 
 

@@ -87,11 +87,11 @@ export function MissionsContentRouter({ category, subCategory }: MissionsContent
   if (category === 'by-region') {
     return (
       <div className="p-4">
-        <div className="flex items-center justify-center h-64 text-slate-500">
+        <div className="flex items-center justify-center h-64 text-slate-400">
           <div className="text-center">
             <MapPin className="w-12 h-12 mx-auto mb-4 opacity-30" />
             <h3 className="text-lg font-semibold text-slate-300 mb-2">Vue par région</h3>
-            <p className="text-slate-500">Contenu en cours de développement</p>
+            <p className="text-slate-400">Contenu en cours de développement</p>
           </div>
         </div>
       </div>
@@ -102,11 +102,11 @@ export function MissionsContentRouter({ category, subCategory }: MissionsContent
   if (category === 'analytics') {
     return (
       <div className="p-4">
-        <div className="flex items-center justify-center h-64 text-slate-500">
+        <div className="flex items-center justify-center h-64 text-slate-400">
           <div className="text-center">
             <Compass className="w-12 h-12 mx-auto mb-4 opacity-30" />
             <h3 className="text-lg font-semibold text-slate-300 mb-2">Analytics Missions</h3>
-            <p className="text-slate-500">Statistiques en cours de développement</p>
+            <p className="text-slate-400">Statistiques en cours de développement</p>
           </div>
         </div>
       </div>
@@ -117,11 +117,11 @@ export function MissionsContentRouter({ category, subCategory }: MissionsContent
   if (category === 'archive') {
     return (
       <div className="p-4">
-        <div className="flex items-center justify-center h-64 text-slate-500">
+        <div className="flex items-center justify-center h-64 text-slate-400">
           <div className="text-center">
             <FileText className="w-12 h-12 mx-auto mb-4 opacity-30" />
             <h3 className="text-lg font-semibold text-slate-300 mb-2">Archives Missions</h3>
-            <p className="text-slate-500">Historique en cours de développement</p>
+            <p className="text-slate-400">Historique en cours de développement</p>
           </div>
         </div>
       </div>

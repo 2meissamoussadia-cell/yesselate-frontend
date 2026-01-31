@@ -182,7 +182,7 @@ export function SyntheseDgBmoView() {
             <Button
               variant="ghost"
               size="sm"
-              className="text-xs text-slate-500 hover:text-slate-300"
+              className="text-xs text-slate-400 hover:text-slate-300"
               onClick={() => openModal('export-config', {})}
             >
               <Play className="h-3 w-3 mr-1" />
@@ -222,7 +222,7 @@ export function SyntheseDgBmoView() {
                       </Badge>
                     </div>
                     <div className="flex items-center gap-3 mt-1">
-                      <span className="text-xs text-slate-500">Générée le: {synthesis.date}</span>
+                      <span className="text-xs text-slate-400">Générée le: {synthesis.date}</span>
                     </div>
                   </div>
                 </div>
@@ -256,7 +256,7 @@ export function SyntheseDgBmoView() {
             <Button
               variant="ghost"
               size="sm"
-              className="text-xs text-slate-500 hover:text-slate-300"
+              className="text-xs text-slate-400 hover:text-slate-300"
               onClick={() => openModal('export-config', {})}
             >
               <Play className="h-3 w-3 mr-1" />
@@ -284,7 +284,7 @@ export function SyntheseDgBmoView() {
                         </Badge>
                       </div>
                       <div className="flex items-center gap-3 mt-1">
-                        <span className="text-xs text-slate-500">
+                        <span className="text-xs text-slate-400">
                           Dernière mise à jour: {report.lastUpdate}
                         </span>
                       </div>

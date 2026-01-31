@@ -72,10 +72,10 @@ export function ConversationsHistoryPage() {
             Cliquez sur une conversation pour l&apos;ouvrir. Depuis le cockpit, clic-droit sur un chantier → « Chat chef chantier ».
           </p>
           {threadsWithChantier.length === 0 ? (
-            <div className="py-12 text-center text-slate-500 rounded-xl border border-dashed border-slate-700/60 bg-slate-900/40">
+            <div className="py-12 text-center text-slate-400 rounded-xl border border-dashed border-slate-700/60 bg-slate-900/40">
               <MessageSquare className="h-12 w-12 mx-auto mb-3 text-slate-600" />
               <p className="text-sm font-medium text-slate-400">Aucune conversation</p>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-slate-400 mt-1">
                 Ouvrez un chat depuis le menu contextuel d&apos;un chantier (Centrale de commandement).
               </p>
             </div>
@@ -98,15 +98,15 @@ export function ConversationsHistoryPage() {
                       <p className="text-sm font-medium text-slate-200 truncate">
                         {t.chantier.id} — {t.subject}
                       </p>
-                      <p className="text-xs text-slate-500 truncate mt-0.5">
+                      <p className="text-xs text-slate-400 truncate mt-0.5">
                         {t.lastMessagePreview || 'Aucun message'}
                       </p>
                     </div>
                     <div className="shrink-0 text-right">
-                      <p className="text-xs text-slate-500">{formatDate(t.lastMessageAt)}</p>
+                      <p className="text-xs text-slate-400">{formatDate(t.lastMessageAt)}</p>
                       <p className="text-xs text-slate-600">{t.messageCount} msg.</p>
                     </div>
-                    <ChevronRight className="h-5 w-5 text-slate-500 shrink-0" />
+                    <ChevronRight className="h-5 w-5 text-slate-400 shrink-0" />
                   </button>
                 </li>
               ))}

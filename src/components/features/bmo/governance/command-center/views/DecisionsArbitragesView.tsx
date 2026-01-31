@@ -216,22 +216,22 @@ export function DecisionsArbitragesView() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-slate-800/50">
-                  <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">
+                  <th className="px-4 py-2 text-left text-xs font-medium text-slate-400 uppercase">
                     Décision
                   </th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">
+                  <th className="px-4 py-2 text-left text-xs font-medium text-slate-400 uppercase">
                     Type
                   </th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">
+                  <th className="px-4 py-2 text-left text-xs font-medium text-slate-400 uppercase">
                     Impact
                   </th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">
+                  <th className="px-4 py-2 text-left text-xs font-medium text-slate-400 uppercase">
                     Échéance
                   </th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">
+                  <th className="px-4 py-2 text-left text-xs font-medium text-slate-400 uppercase">
                     Porteur
                   </th>
-                  <th className="px-4 py-2 text-right text-xs font-medium text-slate-500 uppercase">
+                  <th className="px-4 py-2 text-right text-xs font-medium text-slate-400 uppercase">
                     Actions
                   </th>
                 </tr>
@@ -246,7 +246,7 @@ export function DecisionsArbitragesView() {
                     <td className="px-4 py-3">
                       <div>
                         <p className="text-sm text-slate-300">{decision.title}</p>
-                        <span className="text-xs text-slate-500">{decision.ref}</span>
+                        <span className="text-xs text-slate-400">{decision.ref}</span>
                       </div>
                     </td>
                     <td className="px-4 py-3">
@@ -346,9 +346,9 @@ export function DecisionsArbitragesView() {
                       </Badge>
                     </div>
                     <div className="flex items-center gap-3 mt-1">
-                      <span className="text-xs text-slate-500">{decision.ref}</span>
+                      <span className="text-xs text-slate-400">{decision.ref}</span>
                       <span className="text-xs text-slate-600">•</span>
-                      <span className="text-xs text-slate-500">{decision.blockingReason}</span>
+                      <span className="text-xs text-slate-400">{decision.blockingReason}</span>
                       <span className="text-xs text-slate-600">•</span>
                       <span className="text-xs text-red-400">Impact: {decision.estimatedImpact}</span>
                     </div>
@@ -395,13 +395,13 @@ export function DecisionsArbitragesView() {
                   <div className="min-w-0 flex-1">
                     <p className="text-sm text-slate-300">{arbitration.title}</p>
                     <div className="flex items-center gap-3 mt-1">
-                      <span className="text-xs text-slate-500">{arbitration.ref}</span>
+                      <span className="text-xs text-slate-400">{arbitration.ref}</span>
                       <span className="text-xs text-slate-600">•</span>
                       <span className="text-xs text-amber-400">
                         Impact financier: {arbitration.financialImpact}
                       </span>
                       <span className="text-xs text-slate-600">•</span>
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs text-slate-400">
                         Impact opérationnel: {arbitration.operationalImpact}
                       </span>
                     </div>
@@ -448,15 +448,15 @@ export function DecisionsArbitragesView() {
                   <div className="min-w-0 flex-1">
                     <p className="text-sm text-slate-300">{validation.title}</p>
                     <div className="flex items-center gap-3 mt-1">
-                      <span className="text-xs text-slate-500">{validation.ref}</span>
+                      <span className="text-xs text-slate-400">{validation.ref}</span>
                       <span className="text-xs text-slate-600">•</span>
                       <span className="text-xs text-emerald-400">Montant: {validation.amount}</span>
                       <span className="text-xs text-slate-600">•</span>
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs text-slate-400">
                         Validé par: {validation.validator}
                       </span>
                       <span className="text-xs text-slate-600">•</span>
-                      <span className="text-xs text-slate-500">{validation.validatedAt}</span>
+                      <span className="text-xs text-slate-400">{validation.validatedAt}</span>
                     </div>
                     <div className="mt-1">
                       <span className="text-xs text-amber-400">{validation.impact}</span>

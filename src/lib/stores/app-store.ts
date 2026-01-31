@@ -7,6 +7,9 @@ import { persist } from 'zustand/middleware';
 // préférences utilisateur globales
 // ============================================
 
+/** Locales supportées (FR / EN / AR) */
+export type SupportedLocale = 'fr-FR' | 'en-GB' | 'ar-MA';
+
 interface AppState {
   // Theme
   darkMode: boolean;
@@ -17,6 +20,10 @@ interface AppState {
   sidebarOpen: boolean;
   toggleSidebar: () => void;
   setSidebarOpen: (value: boolean) => void;
+  
+  // Locale préférée (sélecteur FR/EN/AR). null = utiliser la locale serveur.
+  localeOverride: SupportedLocale | null;
+  setLocaleOverride: (value: SupportedLocale | null) => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -31,12 +38,17 @@ export const useAppStore = create<AppState>()(
       sidebarOpen: false,
       toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
       setSidebarOpen: (value) => set({ sidebarOpen: value }),
+      
+      // Locale - null = serveur
+      localeOverride: null,
+      setLocaleOverride: (value) => set({ localeOverride: value }),
     }),
     {
       name: 'nice-renovation-app-storage',
       partialize: (state) => ({
         darkMode: state.darkMode,
         sidebarOpen: state.sidebarOpen,
+        localeOverride: state.localeOverride,
       }),
     }
   )

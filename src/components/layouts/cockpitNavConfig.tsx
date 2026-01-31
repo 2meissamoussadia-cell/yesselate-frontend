@@ -66,7 +66,7 @@ export const GOVERNANCE_NAV_SECTIONS: NavSection[] = [
     id: "gouvernance",
     title: "Gouvernance",
     items: [
-      { id: "dashboard", label: "Tableau de bord", icon: LayoutDashboard, href: "/maitre-ouvrage/governance/dashboard" },
+      { id: "dashboard", label: "Tableau de bord", icon: LayoutDashboard, href: "/maitre-ouvrage/dashboard?main=pilotage&sub=gouvernance" },
       { id: "decisions", label: "Décisions", icon: ClipboardList, href: "/maitre-ouvrage/governance/decisions" },
       { id: "tendances", label: "Tendances", icon: TrendingUp, href: "/maitre-ouvrage/governance/tendances" },
     ],

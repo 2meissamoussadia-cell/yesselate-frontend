@@ -117,7 +117,7 @@ export const BudgetPrevisionsPage = memo(function BudgetPrevisionsPage() {
       render: (value) => value ? (
         <span className="text-slate-300">{value}</span>
       ) : (
-        <span className="text-slate-500">-</span>
+        <span className="text-slate-400">-</span>
       ),
     },
     {
@@ -145,7 +145,7 @@ export const BudgetPrevisionsPage = memo(function BudgetPrevisionsPage() {
       render: (value: number | undefined) => value ? (
         <span className="font-semibold tabular-nums text-emerald-300">{formatMoneyEUR(value)}</span>
       ) : (
-        <span className="text-slate-500">-</span>
+        <span className="text-slate-400">-</span>
       ),
     },
     {
@@ -154,7 +154,7 @@ export const BudgetPrevisionsPage = memo(function BudgetPrevisionsPage() {
       sortable: true,
       align: 'right' as const,
       render: (value: number | undefined, row) => {
-        if (value === undefined) return <span className="text-slate-500">-</span>;
+        if (value === undefined) return <span className="text-slate-400">-</span>;
         const isPositive = value > 0;
         return (
           <div className="flex items-center justify-end gap-1">
@@ -179,7 +179,7 @@ export const BudgetPrevisionsPage = memo(function BudgetPrevisionsPage() {
       sortable: true,
       align: 'right' as const,
       render: (value: number | undefined) => {
-        if (value === undefined) return <span className="text-slate-500">-</span>;
+        if (value === undefined) return <span className="text-slate-400">-</span>;
         const isPositive = value > 0;
         return (
           <span className={cn(

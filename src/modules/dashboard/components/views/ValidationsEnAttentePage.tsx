@@ -169,7 +169,7 @@ export const ValidationsEnAttentePage = memo(function ValidationsEnAttentePage()
       render: (value) => value ? (
         <span className="font-semibold tabular-nums text-slate-200">{value}</span>
       ) : (
-        <span className="text-slate-500">-</span>
+        <span className="text-slate-400">-</span>
       ),
     },
     {
@@ -177,7 +177,7 @@ export const ValidationsEnAttentePage = memo(function ValidationsEnAttentePage()
       label: 'Date limite',
       sortable: true,
       render: (value: string | undefined, row) => {
-        if (!value) return <span className="text-slate-500">-</span>;
+        if (!value) return <span className="text-slate-400">-</span>;
         const date = new Date(value);
         const isOverdue = row.enRetard;
         return (

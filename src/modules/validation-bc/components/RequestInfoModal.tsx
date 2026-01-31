@@ -69,10 +69,10 @@ export function RequestInfoModal({
               placeholder="Précisez les informations ou documents complémentaires nécessaires pour traiter ce document..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="min-h-[150px] bg-slate-800 border-slate-700 text-slate-200 placeholder:text-slate-500"
+              className="min-h-[150px] bg-slate-800 border-slate-700 text-slate-200 placeholder:text-slate-400"
               disabled={loading}
             />
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-400">
               Votre demande sera envoyée au demandeur pour obtenir les compléments nécessaires.
             </p>
           </div>

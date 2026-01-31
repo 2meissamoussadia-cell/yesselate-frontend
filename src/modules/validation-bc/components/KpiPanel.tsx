@@ -92,13 +92,13 @@ export function KpiPanel({ collapsed = false, onToggleCollapse }: KpiPanelProps)
           {onToggleCollapse && (
             <button
               onClick={onToggleCollapse}
-              className="text-xs text-slate-500 hover:text-slate-300"
+              className="text-xs text-slate-400 hover:text-slate-300"
             >
               Masquer
             </button>
           )}
         </div>
-        <span className="text-xs text-slate-500">Mise à jour: à l'instant</span>
+        <span className="text-xs text-slate-400">Mise à jour: à l'instant</span>
       </div>
 
       {isLoading ? (

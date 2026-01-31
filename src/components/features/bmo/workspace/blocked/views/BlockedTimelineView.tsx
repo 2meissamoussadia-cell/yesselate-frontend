@@ -189,7 +189,7 @@ export function BlockedTimelineView({ tabId, data }: Props) {
             <Clock className="w-5 h-5 text-slate-400" />
             Timeline des blocages
           </h2>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-sm text-slate-400 mt-1">
             Vue chronologique des événements
           </p>
         </div>
@@ -228,7 +228,7 @@ export function BlockedTimelineView({ tabId, data }: Props) {
           onClick={() => navigatePeriod(-1)}
           className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
         >
-          <ChevronLeft className="w-5 h-5 text-slate-500" />
+          <ChevronLeft className="w-5 h-5 text-slate-400" />
         </button>
 
         <div className="flex items-center gap-2">
@@ -245,7 +245,7 @@ export function BlockedTimelineView({ tabId, data }: Props) {
           onClick={() => navigatePeriod(1)}
           className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
         >
-          <ChevronRight className="w-5 h-5 text-slate-500" />
+          <ChevronRight className="w-5 h-5 text-slate-400" />
         </button>
       </div>
 
@@ -253,7 +253,7 @@ export function BlockedTimelineView({ tabId, data }: Props) {
       <div className="space-y-6">
         {Object.entries(groupedEvents).map(([date, dayEvents]) => (
           <div key={date}>
-            <h3 className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+            <h3 className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-slate-300" />
               {date}
             </h3>
@@ -283,10 +283,10 @@ export function BlockedTimelineView({ tabId, data }: Props) {
                       <p className="font-medium text-slate-900 dark:text-slate-100">
                         {event.dossier.subject}
                       </p>
-                      <p className="text-sm text-slate-500 mt-1">
+                      <p className="text-sm text-slate-400 mt-1">
                         {event.description}
                       </p>
-                      <div className="flex items-center gap-3 mt-2 text-xs text-slate-500">
+                      <div className="flex items-center gap-3 mt-2 text-xs text-slate-400">
                         <span className="font-mono bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
                           {event.dossier.id}
                         </span>
@@ -312,7 +312,7 @@ export function BlockedTimelineView({ tabId, data }: Props) {
 
       {/* Empty state */}
       {Object.keys(groupedEvents).length === 0 && (
-        <div className="text-center py-12 text-slate-500">
+        <div className="text-center py-12 text-slate-400">
           <Clock className="w-12 h-12 mx-auto mb-3 opacity-30" />
           <p className="font-medium">Aucun événement sur cette période</p>
           <p className="text-sm mt-1">Naviguez pour voir d'autres dates</p>

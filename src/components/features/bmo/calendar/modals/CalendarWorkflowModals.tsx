@@ -278,7 +278,7 @@ export function CreateEventModal({
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Détails de l'événement..."
             rows={3}
-            className="w-full px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700 text-sm text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 resize-none"
+            className="w-full px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700 text-sm text-slate-200 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 resize-none"
           />
         </div>
 
@@ -288,7 +288,7 @@ export function CreateEventModal({
             Lieu
           </label>
           <div className="relative">
-            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <Input
               value={location}
               onChange={(e) => setLocation(e.target.value)}
@@ -518,7 +518,7 @@ export function DeleteEventModal({
 
         <div className="p-3 rounded-lg bg-slate-800/30 border border-slate-700/50">
           <p className="text-sm text-slate-300 font-medium">{event.title}</p>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-400 mt-1">
             {event.date} • {event.startTime} - {event.endTime}
           </p>
         </div>

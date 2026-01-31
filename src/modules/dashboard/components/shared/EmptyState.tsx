@@ -75,9 +75,9 @@ export function EmptyState({
     },
     comingSoon: {
       container: 'bg-slate-800/40 border-slate-600/50 border-dashed',
-      icon: 'text-slate-500',
+      icon: 'text-slate-400',
       title: 'text-slate-300',
-      message: 'text-slate-500',
+      message: 'text-slate-400',
     },
     search: {
       container: 'bg-slate-800/40 border-slate-700/40',
@@ -105,8 +105,8 @@ export function EmptyState({
       aria-labelledby={title ? 'empty-state-title' : undefined}
       aria-describedby="empty-state-desc"
     >
-      <div className="relative mb-4">
-        <Icon className={cn(styles.icon)} style={{ width: 'clamp(2.5rem, 3.5vw, 3rem)', height: 'clamp(2.5rem, 3.5vw, 3rem)', minWidth: '2.5rem', minHeight: '2.5rem' }} aria-hidden="true" />
+      <div className="relative mb-4" style={{ width: 'clamp(2.5rem, 3.5vw, 3rem)', height: 'clamp(2.5rem, 3.5vw, 3rem)', minWidth: '2.5rem', minHeight: '2.5rem' }} aria-hidden="true">
+        <Icon className={cn(styles.icon, 'w-full h-full')} />
         <div
           className={cn(
             'absolute inset-0 rounded-full opacity-20 blur-xl',
@@ -142,7 +142,7 @@ export function EmptyState({
                 'border-slate-700/50 bg-slate-800/50 text-slate-200',
                 'hover:bg-slate-800/70 hover:border-slate-600/50',
                 'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40',
-                'min-h-[32px]'
+                'min-h-[44px]'
               )}
               style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}
               aria-label={actionAriaLabel ?? actionLabel}

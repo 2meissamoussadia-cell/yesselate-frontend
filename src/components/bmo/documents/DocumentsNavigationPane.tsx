@@ -26,8 +26,8 @@ export function DocumentsNavigationPane() {
         const isActive = activeId === s.id;
         return (
           <div key={s.id} className="mb-3">
-            <p className="px-2 mb-1 text-[0.7rem] font-semibold uppercase tracking-wider text-slate-500 flex items-center gap-2">
-              <Icon className="h-3.5 w-3.5 text-slate-500" aria-hidden />
+            <p className="px-2 mb-1 text-[0.7rem] font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+              <Icon className="h-3.5 w-3.5 text-slate-400" aria-hidden />
               {s.label}
             </p>
             <ul className="space-y-0.5">

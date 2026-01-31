@@ -28,20 +28,6 @@ export function GanttGlobalView() {
   const evenements = data?.evenements || [];
   const chantiers = data?.chantiers || [];
 
-  // Debug: vérifier les données (uniquement en développement)
-  React.useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('GanttGlobalView - État:', {
-        loading,
-        error: error?.message,
-        hasData: !!data,
-        jalons: jalons.length,
-        evenements: evenements.length,
-        chantiers: chantiers.length,
-      });
-    }
-  }, [data, loading, error, jalons.length, evenements.length, chantiers.length]);
-
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full text-slate-400">

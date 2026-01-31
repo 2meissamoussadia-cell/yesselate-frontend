@@ -151,7 +151,7 @@ export const DelaysMoyensPage = memo(function DelaysMoyensPage() {
       render: (value) => value ? (
         <span className="text-slate-300">{value}</span>
       ) : (
-        <span className="text-slate-500">-</span>
+        <span className="text-slate-400">-</span>
       ),
     },
     {
@@ -184,7 +184,7 @@ export const DelaysMoyensPage = memo(function DelaysMoyensPage() {
       label: 'Tendance',
       sortable: true,
       render: (value: 'up' | 'down' | 'stable' | undefined) => {
-        if (!value) return <span className="text-slate-500">-</span>;
+        if (!value) return <span className="text-slate-400">-</span>;
         const icons = {
           up: <TrendingUp className="h-4 w-4 text-rose-400" />,
           down: <TrendingDown className="h-4 w-4 text-emerald-400" />,
@@ -243,7 +243,7 @@ export const DelaysMoyensPage = memo(function DelaysMoyensPage() {
         >
           <Clock className="h-3.5 w-3.5" />
           Centre d&apos;alertes — Retards projets
-          <ExternalLink className="h-3 w-3 text-slate-500" />
+          <ExternalLink className="h-3 w-3 text-slate-400" />
         </Link>
       </div>
       <DashboardSection title="Retards Moyens" description="Retards nécessitant un suivi">

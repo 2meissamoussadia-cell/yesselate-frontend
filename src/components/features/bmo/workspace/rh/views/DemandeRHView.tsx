@@ -9,6 +9,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { BureauTag } from '@/components/features/bmo/BureauTag';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/utils/logger';
 import { 
   FileText, Calendar, DollarSign, MapPin, Paperclip, 
   CheckCircle2, XCircle, Clock, AlertTriangle, User,
@@ -75,7 +76,7 @@ export function DemandeRHView({ tab }: { tab: RHTab }) {
   if (!demande) {
     return (
       <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-8 dark:border-slate-800 dark:bg-[#1f1f1f]/70">
-        <div className="text-center text-slate-500">
+        <div className="text-center text-slate-400">
           <AlertTriangle className="w-12 h-12 mx-auto mb-3 opacity-30" />
           <p className="font-medium">Demande introuvable</p>
           <p className="text-sm mt-1">La demande {demandeId} n&apos;existe pas ou a été supprimée.</p>
@@ -139,7 +140,7 @@ export function DemandeRHView({ tab }: { tab: RHTab }) {
               </div>
               
               <h1 className="text-2xl font-bold mb-1">{demande.agent}</h1>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-slate-400">
                 <User className="w-3.5 h-3.5 inline mr-1" />
                 Agent ID: {demande.agentId}
               </p>
@@ -188,7 +189,7 @@ export function DemandeRHView({ tab }: { tab: RHTab }) {
                           {rule.message}
                         </div>
                         {rule.details && (
-                          <div className="text-xs text-slate-500 mt-1">
+                          <div className="text-xs text-slate-400 mt-1">
                             {rule.details}
                           </div>
                         )}
@@ -270,11 +271,11 @@ export function DemandeRHView({ tab }: { tab: RHTab }) {
                         <div className="text-sm">
                           {conflict.message}
                         </div>
-                        <div className="text-xs text-slate-500 mt-1">
+                        <div className="text-xs text-slate-400 mt-1">
                           Période: {conflict.affectedPeriod.start} → {conflict.affectedPeriod.end}
                         </div>
                         {conflict.affectedEmployees && conflict.affectedEmployees.length > 0 && (
-                          <div className="text-xs text-slate-500 mt-1">
+                          <div className="text-xs text-slate-400 mt-1">
                             Employés concernés: {conflict.affectedEmployees.join(', ')}
                           </div>
                         )}
@@ -298,7 +299,7 @@ export function DemandeRHView({ tab }: { tab: RHTab }) {
             <div className="space-y-4">
               {/* Motif */}
               <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-                <div className="text-xs text-slate-500 font-medium mb-1">MOTIF</div>
+                <div className="text-xs text-slate-400 font-medium mb-1">MOTIF</div>
                 <div className="text-sm">{demande.reason}</div>
               </div>
               
@@ -373,7 +374,7 @@ export function DemandeRHView({ tab }: { tab: RHTab }) {
                   status: 'pending' as const,
                 }))}
                 onVerify={(docId, verified) => {
-                  console.log('Document verification:', docId, verified);
+                  logger.debug('Document verification', { component: 'DemandeRHView', docId, verified });
                 }}
               />
             </CardContent>
@@ -405,7 +406,7 @@ export function DemandeRHView({ tab }: { tab: RHTab }) {
                       Validée par {demande.validatedBy}
                     </span>
                   </div>
-                  <p className="text-sm text-slate-500">{demande.validatedAt}</p>
+                  <p className="text-sm text-slate-400">{demande.validatedAt}</p>
                   {demande.validationComment && (
                     <p className="text-sm mt-2 italic">"{demande.validationComment}"</p>
                   )}
@@ -420,7 +421,7 @@ export function DemandeRHView({ tab }: { tab: RHTab }) {
                       Refusée par {demande.rejectedBy}
                     </span>
                   </div>
-                  <p className="text-sm text-slate-500">{demande.rejectedAt}</p>
+                  <p className="text-sm text-slate-400">{demande.rejectedAt}</p>
                   {demande.rejectionReason && (
                     <p className="text-sm mt-2 italic">Motif: {demande.rejectionReason}</p>
                   )}
@@ -444,7 +445,7 @@ export function DemandeRHView({ tab }: { tab: RHTab }) {
               
               <div className="space-y-3">
                 <div>
-                  <div className="text-xs text-slate-500 mb-1">Congés annuels</div>
+                  <div className="text-xs text-slate-400 mb-1">Congés annuels</div>
                   <div className="flex items-center justify-between">
                     <div className="flex-1 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                       <div 
@@ -456,14 +457,14 @@ export function DemandeRHView({ tab }: { tab: RHTab }) {
                       {balance.annuelRestant}/{balance.annuelTotal}
                     </span>
                   </div>
-                  <div className="text-xs text-slate-500 mt-1">
+                  <div className="text-xs text-slate-400 mt-1">
                     {balance.annuelPris} jours pris
                   </div>
                 </div>
                 
                 {balance.ancienneteTotal > 0 && (
                   <div>
-                    <div className="text-xs text-slate-500 mb-1">Congés ancienneté</div>
+                    <div className="text-xs text-slate-400 mb-1">Congés ancienneté</div>
                     <div className="flex items-center justify-between">
                       <div className="flex-1 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                         <div 
@@ -478,7 +479,7 @@ export function DemandeRHView({ tab }: { tab: RHTab }) {
                   </div>
                 )}
                 
-                <div className="pt-2 border-t border-slate-200 dark:border-slate-700 text-xs text-slate-500">
+                <div className="pt-2 border-t border-slate-200 dark:border-slate-700 text-xs text-slate-400">
                   Dernière mise à jour: {balance.lastUpdated}
                 </div>
               </div>
@@ -520,13 +521,13 @@ export function DemandeRHView({ tab }: { tab: RHTab }) {
                     <div className="text-xs font-medium text-emerald-600 dark:text-emerald-400 mb-1">
                       {workingDays.publicHolidays.length} jour(s) férié(s)
                     </div>
-                    <div className="text-xs text-slate-500">
+                    <div className="text-xs text-slate-400">
                       {workingDays.publicHolidays.join(', ')}
                     </div>
                   </div>
                 )}
                 
-                <div className="pt-2 border-t border-slate-200 dark:border-slate-700 text-xs text-slate-500">
+                <div className="pt-2 border-t border-slate-200 dark:border-slate-700 text-xs text-slate-400">
                   💡 Les jours ouvrables excluent weekends et jours fériés
                 </div>
               </div>
@@ -621,7 +622,7 @@ export function DemandeRHView({ tab }: { tab: RHTab }) {
               <div className="p-3 rounded-lg bg-slate-100 dark:bg-slate-800 font-mono text-xs break-all text-slate-600 dark:text-slate-400">
                 {demande.hash}
               </div>
-              <p className="text-xs text-slate-500 mt-2">
+              <p className="text-xs text-slate-400 mt-2">
                 🔐 Signature cryptographique pour audit
               </p>
             </CardContent>
@@ -634,25 +635,25 @@ export function DemandeRHView({ tab }: { tab: RHTab }) {
             <h3 className="font-semibold mb-3">Informations</h3>
             <div className="space-y-2 text-sm text-slate-600 dark:text-slate-300">
               <div className="flex justify-between">
-                <span className="text-slate-500">Bureau</span>
+                <span className="text-slate-400">Bureau</span>
                 <BureauTag bureau={demande.bureau} />
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Type</span>
+                <span className="text-slate-400">Type</span>
                 <span>{TYPE_ICONS[demande.type]} {demande.type}</span>
               </div>
               {demande.subtype && (
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Sous-type</span>
+                  <span className="text-slate-400">Sous-type</span>
                   <span>{demande.subtype}</span>
                 </div>
               )}
               <div className="flex justify-between">
-                <span className="text-slate-500">Date demande</span>
+                <span className="text-slate-400">Date demande</span>
                 <span>{demande.date}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Priorité</span>
+                <span className="text-slate-400">Priorité</span>
                 <Badge variant={
                   demande.priority === 'urgent' ? 'urgent' :
                   demande.priority === 'high' ? 'warning' : 'info'
@@ -786,7 +787,7 @@ export function DemandeRHView({ tab }: { tab: RHTab }) {
             </div>
           </div>
           
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-400">
             Cette action créera automatiquement une substitution temporaire pour {demande.agent} du {demande.startDate} au {demande.endDate}.
           </p>
           

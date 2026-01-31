@@ -160,7 +160,7 @@ export function TimelineView({
                           <span className="text-sm font-medium text-slate-200 truncate">
                             {item.label}
                           </span>
-                          <span className="text-xs text-slate-500">
+                          <span className="text-xs text-slate-400">
                             {startDate.toLocaleDateString()} -{' '}
                             {endDate.toLocaleDateString()}
                           </span>

@@ -58,7 +58,7 @@ export const LastUpdateDisplay = memo(function LastUpdateDisplay({
   const timeAgo = useMemo(() => formatTimeAgo(lastUpdate), [lastUpdate, tick]);
 
   return (
-    <span className={cn('text-[10px] text-slate-500 normal-case', className)}>
+    <span className={cn('text-[10px] text-slate-400 normal-case', className)}>
       {prefix ? `${prefix} : ` : ''}
       {timeAgo}
     </span>

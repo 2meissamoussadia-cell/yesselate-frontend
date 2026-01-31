@@ -199,7 +199,7 @@ export function ConformiteEngagementView() {
                     <div className="min-w-0 flex-1">
                       <p className="text-sm text-slate-300">{overrun.type}</p>
                       <div className="flex items-center gap-3 mt-1">
-                        <span className="text-xs text-slate-500">Module: {overrun.module}</span>
+                        <span className="text-xs text-slate-400">Module: {overrun.module}</span>
                         <span className="text-xs text-slate-600">•</span>
                         <span className="text-xs text-amber-400">
                           {overrun.count} dépassements
@@ -308,7 +308,7 @@ export function ConformiteEngagementView() {
                       </Badge>
                     </div>
                     <div className="flex items-center gap-3 mt-1">
-                      <span className="text-xs text-slate-500">Date: {alert.date}</span>
+                      <span className="text-xs text-slate-400">Date: {alert.date}</span>
                     </div>
                   </div>
                 </div>
@@ -368,7 +368,7 @@ export function ConformiteEngagementView() {
                         </Badge>
                       </div>
                       <div className="flex items-center gap-3 mt-1">
-                        <span className="text-xs text-slate-500">Raison: {item.reason}</span>
+                        <span className="text-xs text-slate-400">Raison: {item.reason}</span>
                         {item.office && (
                           <>
                             <span className="text-xs text-slate-600">•</span>

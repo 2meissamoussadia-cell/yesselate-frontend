@@ -203,7 +203,7 @@ export const PerformanceDemandesPage = memo(function PerformanceDemandesPage() {
       sortable: true,
       align: 'right' as const,
       render: (value: number | undefined) => {
-        if (value === undefined) return <span className="text-slate-500">-</span>;
+        if (value === undefined) return <span className="text-slate-400">-</span>;
         return (
           <div className="flex items-center justify-end gap-1">
             <Clock className="h-3 w-3 text-slate-400" />

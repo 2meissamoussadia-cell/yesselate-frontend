@@ -237,12 +237,12 @@ export function CalendarTimeline({ limit = 10, className, showHeader = true }: C
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <span className="font-medium text-sm truncate">{event.eventTitle}</span>
-                  <span className="text-xs px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-500">
+                  <span className="text-xs px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-400">
                     {config.label}
                   </span>
                 </div>
                 
-                <div className="text-xs text-slate-500 mt-0.5">
+                <div className="text-xs text-slate-400 mt-0.5">
                   par <span className="font-medium">{event.actorName}</span>
                   {event.details && (
                     <span className="ml-1">• {event.details}</span>

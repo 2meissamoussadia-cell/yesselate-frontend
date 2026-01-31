@@ -213,7 +213,7 @@ export function RHRemindersSystem({ open, onClose }: RHRemindersSystemProps) {
       case 'low':
         return 'text-blue-500 bg-blue-500/10 border-blue-500/20';
       default:
-        return 'text-slate-500 bg-slate-500/10 border-slate-500/20';
+        return 'text-slate-400 bg-slate-500/10 border-slate-500/20';
     }
   };
 
@@ -261,7 +261,7 @@ export function RHRemindersSystem({ open, onClose }: RHRemindersSystemProps) {
                 <Bell className="w-5 h-5 text-blue-500" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">Rappels en attente</p>
+                <p className="text-sm text-slate-400">Rappels en attente</p>
                 <p className="text-2xl font-bold">{pendingCount}</p>
               </div>
             </div>
@@ -273,7 +273,7 @@ export function RHRemindersSystem({ open, onClose }: RHRemindersSystemProps) {
                 <AlertTriangle className="w-5 h-5 text-red-500" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">Urgents</p>
+                <p className="text-sm text-slate-400">Urgents</p>
                 <p className="text-2xl font-bold">{urgentCount}</p>
               </div>
             </div>
@@ -285,7 +285,7 @@ export function RHRemindersSystem({ open, onClose }: RHRemindersSystemProps) {
                 <Clock className="w-5 h-5 text-orange-500" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">En retard</p>
+                <p className="text-sm text-slate-400">En retard</p>
                 <p className="text-2xl font-bold">{overdueCount}</p>
               </div>
             </div>
@@ -382,7 +382,7 @@ export function RHRemindersSystem({ open, onClose }: RHRemindersSystemProps) {
                   </p>
 
                   {reminder.linkedTo && (
-                    <div className="text-xs text-slate-500 mb-2 flex items-center gap-1">
+                    <div className="text-xs text-slate-400 mb-2 flex items-center gap-1">
                       <span className="font-medium">Lié à:</span>
                       <span className="text-blue-600 dark:text-blue-400">{reminder.linkedTo.label}</span>
                     </div>
@@ -394,7 +394,7 @@ export function RHRemindersSystem({ open, onClose }: RHRemindersSystemProps) {
                         'flex items-center gap-1 font-medium',
                         isOverdue(reminder.dueDate) && reminder.status === 'pending'
                           ? 'text-red-600'
-                          : 'text-slate-500'
+                          : 'text-slate-400'
                       )}
                     >
                       <Clock className="w-3 h-3" />

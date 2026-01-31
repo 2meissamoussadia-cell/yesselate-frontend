@@ -80,7 +80,8 @@ const componentMap: Record<string, () => Promise<{ default?: ComponentType; [key
   StocksTrendsPage: () => import('../components/views/StocksTrendsPage'),
   MaterielOverviewPage: () => import('../components/views/MaterielOverviewPage'),
   
-  // Conformité
+  // Conformité & HSE
+  HSEConformiteView: () => import('../components/views/HSEConformiteView'),
   ComplianceOverviewPage: () => import('../components/compliance/ComplianceOverviewPage'),
   ComplianceDocumentsPage: () => import('../components/views/ComplianceDocumentsPage'),
   ComplianceWorkflowsPage: () => import('../components/compliance/ComplianceWorkflowsPage'),

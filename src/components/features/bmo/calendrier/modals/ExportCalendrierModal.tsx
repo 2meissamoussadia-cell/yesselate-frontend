@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Download, Calendar, FileSpreadsheet, Loader2, CheckCircle2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/utils/logger';
 import type { CalendrierDomain, CalendrierSection, CalendrierView } from '@/lib/types/calendrier.types';
 
 interface ExportCalendrierModalProps {
@@ -61,7 +62,7 @@ export function ExportCalendrierModal({
         
         // Simuler le téléchargement
         const filename = `calendrier-export-${new Date().toISOString().split('T')[0]}.${format === 'ical' ? 'ics' : 'xlsx'}`;
-        console.log(`Export ${format.toUpperCase()} vers ${filename}`);
+        logger.debug(`Export ${format.toUpperCase()} vers ${filename}`, { component: 'ExportCalendrierModal' });
         
         // TODO: Implémenter le vrai export
         // Pour iCal: générer fichier .ics
@@ -104,7 +105,7 @@ export function ExportCalendrierModal({
                   iCal (.ics)
                 </span>
               </div>
-              <p className="text-xs text-slate-500">Outlook, Google Calendar, Apple Calendar</p>
+              <p className="text-xs text-slate-400">Outlook, Google Calendar, Apple Calendar</p>
             </button>
 
             <button
@@ -123,7 +124,7 @@ export function ExportCalendrierModal({
                   Excel (.xlsx)
                 </span>
               </div>
-              <p className="text-xs text-slate-500">Microsoft Excel, Google Sheets</p>
+              <p className="text-xs text-slate-400">Microsoft Excel, Google Sheets</p>
             </button>
           </div>
         </div>
@@ -135,7 +136,7 @@ export function ExportCalendrierModal({
             <div className="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700">
               <div>
                 <div className="text-sm text-slate-200">Période</div>
-                <div className="text-xs text-slate-500">{periodLabel} en cours</div>
+                <div className="text-xs text-slate-400">{periodLabel} en cours</div>
               </div>
               <Badge variant="gray">{periodLabel}</Badge>
             </div>
@@ -143,7 +144,7 @@ export function ExportCalendrierModal({
             <label className="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700 cursor-pointer hover:bg-slate-800/70 transition-colors">
               <div>
                 <div className="text-sm text-slate-200">Inclure les détails</div>
-                <div className="text-xs text-slate-500">Descriptions, participants, etc.</div>
+                <div className="text-xs text-slate-400">Descriptions, participants, etc.</div>
               </div>
               <input
                 type="checkbox"
@@ -156,7 +157,7 @@ export function ExportCalendrierModal({
             <label className="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700 cursor-pointer hover:bg-slate-800/70 transition-colors">
               <div>
                 <div className="text-sm text-slate-200">Inclure les absences</div>
-                <div className="text-xs text-slate-500">Congés et absences des équipes</div>
+                <div className="text-xs text-slate-400">Congés et absences des équipes</div>
               </div>
               <input
                 type="checkbox"
@@ -169,7 +170,7 @@ export function ExportCalendrierModal({
             <label className="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700 cursor-pointer hover:bg-slate-800/70 transition-colors">
               <div>
                 <div className="text-sm text-slate-200">Inclure les réunions</div>
-                <div className="text-xs text-slate-500">Instances et réunions de chantier</div>
+                <div className="text-xs text-slate-400">Instances et réunions de chantier</div>
               </div>
               <input
                 type="checkbox"
@@ -182,7 +183,7 @@ export function ExportCalendrierModal({
             <label className="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700 cursor-pointer hover:bg-slate-800/70 transition-colors">
               <div>
                 <div className="text-sm text-slate-200">Inclure les jalons</div>
-                <div className="text-xs text-slate-500">Jalons critiques et contrats</div>
+                <div className="text-xs text-slate-400">Jalons critiques et contrats</div>
               </div>
               <input
                 type="checkbox"

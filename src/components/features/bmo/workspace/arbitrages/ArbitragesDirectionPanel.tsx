@@ -29,7 +29,7 @@ export function ArbitragesDirectionPanel({ open, onClose }: Props) {
         <div className="flex items-center justify-between">
           <div>
             <h3 className="font-semibold text-slate-900 dark:text-slate-100">Centre de Pilotage</h3>
-            <p className="text-xs text-slate-500">Arbitrages en temps réel</p>
+            <p className="text-xs text-slate-400">Arbitrages en temps réel</p>
           </div>
           <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"><X className="w-4 h-4" /></button>
         </div>
@@ -66,12 +66,12 @@ export function ArbitragesDirectionPanel({ open, onClose }: Props) {
               <div className="p-3 rounded-xl bg-blue-500/10 border border-blue-500/20">
                 <Clock className="w-4 h-4 text-blue-500 mb-1" />
                 <p className="text-xl font-bold text-blue-600">{stats.inProgress}</p>
-                <p className="text-xs text-slate-500">En cours</p>
+                <p className="text-xs text-slate-400">En cours</p>
               </div>
               <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20">
                 <Scale className="w-4 h-4 text-amber-500 mb-1" />
                 <p className="text-xl font-bold text-amber-600">{stats.pending}</p>
-                <p className="text-xs text-slate-500">En attente</p>
+                <p className="text-xs text-slate-400">En attente</p>
               </div>
             </div>
 
@@ -105,7 +105,7 @@ export function ArbitragesDirectionPanel({ open, onClose }: Props) {
       </div>
 
       <div className="flex-none p-4 border-t border-slate-200 dark:border-slate-800">
-        <p className="text-xs text-slate-500 text-center">Mise à jour auto toutes les 30s</p>
+        <p className="text-xs text-slate-400 text-center">Mise à jour auto toutes les 30s</p>
       </div>
     </div>
   );

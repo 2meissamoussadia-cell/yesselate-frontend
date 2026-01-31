@@ -189,26 +189,28 @@ export function GovernanceSidebar({
       <div className="flex items-center justify-between p-3 border-b border-slate-800/60">
         {!collapsed && (
           <div className="flex items-center gap-2">
-            <CalendarClock className="h-5 w-5 text-blue-400" />
+            <CalendarClock className="h-5 w-5 text-blue-400" aria-hidden />
             <span className="font-semibold text-slate-200 text-sm">
               Centre de Commande
             </span>
           </div>
         )}
         {collapsed && (
-          <CalendarClock className="h-5 w-5 text-blue-400 mx-auto" />
+          <CalendarClock className="h-5 w-5 text-blue-400 mx-auto" aria-hidden />
         )}
         {onToggleCollapse && (
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={onToggleCollapse}
-            className="h-7 w-7 p-0 text-slate-400 hover:text-slate-200 hover:bg-slate-700/50"
+            aria-label={collapsed ? 'Agrandir la barre latérale' : 'Réduire la barre latérale'}
+            className="min-h-[44px] min-w-[44px] p-0 text-slate-400 hover:text-slate-200 hover:bg-slate-700/50 focus-visible:outline focus-visible:ring-2 focus-visible:ring-sky-500"
           >
             {collapsed ? (
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-4 w-4" aria-hidden />
             ) : (
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-4 w-4" aria-hidden />
             )}
           </Button>
         )}
@@ -222,7 +224,7 @@ export function GovernanceSidebar({
             <input
               type="text"
               placeholder="Rechercher…"
-              className="w-full rounded-xl bg-white/5 px-3 py-2 pl-8 text-sm text-slate-200 ring-1 ring-white/10 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500/40"
+              className="w-full rounded-xl bg-white/5 px-3 py-2 pl-8 text-sm text-slate-200 ring-1 ring-white/10 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/40"
               onClick={onOpenCommandPalette}
             />
           </div>
@@ -241,7 +243,7 @@ export function GovernanceSidebar({
       {/* Footer — aligné dashboard */}
       {!collapsed && (
         <div className="border-t border-slate-800/60 p-3">
-          <div className="text-xs text-slate-500 text-center">
+          <div className="text-xs text-slate-400 text-center">
             Gouvernance
           </div>
         </div>

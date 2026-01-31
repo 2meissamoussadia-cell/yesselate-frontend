@@ -115,7 +115,7 @@ const EMPLOYEES = [
 const PRIORITY_CONFIG = {
   urgent: { label: 'Urgent', color: 'bg-rose-500/20 text-rose-500 border-rose-500/30', icon: AlertTriangle },
   high: { label: 'Élevée', color: 'bg-amber-500/20 text-amber-500 border-amber-500/30', icon: AlertCircle },
-  normal: { label: 'Normale', color: 'bg-slate-500/20 text-slate-500 border-slate-500/30', icon: Tag },
+  normal: { label: 'Normale', color: 'bg-slate-500/20 text-slate-400 border-slate-500/30', icon: Tag },
   low: { label: 'Basse', color: 'bg-slate-500/10 text-slate-400 border-slate-500/20', icon: Tag },
 };
 
@@ -330,7 +330,7 @@ export function ValidationBCDocumentView({ documentId, documentType }: Props) {
     return (
       <div className="p-8 text-center">
         <RefreshCw className="w-8 h-8 animate-spin text-slate-400 mx-auto" />
-        <p className="mt-2 text-slate-500">Chargement...</p>
+        <p className="mt-2 text-slate-400">Chargement...</p>
       </div>
     );
   }
@@ -379,7 +379,7 @@ export function ValidationBCDocumentView({ documentId, documentType }: Props) {
               </div>
               <h1 className="mt-2 text-xl font-bold">{data.subject}</h1>
               {data.description && (
-                <p className="mt-1 text-sm text-slate-500">{data.description}</p>
+                <p className="mt-1 text-sm text-slate-400">{data.description}</p>
               )}
             </div>
 
@@ -387,7 +387,7 @@ export function ValidationBCDocumentView({ documentId, documentType }: Props) {
               {/* Bouton Retour - Version simple sans Tooltip complexe */}
               <button 
                 type="button"
-                className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors cursor-pointer" 
+                className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 transition-colors cursor-pointer" 
                 onClick={handleCloseTab}
                 title="Fermer cet onglet"
                 aria-label="Fermer l'onglet"
@@ -399,7 +399,7 @@ export function ValidationBCDocumentView({ documentId, documentType }: Props) {
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <button 
-                      className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors" 
+                      className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 transition-colors" 
                       onClick={load}
                       disabled={loading}
                       aria-label="Actualiser"
@@ -477,7 +477,7 @@ export function ValidationBCDocumentView({ documentId, documentType }: Props) {
         {/* KPIs */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-            <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
+            <div className="flex items-center gap-2 text-xs text-slate-400 mb-1">
               <DollarSign className="w-3 h-3" />
               Montant
             </div>
@@ -485,7 +485,7 @@ export function ValidationBCDocumentView({ documentId, documentType }: Props) {
           </div>
           
           <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-            <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
+            <div className="flex items-center gap-2 text-xs text-slate-400 mb-1">
               <Clock className="w-3 h-3" />
               Délai
             </div>
@@ -495,7 +495,7 @@ export function ValidationBCDocumentView({ documentId, documentType }: Props) {
           </div>
           
           <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-            <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
+            <div className="flex items-center gap-2 text-xs text-slate-400 mb-1">
               <Shield className="w-3 h-3" />
               Niveau validation
             </div>
@@ -505,7 +505,7 @@ export function ValidationBCDocumentView({ documentId, documentType }: Props) {
           </div>
           
           <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-            <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
+            <div className="flex items-center gap-2 text-xs text-slate-400 mb-1">
               <Paperclip className="w-3 h-3" />
               Documents
             </div>
@@ -527,7 +527,7 @@ export function ValidationBCDocumentView({ documentId, documentType }: Props) {
               <div>
                 <p className="font-medium">{data.supplier.name}</p>
                 {data.supplier.siret && (
-                  <p className="text-sm text-slate-500">SIRET : {data.supplier.siret}</p>
+                  <p className="text-sm text-slate-400">SIRET : {data.supplier.siret}</p>
                 )}
               </div>
               <div className="flex items-center gap-2">
@@ -580,12 +580,12 @@ export function ValidationBCDocumentView({ documentId, documentType }: Props) {
                     'p-4 rounded-xl border',
                     data.threeWayMatch.amountMatch ? 'bg-emerald-50/50 border-emerald-200 dark:bg-emerald-950/20 dark:border-emerald-800/50' : 'bg-red-50/50 border-red-200 dark:bg-red-950/20 dark:border-red-800/50'
                   )}>
-                    <div className="flex items-center gap-2 text-sm text-slate-500 mb-2">
+                    <div className="flex items-center gap-2 text-sm text-slate-400 mb-2">
                       <FileText className="w-4 h-4 text-blue-500" />
                       Bon de commande
                     </div>
                     <p className="font-mono font-semibold">{formatCurrency(data.threeWayMatch.bcAmount)}</p>
-                    <p className="text-sm text-slate-500 mt-1">{data.threeWayMatch.orderedQty} unités</p>
+                    <p className="text-sm text-slate-400 mt-1">{data.threeWayMatch.orderedQty} unités</p>
                   </div>
                   
                   {/* Arrows */}
@@ -601,12 +601,12 @@ export function ValidationBCDocumentView({ documentId, documentType }: Props) {
                     'p-4 rounded-xl border',
                     data.threeWayMatch.amountMatch ? 'bg-emerald-50/50 border-emerald-200 dark:bg-emerald-950/20 dark:border-emerald-800/50' : 'bg-red-50/50 border-red-200 dark:bg-red-950/20 dark:border-red-800/50'
                   )}>
-                    <div className="flex items-center gap-2 text-sm text-slate-500 mb-2">
+                    <div className="flex items-center gap-2 text-sm text-slate-400 mb-2">
                       <Receipt className="w-4 h-4 text-emerald-500" />
                       Facture
                     </div>
                     <p className="font-mono font-semibold">{formatCurrency(data.threeWayMatch.invoiceAmount)}</p>
-                    <p className="text-sm text-slate-500 mt-1">{data.threeWayMatch.deliveryQty} livrés</p>
+                    <p className="text-sm text-slate-400 mt-1">{data.threeWayMatch.deliveryQty} livrés</p>
                   </div>
                 </div>
 
@@ -680,7 +680,7 @@ export function ValidationBCDocumentView({ documentId, documentType }: Props) {
                         <div className="flex items-center justify-between mb-1">
                           <div>
                             <p className="font-semibold">{level.name}</p>
-                            <p className="text-sm text-slate-500">{level.role}</p>
+                            <p className="text-sm text-slate-400">{level.role}</p>
                           </div>
                           {level.requiredAmount && (
                             <span className="text-xs px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
@@ -696,7 +696,7 @@ export function ValidationBCDocumentView({ documentId, documentType }: Props) {
                         )}
 
                         {level.comments && (
-                          <p className="text-sm text-slate-500 mt-1 italic">« {level.comments} »</p>
+                          <p className="text-sm text-slate-400 mt-1 italic">« {level.comments} »</p>
                         )}
                       </div>
                     </div>
@@ -714,7 +714,7 @@ export function ValidationBCDocumentView({ documentId, documentType }: Props) {
             onClick={() => toggleSection('documents')}
           >
             <h3 className="font-semibold flex items-center gap-2">
-              <Paperclip className="w-4 h-4 text-slate-500" />
+              <Paperclip className="w-4 h-4 text-slate-400" />
               Pièces justificatives
               <span className="text-xs px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700">
                 {data.documents.length}
@@ -749,15 +749,15 @@ export function ValidationBCDocumentView({ documentId, documentType }: Props) {
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-3">
               <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-                <div className="text-xs text-slate-500 mb-1">Montant demandé</div>
+                <div className="text-xs text-slate-400 mb-1">Montant demandé</div>
                 <div className="font-semibold font-mono">{formatCurrency(data.amount)}</div>
               </div>
               <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-                <div className="text-xs text-slate-500 mb-1">Budget disponible</div>
+                <div className="text-xs text-slate-400 mb-1">Budget disponible</div>
                 <div className="font-semibold font-mono">{formatCurrency(data.budgetAvailable)}</div>
               </div>
               <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-                <div className="text-xs text-slate-500 mb-1">Ligne budgétaire</div>
+                <div className="text-xs text-slate-400 mb-1">Ligne budgétaire</div>
                 <div className="font-mono text-sm">{data.budgetLine}</div>
               </div>
             </div>
@@ -788,7 +788,7 @@ export function ValidationBCDocumentView({ documentId, documentType }: Props) {
             </div>
             <div>
               <p className="font-medium">{data.sourceAgent.name}</p>
-              <p className="text-sm text-slate-500">{serviceConfig.label}</p>
+              <p className="text-sm text-slate-400">{serviceConfig.label}</p>
             </div>
           </div>
           {data.sourceAgent.email && (
@@ -812,7 +812,7 @@ export function ValidationBCDocumentView({ documentId, documentType }: Props) {
               <History className="w-4 h-4" />
               Journal d&apos;audit
             </h3>
-            <p className="text-xs text-slate-500 mt-1">{data.audit.length} événement{data.audit.length > 1 ? 's' : ''}</p>
+            <p className="text-xs text-slate-400 mt-1">{data.audit.length} événement{data.audit.length > 1 ? 's' : ''}</p>
           </div>
 
           <div className="max-h-[400px] overflow-auto p-5 space-y-3">
@@ -836,7 +836,7 @@ export function ValidationBCDocumentView({ documentId, documentType }: Props) {
                   <div className="rounded-xl border border-slate-200/70 p-3 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30">
                     <div className="flex items-center justify-between gap-2 mb-1">
                       <div className="flex items-center gap-2">
-                        <Icon className="w-4 h-4 text-slate-500" />
+                        <Icon className="w-4 h-4 text-slate-400" />
                         <span className="text-sm font-medium capitalize">{e.type.replace(/_/g, ' ')}</span>
                       </div>
                       <span className="text-xs text-slate-400">
@@ -845,7 +845,7 @@ export function ValidationBCDocumentView({ documentId, documentType }: Props) {
                     </div>
                     <div className="text-sm text-slate-600 dark:text-slate-300">
                       <span className="font-medium">{e.actorName}</span>
-                      {e.message && <span className="text-slate-500"> — {e.message}</span>}
+                      {e.message && <span className="text-slate-400"> — {e.message}</span>}
                     </div>
                   </div>
                 </div>
@@ -862,7 +862,7 @@ export function ValidationBCDocumentView({ documentId, documentType }: Props) {
         onClose={() => setComplementOpen(false)}
       >
         <div className="space-y-4">
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-400">
             Précisez les informations ou documents manquants.
           </p>
           <textarea
@@ -913,11 +913,11 @@ export function ValidationBCDocumentView({ documentId, documentType }: Props) {
               >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center">
-                    <User className="w-5 h-5 text-slate-500" />
+                    <User className="w-5 h-5 text-slate-400" />
                   </div>
                   <div>
                     <div className="font-semibold">{emp.name}</div>
-                    <div className="text-sm text-slate-500">{emp.role}</div>
+                    <div className="text-sm text-slate-400">{emp.role}</div>
                   </div>
                 </div>
               </button>

@@ -129,7 +129,7 @@ export function DelegationDetailModal({
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="h-8 w-8 p-0 text-slate-500 hover:text-slate-300"
+            className="h-8 w-8 p-0 text-slate-400 hover:text-slate-300"
           >
             <X className="h-4 w-4" />
           </Button>
@@ -223,12 +223,12 @@ export function DelegationDetailModal({
                 <h3 className="text-sm font-semibold text-slate-200 mb-3">Utilisation</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-xs text-slate-500 mb-1">Nombre d'utilisations</p>
+                    <p className="text-xs text-slate-400 mb-1">Nombre d'utilisations</p>
                     <p className="text-lg font-semibold text-slate-200">{delegation.usageCount}</p>
                   </div>
                   {delegation.lastUsedAt && (
                     <div>
-                      <p className="text-xs text-slate-500 mb-1">Dernière utilisation</p>
+                      <p className="text-xs text-slate-400 mb-1">Dernière utilisation</p>
                       <p className="text-sm text-slate-300">
                         {new Date(delegation.lastUsedAt).toLocaleString('fr-FR')}
                       </p>
@@ -291,8 +291,8 @@ function InfoCard({
   return (
     <div className="p-4 rounded-lg bg-slate-800/40 border border-slate-700/50">
       <div className="flex items-center gap-2 mb-2">
-        <Icon className="h-4 w-4 text-slate-500" />
-        <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">{label}</p>
+        <Icon className="h-4 w-4 text-slate-400" />
+        <p className="text-xs font-medium text-slate-400 uppercase tracking-wide">{label}</p>
       </div>
       <p className="text-sm font-semibold text-slate-200">{value}</p>
       {subValue && (

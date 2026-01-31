@@ -118,12 +118,14 @@ export function ControlStationPanel() {
           Poste de contrôle Calendrier
         </h2>
         <button
+          type="button"
           onClick={() => refetch()}
           disabled={loading}
-          className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-700/50 transition-colors disabled:opacity-50"
+          aria-label="Rafraîchir les données"
+          className="p-2 min-h-[44px] min-w-[44px] rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-700/50 transition-colors disabled:opacity-50 focus-visible:outline focus-visible:ring-2 focus-visible:ring-sky-500"
           title="Rafraîchir"
         >
-          <RefreshCw className={cn('h-4 w-4', loading && 'animate-spin')} />
+          <RefreshCw className={cn('h-4 w-4', loading && 'animate-spin')} aria-hidden />
         </button>
       </div>
 

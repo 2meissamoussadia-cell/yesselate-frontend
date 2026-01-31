@@ -220,7 +220,7 @@ export function RHHelpModal({ open, onClose }: Props) {
                     </div>
                     <div>
                       <h4 className="font-medium text-sm">{feature.title}</h4>
-                      <p className="text-xs text-slate-500 mt-0.5">
+                      <p className="text-xs text-slate-400 mt-0.5">
                         {feature.description}
                       </p>
                     </div>

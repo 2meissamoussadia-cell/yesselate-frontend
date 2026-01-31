@@ -148,7 +148,7 @@ export function DashboardCleanLayout({
                 type="button"
                 onClick={toggleSidebar}
                 className={cn(
-                  'mt-auto flex items-center gap-2 py-2 rounded-xl transition-colors text-slate-500 hover:text-slate-700 dark:hover:text-slate-300',
+                  'mt-auto flex items-center gap-2 py-2 rounded-xl transition-colors text-slate-400 hover:text-slate-700 dark:hover:text-slate-300',
                   expanded ? 'px-3 justify-start' : 'px-2 justify-center w-full'
                 )}
                 aria-label={expanded ? 'Réduire le menu' : 'Déplier le menu'}
@@ -190,7 +190,7 @@ export function DashboardCleanLayout({
               <Bell className="h-5 w-5" />
             </button>
             <div className="flex-1 min-w-0" />
-            <span className="text-xs text-slate-500 dark:text-slate-400 truncate">Dernière maj : {lastUpdate}</span>
+            <span className="text-xs text-slate-400 dark:text-slate-400 truncate">Dernière maj : {lastUpdate}</span>
           </div>
         </>
       )}

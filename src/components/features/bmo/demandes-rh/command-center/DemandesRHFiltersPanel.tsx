@@ -147,7 +147,7 @@ export function DemandesRHFiltersPanel({
               variant="ghost"
               size="sm"
               onClick={() => clearSection(id)}
-              className="h-6 text-xs text-slate-500 hover:text-slate-300"
+              className="h-6 text-xs text-slate-400 hover:text-slate-300"
             >
               Effacer
             </Button>
@@ -204,7 +204,7 @@ export function DemandesRHFiltersPanel({
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="h-7 w-7 p-0 text-slate-500 hover:text-slate-300"
+            className="h-7 w-7 p-0 text-slate-400 hover:text-slate-300"
           >
             <X className="h-4 w-4" />
           </Button>
@@ -224,7 +224,7 @@ export function DemandesRHFiltersPanel({
               <h4 className="text-sm font-medium text-slate-300">Période</h4>
             </div>
             <div className="p-3 rounded-lg border border-slate-700/50 bg-slate-800/30">
-              <p className="text-xs text-slate-500 mb-2">Filtre de date (à implémenter)</p>
+              <p className="text-xs text-slate-400 mb-2">Filtre de date (à implémenter)</p>
               <p className="text-sm text-slate-400">
                 {selectedFilters.dateRange.start || selectedFilters.dateRange.end
                   ? 'Dates sélectionnées'

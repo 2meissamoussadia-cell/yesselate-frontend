@@ -8,6 +8,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import { logger } from '@/lib/utils/logger';
 
 // ============================================
 // TYPES
@@ -342,7 +343,7 @@ async function mockLogin(email: string, password: string): Promise<{ user: User;
 async function mockLogout(): Promise<void> {
   // Simuler délai réseau
   await new Promise((resolve) => setTimeout(resolve, 300));
-  console.log('User logged out');
+  logger.debug('User logged out', { component: 'AuthContext' });
 }
 
 async function mockUpdateProfile(userId: string, data: Partial<User>): Promise<User> {

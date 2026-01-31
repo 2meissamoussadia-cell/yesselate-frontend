@@ -23,7 +23,7 @@ export default function DecisionsValideesPage() {
       <GouvernanceHeader
         title="Décisions validées"
         subtitle="Historique des décisions validées récemment"
-        onExport={() => console.log('Export décisions validées')}
+        onExport={() => { /* TODO: export décisions validées */ }}
       />
 
       {isLoading ? (

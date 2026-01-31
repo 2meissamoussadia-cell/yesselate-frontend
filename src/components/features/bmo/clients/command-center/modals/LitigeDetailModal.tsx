@@ -238,19 +238,19 @@ export function LitigeDetailModal({
               {/* Info Grid */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-4 rounded-xl border border-slate-700/50 bg-slate-800/30">
-                  <div className="text-xs text-slate-500 mb-1">Catégorie</div>
+                  <div className="text-xs text-slate-400 mb-1">Catégorie</div>
                   <div className="text-slate-200 font-medium">{litige.category}</div>
                 </div>
                 <div className="p-4 rounded-xl border border-slate-700/50 bg-slate-800/30">
-                  <div className="text-xs text-slate-500 mb-1">Assigné à</div>
+                  <div className="text-xs text-slate-400 mb-1">Assigné à</div>
                   <div className="text-slate-200 font-medium">{litige.assignedTo || 'Non assigné'}</div>
                 </div>
                 <div className="p-4 rounded-xl border border-slate-700/50 bg-slate-800/30">
-                  <div className="text-xs text-slate-500 mb-1">Montant</div>
+                  <div className="text-xs text-slate-400 mb-1">Montant</div>
                   <div className="text-rose-400 font-bold text-lg">{litige.amount}</div>
                 </div>
                 <div className="p-4 rounded-xl border border-slate-700/50 bg-slate-800/30">
-                  <div className="text-xs text-slate-500 mb-1">Priorité</div>
+                  <div className="text-xs text-slate-400 mb-1">Priorité</div>
                   <div className="flex items-center gap-2">
                     <Flag className={cn(
                       'w-4 h-4',
@@ -287,7 +287,7 @@ export function LitigeDetailModal({
                       onChange={(e) => setNewComment(e.target.value)}
                       placeholder="Ajouter un commentaire ou une action..."
                       rows={2}
-                      className="flex-1 px-3 py-2 rounded-lg bg-slate-900/50 border border-slate-700/50 text-slate-200 placeholder:text-slate-500 resize-none focus:outline-none focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20"
+                      className="flex-1 px-3 py-2 rounded-lg bg-slate-900/50 border border-slate-700/50 text-slate-200 placeholder:text-slate-400 resize-none focus:outline-none focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20"
                     />
                     <Button
                       onClick={handleAddAction}
@@ -319,7 +319,7 @@ export function LitigeDetailModal({
                       <div className="flex-1 pt-2">
                         <div className="flex items-center justify-between mb-1">
                           <span className="font-medium text-slate-200">{action.action}</span>
-                          <span className="text-xs text-slate-500">
+                          <span className="text-xs text-slate-400">
                             {new Date(action.date).toLocaleDateString('fr-FR')}
                           </span>
                         </div>
@@ -377,7 +377,7 @@ export function LitigeDetailModal({
                       onChange={(e) => setResolutionText(e.target.value)}
                       placeholder="Expliquez comment le litige a été résolu, les actions entreprises, et le résultat..."
                       rows={6}
-                      className="w-full px-4 py-3 rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-200 placeholder:text-slate-500 resize-none focus:outline-none focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20"
+                      className="w-full px-4 py-3 rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-200 placeholder:text-slate-400 resize-none focus:outline-none focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20"
                     />
                   </div>
 
@@ -405,7 +405,7 @@ export function LitigeDetailModal({
 
         {/* Footer */}
         <div className="flex items-center justify-between px-6 py-4 border-t border-slate-800/50 bg-slate-900/60">
-          <div className="text-sm text-slate-500">
+          <div className="text-sm text-slate-400">
             Litige #{litige.id}
           </div>
           <Button variant="outline" onClick={onClose}>

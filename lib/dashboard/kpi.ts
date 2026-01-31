@@ -224,3 +224,39 @@ export function formatMoneyCompact(
   }
   return `${sign}${Math.round(absAmount)} ${currency}`;
 }
+
+/**
+ * Formate un pourcentage (espace avant % pour lisibilité).
+ */
+export function formatPercent(value: number | null | undefined): string {
+  if (value == null || isNaN(value)) return '—';
+  return `${value} %`;
+}
+
+/**
+ * Couleur Tailwind pour une barre ou texte "santé" selon le pourcentage (0–100).
+ * ≥ 80 % = Bon (emerald), ≥ 50 % = À surveiller (amber), &lt; 50 % = Critique (rose).
+ */
+export function getHealthColorClass(percent: number): string {
+  if (percent >= 80) return 'text-emerald-500';
+  if (percent >= 50) return 'text-amber-500';
+  return 'text-rose-500';
+}
+
+/**
+ * Label de santé pour affichage (Bon / À surveiller / Critique).
+ */
+export function getHealthLabel(percent: number): string {
+  if (percent >= 80) return 'Bon';
+  if (percent >= 50) return 'À surveiller';
+  return 'Critique';
+}
+
+/**
+ * Classe Tailwind pour la barre de progression "santé" (bg-*).
+ */
+export function getHealthBarBgClass(percent: number): string {
+  if (percent >= 80) return 'bg-emerald-500';
+  if (percent >= 50) return 'bg-amber-500';
+  return 'bg-rose-500';
+}

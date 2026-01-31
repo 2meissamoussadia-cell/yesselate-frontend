@@ -284,7 +284,7 @@ export function RHMultiLevelValidation({ open, onClose }: RHMultiLevelValidation
                 <TrendingUp className="w-5 h-5 text-blue-500" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">En cours</p>
+                <p className="text-sm text-slate-400">En cours</p>
                 <p className="text-2xl font-bold">{inProgressCount}</p>
               </div>
             </div>
@@ -296,7 +296,7 @@ export function RHMultiLevelValidation({ open, onClose }: RHMultiLevelValidation
                 <CheckCircle className="w-5 h-5 text-green-500" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">Approuvées</p>
+                <p className="text-sm text-slate-400">Approuvées</p>
                 <p className="text-2xl font-bold">{approvedCount}</p>
               </div>
             </div>
@@ -308,7 +308,7 @@ export function RHMultiLevelValidation({ open, onClose }: RHMultiLevelValidation
                 <XCircle className="w-5 h-5 text-red-500" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">Rejetées</p>
+                <p className="text-sm text-slate-400">Rejetées</p>
                 <p className="text-2xl font-bold">{rejectedCount}</p>
               </div>
             </div>
@@ -347,7 +347,7 @@ export function RHMultiLevelValidation({ open, onClose }: RHMultiLevelValidation
                     <User className="w-4 h-4" />
                     {request.agent}
                   </h4>
-                  <div className="flex items-center gap-4 text-sm text-slate-500 mt-1">
+                  <div className="flex items-center gap-4 text-sm text-slate-400 mt-1">
                     {request.amount && (
                       <span className="flex items-center gap-1">
                         <DollarSign className="w-3 h-3" />
@@ -367,7 +367,7 @@ export function RHMultiLevelValidation({ open, onClose }: RHMultiLevelValidation
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs text-slate-500 mb-1">Progression</p>
+                  <p className="text-xs text-slate-400 mb-1">Progression</p>
                   <p className="text-2xl font-bold text-blue-600">
                     {request.currentLevel}/{request.totalLevels}
                   </p>
@@ -437,7 +437,7 @@ export function RHMultiLevelValidation({ open, onClose }: RHMultiLevelValidation
                         <div className="flex items-center justify-between mb-1">
                           <div>
                             <p className="font-semibold text-sm">{level.name}</p>
-                            <p className="text-xs text-slate-500">{level.role}</p>
+                            <p className="text-xs text-slate-400">{level.role}</p>
                           </div>
                           <Badge
                             variant={
@@ -460,7 +460,7 @@ export function RHMultiLevelValidation({ open, onClose }: RHMultiLevelValidation
 
                         {/* Validateurs */}
                         <div className="flex items-center gap-2 mb-2">
-                          <p className="text-xs text-slate-500">Validateurs:</p>
+                          <p className="text-xs text-slate-400">Validateurs:</p>
                           <div className="flex flex-wrap gap-1">
                             {level.validators.map((validator, vIdx) => (
                               <span
@@ -475,7 +475,7 @@ export function RHMultiLevelValidation({ open, onClose }: RHMultiLevelValidation
 
                         {/* Conditions requises */}
                         {level.requiredConditions && level.requiredConditions.length > 0 && (
-                          <div className="text-xs text-slate-500 mb-2">
+                          <div className="text-xs text-slate-400 mb-2">
                             <p className="font-medium mb-1">Conditions:</p>
                             <ul className="space-y-0.5 ml-4">
                               {level.requiredConditions.map((condition, cIdx) => (
@@ -508,7 +508,7 @@ export function RHMultiLevelValidation({ open, onClose }: RHMultiLevelValidation
                         {level.comments && (
                           <div className="mt-2 p-2 rounded bg-slate-100 dark:bg-slate-800 text-xs">
                             <div className="flex items-start gap-1">
-                              <MessageSquare className="w-3 h-3 mt-0.5 flex-shrink-0 text-slate-500" />
+                              <MessageSquare className="w-3 h-3 mt-0.5 flex-shrink-0 text-slate-400" />
                               <p className="text-slate-600 dark:text-slate-400">{level.comments}</p>
                             </div>
                           </div>

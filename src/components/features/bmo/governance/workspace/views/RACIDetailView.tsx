@@ -39,7 +39,7 @@ const RACI_COLORS = {
   'A': 'bg-blue-500/20 text-blue-300 border-blue-500/30',
   'C': 'bg-amber-500/20 text-amber-300 border-amber-500/30',
   'I': 'bg-slate-500/20 text-slate-300 border-slate-500/30',
-  '-': 'bg-slate-700/20 text-slate-500 border-slate-700/30',
+  '-': 'bg-slate-700/20 text-slate-400 border-slate-700/30',
 };
 
 const CRITICALITY_COLORS = {
@@ -197,7 +197,7 @@ export function RACIDetailView({ activityId }: RACIDetailViewProps) {
                   role === 'A' && 'text-blue-300/80',
                   role === 'C' && 'text-amber-300/80',
                   role === 'I' && 'text-slate-300/80',
-                  role === '-' && 'text-slate-500'
+                  role === '-' && 'text-slate-400'
                 )}>
                   {RACI_LABELS[role]}
                 </p>

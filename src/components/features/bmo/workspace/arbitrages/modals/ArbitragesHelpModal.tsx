@@ -166,7 +166,7 @@ function TypesSection() {
             <h4 className="text-sm font-semibold text-orange-300 mb-2">{type.type}</h4>
             <p className="text-sm text-slate-300 mb-3">{type.description}</p>
             <div className="text-xs">
-              <span className="text-slate-500">Priorité:</span>
+              <span className="text-slate-400">Priorité:</span>
               <span className="ml-2 text-slate-300">{type.priority}</span>
             </div>
           </div>

@@ -150,6 +150,7 @@ export function CalendrierSidebar({
     return (
       <div key={itemKey} className="space-y-0.5">
         <button
+          type="button"
           onClick={() => {
             if (hasChildren) {
               toggleExpanded(itemKey);
@@ -158,8 +159,10 @@ export function CalendrierSidebar({
               router.push(item.route);
             }
           }}
+          aria-label={!hasChildren ? `Aller à ${item.label}` : undefined}
+          aria-expanded={hasChildren ? isExpanded : undefined}
           className={cn(
-            'w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 text-left',
+            'w-full flex items-center gap-2 px-3 py-2.5 min-h-[44px] rounded-lg transition-all duration-200 text-left focus-visible:outline focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
             'group relative',
             level === 0 && 'font-medium',
             isActive || hasActive
@@ -170,7 +173,7 @@ export function CalendrierSidebar({
         >
           {/* Indicator */}
           {(isActive || hasActive) && (
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 rounded-r-full bg-blue-400" />
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 rounded-r-full bg-blue-400" aria-hidden />
           )}
 
           {/* Icon */}
@@ -180,6 +183,7 @@ export function CalendrierSidebar({
                 'h-4 w-4 flex-shrink-0 transition-all duration-200',
                 isActive || hasActive ? 'text-blue-400 scale-110' : 'text-slate-400 group-hover:text-slate-200'
               )}
+              aria-hidden
             />
           )}
 
@@ -212,6 +216,7 @@ export function CalendrierSidebar({
                     'h-4 w-4 transition-transform duration-200',
                     isExpanded ? 'rotate-180' : ''
                   )}
+                  aria-hidden
                 />
               )}
             </>
@@ -242,26 +247,28 @@ export function CalendrierSidebar({
       <div className="flex items-center justify-between p-3 border-b border-slate-700/50">
         {!collapsed && (
           <div className="flex items-center gap-2">
-            <LucideIcons.CalendarDays className="h-5 w-5 text-blue-400" />
+            <LucideIcons.CalendarDays className="h-5 w-5 text-blue-400" aria-hidden />
             <span className="font-semibold text-slate-200 text-sm">
               Calendrier & Planification v3.0
             </span>
           </div>
         )}
         {collapsed && (
-          <LucideIcons.CalendarDays className="h-5 w-5 text-blue-400 mx-auto" />
+          <LucideIcons.CalendarDays className="h-5 w-5 text-blue-400 mx-auto" aria-hidden />
         )}
         {onToggleCollapse && (
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={onToggleCollapse}
-            className="h-7 w-7 p-0 text-slate-400 hover:text-slate-200 hover:bg-slate-700/50"
+            aria-label={collapsed ? 'Agrandir la barre latérale' : 'Réduire la barre latérale'}
+            className="min-h-[44px] min-w-[44px] p-0 text-slate-400 hover:text-slate-200 hover:bg-slate-700/50 focus-visible:outline focus-visible:ring-2 focus-visible:ring-sky-500"
           >
             {collapsed ? (
-              <LucideIcons.ChevronRight className="h-4 w-4" />
+              <LucideIcons.ChevronRight className="h-4 w-4" aria-hidden />
             ) : (
-              <LucideIcons.ChevronLeft className="h-4 w-4" />
+              <LucideIcons.ChevronLeft className="h-4 w-4" aria-hidden />
             )}
           </Button>
         )}
@@ -279,7 +286,7 @@ export function CalendrierSidebar({
       {/* Footer */}
       {!collapsed && (
         <div className="border-t border-slate-700/50 p-3">
-          <div className="text-xs text-slate-500 text-center">
+          <div className="text-xs text-slate-400 text-center">
             Calendrier v3.0
           </div>
         </div>

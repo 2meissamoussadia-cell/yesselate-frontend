@@ -7,6 +7,7 @@
 
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -167,7 +168,7 @@ export function ResolutionWizardModal({
                         'p-3 rounded-lg border transition-all',
                         formData.impact === option.value
                           ? `${option.bg} border-current ${option.color}`
-                          : 'bg-slate-800 border-slate-700 text-slate-500 hover:border-slate-600'
+                          : 'bg-slate-800 border-slate-700 text-slate-400 hover:border-slate-600'
                       )}
                     >
                       <p className="text-sm font-medium">{option.label}</p>
@@ -309,23 +310,23 @@ export function ResolutionWizardModal({
                 <h4 className="font-medium text-slate-200">Résumé</h4>
                 <div className="space-y-2 text-sm">
                   <p className="text-slate-400">
-                    <span className="text-slate-500">Impact:</span>{' '}
+                    <span className="text-slate-400">Impact:</span>{' '}
                     <span className="text-slate-200 capitalize">{formData.impact}</span>
                   </p>
                   <p className="text-slate-400">
-                    <span className="text-slate-500">Zones affectées:</span>{' '}
+                    <span className="text-slate-400">Zones affectées:</span>{' '}
                     <span className="text-slate-200">
                       {formData.affectedAreas.join(', ') || 'Aucune'}
                     </span>
                   </p>
                   <p className="text-slate-400">
-                    <span className="text-slate-500">Délai estimé:</span>{' '}
+                    <span className="text-slate-400">Délai estimé:</span>{' '}
                     <span className="text-slate-200">
                       {formData.estimatedTime || 'Non spécifié'}
                     </span>
                   </p>
                   <p className="text-slate-400">
-                    <span className="text-slate-500">Impact budgétaire:</span>{' '}
+                    <span className="text-slate-400">Impact budgétaire:</span>{' '}
                     <span className="text-slate-200">
                       {formData.budgetImpact ? `${formData.budgetImpact}€` : 'Non spécifié'}
                     </span>
@@ -338,7 +339,7 @@ export function ResolutionWizardModal({
 
         {/* Footer Navigation */}
         <DialogFooter className="flex items-center justify-between">
-          <div className="text-sm text-slate-500">
+          <div className="text-sm text-slate-400">
             Étape {step} sur {totalSteps}
           </div>
           <div className="flex gap-2">
@@ -489,7 +490,7 @@ export function DecisionCenterModal({ isOpen, onClose }: DecisionCenterProps) {
                   <Button
                     size="sm"
                     className="bg-emerald-500 hover:bg-emerald-600 text-white"
-                    onClick={() => console.log('Approve', decision.id)}
+                    onClick={() => logger.debug('Approve', { component: 'AdvancedModals', id: decision.id })}
                   >
                     <CheckCircle2 className="w-4 h-4 mr-1" />
                     Approuver
@@ -507,7 +508,7 @@ export function DecisionCenterModal({ isOpen, onClose }: DecisionCenterProps) {
                     size="sm"
                     variant="ghost"
                     className="text-slate-400"
-                    onClick={() => console.log('View details', decision.id)}
+                    onClick={() => logger.debug('View details', { component: 'AdvancedModals', id: decision.id })}
                   >
                     Détails
                   </Button>
@@ -516,7 +517,7 @@ export function DecisionCenterModal({ isOpen, onClose }: DecisionCenterProps) {
 
               {'reason' in decision && decision.reason && (
                 <div className="mt-2 p-2 rounded bg-slate-900/50 text-xs text-slate-400">
-                  <span className="text-slate-500">Raison:</span> {decision.reason}
+                  <span className="text-slate-400">Raison:</span> {decision.reason}
                 </div>
               )}
             </div>
@@ -569,7 +570,7 @@ export function GanttViewModal({ isOpen, onClose }: GanttViewProps) {
           {/* Timeline Header */}
           <div className="flex gap-2 pl-48">
             {months.map((month) => (
-              <div key={month} className="flex-1 text-center text-xs text-slate-500 border-l border-slate-700 py-2">
+              <div key={month} className="flex-1 text-center text-xs text-slate-400 border-l border-slate-700 py-2">
                 {month}
               </div>
             ))}

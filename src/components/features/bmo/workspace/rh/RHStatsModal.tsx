@@ -153,7 +153,7 @@ export function RHStatsModal({ open, onOpenChange }: Props) {
                 <div className="text-2xl font-bold text-slate-900 dark:text-white">
                   {stats.total}
                 </div>
-                <div className="text-xs text-slate-500">Total demandes</div>
+                <div className="text-xs text-slate-400">Total demandes</div>
               </CardContent>
             </Card>
             
@@ -162,7 +162,7 @@ export function RHStatsModal({ open, onOpenChange }: Props) {
                 <div className="text-2xl font-bold text-amber-600">
                   {stats.byStatus.pending}
                 </div>
-                <div className="text-xs text-slate-500">En attente</div>
+                <div className="text-xs text-slate-400">En attente</div>
               </CardContent>
             </Card>
             
@@ -171,7 +171,7 @@ export function RHStatsModal({ open, onOpenChange }: Props) {
                 <div className="text-2xl font-bold text-emerald-600">
                   {stats.validationRate}%
                 </div>
-                <div className="text-xs text-slate-500">Taux validation</div>
+                <div className="text-xs text-slate-400">Taux validation</div>
               </CardContent>
             </Card>
             
@@ -180,7 +180,7 @@ export function RHStatsModal({ open, onOpenChange }: Props) {
                 <div className="text-2xl font-bold text-blue-600">
                   {stats.avgProcessingTime}j
                 </div>
-                <div className="text-xs text-slate-500">Délai moyen</div>
+                <div className="text-xs text-slate-400">Délai moyen</div>
               </CardContent>
             </Card>
           </div>
@@ -192,13 +192,13 @@ export function RHStatsModal({ open, onOpenChange }: Props) {
             <h3 className="font-semibold mb-3 flex items-center gap-2">
               {stats.trend === 'up' && <TrendingUp className="w-4 h-4 text-red-500" />}
               {stats.trend === 'down' && <TrendingDown className="w-4 h-4 text-emerald-500" />}
-              {stats.trend === 'same' && <BarChart3 className="w-4 h-4 text-slate-500" />}
+              {stats.trend === 'same' && <BarChart3 className="w-4 h-4 text-slate-400" />}
               Tendance mensuelle
             </h3>
             
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-slate-500">Ce mois-ci</div>
+                <div className="text-sm text-slate-400">Ce mois-ci</div>
                 <div className="text-3xl font-bold">{stats.thisMonth}</div>
               </div>
               
@@ -221,7 +221,7 @@ export function RHStatsModal({ open, onOpenChange }: Props) {
               </div>
               
               <div className="text-right">
-                <div className="text-sm text-slate-500">Mois dernier</div>
+                <div className="text-sm text-slate-400">Mois dernier</div>
                 <div className="text-2xl font-semibold text-slate-400">{stats.lastMonth}</div>
               </div>
             </div>
@@ -265,7 +265,7 @@ export function RHStatsModal({ open, onOpenChange }: Props) {
                       />
                     </div>
                     
-                    <div className="text-xs text-slate-500 mt-1">
+                    <div className="text-xs text-slate-400 mt-1">
                       {percent}% du total
                     </div>
                   </CardContent>
@@ -300,7 +300,7 @@ export function RHStatsModal({ open, onOpenChange }: Props) {
                           />
                         </div>
                         <div className="w-12 text-right text-sm font-semibold">{count}</div>
-                        <div className="w-16 text-right text-xs text-slate-500">{percent}%</div>
+                        <div className="w-16 text-right text-xs text-slate-400">{percent}%</div>
                       </div>
                     );
                   })}
@@ -320,7 +320,7 @@ export function RHStatsModal({ open, onOpenChange }: Props) {
             <div className="grid grid-cols-2 gap-3">
               <Card>
                 <CardContent className="p-4">
-                  <div className="text-sm text-slate-500 mb-1">Montant total</div>
+                  <div className="text-sm text-slate-400 mb-1">Montant total</div>
                   <div className="text-2xl font-bold text-emerald-600">
                     {stats.totalAmounts.toLocaleString()} FCFA
                   </div>
@@ -329,7 +329,7 @@ export function RHStatsModal({ open, onOpenChange }: Props) {
               
               <Card>
                 <CardContent className="p-4">
-                  <div className="text-sm text-slate-500 mb-1">Montant moyen</div>
+                  <div className="text-sm text-slate-400 mb-1">Montant moyen</div>
                   <div className="text-2xl font-bold text-blue-600">
                     {Math.round(stats.avgAmount).toLocaleString()} FCFA
                   </div>
@@ -350,7 +350,7 @@ export function RHStatsModal({ open, onOpenChange }: Props) {
             <div className="grid grid-cols-2 gap-3">
               <Card>
                 <CardContent className="p-4">
-                  <div className="text-sm text-slate-500 mb-1">Total jours</div>
+                  <div className="text-sm text-slate-400 mb-1">Total jours</div>
                   <div className="text-2xl font-bold text-amber-600">
                     {stats.totalDays}
                   </div>
@@ -359,7 +359,7 @@ export function RHStatsModal({ open, onOpenChange }: Props) {
               
               <Card>
                 <CardContent className="p-4">
-                  <div className="text-sm text-slate-500 mb-1">Durée moyenne</div>
+                  <div className="text-sm text-slate-400 mb-1">Durée moyenne</div>
                   <div className="text-2xl font-bold text-purple-600">
                     {stats.avgDays.toFixed(1)} jours
                   </div>
@@ -412,7 +412,7 @@ export function RHStatsModal({ open, onOpenChange }: Props) {
                   <div className="font-semibold text-red-600 dark:text-red-400">
                     {stats.urgentCount} demande(s) urgente(s) en attente
                   </div>
-                  <div className="text-sm text-slate-500">
+                  <div className="text-sm text-slate-400">
                     Action immédiate requise
                   </div>
                 </div>

@@ -132,7 +132,7 @@ export const ActionsInboxPersonnaliseesPage = memo(function ActionsInboxPersonna
       render: (value: boolean | undefined) => value ? (
         <Star className="h-4 w-4 text-amber-400 fill-amber-400" />
       ) : (
-        <Star className="h-4 w-4 text-slate-500" />
+        <Star className="h-4 w-4 text-slate-400" />
       ),
     },
     {
@@ -190,7 +190,7 @@ export const ActionsInboxPersonnaliseesPage = memo(function ActionsInboxPersonna
       label: 'Tags',
       sortable: false,
       render: (value: string[] | undefined) => {
-        if (!value || value.length === 0) return <span className="text-slate-500">-</span>;
+        if (!value || value.length === 0) return <span className="text-slate-400">-</span>;
         return (
           <div className="flex flex-wrap gap-1">
             {value.map((tag, idx) => (

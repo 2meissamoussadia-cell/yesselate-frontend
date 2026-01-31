@@ -119,7 +119,7 @@ export function ContratExportModal({
                 />
                 <div>
                   <p className="text-sm font-medium text-slate-200">Tous les contrats</p>
-                  <p className="text-xs text-slate-500">73 contrats au total</p>
+                  <p className="text-xs text-slate-400">73 contrats au total</p>
                 </div>
               </label>
 
@@ -135,7 +135,7 @@ export function ContratExportModal({
                   />
                   <div>
                     <p className="text-sm font-medium text-slate-200">Contrats filtrés</p>
-                    <p className="text-xs text-slate-500">{filteredCount} contrats avec filtres actifs</p>
+                    <p className="text-xs text-slate-400">{filteredCount} contrats avec filtres actifs</p>
                   </div>
                 </label>
               )}
@@ -152,7 +152,7 @@ export function ContratExportModal({
                   />
                   <div>
                     <p className="text-sm font-medium text-slate-200">Sélection manuelle</p>
-                    <p className="text-xs text-slate-500">{selectedCount} contrats sélectionnés</p>
+                    <p className="text-xs text-slate-400">{selectedCount} contrats sélectionnés</p>
                   </div>
                 </label>
               )}

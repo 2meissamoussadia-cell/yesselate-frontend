@@ -295,7 +295,7 @@ export const TendancesPage = memo(function TendancesPage() {
         <DashboardPanel padding="lg" className="min-w-0 overflow-hidden">
           <div className="h-64 sm:h-96 min-h-[256px] sm:min-h-[384px] w-full min-w-0 overflow-hidden">
               {!generateTrendData?.length ? (
-                <div className="flex items-center justify-center h-full text-slate-500 text-sm">
+                <div className="flex items-center justify-center h-full text-slate-400 text-sm">
                   Aucune donnée pour la période sélectionnée
                 </div>
               ) : (

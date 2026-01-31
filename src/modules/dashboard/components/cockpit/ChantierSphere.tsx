@@ -148,20 +148,20 @@ export const ChantierSphere = React.memo(function ChantierSphere({
             </div>
             <div className="px-3 py-2 space-y-1 text-slate-300">
               <div className="flex justify-between gap-3">
-                <span className="text-slate-500">CA</span>
+                <span className="text-slate-400">CA</span>
                 <span className="font-medium text-slate-200">{(chantier.ca / 1000).toFixed(0)}k FCFA</span>
               </div>
               <div className="flex justify-between gap-3">
-                <span className="text-slate-500">Marge</span>
+                <span className="text-slate-400">Marge</span>
                 <span className="font-medium text-emerald-400">{(chantier.marge * 100).toFixed(0)}%</span>
               </div>
               <div className="flex justify-between gap-3">
-                <span className="text-slate-500">Photos GPS</span>
+                <span className="text-slate-400">Photos GPS</span>
                 <span className="font-medium">{chantier.photosGps}{chantier.photosManquantes != null && chantier.photosManquantes > 0 ? ` (${chantier.photosManquantes} manq.)` : ''}</span>
               </div>
               {(chantier.chefChantierName || chantier.bureauControle) && (
                 <div className="flex justify-between gap-3 pt-1 border-t border-slate-700/40">
-                  <span className="text-slate-500">Équipe</span>
+                  <span className="text-slate-400">Équipe</span>
                   <span className="font-medium text-slate-200 truncate max-w-[120px]" title={chantier.chefChantierName ?? chantier.bureauControle}>
                     {chantier.chefChantierName ?? `Bureau ${chantier.bureauControle}`}
                   </span>

@@ -63,7 +63,7 @@ export function ValidationBCTimeline({ open, documentId, onClose }: ValidationBC
       case 'comment':
         return 'text-purple-500 bg-purple-50 dark:bg-purple-900/20';
       default:
-        return 'text-slate-500 bg-slate-50 dark:bg-slate-800';
+        return 'text-slate-400 bg-slate-50 dark:bg-slate-800';
     }
   };
 
@@ -71,7 +71,7 @@ export function ValidationBCTimeline({ open, documentId, onClose }: ValidationBC
     <FluentModal open={open} title={documentId ? `Timeline — ${documentId}` : 'Timeline globale'} onClose={onClose}>
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <div className="text-sm text-slate-500">
+          <div className="text-sm text-slate-400">
             {documentId ? `Historique complet du document` : `Historique des 50 dernières actions`}
           </div>
           <FluentButton size="sm" variant="secondary" onClick={() => {}} disabled={loading}>
@@ -83,10 +83,10 @@ export function ValidationBCTimeline({ open, documentId, onClose }: ValidationBC
         {loading ? (
           <div className="flex items-center justify-center py-8">
             <RefreshCw className="w-6 h-6 animate-spin text-slate-400" />
-            <span className="ml-2 text-slate-500">Chargement...</span>
+            <span className="ml-2 text-slate-400">Chargement...</span>
           </div>
         ) : events.length === 0 ? (
-          <div className="text-center py-8 text-slate-500">
+          <div className="text-center py-8 text-slate-400">
             <Activity className="w-12 h-12 mx-auto mb-2 opacity-30" />
             <p>Aucun événement</p>
           </div>
@@ -108,7 +108,7 @@ export function ValidationBCTimeline({ open, documentId, onClose }: ValidationBC
                     <div className="p-4 rounded-xl border border-slate-200/60 dark:border-slate-800 bg-white dark:bg-[#141414]/40">
                       <div className="flex items-start justify-between gap-3 mb-2">
                         <div className="font-medium">{event.action}</div>
-                        <div className="text-xs text-slate-500 flex-none">
+                        <div className="text-xs text-slate-400 flex-none">
                           {new Date(event.timestamp).toLocaleString('fr-FR')}
                         </div>
                       </div>

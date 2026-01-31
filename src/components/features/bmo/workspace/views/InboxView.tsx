@@ -27,14 +27,14 @@ const QUEUE_CONFIG: Record<string, { label: string; icon: typeof Inbox; color: s
   overdue: { label: 'Retards SLA', icon: Clock, color: 'text-orange-500' },
   validated: { label: 'Validées', icon: CheckCircle2, color: 'text-emerald-500' },
   rejected: { label: 'Rejetées', icon: XCircle, color: 'text-rose-500' },
-  all: { label: 'Toutes', icon: FileText, color: 'text-slate-500' },
+  all: { label: 'Toutes', icon: FileText, color: 'text-slate-400' },
 };
 
 const PRIORITY_COLORS: Record<string, string> = {
   urgent: 'bg-rose-500/20 text-rose-400 border-rose-500/30',
   high: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
   normal: 'bg-slate-500/20 text-slate-400 border-slate-500/30',
-  low: 'bg-slate-500/10 text-slate-500 border-slate-500/20',
+  low: 'bg-slate-500/10 text-slate-400 border-slate-500/20',
 };
 
 type SortKey = 'id' | 'subject' | 'bureau' | 'priority' | 'delayDays' | 'amount';
@@ -220,7 +220,7 @@ export function InboxView({ tab }: { tab: WorkspaceTab }) {
               </div>
               <div>
                 <h2 className="text-lg font-semibold">{queueConfig.label}</h2>
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-slate-400">
                   {filteredItems.length} demande{filteredItems.length > 1 ? 's' : ''}
                   {selected.size > 0 && ` • ${selected.size} sélectionnée${selected.size > 1 ? 's' : ''}`}
                 </p>
@@ -229,14 +229,14 @@ export function InboxView({ tab }: { tab: WorkspaceTab }) {
             
             <div className="flex items-center gap-2">
               <button 
-                className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/60 text-slate-500" 
+                className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/60 text-slate-400" 
                 onClick={handleExport}
                 title="Exporter en CSV"
               >
                 <Download className="w-4 h-4" />
               </button>
               <button 
-                className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/60 text-slate-500" 
+                className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/60 text-slate-400" 
                 onClick={load}
                 disabled={loading}
                 title="Rafraîchir"
@@ -293,7 +293,7 @@ export function InboxView({ tab }: { tab: WorkspaceTab }) {
         </div>
         
         {/* Table header */}
-        <div className="grid grid-cols-[auto_1fr_90px_90px_70px_100px] gap-2 px-4 py-2 border-b border-slate-200/70 dark:border-slate-800 text-xs font-medium text-slate-500 uppercase bg-slate-50/50 dark:bg-slate-900/30">
+        <div className="grid grid-cols-[auto_1fr_90px_90px_70px_100px] gap-2 px-4 py-2 border-b border-slate-200/70 dark:border-slate-800 text-xs font-medium text-slate-400 uppercase bg-slate-50/50 dark:bg-slate-900/30">
           {canBatch && (
             <div className="flex items-center">
               <input
@@ -325,14 +325,14 @@ export function InboxView({ tab }: { tab: WorkspaceTab }) {
         {/* Liste */}
         <div className="max-h-[calc(100vh-380px)] overflow-auto">
           {loading && (
-            <div className="p-8 text-center text-slate-500">
+            <div className="p-8 text-center text-slate-400">
               <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2" />
               Chargement...
             </div>
           )}
           
           {!loading && filteredItems.length === 0 && (
-            <div className="p-8 text-center text-slate-500">
+            <div className="p-8 text-center text-slate-400">
               <Inbox className="w-12 h-12 mx-auto mb-3 opacity-30" />
               <p className="font-medium">{search ? 'Aucun résultat pour cette recherche.' : 'Aucune demande dans cette file.'}</p>
               {search && (
@@ -379,7 +379,7 @@ export function InboxView({ tab }: { tab: WorkspaceTab }) {
                 <div className="flex-1 min-w-0">
                   <div className="font-mono text-xs text-slate-400">{d.id}</div>
                   <div className="font-semibold truncate">{d.subject}</div>
-                  <div className="text-xs text-slate-500">{d.type}</div>
+                  <div className="text-xs text-slate-400">{d.type}</div>
                 </div>
                 <ChevronRight className="w-4 h-4 text-slate-300 flex-none" />
               </div>
@@ -398,7 +398,7 @@ export function InboxView({ tab }: { tab: WorkspaceTab }) {
               </div>
               
               <div className="flex items-center">
-                <span className={`text-sm font-mono ${d.isOverdue ? 'text-rose-500 font-bold' : 'text-slate-500'}`}>
+                <span className={`text-sm font-mono ${d.isOverdue ? 'text-rose-500 font-bold' : 'text-slate-400'}`}>
                   J+{d.delayDays}
                   {d.isOverdue && <AlertTriangle className="w-3 h-3 inline ml-0.5" />}
                 </span>
@@ -425,7 +425,7 @@ export function InboxView({ tab }: { tab: WorkspaceTab }) {
           <div className="grid grid-cols-2 gap-3">
             <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/50">
               <div className="text-2xl font-bold">{stats.total}</div>
-              <div className="text-xs text-slate-500">Total</div>
+              <div className="text-xs text-slate-400">Total</div>
             </div>
             <div className="p-3 rounded-xl bg-rose-500/10">
               <div className="text-2xl font-bold text-rose-500">{stats.urgent}</div>
@@ -465,7 +465,7 @@ export function InboxView({ tab }: { tab: WorkspaceTab }) {
                       className="h-2 bg-blue-500/30 rounded-full" 
                       style={{ width: `${Math.min(100, (count / stats.total) * 100)}px` }}
                     />
-                    <span className="text-sm font-mono text-slate-500 w-8 text-right">{count}</span>
+                    <span className="text-sm font-mono text-slate-400 w-8 text-right">{count}</span>
                   </div>
                 </div>
               ))}
@@ -476,7 +476,7 @@ export function InboxView({ tab }: { tab: WorkspaceTab }) {
         {/* Instructions */}
         <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-4 dark:border-slate-800 dark:bg-[#1f1f1f]/70">
           <h3 className="font-semibold mb-2">Actions rapides</h3>
-          <ul className="text-sm text-slate-500 space-y-1.5">
+          <ul className="text-sm text-slate-400 space-y-1.5">
             <li className="flex items-center gap-2">
               <ChevronRight className="w-3 h-3" />
               Cliquez sur une ligne pour ouvrir la demande

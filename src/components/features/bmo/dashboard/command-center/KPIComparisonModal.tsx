@@ -89,7 +89,7 @@ export function KPIComparisonModal({ kpiIds, onClose }: KPIComparisonModalProps)
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800/50 flex-shrink-0">
           <div>
             <h2 className="text-lg font-semibold text-slate-200">Comparaison de KPIs</h2>
-            <p className="text-xs text-slate-500">{kpiIds.length} KPIs sélectionnés</p>
+            <p className="text-xs text-slate-400">{kpiIds.length} KPIs sélectionnés</p>
           </div>
           <div className="flex items-center gap-2">
             <select
@@ -160,7 +160,7 @@ export function KPIComparisonModal({ kpiIds, onClose }: KPIComparisonModalProps)
                     </div>
                     <div>
                       <p className="text-sm font-medium text-slate-200">{displayData?.label}</p>
-                      <p className="text-xs text-slate-500">{mapping.metadata.category}</p>
+                      <p className="text-xs text-slate-400">{mapping.metadata.category}</p>
                     </div>
                   </div>
 
@@ -182,7 +182,7 @@ export function KPIComparisonModal({ kpiIds, onClose }: KPIComparisonModalProps)
                     <div className="text-center">
                       <p className="text-sm font-medium text-slate-300">{kpiDetail?.target || mapping.metadata.target || 'N/A'}</p>
                       {kpiDetail?.target && displayData?.value && (
-                        <p className="text-xs text-slate-500">
+                        <p className="text-xs text-slate-400">
                           {typeof displayData.value === 'number' && typeof kpiDetail.target === 'number'
                             ? `${Math.round((displayData.value / kpiDetail.target) * 100)}%`
                             : '—'}
@@ -266,7 +266,7 @@ export function KPIComparisonModal({ kpiIds, onClose }: KPIComparisonModalProps)
 
           {/* Graphique comparatif */}
           <div className="mt-6 p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-            <p className="text-xs text-slate-500 mb-4">Vue comparative</p>
+            <p className="text-xs text-slate-400 mb-4">Vue comparative</p>
             <div className="h-48 flex items-end gap-2">
               {kpiDetails.map(({ mapping, detail }, i) => {
                 const value = typeof detail.displayData?.value === 'number'
@@ -307,7 +307,7 @@ export function KPIComparisonModal({ kpiIds, onClose }: KPIComparisonModalProps)
 
         {/* Footer */}
         <div className="flex items-center justify-between px-6 py-3 border-t border-slate-800/50 flex-shrink-0">
-          <div className="text-xs text-slate-500">
+          <div className="text-xs text-slate-400">
             Comparaison de {kpiIds.length} KPIs
           </div>
           <Button size="sm" variant="outline" onClick={onClose} className="border-slate-700">

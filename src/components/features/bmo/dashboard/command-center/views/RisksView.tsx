@@ -276,7 +276,7 @@ export function RisksView() {
         <div className="text-center py-12 rounded-xl border border-slate-700/50 bg-slate-800/30">
           <Shield className="w-12 h-12 text-emerald-500 mx-auto mb-4" />
           <p className="text-slate-200 font-medium">Aucun risque détecté</p>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-sm text-slate-400 mt-1">
             Tout est sous contrôle dans cette catégorie
           </p>
         </div>
@@ -286,7 +286,7 @@ export function RisksView() {
       {snoozedRisks.size > 0 && (
         <div className="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
           <div className="flex items-center gap-2">
-            <EyeOff className="w-4 h-4 text-slate-500" />
+            <EyeOff className="w-4 h-4 text-slate-400" />
             <span className="text-sm text-slate-400">
               {snoozedRisks.size} risque(s) masqué(s) pour 2h
             </span>

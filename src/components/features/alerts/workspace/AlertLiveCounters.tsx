@@ -234,7 +234,7 @@ export function AlertLiveCounters({ onQueueClick, compact = false }: AlertLiveCo
       </div>
       
       {/* Résumé additionnel */}
-      <div className="flex items-center justify-between text-xs text-slate-500">
+      <div className="flex items-center justify-between text-xs text-slate-400">
         <div className="flex items-center gap-4">
           <span>
             <strong className="text-slate-700 dark:text-slate-300">{stats.total}</strong> total

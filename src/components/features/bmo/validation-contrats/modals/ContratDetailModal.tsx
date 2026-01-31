@@ -207,7 +207,7 @@ export function ContratDetailModal({
                   'flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors border-b-2',
                   activeTab === tab.id
                     ? 'text-purple-400 border-purple-500'
-                    : 'text-slate-500 border-transparent hover:text-slate-300'
+                    : 'text-slate-400 border-transparent hover:text-slate-300'
                 )}
               >
                 <Icon className="h-4 w-4" />
@@ -358,15 +358,15 @@ function DetailsTab({ contrat }: { contrat: Contrat }) {
         </h3>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <p className="text-xs text-slate-500">Nom</p>
+            <p className="text-xs text-slate-400">Nom</p>
             <p className="text-sm text-slate-300">{contrat.fournisseur.name}</p>
           </div>
           <div>
-            <p className="text-xs text-slate-500">Contact</p>
+            <p className="text-xs text-slate-400">Contact</p>
             <p className="text-sm text-slate-300">{contrat.fournisseur.contact}</p>
           </div>
           <div className="col-span-2">
-            <p className="text-xs text-slate-500">Email</p>
+            <p className="text-xs text-slate-400">Email</p>
             <p className="text-sm text-slate-300">{contrat.fournisseur.email}</p>
           </div>
         </div>
@@ -424,7 +424,7 @@ function ClausesTab({ contrat }: { contrat: Contrat }) {
                 <p className="text-sm text-slate-400 mt-1">{clause.content}</p>
                 {clause.comment && (
                   <div className="mt-2 p-2 bg-slate-900/50 rounded border border-slate-700/30">
-                    <p className="text-xs text-slate-500">Commentaire:</p>
+                    <p className="text-xs text-slate-400">Commentaire:</p>
                     <p className="text-xs text-slate-400 mt-0.5">{clause.comment}</p>
                   </div>
                 )}
@@ -464,7 +464,7 @@ function DocumentsTab({ contrat }: { contrat: Contrat }) {
             </div>
             <div>
               <p className="text-sm font-medium text-slate-200">{doc.name}</p>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-400">
                 {(doc.size / 1024 / 1024).toFixed(2)} MB • {new Date(doc.uploadedAt).toLocaleDateString('fr-FR')}
               </p>
             </div>
@@ -503,7 +503,7 @@ function WorkflowTab({ contrat }: { contrat: Contrat }) {
               {validation.done ? (
                 <CheckCircle className="h-5 w-5 text-emerald-500" />
               ) : (
-                <Clock className="h-5 w-5 text-slate-500" />
+                <Clock className="h-5 w-5 text-slate-400" />
               )}
             </div>
             
@@ -521,7 +521,7 @@ function WorkflowTab({ contrat }: { contrat: Contrat }) {
               )}>
                 {validation.label}
               </p>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-slate-400 mt-0.5">
                 {validation.done ? 'Terminé' : 'En attente'}
               </p>
             </div>
@@ -541,7 +541,7 @@ function WorkflowTab({ contrat }: { contrat: Contrat }) {
                 </div>
                 <p className="text-sm text-slate-300">{risque.description}</p>
                 {risque.mitigation && (
-                  <p className="text-xs text-slate-500 mt-1">Mitigation: {risque.mitigation}</p>
+                  <p className="text-xs text-slate-400 mt-1">Mitigation: {risque.mitigation}</p>
                 )}
               </div>
             ))}
@@ -583,7 +583,7 @@ function CommentsTab({ contrat }: { contrat: Contrat }) {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-sm font-medium text-slate-200">{comment.by}</span>
-                  <span className="text-xs text-slate-500">
+                  <span className="text-xs text-slate-400">
                     {new Date(comment.at).toLocaleDateString('fr-FR')}
                   </span>
                   <Badge className="text-xs" variant={comment.visibility === 'internal' ? 'gray' : 'default'}>
@@ -612,12 +612,12 @@ function HistoriqueTab({ contrat }: { contrat: Contrat }) {
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
               <span className="text-sm font-medium text-slate-200">{entry.action}</span>
-              <span className="text-xs text-slate-500">
+              <span className="text-xs text-slate-400">
                 {new Date(entry.at).toLocaleDateString('fr-FR')} à {new Date(entry.at).toLocaleTimeString('fr-FR')}
               </span>
             </div>
             <p className="text-sm text-slate-400">{entry.details}</p>
-            <p className="text-xs text-slate-500 mt-0.5">Par: {entry.by}</p>
+            <p className="text-xs text-slate-400 mt-0.5">Par: {entry.by}</p>
           </div>
         </div>
       ))}
@@ -631,7 +631,7 @@ function HistoriqueTab({ contrat }: { contrat: Contrat }) {
 function InfoField({ icon: Icon, label, value }: { icon: any; label: string; value: string }) {
   return (
     <div>
-      <p className="text-xs text-slate-500 mb-1 flex items-center gap-1">
+      <p className="text-xs text-slate-400 mb-1 flex items-center gap-1">
         <Icon className="h-3 w-3" />
         {label}
       </p>
@@ -643,7 +643,7 @@ function InfoField({ icon: Icon, label, value }: { icon: any; label: string; val
 function ConditionLine({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-start gap-2">
-      <span className="text-xs text-slate-500 min-w-[100px]">{label}:</span>
+      <span className="text-xs text-slate-400 min-w-[100px]">{label}:</span>
       <span className="text-xs text-slate-300">{value}</span>
     </div>
   );

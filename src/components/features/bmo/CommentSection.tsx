@@ -111,7 +111,7 @@ export function CommentSection({ entityType, entityId, className }: Props) {
         <div className="p-8 rounded-xl bg-slate-800/30 border border-slate-700/50 text-center">
           <MessageSquare className="w-12 h-12 text-slate-600 mx-auto mb-3" />
           <p className="text-slate-400">Aucun commentaire pour le moment</p>
-          <p className="text-sm text-slate-500 mt-1">Soyez le premier à commenter</p>
+          <p className="text-sm text-slate-400 mt-1">Soyez le premier à commenter</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -168,7 +168,7 @@ export function CommentSection({ entityType, entityId, className }: Props) {
             <span className="text-sm text-slate-400">
               Répondre à {threads.find((t) => t.comment.id === replyTo || t.replies.find((r) => r.id === replyTo))?.comment.auteurNom}
             </span>
-            <button type="button" onClick={() => setReplyTo(null)} className="text-slate-500 hover:text-slate-300">
+            <button type="button" onClick={() => setReplyTo(null)} className="text-slate-400 hover:text-slate-300">
               ✕
             </button>
           </div>
@@ -255,10 +255,10 @@ function CommentItem({
               <div className="flex items-center gap-2">
                 <span className="font-semibold text-slate-200">{comment.auteurNom}</span>
                 {comment.isEdited && (
-                  <span className="text-xs text-slate-500">(modifié)</span>
+                  <span className="text-xs text-slate-400">(modifié)</span>
                 )}
               </div>
-              <span className="text-xs text-slate-500">
+              <span className="text-xs text-slate-400">
                 {commentsService.formatRelativeTime(comment.createdAt)}
               </span>
             </div>

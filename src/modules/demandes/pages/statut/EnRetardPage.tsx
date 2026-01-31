@@ -73,7 +73,7 @@ function EnRetardCard({ demande }: { demande: any }) {
               <div className="text-sm text-slate-400 mt-1">{demande.reference}</div>
             </div>
           </div>
-          <div className="flex items-center gap-4 text-xs text-slate-500">
+          <div className="flex items-center gap-4 text-xs text-slate-400">
             <span>{demande.createdBy}</span>
             {demande.dueDate && (
               <span className="text-orange-400">Échéance: {new Date(demande.dueDate).toLocaleDateString('fr-FR')}</span>

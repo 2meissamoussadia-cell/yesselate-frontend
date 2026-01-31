@@ -108,7 +108,7 @@ export function ChantierContextMenu({
         <button
           type="button"
           onClick={onClose}
-          className="p-1 rounded-md text-slate-500 hover:text-slate-300 hover:bg-slate-800/50"
+          className="p-1 rounded-md text-slate-400 hover:text-slate-300 hover:bg-slate-800/50"
           aria-label="Fermer"
         >
           <X className="h-4 w-4" />
@@ -125,7 +125,7 @@ export function ChantierContextMenu({
             'hover:bg-slate-800/70 transition-colors'
           )}
         >
-          <Icon className="h-4 w-4 text-slate-500 shrink-0" />
+          <Icon className="h-4 w-4 text-slate-400 shrink-0" />
           {label}
         </button>
       ))}

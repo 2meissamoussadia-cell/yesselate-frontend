@@ -124,11 +124,11 @@ export function Stepper({
                         {step.label}
                       </span>
                       {step.optional && (
-                        <span className="text-xs text-slate-500">(Optionnel)</span>
+                        <span className="text-xs text-slate-400">(Optionnel)</span>
                       )}
                     </div>
                     {step.description && (
-                      <p className="text-xs text-slate-500 mt-0.5">{step.description}</p>
+                      <p className="text-xs text-slate-400 mt-0.5">{step.description}</p>
                     )}
                   </div>
                 </button>
@@ -203,11 +203,11 @@ export function Stepper({
                         {step.label}
                       </span>
                       {step.optional && (
-                        <span className="text-xs text-slate-500">(Optionnel)</span>
+                        <span className="text-xs text-slate-400">(Optionnel)</span>
                       )}
                     </div>
                     {step.description && (
-                      <p className="text-xs text-slate-500">{step.description}</p>
+                      <p className="text-xs text-slate-400">{step.description}</p>
                     )}
                   </div>
                 </button>

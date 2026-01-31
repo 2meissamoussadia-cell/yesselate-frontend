@@ -157,7 +157,12 @@ export function SearchGlobal() {
           </kbd>
         </div>
 
-        <Command.List className="max-h-[50vh] min-h-[120px] overflow-y-auto p-2">
+        <Command.List
+          className="max-h-[50vh] min-h-[120px] overflow-y-auto p-2"
+          aria-label="Résultats de recherche"
+          aria-live="polite"
+          aria-busy={loading}
+        >
           {loading && (
             <Command.Loading className="py-8 text-center text-sm text-[rgb(var(--muted))]">
               Recherche en cours…

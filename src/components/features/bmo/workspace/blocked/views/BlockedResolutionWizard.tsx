@@ -175,7 +175,7 @@ export function BlockedResolutionWizard({ tabId, data }: Props) {
           <Sparkles className="w-5 h-5 text-purple-500" />
           Assistant de résolution
         </h2>
-        <p className="text-sm text-slate-500 mt-1">
+        <p className="text-sm text-slate-400 mt-1">
           Résolvez les blocages de manière guidée et structurée
         </p>
       </div>
@@ -191,7 +191,7 @@ export function BlockedResolutionWizard({ tabId, data }: Props) {
                   ? "bg-emerald-500 text-white"
                   : idx === currentStepIndex
                     ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900"
-                    : "bg-slate-100 dark:bg-slate-800 text-slate-500"
+                    : "bg-slate-100 dark:bg-slate-800 text-slate-400"
               )}
             >
               {idx < currentStepIndex ? <Check className="w-4 h-4" /> : idx + 1}
@@ -200,7 +200,7 @@ export function BlockedResolutionWizard({ tabId, data }: Props) {
               "ml-2 text-sm hidden md:inline",
               idx === currentStepIndex 
                 ? "font-medium text-slate-900 dark:text-slate-100" 
-                : "text-slate-500"
+                : "text-slate-400"
             )}>
               {s.label}
             </span>
@@ -267,7 +267,7 @@ export function BlockedResolutionWizard({ tabId, data }: Props) {
                         </span>
                       </div>
                       <p className="font-medium text-slate-900 dark:text-slate-100 mt-1">{dossier.subject}</p>
-                      <div className="flex items-center gap-3 mt-2 text-xs text-slate-500">
+                      <div className="flex items-center gap-3 mt-2 text-xs text-slate-400">
                         <span className="flex items-center gap-1">
                           <Building2 className="w-3 h-3" />
                           {dossier.bureau}
@@ -291,7 +291,7 @@ export function BlockedResolutionWizard({ tabId, data }: Props) {
             <h3 className="font-semibold text-slate-900 dark:text-slate-100">
               Choisissez un modèle (optionnel)
             </h3>
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-slate-400">
               Utilisez un modèle prédéfini pour accélérer la rédaction
             </p>
 
@@ -322,7 +322,7 @@ export function BlockedResolutionWizard({ tabId, data }: Props) {
                     </span>
                   </div>
                   <p className="font-medium text-slate-900 dark:text-slate-100">{template.name}</p>
-                  <p className="text-xs text-slate-500 mt-1 line-clamp-2">{template.content}</p>
+                  <p className="text-xs text-slate-400 mt-1 line-clamp-2">{template.content}</p>
                 </button>
               ))}
             </div>
@@ -403,7 +403,7 @@ export function BlockedResolutionWizard({ tabId, data }: Props) {
             </h3>
 
             <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
-              <p className="text-sm text-slate-500 mb-2">Dossiers concernés ({selectedIds.size})</p>
+              <p className="text-sm text-slate-400 mb-2">Dossiers concernés ({selectedIds.size})</p>
               <div className="flex flex-wrap gap-2">
                 {selectedDossiers.map(d => (
                   <span key={d.id} className="font-mono text-xs px-2 py-1 rounded bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300">
@@ -414,13 +414,13 @@ export function BlockedResolutionWizard({ tabId, data }: Props) {
             </div>
 
             <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50">
-              <p className="text-sm text-slate-500 mb-2">Décision</p>
+              <p className="text-sm text-slate-400 mb-2">Décision</p>
               <p className="text-slate-900 dark:text-slate-100 whitespace-pre-wrap">{finalContent}</p>
             </div>
 
             {additionalNotes && (
               <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50">
-                <p className="text-sm text-slate-500 mb-2">Notes</p>
+                <p className="text-sm text-slate-400 mb-2">Notes</p>
                 <p className="text-slate-600 dark:text-slate-400">{additionalNotes}</p>
               </div>
             )}
@@ -443,7 +443,7 @@ export function BlockedResolutionWizard({ tabId, data }: Props) {
             <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2">
               Résolution enregistrée
             </h3>
-            <p className="text-slate-500 text-center max-w-md">
+            <p className="text-slate-400 text-center max-w-md">
               {selectedIds.size} dossier(s) ont été résolus avec succès. 
               Les décisions ont été enregistrées dans le registre d'audit.
             </p>

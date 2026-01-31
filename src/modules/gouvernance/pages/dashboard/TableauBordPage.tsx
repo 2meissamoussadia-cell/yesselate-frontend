@@ -40,7 +40,7 @@ export default function TableauBordPage() {
       <GouvernanceHeader
         title="Tableau de bord exécutif"
         subtitle="Vue synthétique des indicateurs stratégiques, alertes critiques et tendances"
-        onExport={() => console.log('Export')}
+        onExport={() => { /* TODO: export */ }}
         onRefresh={() => window.location.reload()}
       />
 

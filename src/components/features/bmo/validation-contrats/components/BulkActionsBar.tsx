@@ -105,7 +105,7 @@ export function BulkActionsBar({
           onClick={onClear}
           disabled={loading}
           variant="ghost"
-          className="text-slate-500 hover:text-slate-300 h-8 w-8 p-0"
+          className="text-slate-400 hover:text-slate-300 h-8 w-8 p-0"
         >
           <X className="h-4 w-4" />
         </Button>

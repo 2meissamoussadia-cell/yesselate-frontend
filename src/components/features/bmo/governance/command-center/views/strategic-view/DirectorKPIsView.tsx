@@ -71,7 +71,7 @@ export function DirectorKPIsView() {
           <div className="w-full bg-slate-900/50 rounded-full h-2">
             <div className="bg-amber-500 h-2 rounded-full" style={{ width: '67%' }} />
           </div>
-          <div className="flex items-center gap-4 text-xs text-slate-500">
+          <div className="flex items-center gap-4 text-xs text-slate-400">
             <span>Écart: -3% vs prévisionnel</span>
             <span>•</span>
             <span>Prévisionnel: 18.7M€</span>
@@ -101,7 +101,7 @@ export function DirectorKPIsView() {
                 {kpi.value}
               </p>
               {kpi.total && (
-                <p className="text-xs text-slate-500 mt-1">sur {kpi.total}</p>
+                <p className="text-xs text-slate-400 mt-1">sur {kpi.total}</p>
               )}
             </div>
           ))}

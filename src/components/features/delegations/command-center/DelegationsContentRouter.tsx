@@ -281,10 +281,10 @@ const OverviewView = React.memo(function OverviewView({
                         {' - '}
                         <span className="text-slate-400">{activity.action}</span>
                         {activity.details && (
-                          <span className="text-slate-500 text-xs ml-1">({activity.details})</span>
+                          <span className="text-slate-400 text-xs ml-1">({activity.details})</span>
                         )}
                       </p>
-                      <p className="text-xs text-slate-500 mt-0.5">
+                      <p className="text-xs text-slate-400 mt-0.5">
                         {new Date(activity.createdAt).toLocaleString('fr-FR', {
                           day: '2-digit',
                           month: 'short',
@@ -361,7 +361,7 @@ const HistoryView = React.memo(function HistoryView() {
         <div className="text-center py-12">
           <History className="h-16 w-16 text-slate-600 mx-auto mb-4 opacity-50" />
           <h3 className="text-lg font-semibold text-slate-300 mb-2">Historique complet</h3>
-          <p className="text-slate-500 mb-4">
+          <p className="text-slate-400 mb-4">
             Visualisation de l'historique des délégations avec filtres avancés
           </p>
           <p className="text-sm text-slate-600">
@@ -412,10 +412,10 @@ const AnalyticsView = React.memo(function AnalyticsView() {
             <div className="rounded-xl border border-slate-700/50 bg-slate-900/40 p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-sm font-medium text-slate-400">Total</h3>
-                <Users className="h-5 w-5 text-slate-500" />
+                <Users className="h-5 w-5 text-slate-400" />
               </div>
               <div className="text-3xl font-bold text-slate-200">{stats.total}</div>
-              <div className="text-xs text-slate-500 mt-2">délégations</div>
+              <div className="text-xs text-slate-400 mt-2">délégations</div>
             </div>
 
             <div className="rounded-xl border border-slate-700/50 bg-slate-900/40 p-6">
@@ -424,7 +424,7 @@ const AnalyticsView = React.memo(function AnalyticsView() {
                 <TrendingUp className="h-5 w-5 text-blue-400" />
               </div>
               <div className="text-3xl font-bold text-slate-200">{stats.totalUsage}</div>
-              <div className="text-xs text-slate-500 mt-2">utilisations totales</div>
+              <div className="text-xs text-slate-400 mt-2">utilisations totales</div>
             </div>
 
             <div className="rounded-xl border border-slate-700/50 bg-slate-900/40 p-6">
@@ -433,7 +433,7 @@ const AnalyticsView = React.memo(function AnalyticsView() {
                 <FileText className="h-5 w-5 text-purple-400" />
               </div>
               <div className="text-3xl font-bold text-slate-200">{stats.byBureau?.length || 0}</div>
-              <div className="text-xs text-slate-500 mt-2">bureaux</div>
+              <div className="text-xs text-slate-400 mt-2">bureaux</div>
             </div>
 
             <div className="rounded-xl border border-slate-700/50 bg-slate-900/40 p-6">
@@ -442,7 +442,7 @@ const AnalyticsView = React.memo(function AnalyticsView() {
                 <Key className="h-5 w-5 text-amber-400" />
               </div>
               <div className="text-3xl font-bold text-slate-200">{stats.byType?.length || 0}</div>
-              <div className="text-xs text-slate-500 mt-2">types différents</div>
+              <div className="text-xs text-slate-400 mt-2">types différents</div>
             </div>
           </div>
 
@@ -461,7 +461,7 @@ const AnalyticsView = React.memo(function AnalyticsView() {
                     .slice(0, 10)
                     .map((item, idx) => (
                       <div key={item.bureau} className="flex items-center gap-3">
-                        <div className="w-8 text-xs text-slate-500 text-right">
+                        <div className="w-8 text-xs text-slate-400 text-right">
                           {idx + 1}
                         </div>
                         <div className="flex-1">
@@ -497,7 +497,7 @@ const AnalyticsView = React.memo(function AnalyticsView() {
                     .slice(0, 10)
                     .map((item, idx) => (
                       <div key={item.type} className="flex items-center gap-3">
-                        <div className="w-8 text-xs text-slate-500 text-right">
+                        <div className="w-8 text-xs text-slate-400 text-right">
                           {idx + 1}
                         </div>
                         <div className="flex-1">
@@ -561,21 +561,21 @@ const AnalyticsView = React.memo(function AnalyticsView() {
               <div className="p-4 rounded-lg bg-slate-800/40 border border-slate-700/50">
                 <div className="text-sm text-slate-400 mb-2">Utilisations totales</div>
                 <div className="text-3xl font-bold text-slate-200 mb-1">{stats.totalUsage}</div>
-                <div className="text-xs text-slate-500">Toutes délégations confondues</div>
+                <div className="text-xs text-slate-400">Toutes délégations confondues</div>
               </div>
               <div className="p-4 rounded-lg bg-slate-800/40 border border-slate-700/50">
                 <div className="text-sm text-slate-400 mb-2">Moyenne par délégation</div>
                 <div className="text-3xl font-bold text-slate-200 mb-1">
                   {stats.total > 0 ? Math.round(stats.totalUsage / stats.total) : 0}
                 </div>
-                <div className="text-xs text-slate-500">Utilisations moyennes</div>
+                <div className="text-xs text-slate-400">Utilisations moyennes</div>
               </div>
               <div className="p-4 rounded-lg bg-slate-800/40 border border-slate-700/50">
                 <div className="text-sm text-slate-400 mb-2">Taux d'utilisation</div>
                 <div className="text-3xl font-bold text-slate-200 mb-1">
                   {stats.total > 0 ? Math.round((stats.active / stats.total) * 100) : 0}%
                 </div>
-                <div className="text-xs text-slate-500">Délégations actives</div>
+                <div className="text-xs text-slate-400">Délégations actives</div>
               </div>
             </div>
           </div>
@@ -619,7 +619,7 @@ const SettingsView = React.memo(function SettingsView() {
             <div className="flex items-center justify-between">
               <div>
                 <label className="text-sm font-medium text-slate-300">Afficher la barre KPIs</label>
-                <p className="text-xs text-slate-500">Afficher/masquer la barre de KPIs en haut</p>
+                <p className="text-xs text-slate-400">Afficher/masquer la barre de KPIs en haut</p>
               </div>
               <button
                 onClick={() => setKPIConfig({ visible: !kpiConfig.visible })}
@@ -638,7 +638,7 @@ const SettingsView = React.memo(function SettingsView() {
             <div className="flex items-center justify-between">
               <div>
                 <label className="text-sm font-medium text-slate-300">Rafraîchissement automatique</label>
-                <p className="text-xs text-slate-500">Actualiser les données automatiquement</p>
+                <p className="text-xs text-slate-400">Actualiser les données automatiquement</p>
               </div>
               <button
                 onClick={() => setKPIConfig({ autoRefresh: !kpiConfig.autoRefresh })}
@@ -657,7 +657,7 @@ const SettingsView = React.memo(function SettingsView() {
             <div className="flex items-center justify-between">
               <div>
                 <label className="text-sm font-medium text-slate-300">Intervalle de rafraîchissement</label>
-                <p className="text-xs text-slate-500">Temps entre chaque actualisation (secondes)</p>
+                <p className="text-xs text-slate-400">Temps entre chaque actualisation (secondes)</p>
               </div>
               <input
                 type="number"
@@ -682,7 +682,7 @@ const SettingsView = React.memo(function SettingsView() {
             <div className="flex items-center justify-between">
               <div>
                 <label className="text-sm font-medium text-slate-300">Mode plein écran</label>
-                <p className="text-xs text-slate-500">Activer/désactiver le mode plein écran</p>
+                <p className="text-xs text-slate-400">Activer/désactiver le mode plein écran</p>
               </div>
               <button
                 onClick={toggleFullscreen}

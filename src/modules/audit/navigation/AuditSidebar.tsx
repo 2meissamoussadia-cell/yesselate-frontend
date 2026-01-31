@@ -120,7 +120,7 @@ export function AuditSidebar({
           {Object.values(auditNavigationConfig).map((node) => <NavNodeComponent key={node.id} node={node} level={0} />)}
         </div>
       </nav>
-      {!collapsed && <div className="border-t border-slate-700/50 p-3"><div className="text-xs text-slate-500 text-center">Audit v2.0</div></div>}
+      {!collapsed && <div className="border-t border-slate-700/50 p-3"><div className="text-xs text-slate-400 text-center">Audit v2.0</div></div>}
     </aside>
   );
 }

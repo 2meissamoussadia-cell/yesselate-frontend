@@ -10,6 +10,7 @@
 import { useState, useEffect } from 'react';
 import { X, Search, User, Award, Briefcase, TrendingUp, CheckCircle, Loader2, AlertCircle } from 'lucide-react';
 import { employeesApiService } from '@/lib/services/employees-documents-api';
+import { logger } from '@/lib/utils/logger';
 import type { SubstituteCandidate, Employee } from '@/lib/types/substitution.types';
 
 interface AssignSubstitutModalProps {
@@ -78,16 +79,12 @@ export function AssignSubstitutModal({
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      console.log('[AssignSubstitut]', {
-        substitutionId: substitution.id,
-        substitut: selectedCandidate.employee,
-        score: selectedCandidate.score,
-      });
+      logger.debug('AssignSubstitut', { component: 'AssignSubstitutModal', substitutionId: substitution.id, substitut: selectedCandidate.employee?.id, score: selectedCandidate.score });
 
       onSuccess?.(selectedCandidate.employee);
       handleClose();
     } catch (err) {
-      console.error('Assign error:', err);
+      logger.error('Assign error', err instanceof Error ? err : undefined, { component: 'AssignSubstitutModal' });
       setError('Erreur lors de l\'assignation.');
     } finally {
       setAssigning(false);
@@ -245,7 +242,7 @@ export function AssignSubstitutModal({
                           <div className="flex items-center gap-2">
                             <Award className={`w-4 h-4 ${getScoreColor(candidate.score)}`} />
                             <div>
-                              <div className="text-xs text-slate-500">Score</div>
+                              <div className="text-xs text-slate-400">Score</div>
                               <div className={`text-sm font-semibold ${getScoreColor(candidate.score)}`}>
                                 {candidate.score}%
                               </div>
@@ -255,7 +252,7 @@ export function AssignSubstitutModal({
                           <div className="flex items-center gap-2">
                             <Briefcase className="w-4 h-4 text-slate-400" />
                             <div>
-                              <div className="text-xs text-slate-500">Charge</div>
+                              <div className="text-xs text-slate-400">Charge</div>
                               <div className={`text-sm font-semibold ${
                                 candidate.workload > 70 ? 'text-orange-400' : 'text-green-400'
                               }`}>
@@ -267,7 +264,7 @@ export function AssignSubstitutModal({
                           <div className="flex items-center gap-2">
                             <CheckCircle className="w-4 h-4 text-slate-400" />
                             <div>
-                              <div className="text-xs text-slate-500">Compétences</div>
+                              <div className="text-xs text-slate-400">Compétences</div>
                               <div className="text-sm font-semibold text-slate-300">
                                 {candidate.competencesMatch}%
                               </div>
@@ -277,7 +274,7 @@ export function AssignSubstitutModal({
                           <div className="flex items-center gap-2">
                             <TrendingUp className="w-4 h-4 text-slate-400" />
                             <div>
-                              <div className="text-xs text-slate-500">Expérience</div>
+                              <div className="text-xs text-slate-400">Expérience</div>
                               <div className="text-sm font-semibold text-slate-300">
                                 {candidate.previousSubstitutions || 0}
                               </div>
@@ -287,7 +284,7 @@ export function AssignSubstitutModal({
 
                         {/* Reason */}
                         {candidate.reason && (
-                          <p className="text-xs text-slate-500 mt-2">
+                          <p className="text-xs text-slate-400 mt-2">
                             💡 {candidate.reason}
                           </p>
                         )}
@@ -304,7 +301,7 @@ export function AssignSubstitutModal({
                               </span>
                             ))}
                             {candidate.employee.competences.length > 5 && (
-                              <span className="px-2 py-0.5 text-xs text-slate-500">
+                              <span className="px-2 py-0.5 text-xs text-slate-400">
                                 +{candidate.employee.competences.length - 5}
                               </span>
                             )}

@@ -120,10 +120,10 @@ export function CalendrierQuickActions({
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-slate-200">{action.label}</span>
                   {action.redirect && (
-                    <ArrowRight className="h-3 w-3 text-slate-500" />
+                    <ArrowRight className="h-3 w-3 text-slate-400" />
                   )}
                 </div>
-                <p className="text-xs text-slate-500 mt-0.5 truncate">{action.description}</p>
+                <p className="text-xs text-slate-400 mt-0.5 truncate">{action.description}</p>
               </div>
             </button>
           );

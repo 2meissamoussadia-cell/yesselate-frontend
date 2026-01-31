@@ -55,7 +55,7 @@ export function ActionsMenu({ onRefresh, isRefreshing, onFilters }: ActionsMenuP
         <Button
           variant="ghost"
           size="sm"
-          className="h-8 w-8 p-0 text-slate-500 hover:text-slate-300 hover:bg-slate-800/50"
+          className="h-8 w-8 p-0 text-slate-400 hover:text-slate-300 hover:bg-slate-800/50"
           title="Actions"
         >
           <MoreHorizontal className="h-4 w-4" />
@@ -69,7 +69,7 @@ export function ActionsMenu({ onRefresh, isRefreshing, onFilters }: ActionsMenuP
         >
           <Search className="mr-2 h-4 w-4" />
           Rechercher
-          <kbd className="ml-auto text-xs bg-slate-800 text-slate-500 px-1.5 py-0.5 rounded">
+          <kbd className="ml-auto text-xs bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">
             ⌘K
           </kbd>
         </DropdownMenuItem>
@@ -94,7 +94,7 @@ export function ActionsMenu({ onRefresh, isRefreshing, onFilters }: ActionsMenuP
         >
           <Filter className="mr-2 h-4 w-4" />
           Filtres avancés
-          <kbd className="ml-auto text-xs bg-slate-800 text-slate-500 px-1.5 py-0.5 rounded">
+          <kbd className="ml-auto text-xs bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">
             ⌘F
           </kbd>
         </DropdownMenuItem>
@@ -106,7 +106,7 @@ export function ActionsMenu({ onRefresh, isRefreshing, onFilters }: ActionsMenuP
         >
           <Download className="mr-2 h-4 w-4" />
           Exporter
-          <kbd className="ml-auto text-xs bg-slate-800 text-slate-500 px-1.5 py-0.5 rounded">
+          <kbd className="ml-auto text-xs bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">
             ⌘E
           </kbd>
         </DropdownMenuItem>
@@ -139,7 +139,7 @@ export function ActionsMenu({ onRefresh, isRefreshing, onFilters }: ActionsMenuP
               Plein écran
             </>
           )}
-          <kbd className="ml-auto text-xs bg-slate-800 text-slate-500 px-1.5 py-0.5 rounded">
+          <kbd className="ml-auto text-xs bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">
             F11
           </kbd>
         </DropdownMenuItem>
@@ -171,7 +171,7 @@ export function ActionsMenu({ onRefresh, isRefreshing, onFilters }: ActionsMenuP
         >
           <BarChart3 className="mr-2 h-4 w-4" />
           Statistiques
-          <kbd className="ml-auto text-xs bg-slate-800 text-slate-500 px-1.5 py-0.5 rounded">
+          <kbd className="ml-auto text-xs bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">
             ⌘I
           </kbd>
         </DropdownMenuItem>
@@ -194,7 +194,7 @@ export function ActionsMenu({ onRefresh, isRefreshing, onFilters }: ActionsMenuP
         >
           <Keyboard className="mr-2 h-4 w-4" />
           Raccourcis
-          <kbd className="ml-auto text-xs bg-slate-800 text-slate-500 px-1.5 py-0.5 rounded">
+          <kbd className="ml-auto text-xs bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">
             ?
           </kbd>
         </DropdownMenuItem>

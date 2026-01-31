@@ -218,7 +218,7 @@ function ContratValidationModal({ onClose, data }: { onClose: () => void; data?:
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Commentaires, conditions particulières..."
-            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-200 placeholder:text-slate-500 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 resize-none"
+            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-200 placeholder:text-slate-400 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 resize-none"
             rows={4}
           />
         </div>
@@ -325,7 +325,7 @@ function ContratRejectionModal({ onClose, data }: { onClose: () => void; data?: 
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Précisions, actions correctives..."
-            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-200 placeholder:text-slate-500 focus:border-red-500 focus:ring-1 focus:ring-red-500 resize-none"
+            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-200 placeholder:text-slate-400 focus:border-red-500 focus:ring-1 focus:ring-red-500 resize-none"
             rows={4}
           />
         </div>

@@ -213,7 +213,7 @@ export function BTPExportModal({
                           {option.label}
                         </Label>
                       </div>
-                      <p className="text-xs text-slate-500">{option.description}</p>
+                      <p className="text-xs text-slate-400">{option.description}</p>
                     </div>
                   </div>
                 );

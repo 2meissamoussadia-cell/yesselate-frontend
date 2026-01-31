@@ -5,6 +5,7 @@ import { FluentModal } from '@/components/ui/fluent-modal';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/utils/logger';
 import { 
   FileText, Download, ExternalLink, Eye, ZoomIn, ZoomOut,
   RotateCw, Printer, Share2, Check, X, Maximize2,
@@ -70,7 +71,7 @@ export function RHDocumentPreview({ documents, onVerify }: Props) {
 
   const handleDownload = (doc: Document) => {
     // Simulation de téléchargement
-    console.log('Downloading:', doc.name);
+    logger.debug('Downloading', { component: 'RHDocumentPreview', name: doc.name });
     // En production: window.open(doc.url, '_blank');
   };
 
@@ -80,7 +81,7 @@ export function RHDocumentPreview({ documents, onVerify }: Props) {
 
   if (documents.length === 0) {
     return (
-      <div className="p-6 text-center text-slate-500 rounded-xl border border-dashed border-slate-300 dark:border-slate-700">
+      <div className="p-6 text-center text-slate-400 rounded-xl border border-dashed border-slate-300 dark:border-slate-700">
         <FileText className="w-12 h-12 mx-auto mb-3 opacity-30" />
         <p>Aucun document joint</p>
       </div>
@@ -111,7 +112,7 @@ export function RHDocumentPreview({ documents, onVerify }: Props) {
                 <span className="font-medium truncate">{doc.name}</span>
                 {getStatusBadge(doc.status)}
               </div>
-              <div className="text-sm text-slate-500 flex items-center gap-2 mt-0.5">
+              <div className="text-sm text-slate-400 flex items-center gap-2 mt-0.5">
                 <span>{doc.type}</span>
                 {doc.size && <span>• {doc.size}</span>}
                 <span>• {doc.date}</span>
@@ -185,7 +186,7 @@ export function RHDocumentPreview({ documents, onVerify }: Props) {
 
                 <button
                   onClick={handleReset}
-                  className="px-3 py-2 rounded-lg text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                  className="px-3 py-2 rounded-lg text-sm text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
                 >
                   Réinitialiser
                 </button>
@@ -234,11 +235,11 @@ export function RHDocumentPreview({ documents, onVerify }: Props) {
                     <div className="text-center">
                       {getDocIcon(selectedDoc.type)}
                       <div className="mt-4 text-lg font-semibold">{selectedDoc.name}</div>
-                      <div className="mt-2 text-slate-500">{selectedDoc.type}</div>
+                      <div className="mt-2 text-slate-400">{selectedDoc.type}</div>
                       <div className="mt-1 text-sm text-slate-400">{selectedDoc.size || 'Taille inconnue'}</div>
                       
                       <div className="mt-8 p-6 rounded-xl bg-slate-50 dark:bg-slate-700/50">
-                        <p className="text-sm text-slate-500">
+                        <p className="text-sm text-slate-400">
                           🔍 Prévisualisation simulée
                         </p>
                         <p className="text-xs text-slate-400 mt-2">
@@ -255,7 +256,7 @@ export function RHDocumentPreview({ documents, onVerify }: Props) {
             {onVerify && selectedDoc.status !== 'verified' && (
               <div className="p-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
                 <div className="flex items-center justify-between">
-                  <div className="text-sm text-slate-500">
+                  <div className="text-sm text-slate-400">
                     Vérifiez ce document et confirmez sa validité
                   </div>
                   <div className="flex items-center gap-2">
@@ -384,7 +385,7 @@ export function RHDocumentUpload({
         <p className="text-lg font-medium mb-1">
           {isDragging ? 'Déposez les fichiers ici' : 'Glissez-déposez vos fichiers'}
         </p>
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-slate-400">
           ou cliquez pour parcourir
         </p>
         <p className="text-xs text-slate-400 mt-2">
@@ -415,7 +416,7 @@ export function RHDocumentUpload({
               <FileText className="w-5 h-5 text-slate-400" />
               <div className="flex-1 min-w-0">
                 <div className="truncate font-medium">{file.name}</div>
-                <div className="text-xs text-slate-500">
+                <div className="text-xs text-slate-400">
                   {(file.size / 1024 / 1024).toFixed(2)} MB
                 </div>
               </div>

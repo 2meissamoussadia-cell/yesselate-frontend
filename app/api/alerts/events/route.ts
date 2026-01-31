@@ -8,6 +8,7 @@ import { can } from '@lib-root/server/security/policy';
 import { pgPool } from '@lib-root/server/db/pool';
 import { rateLimitRedis } from '@lib-root/server/observability/rateLimitRedis';
 import { withReq } from '@lib-root/server/logging';
+import { MOCK_ALERT_EVENTS } from '../mockData';
 
 const log = withReq('alerts-events');
 
@@ -27,14 +28,25 @@ const log = withReq('alerts-events');
  * ABAC: Filtrage par bureau/chantier via labels
  * Phase P15: Moteur d'alertes
  */
-function emptyEventsResponse(req: NextRequest) {
+function mockEventsResponse(req: NextRequest) {
   const url = new URL(req.url);
   const limit = parseInt(url.searchParams.get('limit') || '100', 10);
   const offset = parseInt(url.searchParams.get('offset') || '0', 10);
+  const statusParam = url.searchParams.get('status') || 'open';
+  const severityParam = url.searchParams.get('severity');
+  let events = [...MOCK_ALERT_EVENTS];
+  if (statusParam !== 'all') {
+    events = events.filter((e) => e.status === statusParam);
+  }
+  if (severityParam) {
+    events = events.filter((e) => e.severity === severityParam);
+  }
+  const total = events.length;
+  const sliced = events.slice(offset, offset + limit);
   return NextResponse.json({
     ok: true,
-    events: [],
-    pagination: { total: 0, limit, offset, hasMore: false },
+    events: sliced,
+    pagination: { total, limit, offset, hasMore: offset + limit < total },
   }, { status: 200 });
 }
 
@@ -81,12 +93,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       client = await pgPool.connect();
     } catch (dbError) {
       const seconds = (performance.now() - t0) / 1000;
-      logReq.warn({ err: dbError, seconds }, 'alerts events: DB unavailable, returning empty list');
-      return NextResponse.json({
-        ok: true,
-        events: [],
-        pagination: { total: 0, limit, offset, hasMore: false },
-      }, { status: 200 });
+      logReq.warn({ err: dbError, seconds }, 'alerts events: DB unavailable, returning mock events');
+      return mockEventsResponse(req);
     }
     try {
       let query = `
@@ -166,7 +174,14 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       params.push(limit, offset);
       
       const result = await client.query(query, params);
-      
+
+      // Phase 4/5: si la base ne renvoie aucun événement, retourner des mocks pour l'UI
+      if (total === 0) {
+        const seconds = (performance.now() - t0) / 1000;
+        logReq.info({ seconds }, 'alerts events: no rows, returning mock events');
+        return mockEventsResponse(req);
+      }
+
       const seconds = (performance.now() - t0) / 1000;
       logReq.info({ count: result.rows.length, total, seconds }, 'alerts events fetched');
       
@@ -181,14 +196,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         },
       }, { status: 200 });
     } catch (queryError: unknown) {
-      // Graceful fallback when alert_events/alert_rules are missing or query fails (e.g. local dev)
       const seconds = (performance.now() - t0) / 1000;
-      logReq.warn({ err: queryError, seconds }, 'alerts events: query failed, returning empty list');
-      return NextResponse.json({
-        ok: true,
-        events: [],
-        pagination: { total: 0, limit, offset, hasMore: false },
-      }, { status: 200 });
+      logReq.warn({ err: queryError, seconds }, 'alerts events: query failed, returning mock events');
+      return mockEventsResponse(req);
     } finally {
       client.release();
     }
@@ -196,11 +206,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     // Graceful fallback: any error (rate-limit, context, hydrate, DB) → 200 + empty events
     try {
       const seconds = (performance.now() - t0) / 1000;
-      logReq.warn({ err: error, seconds }, 'alerts events: error, returning empty list');
+      logReq.warn({ err: error, seconds }, 'alerts events: error, returning mock events');
     } catch {
       // ignore logger errors
     }
-    return emptyEventsResponse(req);
+    return mockEventsResponse(req);
   }
 }
 

@@ -156,7 +156,7 @@ function ShortcutsSection() {
                   <div className="flex items-center gap-1">
                     {shortcut.keys.map((key, i) => (
                       <React.Fragment key={i}>
-                        {i > 0 && <span className="text-slate-500 text-xs mx-1">+</span>}
+                        {i > 0 && <span className="text-slate-400 text-xs mx-1">+</span>}
                         <kbd className="px-3 py-1.5 bg-slate-700 rounded-md text-xs font-mono text-slate-200 border border-slate-600">
                           {key}
                         </kbd>
@@ -316,7 +316,7 @@ function TypesSection() {
                   <h4 className="text-sm font-semibold text-slate-200 mb-1">{type.name}</h4>
                   <p className="text-xs text-slate-400 mb-2">{type.description}</p>
                   <div className="flex items-center gap-2 text-xs">
-                    <span className="text-slate-500">Exemples:</span>
+                    <span className="text-slate-400">Exemples:</span>
                     <span className="text-slate-400">{type.examples}</span>
                   </div>
                 </div>

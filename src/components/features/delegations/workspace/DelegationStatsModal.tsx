@@ -155,7 +155,7 @@ export function DelegationStatsModal({ open, onClose }: DelegationStatsModalProp
             </div>
             <div className="text-3xl font-bold text-blue-600">{stats.total}</div>
             {evolution && (
-              <div className="text-xs text-slate-500 mt-1 flex items-center gap-1">
+              <div className="text-xs text-slate-400 mt-1 flex items-center gap-1">
                 {evolution.total > 0 ? (
                   <>
                     <TrendingUp className="w-3 h-3 text-emerald-500" />
@@ -179,7 +179,7 @@ export function DelegationStatsModal({ open, onClose }: DelegationStatsModalProp
             </div>
             <div className="text-3xl font-bold text-emerald-600">{stats.active}</div>
             {evolution && (
-              <div className="text-xs text-slate-500 mt-1 flex items-center gap-1">
+              <div className="text-xs text-slate-400 mt-1 flex items-center gap-1">
                 {evolution.active > 0 ? (
                   <>
                     <TrendingUp className="w-3 h-3 text-emerald-500" />
@@ -202,7 +202,7 @@ export function DelegationStatsModal({ open, onClose }: DelegationStatsModalProp
               <span className="text-xs text-slate-600 dark:text-slate-400">Expirent Bientôt</span>
             </div>
             <div className="text-3xl font-bold text-amber-600">{stats.expiringSoon}</div>
-            <div className="text-xs text-slate-500 mt-1">
+            <div className="text-xs text-slate-400 mt-1">
               {stats.active > 0 ? Math.round((stats.expiringSoon / stats.active) * 100) : 0}% des actives
             </div>
           </div>
@@ -214,7 +214,7 @@ export function DelegationStatsModal({ open, onClose }: DelegationStatsModalProp
             </div>
             <div className="text-3xl font-bold text-purple-600">{stats.totalUsage}</div>
             {evolution && (
-              <div className="text-xs text-slate-500 mt-1 flex items-center gap-1">
+              <div className="text-xs text-slate-400 mt-1 flex items-center gap-1">
                 {evolution.totalUsage > 0 ? (
                   <>
                     <TrendingUp className="w-3 h-3 text-emerald-500" />
@@ -279,16 +279,16 @@ export function DelegationStatsModal({ open, onClose }: DelegationStatsModalProp
               <CheckCircle2 className="w-6 h-6 text-emerald-500 mx-auto mb-2" />
               <div className="text-2xl font-bold text-emerald-600">{stats.active}</div>
               <div className="text-sm text-slate-600 dark:text-slate-400 mt-1">Actives</div>
-              <div className="text-xs text-slate-500 mt-1">
+              <div className="text-xs text-slate-400 mt-1">
                 {Math.round((stats.active / stats.total) * 100)}%
               </div>
             </div>
 
             <div className="text-center p-4 rounded-lg bg-slate-50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800">
-              <Calendar className="w-6 h-6 text-slate-500 mx-auto mb-2" />
+              <Calendar className="w-6 h-6 text-slate-400 mx-auto mb-2" />
               <div className="text-2xl font-bold text-slate-600">{stats.expired}</div>
               <div className="text-sm text-slate-600 dark:text-slate-400 mt-1">Expirées</div>
-              <div className="text-xs text-slate-500 mt-1">
+              <div className="text-xs text-slate-400 mt-1">
                 {Math.round((stats.expired / stats.total) * 100)}%
               </div>
             </div>
@@ -297,7 +297,7 @@ export function DelegationStatsModal({ open, onClose }: DelegationStatsModalProp
               <XCircle className="w-6 h-6 text-red-500 mx-auto mb-2" />
               <div className="text-2xl font-bold text-red-600">{stats.revoked}</div>
               <div className="text-sm text-slate-600 dark:text-slate-400 mt-1">Révoquées</div>
-              <div className="text-xs text-slate-500 mt-1">
+              <div className="text-xs text-slate-400 mt-1">
                 {Math.round((stats.revoked / stats.total) * 100)}%
               </div>
             </div>
@@ -306,7 +306,7 @@ export function DelegationStatsModal({ open, onClose }: DelegationStatsModalProp
               <Pause className="w-6 h-6 text-amber-500 mx-auto mb-2" />
               <div className="text-2xl font-bold text-amber-600">{stats.suspended}</div>
               <div className="text-sm text-slate-600 dark:text-slate-400 mt-1">Suspendues</div>
-              <div className="text-xs text-slate-500 mt-1">
+              <div className="text-xs text-slate-400 mt-1">
                 {Math.round((stats.suspended / stats.total) * 100)}%
               </div>
             </div>
@@ -315,7 +315,7 @@ export function DelegationStatsModal({ open, onClose }: DelegationStatsModalProp
               <AlertTriangle className="w-6 h-6 text-orange-500 mx-auto mb-2" />
               <div className="text-2xl font-bold text-orange-600">{stats.expiringSoon}</div>
               <div className="text-sm text-slate-600 dark:text-slate-400 mt-1">Expirent</div>
-              <div className="text-xs text-slate-500 mt-1">
+              <div className="text-xs text-slate-400 mt-1">
                 dans 7 jours
               </div>
             </div>
@@ -341,7 +341,7 @@ export function DelegationStatsModal({ open, onClose }: DelegationStatsModalProp
                     {topBureau.count}
                   </Badge>
                 </div>
-                <div className="text-xs text-slate-500 mt-3">
+                <div className="text-xs text-slate-400 mt-3">
                   {Math.round((topBureau.count / stats.total) * 100)}% du total des délégations
                 </div>
               </div>
@@ -365,7 +365,7 @@ export function DelegationStatsModal({ open, onClose }: DelegationStatsModalProp
                     {topType.count}
                   </Badge>
                 </div>
-                <div className="text-xs text-slate-500 mt-3">
+                <div className="text-xs text-slate-400 mt-3">
                   {Math.round((topType.count / stats.total) * 100)}% du total des délégations
                 </div>
               </div>
@@ -399,7 +399,7 @@ export function DelegationStatsModal({ open, onClose }: DelegationStatsModalProp
                     <p className="text-xs text-slate-600 dark:text-slate-400 mb-1">
                       Par <strong>{activity.actorName}</strong> sur délégation de <strong>{activity.agentName}</strong>
                     </p>
-                    <div className="text-xs text-slate-500">
+                    <div className="text-xs text-slate-400">
                       {new Date(activity.createdAt).toLocaleString('fr-FR')}
                     </div>
                   </div>
@@ -427,7 +427,7 @@ export function DelegationStatsModal({ open, onClose }: DelegationStatsModalProp
         )}
 
         {/* Footer avec timestamp */}
-        <div className="text-center text-xs text-slate-500 pt-4 border-t border-slate-200 dark:border-slate-700">
+        <div className="text-center text-xs text-slate-400 pt-4 border-t border-slate-200 dark:border-slate-700">
           Dernière mise à jour: {new Date().toLocaleString('fr-FR')}
         </div>
       </div>

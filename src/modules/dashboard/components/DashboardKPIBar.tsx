@@ -316,7 +316,7 @@ const LastUpdateDisplay = memo(function LastUpdateDisplay({
   }
   
   return (
-    <span className="text-[10px] text-slate-500">
+    <span className="text-[10px] text-slate-400">
       {display}
     </span>
   );
@@ -640,8 +640,9 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
       className="relative z-10 border-b border-slate-800/60 bg-slate-950/40 backdrop-blur-xl"
       style={{ padding: 'clamp(0.75rem, 1.5vw, 1rem)' }}
       role="region"
-      aria-label="Indicateurs de performance en temps réel"
+      aria-labelledby="kpi-bar-heading"
     >
+      <h1 id="kpi-bar-heading" className="sr-only">{t('kpi.title')}</h1>
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-4">
         <div className="flex items-start gap-3">
           <div className="mt-0.5 grid h-9 w-9 place-items-center rounded-2xl bg-emerald-500/10 ring-1 ring-emerald-500/20">
@@ -649,20 +650,20 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h2 className="font-semibold text-white" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>{t('kpi.title')}</h2>
+              <h2 id="kpi-bar-title" className="font-semibold text-white" style={{ fontSize: 'clamp(0.875rem, 1vw, 1rem)' }}>{t('kpi.title')}</h2>
               <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-emerald-200 ring-1 ring-emerald-500/20" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.6875rem)' }}>
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 {t('kpi.live')}
               </span>
               {lastUpdate ? (
-                <span className="hidden sm:inline text-[11px] text-slate-500">
+                <span className="hidden sm:inline text-[11px] text-slate-400">
                   • {t('kpi.lastUpdate.label')} <LastUpdateDisplay lastUpdate={lastUpdate} />
                 </span>
               ) : null}
               {topKpis.length !== safeKpis.length ? (
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <span className="hidden sm:inline text-slate-500 cursor-help" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.6875rem)' }}>
+                    <span className="hidden sm:inline text-slate-400 cursor-help" style={{ fontSize: 'clamp(0.625rem, 0.75vw, 0.6875rem)' }}>
                       • {topKpis.length}/{safeKpis.length}
                     </span>
                   </TooltipTrigger>
@@ -681,7 +682,7 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
         <div className="flex items-center gap-2">
           {/* Recherche KPI */}
           <div className="relative hidden sm:block">
-            <Search className="absolute left-2 top-1/2 -translate-y-1/2 text-slate-500" style={{ width: 'clamp(0.875rem, 1vw, 0.875rem)', height: 'clamp(0.875rem, 1vw, 0.875rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />
+            <Search className="absolute left-2 top-1/2 -translate-y-1/2 text-slate-400" style={{ width: 'clamp(0.875rem, 1vw, 0.875rem)', height: 'clamp(0.875rem, 1vw, 0.875rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />
             <input
               type="text"
               placeholder={t('kpi.search.placeholder')}
@@ -690,7 +691,7 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
               className={cn(
                 'w-56 pl-8 pr-8 py-2 text-xs rounded-lg',
                 'bg-slate-900/40 border border-slate-800/70',
-                'text-slate-200 placeholder:text-slate-500',
+                'text-slate-200 placeholder:text-slate-400',
                 'focus:outline-none focus:ring-2 focus:ring-blue-500/40'
               )}
               aria-label="Rechercher un indicateur"
@@ -699,7 +700,7 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
               <button
                 type="button"
                 onClick={handleClearKpiFilter}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-200 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded"
                 style={{ minWidth: '32px', minHeight: '32px' }}
                 aria-label={t('kpi.search.clear')}
               >
@@ -911,7 +912,7 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
 
             <div className="hidden md:flex items-center gap-2">
               {/* petit rappel (optionnel) */}
-              <div className="text-[11px] text-slate-500">Astuce : molette + shift</div>
+              <div className="text-[11px] text-slate-400">Astuce : molette + shift</div>
             </div>
           </div>
 

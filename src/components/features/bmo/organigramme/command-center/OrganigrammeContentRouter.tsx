@@ -101,7 +101,7 @@ export const OrganigrammeContentRouter = React.memo(function OrganigrammeContent
         <h3 className="text-lg font-semibold text-slate-300 mb-2">
           {category} - {subCategory || 'all'}
         </h3>
-        <p className="text-slate-500">Contenu en cours de développement</p>
+        <p className="text-slate-400">Contenu en cours de développement</p>
       </div>
     </div>
   );
@@ -432,7 +432,7 @@ function PositionsView({ subCategory }: { subCategory: string | null }) {
       <div className="text-center">
         <Briefcase className="w-16 h-16 text-slate-600 mx-auto mb-4" />
         <h3 className="text-lg font-semibold text-slate-300 mb-2">Postes</h3>
-        <p className="text-slate-500">Vue des postes en cours de développement</p>
+        <p className="text-slate-400">Vue des postes en cours de développement</p>
       </div>
     </div>
   );
@@ -448,7 +448,7 @@ function TeamsView({ subCategory }: { subCategory: string | null }) {
       <div className="text-center">
         <UserCheck className="w-16 h-16 text-slate-600 mx-auto mb-4" />
         <h3 className="text-lg font-semibold text-slate-300 mb-2">Équipes</h3>
-        <p className="text-slate-500">Vue des équipes en cours de développement</p>
+        <p className="text-slate-400">Vue des équipes en cours de développement</p>
       </div>
     </div>
   );
@@ -460,7 +460,7 @@ function SkillsView({ subCategory }: { subCategory: string | null }) {
       <div className="text-center">
         <Award className="w-16 h-16 text-slate-600 mx-auto mb-4" />
         <h3 className="text-lg font-semibold text-slate-300 mb-2">Compétences</h3>
-        <p className="text-slate-500">Vue des compétences en cours de développement</p>
+        <p className="text-slate-400">Vue des compétences en cours de développement</p>
       </div>
     </div>
   );
@@ -476,7 +476,7 @@ function AnalyticsView({ subCategory }: { subCategory: string | null }) {
       <div className="text-center">
         <BarChart3 className="w-16 h-16 text-slate-600 mx-auto mb-4" />
         <h3 className="text-lg font-semibold text-slate-300 mb-2">Analyse</h3>
-        <p className="text-slate-500">Statistiques et analyses en cours de développement</p>
+        <p className="text-slate-400">Statistiques et analyses en cours de développement</p>
       </div>
     </div>
   );

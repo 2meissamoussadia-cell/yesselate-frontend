@@ -116,7 +116,7 @@ export function QuickPanel() {
                     <p className="whitespace-pre-wrap">{note.content}</p>
                     {note.pinned && <span>📌</span>}
                   </div>
-                  <p className="text-[9px] text-slate-500 mt-1">{note.date}</p>
+                  <p className="text-[9px] text-slate-400 mt-1">{note.date}</p>
                 </div>
               );
             })}

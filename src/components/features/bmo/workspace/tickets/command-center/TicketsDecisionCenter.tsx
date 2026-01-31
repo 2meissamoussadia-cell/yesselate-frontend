@@ -188,7 +188,7 @@ export function TicketsDecisionCenter({ open, onClose }: Props) {
             </div>
             <div>
               <h2 className="text-lg font-bold text-slate-100">Centre de Décision</h2>
-              <p className="text-sm text-slate-500">Actions rapides et décisions en lot</p>
+              <p className="text-sm text-slate-400">Actions rapides et décisions en lot</p>
             </div>
           </div>
           <button
@@ -330,7 +330,7 @@ export function TicketsDecisionCenter({ open, onClose }: Props) {
                   
                   <div className="space-y-2 max-h-[400px] overflow-y-auto">
                     {stats.critical.length === 0 ? (
-                      <div className="text-center py-8 text-slate-500">
+                      <div className="text-center py-8 text-slate-400">
                         <CheckCircle2 className="w-12 h-12 mx-auto mb-3 text-emerald-500/50" />
                         <p>Aucun ticket critique en attente</p>
                       </div>
@@ -411,7 +411,7 @@ export function TicketsDecisionCenter({ open, onClose }: Props) {
                   <h3 className="text-sm font-semibold text-slate-300">Résolution en lot</h3>
                   
                   {selectedTickets.length === 0 ? (
-                    <div className="text-center py-8 text-slate-500 border border-dashed border-slate-700 rounded-xl">
+                    <div className="text-center py-8 text-slate-400 border border-dashed border-slate-700 rounded-xl">
                       <MessageSquare className="w-12 h-12 mx-auto mb-3 text-slate-600" />
                       <p>Sélectionnez des tickets à résoudre</p>
                       <p className="text-sm mt-1">Utilisez les autres onglets pour sélectionner</p>
@@ -482,7 +482,7 @@ export function TicketsDecisionCenter({ open, onClose }: Props) {
                   </div>
 
                   {selectedTickets.length === 0 ? (
-                    <div className="text-center py-8 text-slate-500 border border-dashed border-slate-700 rounded-xl">
+                    <div className="text-center py-8 text-slate-400 border border-dashed border-slate-700 rounded-xl">
                       <Users className="w-12 h-12 mx-auto mb-3 text-slate-600" />
                       <p>Aucun ticket sélectionné</p>
                     </div>
@@ -627,7 +627,7 @@ function QuickActionButton({ icon: Icon, title, description, color, onClick }: Q
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-slate-200">{title}</p>
-        <p className="text-xs text-slate-500">{description}</p>
+        <p className="text-xs text-slate-400">{description}</p>
       </div>
       <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-slate-400 transition-colors" />
     </button>
@@ -694,7 +694,7 @@ function TicketRow({ ticket, selected, onToggle, onQuickResolve, processing, com
       </div>
 
       {!compact && (
-        <div className="text-right text-xs text-slate-500 flex-shrink-0">
+        <div className="text-right text-xs text-slate-400 flex-shrink-0">
           <p>{ticket.client.name}</p>
           <p>{ticket.assignee?.name || 'Non-assigné'}</p>
         </div>

@@ -117,7 +117,7 @@ export function StatistiquesNotificationPanel({ isOpen, onClose }: StatistiquesN
 
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {notifications.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 text-slate-500">
+            <div className="flex flex-col items-center justify-center py-12 text-slate-400">
               <Bell className="w-12 h-12 mb-3 opacity-30" />
               <p className="text-sm">Aucune notification</p>
             </div>
@@ -143,7 +143,7 @@ export function StatistiquesNotificationPanel({ isOpen, onClose }: StatistiquesN
                     </div>
                     <p className="text-xs text-slate-400 mb-2">{notif.message}</p>
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs text-slate-400">
                         {new Date(notif.timestamp).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                       </span>
                       {notif.actionLabel && (
@@ -161,7 +161,7 @@ export function StatistiquesNotificationPanel({ isOpen, onClose }: StatistiquesN
         </div>
 
         <div className="px-4 py-3 border-t border-slate-800 bg-slate-900/80">
-          <div className="flex items-center justify-between text-xs text-slate-500">
+          <div className="flex items-center justify-between text-xs text-slate-400">
             <span>{notifications.length} notification{notifications.length > 1 ? 's' : ''}</span>
             {unreadCount > 0 && (
               <span className="text-purple-400">{unreadCount} non lu{unreadCount > 1 ? 'es' : 'e'}</span>

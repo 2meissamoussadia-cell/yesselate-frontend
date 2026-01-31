@@ -58,7 +58,7 @@ export function BureauPage() {
               </div>
             ))}
             {bureaux.length === 0 && (
-              <div className="text-sm text-slate-500 text-center py-4">
+              <div className="text-sm text-slate-400 text-center py-4">
                 Aucune alerte par bureau
               </div>
             )}

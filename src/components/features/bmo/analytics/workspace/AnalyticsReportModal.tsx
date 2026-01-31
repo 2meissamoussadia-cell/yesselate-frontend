@@ -253,7 +253,7 @@ export function AnalyticsReportModal({ open, onClose }: AnalyticsReportModalProp
                   {type.icon}
                 </div>
                 <p className="font-medium text-xs text-slate-200">{type.label}</p>
-                <p className="text-[10px] text-slate-500 mt-0.5">{type.description}</p>
+                <p className="text-[10px] text-slate-400 mt-0.5">{type.description}</p>
               </button>
             ))}
           </div>
@@ -269,7 +269,7 @@ export function AnalyticsReportModal({ open, onClose }: AnalyticsReportModalProp
               type="text"
               value={config.title}
               onChange={(e) => setConfig(prev => ({ ...prev, title: e.target.value }))}
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800 text-slate-200 placeholder:text-slate-500"
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800 text-slate-200 placeholder:text-slate-400"
               placeholder="Titre du rapport..."
             />
           </div>
@@ -392,7 +392,7 @@ export function AnalyticsReportModal({ open, onClose }: AnalyticsReportModalProp
               ))}
             </div>
             {config.bureauFilter.length === 0 && (
-              <p className="text-xs text-slate-500 mt-2">Tous les bureaux inclus</p>
+              <p className="text-xs text-slate-400 mt-2">Tous les bureaux inclus</p>
             )}
           </div>
         </div>
@@ -404,7 +404,7 @@ export function AnalyticsReportModal({ open, onClose }: AnalyticsReportModalProp
               <p className="text-sm font-medium text-slate-200">
                 Estimation du rapport
               </p>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-slate-400 mt-1">
                 {config.sections.filter(s => s.included).length} sections • 
                 {config.includeCharts ? ' avec graphiques' : ' sans graphiques'} • 
                 {PERIOD_OPTIONS.find(p => p.id === config.period)?.label}

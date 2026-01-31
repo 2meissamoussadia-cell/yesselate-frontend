@@ -91,15 +91,15 @@ export function ReglesMetierPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
                 <div>
-                  <span className="text-slate-500">Type de document:</span>
+                  <span className="text-slate-400">Type de document:</span>
                   <span className="text-slate-300 ml-2">{regle.typeDocument}</span>
                 </div>
                 <div>
-                  <span className="text-slate-500">Condition:</span>
+                  <span className="text-slate-400">Condition:</span>
                   <span className="text-slate-300 ml-2 font-mono">{regle.condition}</span>
                 </div>
                 <div className="md:col-span-2">
-                  <span className="text-slate-500">Action:</span>
+                  <span className="text-slate-400">Action:</span>
                   <span className="text-slate-300 ml-2 font-mono">{regle.action}</span>
                 </div>
               </div>

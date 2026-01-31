@@ -213,7 +213,7 @@ export const ValidationContratsCommandSidebar = React.memo(function ValidationCo
       {/* Footer */}
       <div className="p-3 border-t border-slate-700/50">
         {!collapsed && (
-          <div className="text-xs text-slate-500 space-y-1">
+          <div className="text-xs text-slate-400 space-y-1">
             <div className="flex items-center justify-between">
               <span>Taux validation</span>
               <span className="text-emerald-400 font-medium">87%</span>

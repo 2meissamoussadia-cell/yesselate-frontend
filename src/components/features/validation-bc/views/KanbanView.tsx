@@ -419,7 +419,7 @@ export function KanbanView() {
                   ))}
 
                   {columnCards.length === 0 && (
-                    <div className="flex items-center justify-center h-32 text-slate-500 text-sm">
+                    <div className="flex items-center justify-center h-32 text-slate-400 text-sm">
                       Aucun document
                     </div>
                   )}

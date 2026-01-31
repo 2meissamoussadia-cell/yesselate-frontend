@@ -33,7 +33,9 @@ const customJestConfig = {
     'hooks\\.test',
   ],
   moduleNameMapper: {
+    '^@/lib/server/(.*)$': '<rootDir>/lib/server/$1',
     '^@/(.*)$': '<rootDir>/src/$1',
+    '^@lib-root/(.*)$': '<rootDir>/lib/$1',
   },
   collectCoverageFrom: [
     'src/hooks/**/*.{ts,tsx}',

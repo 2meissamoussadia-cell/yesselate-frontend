@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useTicketsWorkspaceStore } from '@/lib/stores/ticketsWorkspaceStore';
+import { logger } from '@/lib/utils/logger';
 import { ticketsApi, type TicketPriority, type TicketStatus, type TicketCategory } from '@/lib/services/ticketsApiService';
 import {
   X,
@@ -142,7 +143,7 @@ export function TicketsFiltersPanel() {
   };
 
   const handleApply = () => {
-    console.log('Applying filters:', filters);
+    logger.debug('Applying filters', { component: 'TicketsFiltersPanel', filters });
     // TODO: Apply filters to the ticket list
     toggleFiltersPanel();
   };
@@ -415,7 +416,7 @@ export function TicketsFiltersPanel() {
           >
             <div className="space-y-3">
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">Du</label>
+                <label className="text-xs text-slate-400 mb-1 block">Du</label>
                 <input
                   type="date"
                   value={filters.dateFrom}
@@ -424,7 +425,7 @@ export function TicketsFiltersPanel() {
                 />
               </div>
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">Au</label>
+                <label className="text-xs text-slate-400 mb-1 block">Au</label>
                 <input
                   type="date"
                   value={filters.dateTo}
@@ -490,9 +491,9 @@ function FilterSection({ title, icon: Icon, expanded, onToggle, count, children 
           )}
         </div>
         {expanded ? (
-          <ChevronDown className="w-4 h-4 text-slate-500" />
+          <ChevronDown className="w-4 h-4 text-slate-400" />
         ) : (
-          <ChevronRight className="w-4 h-4 text-slate-500" />
+          <ChevronRight className="w-4 h-4 text-slate-400" />
         )}
       </button>
       {expanded && (

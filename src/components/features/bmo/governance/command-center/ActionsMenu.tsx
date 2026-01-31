@@ -171,7 +171,7 @@ export function ActionsMenu({ onRefresh, isRefreshing, onOpenFilters }: ActionsM
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
           'h-8 w-8 p-0',
-          isOpen ? 'bg-slate-800 text-slate-200' : 'text-slate-500 hover:text-slate-300'
+          isOpen ? 'bg-slate-800 text-slate-200' : 'text-slate-400 hover:text-slate-300'
         )}
       >
         <MoreVertical className="h-4 w-4" />
@@ -198,7 +198,7 @@ export function ActionsMenu({ onRefresh, isRefreshing, onOpenFilters }: ActionsM
                     <span>{action.label}</span>
                   </div>
                   {action.shortcut && (
-                    <kbd className="text-xs bg-slate-800 text-slate-500 px-1.5 py-0.5 rounded">
+                    <kbd className="text-xs bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">
                       {action.shortcut}
                     </kbd>
                   )}
@@ -213,11 +213,11 @@ export function ActionsMenu({ onRefresh, isRefreshing, onOpenFilters }: ActionsM
           {/* Shortcuts submenu */}
           {showShortcuts && (
             <div className="border-t border-slate-800 py-2 px-3">
-              <p className="text-xs font-medium text-slate-500 uppercase mb-2">Raccourcis</p>
+              <p className="text-xs font-medium text-slate-400 uppercase mb-2">Raccourcis</p>
               <div className="space-y-1">
                 {shortcuts.map((s) => (
                   <div key={s.key} className="flex items-center justify-between text-xs">
-                    <span className="text-slate-500">{s.label}</span>
+                    <span className="text-slate-400">{s.label}</span>
                     <kbd className="bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">
                       {s.key}
                     </kbd>

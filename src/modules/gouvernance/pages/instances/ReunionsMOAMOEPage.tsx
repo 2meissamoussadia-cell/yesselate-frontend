@@ -22,7 +22,7 @@ export default function ReunionsMOAMOEPage() {
       <GouvernanceHeader
         title="Réunions MOA/MOE"
         subtitle="Calendrier des réunions Maîtrise d'Ouvrage / Maîtrise d'Œuvre"
-        onExport={() => console.log('Export réunions MOA/MOE')}
+        onExport={() => { /* TODO: export réunions MOA/MOE */ }}
       />
 
       {isLoading ? (
@@ -57,7 +57,7 @@ export default function ReunionsMOAMOEPage() {
                     )}
                   </div>
                 </div>
-                <button className="rounded-xl bg-purple-500/15 px-3 py-1.5 text-xs font-medium text-purple-200 ring-1 ring-purple-500/30 hover:bg-purple-500/25">
+                <button type="button" aria-label="Voir la réunion" className="rounded-xl bg-purple-500/15 px-3 py-2 min-h-[44px] text-xs font-medium text-purple-200 ring-1 ring-purple-500/30 hover:bg-purple-500/25 focus-visible:outline focus-visible:ring-2 focus-visible:ring-purple-500">
                   Voir détails
                 </button>
               </div>

@@ -250,7 +250,7 @@ export function LogsFiltersPanel({ isOpen, onClose, onApplyFilters }: LogsFilter
             </label>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs text-slate-500 mb-1">Du</label>
+                <label className="block text-xs text-slate-400 mb-1">Du</label>
                 <input
                   type="date"
                   value={localFilters.dateFrom ? new Date(localFilters.dateFrom).toISOString().split('T')[0] : ''}
@@ -259,7 +259,7 @@ export function LogsFiltersPanel({ isOpen, onClose, onApplyFilters }: LogsFilter
                 />
               </div>
               <div>
-                <label className="block text-xs text-slate-500 mb-1">Au</label>
+                <label className="block text-xs text-slate-400 mb-1">Au</label>
                 <input
                   type="date"
                   value={localFilters.dateTo ? new Date(localFilters.dateTo).toISOString().split('T')[0] : ''}

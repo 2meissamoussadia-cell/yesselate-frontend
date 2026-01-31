@@ -123,7 +123,7 @@ export function SignatureBlock({
 
             {/* Hash de traçabilité */}
             {showDetails && (
-              <div className="text-[10px] font-mono text-slate-500 mt-1">
+              <div className="text-[10px] font-mono text-slate-400 mt-1">
                 Hash: {signature.signatureHash.slice(0, 20)}...
               </div>
             )}

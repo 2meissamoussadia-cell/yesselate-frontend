@@ -62,8 +62,6 @@ export function ExecutiveControls() {
   const executeCommand = useCallback((command: ExecutiveCommandV5) => {
     setActiveCommand(command.id);
     setLastCommand(command.label);
-    // eslint-disable-next-line no-console
-    console.log(`🚀 EXECUTIVE V5: ${command.action.toUpperCase()}`);
 
     switch (command.id) {
       case 'pay-orange':
@@ -74,9 +72,9 @@ export function ExecutiveControls() {
         })
           .then((r) => r.json())
           .then((data) => {
-            if (data?.success) console.log('🍊 Orange Money:', data.transactionId);
+            if (data?.success) setLastCommand(`Orange Money: ${data.transactionId ?? 'OK'}`);
           })
-          .catch((e) => console.warn('🍊 Orange Money:', e));
+          .catch(() => setActiveCommand(null));
         break;
       case 'pay-wave':
         fetch('/api/payments/wave', {
@@ -86,9 +84,9 @@ export function ExecutiveControls() {
         })
           .then((r) => r.json())
           .then((data) => {
-            if (data?.success) console.log('🌊 Wave:', data.transactionId);
+            if (data?.success) setLastCommand(`Wave: ${data.transactionId ?? 'OK'}`);
           })
-          .catch((e) => console.warn('🌊 Wave:', e));
+          .catch(() => setActiveCommand(null));
         break;
       case 'huissier':
         fetch('/api/huissier/certify', {
@@ -98,9 +96,9 @@ export function ExecutiveControls() {
         })
           .then((r) => r.json())
           .then((data) => {
-            if (data?.success) console.log('📄 Huissier UCIE:', data.pdfUrl ?? data.message);
+            if (data?.success) setLastCommand(`Huissier: ${data.pdfUrl ?? data.message ?? 'OK'}`);
           })
-          .catch((e) => console.warn('📄 Huissier:', e));
+          .catch(() => setActiveCommand(null));
         break;
       case 'contract':
         fetch('/api/cockpit/contract', {
@@ -110,9 +108,9 @@ export function ExecutiveControls() {
         })
           .then((r) => r.json())
           .then((data) => {
-            if (data?.success) console.log('📝 Contrat Auto:', data.contractId ?? data.message);
+            if (data?.success) setLastCommand(`Contrat: ${data.contractId ?? data.message ?? 'OK'}`);
           })
-          .catch((e) => console.warn('📝 Contrat:', e));
+          .catch(() => setActiveCommand(null));
         break;
       case 'broadcast':
         fetch('/api/cockpit/broadcast', {
@@ -122,31 +120,15 @@ export function ExecutiveControls() {
         })
           .then((r) => r.json())
           .then((data) => {
-            if (data?.success) console.log('📢 Broadcast:', data.broadcastId ?? data.message);
+            if (data?.success) setLastCommand(`Broadcast: ${data.broadcastId ?? data.message ?? 'OK'}`);
           })
-          .catch((e) => console.warn('📢 Broadcast:', e));
+          .catch(() => setActiveCommand(null));
         break;
       default:
         break;
     }
 
     setTimeout(() => {
-      switch (command.id) {
-        case 'call':
-          // eslint-disable-next-line no-console
-          console.log('📞 WebRTC connexion équipe chantier');
-          break;
-        case 'emergency':
-          // eslint-disable-next-line no-console
-          console.log('🚨 Mode urgence — chantiers critiques');
-          break;
-        case 'report':
-          // eslint-disable-next-line no-console
-          console.log('📊 Génération rapport DG PDF');
-          break;
-        default:
-          break;
-      }
       setActiveCommand(null);
     }, 2000);
   }, []);
@@ -162,11 +144,7 @@ export function ExecutiveControls() {
   const startVoice = useCallback(() => {
     if (typeof window === 'undefined') return;
     const SpeechRecognitionCtor = window.SpeechRecognition ?? window.webkitSpeechRecognition;
-    if (!SpeechRecognitionCtor) {
-      // eslint-disable-next-line no-console
-      console.warn('🎙️ Web Speech API non supportée dans ce navigateur.');
-      return;
-    }
+    if (!SpeechRecognitionCtor) return;
 
     if (recognitionRef.current) {
       try {
@@ -200,8 +178,6 @@ export function ExecutiveControls() {
         executeCommand(detected.command);
       } else if (transcript.toLowerCase().includes('phase 4') || transcript.toLowerCase().includes('phase4')) {
         playBeep('accept');
-        // eslint-disable-next-line no-console
-        console.log('🔍 Filtre auto Phase 4');
       } else if (transcript.length > 2) {
         playBeep('error');
       }
@@ -299,7 +275,7 @@ export function ExecutiveControls() {
             }
             aria-pressed={voiceLang === lang}
             className={`min-h-[44px] min-w-[44px] px-2 sm:px-3 py-2 text-[10px] font-bold uppercase transition-colors touch-manipulation ${
-              voiceLang === lang ? 'bg-blue-500/30 text-blue-300' : 'text-slate-500 hover:text-slate-300'
+              voiceLang === lang ? 'bg-blue-500/30 text-blue-300' : 'text-slate-400 hover:text-slate-300'
             }`}
           >
             {lang === 'fr' ? 'FR' : lang === 'en' ? 'EN' : 'WO'}
@@ -406,7 +382,7 @@ export function ExecutiveControls() {
               />
             </div>
           )}
-          <p className="mt-2 pt-2 border-t border-slate-800 text-[10px] text-slate-500">Ex: {suggestions.slice(0, 3).join(', ')}</p>
+          <p className="mt-2 pt-2 border-t border-slate-800 text-[10px] text-slate-400">Ex: {suggestions.slice(0, 3).join(', ')}</p>
         </div>
       )}
 
@@ -453,7 +429,7 @@ export function ExecutiveControls() {
                 </div>
               ))}
             </div>
-            <div className="px-4 py-3 border-t border-slate-800/60 text-xs text-slate-500 space-y-1">
+            <div className="px-4 py-3 border-t border-slate-800/60 text-xs text-slate-400 space-y-1">
               <p><kbd className="px-1 py-0.5 rounded bg-slate-800 text-slate-400">?</kbd> Afficher cette aide</p>
               <p><kbd className="px-1 py-0.5 rounded bg-slate-800 text-slate-400">Échap</kbd> Fermer</p>
               <p><kbd className="px-1 py-0.5 rounded bg-slate-800 text-slate-400">Ctrl+Shift+V</kbd> Activer / arrêter la voix</p>

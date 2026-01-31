@@ -202,7 +202,7 @@ export function AssignModal({ open, onClose, alert, onConfirm }: AssignModalProp
         {/* Alert Preview */}
         <div className="p-4 rounded-xl bg-slate-800/30 border border-slate-700/50">
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-xs font-mono text-slate-500">{alert.id}</span>
+            <span className="text-xs font-mono text-slate-400">{alert.id}</span>
             <Badge variant={alert.severity === 'critical' ? 'destructive' : 'warning'}>
               {alert.severity}
             </Badge>
@@ -237,7 +237,7 @@ export function AssignModal({ open, onClose, alert, onConfirm }: AssignModalProp
                       <p className="text-xs text-slate-400">{topSuggestion.email}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-xs text-slate-500">{topSuggestion.currentLoad} alertes</p>
+                      <p className="text-xs text-slate-400">{topSuggestion.currentLoad} alertes</p>
                       <p className="text-xs text-emerald-400">~{topSuggestion.avgResolutionTime}h</p>
                     </div>
                   </div>
@@ -257,7 +257,7 @@ export function AssignModal({ open, onClose, alert, onConfirm }: AssignModalProp
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Rechercher un utilisateur..."
-                className="w-full pl-10 pr-4 py-2 rounded-lg bg-slate-800/50 border border-slate-700 text-sm text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+                className="w-full pl-10 pr-4 py-2 rounded-lg bg-slate-800/50 border border-slate-700 text-sm text-slate-200 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
               />
             </div>
             <button
@@ -322,7 +322,7 @@ export function AssignModal({ open, onClose, alert, onConfirm }: AssignModalProp
                         )}
                       </div>
                       <div className="flex items-center gap-2 mt-1">
-                        <p className="text-xs text-slate-500 truncate">{user.email}</p>
+                        <p className="text-xs text-slate-400 truncate">{user.email}</p>
                         {user.bureau && (
                           <Badge variant="default" className="text-xs bg-slate-700/30">
                             {user.bureau}
@@ -343,8 +343,8 @@ export function AssignModal({ open, onClose, alert, onConfirm }: AssignModalProp
                         <p className="text-xs text-slate-400">{user.currentLoad} alertes</p>
                       </div>
                       <div className="flex items-center gap-1 justify-end">
-                        <Clock className="w-3 h-3 text-slate-500" />
-                        <p className="text-xs text-slate-500">~{user.avgResolutionTime}h</p>
+                        <Clock className="w-3 h-3 text-slate-400" />
+                        <p className="text-xs text-slate-400">~{user.avgResolutionTime}h</p>
                       </div>
                     </div>
 
@@ -364,7 +364,7 @@ export function AssignModal({ open, onClose, alert, onConfirm }: AssignModalProp
                             'text-xs px-2 py-0.5 rounded-full',
                             alert.type === exp
                               ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
-                              : 'bg-slate-700/30 text-slate-500'
+                              : 'bg-slate-700/30 text-slate-400'
                           )}
                         >
                           {exp}
@@ -388,7 +388,7 @@ export function AssignModal({ open, onClose, alert, onConfirm }: AssignModalProp
               value={note}
               onChange={(e) => setNote(e.target.value)}
               placeholder="Ajoutez des instructions ou informations complémentaires..."
-              className="w-full h-20 px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700 text-sm text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 resize-none"
+              className="w-full h-20 px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700 text-sm text-slate-200 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 resize-none"
             />
           </div>
         )}

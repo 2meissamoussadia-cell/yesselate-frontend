@@ -100,13 +100,13 @@ export function AcknowledgeModal({ open, onClose, alert, onConfirm }: Acknowledg
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-xs font-mono text-slate-500">{alert.id}</span>
+                <span className="text-xs font-mono text-slate-400">{alert.id}</span>
                 <Badge variant={alert.type === 'critical' ? 'destructive' : 'warning'}>
                   {alert.type}
                 </Badge>
               </div>
               <h3 className="text-sm font-medium text-slate-200">{alert.title}</h3>
-              <p className="text-xs text-slate-500 mt-1">{alert.description}</p>
+              <p className="text-xs text-slate-400 mt-1">{alert.description}</p>
             </div>
           </div>
         </div>
@@ -134,7 +134,7 @@ export function AcknowledgeModal({ open, onClose, alert, onConfirm }: Acknowledg
             value={note}
             onChange={(e) => setNote(e.target.value)}
             placeholder="Ajoutez une note pour expliquer la prise en charge..."
-            className="w-full h-24 px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700 text-sm text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 resize-none"
+            className="w-full h-24 px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700 text-sm text-slate-200 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 resize-none"
           />
         </div>
 
@@ -207,7 +207,7 @@ export function ResolveModal({ open, onClose, alert, onConfirm }: ResolveModalPr
         {/* Alert Preview */}
         <div className="p-4 rounded-xl bg-slate-800/30 border border-slate-700/50">
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-xs font-mono text-slate-500">{alert.id}</span>
+            <span className="text-xs font-mono text-slate-400">{alert.id}</span>
             <Badge variant={alert.type === 'critical' ? 'destructive' : 'warning'}>
               {alert.type}
             </Badge>
@@ -306,10 +306,10 @@ export function ResolveModal({ open, onClose, alert, onConfirm }: ResolveModalPr
             value={note}
             onChange={(e) => setNote(e.target.value)}
             placeholder="Décrivez les actions effectuées pour résoudre cette alerte..."
-            className="w-full h-24 px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700 text-sm text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 resize-none"
+            className="w-full h-24 px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700 text-sm text-slate-200 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 resize-none"
             required
           />
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-400 mt-1">
             💡 Cliquez sur "Utiliser un template" pour gagner du temps avec des réponses prédéfinies
           </p>
         </div>
@@ -406,7 +406,7 @@ export function EscalateModal({ open, onClose, alert, onConfirm }: EscalateModal
         {/* Alert Preview */}
         <div className="p-4 rounded-xl bg-slate-800/30 border border-slate-700/50">
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-xs font-mono text-slate-500">{alert.id}</span>
+            <span className="text-xs font-mono text-slate-400">{alert.id}</span>
             <Badge variant={alert.type === 'critical' ? 'destructive' : 'warning'}>
               {alert.type}
             </Badge>
@@ -448,7 +448,7 @@ export function EscalateModal({ open, onClose, alert, onConfirm }: EscalateModal
                 <div className="flex items-center gap-3">
                   <User className={cn(
                     'w-5 h-5',
-                    escalateTo === target.id ? 'text-amber-400' : 'text-slate-500'
+                    escalateTo === target.id ? 'text-amber-400' : 'text-slate-400'
                   )} />
                   <div className="text-left">
                     <p className={cn(
@@ -457,7 +457,7 @@ export function EscalateModal({ open, onClose, alert, onConfirm }: EscalateModal
                     )}>
                       {target.label}
                     </p>
-                    <p className="text-xs text-slate-500">{target.role}</p>
+                    <p className="text-xs text-slate-400">{target.role}</p>
                   </div>
                 </div>
                 {escalateTo === target.id && (
@@ -506,7 +506,7 @@ export function EscalateModal({ open, onClose, alert, onConfirm }: EscalateModal
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             placeholder="Expliquez pourquoi cette alerte nécessite une escalade..."
-            className="w-full h-24 px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700 text-sm text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/30 resize-none"
+            className="w-full h-24 px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700 text-sm text-slate-200 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/30 resize-none"
             required
           />
         </div>
@@ -588,7 +588,7 @@ export function AlertDetailModal({
           </div>
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-xs font-mono text-slate-500">{alert.id}</span>
+              <span className="text-xs font-mono text-slate-400">{alert.id}</span>
               <Badge variant={alert.type === 'critical' ? 'destructive' : 'warning'}>
                 {alert.type.toUpperCase()}
               </Badge>
@@ -607,14 +607,14 @@ export function AlertDetailModal({
         {/* Metadata */}
         <div className="grid grid-cols-3 gap-4">
           <div className="p-3 rounded-lg bg-slate-800/30 border border-slate-700/50">
-            <div className="flex items-center gap-2 text-slate-500 mb-1">
+            <div className="flex items-center gap-2 text-slate-400 mb-1">
               <FileText className="w-4 h-4" />
               <span className="text-xs">Source</span>
             </div>
             <p className="text-sm font-medium text-slate-200">{alert.source}</p>
           </div>
           <div className="p-3 rounded-lg bg-slate-800/30 border border-slate-700/50">
-            <div className="flex items-center gap-2 text-slate-500 mb-1">
+            <div className="flex items-center gap-2 text-slate-400 mb-1">
               <Calendar className="w-4 h-4" />
               <span className="text-xs">Créée le</span>
             </div>
@@ -623,7 +623,7 @@ export function AlertDetailModal({
             </p>
           </div>
           <div className="p-3 rounded-lg bg-slate-800/30 border border-slate-700/50">
-            <div className="flex items-center gap-2 text-slate-500 mb-1">
+            <div className="flex items-center gap-2 text-slate-400 mb-1">
               <Clock className="w-4 h-4" />
               <span className="text-xs">Âge</span>
             </div>
@@ -638,7 +638,7 @@ export function AlertDetailModal({
           <div className="p-3 rounded-lg bg-slate-800/30 border border-slate-700/50">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-slate-500" />
+                <FileText className="w-4 h-4 text-slate-400" />
                 <span className="text-sm text-slate-300">Élément lié:</span>
                 <span className="text-sm font-mono text-blue-400">{alert.relatedItem}</span>
               </div>
@@ -671,7 +671,7 @@ export function AlertDetailModal({
                   </div>
                   <div className="flex-1">
                     <p className="text-sm text-slate-200">{item.action}</p>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-slate-400">
                       {new Date(item.time).toLocaleString('fr-FR')}
                     </p>
                   </div>

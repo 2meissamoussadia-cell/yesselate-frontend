@@ -283,7 +283,7 @@ function DocumentItem({ name, size, date }: { name: string; size: string; date: 
         </div>
         <div>
           <div className="text-sm font-medium text-slate-200">{name}</div>
-          <div className="text-xs text-slate-500">
+          <div className="text-xs text-slate-400">
             {size} • {new Date(date).toLocaleDateString('fr-FR')}
           </div>
         </div>
@@ -325,7 +325,7 @@ function TimelineItem({
       </div>
       <div className="flex-1 pb-4">
         <div className="text-sm font-medium text-slate-200">{action}</div>
-        <div className="text-xs text-slate-500 mt-1">
+        <div className="text-xs text-slate-400 mt-1">
           <User className="w-3 h-3 inline mr-1" />
           {user} • {date}
         </div>

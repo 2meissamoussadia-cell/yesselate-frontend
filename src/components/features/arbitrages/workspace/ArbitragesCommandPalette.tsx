@@ -203,7 +203,7 @@ export function ArbitragesCommandPalette() {
       id: 'help',
       label: 'Aide',
       description: 'Voir les raccourcis clavier et l\'aide',
-      icon: <HelpCircle className="w-4 h-4 text-slate-500" />,
+      icon: <HelpCircle className="w-4 h-4 text-slate-400" />,
       keywords: ['aide', 'help', 'raccourcis', 'shortcuts'],
       action: () => {
         window.dispatchEvent(new CustomEvent('arbitrages:open-help'));
@@ -248,7 +248,7 @@ export function ArbitragesCommandPalette() {
         {/* Commands list */}
         <div className="max-h-[400px] overflow-y-auto space-y-1">
           {filteredCommands.length === 0 ? (
-            <div className="p-8 text-center text-slate-500">
+            <div className="p-8 text-center text-slate-400">
               <p>Aucune commande trouvée</p>
             </div>
           ) : (
@@ -262,7 +262,7 @@ export function ArbitragesCommandPalette() {
                 <div className="flex-none">{cmd.icon}</div>
                 <div className="flex-1 min-w-0">
                   <div className="font-medium text-sm">{cmd.label}</div>
-                  <div className="text-xs text-slate-500">{cmd.description}</div>
+                  <div className="text-xs text-slate-400">{cmd.description}</div>
                 </div>
               </button>
             ))

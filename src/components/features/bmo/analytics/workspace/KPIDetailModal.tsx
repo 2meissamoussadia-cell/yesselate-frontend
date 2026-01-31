@@ -93,7 +93,7 @@ export function KPIDetailModal({ open, onClose, kpiId, fallbackData }: KPIDetail
               <div className="flex items-baseline gap-2 mb-2">
                 <span className="text-3xl font-bold text-slate-100">{fallbackData.value}</span>
                 {fallbackData.unit && (
-                  <span className="text-sm text-slate-500">{fallbackData.unit}</span>
+                  <span className="text-sm text-slate-400">{fallbackData.unit}</span>
                 )}
               </div>
               {fallbackData.target && (
@@ -123,7 +123,7 @@ export function KPIDetailModal({ open, onClose, kpiId, fallbackData }: KPIDetail
             Impossible de charger les détails du KPI
           </p>
           {kpiId && (
-            <p className="text-xs text-slate-500 mt-2">ID: {kpiId}</p>
+            <p className="text-xs text-slate-400 mt-2">ID: {kpiId}</p>
           )}
         </div>
       </FluentModal>
@@ -840,7 +840,7 @@ function ActionsTab({
           <div className="text-center py-8 border border-dashed border-slate-700/50 rounded-lg">
             <CheckCircle className="w-12 h-12 text-slate-600 mx-auto mb-3" />
             <p className="text-slate-400 text-sm">Aucune action planifiée</p>
-            <p className="text-slate-500 text-xs mt-1">Créez une action depuis les recommandations ou manuellement</p>
+            <p className="text-slate-400 text-xs mt-1">Créez une action depuis les recommandations ou manuellement</p>
           </div>
         ) : (
           <div className="space-y-2">
@@ -880,7 +880,7 @@ function ActionsTab({
                       <div className="flex items-center gap-2 mb-1">
                         <h4 className={cn(
                           'font-medium',
-                          action.status === 'completed' ? 'line-through text-slate-500' : 'text-slate-200'
+                          action.status === 'completed' ? 'line-through text-slate-400' : 'text-slate-200'
                         )}>
                           {action.title}
                         </h4>
@@ -898,7 +898,7 @@ function ActionsTab({
                         </Badge>
                       </div>
                       <p className="text-sm text-slate-400 mb-2">{action.description}</p>
-                      <div className="flex items-center gap-4 text-xs text-slate-500">
+                      <div className="flex items-center gap-4 text-xs text-slate-400">
                         {action.assignedTo && (
                           <span className="flex items-center gap-1">
                             <Users className="w-3 h-3" />

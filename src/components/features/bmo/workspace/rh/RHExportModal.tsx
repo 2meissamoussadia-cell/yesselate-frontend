@@ -287,7 +287,7 @@ export function RHExportModal({ open, onOpenChange, filteredDemands }: Props) {
           
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm mb-1 text-slate-500">Date début</label>
+              <label className="block text-sm mb-1 text-slate-400">Date début</label>
               <input
                 type="date"
                 value={dateRange.start}
@@ -297,7 +297,7 @@ export function RHExportModal({ open, onOpenChange, filteredDemands }: Props) {
               />
             </div>
             <div>
-              <label className="block text-sm mb-1 text-slate-500">Date fin</label>
+              <label className="block text-sm mb-1 text-slate-400">Date fin</label>
               <input
                 type="date"
                 value={dateRange.end}
@@ -341,16 +341,16 @@ export function RHExportModal({ open, onOpenChange, filteredDemands }: Props) {
           <CardContent className="p-4">
             <div className="text-sm space-y-1">
               <div className="flex justify-between">
-                <span className="text-slate-500">Demandes à exporter:</span>
+                <span className="text-slate-400">Demandes à exporter:</span>
                 <span className="font-bold">{getDemandsCount()}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Format:</span>
+                <span className="text-slate-400">Format:</span>
                 <span className="font-semibold">{formatConfig[format].label}</span>
               </div>
               {dateRange.start && dateRange.end && (
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Période:</span>
+                  <span className="text-slate-400">Période:</span>
                   <span className="font-semibold">{dateRange.start} → {dateRange.end}</span>
                 </div>
               )}

@@ -675,7 +675,7 @@ export function DocumentDetailsModal({
                             <h4 className="font-semibold text-slate-200">{etape.nom}</h4>
                             <p className="text-sm text-slate-400">{etape.validateur}</p>
                             {etape.date && (
-                              <p className="text-xs text-slate-500 mt-1">{etape.date}</p>
+                              <p className="text-xs text-slate-400 mt-1">{etape.date}</p>
                             )}
                             {etape.commentaire && (
                               <p className="text-sm text-slate-300 mt-2 p-2 bg-slate-900/50 rounded">
@@ -752,7 +752,7 @@ export function DocumentDetailsModal({
                           <div className="flex items-center gap-2 mb-1">
                             <span className="font-semibold text-slate-200">{comment.auteur}</span>
                             <span className="text-xs text-slate-400">{comment.fonction}</span>
-                            <span className="text-xs text-slate-500">• {comment.date}</span>
+                            <span className="text-xs text-slate-400">• {comment.date}</span>
                           </div>
                           <p className="text-slate-300 text-sm">{comment.texte}</p>
                         </div>
@@ -812,7 +812,7 @@ export function DocumentDetailsModal({
                             <p className="text-sm text-slate-400">
                               {event.actorName} • {event.actorRole}
                             </p>
-                            <p className="text-xs text-slate-500 mt-1">{event.timestamp}</p>
+                            <p className="text-xs text-slate-400 mt-1">{event.timestamp}</p>
                             {event.details && (
                               <p className="text-sm text-slate-300 mt-2">{event.details}</p>
                             )}

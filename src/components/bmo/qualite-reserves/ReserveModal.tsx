@@ -227,7 +227,7 @@ export function ReserveModal({
           {/* Historique des actions (log structuré) */}
           <div className="rounded-lg border border-slate-800 bg-slate-900/40 p-3">
             <p className="text-[0.7rem] font-medium text-slate-300 mb-3">Historique des actions</p>
-            <p className="text-[0.65rem] text-slate-500 mb-2">
+            <p className="text-[0.65rem] text-slate-400 mb-2">
               Une ligne par entrée : date — auteur — action (ex. 28/01/2026 — MOE — Contrôle effectué)
             </p>
             <Textarea

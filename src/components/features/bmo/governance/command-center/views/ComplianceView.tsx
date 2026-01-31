@@ -113,11 +113,11 @@ function RegulationsView({ data }: { data: typeof regulations }) {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-slate-300">{reg.name}</p>
-                  <p className="text-xs text-slate-500">{reg.domain}</p>
+                  <p className="text-xs text-slate-400">{reg.domain}</p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                <div className="text-right text-xs text-slate-500">
+                <div className="text-right text-xs text-slate-400">
                   <p>Dernier contrôle: {reg.lastCheck}</p>
                   <p>Prochain: {reg.nextCheck}</p>
                 </div>
@@ -164,14 +164,14 @@ function ContractsView({ data }: { data: typeof contracts }) {
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center">
-                    <Scale className="h-5 w-5 text-slate-500" />
+                    <Scale className="h-5 w-5 text-slate-400" />
                   </div>
                   <div>
                     <p className="text-sm font-medium text-slate-300">{contract.name}</p>
                     <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-xs text-slate-500">{contract.ref}</span>
+                      <span className="text-xs text-slate-400">{contract.ref}</span>
                       <span className="text-xs text-slate-600">•</span>
-                      <span className="text-xs text-slate-500">{contract.type}</span>
+                      <span className="text-xs text-slate-400">{contract.type}</span>
                     </div>
                   </div>
                 </div>
@@ -180,7 +180,7 @@ function ContractsView({ data }: { data: typeof contracts }) {
                 </Badge>
               </div>
               <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-800/50">
-                <div className="flex items-center gap-4 text-xs text-slate-500">
+                <div className="flex items-center gap-4 text-xs text-slate-400">
                   <span>Fin: {contract.endDate}</span>
                   <span>Valeur: {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(contract.value)}</span>
                 </div>
@@ -229,9 +229,9 @@ function AuditsView({ data }: { data: typeof audits }) {
                 <div>
                   <p className="text-sm font-medium text-slate-300">{audit.name}</p>
                   <div className="flex items-center gap-2 mt-0.5">
-                    <span className="text-xs text-slate-500">{audit.ref}</span>
+                    <span className="text-xs text-slate-400">{audit.ref}</span>
                     <span className="text-xs text-slate-600">•</span>
-                    <span className="text-xs text-slate-500">{audit.auditor}</span>
+                    <span className="text-xs text-slate-400">{audit.auditor}</span>
                   </div>
                 </div>
               </div>
@@ -281,7 +281,7 @@ function CertificationsView({ data }: { data: typeof certifications }) {
                   </div>
                   <div>
                     <p className="text-sm font-medium text-slate-300">{cert.name}</p>
-                    <p className="text-xs text-slate-500">Expire: {cert.expiryDate}</p>
+                    <p className="text-xs text-slate-400">Expire: {cert.expiryDate}</p>
                   </div>
                 </div>
                 <Badge variant="default" className={cn('text-xs', status.color)}>
@@ -291,7 +291,7 @@ function CertificationsView({ data }: { data: typeof certifications }) {
               {cert.status === 'renewing' && (
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-slate-500">Progression renouvellement</span>
+                    <span className="text-xs text-slate-400">Progression renouvellement</span>
                     <span className="text-xs text-slate-400">{cert.progress}%</span>
                   </div>
                   <div className="h-1.5 bg-slate-700/50 rounded-full overflow-hidden">
@@ -329,16 +329,16 @@ function HSEView({ data }: { data: typeof hseIndicators }) {
             key={indicator.id}
             className="p-4 rounded-lg bg-slate-900/60 border border-slate-800/50"
           >
-            <p className="text-xs text-slate-500 mb-2">{indicator.label}</p>
+            <p className="text-xs text-slate-400 mb-2">{indicator.label}</p>
             <div className="flex items-end justify-between">
               <div>
                 <span className="text-2xl font-bold text-slate-200">{indicator.value}</span>
-                {indicator.unit && <span className="text-sm text-slate-500 ml-1">{indicator.unit}</span>}
+                {indicator.unit && <span className="text-sm text-slate-400 ml-1">{indicator.unit}</span>}
               </div>
               <div className={cn(
                 'text-xs',
                 indicator.trend === 'up' ? 'text-emerald-400' :
-                indicator.trend === 'down' ? 'text-red-400' : 'text-slate-500'
+                indicator.trend === 'down' ? 'text-red-400' : 'text-slate-400'
               )}>
                 {indicator.trend === 'up' ? '↑' : indicator.trend === 'down' ? '↓' : '→'}
               </div>
@@ -346,7 +346,7 @@ function HSEView({ data }: { data: typeof hseIndicators }) {
             {indicator.target && (
               <div className="mt-2 pt-2 border-t border-slate-800/50">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-slate-500">Objectif</span>
+                  <span className="text-slate-400">Objectif</span>
                   <span className="text-slate-400">{indicator.target}{indicator.unit}</span>
                 </div>
               </div>
@@ -364,7 +364,7 @@ function HSEView({ data }: { data: typeof hseIndicators }) {
           <CheckCircle2 className="h-5 w-5 text-emerald-400" />
           <div>
             <p className="text-sm font-medium text-slate-300">127 jours sans accident majeur</p>
-            <p className="text-xs text-slate-500">Objectif 150 jours - encore 23 jours</p>
+            <p className="text-xs text-slate-400">Objectif 150 jours - encore 23 jours</p>
           </div>
         </div>
       </div>
@@ -387,7 +387,7 @@ function StatCard({
     <div className="bg-slate-900/60 rounded-lg p-3 border border-slate-800/50">
       <div className="flex items-center gap-2 mb-2">
         <Icon className={cn('h-4 w-4', iconColor)} />
-        <span className="text-xs text-slate-500">{label}</span>
+        <span className="text-xs text-slate-400">{label}</span>
       </div>
       <span className="text-xl font-bold text-slate-200">{value}</span>
     </div>

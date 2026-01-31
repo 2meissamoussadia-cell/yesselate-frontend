@@ -5,6 +5,7 @@ import { FluentModal } from '@/components/ui/fluent-modal';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { Calendar, Clock, Users, MapPin, FileText, CheckCircle, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/utils/logger';
 import { useAnalyticsToast } from './AnalyticsToast';
 
 interface ScheduleMeetingModalProps {
@@ -91,20 +92,19 @@ export function ScheduleMeetingModal({ open, onClose, data }: ScheduleMeetingMod
     setIsSubmitting(true);
     try {
       // Ici, on pourrait envoyer la réunion à l'API
-      if (process.env.NODE_ENV === 'development') {
-        console.log('Planification de réunion:', {
-          title,
-          description,
-          date,
-          time,
-          duration,
-          location,
-          attendees: attendees.split(',').map(a => a.trim()).filter(Boolean),
-          meetingType,
-          kpiId: data?.kpiId,
-          kpiName: data?.kpiName,
-        });
-      }
+      logger.debug('Planification de réunion', {
+        component: 'ScheduleMeetingModal',
+        title,
+        description,
+        date,
+        time,
+        duration,
+        location,
+        attendees: attendees.split(',').map(a => a.trim()).filter(Boolean),
+        meetingType,
+        kpiId: data?.kpiId,
+        kpiName: data?.kpiName,
+      });
 
       // Simuler un appel API
       await new Promise(resolve => setTimeout(resolve, 500));
@@ -136,7 +136,7 @@ export function ScheduleMeetingModal({ open, onClose, data }: ScheduleMeetingMod
             <p className="text-xs text-slate-400 mb-1">KPI associé</p>
             <p className="text-sm font-medium text-slate-200">{data.kpiName}</p>
             {data.kpiId && (
-              <p className="text-xs text-slate-500 mt-1">ID: {data.kpiId}</p>
+              <p className="text-xs text-slate-400 mt-1">ID: {data.kpiId}</p>
             )}
           </div>
         )}

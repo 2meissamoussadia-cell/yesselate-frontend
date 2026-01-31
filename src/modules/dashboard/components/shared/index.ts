@@ -31,6 +31,7 @@ export { SegmentedTabs } from './SegmentedTabs';
 export { EmptyState } from './EmptyState';
 
 export { DashboardLoadingFallback } from './DashboardLoadingFallback';
+export { DashboardErrorBoundary } from './DashboardErrorBoundary';
 
 export { getTrendIcon, getTrendColor } from './getTrendIcon';
 export type { TrendType } from './getTrendIcon';
@@ -65,3 +66,15 @@ export type { FinancesGlobalesWidgetProps } from './FinancesGlobalesWidget';
 
 export { CashflowChart } from './CashflowChart';
 export type { CashflowChartProps } from './CashflowChart';
+
+export { TresoreriePrevisionnelleWidget } from './TresoreriePrevisionnelleWidget';
+export type { TresoreriePrevisionnelleWidgetProps } from './TresoreriePrevisionnelleWidget';
+
+export { AlertesIntelligentesWidget } from './AlertesIntelligentesWidget';
+export type { AlertesIntelligentesWidgetProps } from './AlertesIntelligentesWidget';
+
+export { HSEConformiteWidget } from './HSEConformiteWidget';
+export type { HSEConformiteWidgetProps, DocConformite } from './HSEConformiteWidget';
+
+export { CustomizableDashboard } from './CustomizableDashboard';
+export type { CustomizableDashboardProps, WidgetDefinition } from './CustomizableDashboard';

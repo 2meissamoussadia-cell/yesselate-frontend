@@ -211,7 +211,7 @@ function WorkflowSection() {
                 <span className="text-xs text-amber-400">En cours</span>
               )}
               {step.status === 'pending' && (
-                <span className="text-xs text-slate-500">En attente</span>
+                <span className="text-xs text-slate-400">En attente</span>
               )}
             </div>
           </div>

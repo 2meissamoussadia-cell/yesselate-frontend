@@ -112,3 +112,41 @@ export function RACITableSkeleton({ rows = 10 }: { rows?: number }) {
   );
 }
 
+/**
+ * Skeleton pour la page Dashboard (header, cartes KPI, table)
+ * Utilisé pendant le chargement des vues cockpit.
+ */
+export function DashboardSkeleton() {
+  return (
+    <div className="space-y-6 p-4 sm:p-6" role="status" aria-label="Chargement du dashboard">
+      {/* Header */}
+      <div className="flex items-center justify-between gap-4">
+        <Skeleton variant="text" className="h-8 w-64" />
+        <Skeleton variant="rectangular" className="h-10 w-32 rounded-lg" />
+      </div>
+
+      {/* Cards KPI */}
+      <div className="grid grid-cols-2 gap-4 sm:gap-6">
+        {[1, 2].map((i) => (
+          <div
+            key={i}
+            className="space-y-4 rounded-xl border border-slate-800 bg-slate-800/50 p-6"
+          >
+            <Skeleton variant="text" className="h-6 w-48" />
+            <Skeleton variant="text" className="h-4 w-full" />
+            <Skeleton variant="rectangular" className="h-32 w-full rounded-lg" />
+          </div>
+        ))}
+      </div>
+
+      {/* Table */}
+      <div className="space-y-3">
+        <Skeleton variant="text" className="h-6 w-32" />
+        {[1, 2, 3].map((i) => (
+          <Skeleton key={i} variant="rectangular" className="h-16 w-full rounded-lg" />
+        ))}
+      </div>
+    </div>
+  );
+}
+

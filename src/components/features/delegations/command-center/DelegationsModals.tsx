@@ -125,7 +125,7 @@ function ShortcutsModal({ onClose }: { onClose: () => void }) {
           <h2 className="text-lg font-semibold text-slate-200">Raccourcis clavier</h2>
           <button
             onClick={onClose}
-            className="text-slate-500 hover:text-slate-300 text-xl leading-none"
+            className="text-slate-400 hover:text-slate-300 text-xl leading-none"
           >
             ×
           </button>

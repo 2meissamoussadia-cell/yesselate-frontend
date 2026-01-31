@@ -101,7 +101,7 @@ export function CalendarMultiResources({ isOpen, onClose }: CalendarMultiResourc
                     <span className="text-sm font-medium text-slate-200">{conflict.title}</span>
                   </div>
                   <p className="text-xs text-slate-400 mb-2">{conflict.description}</p>
-                  <div className="flex items-center gap-4 text-xs text-slate-500">
+                  <div className="flex items-center gap-4 text-xs text-slate-400">
                     <div className="flex items-center gap-1">
                       <Calendar className="h-3 w-3" />
                       {conflict.date}
@@ -115,7 +115,7 @@ export function CalendarMultiResources({ isOpen, onClose }: CalendarMultiResourc
               </div>
               
               <div className="mt-3 pt-3 border-t border-slate-700">
-                <div className="text-xs text-slate-500 mb-2">Événements en conflit :</div>
+                <div className="text-xs text-slate-400 mb-2">Événements en conflit :</div>
                 <div className="flex flex-wrap gap-2">
                   {conflict.events.map((event, idx) => (
                     <Badge key={idx} variant="default" className="text-xs">

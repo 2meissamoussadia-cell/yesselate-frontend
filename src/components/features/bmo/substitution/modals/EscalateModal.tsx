@@ -9,6 +9,7 @@
 
 import { useState } from 'react';
 import { X, AlertTriangle, User, FileText, Loader2 } from 'lucide-react';
+import { logger } from '@/lib/utils/logger';
 
 interface EscalateModalProps {
   isOpen: boolean;
@@ -67,7 +68,8 @@ export function EscalateModal({ isOpen, onClose, substitution, onSuccess }: Esca
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      console.log('[Escalate]', {
+      logger.debug('Escalate', {
+        component: 'EscalateModal',
         substitutionId: substitution.id,
         level: selectedLevel,
         reason: selectedReason === 'Autre (préciser)' ? customReason : selectedReason,

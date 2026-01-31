@@ -33,7 +33,7 @@ export function DemandesRejectedView() {
           <XCircle className="w-5 h-5 text-slate-400" />
           Demandes Rejetées
         </h1>
-        <p className="text-sm text-slate-500 mt-0.5">
+        <p className="text-sm text-slate-400 mt-0.5">
           {mockRejected.length} demande(s) rejetée(s)
         </p>
       </div>
@@ -60,13 +60,13 @@ export function DemandesRejectedView() {
             {/* Content */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-xs font-mono text-slate-500">{demande.id}</span>
+                <span className="text-xs font-mono text-slate-400">{demande.id}</span>
                 <Badge variant="default" className="text-xs">
                   Rejeté
                 </Badge>
               </div>
               <p className="text-sm font-medium text-slate-200 truncate">{demande.title}</p>
-              <p className="text-xs text-slate-500 mt-0.5">Motif: {demande.reason}</p>
+              <p className="text-xs text-slate-400 mt-0.5">Motif: {demande.reason}</p>
             </div>
 
             {/* Info */}
@@ -75,13 +75,13 @@ export function DemandesRejectedView() {
             </Badge>
 
             {/* Rejected by */}
-            <div className="flex items-center gap-1.5 text-xs text-slate-500">
+            <div className="flex items-center gap-1.5 text-xs text-slate-400">
               <User className="w-3.5 h-3.5" />
               <span>{demande.rejectedBy}</span>
             </div>
 
             {/* Rejected at */}
-            <div className="flex items-center gap-1.5 text-xs text-slate-500">
+            <div className="flex items-center gap-1.5 text-xs text-slate-400">
               <Calendar className="w-3.5 h-3.5" />
               <span>{demande.rejectedAt}</span>
             </div>
@@ -91,7 +91,7 @@ export function DemandesRejectedView() {
               variant="ghost"
               size="sm"
               onClick={() => openModal('demande-detail', { demandeId: demande.id })}
-              className="h-8 w-8 p-0 text-slate-500 hover:text-slate-300"
+              className="h-8 w-8 p-0 text-slate-400 hover:text-slate-300"
             >
               <ArrowRight className="h-4 w-4" />
             </Button>
@@ -99,7 +99,7 @@ export function DemandesRejectedView() {
         )}
         />
       ) : (
-        <div className="p-8 text-center text-slate-500 rounded-xl border border-slate-700/50 bg-slate-800/30">
+        <div className="p-8 text-center text-slate-400 rounded-xl border border-slate-700/50 bg-slate-800/30">
           <p className="text-sm">Aucune demande rejetée</p>
         </div>
       )}

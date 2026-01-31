@@ -108,7 +108,7 @@ export function ValidationBCLiveCounters() {
             </div>
             <div>
               <div className={cn('text-2xl font-bold', counter.color)}>{counter.value}</div>
-              <div className="text-xs text-slate-500 dark:text-slate-400">{counter.label}</div>
+              <div className="text-xs text-slate-400 dark:text-slate-400">{counter.label}</div>
             </div>
           </div>
         </div>

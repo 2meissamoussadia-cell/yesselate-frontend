@@ -200,7 +200,7 @@ export function HistoriqueTab() {
                           <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
                             <div className="flex items-start justify-between mb-2">
                               <div className="font-medium text-white">{event.description ?? '—'}</div>
-                              <div className="text-xs text-slate-500">
+                              <div className="text-xs text-slate-400">
                                 {new Date(event.createdAt).toLocaleTimeString('fr-FR', {
                                   hour: '2-digit',
                                   minute: '2-digit',
@@ -208,7 +208,7 @@ export function HistoriqueTab() {
                               </div>
                             </div>
 
-                            <div className="flex items-center gap-3 text-xs text-slate-500">
+                            <div className="flex items-center gap-3 text-xs text-slate-400">
                               {event.user && (
                                 <span className="flex items-center gap-1">
                                   👤 {event.user.name}

@@ -188,14 +188,14 @@ export function ValidationBCDirectionPanel() {
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <div className="text-xs text-slate-500 mb-1">Si validation totale</div>
+                <div className="text-xs text-slate-400 mb-1">Si validation totale</div>
                 <div className="text-xl font-bold text-emerald-600">+45.2M FCFA</div>
-                <div className="text-xs text-slate-500">Engagement total</div>
+                <div className="text-xs text-slate-400">Engagement total</div>
               </div>
               <div>
-                <div className="text-xs text-slate-500 mb-1">Budget restant après</div>
+                <div className="text-xs text-slate-400 mb-1">Budget restant après</div>
                 <div className="text-xl font-bold text-amber-600">12.8M FCFA</div>
-                <div className="text-xs text-slate-500">Marge disponible</div>
+                <div className="text-xs text-slate-400">Marge disponible</div>
               </div>
             </div>
           </div>

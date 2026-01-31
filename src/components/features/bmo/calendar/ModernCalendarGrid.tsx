@@ -139,7 +139,7 @@ export function ModernCalendarGrid({
                 )}>
                   <span className={cn(
                     'text-sm font-semibold',
-                    !isCurrentMonth && 'text-slate-500'
+                    !isCurrentMonth && 'text-slate-400'
                   )}>
                     {day.getDate()}
                   </span>

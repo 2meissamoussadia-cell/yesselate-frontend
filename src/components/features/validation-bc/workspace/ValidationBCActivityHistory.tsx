@@ -129,9 +129,9 @@ export function ValidationBCActivityHistory({ limit = 10, showFilters = true, on
       case 'delegated':
         return <User className="w-4 h-4 text-purple-500" />;
       case 'modified':
-        return <Clock className="w-4 h-4 text-slate-500" />;
+        return <Clock className="w-4 h-4 text-slate-400" />;
       default:
-        return <History className="w-4 h-4 text-slate-500" />;
+        return <History className="w-4 h-4 text-slate-400" />;
     }
   };
 
@@ -228,7 +228,7 @@ export function ValidationBCActivityHistory({ limit = 10, showFilters = true, on
             <RefreshCw className="w-6 h-6 animate-spin text-slate-400" />
           </div>
         ) : filteredActivities.length === 0 ? (
-          <div className="text-center py-8 text-slate-500">
+          <div className="text-center py-8 text-slate-400">
             <History className="w-8 h-8 mx-auto mb-2 text-slate-300" />
             <div className="text-sm">Aucune activité récente</div>
           </div>
@@ -250,7 +250,7 @@ export function ValidationBCActivityHistory({ limit = 10, showFilters = true, on
                   <div className="flex-1 min-w-0">
                     <div className="text-sm">
                       <span className="font-medium">{activity.actor.name}</span>
-                      <span className="text-slate-500 mx-1">{getActionLabel(activity.action)}</span>
+                      <span className="text-slate-400 mx-1">{getActionLabel(activity.action)}</span>
                       {activity.document && (
                         <button
                           onClick={() => onViewDocument?.(activity.document!.id)}
@@ -262,7 +262,7 @@ export function ValidationBCActivityHistory({ limit = 10, showFilters = true, on
                     </div>
                     
                     {activity.details && (
-                      <div className="text-xs text-slate-500 mt-1">{activity.details}</div>
+                      <div className="text-xs text-slate-400 mt-1">{activity.details}</div>
                     )}
                     
                     <div className="text-xs text-slate-400 mt-1 flex items-center gap-2">

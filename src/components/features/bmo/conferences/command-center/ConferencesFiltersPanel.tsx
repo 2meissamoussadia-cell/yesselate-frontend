@@ -227,7 +227,7 @@ export function ConferencesFiltersPanel({
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="h-7 w-7 p-0 text-slate-500 hover:text-slate-300"
+            className="h-7 w-7 p-0 text-slate-400 hover:text-slate-300"
           >
             <X className="h-4 w-4" />
           </Button>
@@ -256,7 +256,7 @@ export function ConferencesFiltersPanel({
                       variant="ghost"
                       size="sm"
                       onClick={() => clearSection(section.id as keyof typeof localFilters)}
-                      className="h-6 text-xs text-slate-500 hover:text-slate-300"
+                      className="h-6 text-xs text-slate-400 hover:text-slate-300"
                     >
                       Effacer
                     </Button>
@@ -301,7 +301,7 @@ export function ConferencesFiltersPanel({
             </div>
             <div className="p-3 rounded-lg bg-slate-800/30 border border-slate-700/50">
               <p className="text-xs text-slate-400 mb-2">Plage de dates</p>
-              <p className="text-sm text-slate-500 italic">Date picker à implémenter</p>
+              <p className="text-sm text-slate-400 italic">Date picker à implémenter</p>
             </div>
           </div>
         </div>

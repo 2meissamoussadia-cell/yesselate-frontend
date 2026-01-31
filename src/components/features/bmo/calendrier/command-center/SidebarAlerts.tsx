@@ -97,8 +97,8 @@ export function SidebarAlerts({ className }: SidebarAlertsProps) {
   if (alerts.length === 0) {
     return (
       <div className={cn('p-4 text-center', className)}>
-        <Bell className="h-8 w-8 text-slate-500 mx-auto mb-2" />
-        <p className="text-sm text-slate-500">Aucune alerte</p>
+        <Bell className="h-8 w-8 text-slate-400 mx-auto mb-2" />
+        <p className="text-sm text-slate-400">Aucune alerte</p>
       </div>
     );
   }

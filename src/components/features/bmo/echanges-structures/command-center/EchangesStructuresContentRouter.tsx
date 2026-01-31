@@ -354,7 +354,7 @@ const AnalyticsView = React.memo(function AnalyticsView() {
       <div className="text-center">
         <Mail className="w-16 h-16 text-slate-600 mx-auto mb-4" />
         <h3 className="text-lg font-semibold text-slate-300 mb-2">Analytiques</h3>
-        <p className="text-slate-500">Contenu en cours de développement</p>
+        <p className="text-slate-400">Contenu en cours de développement</p>
       </div>
     </div>
   );
@@ -369,7 +369,7 @@ const SettingsView = React.memo(function SettingsView() {
       <div className="text-center">
         <Mail className="w-16 h-16 text-slate-600 mx-auto mb-4" />
         <h3 className="text-lg font-semibold text-slate-300 mb-2">Paramètres</h3>
-        <p className="text-slate-500">Contenu en cours de développement</p>
+        <p className="text-slate-400">Contenu en cours de développement</p>
       </div>
     </div>
   );

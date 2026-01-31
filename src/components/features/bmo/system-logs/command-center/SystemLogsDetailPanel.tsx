@@ -79,7 +79,7 @@ export function SystemLogsDetailPanel() {
               variant="ghost"
               size="sm"
               onClick={closeDetailPanel}
-              className="h-7 w-7 p-0 text-slate-500 hover:text-slate-300"
+              className="h-7 w-7 p-0 text-slate-400 hover:text-slate-300"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -147,28 +147,28 @@ function LogDetailContent({ data }: { data: Record<string, any> }) {
           )}
           {data.source && (
             <div className="flex items-center gap-2">
-              <Database className="h-3 w-3 text-slate-500" />
+              <Database className="h-3 w-3 text-slate-400" />
               <span className="text-slate-400 flex-1">Source</span>
               <span className="text-slate-200 font-mono text-xs">{data.source}</span>
             </div>
           )}
           {data.timestamp && (
             <div className="flex items-center gap-2">
-              <Clock className="h-3 w-3 text-slate-500" />
+              <Clock className="h-3 w-3 text-slate-400" />
               <span className="text-slate-400 flex-1">Timestamp</span>
               <span className="text-slate-200 font-mono text-xs">{data.timestamp}</span>
             </div>
           )}
           {data.userId && (
             <div className="flex items-center gap-2">
-              <User className="h-3 w-3 text-slate-500" />
+              <User className="h-3 w-3 text-slate-400" />
               <span className="text-slate-400 flex-1">Utilisateur</span>
               <span className="text-slate-200 font-mono text-xs">{data.userId}</span>
             </div>
           )}
           {data.ip && (
             <div className="flex items-center gap-2">
-              <Globe className="h-3 w-3 text-slate-500" />
+              <Globe className="h-3 w-3 text-slate-400" />
               <span className="text-slate-400 flex-1">IP</span>
               <span className="text-slate-200 font-mono text-xs">{data.ip}</span>
             </div>

@@ -310,7 +310,7 @@ function ServiceQueueCard({
       
       <div className="mt-3">
         <div className="font-semibold text-sm">{queue.name}</div>
-        <div className="text-xs text-slate-500 mt-1">
+        <div className="text-xs text-slate-400 mt-1">
           {queue.documents.total} documents
         </div>
       </div>
@@ -318,11 +318,11 @@ function ServiceQueueCard({
       <div className="mt-3 flex items-center gap-4 text-xs">
         <div className="flex items-center gap-1">
           <Clock className="w-3 h-3 text-slate-400" />
-          <span className="text-slate-500">{queue.avgProcessingTime}h</span>
+          <span className="text-slate-400">{queue.avgProcessingTime}h</span>
         </div>
         <div className="flex items-center gap-1">
           <CheckCircle2 className="w-3 h-3 text-emerald-500" />
-          <span className="text-slate-500">{queue.slaCompliance}%</span>
+          <span className="text-slate-400">{queue.slaCompliance}%</span>
         </div>
       </div>
     </button>
@@ -362,7 +362,7 @@ function DocumentCard({
           </div>
           <div className="min-w-0">
             <div className="font-semibold text-sm">{document.reference}</div>
-            <div className="text-xs text-slate-500 truncate">{document.title}</div>
+            <div className="text-xs text-slate-400 truncate">{document.title}</div>
           </div>
         </div>
         
@@ -421,7 +421,7 @@ function DocumentCard({
                     document.threeWayStatus === 'mismatch' ? 'Non conforme' : 'En attente'}
           </span>
           {document.linkedDocuments && (
-            <span className="text-slate-500 ml-auto">
+            <span className="text-slate-400 ml-auto">
               {document.linkedDocuments.map(d => d.ref).join(', ')}
             </span>
           )}
@@ -434,19 +434,19 @@ function DocumentCard({
           <span className={cn('px-2 py-0.5 rounded text-xs font-medium', getStatusColor(document.status))}>
             {getStatusLabel(document.status)}
           </span>
-          <span className="text-xs text-slate-500">
+          <span className="text-xs text-slate-400">
             Niveau {document.currentLevel}/{document.maxLevel}
           </span>
         </div>
         
         <div className="flex items-center gap-1">
           {document.comments && document.comments > 0 && (
-            <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-xs text-slate-500">
+            <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-xs text-slate-400">
               💬 {document.comments}
             </span>
           )}
           {document.attachments && document.attachments > 0 && (
-            <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-xs text-slate-500">
+            <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-xs text-slate-400">
               📎 {document.attachments}
             </span>
           )}
@@ -544,7 +544,7 @@ export function ValidationBCServiceQueues({
             </div>
             <div>
               <div className="font-semibold text-sm">Tous les services</div>
-              <div className="text-xs text-slate-500">{totalStats.total} documents</div>
+              <div className="text-xs text-slate-400">{totalStats.total} documents</div>
             </div>
           </div>
           {totalStats.pending > 0 && (
@@ -592,7 +592,7 @@ export function ValidationBCServiceQueues({
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-sm text-slate-500">{filteredDocuments.length} document(s)</span>
+          <span className="text-sm text-slate-400">{filteredDocuments.length} document(s)</span>
           <FluentButton size="sm" variant="secondary" onClick={refresh} disabled={loading}>
             <RefreshCw className={cn('w-4 h-4', loading && 'animate-spin')} />
           </FluentButton>
@@ -608,7 +608,7 @@ export function ValidationBCServiceQueues({
         ) : filteredDocuments.length === 0 ? (
           <div className="col-span-full text-center py-12">
             <FileCheck className="w-12 h-12 mx-auto text-slate-300 dark:text-slate-600 mb-3" />
-            <p className="text-slate-500">Aucun document trouvé</p>
+            <p className="text-slate-400">Aucun document trouvé</p>
           </div>
         ) : (
           filteredDocuments.map(doc => (

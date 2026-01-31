@@ -56,7 +56,7 @@ export function MissionsDetailPanel() {
               variant="ghost"
               size="sm"
               onClick={closeDetailPanel}
-              className="h-7 w-7 p-0 text-slate-500 hover:text-slate-300"
+              className="h-7 w-7 p-0 text-slate-400 hover:text-slate-300"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -99,22 +99,22 @@ function MissionDetailContent({ data }: { data: Record<string, unknown> }) {
   return (
     <div className="space-y-4">
       <div>
-        <h4 className="text-xs font-medium text-slate-500 uppercase mb-2">Informations générales</h4>
+        <h4 className="text-xs font-medium text-slate-400 uppercase mb-2">Informations générales</h4>
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-sm">
-            <Plane className="h-4 w-4 text-slate-500" />
+            <Plane className="h-4 w-4 text-slate-400" />
             <span className="text-slate-300">{(data.id as string) || 'N/A'}</span>
           </div>
           <div className="flex items-center gap-2 text-sm">
-            <MapPin className="h-4 w-4 text-slate-500" />
+            <MapPin className="h-4 w-4 text-slate-400" />
             <span className="text-slate-300">{(data.destination as string) || 'N/A'}</span>
           </div>
           <div className="flex items-center gap-2 text-sm">
-            <User className="h-4 w-4 text-slate-500" />
+            <User className="h-4 w-4 text-slate-400" />
             <span className="text-slate-300">{(data.agent as string) || 'N/A'}</span>
           </div>
           <div className="flex items-center gap-2 text-sm">
-            <Calendar className="h-4 w-4 text-slate-500" />
+            <Calendar className="h-4 w-4 text-slate-400" />
             <span className="text-slate-300">
               {data.dateDepart && data.dateRetour
                 ? `${new Date(data.dateDepart as string).toLocaleDateString('fr-FR')} → ${new Date(data.dateRetour as string).toLocaleDateString('fr-FR')}`
@@ -122,7 +122,7 @@ function MissionDetailContent({ data }: { data: Record<string, unknown> }) {
             </span>
           </div>
           <div className="flex items-center gap-2 text-sm">
-            <DollarSign className="h-4 w-4 text-slate-500" />
+            <DollarSign className="h-4 w-4 text-slate-400" />
             <span className="text-slate-300">{(data.budgetPrevu as string) || 'N/A'}</span>
           </div>
         </div>
@@ -130,7 +130,7 @@ function MissionDetailContent({ data }: { data: Record<string, unknown> }) {
 
       {data.objet ? (
         <div>
-          <h4 className="text-xs font-medium text-slate-500 uppercase mb-2">Objet</h4>
+          <h4 className="text-xs font-medium text-slate-400 uppercase mb-2">Objet</h4>
           <p className="text-sm text-slate-300">{data.objet as string}</p>
         </div>
       ) : null}

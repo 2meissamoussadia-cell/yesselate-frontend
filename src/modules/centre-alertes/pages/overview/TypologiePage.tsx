@@ -82,7 +82,7 @@ export function TypologiePage() {
                 <span className="text-sm text-slate-300">{typologie.label}</span>
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-bold text-slate-200">{typologie.value}</span>
-                  <span className="text-xs text-slate-500">
+                  <span className="text-xs text-slate-400">
                     ({((typologie.value / total) * 100).toFixed(1)}%)
                   </span>
                 </div>

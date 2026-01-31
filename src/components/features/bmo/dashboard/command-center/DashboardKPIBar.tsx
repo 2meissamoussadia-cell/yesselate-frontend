@@ -137,7 +137,7 @@ export function DashboardKPIBar({
             size="sm"
             onClick={typeof onRefresh === 'function' ? onRefresh : undefined}
             disabled={typeof onRefresh !== 'function'}
-            className="h-6 w-6 p-0 text-slate-500 hover:text-slate-300 disabled:opacity-50 flex-shrink-0"
+            className="h-6 w-6 p-0 text-slate-400 hover:text-slate-300 disabled:opacity-50 flex-shrink-0"
           >
             <RefreshCw className={cn('h-3 w-3', isRefreshing && 'animate-spin')} />
           </Button>
@@ -145,7 +145,7 @@ export function DashboardKPIBar({
             variant="ghost"
             size="sm"
             onClick={() => setKPIConfig({ collapsed: !kpiConfig.collapsed })}
-            className="h-6 w-6 p-0 text-slate-500 hover:text-slate-300 flex-shrink-0"
+            className="h-6 w-6 p-0 text-slate-400 hover:text-slate-300 flex-shrink-0"
           >
             {kpiConfig.collapsed ? (
               <ChevronDown className="h-3 w-3" />
@@ -182,7 +182,7 @@ function KPICard({ kpi, onClick }: { kpi: KPIItem; onClick?: () => void }) {
   const trendColors = {
     up: kpi.status === 'critical' ? 'text-red-400' : 'text-emerald-400',
     down: kpi.status === 'critical' ? 'text-emerald-400' : 'text-amber-400',
-    stable: 'text-slate-500',
+    stable: 'text-slate-400',
   };
 
   return (
@@ -192,7 +192,7 @@ function KPICard({ kpi, onClick }: { kpi: KPIItem; onClick?: () => void }) {
     >
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0 flex-1">
-          <p className="text-xs text-slate-500 truncate mb-0.5 group-hover:text-slate-400 transition-colors">
+          <p className="text-xs text-slate-400 truncate mb-0.5 group-hover:text-slate-400 transition-colors">
             {kpi.label}
           </p>
           <div className="flex items-baseline gap-2">

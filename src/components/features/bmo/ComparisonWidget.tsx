@@ -50,7 +50,7 @@ export function ComparisonWidget({
     >
       <div className="flex items-center justify-between gap-2">
         <div className="flex-1 min-w-0">
-          <p className={cn('text-[10px] uppercase tracking-wide', darkMode ? 'text-slate-500' : 'text-gray-500')}>
+          <p className={cn('text-[10px] uppercase tracking-wide', darkMode ? 'text-slate-400' : 'text-gray-500')}>
             {label}
           </p>
           <p className="text-lg font-bold mt-1">{format(current)}</p>

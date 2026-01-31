@@ -51,7 +51,7 @@ export function KPICard({
           <p
             className={cn(
               'text-[10px] uppercase tracking-wide',
-              darkMode ? 'text-slate-500' : 'text-gray-500'
+              darkMode ? 'text-slate-400' : 'text-gray-500'
             )}
           >
             {label}
@@ -59,7 +59,7 @@ export function KPICard({
           <p className="text-xl font-extrabold">
             {value}
             {sub && (
-              <span className="text-xs font-normal text-slate-500 ml-1">
+              <span className="text-xs font-normal text-slate-400 ml-1">
                 {sub}
               </span>
             )}
@@ -72,7 +72,7 @@ export function KPICard({
                   ? 'text-emerald-400'
                   : up === false
                   ? 'text-red-400'
-                  : 'text-slate-500'
+                  : 'text-slate-400'
               )}
             >
               {up !== undefined && (up ? '↗' : '↘')} {trend}

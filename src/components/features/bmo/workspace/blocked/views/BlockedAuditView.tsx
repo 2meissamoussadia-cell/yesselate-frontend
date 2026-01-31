@@ -17,7 +17,7 @@ type Props = {
 
 const ACTION_CONFIG: Record<string, { icon: typeof Eye; color: string; label: string }> = {
   created: { icon: FileText, color: 'text-blue-500', label: 'Créé' },
-  updated: { icon: FileText, color: 'text-slate-500', label: 'Modifié' },
+  updated: { icon: FileText, color: 'text-slate-400', label: 'Modifié' },
   escalated: { icon: ArrowUpRight, color: 'text-orange-500', label: 'Escaladé' },
   substituted: { icon: Shield, color: 'text-purple-500', label: 'Substitué' },
   resolved: { icon: CheckCircle2, color: 'text-emerald-500', label: 'Résolu' },
@@ -150,7 +150,7 @@ export function BlockedAuditView({ tabId, data }: Props) {
             <Eye className="w-5 h-5 text-slate-400" />
             Registre d'audit
           </h2>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-sm text-slate-400 mt-1">
             {filteredEntries.length} entrée(s) · Traçabilité complète des décisions
           </p>
         </div>
@@ -194,7 +194,7 @@ export function BlockedAuditView({ tabId, data }: Props) {
       <div className="space-y-6">
         {Object.entries(groupedByDate).map(([date, dayEntries]) => (
           <div key={date}>
-            <h3 className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-3">
+            <h3 className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-3">
               {date}
             </h3>
             <div className="space-y-2">
@@ -228,11 +228,11 @@ export function BlockedAuditView({ tabId, data }: Props) {
                         <p className="font-medium text-slate-900 dark:text-slate-100">
                           {entry.dossierSubject}
                         </p>
-                        <p className="text-sm text-slate-500 mt-1">
+                        <p className="text-sm text-slate-400 mt-1">
                           {entry.details}
                         </p>
 
-                        <div className="flex items-center gap-4 mt-3 text-xs text-slate-500">
+                        <div className="flex items-center gap-4 mt-3 text-xs text-slate-400">
                           <span className="flex items-center gap-1">
                             <User className="w-3 h-3" />
                             {entry.userName}
@@ -264,7 +264,7 @@ export function BlockedAuditView({ tabId, data }: Props) {
 
       {/* Empty state */}
       {filteredEntries.length === 0 && (
-        <div className="text-center py-12 text-slate-500">
+        <div className="text-center py-12 text-slate-400">
           <Eye className="w-12 h-12 mx-auto mb-3 opacity-30" />
           <p className="font-medium">Aucune entrée d'audit</p>
           <p className="text-sm mt-1">Les actions seront enregistrées ici</p>
@@ -279,7 +279,7 @@ export function BlockedAuditView({ tabId, data }: Props) {
             <p className="font-medium text-slate-900 dark:text-slate-100 text-sm">
               Intégrité garantie par SHA-256
             </p>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-slate-400 mt-0.5">
               Chaque entrée est signée cryptographiquement et immuable. Les hashes peuvent être vérifiés indépendamment.
             </p>
           </div>

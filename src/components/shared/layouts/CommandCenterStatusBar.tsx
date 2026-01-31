@@ -81,7 +81,7 @@ export function CommandCenterStatusBar({
               isSyncing ? 'bg-amber-500 animate-pulse' : isConnected ? 'bg-emerald-500' : 'bg-red-500'
             )}
           />
-          <span className="text-slate-500">
+          <span className="text-slate-400">
             {isSyncing ? 'Synchronisation...' : isConnected ? 'Connecté' : 'Déconnecté'}
           </span>
         </div>

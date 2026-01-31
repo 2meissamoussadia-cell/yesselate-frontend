@@ -119,7 +119,7 @@ export function KPIHistoryChart({
             ))}
             {target && (
               <div className="pt-1 mt-1 border-t border-slate-700/50">
-                <span className="text-xs text-slate-500">Objectif: {target}</span>
+                <span className="text-xs text-slate-400">Objectif: {target}</span>
               </div>
             )}
           </div>
@@ -264,19 +264,19 @@ export function KPIHistoryChart({
       {showTrend && (
         <div className="grid grid-cols-4 gap-3">
           <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
-            <p className="text-xs text-slate-500 mb-1">Actuel</p>
+            <p className="text-xs text-slate-400 mb-1">Actuel</p>
             <p className="text-lg font-bold text-slate-200">{stats.current.toFixed(1)}</p>
           </div>
           <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
-            <p className="text-xs text-slate-500 mb-1">Moyenne</p>
+            <p className="text-xs text-slate-400 mb-1">Moyenne</p>
             <p className="text-lg font-bold text-slate-200">{stats.avg.toFixed(1)}</p>
           </div>
           <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
-            <p className="text-xs text-slate-500 mb-1">Min</p>
+            <p className="text-xs text-slate-400 mb-1">Min</p>
             <p className="text-lg font-bold text-slate-200">{stats.min.toFixed(1)}</p>
           </div>
           <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
-            <p className="text-xs text-slate-500 mb-1">Max</p>
+            <p className="text-xs text-slate-400 mb-1">Max</p>
             <p className="text-lg font-bold text-slate-200">{stats.max.toFixed(1)}</p>
           </div>
         </div>

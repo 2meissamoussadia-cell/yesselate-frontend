@@ -27,7 +27,7 @@ export function FinancesTresorerieView() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">Mouvements de trésorerie</h2>
-          <p className="text-sm text-slate-500">{mouvements.length} mouvement(s)</p>
+          <p className="text-sm text-slate-400">{mouvements.length} mouvement(s)</p>
         </div>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -38,7 +38,7 @@ export function FinancesTresorerieView() {
       {loading ? (
         <div className="space-y-3">{[...Array(5)].map((_, i) => <div key={i} className="h-20 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />)}</div>
       ) : mouvements.length === 0 ? (
-        <div className="py-12 text-center text-slate-500"><p className="font-medium">Aucun mouvement trouvé</p></div>
+        <div className="py-12 text-center text-slate-400"><p className="font-medium">Aucun mouvement trouvé</p></div>
       ) : (
         <div className="space-y-2">
           {mouvements.map(mouvement => (
@@ -50,7 +50,7 @@ export function FinancesTresorerieView() {
                   </div>
                   <div>
                     <p className="font-medium text-slate-900 dark:text-slate-100">{mouvement.libelle}</p>
-                    <div className="flex items-center gap-3 text-xs text-slate-500 mt-1">
+                    <div className="flex items-center gap-3 text-xs text-slate-400 mt-1">
                       <span>{new Date(mouvement.date).toLocaleDateString('fr-FR')}</span>
                       <span>•</span>
                       <span>{mouvement.categorie}</span>

@@ -44,20 +44,20 @@ export function FinancesDashboardView() {
           <p className="text-sm opacity-80 mt-1">FCFA</p>
         </div>
         <div className="p-6 rounded-xl bg-white dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800">
-          <div className="flex items-center gap-3 mb-4"><TrendingUp className="w-6 h-6 text-blue-500" /><span className="text-sm font-medium text-slate-500">Budget annuel</span></div>
+          <div className="flex items-center gap-3 mb-4"><TrendingUp className="w-6 h-6 text-blue-500" /><span className="text-sm font-medium text-slate-400">Budget annuel</span></div>
           <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">{stats ? financesApiService.formatMontant(stats.budgetTotal) : '---'}</p>
           <div className="mt-2 h-2 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden"><div className="h-full bg-blue-500 rounded-full" style={{ width: stats ? `${(stats.budgetConsomme / stats.budgetTotal) * 100}%` : '0%' }} /></div>
-          <p className="text-xs text-slate-500 mt-1">{stats ? Math.round((stats.budgetConsomme / stats.budgetTotal) * 100) : 0}% consommé</p>
+          <p className="text-xs text-slate-400 mt-1">{stats ? Math.round((stats.budgetConsomme / stats.budgetTotal) * 100) : 0}% consommé</p>
         </div>
         <div className="p-6 rounded-xl bg-white dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800">
-          <div className="flex items-center gap-3 mb-4"><ArrowUpRight className="w-6 h-6 text-emerald-500" /><span className="text-sm font-medium text-slate-500">Flux entrants</span></div>
+          <div className="flex items-center gap-3 mb-4"><ArrowUpRight className="w-6 h-6 text-emerald-500" /><span className="text-sm font-medium text-slate-400">Flux entrants</span></div>
           <p className="text-2xl font-bold text-emerald-600">{stats ? financesApiService.formatMontant(stats.fluxEntrants) : '---'}</p>
-          <p className="text-xs text-slate-500 mt-1">Ce mois</p>
+          <p className="text-xs text-slate-400 mt-1">Ce mois</p>
         </div>
         <div className="p-6 rounded-xl bg-white dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800">
-          <div className="flex items-center gap-3 mb-4"><ArrowDownRight className="w-6 h-6 text-red-500" /><span className="text-sm font-medium text-slate-500">Flux sortants</span></div>
+          <div className="flex items-center gap-3 mb-4"><ArrowDownRight className="w-6 h-6 text-red-500" /><span className="text-sm font-medium text-slate-400">Flux sortants</span></div>
           <p className="text-2xl font-bold text-red-600">{stats ? financesApiService.formatMontant(stats.fluxSortants) : '---'}</p>
-          <p className="text-xs text-slate-500 mt-1">Ce mois</p>
+          <p className="text-xs text-slate-400 mt-1">Ce mois</p>
         </div>
       </div>
 
@@ -72,15 +72,15 @@ export function FinancesDashboardView() {
                   <div className="p-2 rounded-lg bg-emerald-500/10"><Building2 className="w-5 h-5 text-emerald-500" /></div>
                   <div>
                     <p className="font-semibold text-slate-900 dark:text-slate-100">{compte.nom}</p>
-                    <p className="text-xs text-slate-500">{compte.banque}</p>
+                    <p className="text-xs text-slate-400">{compte.banque}</p>
                   </div>
                 </div>
                 <span className={cn("px-2 py-1 rounded text-xs font-medium", compte.type === 'courant' ? 'bg-blue-500/10 text-blue-600' : compte.type === 'epargne' ? 'bg-purple-500/10 text-purple-600' : 'bg-amber-500/10 text-amber-600')}>{compte.type === 'courant' ? 'Courant' : compte.type === 'epargne' ? 'Épargne' : 'Devise'}</span>
               </div>
-              <p className="text-2xl font-mono font-bold text-emerald-600 dark:text-emerald-400">{financesApiService.formatMontant(compte.solde)}<span className="text-sm font-normal text-slate-500 ml-2">{compte.devise}</span></p>
+              <p className="text-2xl font-mono font-bold text-emerald-600 dark:text-emerald-400">{financesApiService.formatMontant(compte.solde)}<span className="text-sm font-normal text-slate-400 ml-2">{compte.devise}</span></p>
               <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-200/50 dark:border-slate-800">
-                <p className="text-xs text-slate-500">ID: {compte.id}</p>
-                <p className="text-xs text-slate-500">MAJ: {new Date(compte.lastUpdated).toLocaleDateString('fr-FR')}</p>
+                <p className="text-xs text-slate-400">ID: {compte.id}</p>
+                <p className="text-xs text-slate-400">MAJ: {new Date(compte.lastUpdated).toLocaleDateString('fr-FR')}</p>
               </div>
             </button>
           ))}

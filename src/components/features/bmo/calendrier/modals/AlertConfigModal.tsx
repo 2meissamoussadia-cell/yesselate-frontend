@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Bell, Clock, AlertTriangle, CheckCircle2, Loader2, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/utils/logger';
 
 interface AlertConfigModalProps {
   open: boolean;
@@ -69,7 +70,7 @@ export function AlertConfigModal({
       } else {
         // Mock save
         await new Promise((resolve) => setTimeout(resolve, 1000));
-        console.log('Configuration alerte sauvegardée:', config);
+        logger.debug('Configuration alerte sauvegardée', { component: 'AlertConfigModal', config: config.name });
       }
       setSuccess(true);
       setTimeout(() => {
@@ -206,7 +207,7 @@ export function AlertConfigModal({
         <label className="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700 cursor-pointer hover:bg-slate-800/70 transition-colors">
           <div>
             <div className="text-sm text-slate-200">Activer l'alerte</div>
-            <div className="text-xs text-slate-500">L'alerte sera active immédiatement après sauvegarde</div>
+            <div className="text-xs text-slate-400">L'alerte sera active immédiatement après sauvegarde</div>
           </div>
           <input
             type="checkbox"

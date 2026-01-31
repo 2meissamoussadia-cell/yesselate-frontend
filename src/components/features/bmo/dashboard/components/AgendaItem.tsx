@@ -80,7 +80,7 @@ export const AgendaItem = memo(function AgendaItem({
           <div className="flex flex-col items-center justify-center rounded-lg bg-slate-800/60 border border-slate-700/50 px-2 py-1.5 min-w-[2.5rem]">
             <span className="text-slate-400 uppercase text-[10px] font-medium tracking-wider">{dayName}</span>
             <span className="font-bold text-slate-200 text-sm leading-none my-0.5">{dayNumber}</span>
-            <span className="text-slate-500 text-[10px]">{month}</span>
+            <span className="text-slate-400 text-[10px]">{month}</span>
           </div>
           <div className="flex flex-wrap items-center gap-1.5">
             <Badge
@@ -121,14 +121,14 @@ export const AgendaItem = memo(function AgendaItem({
       {(event.projet || (event.participants && event.participants.length > 0)) && (
         <div className="flex items-center justify-between pt-2.5 border-t border-slate-800/50">
           {event.projet && (
-            <span className="text-slate-500 truncate text-[10px] font-medium">
+            <span className="text-slate-400 truncate text-[10px] font-medium">
               {event.projet}
             </span>
           )}
           {event.participants && event.participants.length > 0 && (
             <div className="flex items-center gap-1">
-              <Users className="text-slate-500 w-3.5 h-3.5 flex-shrink-0" style={{ width: '0.875rem', height: '0.875rem', minWidth: '0.875rem', minHeight: '0.875rem' }} />
-              <span className="text-slate-500 text-[10px] font-medium">
+              <Users className="text-slate-400 w-3.5 h-3.5 flex-shrink-0" style={{ width: '0.875rem', height: '0.875rem', minWidth: '0.875rem', minHeight: '0.875rem' }} />
+              <span className="text-slate-400 text-[10px] font-medium">
                 {event.participants.length}
               </span>
             </div>

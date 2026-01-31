@@ -94,7 +94,7 @@ export function BmoPageTemplate({
         )}
       </header>
 
-      <div className="flex-1 min-h-0 min-w-0 overflow-y-auto bg-slate-950/40 px-4 sm:px-6 py-3">
+      <div className="flex-1 min-h-0 min-w-0 max-w-full overflow-x-hidden overflow-y-auto bg-slate-950/40 px-4 sm:px-6 py-3">
         <div className="mx-auto w-full max-w-7xl">{children}</div>
       </div>
     </div>

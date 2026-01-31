@@ -146,7 +146,7 @@ export function GlobalShortcutsMenu() {
                     <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
                       Raccourcis Clavier
                     </h2>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                    <p className="text-sm text-slate-400 dark:text-slate-400">
                       Gagnez du temps avec ces raccourcis
                     </p>
                   </div>
@@ -157,7 +157,7 @@ export function GlobalShortcutsMenu() {
                   className={cn(
                     'p-2 rounded-lg transition-colors',
                     'hover:bg-slate-100 dark:hover:bg-slate-800',
-                    'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100'
+                    'text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
                   )}
                   aria-label="Fermer"
                 >

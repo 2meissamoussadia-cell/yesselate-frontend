@@ -85,7 +85,7 @@ export function AnalyticsReportView() {
       <div className="flex items-start justify-between">
         <div>
           <h2 className="text-2xl font-bold mb-2">Génération de Rapports</h2>
-          <p className="text-slate-500 text-sm">
+          <p className="text-slate-400 text-sm">
             Créez des rapports personnalisés et exportez-les dans différents formats
           </p>
         </div>
@@ -113,7 +113,7 @@ export function AnalyticsReportView() {
               >
                 <div className="text-3xl mb-2">{type.icon}</div>
                 <h3 className="font-semibold mb-1">{type.title}</h3>
-                <p className="text-xs text-slate-500 mb-3">{type.description}</p>
+                <p className="text-xs text-slate-400 mb-3">{type.description}</p>
                 <div className="space-y-1">
                   {type.includes.map((item, idx) => (
                     <div key={idx} className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400">
@@ -222,7 +222,7 @@ export function AnalyticsReportView() {
                 </div>
                 <div className="text-center">
                   <div className="font-semibold text-sm mb-1">{format.label}</div>
-                  <div className="text-xs text-slate-500">{format.description}</div>
+                  <div className="text-xs text-slate-400">{format.description}</div>
                 </div>
               </button>
             ))}
@@ -239,25 +239,25 @@ export function AnalyticsReportView() {
           <div className="space-y-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
               <div>
-                <div className="text-slate-500 mb-1">Type</div>
+                <div className="text-slate-400 mb-1">Type</div>
                 <div className="font-semibold">
                   {reportTypes.find(t => t.id === selectedType)?.title}
                 </div>
               </div>
               <div>
-                <div className="text-slate-500 mb-1">Période</div>
+                <div className="text-slate-400 mb-1">Période</div>
                 <div className="font-semibold capitalize">{selectedPeriod}</div>
               </div>
               {selectedType === 'bureau' && (
                 <div>
-                  <div className="text-slate-500 mb-1">Bureau</div>
+                  <div className="text-slate-400 mb-1">Bureau</div>
                   <div className="font-semibold">
                     {selectedBureau === 'ALL' ? 'Tous' : selectedBureau}
                   </div>
                 </div>
               )}
               <div>
-                <div className="text-slate-500 mb-1">Format</div>
+                <div className="text-slate-400 mb-1">Format</div>
                 <div className="font-semibold uppercase">{selectedFormat}</div>
               </div>
             </div>
@@ -290,7 +290,7 @@ export function AnalyticsReportView() {
               </FluentButton>
             </div>
 
-            <div className="text-xs text-slate-500 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg">
+            <div className="text-xs text-slate-400 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg">
               💡 <strong>Astuce:</strong> Les rapports générés incluent tous les graphiques, 
               tableaux et données de la période sélectionnée. Les formats Excel et CSV permettent 
               une manipulation ultérieure des données.

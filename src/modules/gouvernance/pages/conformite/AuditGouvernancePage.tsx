@@ -23,7 +23,7 @@ export default function AuditGouvernancePage() {
       <GouvernanceHeader
         title="Audit gouvernance"
         subtitle="Liste des audits de gouvernance programmés et réalisés"
-        onExport={() => console.log('Export audits')}
+        onExport={() => { /* TODO: export audits */ }}
       />
 
       {isLoading ? (

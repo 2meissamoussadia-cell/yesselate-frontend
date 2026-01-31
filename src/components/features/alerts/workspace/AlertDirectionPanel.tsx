@@ -55,7 +55,7 @@ export function AlertDirectionPanel({ isOpen, onClose }: AlertDirectionPanelProp
           
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors"
+            className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -71,7 +71,7 @@ export function AlertDirectionPanel({ isOpen, onClose }: AlertDirectionPanelProp
               <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/30 border border-slate-200/70 dark:border-slate-800">
                 <div className="flex items-center gap-2 mb-2">
                   <AlertCircle className="w-4 h-4 text-rose-500" />
-                  <p className="text-xs text-slate-500">Critiques</p>
+                  <p className="text-xs text-slate-400">Critiques</p>
                 </div>
                 <p className="text-2xl font-bold text-slate-700 dark:text-slate-200">{stats.critical}</p>
                 <p className="text-xs text-rose-500 mt-1">{criticalRate}% du total</p>
@@ -80,7 +80,7 @@ export function AlertDirectionPanel({ isOpen, onClose }: AlertDirectionPanelProp
               <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/30 border border-slate-200/70 dark:border-slate-800">
                 <div className="flex items-center gap-2 mb-2">
                   <CheckCircle className="w-4 h-4 text-emerald-500" />
-                  <p className="text-xs text-slate-500">Résolues</p>
+                  <p className="text-xs text-slate-400">Résolues</p>
                 </div>
                 <p className="text-2xl font-bold text-slate-700 dark:text-slate-200">{stats.resolved}</p>
                 <p className="text-xs text-emerald-500 mt-1">{resolvedRate}% du total</p>
@@ -89,19 +89,19 @@ export function AlertDirectionPanel({ isOpen, onClose }: AlertDirectionPanelProp
               <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/30 border border-slate-200/70 dark:border-slate-800">
                 <div className="flex items-center gap-2 mb-2">
                   <Clock className="w-4 h-4 text-blue-500" />
-                  <p className="text-xs text-slate-500">Temps réponse</p>
+                  <p className="text-xs text-slate-400">Temps réponse</p>
                 </div>
                 <p className="text-2xl font-bold text-slate-700 dark:text-slate-200">{stats.avgResponseTime}min</p>
-                <p className="text-xs text-slate-500 mt-1">Moyenne</p>
+                <p className="text-xs text-slate-400 mt-1">Moyenne</p>
               </div>
               
               <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/30 border border-slate-200/70 dark:border-slate-800">
                 <div className="flex items-center gap-2 mb-2">
                   <TrendingUp className="w-4 h-4 text-purple-500" />
-                  <p className="text-xs text-slate-500">Temps résolution</p>
+                  <p className="text-xs text-slate-400">Temps résolution</p>
                 </div>
                 <p className="text-2xl font-bold text-slate-700 dark:text-slate-200">{stats.avgResolutionTime}min</p>
-                <p className="text-xs text-slate-500 mt-1">Moyenne</p>
+                <p className="text-xs text-slate-400 mt-1">Moyenne</p>
               </div>
             </div>
           </div>
@@ -121,7 +121,7 @@ export function AlertDirectionPanel({ isOpen, onClose }: AlertDirectionPanelProp
                       <div key={bureau} className="space-y-1">
                         <div className="flex items-center justify-between text-sm">
                           <span className="font-medium text-slate-700 dark:text-slate-200">{bureau}</span>
-                          <span className="text-slate-500">{count} ({percentage}%)</span>
+                          <span className="text-slate-400">{count} ({percentage}%)</span>
                         </div>
                         <div className="h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
                           <div 
@@ -187,7 +187,7 @@ export function AlertDirectionPanel({ isOpen, onClose }: AlertDirectionPanelProp
                     {criticalRate}%
                   </span>
                 </div>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-400">
                   {criticalRate > 30 ? "⚠️ Taux élevé - action recommandée" : "✅ Taux normal"}
                 </p>
               </div>
@@ -207,7 +207,7 @@ export function AlertDirectionPanel({ isOpen, onClose }: AlertDirectionPanelProp
                     {escalationRate}%
                   </span>
                 </div>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-400">
                   {escalationRate > 20 ? "⚠️ Taux élevé - formation recommandée" : "✅ Taux normal"}
                 </p>
               </div>
@@ -227,7 +227,7 @@ export function AlertDirectionPanel({ isOpen, onClose }: AlertDirectionPanelProp
                     {resolvedRate}%
                   </span>
                 </div>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-400">
                   {resolvedRate < 50 ? "⚠️ Taux faible - ressources insuffisantes?" : "✅ Bon taux de résolution"}
                 </p>
               </div>

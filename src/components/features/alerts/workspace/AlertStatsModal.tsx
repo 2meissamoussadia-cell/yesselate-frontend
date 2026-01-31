@@ -67,7 +67,7 @@ export function AlertStatsModal({ open, onClose }: AlertStatsModalProps) {
         {/* Header avec refresh */}
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-slate-400">
               Dernière mise à jour: {lastUpdate.toLocaleTimeString('fr-FR')}
             </p>
           </div>
@@ -89,7 +89,7 @@ export function AlertStatsModal({ open, onClose }: AlertStatsModalProps) {
               <h3 className="text-lg font-semibold text-slate-700 dark:text-slate-200">
                 Score de Performance Global
               </h3>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-slate-400">
                 Basé sur le taux de résolution, critiques et escalades
               </p>
             </div>
@@ -97,7 +97,7 @@ export function AlertStatsModal({ open, onClose }: AlertStatsModalProps) {
               <div className={cn('text-4xl font-bold', getPerformanceColor(performanceScore))}>
                 {performanceScore}%
               </div>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-slate-400 mt-1">
                 {performanceScore >= 80 ? '✅ Excellent' : performanceScore >= 60 ? '⚠️ Correct' : '🔴 À améliorer'}
               </p>
             </div>
@@ -134,7 +134,7 @@ export function AlertStatsModal({ open, onClose }: AlertStatsModalProps) {
               <p className="text-sm font-medium text-slate-700 dark:text-slate-200">Avertissements</p>
             </div>
             <p className="text-3xl font-bold text-slate-700 dark:text-slate-200">{stats.warning}</p>
-            <p className="text-xs text-slate-500 mt-1">{Math.round((stats.warning / stats.total) * 100)}% du total</p>
+            <p className="text-xs text-slate-400 mt-1">{Math.round((stats.warning / stats.total) * 100)}% du total</p>
           </div>
 
           <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/30">
@@ -167,7 +167,7 @@ export function AlertStatsModal({ open, onClose }: AlertStatsModalProps) {
               <p className="text-3xl font-bold text-slate-700 dark:text-slate-200">
                 {stats.avgResponseTime}
               </p>
-              <p className="text-sm text-slate-500">minutes</p>
+              <p className="text-sm text-slate-400">minutes</p>
             </div>
             <div className="mt-3 flex items-center gap-2 text-sm">
               {stats.avgResponseTime < 60 ? (
@@ -193,7 +193,7 @@ export function AlertStatsModal({ open, onClose }: AlertStatsModalProps) {
               <p className="text-3xl font-bold text-slate-700 dark:text-slate-200">
                 {stats.avgResolutionTime}
               </p>
-              <p className="text-sm text-slate-500">minutes</p>
+              <p className="text-sm text-slate-400">minutes</p>
             </div>
             <div className="mt-3 flex items-center gap-2 text-sm">
               {stats.avgResolutionTime < 120 ? (
@@ -215,7 +215,7 @@ export function AlertStatsModal({ open, onClose }: AlertStatsModalProps) {
         {Object.keys(stats.byBureau).length > 0 && (
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <Building2 className="w-5 h-5 text-slate-500" />
+              <Building2 className="w-5 h-5 text-slate-400" />
               <h3 className="font-semibold text-slate-700 dark:text-slate-200">Répartition par bureau</h3>
             </div>
             <div className="space-y-3">
@@ -228,7 +228,7 @@ export function AlertStatsModal({ open, onClose }: AlertStatsModalProps) {
                     <div key={bureau} className="space-y-1">
                       <div className="flex items-center justify-between text-sm">
                         <span className="font-medium text-slate-700 dark:text-slate-200">{bureau}</span>
-                        <span className="text-slate-500">{count} alertes ({percentage}%)</span>
+                        <span className="text-slate-400">{count} alertes ({percentage}%)</span>
                       </div>
                       <div className="h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
                         <div
@@ -247,7 +247,7 @@ export function AlertStatsModal({ open, onClose }: AlertStatsModalProps) {
         {Object.keys(stats.byType).length > 0 && (
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <Activity className="w-5 h-5 text-slate-500" />
+              <Activity className="w-5 h-5 text-slate-400" />
               <h3 className="font-semibold text-slate-700 dark:text-slate-200">Répartition par type</h3>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -263,7 +263,7 @@ export function AlertStatsModal({ open, onClose }: AlertStatsModalProps) {
                       </p>
                       <div className="flex items-baseline gap-2">
                         <p className="text-2xl font-bold text-slate-700 dark:text-slate-200">{count}</p>
-                        <p className="text-xs text-slate-500">({percentage}%)</p>
+                        <p className="text-xs text-slate-400">({percentage}%)</p>
                       </div>
                     </div>
                   );

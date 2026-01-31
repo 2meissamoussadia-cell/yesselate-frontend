@@ -28,7 +28,7 @@ const STAT_CONFIG = [
   { key: 'validated', label: 'Validées', icon: CheckCircle2, color: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' },
   { key: 'rejected', label: 'Rejetées', icon: XCircle, color: 'bg-rose-500/10 text-rose-600 dark:text-rose-400' },
   { key: 'avgDelay', label: 'Délai moyen', icon: Timer, color: 'bg-blue-500/10 text-blue-600 dark:text-blue-400', suffix: 'j' },
-  { key: 'ts', label: 'Mise à jour', icon: Calendar, color: 'bg-slate-500/10 text-slate-500', isDate: true },
+  { key: 'ts', label: 'Mise à jour', icon: Calendar, color: 'bg-slate-500/10 text-slate-400', isDate: true },
 ] as const;
 
 export function QuickStatsModal({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
@@ -83,7 +83,7 @@ export function QuickStatsModal({ open, onOpenChange }: { open: boolean; onOpenC
       <div className="space-y-4">
         {/* En-tête avec refresh */}
         <div className="flex items-center justify-between">
-          <div className="text-sm text-slate-500">
+          <div className="text-sm text-slate-400">
             {lastRefresh && (
               <span>Dernière mise à jour : {lastRefresh.toLocaleTimeString()}</span>
             )}
@@ -173,7 +173,7 @@ export function QuickStatsModal({ open, onOpenChange }: { open: boolean; onOpenC
                   style={{ width: `${processingRate}%` }}
                 />
               </div>
-              <div className="text-xs text-slate-500 mt-1">
+              <div className="text-xs text-slate-400 mt-1">
                 {data.validated + data.rejected} traitées sur {data.total} demandes
               </div>
             </div>

@@ -133,7 +133,7 @@ export function BureauxView({ subCategory, onOpenEvaluation }: BureauxViewProps)
                     </div>
                   ))}
                   {bureauData.evaluations.length > 10 && (
-                    <p className="text-xs text-slate-500 text-center pt-2">
+                    <p className="text-xs text-slate-400 text-center pt-2">
                       + {bureauData.evaluations.length - 10} autre(s) évaluation(s)
                     </p>
                   )}

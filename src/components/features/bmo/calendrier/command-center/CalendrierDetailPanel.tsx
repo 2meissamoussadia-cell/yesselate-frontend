@@ -82,24 +82,24 @@ export function CalendrierDetailPanel() {
           {type === 'sla' && (
             <>
               <div>
-                <p className="text-xs text-slate-500 mb-1">Élément</p>
+                <p className="text-xs text-slate-400 mb-1">Élément</p>
                 <p className="text-sm text-slate-200 font-medium">{data.elementLabel || 'N/A'}</p>
               </div>
               <div>
-                <p className="text-xs text-slate-500 mb-1">Statut</p>
+                <p className="text-xs text-slate-400 mb-1">Statut</p>
                 <Badge variant={data.statut === 'en-retard' ? 'destructive' : 'default'}>
                   {data.statut || 'N/A'}
                 </Badge>
               </div>
               <div>
-                <p className="text-xs text-slate-500 mb-1">Échéance</p>
+                <p className="text-xs text-slate-400 mb-1">Échéance</p>
                 <p className="text-sm text-slate-200">
                   {data.echeancePrevue ? new Date(data.echeancePrevue).toLocaleDateString('fr-FR') : 'N/A'}
                 </p>
               </div>
               {data.retard && (
                 <div>
-                  <p className="text-xs text-slate-500 mb-1">Retard</p>
+                  <p className="text-xs text-slate-400 mb-1">Retard</p>
                   <p className="text-sm text-amber-400">{data.retard} jours</p>
                 </div>
               )}
@@ -109,11 +109,11 @@ export function CalendrierDetailPanel() {
           {type === 'conflit' && (
             <>
               <div>
-                <p className="text-xs text-slate-500 mb-1">Type</p>
+                <p className="text-xs text-slate-400 mb-1">Type</p>
                 <p className="text-sm text-slate-200 font-medium">{data.type || 'N/A'}</p>
               </div>
               <div>
-                <p className="text-xs text-slate-500 mb-1">Impact</p>
+                <p className="text-xs text-slate-400 mb-1">Impact</p>
                 <Badge variant={data.impact === 'critique' ? 'destructive' : 'default'}>
                   {data.impact || 'N/A'}
                 </Badge>
@@ -124,11 +124,11 @@ export function CalendrierDetailPanel() {
           {type === 'jalon' && (
             <>
               <div>
-                <p className="text-xs text-slate-500 mb-1">Projet</p>
+                <p className="text-xs text-slate-400 mb-1">Projet</p>
                 <p className="text-sm text-slate-200 font-medium">{data.projetLabel || 'N/A'}</p>
               </div>
               <div>
-                <p className="text-xs text-slate-500 mb-1">Jalon</p>
+                <p className="text-xs text-slate-400 mb-1">Jalon</p>
                 <p className="text-sm text-slate-200">{data.jalonLabel || 'N/A'}</p>
               </div>
             </>
@@ -137,11 +137,11 @@ export function CalendrierDetailPanel() {
           {type === 'absence' && (
             <>
               <div>
-                <p className="text-xs text-slate-500 mb-1">Employé</p>
+                <p className="text-xs text-slate-400 mb-1">Employé</p>
                 <p className="text-sm text-slate-200 font-medium">{data.employeNom || 'N/A'}</p>
               </div>
               <div>
-                <p className="text-xs text-slate-500 mb-1">Type</p>
+                <p className="text-xs text-slate-400 mb-1">Type</p>
                 <p className="text-sm text-slate-200">{data.type || 'N/A'}</p>
               </div>
             </>
@@ -150,11 +150,11 @@ export function CalendrierDetailPanel() {
           {type === 'instance' && (
             <>
               <div>
-                <p className="text-xs text-slate-500 mb-1">Titre</p>
+                <p className="text-xs text-slate-400 mb-1">Titre</p>
                 <p className="text-sm text-slate-200 font-medium">{data.titre || 'N/A'}</p>
               </div>
               <div>
-                <p className="text-xs text-slate-500 mb-1">Date</p>
+                <p className="text-xs text-slate-400 mb-1">Date</p>
                 <p className="text-sm text-slate-200">
                   {data.date ? new Date(data.date).toLocaleDateString('fr-FR') : 'N/A'}
                 </p>

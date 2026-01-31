@@ -62,14 +62,14 @@ export function DetailPanel() {
             <Badge variant="default" className="text-xs bg-slate-800 text-slate-400 border-slate-700">
               {data.reference || 'Détails'}
             </Badge>
-            <span className="text-xs text-slate-500 truncate">{type}</span>
+            <span className="text-xs text-slate-400 truncate">{type}</span>
           </div>
           <div className="flex items-center gap-1">
             <Button
               variant="ghost"
               size="sm"
               onClick={handleOpenFullModal}
-              className="h-7 w-7 p-0 text-slate-500 hover:text-slate-300"
+              className="h-7 w-7 p-0 text-slate-400 hover:text-slate-300"
               title="Ouvrir en modal"
             >
               <ExternalLink className="h-3.5 w-3.5" />
@@ -78,7 +78,7 @@ export function DetailPanel() {
               variant="ghost"
               size="sm"
               onClick={closeDetailPanel}
-              className="h-7 w-7 p-0 text-slate-500 hover:text-slate-300"
+              className="h-7 w-7 p-0 text-slate-400 hover:text-slate-300"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -93,7 +93,7 @@ export function DetailPanel() {
               {data.designation || data.title || data.name || 'Sans titre'}
             </h3>
             {data.subtitle && (
-              <p className="text-sm text-slate-500 mt-1">{data.subtitle}</p>
+              <p className="text-sm text-slate-400 mt-1">{data.subtitle}</p>
             )}
           </div>
 
@@ -122,7 +122,7 @@ export function DetailPanel() {
           {data.progress !== undefined && (
             <div className="p-3 rounded-lg bg-slate-800/40">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-slate-500">Avancement</span>
+                <span className="text-xs text-slate-400">Avancement</span>
                 <span className="text-sm font-medium text-slate-300">{data.progress}%</span>
               </div>
               <div className="h-2 bg-slate-700/50 rounded-full overflow-hidden">
@@ -154,14 +154,14 @@ export function DetailPanel() {
           {/* Description */}
           {data.description && (
             <div>
-              <p className="text-xs text-slate-500 uppercase mb-1">Description</p>
+              <p className="text-xs text-slate-400 uppercase mb-1">Description</p>
               <p className="text-sm text-slate-400 leading-relaxed">{data.description}</p>
             </div>
           )}
 
           {/* Quick Actions */}
           <div className="pt-2 space-y-2">
-            <p className="text-xs text-slate-500 uppercase">Actions rapides</p>
+            <p className="text-xs text-slate-400 uppercase">Actions rapides</p>
             <div className="grid grid-cols-2 gap-2">
               <QuickActionButton icon={History} label="Historique" />
               <QuickActionButton icon={MessageSquare} label="Commenter" />
@@ -199,10 +199,10 @@ function InfoRow({
   return (
     <div className="flex items-center gap-3">
       <div className="w-8 h-8 rounded-lg bg-slate-800/60 flex items-center justify-center flex-shrink-0">
-        <Icon className="h-4 w-4 text-slate-500" />
+        <Icon className="h-4 w-4 text-slate-400" />
       </div>
       <div className="min-w-0">
-        <p className="text-xs text-slate-500">{label}</p>
+        <p className="text-xs text-slate-400">{label}</p>
         <p className="text-sm text-slate-300 truncate">{value}</p>
       </div>
     </div>
@@ -240,7 +240,7 @@ function PriorityBadge({ priority }: { priority: string }) {
   return (
     <div className="flex items-center gap-1.5">
       <div className={cn('w-2 h-2 rounded-full', cfg.color)} />
-      <span className="text-xs text-slate-500">{cfg.label}</span>
+      <span className="text-xs text-slate-400">{cfg.label}</span>
     </div>
   );
 }

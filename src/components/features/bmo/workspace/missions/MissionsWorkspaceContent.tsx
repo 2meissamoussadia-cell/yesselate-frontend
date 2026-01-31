@@ -45,7 +45,7 @@ export function MissionsWorkspaceContent() {
     openTab({ type: 'mission', id: `mission:${mission.id}`, title: mission.id, icon: '✈️', data: { missionId: mission.id } });
   };
 
-  if (!activeTab) return <div className="flex items-center justify-center h-64 text-slate-500"><div className="text-center"><FileText className="w-12 h-12 mx-auto mb-3 opacity-30" /><p>Aucun onglet</p></div></div>;
+  if (!activeTab) return <div className="flex items-center justify-center h-64 text-slate-400"><div className="text-center"><FileText className="w-12 h-12 mx-auto mb-3 opacity-30" /><p>Aucun onglet</p></div></div>;
 
   if (activeTab.type === 'calendrier') return <PlaceholderView icon={<Calendar className="w-12 h-12" />} title="Calendrier des missions" />;
   if (activeTab.type === 'frais') return <PlaceholderView icon={<Receipt className="w-12 h-12" />} title="Frais de mission" />;
@@ -59,7 +59,7 @@ export function MissionsWorkspaceContent() {
           <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
             {queue === 'pending' ? 'En attente' : queue === 'approved' ? 'Approuvées' : queue === 'in_progress' ? 'En cours' : queue === 'completed' ? 'Terminées' : queue === 'cancelled' ? 'Annulées' : 'Toutes les missions'}
           </h2>
-          <p className="text-sm text-slate-500">{missions.length} mission(s)</p>
+          <p className="text-sm text-slate-400">{missions.length} mission(s)</p>
         </div>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -70,7 +70,7 @@ export function MissionsWorkspaceContent() {
       {loading ? (
         <div className="space-y-3">{[...Array(5)].map((_, i) => <div key={i} className="h-24 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />)}</div>
       ) : missions.length === 0 ? (
-        <div className="py-12 text-center text-slate-500"><Plane className="w-12 h-12 mx-auto mb-3 opacity-30" /><p className="font-medium">Aucune mission trouvée</p></div>
+        <div className="py-12 text-center text-slate-400"><Plane className="w-12 h-12 mx-auto mb-3 opacity-30" /><p className="font-medium">Aucune mission trouvée</p></div>
       ) : (
         <div className="space-y-2">
           {missions.map(mission => {
@@ -89,7 +89,7 @@ export function MissionsWorkspaceContent() {
                         <span className="text-xs px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-600 flex items-center gap-1"><MapPin className="w-3 h-3" />{mission.destination}</span>
                       </div>
                       <p className="font-medium text-slate-900 dark:text-slate-100">{mission.objet}</p>
-                      <div className="flex items-center gap-4 mt-2 text-xs text-slate-500">
+                      <div className="flex items-center gap-4 mt-2 text-xs text-slate-400">
                         <span className="flex items-center gap-1"><User className="w-3 h-3" />{mission.agent}</span>
                         <span className="flex items-center gap-1"><Building2 className="w-3 h-3" />{mission.bureau}</span>
                         <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{new Date(mission.dateDepart).toLocaleDateString('fr-FR')} → {new Date(mission.dateRetour).toLocaleDateString('fr-FR')}</span>
@@ -97,7 +97,7 @@ export function MissionsWorkspaceContent() {
                     </div>
                     <div className="text-right flex-none">
                       <p className="font-mono font-bold text-cyan-600 dark:text-cyan-400">{missionsApiService.formatMontant(mission.budgetPrevu)} FCFA</p>
-                      <p className="text-xs text-slate-500 mt-1">Budget prévu</p>
+                      <p className="text-xs text-slate-400 mt-1">Budget prévu</p>
                       <div className="flex items-center justify-end gap-2 mt-2">
                         <button onClick={e => { e.stopPropagation(); handleOpenDetail(mission); }} className="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-700"><Eye className="w-4 h-4 text-slate-400" /></button>
                         <ChevronRight className={cn("w-4 h-4 text-slate-400 transition-transform", isExpanded && "rotate-90")} />
@@ -108,9 +108,9 @@ export function MissionsWorkspaceContent() {
                 {isExpanded && (
                   <div className="px-4 pb-4 pt-0 border-t border-slate-200/70 dark:border-slate-800">
                     <div className="grid grid-cols-3 gap-4 py-4">
-                      <div><p className="text-xs text-slate-500 mb-1">Projet</p><p className="font-medium text-slate-900 dark:text-slate-100">{mission.projet || 'N/A'}</p></div>
-                      <div><p className="text-xs text-slate-500 mb-1">Frais réels</p><p className="font-medium text-slate-900 dark:text-slate-100">{mission.fraisReels ? `${missionsApiService.formatMontant(mission.fraisReels)} FCFA` : 'Non déclarés'}</p></div>
-                      <div><p className="text-xs text-slate-500 mb-1">Durée</p><p className="font-medium text-slate-900 dark:text-slate-100">{Math.ceil((new Date(mission.dateRetour).getTime() - new Date(mission.dateDepart).getTime()) / (1000 * 60 * 60 * 24))} jour(s)</p></div>
+                      <div><p className="text-xs text-slate-400 mb-1">Projet</p><p className="font-medium text-slate-900 dark:text-slate-100">{mission.projet || 'N/A'}</p></div>
+                      <div><p className="text-xs text-slate-400 mb-1">Frais réels</p><p className="font-medium text-slate-900 dark:text-slate-100">{mission.fraisReels ? `${missionsApiService.formatMontant(mission.fraisReels)} FCFA` : 'Non déclarés'}</p></div>
+                      <div><p className="text-xs text-slate-400 mb-1">Durée</p><p className="font-medium text-slate-900 dark:text-slate-100">{Math.ceil((new Date(mission.dateRetour).getTime() - new Date(mission.dateDepart).getTime()) / (1000 * 60 * 60 * 24))} jour(s)</p></div>
                     </div>
                     <div className="flex items-center gap-2 pt-2 border-t border-slate-200/70 dark:border-slate-800">
                       <button onClick={() => handleOpenDetail(mission)} className="flex-1 px-4 py-2 rounded-lg bg-cyan-500 text-white text-sm font-medium hover:bg-cyan-600">Voir le détail</button>
@@ -129,6 +129,6 @@ export function MissionsWorkspaceContent() {
 }
 
 function PlaceholderView({ icon, title }: { icon: React.ReactNode; title: string }) {
-  return <div className="flex items-center justify-center h-64 text-slate-500"><div className="text-center"><div className="mx-auto mb-4 opacity-30">{icon}</div><p className="font-semibold">{title}</p><p className="text-xs mt-4 text-slate-400">En cours de développement</p></div></div>;
+  return <div className="flex items-center justify-center h-64 text-slate-400"><div className="text-center"><div className="mx-auto mb-4 opacity-30">{icon}</div><p className="font-semibold">{title}</p><p className="text-xs mt-4 text-slate-400">En cours de développement</p></div></div>;
 }
 

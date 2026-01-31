@@ -390,7 +390,7 @@ export function BTPDomainView({ domainId }: BTPDomainViewProps) {
                       {alertData.title || `Alerte ${alertData.category}`}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-slate-400">
                     {alertData.description || 'Description de l\'alerte...'}
                   </p>
                 </div>
@@ -444,7 +444,7 @@ export function BTPDomainView({ domainId }: BTPDomainViewProps) {
               {module.label}
             </h3>
             {module.description && (
-              <p className="text-slate-500 text-xs mb-3 line-clamp-2">{module.description}</p>
+              <p className="text-slate-400 text-xs mb-3 line-clamp-2">{module.description}</p>
             )}
             <div className="flex items-center justify-between">
               <div className="text-xs text-slate-400">

@@ -21,7 +21,7 @@ Rapport d'audit du module dashboard et zones connexes (état au 29/01/2025).
 |-------|--------|----------------|
 | **Import EmptyState** | Unifié : implémentation unique dans shared, ré-export depuis views ; AdminSettings* et ViewRouter importent depuis shared. | Fait. |
 | **Deux shells « DashboardShell »** | `DashboardShell.tsx` (racine) = shell complet. `shared/DashboardShell.tsx` = layout seul. Documenté dans les deux fichiers + index (DashboardShell vs DashboardShellShared). | Fait. |
-| **Registry vs config / loadComponent** | `DashboardViewRouter` : si la route est dans le **registry** → rend `DashboardContentSwitch` (loaders + data). Sinon → charge le composant par **nom** via `loadComponent` + `navigation.config.json`. Deux sources de vérité (registry vs JSON) pour « quelle URL → quelle vue ». | Clarifier la convention (registry = priorité ou unique source) et documenter ; éviter qu'une route soit définie seulement dans l'un des deux. |
+| **Registry vs config / loadComponent** | `DashboardViewRouter` : si la route est dans le **registry** → rend `DashboardContentSwitch` (loaders + data). Sinon → charge le composant par **nom** via `loadComponent` + `navigation.config.json`. | ✅ Documenté : `docs/dashboard/REGISTRY_NAV_CONFIG_CONVENTION.md` — registry prioritaire, fallback loadComponent. |
 | **Exports dashboard** | Le module exporte `DashboardShell` (shell complet) et `DashboardShellShared` (layout). Commentaires ajoutés dans l'index. | Fait. |
 
 ---
@@ -32,8 +32,8 @@ Rapport d'audit du module dashboard et zones connexes (état au 29/01/2025).
 |--------|--------|------------------|
 | **DashboardContentRouter** | Déprécié, remplacé par `DashboardViewRouter`. Export marqué @deprecated dans `components/index.ts` ; conservé pour rétrocompat. | Fait (dépréciation documentée). |
 | **mapKPIColorToTone / mapKPIToneToColor** | Dans `kpi.ts`, wrappers autour de `mapColorToTone` / `mapToneToColor` de `colorMapping.ts`. | Garder tel quel (rétrocompat). |
-| **KpiCard (gouvernance) vs KpiStatCard (BMO)** | Comportement proche, pas de composant partagé. | Optionnel : extraire un composant KPI commun ou documenter les deux usages. |
-| **Pages PerformanceBureaux*** | Structure et rendu quasi identiques (liste + EmptyState « Aucun projet »). | Factoriser un composant commun (ex. `PerformanceBureauxListPage`) avec paramètre bureau. |
+| **KpiCard (gouvernance) vs KpiStatCard (BMO)** | Comportement proche, pas de composant partagé. | ✅ Documenté : `docs/dashboard/KPI_COMPONENTS_USAGE.md` (usage par zone : dashboard KPICard/KpiCardPro, BMO KpiStatCard, gouvernance KpiCard local). |
+| **Pages PerformanceBureaux*** | Structure et rendu quasi identiques (liste + EmptyState « Aucun projet »). | ✅ Factorisé : `PerformanceBureauxSinglePage` (defaultBureau) ; Bmo, Bpl, Bcg, Brc, Bop, Bf, Bj, Bct, Bja, Bex délèguent à ce composant. |
 
 ---
 

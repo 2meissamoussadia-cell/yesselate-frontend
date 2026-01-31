@@ -23,8 +23,8 @@ export function DelegationScopeSection({ delegation, sub }: Props) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
         <Info className="w-10 h-10 text-slate-300 dark:text-slate-600 mb-3" />
-        <p className="text-slate-500 dark:text-slate-400">Chargement des données...</p>
-        <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
+        <p className="text-slate-400 dark:text-slate-400">Chargement des données...</p>
+        <p className="text-xs text-slate-400 dark:text-slate-400 mt-1">
           Si le problème persiste, vérifiez la connexion API.
         </p>
       </div>
@@ -80,13 +80,13 @@ export function DelegationScopeSection({ delegation, sub }: Props) {
                     <span className="font-medium">{p.action?.replace(/_/g, ' ')}</span>
                     <span className={cn(
                       "text-xs px-2 py-0.5 rounded",
-                      p.enabled ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-500"
+                      p.enabled ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-400"
                     )}>
                       {p.enabled ? 'Actif' : 'Désactivé'}
                     </span>
                   </div>
                   {p.maxAmount && (
-                    <div className="text-sm text-slate-500">
+                    <div className="text-sm text-slate-400">
                       Plafond : {new Intl.NumberFormat('fr-FR').format(p.maxAmount)} {p.currency}
                     </div>
                   )}
@@ -143,7 +143,7 @@ export function DelegationScopeSection({ delegation, sub }: Props) {
         />
       );
     default:
-      return <div className="text-slate-500">Sous-section inconnue</div>;
+      return <div className="text-slate-400">Sous-section inconnue</div>;
   }
 }
 
@@ -201,7 +201,7 @@ function ScopeDetail({
         {icon}
         <div>
           <h2 className="text-lg font-semibold">{title}</h2>
-          <p className="text-sm text-slate-500">{description}</p>
+          <p className="text-sm text-slate-400">{description}</p>
         </div>
       </div>
 

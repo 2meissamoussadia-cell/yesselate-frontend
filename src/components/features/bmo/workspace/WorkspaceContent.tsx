@@ -25,7 +25,7 @@ export function WorkspaceContent() {
           </div>
           
           <h2 className="text-xl font-semibold mb-2">Bienvenue dans la console métier</h2>
-          <p className="text-slate-500 mb-6 max-w-md mx-auto">
+          <p className="text-slate-400 mb-6 max-w-md mx-auto">
             Sélectionnez une file de demandes ci-dessus ou utilisez les raccourcis rapides ci-dessous pour commencer.
           </p>
           
@@ -69,7 +69,7 @@ export function WorkspaceContent() {
 
   return (
     <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-6 dark:border-slate-800 dark:bg-[#1f1f1f]/70">
-      <div className="text-center text-slate-500">
+      <div className="text-center text-slate-400">
         Vue non supportée : {tab.type}
       </div>
     </div>

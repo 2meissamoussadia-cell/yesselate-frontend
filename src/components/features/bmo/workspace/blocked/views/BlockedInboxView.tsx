@@ -164,7 +164,7 @@ export function BlockedInboxView({ tabId, data }: Props) {
         <div>
           <div className="flex items-center gap-3">
             <span className="text-xl font-bold text-slate-900 dark:text-slate-100">{stats.total}</span>
-            <span className="text-slate-500">dossiers</span>
+            <span className="text-slate-400">dossiers</span>
             {stats.critical > 0 && (
               <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium">
                 <AlertCircle className="w-3 h-3 text-red-500" />
@@ -172,12 +172,12 @@ export function BlockedInboxView({ tabId, data }: Props) {
               </span>
             )}
           </div>
-          <p className="text-sm text-slate-500">Délai moyen: {stats.avgDelay}j</p>
+          <p className="text-sm text-slate-400">Délai moyen: {stats.avgDelay}j</p>
         </div>
         
         {visibleSelectedCount > 0 && (
           <div className="flex items-center gap-2">
-            <span className="text-sm text-slate-500">{visibleSelectedCount} sélectionné(s)</span>
+            <span className="text-sm text-slate-400">{visibleSelectedCount} sélectionné(s)</span>
             <button
               onClick={() => clearSelection()}
               className="text-sm text-orange-600 hover:underline"
@@ -252,7 +252,7 @@ export function BlockedInboxView({ tabId, data }: Props) {
       {/* Liste des dossiers */}
       <div className="space-y-2">
         {filteredDossiers.length === 0 ? (
-          <div className="py-12 text-center text-slate-500">
+          <div className="py-12 text-center text-slate-400">
             <FileText className="w-12 h-12 mx-auto mb-3 opacity-30" />
             <p>Aucun dossier ne correspond aux critères</p>
           </div>
@@ -313,9 +313,9 @@ export function BlockedInboxView({ tabId, data }: Props) {
                       </div>
                       
                       <p className="font-medium text-slate-900 dark:text-slate-100">{dossier.subject}</p>
-                      <p className="text-sm text-slate-500 mt-0.5 line-clamp-1">{dossier.reason}</p>
+                      <p className="text-sm text-slate-400 mt-0.5 line-clamp-1">{dossier.reason}</p>
                       
-                      <div className="flex items-center gap-4 mt-2 text-xs text-slate-500">
+                      <div className="flex items-center gap-4 mt-2 text-xs text-slate-400">
                         <span className="flex items-center gap-1">
                           <Building2 className="w-3 h-3" />
                           {dossier.bureau}
@@ -331,7 +331,7 @@ export function BlockedInboxView({ tabId, data }: Props) {
                     {/* Right side */}
                     <div className="text-right flex-none">
                       <p className="font-mono font-bold text-amber-600 dark:text-amber-400">{dossier.amount}</p>
-                      <p className="text-xs text-slate-500 mt-1">
+                      <p className="text-xs text-slate-400 mt-1">
                         Priorité: <span className={cn("font-bold", priority > 5000 ? "text-red-500" : priority > 2000 ? "text-amber-500" : "text-blue-500")}>{priority}</span>
                       </p>
                       <ChevronRight className={cn(
@@ -349,11 +349,11 @@ export function BlockedInboxView({ tabId, data }: Props) {
                       {/* Détails */}
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                         <div>
-                          <p className="text-xs text-slate-500 mb-1">Responsable</p>
+                          <p className="text-xs text-slate-400 mb-1">Responsable</p>
                           <p className="font-medium">{dossier.responsible || '—'}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-slate-500 mb-1">Projet</p>
+                          <p className="text-xs text-slate-400 mb-1">Projet</p>
                           <Link 
                             href={`/maitre-ouvrage/projets-en-cours?id=${dossier.project}`}
                             className="font-medium text-orange-600 hover:underline"
@@ -362,7 +362,7 @@ export function BlockedInboxView({ tabId, data }: Props) {
                           </Link>
                         </div>
                         <div>
-                          <p className="text-xs text-slate-500 mb-1">Délai</p>
+                          <p className="text-xs text-slate-400 mb-1">Délai</p>
                           <p className={cn(
                             "font-medium",
                             (dossier.delay ?? 0) > 14 ? "text-red-500" : (dossier.delay ?? 0) > 7 ? "text-amber-500" : ""
@@ -371,7 +371,7 @@ export function BlockedInboxView({ tabId, data }: Props) {
                           </p>
                         </div>
                         <div>
-                          <p className="text-xs text-slate-500 mb-1">Montant</p>
+                          <p className="text-xs text-slate-400 mb-1">Montant</p>
                           <p className="font-mono font-bold">{dossier.amount}</p>
                         </div>
                       </div>
@@ -425,7 +425,7 @@ export function BlockedInboxView({ tabId, data }: Props) {
       {/* Pagination / Load more */}
       {filteredDossiers.length > 0 && (
         <div className="text-center py-4">
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-400">
             Affichage de {filteredDossiers.length} dossiers
           </p>
         </div>

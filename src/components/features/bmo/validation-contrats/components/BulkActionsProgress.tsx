@@ -63,7 +63,7 @@ export function BulkActionsProgress({ current, total, action }: BulkActionsProgr
           </div>
         </div>
 
-        <p className="text-xs text-slate-500 mt-4 text-center">
+        <p className="text-xs text-slate-400 mt-4 text-center">
           Veuillez patienter, cette opération peut prendre quelques instants...
         </p>
       </div>

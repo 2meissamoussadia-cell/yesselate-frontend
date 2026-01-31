@@ -282,7 +282,7 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
                   'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] transition-colors',
                   active
                     ? 'bg-slate-800 text-slate-100'
-                    : 'bg-transparent text-slate-500 hover:bg-slate-900'
+                    : 'bg-transparent text-slate-400 hover:bg-slate-900'
                 )}
               >
                 {leafNode.label}
@@ -294,7 +294,7 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
 
       {/* BREADCRUMB OPTIONNEL EN BAS — masqué si mainTabsOnly */}
       {!mainTabsOnly && showBreadcrumbs && (
-        <div className="px-4 pb-2 text-[10px] text-slate-500 flex items-center gap-1">
+        <div className="px-4 pb-2 text-[10px] text-slate-400 flex items-center gap-1">
           <span>{mainLabel}</span>
           {activeSubLabel && (
             <>

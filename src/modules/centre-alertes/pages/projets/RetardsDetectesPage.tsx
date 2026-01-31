@@ -45,7 +45,7 @@ export function RetardsDetectesPage() {
                 {alerte.description && (
                   <p className="text-sm text-slate-400 mb-2">{alerte.description}</p>
                 )}
-                <div className="flex items-center gap-4 text-xs text-slate-500">
+                <div className="flex items-center gap-4 text-xs text-slate-400">
                   {alerte.projetNom && <span>Projet: {alerte.projetNom}</span>}
                   <span>Bureau: {alerte.bureau}</span>
                   <span>Responsable: {alerte.responsable}</span>
@@ -58,7 +58,7 @@ export function RetardsDetectesPage() {
           </div>
         ))}
         {retards.length === 0 && (
-          <div className="text-center py-8 text-slate-500">
+          <div className="text-center py-8 text-slate-400">
             Aucun retard détecté
           </div>
         )}

@@ -104,7 +104,7 @@ export function AnalyticsStatsModal({ open, onClose }: AnalyticsStatsModalProps)
               <span className="text-xs text-slate-400">Total Demandes</span>
             </div>
             <div className="text-3xl font-bold text-blue-400">{stats.totalDemands}</div>
-            <div className="text-xs text-slate-500 mt-1 flex items-center gap-1">
+            <div className="text-xs text-slate-400 mt-1 flex items-center gap-1">
               {monthEvolution.demandsChange > 0 ? (
                 <>
                   <TrendingUp className="w-3 h-3 text-emerald-500" />
@@ -126,7 +126,7 @@ export function AnalyticsStatsModal({ open, onClose }: AnalyticsStatsModalProps)
               <span className="text-xs text-slate-400">Taux Validation</span>
             </div>
             <div className="text-3xl font-bold text-emerald-400">{stats.globalValidationRate}%</div>
-            <div className="text-xs text-slate-500 mt-1 flex items-center gap-1">
+            <div className="text-xs text-slate-400 mt-1 flex items-center gap-1">
               {monthEvolution.validationChange > 0 ? (
                 <>
                   <TrendingUp className="w-3 h-3 text-emerald-500" />
@@ -148,7 +148,7 @@ export function AnalyticsStatsModal({ open, onClose }: AnalyticsStatsModalProps)
               <span className="text-xs text-slate-400">En Attente</span>
             </div>
             <div className="text-3xl font-bold text-amber-400">{stats.totalPending}</div>
-            <div className="text-xs text-slate-500 mt-1">
+            <div className="text-xs text-slate-400 mt-1">
               {Math.round((stats.totalPending / stats.totalDemands) * 100)}% du total
             </div>
           </div>
@@ -159,7 +159,7 @@ export function AnalyticsStatsModal({ open, onClose }: AnalyticsStatsModalProps)
               <span className="text-xs text-slate-400">Conformité SLA</span>
             </div>
             <div className="text-3xl font-bold text-purple-400">{stats.globalSLA}%</div>
-            <div className="text-xs text-slate-500 mt-1 flex items-center gap-1">
+            <div className="text-xs text-slate-400 mt-1 flex items-center gap-1">
               {monthEvolution.slaChange > 0 ? (
                 <>
                   <TrendingUp className="w-3 h-3 text-emerald-500" />
@@ -186,21 +186,21 @@ export function AnalyticsStatsModal({ open, onClose }: AnalyticsStatsModalProps)
             <div className="text-center p-4 rounded-lg bg-emerald-950/20 border border-emerald-800">
               <div className="text-3xl font-bold text-emerald-400">{stats.goodKPIs}</div>
               <div className="text-sm text-slate-400 mt-1">🟢 Good</div>
-              <div className="text-xs text-slate-500 mt-1">
+              <div className="text-xs text-slate-400 mt-1">
                 {Math.round((stats.goodKPIs / kpis.length) * 100)}%
               </div>
             </div>
             <div className="text-center p-4 rounded-lg bg-amber-950/20 border border-amber-800">
               <div className="text-3xl font-bold text-amber-400">{stats.warningKPIs}</div>
               <div className="text-sm text-slate-400 mt-1">🟡 Warning</div>
-              <div className="text-xs text-slate-500 mt-1">
+              <div className="text-xs text-slate-400 mt-1">
                 {Math.round((stats.warningKPIs / kpis.length) * 100)}%
               </div>
             </div>
             <div className="text-center p-4 rounded-lg bg-red-950/20 border border-red-800">
               <div className="text-3xl font-bold text-red-400">{stats.criticalKPIs}</div>
               <div className="text-sm text-slate-400 mt-1">🔴 Critical</div>
-              <div className="text-xs text-slate-500 mt-1">
+              <div className="text-xs text-slate-400 mt-1">
                 {Math.round((stats.criticalKPIs / kpis.length) * 100)}%
               </div>
             </div>
@@ -227,15 +227,15 @@ export function AnalyticsStatsModal({ open, onClose }: AnalyticsStatsModalProps)
               </div>
               <div className="grid grid-cols-3 gap-2 mt-3 text-xs">
                 <div>
-                  <div className="text-slate-500">Validation</div>
+                  <div className="text-slate-400">Validation</div>
                   <div className="font-semibold text-emerald-600">{stats.topBureau?.validationRate}%</div>
                 </div>
                 <div>
-                  <div className="text-slate-500">SLA</div>
+                  <div className="text-slate-400">SLA</div>
                   <div className="font-semibold text-emerald-600">{stats.topBureau?.slaCompliance}%</div>
                 </div>
                 <div>
-                  <div className="text-slate-500">Délai</div>
+                  <div className="text-slate-400">Délai</div>
                   <div className="font-semibold text-emerald-600">{stats.topBureau?.avgDelay}j</div>
                 </div>
               </div>
@@ -254,15 +254,15 @@ export function AnalyticsStatsModal({ open, onClose }: AnalyticsStatsModalProps)
               </div>
               <div className="grid grid-cols-3 gap-2 mt-3 text-xs">
                 <div>
-                  <div className="text-slate-500">Validation</div>
+                  <div className="text-slate-400">Validation</div>
                   <div className="font-semibold">{stats.weakestBureau?.validationRate}%</div>
                 </div>
                 <div>
-                  <div className="text-slate-500">SLA</div>
+                  <div className="text-slate-400">SLA</div>
                   <div className="font-semibold">{stats.weakestBureau?.slaCompliance}%</div>
                 </div>
                 <div>
-                  <div className="text-slate-500">Délai</div>
+                  <div className="text-slate-400">Délai</div>
                   <div className="font-semibold">{stats.weakestBureau?.avgDelay}j</div>
                 </div>
               </div>
@@ -383,7 +383,7 @@ export function AnalyticsStatsModal({ open, onClose }: AnalyticsStatsModalProps)
         </div>
 
         {/* Footer avec timestamp */}
-        <div className="text-center text-xs text-slate-500 pt-4 border-t border-slate-200 dark:border-slate-700">
+        <div className="text-center text-xs text-slate-400 pt-4 border-t border-slate-200 dark:border-slate-700">
           Dernière mise à jour: {new Date().toLocaleString('fr-FR')}
         </div>
       </div>

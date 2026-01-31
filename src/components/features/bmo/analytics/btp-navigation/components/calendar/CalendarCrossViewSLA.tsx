@@ -91,19 +91,19 @@ export function CalendarCrossViewSLA({ isOpen, onClose }: CalendarCrossViewSLAPr
         {/* KPIs */}
         <div className="grid grid-cols-3 gap-3">
           <div className="bg-slate-900/50 rounded-lg p-3 border border-slate-700">
-            <div className="text-xs text-slate-500 mb-1">En retard</div>
+            <div className="text-xs text-slate-400 mb-1">En retard</div>
             <div className="text-2xl font-bold text-rose-400">
               {slaItems.filter(i => i.status === 'overdue').length}
             </div>
           </div>
           <div className="bg-slate-900/50 rounded-lg p-3 border border-slate-700">
-            <div className="text-xs text-slate-500 mb-1">En risque</div>
+            <div className="text-xs text-slate-400 mb-1">En risque</div>
             <div className="text-2xl font-bold text-amber-400">
               {slaItems.filter(i => i.status === 'at-risk').length}
             </div>
           </div>
           <div className="bg-slate-900/50 rounded-lg p-3 border border-slate-700">
-            <div className="text-xs text-slate-500 mb-1">À l'heure</div>
+            <div className="text-xs text-slate-400 mb-1">À l'heure</div>
             <div className="text-2xl font-bold text-emerald-400">
               {slaItems.filter(i => i.status === 'on-time').length}
             </div>
@@ -131,7 +131,7 @@ export function CalendarCrossViewSLA({ isOpen, onClose }: CalendarCrossViewSLAPr
                       </Badge>
                     )}
                   </div>
-                  <div className="flex items-center gap-4 text-xs text-slate-500">
+                  <div className="flex items-center gap-4 text-xs text-slate-400">
                     <div className="flex items-center gap-1">
                       <Clock className="h-3 w-3" />
                       {item.deadline}

@@ -243,7 +243,7 @@ export function AdvancedFilters({ filters, onFiltersChange }: AdvancedFiltersPro
                   />
                 </div>
               </div>
-              <p className="text-[10px] text-slate-500 mt-2">
+              <p className="text-[10px] text-slate-400 mt-2">
                 Les seuils s'appliquent aux données après filtres période/bureaux.
               </p>
             </div>

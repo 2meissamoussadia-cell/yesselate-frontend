@@ -188,7 +188,7 @@ export function BTPModuleView({ domainId, moduleId }: BTPModuleViewProps) {
               <div className="w-2 h-2 rounded-full bg-blue-400" />
               <div className="flex-1">
                 <p className="text-xs text-slate-300">Événement {i}</p>
-                <p className="text-xs text-slate-500">Il y a {i} jour(s)</p>
+                <p className="text-xs text-slate-400">Il y a {i} jour(s)</p>
               </div>
             </div>
           ))}
@@ -229,7 +229,7 @@ export function BTPModuleView({ domainId, moduleId }: BTPModuleViewProps) {
           >
             <h3 className="text-sm font-medium text-slate-300 mb-1">{subMod.label}</h3>
             {subMod.description && (
-              <p className="text-xs text-slate-500 line-clamp-2">{subMod.description}</p>
+              <p className="text-xs text-slate-400 line-clamp-2">{subMod.description}</p>
             )}
           </div>
         ))}

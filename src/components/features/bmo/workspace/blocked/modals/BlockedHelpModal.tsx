@@ -220,7 +220,7 @@ function WorkflowSection() {
                 <span className="text-xs text-amber-400">En cours</span>
               )}
               {step.status === 'pending' && (
-                <span className="text-xs text-slate-500">En attente</span>
+                <span className="text-xs text-slate-400">En attente</span>
               )}
             </div>
           </div>
@@ -294,7 +294,7 @@ function ImpactsSection() {
               <span className="text-2xl">{item.icon}</span>
               <div className="flex-1">
                 <h4 className={`text-sm font-medium text-${item.color}-400`}>{item.label}</h4>
-                <span className="text-xs text-slate-500">SLA: {item.sla}</span>
+                <span className="text-xs text-slate-400">SLA: {item.sla}</span>
               </div>
             </div>
             <p className="text-sm text-slate-400 ml-11">{item.description}</p>

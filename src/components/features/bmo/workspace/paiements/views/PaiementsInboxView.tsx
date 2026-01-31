@@ -91,7 +91,7 @@ export function PaiementsInboxView({ tabId, data }: Props) {
              queue === 'scheduled' ? 'Paiements planifiés' :
              queue === 'critical' ? 'Paiements urgents' : 'Tous les paiements'}
           </h2>
-          <p className="text-sm text-slate-500">{paiements.length} paiement(s)</p>
+          <p className="text-sm text-slate-400">{paiements.length} paiement(s)</p>
         </div>
         <div className="flex items-center gap-3">
           <div className="relative">
@@ -113,7 +113,7 @@ export function PaiementsInboxView({ tabId, data }: Props) {
           <button className="px-3 py-1.5 rounded-lg bg-emerald-500 text-white text-sm font-medium hover:bg-emerald-600">Valider</button>
           <button className="px-3 py-1.5 rounded-lg bg-blue-500 text-white text-sm font-medium hover:bg-blue-600">Planifier</button>
           <button className="px-3 py-1.5 rounded-lg bg-red-500 text-white text-sm font-medium hover:bg-red-600">Rejeter</button>
-          <button onClick={clearSelection} className="text-sm text-slate-500 hover:text-slate-700">Annuler</button>
+          <button onClick={clearSelection} className="text-sm text-slate-400 hover:text-slate-700">Annuler</button>
         </div>
       )}
 
@@ -121,7 +121,7 @@ export function PaiementsInboxView({ tabId, data }: Props) {
       {loading ? (
         <div className="space-y-3">{[...Array(5)].map((_, i) => <div key={i} className="h-24 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />)}</div>
       ) : paiements.length === 0 ? (
-        <div className="py-12 text-center text-slate-500">
+        <div className="py-12 text-center text-slate-400">
           <FileText className="w-12 h-12 mx-auto mb-3 opacity-30" />
           <p className="font-medium">Aucun paiement trouvé</p>
         </div>
@@ -145,11 +145,11 @@ export function PaiementsInboxView({ tabId, data }: Props) {
                       <div className="flex items-center gap-2 flex-wrap mb-1">
                         <span className="font-mono text-xs px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">{paiement.reference}</span>
                         <span className={cn("text-xs font-medium px-2 py-0.5 rounded", style.badge)}>{paiement.urgency.toUpperCase()}</span>
-                        <span className="text-xs text-slate-500 flex items-center gap-1"><StatusIcon className="w-3 h-3" />{paiementsApiService.getStatusLabel(paiement.status)}</span>
-                        <span className="text-xs text-slate-500">{paiementsApiService.getTypeLabel(paiement.type)}</span>
+                        <span className="text-xs text-slate-400 flex items-center gap-1"><StatusIcon className="w-3 h-3" />{paiementsApiService.getStatusLabel(paiement.status)}</span>
+                        <span className="text-xs text-slate-400">{paiementsApiService.getTypeLabel(paiement.type)}</span>
                       </div>
                       <p className="font-medium text-slate-900 dark:text-slate-100 line-clamp-1">{paiement.description}</p>
-                      <div className="flex items-center gap-4 mt-2 text-xs text-slate-500">
+                      <div className="flex items-center gap-4 mt-2 text-xs text-slate-400">
                         <span className="flex items-center gap-1"><Building2 className="w-3 h-3" />{paiement.fournisseur.name}</span>
                         <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />Échéance: {new Date(paiement.dateEcheance).toLocaleDateString('fr-FR')}</span>
                       </div>
@@ -169,13 +169,13 @@ export function PaiementsInboxView({ tabId, data }: Props) {
                 {isExpanded && (
                   <div className="px-4 pb-4 pt-0 border-t border-slate-200/70 dark:border-slate-800">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-4">
-                      <div><p className="text-xs text-slate-500 mb-1">Bureau</p><p className="font-medium text-slate-900 dark:text-slate-100">{paiement.bureau}</p></div>
-                      <div><p className="text-xs text-slate-500 mb-1">Responsable</p><p className="font-medium text-slate-900 dark:text-slate-100">{paiement.responsible}</p></div>
-                      <div><p className="text-xs text-slate-500 mb-1">Date facture</p><p className="font-medium text-slate-900 dark:text-slate-100">{new Date(paiement.dateFacture).toLocaleDateString('fr-FR')}</p></div>
-                      <div><p className="text-xs text-slate-500 mb-1">Date échéance</p><p className="font-medium text-slate-900 dark:text-slate-100">{new Date(paiement.dateEcheance).toLocaleDateString('fr-FR')}</p></div>
+                      <div><p className="text-xs text-slate-400 mb-1">Bureau</p><p className="font-medium text-slate-900 dark:text-slate-100">{paiement.bureau}</p></div>
+                      <div><p className="text-xs text-slate-400 mb-1">Responsable</p><p className="font-medium text-slate-900 dark:text-slate-100">{paiement.responsible}</p></div>
+                      <div><p className="text-xs text-slate-400 mb-1">Date facture</p><p className="font-medium text-slate-900 dark:text-slate-100">{new Date(paiement.dateFacture).toLocaleDateString('fr-FR')}</p></div>
+                      <div><p className="text-xs text-slate-400 mb-1">Date échéance</p><p className="font-medium text-slate-900 dark:text-slate-100">{new Date(paiement.dateEcheance).toLocaleDateString('fr-FR')}</p></div>
                     </div>
                     <div className="mb-4">
-                      <p className="text-xs text-slate-500 mb-2">Validations</p>
+                      <p className="text-xs text-slate-400 mb-2">Validations</p>
                       <div className="flex items-center gap-2">
                         {Object.entries(paiement.validations).map(([key, done]) => (
                           <span key={key} className={cn("px-2 py-1 rounded text-xs font-medium", done ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400" : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400")}>
@@ -201,7 +201,7 @@ export function PaiementsInboxView({ tabId, data }: Props) {
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-2 pt-4">
           <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm disabled:opacity-50">Précédent</button>
-          <span className="text-sm text-slate-500">Page {page} / {totalPages}</span>
+          <span className="text-sm text-slate-400">Page {page} / {totalPages}</span>
           <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} className="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm disabled:opacity-50">Suivant</button>
         </div>
       )}

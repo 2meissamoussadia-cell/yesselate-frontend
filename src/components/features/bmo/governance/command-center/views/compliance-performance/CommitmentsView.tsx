@@ -81,7 +81,7 @@ export function CommitmentsView() {
                         style={{ width: `${commitment.budget.percentage}%` }}
                       />
                     </div>
-                    <div className="flex items-center justify-between text-xs text-slate-500">
+                    <div className="flex items-center justify-between text-xs text-slate-400">
                       <span>{commitment.budget.percentage}%</span>
                       <span>Écart: {commitment.variance.budget}</span>
                     </div>
@@ -109,7 +109,7 @@ export function CommitmentsView() {
                     </div>
                   </div>
                   <div className="mt-2">
-                    <div className="flex items-center justify-between text-xs text-slate-500">
+                    <div className="flex items-center justify-between text-xs text-slate-400">
                       <span>Taux respect: {commitment.milestones.percentage}%</span>
                       <span>Écart: {commitment.variance.milestones}</span>
                     </div>

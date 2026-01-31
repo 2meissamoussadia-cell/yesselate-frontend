@@ -325,9 +325,9 @@ export function EvaluationsCommandPalette({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Rechercher une évaluation, une action..."
-            className="flex-1 bg-transparent text-slate-200 placeholder:text-slate-500 outline-none text-base"
+            className="flex-1 bg-transparent text-slate-200 placeholder:text-slate-400 outline-none text-base"
           />
-          <kbd className="px-2 py-1 rounded bg-slate-800 text-xs font-mono text-slate-500 border border-slate-700">
+          <kbd className="px-2 py-1 rounded bg-slate-800 text-xs font-mono text-slate-400 border border-slate-700">
             ESC
           </kbd>
         </div>
@@ -336,7 +336,7 @@ export function EvaluationsCommandPalette({
         <div className="max-h-[60vh] overflow-y-auto">
           {Object.entries(groupedCommands).map(([category, commands]) => (
             <div key={category} className="py-2">
-              <div className="px-4 py-1.5 text-xs font-semibold text-slate-500 uppercase tracking-wide">
+              <div className="px-4 py-1.5 text-xs font-semibold text-slate-400 uppercase tracking-wide">
                 {categoryLabels[category] || category}
               </div>
               {commands.map((cmd, idx) => {
@@ -356,11 +356,11 @@ export function EvaluationsCommandPalette({
                     <div className="flex-1 min-w-0">
                       <div className="font-medium text-slate-200">{cmd.label}</div>
                       {cmd.description && (
-                        <div className="text-xs text-slate-500 mt-0.5 truncate">{cmd.description}</div>
+                        <div className="text-xs text-slate-400 mt-0.5 truncate">{cmd.description}</div>
                       )}
                     </div>
                     {cmd.shortcut && (
-                      <kbd className="px-2 py-0.5 rounded bg-slate-800 text-xs font-mono text-slate-500 border border-slate-700">
+                      <kbd className="px-2 py-0.5 rounded bg-slate-800 text-xs font-mono text-slate-400 border border-slate-700">
                         {cmd.shortcut}
                       </kbd>
                     )}
@@ -379,7 +379,7 @@ export function EvaluationsCommandPalette({
         </div>
 
         {/* Footer */}
-        <div className="px-4 py-2 border-t border-slate-800 text-xs text-slate-500 flex items-center justify-between">
+        <div className="px-4 py-2 border-t border-slate-800 text-xs text-slate-400 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <span>↑↓ Naviguer</span>
             <span>↵ Sélectionner</span>

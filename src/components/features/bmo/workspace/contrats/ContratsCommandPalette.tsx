@@ -295,7 +295,7 @@ export function ContratsCommandPalette({ open, onClose, onOpenStats, onOpenExpor
             onKeyDown={handleKeyDown}
             className="flex-1 bg-transparent outline-none text-lg placeholder:text-slate-400"
           />
-          <kbd className="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 text-xs font-mono text-slate-500">
+          <kbd className="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 text-xs font-mono text-slate-400">
             ESC
           </kbd>
         </div>
@@ -303,7 +303,7 @@ export function ContratsCommandPalette({ open, onClose, onOpenStats, onOpenExpor
         {/* Results */}
         <div ref={listRef} className="max-h-[60vh] overflow-y-auto">
           {filteredCommands.length === 0 ? (
-            <div className="py-12 text-center text-slate-500">
+            <div className="py-12 text-center text-slate-400">
               <Search className="w-12 h-12 mx-auto mb-3 opacity-30" />
               <p>Aucun résultat pour "{query}"</p>
             </div>
@@ -311,7 +311,7 @@ export function ContratsCommandPalette({ open, onClose, onOpenStats, onOpenExpor
             <div className="py-2">
               {groupedCommands.map(({ category, items }) => (
                 <div key={category} className="mb-1">
-                  <div className="px-4 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                  <div className="px-4 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">
                     {categoryLabels[category]}
                   </div>
                   {items.map((cmd) => {
@@ -342,7 +342,7 @@ export function ContratsCommandPalette({ open, onClose, onOpenStats, onOpenExpor
                         <div className="flex-1 min-w-0">
                           <div className="font-medium">{cmd.label}</div>
                           {cmd.description && (
-                            <div className="text-xs text-slate-500 truncate">{cmd.description}</div>
+                            <div className="text-xs text-slate-400 truncate">{cmd.description}</div>
                           )}
                         </div>
                         {cmd.shortcut && (
@@ -350,7 +350,7 @@ export function ContratsCommandPalette({ open, onClose, onOpenStats, onOpenExpor
                             "px-2 py-1 rounded text-xs font-mono transition-colors",
                             isSelected
                               ? "bg-purple-500/20 text-purple-600"
-                              : "bg-slate-100 dark:bg-slate-800 text-slate-500"
+                              : "bg-slate-100 dark:bg-slate-800 text-slate-400"
                           )}>
                             {cmd.shortcut}
                           </kbd>
@@ -370,7 +370,7 @@ export function ContratsCommandPalette({ open, onClose, onOpenStats, onOpenExpor
 
         {/* Footer */}
         <div className="px-4 py-3 border-t border-slate-200/70 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50">
-          <div className="flex items-center justify-between text-xs text-slate-500">
+          <div className="flex items-center justify-between text-xs text-slate-400">
             <div className="flex items-center gap-4">
               <span><kbd className="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-700">↑↓</kbd> naviguer</span>
               <span><kbd className="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-700">↵</kbd> sélectionner</span>

@@ -68,7 +68,7 @@ export function CalendrierSubNavigation({
     <div className="bg-slate-900/60 border-b border-slate-700/50">
       {/* Breadcrumb */}
       <div className="px-4 py-2 flex items-center gap-2 text-sm border-b border-slate-800/50">
-        <span className="text-slate-500">Calendrier</span>
+        <span className="text-slate-400">Calendrier</span>
         <ChevronRight className="h-3 w-3 text-slate-600" />
         <span className="text-slate-300 font-medium">{mainLabel}</span>
         {subCategory && activeSubLabel && (
@@ -80,7 +80,7 @@ export function CalendrierSubNavigation({
         {subSubCategory && activeSubSubLabel && (
           <>
             <ChevronRight className="h-3 w-3 text-slate-600" />
-            <span className="text-slate-500 text-xs">{activeSubSubLabel}</span>
+            <span className="text-slate-400 text-xs">{activeSubSubLabel}</span>
           </>
         )}
       </div>
@@ -130,7 +130,7 @@ export function CalendrierSubNavigation({
       {/* Level 3: Sub-sub-categories filters */}
       {subSubCategories.length > 0 && (
         <div className="flex items-center gap-1 px-4 pb-2 overflow-x-auto border-t border-slate-800/50">
-          <span className="text-xs text-slate-500 mr-2 whitespace-nowrap">Filtres:</span>
+          <span className="text-xs text-slate-400 mr-2 whitespace-nowrap">Filtres:</span>
           {subSubCategories.map((subSubCat) => {
             const isActive = subSubCategory === subSubCat.id;
 
@@ -144,7 +144,7 @@ export function CalendrierSubNavigation({
                   'h-7 px-2.5 text-[11px] whitespace-nowrap',
                   isActive
                     ? 'bg-slate-800/80 text-slate-200 border border-slate-700'
-                    : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800/30'
+                    : 'text-slate-400 hover:text-slate-300 hover:bg-slate-800/30'
                 )}
               >
                 {subSubCat.label}

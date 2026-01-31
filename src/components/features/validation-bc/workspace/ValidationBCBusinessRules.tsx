@@ -138,7 +138,7 @@ function RuleCard({ rule, onClick }: { rule: BusinessRule; onClick: () => void }
               </span>
             )}
           </div>
-          <p className="text-xs text-slate-500 mt-0.5 line-clamp-2">{rule.description}</p>
+          <p className="text-xs text-slate-400 mt-0.5 line-clamp-2">{rule.description}</p>
           
           <div className="flex items-center gap-3 mt-2">
             <div className="flex items-center gap-1">
@@ -153,7 +153,7 @@ function RuleCard({ rule, onClick }: { rule: BusinessRule; onClick: () => void }
                   style={{ width: `${rule.passRate}%` }}
                 />
               </div>
-              <span className="text-xs font-mono text-slate-500">{rule.passRate}%</span>
+              <span className="text-xs font-mono text-slate-400">{rule.passRate}%</span>
             </div>
             
             {rule.violations > 0 && (
@@ -191,7 +191,7 @@ function KPICard({
     <div className="p-4 rounded-xl border border-slate-200/70 bg-white/80 dark:border-slate-800 dark:bg-[#1f1f1f]/70">
       <div className="flex items-center gap-2 mb-2">
         <Icon className={cn('w-4 h-4', color)} />
-        <span className="text-xs text-slate-500">{label}</span>
+        <span className="text-xs text-slate-400">{label}</span>
       </div>
       <div className="flex items-end gap-2">
         <span className={cn('text-2xl font-bold', color)}>
@@ -202,7 +202,7 @@ function KPICard({
             'text-xs font-medium flex items-center gap-0.5 mb-1',
             trend === 'up' && 'text-emerald-600',
             trend === 'down' && 'text-rose-600',
-            trend === 'stable' && 'text-slate-500'
+            trend === 'stable' && 'text-slate-400'
           )}>
             {trend === 'up' && <ArrowUpRight className="w-3 h-3" />}
             {trend === 'down' && <ArrowDownRight className="w-3 h-3" />}
@@ -274,15 +274,15 @@ function ThreeWayMatchVisual({ stats }: { stats: ControlStats['threeWayMatch'] }
       <div className="grid grid-cols-3 gap-2 mt-4">
         <div className="text-center p-2 rounded-lg bg-emerald-500/10">
           <div className="text-lg font-bold text-emerald-600">{stats.passed}</div>
-          <div className="text-xs text-slate-500">Conformes</div>
+          <div className="text-xs text-slate-400">Conformes</div>
         </div>
         <div className="text-center p-2 rounded-lg bg-rose-500/10">
           <div className="text-lg font-bold text-rose-600">{stats.failed}</div>
-          <div className="text-xs text-slate-500">Écarts</div>
+          <div className="text-xs text-slate-400">Écarts</div>
         </div>
         <div className="text-center p-2 rounded-lg bg-amber-500/10">
           <div className="text-lg font-bold text-amber-600">{stats.pending}</div>
-          <div className="text-xs text-slate-500">En attente</div>
+          <div className="text-xs text-slate-400">En attente</div>
         </div>
       </div>
     </div>
@@ -324,14 +324,14 @@ function ApprovalThresholdsTable({ thresholds }: { thresholds: ApprovalThreshold
               </div>
               <div>
                 <div className="font-medium text-sm">{t.level}</div>
-                <div className="text-xs text-slate-500">
+                <div className="text-xs text-slate-400">
                   {formatAmount(t.minAmount)} - {formatAmount(t.maxAmount)} FCFA
                 </div>
               </div>
             </div>
             
             <div className="text-right">
-              <div className="text-xs text-slate-500">{t.approver}</div>
+              <div className="text-xs text-slate-400">{t.approver}</div>
               {t.currentQueue > 0 && (
                 <div className="text-xs font-medium text-amber-600">
                   {t.currentQueue} en file
@@ -527,7 +527,7 @@ export function ValidationBCBusinessRules() {
             <Shield className="w-6 h-6 text-purple-500" />
             Règles Métier & Contrôles
           </h2>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-sm text-slate-400 mt-1">
             Système de validation Amazon-style : 3-way match, seuils, tolérances, anti-fraude
           </p>
         </div>
@@ -673,14 +673,14 @@ export function ValidationBCBusinessRules() {
                 <selectedRule.icon className={cn('w-8 h-8', selectedRule.color)} />
                 <div>
                   <div className="font-semibold">{selectedRule.name}</div>
-                  <div className="text-sm text-slate-500">{selectedRule.description}</div>
+                  <div className="text-sm text-slate-400">{selectedRule.description}</div>
                 </div>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="p-3 rounded-lg bg-slate-100 dark:bg-slate-800">
-                <div className="text-xs text-slate-500">Taux de conformité</div>
+                <div className="text-xs text-slate-400">Taux de conformité</div>
                 <div className={cn(
                   'text-2xl font-bold',
                   selectedRule.passRate >= 95 ? 'text-emerald-600' : 
@@ -690,7 +690,7 @@ export function ValidationBCBusinessRules() {
                 </div>
               </div>
               <div className="p-3 rounded-lg bg-slate-100 dark:bg-slate-800">
-                <div className="text-xs text-slate-500">Violations</div>
+                <div className="text-xs text-slate-400">Violations</div>
                 <div className={cn(
                   'text-2xl font-bold',
                   selectedRule.violations === 0 ? 'text-emerald-600' : 'text-rose-600'
@@ -702,7 +702,7 @@ export function ValidationBCBusinessRules() {
 
             {selectedRule.threshold && (
               <div className="p-3 rounded-lg border border-blue-500/20 bg-blue-500/5">
-                <div className="text-xs text-slate-500 mb-1">Seuil configuré</div>
+                <div className="text-xs text-slate-400 mb-1">Seuil configuré</div>
                 <div className="font-mono text-sm">{selectedRule.threshold}</div>
               </div>
             )}

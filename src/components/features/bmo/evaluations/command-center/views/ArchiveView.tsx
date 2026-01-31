@@ -92,7 +92,7 @@ export function ArchiveView({ subCategory, onOpenEvaluation }: ArchiveViewProps)
                   </div>
                   <div>
                     <p className="font-medium text-slate-300">{evalItem.employeeName}</p>
-                    <p className="text-sm text-slate-500">{evalItem.employeeRole}</p>
+                    <p className="text-sm text-slate-400">{evalItem.employeeRole}</p>
                     <div className="flex items-center gap-2 mt-1">
                       <BureauTag bureau={evalItem.bureau} />
                       {evalItem.scoreGlobal && (
@@ -100,7 +100,7 @@ export function ArchiveView({ subCategory, onOpenEvaluation }: ArchiveViewProps)
                           {evalItem.scoreGlobal}/100
                         </Badge>
                       )}
-                      <div className="flex items-center gap-1 text-xs text-slate-500">
+                      <div className="flex items-center gap-1 text-xs text-slate-400">
                         <Calendar className="h-3 w-3" />
                         {evalItem.date}
                       </div>
@@ -109,8 +109,8 @@ export function ArchiveView({ subCategory, onOpenEvaluation }: ArchiveViewProps)
                 </div>
                 <div className="text-right">
                   <Badge variant="default" className="text-xs mb-2">Archivée</Badge>
-                  <p className="text-xs text-slate-500">{evalItem.evaluatorName}</p>
-                  <Eye className="h-4 w-4 text-slate-500 mt-2 ml-auto" />
+                  <p className="text-xs text-slate-400">{evalItem.evaluatorName}</p>
+                  <Eye className="h-4 w-4 text-slate-400 mt-2 ml-auto" />
                 </div>
               </div>
             </CardContent>

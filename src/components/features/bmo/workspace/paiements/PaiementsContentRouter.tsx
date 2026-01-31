@@ -509,7 +509,7 @@ function PlaceholderView({
       <div className="flex flex-col items-center justify-center text-center">
         <div className="text-slate-600 mb-4">{icon}</div>
         <h3 className="text-lg font-semibold text-slate-300 mb-2">{title}</h3>
-        <p className="text-sm text-slate-500 mb-4">{description}</p>
+        <p className="text-sm text-slate-400 mb-4">{description}</p>
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800/50 text-sm text-slate-400">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>

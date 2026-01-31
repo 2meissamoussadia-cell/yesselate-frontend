@@ -20,6 +20,7 @@ import {
   Check, X, RefreshCw, Download, BarChart3, Filter
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/utils/logger';
 import { InteractiveChart, ChartGrid } from '../charts';
 
 interface ComparisonPanelProps {
@@ -136,9 +137,7 @@ export function ComparisonPanel({ type }: ComparisonPanelProps) {
   }, []);
 
   const handleExport = () => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Exporting comparison data...');
-    }
+    logger.debug('Exporting comparison data', { component: 'ComparisonPanel' });
   };
 
   const bestPerformer = useMemo(() => {
@@ -177,7 +176,7 @@ export function ComparisonPanel({ type }: ComparisonPanelProps) {
             <h2 className="text-xl font-bold">
               Comparaison {type === 'bureaux' ? 'par Bureau' : 'par Période'}
             </h2>
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-slate-400">
               {type === 'bureaux' 
                 ? `${selectedBureaux.length} bureau(x) • ${selectedMetrics.length} métrique(s)`
                 : `${selectedPeriods.length} période(s) • ${selectedMetrics.length} métrique(s)`
@@ -247,7 +246,7 @@ export function ComparisonPanel({ type }: ComparisonPanelProps) {
                   />
                   <div className="flex-1">
                     <p className="text-sm font-medium">{bureau.code}</p>
-                    <p className="text-xs text-slate-500">{bureau.name}</p>
+                    <p className="text-xs text-slate-400">{bureau.name}</p>
                   </div>
                   {selectedBureaux.includes(bureau.id) && (
                     <Check className="w-4 h-4 text-blue-600" />
@@ -310,7 +309,7 @@ export function ComparisonPanel({ type }: ComparisonPanelProps) {
       {/* Summary Stats */}
       <div className="grid grid-cols-3 gap-4">
         <div className="p-4 rounded-xl border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20">
-          <p className="text-xs text-slate-500 mb-1">🏆 Meilleur</p>
+          <p className="text-xs text-slate-400 mb-1">🏆 Meilleur</p>
           <p className="text-lg font-bold text-green-700 dark:text-green-300">
             {bestPerformer?.name}
           </p>
@@ -320,12 +319,12 @@ export function ComparisonPanel({ type }: ComparisonPanelProps) {
         </div>
 
         <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 text-center">
-          <p className="text-xs text-slate-500 mb-1">Moyenne</p>
+          <p className="text-xs text-slate-400 mb-1">Moyenne</p>
           <p className="text-2xl font-bold">{averagePerformance}/100</p>
         </div>
 
         <div className="p-4 rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20">
-          <p className="text-xs text-slate-500 mb-1">⚠️ À améliorer</p>
+          <p className="text-xs text-slate-400 mb-1">⚠️ À améliorer</p>
           <p className="text-lg font-bold text-amber-700 dark:text-amber-300">
             {worstPerformer?.name}
           </p>
@@ -363,13 +362,13 @@ export function ComparisonPanel({ type }: ComparisonPanelProps) {
             <table className="w-full">
               <thead className="bg-slate-800/50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-slate-400 uppercase">
                     {type === 'bureaux' ? 'Bureau' : 'Période'}
                   </th>
                   {selectedMetrics.map(metricId => {
                     const metric = METRIC_OPTIONS.find(m => m.id === metricId)!;
                     return (
-                      <th key={metricId} className="px-4 py-3 text-center text-xs font-semibold text-slate-500 uppercase">
+                      <th key={metricId} className="px-4 py-3 text-center text-xs font-semibold text-slate-400 uppercase">
                         {metric.label}
                       </th>
                     );
@@ -382,7 +381,7 @@ export function ComparisonPanel({ type }: ComparisonPanelProps) {
                     <td className="px-4 py-3">
                       <p className="font-semibold">{item.name}</p>
                       {type === 'bureaux' && (
-                        <p className="text-xs text-slate-500">{(item as any).fullName}</p>
+                        <p className="text-xs text-slate-400">{(item as any).fullName}</p>
                       )}
                     </td>
                     {selectedMetrics.map(metricId => {

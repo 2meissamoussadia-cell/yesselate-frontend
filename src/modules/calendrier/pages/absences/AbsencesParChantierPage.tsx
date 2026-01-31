@@ -78,7 +78,7 @@ export function AbsencesParChantierPage() {
                   </Button>
                 ))
               ) : (
-                <span className="text-sm text-slate-500">Aucun chantier disponible</span>
+                <span className="text-sm text-slate-400">Aucun chantier disponible</span>
               )}
             </div>
           </div>

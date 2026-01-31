@@ -268,7 +268,7 @@ export function BlockedFiltersPanel({
           <FilterSection title="Délai (jours)" icon="⏱️">
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">Minimum</label>
+                <label className="text-xs text-slate-400 mb-1 block">Minimum</label>
                 <input
                   type="number"
                   min="0"
@@ -281,7 +281,7 @@ export function BlockedFiltersPanel({
                 />
               </div>
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">Maximum</label>
+                <label className="text-xs text-slate-400 mb-1 block">Maximum</label>
                 <input
                   type="number"
                   min="0"
@@ -300,7 +300,7 @@ export function BlockedFiltersPanel({
           <FilterSection title="Montant (FCFA)" icon="💰">
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">Minimum</label>
+                <label className="text-xs text-slate-400 mb-1 block">Minimum</label>
                 <input
                   type="number"
                   placeholder="0"
@@ -313,7 +313,7 @@ export function BlockedFiltersPanel({
                 />
               </div>
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">Maximum</label>
+                <label className="text-xs text-slate-400 mb-1 block">Maximum</label>
                 <input
                   type="number"
                   placeholder="∞"
@@ -332,7 +332,7 @@ export function BlockedFiltersPanel({
           <FilterSection title="Période de création" icon="📅">
             <div className="space-y-2">
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">Du</label>
+                <label className="text-xs text-slate-400 mb-1 block">Du</label>
                 <input
                   type="date"
                   value={filters.dateRange?.start || ''}
@@ -341,7 +341,7 @@ export function BlockedFiltersPanel({
                 />
               </div>
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">Au</label>
+                <label className="text-xs text-slate-400 mb-1 block">Au</label>
                 <input
                   type="date"
                   value={filters.dateRange?.end || ''}

@@ -31,7 +31,7 @@ const ROLE_LABELS: Record<string, { label: string; color: string; description: s
 
 export function DelegationActorsSection({ delegation, sub, onAddActor }: Props) {
   if (!delegation) {
-    return <div className="text-slate-500 text-center py-8">Aucune donnée</div>;
+    return <div className="text-slate-400 text-center py-8">Aucune donnée</div>;
   }
 
   const actors = delegation.actors || [];
@@ -57,7 +57,7 @@ export function DelegationActorsSection({ delegation, sub, onAddActor }: Props) 
           ))}
           
           {actors.length === 0 && (
-            <div className="text-center py-8 text-slate-500">
+            <div className="text-center py-8 text-slate-400">
               Aucun acteur défini (seuls le délégant et le délégataire sont présents par défaut).
             </div>
           )}
@@ -77,7 +77,7 @@ export function DelegationActorsSection({ delegation, sub, onAddActor }: Props) 
     case 'notifications':
       return <NotificationsDetail actors={actors} />;
     default:
-      return <div className="text-slate-500">Sous-section inconnue</div>;
+      return <div className="text-slate-400">Sous-section inconnue</div>;
   }
 }
 
@@ -91,7 +91,7 @@ function ActorCard({ actor }: { actor: any }) {
   return (
     <div className="p-4 rounded-xl border border-slate-200/70 dark:border-slate-700 flex items-start gap-4">
       <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
-        <UserCheck className="w-5 h-5 text-slate-500" />
+        <UserCheck className="w-5 h-5 text-slate-400" />
       </div>
       
       <div className="flex-1">
@@ -106,10 +106,10 @@ function ActorCard({ actor }: { actor: any }) {
         </div>
         
         {(actor.user?.role || actor.userRole) && (
-          <div className="text-sm text-slate-500">{actor.user?.role || actor.userRole}</div>
+          <div className="text-sm text-slate-400">{actor.user?.role || actor.userRole}</div>
         )}
         
-        <div className="flex gap-3 mt-2 text-xs text-slate-500">
+        <div className="flex gap-3 mt-2 text-xs text-slate-400">
           {(actor.canApprove === 1 || actor.canApprove === true) && (
             <span className="text-emerald-600">✓ Peut valider</span>
           )}
@@ -172,7 +172,7 @@ function RACIMatrix({ delegation, actors }: { delegation: any; actors: any[] }) 
         <LayoutList className="w-5 h-5 text-purple-500" />
         Matrice RACI
       </h2>
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-400">
         R = Responsable, A = Approbateur, C = Consulté, I = Informé
       </p>
       
@@ -262,7 +262,7 @@ function ApproversDetail({ actors, onAddActor }: { actors: any[]; onAddActor: ()
             <UserCheck className="w-5 h-5 text-amber-500" />
             Co-validateurs
           </h2>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-400">
             Personnes autorisées à effectuer la double validation.
           </p>
         </div>
@@ -278,7 +278,7 @@ function ApproversDetail({ actors, onAddActor }: { actors: any[]; onAddActor: ()
         ))}
         
         {actors.length === 0 && (
-          <div className="text-center py-8 text-slate-500 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+          <div className="text-center py-8 text-slate-400 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
             Aucun co-validateur défini.
           </div>
         )}
@@ -296,7 +296,7 @@ function ControllersDetail({ actors, onAddActor }: { actors: any[]; onAddActor: 
             <Shield className="w-5 h-5 text-emerald-500" />
             Contrôleurs &amp; Auditeurs
           </h2>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-400">
             Personnes chargées du contrôle interne et de l&apos;audit.
           </p>
         </div>
@@ -312,7 +312,7 @@ function ControllersDetail({ actors, onAddActor }: { actors: any[]; onAddActor: 
         ))}
         
         {actors.length === 0 && (
-          <div className="text-center py-8 text-slate-500 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+          <div className="text-center py-8 text-slate-400 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
             Aucun contrôleur ou auditeur défini.
           </div>
         )}
@@ -330,7 +330,7 @@ function NotificationsDetail({ actors }: { actors: any[] }) {
         <Bell className="w-5 h-5 text-blue-500" />
         Notifications
       </h2>
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-400">
         Personnes notifiées lors des utilisations de cette délégation.
       </p>
       
@@ -340,7 +340,7 @@ function NotificationsDetail({ actors }: { actors: any[] }) {
             <Bell className="w-4 h-4 text-blue-500" />
             <div>
               <div className="font-medium">{actor.user?.name || actor.userName}</div>
-              <div className="text-xs text-slate-500">
+              <div className="text-xs text-slate-400">
                 {ROLE_LABELS[actor.roleType]?.label || actor.roleType}
               </div>
             </div>
@@ -348,7 +348,7 @@ function NotificationsDetail({ actors }: { actors: any[] }) {
         ))}
         
         {notified.length === 0 && (
-          <div className="text-center py-8 text-slate-500 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+          <div className="text-center py-8 text-slate-400 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
             Aucune personne configurée pour les notifications.
           </div>
         )}

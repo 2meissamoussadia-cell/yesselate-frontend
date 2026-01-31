@@ -8,6 +8,7 @@ import { can } from '@lib-root/server/security/policy';
 import { pgPool } from '@lib-root/server/db/pool';
 import { rateLimitRedis } from '@lib-root/server/observability/rateLimitRedis';
 import { withReq } from '@lib-root/server/logging';
+import { MOCK_ALERT_STATS } from '../mockData';
 
 const log = withReq('alerts-stats');
 
@@ -21,6 +22,7 @@ const log = withReq('alerts-stats');
  * 
  * Guards: alerts:view
  * Phase P15: Moteur d'alertes
+ * Phase 4/5: en cas d'erreur ou base vide, retourne des stats mockées.
  */
 const EMPTY_STATS = {
   open_count: 0,
@@ -69,8 +71,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       client = await pgPool.connect();
     } catch (dbError) {
       const seconds = (performance.now() - t0) / 1000;
-      logReq.warn({ err: dbError, seconds }, 'alerts stats: DB unavailable, returning empty stats');
-      return NextResponse.json({ ok: true, stats: EMPTY_STATS }, { status: 200 });
+      logReq.warn({ err: dbError, seconds }, 'alerts stats: DB unavailable, returning mock stats');
+      return NextResponse.json({ ok: true, stats: MOCK_ALERT_STATS }, { status: 200 });
     }
     try {
       let query = `
@@ -132,6 +134,14 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         info_open: parseInt(row.info_open || '0', 10),
       };
 
+      // Phase 4/5: si la base ne renvoie que des zéros, retourner des stats mockées pour l'UI
+      const hasAny = stats.open_count + stats.ack_count + stats.closed_count > 0;
+      if (!hasAny) {
+        const seconds = (performance.now() - t0) / 1000;
+        logReq.info({ seconds }, 'alerts stats: no data, returning mock stats');
+        return NextResponse.json({ ok: true, stats: MOCK_ALERT_STATS }, { status: 200 });
+      }
+
       const seconds = (performance.now() - t0) / 1000;
       logReq.info({ stats, seconds }, 'alerts stats fetched');
 
@@ -148,13 +158,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       client.release();
     }
   } catch (error: unknown) {
-    // Graceful fallback: any error (rate-limit, context, hydrate, DB) → 200 + empty stats
     try {
       const seconds = (performance.now() - t0) / 1000;
-      logReq.warn({ err: error, seconds }, 'alerts stats: error, returning empty stats');
+      logReq.warn({ err: error, seconds }, 'alerts stats: error, returning mock stats');
     } catch {
       // ignore logger errors
     }
-    return NextResponse.json({ ok: true, stats: EMPTY_STATS }, { status: 200 });
+    return NextResponse.json({ ok: true, stats: MOCK_ALERT_STATS }, { status: 200 });
   }
 }

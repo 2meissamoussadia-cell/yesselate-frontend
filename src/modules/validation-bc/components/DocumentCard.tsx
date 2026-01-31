@@ -92,7 +92,7 @@ export function DocumentCard({ document, onValidate, onReject, onView }: Documen
       )}
 
       {/* Metadata */}
-      <div className="flex flex-wrap gap-2 mb-3 text-xs text-slate-500">
+      <div className="flex flex-wrap gap-2 mb-3 text-xs text-slate-400">
         <span>Montant: {document.montant.toLocaleString('fr-FR')} {document.devise || 'EUR'}</span>
         {document.demandeur && <span>• {document.demandeur}</span>}
         {document.delaiMoyen && <span>• Délai: {document.delaiMoyen.toFixed(1)}j</span>}

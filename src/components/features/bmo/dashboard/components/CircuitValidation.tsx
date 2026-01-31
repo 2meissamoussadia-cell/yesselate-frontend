@@ -159,7 +159,7 @@ export const CircuitValidation = memo(function CircuitValidation({
                       </div>
                       {stage.targetTime > 0 && (
                         <div className="flex items-center justify-between text-xs">
-                          <span className="text-slate-500">Objectif:</span>
+                          <span className="text-slate-400">Objectif:</span>
                           <span className="text-slate-300 font-medium">{stage.targetTime.toFixed(1)}j</span>
                         </div>
                       )}

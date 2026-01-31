@@ -319,7 +319,7 @@ export function BTPSimulationModal({
                         {Object.keys(scenario.results || {}).length} résultats
                       </Badge>
                     </div>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-slate-400">
                       {scenario.parameters.length} paramètre{scenario.parameters.length > 1 ? 's' : ''}
                     </p>
                   </div>

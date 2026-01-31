@@ -216,7 +216,7 @@ export function RHAdvancedFiltersModal({ open, onOpenChange, filters, onApply, o
           
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm mb-1 text-slate-500">Date début</label>
+              <label className="block text-sm mb-1 text-slate-400">Date début</label>
               <input
                 type="date"
                 value={localFilters.dateRange.start}
@@ -229,7 +229,7 @@ export function RHAdvancedFiltersModal({ open, onOpenChange, filters, onApply, o
               />
             </div>
             <div>
-              <label className="block text-sm mb-1 text-slate-500">Date fin</label>
+              <label className="block text-sm mb-1 text-slate-400">Date fin</label>
               <input
                 type="date"
                 value={localFilters.dateRange.end}
@@ -252,7 +252,7 @@ export function RHAdvancedFiltersModal({ open, onOpenChange, filters, onApply, o
           
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm mb-1 text-slate-500">Minimum</label>
+              <label className="block text-sm mb-1 text-slate-400">Minimum</label>
               <input
                 type="number"
                 value={localFilters.amountRange.min}
@@ -265,7 +265,7 @@ export function RHAdvancedFiltersModal({ open, onOpenChange, filters, onApply, o
               />
             </div>
             <div>
-              <label className="block text-sm mb-1 text-slate-500">Maximum</label>
+              <label className="block text-sm mb-1 text-slate-400">Maximum</label>
               <input
                 type="number"
                 value={localFilters.amountRange.max}
@@ -288,7 +288,7 @@ export function RHAdvancedFiltersModal({ open, onOpenChange, filters, onApply, o
           
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm mb-1 text-slate-500">Minimum</label>
+              <label className="block text-sm mb-1 text-slate-400">Minimum</label>
               <input
                 type="number"
                 value={localFilters.daysRange.min}
@@ -301,7 +301,7 @@ export function RHAdvancedFiltersModal({ open, onOpenChange, filters, onApply, o
               />
             </div>
             <div>
-              <label className="block text-sm mb-1 text-slate-500">Maximum</label>
+              <label className="block text-sm mb-1 text-slate-400">Maximum</label>
               <input
                 type="number"
                 value={localFilters.daysRange.max}

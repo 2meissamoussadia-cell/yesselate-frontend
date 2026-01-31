@@ -36,10 +36,10 @@ export function CockpitDroneFeedPanel() {
         >
           <WifiOff className="h-12 w-12 text-slate-600 mb-3" />
           <p className="text-sm font-medium text-slate-400">Feed drone non connecté</p>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-400 mt-1">
             Définir <code className="px-1 py-0.5 rounded bg-slate-800 text-slate-400">NEXT_PUBLIC_DRONE_FEED_URL</code> pour afficher le flux.
           </p>
-          <div className="mt-4 flex items-center gap-2 text-[10px] text-slate-500">
+          <div className="mt-4 flex items-center gap-2 text-[10px] text-slate-400">
             <Video className="h-3.5 w-3.5" />
             Phase 6 — Placeholder
           </div>

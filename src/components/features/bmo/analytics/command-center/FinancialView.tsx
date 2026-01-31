@@ -443,7 +443,7 @@ export const FinancialView = React.memo(function FinancialView({ subCategory }: 
                           <span className="text-lg">{bureauInfo?.icon}</span>
                           <div>
                             <div className="font-semibold text-slate-200">{row.bureau}</div>
-                            <div className="text-xs text-slate-500">{row.bureauName}</div>
+                            <div className="text-xs text-slate-400">{row.bureauName}</div>
                           </div>
                         </div>
                       </td>

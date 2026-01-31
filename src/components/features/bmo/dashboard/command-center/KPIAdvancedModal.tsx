@@ -229,7 +229,7 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
             )}
             <div>
               <h2 className="text-lg font-semibold text-slate-200">{displayData?.label || 'KPI'}</h2>
-              <p className="text-xs text-slate-500">{metadata?.description}</p>
+              <p className="text-xs text-slate-400">{metadata?.description}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -322,15 +322,15 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
               {/* Valeur principale */}
               <div className="grid grid-cols-4 gap-4">
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <p className="text-xs text-slate-500 mb-1">Valeur actuelle</p>
+                  <p className="text-xs text-slate-400 mb-1">Valeur actuelle</p>
                   <p className="text-2xl font-bold text-slate-200">{displayData?.value || 'N/A'}</p>
                 </div>
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <p className="text-xs text-slate-500 mb-1">Objectif</p>
+                  <p className="text-xs text-slate-400 mb-1">Objectif</p>
                   <p className="text-2xl font-bold text-slate-200">{detail?.target || metadata?.target || 'N/A'}</p>
                 </div>
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <p className="text-xs text-slate-500 mb-1">Variation</p>
+                  <p className="text-xs text-slate-400 mb-1">Variation</p>
                   <p className={cn(
                     'text-2xl font-bold flex items-center gap-1',
                     displayData?.trend === 'up' && displayData?.tone === 'ok' && 'text-emerald-400',
@@ -344,7 +344,7 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
                   </p>
                 </div>
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <p className="text-xs text-slate-500 mb-1">Statut</p>
+                  <p className="text-xs text-slate-400 mb-1">Statut</p>
                   <Badge variant={displayData?.tone === 'ok' ? 'default' : displayData?.tone === 'warn' ? 'warning' : 'destructive'}>
                     {displayData?.tone === 'ok' ? 'Normal' : displayData?.tone === 'warn' ? 'Attention' : displayData?.tone === 'crit' ? 'Critique' : 'Info'}
                   </Badge>
@@ -353,7 +353,7 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
 
               {/* Graphique historique mini */}
               <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                <p className="text-xs text-slate-500 mb-3">Évolution sur {period === 'month' ? '1 mois' : period === 'quarter' ? '3 mois' : '12 mois'}</p>
+                <p className="text-xs text-slate-400 mb-3">Évolution sur {period === 'month' ? '1 mois' : period === 'quarter' ? '3 mois' : '12 mois'}</p>
                 <div className="h-32 flex items-end gap-1">
                   {historicalData.map((point: HistoricalDataPoint, i: number) => {
                     const height = ((point.value - minValue) / (maxValue - minValue || 1)) * 100;
@@ -383,7 +383,7 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
               {/* Métriques liées */}
               {detail?.relatedMetrics && detail.relatedMetrics.length > 0 && (
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <p className="text-xs text-slate-500 mb-3">Métriques liées</p>
+                  <p className="text-xs text-slate-400 mb-3">Métriques liées</p>
                   <div className="grid grid-cols-2 gap-3">
                     {detail.relatedMetrics.map((metric: any, i: number) => (
                       <div key={i} className="p-2 rounded bg-slate-900/50">
@@ -400,7 +400,7 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
           {activeTab === 'history' && (
             <div className="space-y-4">
               <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                <p className="text-xs text-slate-500 mb-4">Historique détaillé</p>
+                <p className="text-xs text-slate-400 mb-4">Historique détaillé</p>
                 <div className="h-64 flex items-end gap-1 mb-4">
                   {historicalData.map((point: HistoricalDataPoint, i: number) => {
                     const height = ((point.value - minValue) / (maxValue - minValue || 1)) * 100;
@@ -432,7 +432,7 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
                       <div className="flex items-center gap-4">
                         <span className="text-sm font-medium text-slate-200">{point.value}</span>
                         {point.target && (
-                          <span className="text-xs text-slate-500">Objectif: {point.target}</span>
+                          <span className="text-xs text-slate-400">Objectif: {point.target}</span>
                         )}
                       </div>
                     </div>
@@ -446,7 +446,7 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
             <div className="space-y-4">
               {breakdownByBureau.length > 0 && (
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <p className="text-xs text-slate-500 mb-4">Répartition par bureau</p>
+                  <p className="text-xs text-slate-400 mb-4">Répartition par bureau</p>
                   <div className="space-y-3">
                     {breakdownByBureau.map((item: BreakdownItem, i: number) => (
                       <div key={`${item.bureau}-${i}`} className="space-y-1">
@@ -474,7 +474,7 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
 
               {detail?.breakdown?.byType && (
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <p className="text-xs text-slate-500 mb-4">Répartition par type</p>
+                  <p className="text-xs text-slate-400 mb-4">Répartition par type</p>
                   <div className="space-y-3">
                     {Array.isArray(detail.breakdown.byType) && detail.breakdown.byType.map((item: BreakdownItem, i: number) => {
                       const percentage = item.percentage !== undefined 
@@ -506,18 +506,18 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
           {activeTab === 'comparison' && (
             <div className="space-y-4">
               <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                <p className="text-xs text-slate-500 mb-4">Comparaison temporelle</p>
+                <p className="text-xs text-slate-400 mb-4">Comparaison temporelle</p>
                 <div className="grid grid-cols-3 gap-4">
                   <div className="p-3 rounded bg-slate-900/50">
-                    <p className="text-xs text-slate-500 mb-1">Période actuelle</p>
+                    <p className="text-xs text-slate-400 mb-1">Période actuelle</p>
                     <p className="text-lg font-bold text-slate-200">{detail?.currentValue || displayData?.value || 'N/A'}</p>
                   </div>
                   <div className="p-3 rounded bg-slate-900/50">
-                    <p className="text-xs text-slate-500 mb-1">Période précédente</p>
+                    <p className="text-xs text-slate-400 mb-1">Période précédente</p>
                     <p className="text-lg font-bold text-slate-200">{detail?.previousValue || 'N/A'}</p>
                   </div>
                   <div className="p-3 rounded bg-slate-900/50">
-                    <p className="text-xs text-slate-500 mb-1">Variation</p>
+                    <p className="text-xs text-slate-400 mb-1">Variation</p>
                     <p className={cn(
                       'text-lg font-bold flex items-center gap-1',
                       (detail?.trend || 0) > 0 ? 'text-emerald-400' : (detail?.trend || 0) < 0 ? 'text-red-400' : 'text-slate-400'
@@ -534,7 +534,7 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
               {/* Comparaison par bureau */}
               {breakdownByBureau.length > 0 && (
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <p className="text-xs text-slate-500 mb-4">Comparaison par bureau</p>
+                  <p className="text-xs text-slate-400 mb-4">Comparaison par bureau</p>
                   <div className="space-y-2">
                     {breakdownByBureau.map((item: any, i: number) => (
                       <div key={i} className="flex items-center justify-between p-2 rounded bg-slate-900/50">
@@ -558,7 +558,7 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
           {activeTab === 'predictions' && (
             <div className="space-y-4">
               <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                <p className="text-xs text-slate-500 mb-4">Prédictions basées sur les tendances</p>
+                <p className="text-xs text-slate-400 mb-4">Prédictions basées sur les tendances</p>
                 <div className="space-y-3">
                   {predictions.map((pred: Prediction, i: number) => (
                     <div key={`${pred.period}-${i}`} className="p-3 rounded bg-slate-900/50">
@@ -588,7 +588,7 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
                   <Download className="w-5 h-5 text-blue-400" />
                   <div className="text-left">
                     <p className="text-sm font-medium text-slate-200">Exporter</p>
-                    <p className="text-xs text-slate-500">Télécharger les données</p>
+                    <p className="text-xs text-slate-400">Télécharger les données</p>
                   </div>
                 </Button>
                 <Button
@@ -598,7 +598,7 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
                   <Bell className="w-5 h-5 text-amber-400" />
                   <div className="text-left">
                     <p className="text-sm font-medium text-slate-200">Configurer alerte</p>
-                    <p className="text-xs text-slate-500">Définir des seuils</p>
+                    <p className="text-xs text-slate-400">Définir des seuils</p>
                   </div>
                 </Button>
                 <Button
@@ -608,7 +608,7 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
                   <Share2 className="w-5 h-5 text-purple-400" />
                   <div className="text-left">
                     <p className="text-sm font-medium text-slate-200">Partager</p>
-                    <p className="text-xs text-slate-500">Partager ce KPI</p>
+                    <p className="text-xs text-slate-400">Partager ce KPI</p>
                   </div>
                 </Button>
                 <Button
@@ -618,7 +618,7 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
                   <Settings className="w-5 h-5 text-slate-400" />
                   <div className="text-left">
                     <p className="text-sm font-medium text-slate-200">Paramètres</p>
-                    <p className="text-xs text-slate-500">Configurer le KPI</p>
+                    <p className="text-xs text-slate-400">Configurer le KPI</p>
                   </div>
                 </Button>
               </div>
@@ -628,7 +628,7 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
 
         {/* Footer */}
         <div className="flex items-center justify-between px-6 py-3 border-t border-slate-800/50 flex-shrink-0">
-          <div className="text-xs text-slate-500">
+          <div className="text-xs text-slate-400">
             Dernière mise à jour: {detail?.timestamp ? new Date(detail.timestamp).toLocaleString('fr-FR') : 'N/A'}
           </div>
           <div className="flex gap-2">

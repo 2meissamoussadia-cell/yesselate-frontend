@@ -23,7 +23,7 @@ const ACTION_CONFIG: Record<string, { icon: typeof FileText; color: string; labe
   rejection: { icon: XCircle, color: 'text-rose-500 bg-rose-500/10', label: 'Rejet' },
   assign: { icon: UserPlus, color: 'text-purple-500 bg-purple-500/10', label: 'Affectation' },
   request_complement: { icon: MessageSquare, color: 'text-amber-500 bg-amber-500/10', label: 'Complément' },
-  review: { icon: Clock, color: 'text-slate-500 bg-slate-500/10', label: 'Revue' },
+  review: { icon: Clock, color: 'text-slate-400 bg-slate-500/10', label: 'Revue' },
 };
 
 const formatRelativeTime = (dateStr: string): string => {
@@ -148,7 +148,7 @@ export function RecentActivity({ limit = 10, className }: Props) {
       </div>
 
       {activities.length === 0 ? (
-        <div className="text-center py-8 text-slate-500">
+        <div className="text-center py-8 text-slate-400">
           <AlertTriangle className="w-8 h-8 mx-auto mb-2 opacity-50" />
           <p className="text-sm">Aucune activité récente</p>
         </div>
@@ -170,7 +170,7 @@ export function RecentActivity({ limit = 10, className }: Props) {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs text-slate-500">{activity.demandId}</span>
+                    <span className="font-mono text-xs text-slate-400">{activity.demandId}</span>
                     <span className="text-xs px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800">
                       {config.label}
                     </span>
@@ -178,7 +178,7 @@ export function RecentActivity({ limit = 10, className }: Props) {
                   <div className="text-sm text-slate-600 dark:text-slate-300 truncate">
                     <span className="font-medium">{activity.actorName}</span>
                     {activity.message && (
-                      <span className="text-slate-500"> — {activity.message}</span>
+                      <span className="text-slate-400"> — {activity.message}</span>
                     )}
                   </div>
                   <div className="text-xs text-slate-400 mt-0.5">

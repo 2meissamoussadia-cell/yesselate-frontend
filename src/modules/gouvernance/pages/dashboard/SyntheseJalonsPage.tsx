@@ -22,7 +22,7 @@ export default function SyntheseJalonsPage() {
       <GouvernanceHeader
         title="Synthèse jalons"
         subtitle="Vue d'ensemble de tous les jalons avec statuts et retards"
-        onExport={() => console.log('Export synthèse jalons')}
+        onExport={() => { /* TODO: export synthèse jalons */ }}
       />
 
       {isLoading ? (

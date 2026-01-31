@@ -59,7 +59,7 @@ export function RecouvrementsInboxView({ tabId, data }: Props) {
           <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
             {queue === 'pending' ? 'En attente' : queue === 'in_progress' ? 'En cours' : queue === 'paid' ? 'Payées' : queue === 'litige' ? 'En litige' : queue === 'overdue' ? 'En retard' : queue === 'irrecoverable' ? 'Irrécouvrables' : 'Toutes les créances'}
           </h2>
-          <p className="text-sm text-slate-500">{creances.length} créance(s)</p>
+          <p className="text-sm text-slate-400">{creances.length} créance(s)</p>
         </div>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -70,7 +70,7 @@ export function RecouvrementsInboxView({ tabId, data }: Props) {
       {loading ? (
         <div className="space-y-3">{[...Array(5)].map((_, i) => <div key={i} className="h-28 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />)}</div>
       ) : creances.length === 0 ? (
-        <div className="py-12 text-center text-slate-500"><DollarSign className="w-12 h-12 mx-auto mb-3 opacity-30" /><p className="font-medium">Aucune créance trouvée</p></div>
+        <div className="py-12 text-center text-slate-400"><DollarSign className="w-12 h-12 mx-auto mb-3 opacity-30" /><p className="font-medium">Aucune créance trouvée</p></div>
       ) : (
         <div className="space-y-2">
           {creances.map(creance => {
@@ -91,7 +91,7 @@ export function RecouvrementsInboxView({ tabId, data }: Props) {
                         {creance.joursRetard > 0 && <span className="text-xs font-medium px-2 py-0.5 rounded bg-red-500/20 text-red-600">{creance.joursRetard}j retard</span>}
                       </div>
                       <p className="font-medium text-slate-900 dark:text-slate-100">{creance.client}</p>
-                      <div className="flex items-center gap-4 mt-2 text-xs text-slate-500">
+                      <div className="flex items-center gap-4 mt-2 text-xs text-slate-400">
                         <span className="flex items-center gap-1"><Building2 className="w-3 h-3" />{creance.projetName || 'N/A'}</span>
                         <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />Échéance: {new Date(creance.dateEcheance).toLocaleDateString('fr-FR')}</span>
                         <span className="flex items-center gap-1"><Bell className="w-3 h-3" />{creance.nbRelances} relance(s)</span>
@@ -99,7 +99,7 @@ export function RecouvrementsInboxView({ tabId, data }: Props) {
                     </div>
                     <div className="text-right flex-none">
                       <p className="font-mono font-bold text-amber-600 dark:text-amber-400">{recouvrementsApiService.formatMontant(creance.montant)} FCFA</p>
-                      <p className="text-xs text-slate-500 mt-1">Recouvré: {progress}%</p>
+                      <p className="text-xs text-slate-400 mt-1">Recouvré: {progress}%</p>
                       <div className="w-20 h-1.5 rounded-full bg-slate-200 dark:bg-slate-700 mt-1 overflow-hidden"><div className="h-full bg-emerald-500 rounded-full" style={{ width: `${progress}%` }} /></div>
                       <div className="flex items-center justify-end gap-2 mt-2">
                         <button onClick={e => handleToggleWatchlist(e, creance.id)} className="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-700">{isInWatchlist ? <Star className="w-4 h-4 text-amber-500 fill-current" /> : <StarOff className="w-4 h-4 text-slate-400" />}</button>
@@ -112,10 +112,10 @@ export function RecouvrementsInboxView({ tabId, data }: Props) {
                 {isExpanded && (
                   <div className="px-4 pb-4 pt-0 border-t border-slate-200/70 dark:border-slate-800">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-4">
-                      <div><p className="text-xs text-slate-500 mb-1">Montant recouvré</p><p className="font-medium text-emerald-600">{recouvrementsApiService.formatMontant(creance.montantRecouvre)} FCFA</p></div>
-                      <div><p className="text-xs text-slate-500 mb-1">Restant dû</p><p className="font-medium text-red-600">{recouvrementsApiService.formatMontant(creance.montant - creance.montantRecouvre)} FCFA</p></div>
-                      <div><p className="text-xs text-slate-500 mb-1">Date facture</p><p className="font-medium text-slate-900 dark:text-slate-100">{new Date(creance.dateFacture).toLocaleDateString('fr-FR')}</p></div>
-                      <div><p className="text-xs text-slate-500 mb-1">Dernière relance</p><p className="font-medium text-slate-900 dark:text-slate-100">{creance.derniereRelance ? new Date(creance.derniereRelance).toLocaleDateString('fr-FR') : 'Aucune'}</p></div>
+                      <div><p className="text-xs text-slate-400 mb-1">Montant recouvré</p><p className="font-medium text-emerald-600">{recouvrementsApiService.formatMontant(creance.montantRecouvre)} FCFA</p></div>
+                      <div><p className="text-xs text-slate-400 mb-1">Restant dû</p><p className="font-medium text-red-600">{recouvrementsApiService.formatMontant(creance.montant - creance.montantRecouvre)} FCFA</p></div>
+                      <div><p className="text-xs text-slate-400 mb-1">Date facture</p><p className="font-medium text-slate-900 dark:text-slate-100">{new Date(creance.dateFacture).toLocaleDateString('fr-FR')}</p></div>
+                      <div><p className="text-xs text-slate-400 mb-1">Dernière relance</p><p className="font-medium text-slate-900 dark:text-slate-100">{creance.derniereRelance ? new Date(creance.derniereRelance).toLocaleDateString('fr-FR') : 'Aucune'}</p></div>
                     </div>
                     <div className="flex items-center gap-2 pt-2 border-t border-slate-200/70 dark:border-slate-800">
                       <button onClick={() => handleOpenDetail(creance)} className="flex-1 px-4 py-2 rounded-lg bg-amber-500 text-white text-sm font-medium hover:bg-amber-600">Voir le détail</button>

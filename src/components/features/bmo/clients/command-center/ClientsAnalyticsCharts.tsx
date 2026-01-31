@@ -55,7 +55,7 @@ export function ClientsGrowthChart() {
                   title={`${item.prospects} prospects`}
                 />
               </div>
-              <span className="text-[10px] text-slate-500">{item.month}</span>
+              <span className="text-[10px] text-slate-400">{item.month}</span>
             </div>
           );
         })}
@@ -120,7 +120,7 @@ export function ClientsRevenueChart() {
         </svg>
         <div className="absolute inset-0 flex items-center justify-center flex-col">
           <span className="text-xl font-bold text-slate-200">4.2M€</span>
-          <span className="text-xs text-slate-500">CA Total</span>
+          <span className="text-xs text-slate-400">CA Total</span>
         </div>
       </div>
 
@@ -134,7 +134,7 @@ export function ClientsRevenueChart() {
             </div>
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium text-slate-300">{segment.amount}</span>
-              <span className="text-xs text-slate-500">({segment.value}%)</span>
+              <span className="text-xs text-slate-400">({segment.value}%)</span>
             </div>
           </div>
         ))}
@@ -217,7 +217,7 @@ export function ClientsSatisfactionChart() {
       </div>
       
       {/* Labels */}
-      <div className="flex justify-between text-[10px] text-slate-500">
+      <div className="flex justify-between text-[10px] text-slate-400">
         {data.map((d, i) => (
           <span key={i}>{d.month}</span>
         ))}
@@ -227,7 +227,7 @@ export function ClientsSatisfactionChart() {
       <div className="flex items-center justify-center gap-2">
         <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
         <span className="text-lg font-bold text-emerald-400">{data[data.length - 1].score}%</span>
-        <span className="text-sm text-slate-500">satisfaction</span>
+        <span className="text-sm text-slate-400">satisfaction</span>
         <TrendingUp className="w-4 h-4 text-emerald-400" />
       </div>
     </div>
@@ -357,10 +357,10 @@ export function ClientsLifecycleChart() {
             >
               <div className="flex items-center gap-2 mb-1">
                 <div className={cn('w-2 h-2 rounded-full', stage.color)} />
-                <Icon className="w-3 h-3 text-slate-500" />
+                <Icon className="w-3 h-3 text-slate-400" />
               </div>
               <p className="text-lg font-bold text-slate-200">{stage.count}</p>
-              <p className="text-[10px] text-slate-500">{stage.stage}</p>
+              <p className="text-[10px] text-slate-400">{stage.stage}</p>
             </div>
           );
         })}
@@ -403,7 +403,7 @@ export function ClientsMonthlyRevenueChart() {
         ))}
       </div>
       
-      <div className="flex justify-between text-[10px] text-slate-500">
+      <div className="flex justify-between text-[10px] text-slate-400">
         {data.map((d, i) => (
           <span key={i}>{d.month}</span>
         ))}
@@ -424,7 +424,7 @@ export function ClientsMonthlyRevenueChart() {
       <div className="flex items-center justify-center gap-2 p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
         <TrendingUp className="w-4 h-4 text-emerald-400" />
         <span className="text-sm font-medium text-emerald-400">+9.8%</span>
-        <span className="text-xs text-slate-500">vs année précédente</span>
+        <span className="text-xs text-slate-400">vs année précédente</span>
       </div>
     </div>
   );
@@ -459,7 +459,7 @@ export function ClientsInteractionsHeatmap() {
       <div className="flex gap-1">
         <div className="w-8" /> {/* Spacer for labels */}
         {hours.map((hour, idx) => (
-          <div key={idx} className="flex-1 text-center text-[9px] text-slate-500">
+          <div key={idx} className="flex-1 text-center text-[9px] text-slate-400">
             {hour}
           </div>
         ))}
@@ -467,7 +467,7 @@ export function ClientsInteractionsHeatmap() {
       
       {days.map((day, dayIdx) => (
         <div key={dayIdx} className="flex gap-1 items-center">
-          <div className="w-8 text-[10px] text-slate-500">{day}</div>
+          <div className="w-8 text-[10px] text-slate-400">{day}</div>
           {heatmapData[dayIdx].map((value, hourIdx) => (
             <div
               key={hourIdx}
@@ -482,7 +482,7 @@ export function ClientsInteractionsHeatmap() {
       ))}
       
       {/* Legend */}
-      <div className="flex items-center justify-center gap-1 mt-3 text-xs text-slate-500">
+      <div className="flex items-center justify-center gap-1 mt-3 text-xs text-slate-400">
         <span>Peu</span>
         <div className="flex gap-0.5">
           {[1, 3, 5, 7, 9].map(v => (

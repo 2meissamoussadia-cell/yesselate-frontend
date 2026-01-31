@@ -504,7 +504,7 @@ export function RHCommandPalette({
             onKeyDown={handleKeyDown}
             className="flex-1 bg-transparent outline-none text-lg placeholder:text-slate-400"
           />
-          <kbd className="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 text-xs font-mono text-slate-500">
+          <kbd className="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 text-xs font-mono text-slate-400">
             ESC
           </kbd>
         </div>
@@ -512,7 +512,7 @@ export function RHCommandPalette({
         {/* Résultats */}
         <div ref={listRef} className="max-h-[60vh] overflow-y-auto scroll-smooth">
           {filteredCommands.length === 0 ? (
-            <div className="p-8 text-center text-slate-500">
+            <div className="p-8 text-center text-slate-400">
               <FileText className="w-12 h-12 mx-auto mb-3 opacity-30" />
               <p className="font-medium">Aucune commande trouvée</p>
               <p className="text-sm mt-1">Essayez avec d&apos;autres mots-clés</p>
@@ -525,7 +525,7 @@ export function RHCommandPalette({
                 
                 return (
                   <div key={category} className="mb-1">
-                    <div className="px-4 py-2 flex items-center gap-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                    <div className="px-4 py-2 flex items-center gap-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">
                       {category !== 'recent' && <CategoryIcon className="w-3 h-3" />}
                       {label}
                     </div>
@@ -566,7 +566,7 @@ export function RHCommandPalette({
                               )}
                             </div>
                             {cmd.description && (
-                              <div className="text-xs text-slate-500 truncate">{cmd.description}</div>
+                              <div className="text-xs text-slate-400 truncate">{cmd.description}</div>
                             )}
                           </div>
                           {cmd.shortcut && (
@@ -574,7 +574,7 @@ export function RHCommandPalette({
                               "px-2 py-1 rounded text-xs font-mono transition-colors",
                               isSelected 
                                 ? "bg-blue-500/20 text-blue-600 dark:text-blue-400" 
-                                : "bg-slate-100 dark:bg-slate-800 text-slate-500"
+                                : "bg-slate-100 dark:bg-slate-800 text-slate-400"
                             )}>
                               {cmd.shortcut}
                             </kbd>
@@ -595,7 +595,7 @@ export function RHCommandPalette({
 
         {/* Footer - Tips */}
         <div className="px-4 py-3 border-t border-slate-200/70 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30">
-          <div className="flex items-center justify-between text-xs text-slate-500">
+          <div className="flex items-center justify-between text-xs text-slate-400">
             <div className="flex items-center gap-4">
               <span className="flex items-center gap-1">
                 <kbd className="px-1.5 py-0.5 rounded bg-white dark:bg-slate-800 font-mono">↑↓</kbd>

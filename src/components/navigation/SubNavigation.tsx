@@ -125,7 +125,7 @@ export function SubNavigation({
 
       {filters && filters.length > 0 && (
         <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Filtres">
-          <span className="text-xs text-slate-500 font-medium">Filtres :</span>
+          <span className="text-xs text-slate-400 font-medium">Filtres :</span>
           {filters.map((filter) => (
             <button
               key={filter.id}

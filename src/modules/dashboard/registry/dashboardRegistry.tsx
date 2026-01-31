@@ -16,6 +16,10 @@ import { CockpitDG_V2Page } from '../components/views/CockpitDG_V2Page';
 import { RapportDGPage } from '../components/views/RapportDGPage';
 import { DashboardDGLayout } from '../components/views/DashboardDGLayout';
 import { PortefeuilleChantiersPage } from '../components/views/PortefeuilleChantiersPage';
+import { GovernancePilotageView } from '../components/views/GovernancePilotageView';
+import { CalendrierEcheancesView } from '../components/views/CalendrierEcheancesView';
+import { AnalyticsReportsView } from '../components/views/AnalyticsReportsView';
+import { HSEConformiteView } from '../components/views/HSEConformiteView';
 import { DashboardPageSkeleton } from '../components/shared/DashboardSkeleton';
 import { formatMoneyEUR } from '../utils/colorMapping';
 import type {
@@ -216,6 +220,7 @@ const createDefaultView = (title: string, description?: string): ViewEntry => ({
   render: ({ nav }) => (
     <div className="p-6 space-y-4 animate-fadeIn">
       <div>
+        <h1 className="sr-only">{title}</h1>
         <h2 className="text-2xl font-bold text-white mb-2">{title}</h2>
         {description && (
           <p className="text-slate-400 text-sm">{description}</p>
@@ -223,7 +228,7 @@ const createDefaultView = (title: string, description?: string): ViewEntry => ({
       </div>
       <div className="bg-slate-800/40 border border-slate-700/40 rounded-xl p-6 text-center">
         <p className="text-slate-300 mb-2">Vue en cours de développement</p>
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-slate-400">
           Navigation: {nav.main} → {nav.sub || 'N/A'} → {nav.leaf || 'N/A'}
         </p>
       </div>
@@ -255,6 +260,13 @@ const loadOverviewKpisBudget = loadKpisBudgetApi;
 
 // Alias pour compatibilité : utiliser les loaders API
 const loadOverviewKpisHighlights = loadOverviewKpisHighlightsApi;
+
+// Loader HSE : pas d'API dashboard avec main=pilotage (route rejette pilotage). Retour statique pour afficher la vue.
+const loadHseView: Loader<DashboardViewData> = async (nav) => ({
+  key: navToKey(nav),
+  data: {} as DashboardViewData,
+  fetchedAt: Date.now(),
+});
 
 // Loader pour le Reporting Direction (Phase P7)
 // Le backend retourne des structures différentes selon la leaf
@@ -497,15 +509,40 @@ export const dashboardRegistry: DashboardRegistry = {
   // --- PILOTAGE ---
   'pilotage::dashboard::default': dgCockpitEntry,
   'pilotage::dashboard::dashboard': dgCockpitEntry,
-  'pilotage::gouvernance::default': createDefaultView('Gouvernance & décisions', 'Décisions et instances de pilotage'),
-  'pilotage::calendrier::default': createDefaultView('Calendrier & échéances', 'Jalons et planning'),
-  'pilotage::analytics::default': createDefaultView('Analytics & rapports', 'Rapports et tableaux de bord'),
+  'pilotage::gouvernance::default': {
+    id: 'pilotage-gouvernance',
+    title: 'Gouvernance & décisions',
+    ttl: 60_000,
+    loader: loadOverviewSummaryDashboard,
+    render: () => <GovernancePilotageView />,
+  },
+  'pilotage::calendrier::default': {
+    id: 'pilotage-calendrier',
+    title: 'Calendrier & échéances',
+    ttl: 60_000,
+    loader: loadOverviewSummaryDashboard,
+    render: () => <CalendrierEcheancesView />,
+  },
+  'pilotage::analytics::default': {
+    id: 'pilotage-analytics',
+    title: 'Analytics & rapports',
+    ttl: 60_000,
+    loader: loadOverviewSummaryDashboard,
+    render: () => <AnalyticsReportsView />,
+  },
   'pilotage::alertes::default': {
     id: 'pilotage-alertes',
     title: "Centre d'alertes",
     ttl: 30_000,
     loader: loadAlertsActivesApi,
     render: pilotageAlertes,
+  },
+  'pilotage::hse::default': {
+    id: 'pilotage-hse',
+    title: 'HSE & Conformité',
+    ttl: 60_000,
+    loader: loadHseView,
+    render: () => <HSEConformiteView />,
   },
   'pilotage::cockpit-advanced::default': {
     id: 'dg-cockpit-advanced',

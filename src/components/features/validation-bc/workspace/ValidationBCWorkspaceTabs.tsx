@@ -154,7 +154,7 @@ export function ValidationBCWorkspaceTabs({ onBackToDashboard }: ValidationBCWor
             aria-selected={isActive}
             aria-label={`Onglet ${tab.title}`}
           >
-            <div className={cn('flex-none', isActive ? 'text-purple-600 dark:text-purple-400' : 'text-slate-500')}>
+            <div className={cn('flex-none', isActive ? 'text-purple-600 dark:text-purple-400' : 'text-slate-400')}>
               {getTabIcon(tab.type, tab.icon)}
             </div>
 

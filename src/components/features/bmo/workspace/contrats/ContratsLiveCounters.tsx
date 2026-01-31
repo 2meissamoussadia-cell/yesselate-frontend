@@ -133,7 +133,7 @@ export function ContratsLiveCounters({ onOpenQueue, compact = false }: Props) {
                   : 'text-slate-400',
                 counter.key === 'critical' && (stats.byUrgency?.critical || 0) > 0 && 'animate-pulse'
               )} />
-              <span className="text-xs text-slate-500 font-medium">{counter.label}</span>
+              <span className="text-xs text-slate-400 font-medium">{counter.label}</span>
             </div>
             <p className={cn(
               "text-2xl font-bold",
@@ -147,7 +147,7 @@ export function ContratsLiveCounters({ onOpenQueue, compact = false }: Props) {
             )}>
               {counter.value}
               {counter.suffix && (
-                <span className="text-xs font-normal text-slate-500 ml-1">{counter.suffix}</span>
+                <span className="text-xs font-normal text-slate-400 ml-1">{counter.suffix}</span>
               )}
             </p>
           </button>

@@ -6,7 +6,7 @@
 
 'use client';
 
-import React from 'react';
+import React, { useId } from 'react';
 import { cn } from '@/lib/utils';
 import { colors, borderRadius, shadows, transitions } from '../../utils/dashboardDesignTokens';
 
@@ -38,6 +38,7 @@ export function DashboardPanel({
   subtitle,
   icon: Icon,
 }: DashboardPanelProps) {
+  const titleId = useId();
   return (
     <div
       className={cn(
@@ -52,17 +53,19 @@ export function DashboardPanel({
         className
       )}
       style={style}
+      role={title ? 'region' : undefined}
+      aria-labelledby={title ? titleId : undefined}
     >
       {(title || subtitle || Icon) && (
         <div className="mb-4 space-y-1">
           <div className="flex items-center gap-3">
             {Icon && (
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-800/60 bg-slate-900/40">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-800/60 bg-slate-900/40" aria-hidden>
                 <Icon className="h-4 w-4 text-slate-300" />
               </div>
             )}
             {title && (
-              <h2 className="text-base font-semibold tracking-tight text-slate-50">
+              <h2 id={titleId} className="text-base font-semibold tracking-tight text-slate-50">
                 {title}
               </h2>
             )}

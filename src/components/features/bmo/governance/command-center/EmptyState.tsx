@@ -83,7 +83,7 @@ export function EmptyState({
       <div className="w-16 h-16 rounded-2xl bg-slate-800/50 flex items-center justify-center mb-4">
         <Icon className={cn(
           'h-8 w-8',
-          variant === 'error' ? 'text-red-400' : 'text-slate-500'
+          variant === 'error' ? 'text-red-400' : 'text-slate-400'
         )} />
       </div>
 
@@ -91,7 +91,7 @@ export function EmptyState({
         {displayTitle}
       </h3>
 
-      <p className="text-sm text-slate-500 max-w-sm mb-6">
+      <p className="text-sm text-slate-400 max-w-sm mb-6">
         {displayDescription}
       </p>
 
@@ -152,7 +152,7 @@ export function LoadingState({
         <div className="absolute inset-0 rounded-full border-2 border-slate-700" />
         <div className="absolute inset-0 rounded-full border-2 border-t-blue-500 animate-spin" />
       </div>
-      <p className="text-sm text-slate-500">{message}</p>
+      <p className="text-sm text-slate-400">{message}</p>
     </div>
   );
 }

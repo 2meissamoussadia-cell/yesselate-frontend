@@ -190,7 +190,7 @@ export const ValidationsValideesPage = memo(function ValidationsValideesPage() {
       render: (value) => value ? (
         <span className="font-semibold tabular-nums text-slate-200">{value}</span>
       ) : (
-        <span className="text-slate-500">-</span>
+        <span className="text-slate-400">-</span>
       ),
     },
   ], []);

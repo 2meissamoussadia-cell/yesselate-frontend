@@ -24,13 +24,16 @@ import {
   Clock,
   TrendingUp,
   BarChart3,
+  Building2,
   Settings,
   FileSpreadsheet,
   ChevronDown,
 } from 'lucide-react';
 
+import { toast } from 'sonner';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ErrorBoundary } from '@/components/shared/ErrorBoundary';
+import { DashboardErrorBoundary } from '@/modules/dashboard/components/shared/DashboardErrorBoundary';
 
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import type { DashboardMainCategory } from '@/modules/dashboard/types/dashboardNavigationTypes';
@@ -54,10 +57,18 @@ import { DashboardCommandPalette } from '@/components/features/bmo/dashboard/com
 import { DashboardBottomNav } from '@/modules/dashboard/components/mobile/DashboardBottomNav';
 import { getKPIMappingByLabel } from '@/lib/mappings/dashboardKPIMapping';
 import { useDashboardKPIs } from '@/lib/hooks/useDashboardKPIs';
+import {
+  getKpisForPerimetre,
+  DATE_FILTER_OPTIONS,
+  CHANTIERS_FILTER_MOCK,
+  EQUIPES_FILTER_MOCK,
+  type DateFilterId,
+} from '@/modules/dashboard/data/dashboardCockpitMock';
 import { useDashboardExport } from '@/modules/dashboard/hooks/useDashboardExport';
 import { KPIAlertsSystem } from '@/components/features/bmo/dashboard/command-center/KPIAlertsSystem';
 import { useLogger } from '@/lib/utils/logger';
 import { clearCache } from '@/modules/dashboard/api/client';
+import { RisquesCritiquesModal } from '@/modules/dashboard/components/modals/RisquesCritiquesModal';
 
 /* =========================
    Loading
@@ -89,6 +100,13 @@ export default function DashboardPage() {
 ========================= */
 
 type KPITone = 'ok' | 'warn' | 'crit' | 'info';
+
+/** Audit §9 : éviter d'afficher NaN / undefined dans les KPI. */
+function sanitizeKpiValue(v: unknown): string | number {
+  if (v === null || v === undefined) return '—';
+  if (typeof v === 'number' && Number.isNaN(v)) return '—';
+  return typeof v === 'number' ? v : String(v);
+}
 type KPITrend = 'up' | 'down' | 'neutral';
 
 interface KPIData {
@@ -151,6 +169,10 @@ function DashboardContent() {
 
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [exportingFormat, setExportingFormat] = useState<'pdf' | 'excel' | null>(null);
+  const [perimetreFilter, setPerimetreFilter] = useState<'nice-renovation' | 'tous'>('nice-renovation');
+  const [dateFilter, setDateFilter] = useState<DateFilterId>('annee');
+  const [chantierFilter, setChantierFilter] = useState<string>('tous');
+  const [equipeFilter, setEquipeFilter] = useState<string>('toutes');
   const exportMenuRef = useRef<HTMLDivElement | null>(null);
   const { exportData } = useDashboardExport();
 
@@ -176,8 +198,14 @@ function DashboardContent() {
   // Note: Les handlers de navigation ne sont plus nécessaires car DashboardSidebar et DashboardSubNavigation
   // utilisent directement le store via useDashboardCommandCenterStore
 
+  const [risquesModalOpen, setRisquesModalOpen] = useState(false);
+
   const handleKPIClick = useCallback(
     (kpi: KPIData) => {
+      if (kpi.label === 'Risques critiques') {
+        setRisquesModalOpen(true);
+        return;
+      }
       const mapping = getKPIMappingByLabel(kpi.label);
       if (mapping) openModal('kpi-drilldown', { kpi, kpiId: mapping.metadata.id });
       else openModal('kpi-drilldown', { kpi });
@@ -198,26 +226,39 @@ function DashboardContent() {
         const mapping = getKPIMappingByLabel(kpi.label);
         return {
           label: kpi.label,
-          value: kpi.value,
-          delta: kpi.delta,
+          value: sanitizeKpiValue(kpi.value),
+          delta: sanitizeKpiValue(kpi.delta) as string,
           tone: kpi.tone,
           trend: kpi.trend,
           icon: mapping?.display.icon || kpi.icon || Activity,
         };
       });
     }
-    // fallback
-    return [
-      { label: 'Demandes', value: 247, delta: '+12', tone: 'ok', icon: FileText, trend: 'up' },
-      { label: 'Validations', value: '89%', delta: '+3%', tone: 'ok', icon: CheckCircle2, trend: 'up' },
-      { label: 'Blocages', value: 5, delta: '-2', tone: 'warn', icon: AlertTriangle, trend: 'down' },
-      { label: 'Risques critiques', value: 3, delta: '+1', tone: 'crit', icon: AlertCircle, trend: 'up' },
-      { label: 'Budget consommé', value: '67%', delta: '—', tone: 'info', icon: DollarSign, trend: 'neutral' },
-      { label: 'Décisions en attente', value: 8, delta: '—', tone: 'warn', icon: Clock, trend: 'neutral' },
-      { label: 'Temps réponse', value: '2.4j', delta: '-0.3j', tone: 'warn', icon: Activity, trend: 'down' },
-      { label: 'Conformité SLA', value: '94%', delta: '+2%', tone: 'ok', icon: TrendingUp, trend: 'up' },
-    ];
-  }, [apiKpis]);
+    // fallback mock : KPIs par périmètre (à remplacer par API)
+    const mockKpis = getKpisForPerimetre(perimetreFilter);
+    const iconByLabel: Record<string, React.ComponentType<{ className?: string }>> = {
+      'Chantiers en cours': Building2,
+      Demandes: FileText,
+      Validations: CheckCircle2,
+      Blocages: AlertTriangle,
+      'Risques critiques': AlertCircle,
+      'Budget consommé': DollarSign,
+      'Décisions en attente': Clock,
+      'Temps réponse': Activity,
+      'Conformité SLA': TrendingUp,
+    };
+    return mockKpis.map((kpi) => {
+      const mapping = getKPIMappingByLabel(kpi.label);
+      return {
+        label: kpi.label,
+        value: sanitizeKpiValue(kpi.value),
+        delta: sanitizeKpiValue(kpi.delta) as string,
+        tone: kpi.tone,
+        trend: kpi.trend,
+        icon: mapping?.display.icon || iconByLabel[kpi.label] || Activity,
+      };
+    });
+  }, [apiKpis, perimetreFilter]);
 
   useEffect(() => {
     if (apiLastUpdate) setLastUpdate(new Date(apiLastUpdate));
@@ -278,14 +319,18 @@ function DashboardContent() {
       if (isRefreshingRef.current) return;
       isRefreshingRef.current = true;
       setIsRefreshing(true);
+      const toastId = retryAttempt === 0 ? toast.loading('Actualisation en cours…') : undefined;
       try {
         clearCache();
         invalidateAllViews();
         await refetchKPIsFromAPI?.();
+        if (toastId) toast.dismiss(toastId);
         if (retryAttempt > 0) setRetryCount(0);
         setLastUpdate(new Date());
         setRefreshCount((p) => p + 1);
+        toast.success('Données rafraîchies');
       } catch (e) {
+        if (toastId) toast.dismiss(toastId);
         if (retryAttempt < maxRetries) {
           const delay = Math.min(1000 * Math.pow(2, retryAttempt), 8000);
           setRetryCount(retryAttempt + 1);
@@ -293,6 +338,8 @@ function DashboardContent() {
           return;
         }
         setRetryCount(0);
+        const msg = e instanceof Error ? e.message : 'Impossible de rafraîchir les données';
+        toast.error('Erreur', { description: msg });
       } finally {
         if (retryAttempt === 0 || retryAttempt >= maxRetries) {
           isRefreshingRef.current = false;
@@ -310,6 +357,12 @@ function DashboardContent() {
       setExportingFormat(format);
       try {
         await exportData(format);
+        toast.success('Export réussi', {
+          description: format === 'excel' ? 'Fichier Excel téléchargé' : 'Fichier PDF téléchargé',
+        });
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : 'Erreur lors de l\'export';
+        toast.error('Erreur export', { description: msg });
       } finally {
         setExportingFormat(null);
       }
@@ -317,7 +370,14 @@ function DashboardContent() {
     [exportData]
   );
 
-  // keyboard shortcuts
+  // Spec Dashboard ERP BTP : Header recherche (⌘K) ouvre la palette de commandes
+  useEffect(() => {
+    const onOpen = () => toggleCommandPalette();
+    document.addEventListener('bmo-open-command-palette', onOpen);
+    return () => document.removeEventListener('bmo-open-command-palette', onOpen);
+  }, [toggleCommandPalette]);
+
+  // keyboard shortcuts (⌘K palette, ⌘R refresh, ? aide, Escape ferme export)
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement;
@@ -331,13 +391,17 @@ function DashboardContent() {
         e.preventDefault();
         refreshAllKPIs();
       }
+      if (e.key === '?' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault();
+        openModal('shortcuts');
+      }
       if (e.key === 'Escape') {
         setShowExportMenu(false);
       }
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [toggleCommandPalette, refreshAllKPIs]);
+  }, [toggleCommandPalette, refreshAllKPIs, openModal]);
 
   // page title (simple mais efficace)
   const pageTitle = useMemo(() => {
@@ -346,23 +410,25 @@ function DashboardContent() {
   }, [mainCategory, subCategory, subSubCategory]);
 
   const pathname = usePathname();
-  // Vue d'accueil Cockpit DG = page dashboard (ou pilotage/dashboard en store). Afficher directement DashboardAccueil3P sans ViewRouter pour éviter la barre "DG Cockpit" en double.
+  // Vue d'accueil Cockpit DG = uniquement quand pilotage + dashboard (pas quand alertes/gouvernance/calendrier/analytics).
+  // Ne pas utiliser pathname seul : sur /maitre-ouvrage/dashboard le contenu doit changer selon la sub (subsidebar).
   const isCockpitHome =
-    (typeof pathname === 'string' && pathname.includes('/maitre-ouvrage/dashboard')) ||
     (mainCategory === 'pilotage' && subCategory === 'dashboard') ||
     ((mainCategory as string) === 'overview' && (subCategory === 'summary' || !subCategory));
   const useCleanLayout = true; // Refonte UX — layout Procore / SAP Fiori
 
   if (useCleanLayout) {
     return (
-      <>
+      <DashboardErrorBoundary>
+        <>
         <Suspense fallback={null}>
           <DashboardUrlSync />
         </Suspense>
         <DashboardCommandPalette kpis={allKpis} />
         <DashboardCleanLayout lastUpdate={formatTimeAgo(lastUpdate)} hideHeader>
           {isCockpitHome ? (
-            <div className="flex-1 min-h-0 min-w-0 flex overflow-hidden">
+            <div className="flex-1 min-h-0 min-w-0 flex overflow-hidden" role="region" aria-labelledby="dashboard-page-title">
+              <h1 id="dashboard-page-title" className="sr-only">{pageTitle}</h1>
               <DashboardSubSidebar />
               <div className="flex-1 min-h-0 min-w-0 flex flex-col overflow-hidden">
                 <div className="shrink-0 border-b border-slate-800/60 bg-slate-950/50">
@@ -372,29 +438,45 @@ function DashboardContent() {
                       type="button"
                       onClick={toggleKpiStrip}
                       className={cn(
-                        'w-full px-4 sm:px-6 py-2.5 flex items-center justify-between gap-2 text-left text-sm font-medium text-slate-300 hover:bg-slate-800/50 transition-colors',
+                        'w-full px-4 sm:px-6 py-2.5 flex items-center justify-between gap-2 text-left text-sm font-medium text-slate-200 hover:bg-slate-800/50 transition-colors',
                         'focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500/50'
                       )}
                       aria-expanded={!kpiStripCollapsed}
                       aria-controls="dashboard-kpi-strip"
                       id="dashboard-kpi-strip-toggle"
                     >
-                      <span className="text-[10px] uppercase tracking-wider text-slate-400">Indicateurs clés</span>
-                      <ChevronDown className={cn('h-4 w-4 shrink-0 text-slate-500 transition-transform duration-200', kpiStripCollapsed && '-rotate-90')} aria-hidden />
+                      <span className="text-[10px] uppercase tracking-wider text-slate-300">Indicateurs clés</span>
+                      <ChevronDown className={cn('h-4 w-4 shrink-0 text-slate-400 transition-transform duration-200', kpiStripCollapsed && '-rotate-90')} aria-hidden />
                     </button>
                     {!kpiStripCollapsed && (
-                      <div id="dashboard-kpi-strip" className={cn('px-4 sm:px-6 pb-3 pt-0')} role="region" aria-labelledby="dashboard-kpi-strip-toggle">
+                      <div id="dashboard-kpi-strip" className={cn('px-4 sm:px-6 pb-3 pt-0')} role="region" aria-labelledby="dashboard-kpi-strip-toggle" aria-live="polite" aria-atomic="false">
                         <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-dashboard min-w-0" role="list" style={{ scrollbarGutter: 'stable' }}>
-                          {topKpis.slice(0, 6).map((kpi) => (
-                            <KPICardPro key={kpi.label} kpi={kpi} onClick={() => handleKPIClick(kpi)} />
+                          {topKpis.slice(0, 6).map((kpi, idx) => (
+                            <KPICardPro
+                              key={kpi.label}
+                              kpi={kpi}
+                              onClick={() => handleKPIClick(kpi)}
+                              size={idx < 2 ? 'xl' : idx < 4 ? 'lg' : 'md'}
+                            />
                           ))}
                         </div>
                       </div>
                     )}
                   </div>
                   <div className="px-4 sm:px-6 py-2 flex items-center justify-between gap-3 border-b border-slate-800/60 bg-slate-950/30">
-                    <div className="flex items-center gap-2 text-[11px] text-slate-400">
+                    <div className="flex items-center gap-3 text-[11px] text-slate-300 min-w-0">
                       <span>Dernière MAJ : {formatTimeAgo(lastUpdate)}</span>
+                      <label htmlFor="perimetre-filter" className="sr-only">Périmètre</label>
+                      <select
+                        id="perimetre-filter"
+                        value={perimetreFilter}
+                        onChange={(e) => setPerimetreFilter(e.target.value as 'nice-renovation' | 'tous')}
+                        className="rounded-lg border border-slate-700/70 bg-slate-800/50 px-2 py-1 text-slate-200 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
+                        aria-label="Filtrer par périmètre"
+                      >
+                        <option value="nice-renovation">NICE RÉNOVATION</option>
+                        <option value="tous">Tous les périmètres</option>
+                      </select>
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <button
@@ -472,12 +554,13 @@ function DashboardContent() {
                   </div>
                 </div>
                 <div className="flex-1 min-h-0 overflow-auto animate-fadeIn pb-20 md:pb-0">
-                  <DashboardAccueil3P kpis={allKpis} />
+                  <DashboardAccueil3P kpis={allKpis} perimetreFilter={perimetreFilter} />
                 </div>
               </div>
             </div>
           ) : (
-            <div className="flex-1 min-h-0 min-w-0 flex overflow-hidden">
+            <div className="flex-1 min-h-0 min-w-0 flex overflow-hidden" role="region" aria-labelledby="dashboard-page-title-other">
+              <h1 id="dashboard-page-title-other" className="sr-only">{pageTitle}</h1>
               <DashboardSubSidebar />
               <div className="flex-1 min-h-0 min-w-0 flex flex-col overflow-hidden">
                 <div className="shrink-0 border-b border-slate-800/60 bg-slate-950/50">
@@ -487,29 +570,81 @@ function DashboardContent() {
                       type="button"
                       onClick={toggleKpiStrip}
                       className={cn(
-                        'w-full px-4 sm:px-6 py-2.5 flex items-center justify-between gap-2 text-left text-sm font-medium text-slate-300 hover:bg-slate-800/50 transition-colors',
+                        'w-full px-4 sm:px-6 py-2.5 flex items-center justify-between gap-2 text-left text-sm font-medium text-slate-200 hover:bg-slate-800/50 transition-colors',
                         'focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500/50'
                       )}
                       aria-expanded={!kpiStripCollapsed}
                       aria-controls="dashboard-kpi-strip-other"
                       id="dashboard-kpi-strip-toggle-other"
                     >
-                      <span className="text-[10px] uppercase tracking-wider text-slate-400">Indicateurs clés</span>
-                      <ChevronDown className={cn('h-4 w-4 shrink-0 text-slate-500 transition-transform duration-200', kpiStripCollapsed && '-rotate-90')} aria-hidden />
+                      <span className="text-[10px] uppercase tracking-wider text-slate-300">Indicateurs clés</span>
+                      <ChevronDown className={cn('h-4 w-4 shrink-0 text-slate-400 transition-transform duration-200', kpiStripCollapsed && '-rotate-90')} aria-hidden />
                     </button>
                     {!kpiStripCollapsed && (
-                      <div id="dashboard-kpi-strip-other" className={cn('px-4 sm:px-6 pb-3 pt-0')} role="region" aria-labelledby="dashboard-kpi-strip-toggle-other">
+                      <div id="dashboard-kpi-strip-other" className={cn('px-4 sm:px-6 pb-3 pt-0')} role="region" aria-labelledby="dashboard-kpi-strip-toggle-other" aria-live="polite" aria-atomic="false">
                         <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-dashboard min-w-0" role="list" style={{ scrollbarGutter: 'stable' }}>
-                          {topKpis.slice(0, 6).map((kpi) => (
-                            <KPICardPro key={kpi.label} kpi={kpi} onClick={() => handleKPIClick(kpi)} />
+                          {topKpis.slice(0, 6).map((kpi, idx) => (
+                            <KPICardPro
+                              key={kpi.label}
+                              kpi={kpi}
+                              onClick={() => handleKPIClick(kpi)}
+                              size={idx < 2 ? 'xl' : idx < 4 ? 'lg' : 'md'}
+                            />
                           ))}
                         </div>
                       </div>
                     )}
                   </div>
                   <div className="px-4 sm:px-6 py-2 flex items-center justify-between gap-3 border-b border-slate-800/60 bg-slate-950/30">
-                    <div className="flex items-center gap-2 text-[11px] text-slate-400">
+                    <div className="flex items-center gap-3 text-[11px] text-slate-300 min-w-0 flex-wrap">
                       <span>Dernière MAJ : {formatTimeAgo(lastUpdate)}</span>
+                      <label htmlFor="perimetre-filter-other" className="sr-only">Périmètre</label>
+                      <select
+                        id="perimetre-filter-other"
+                        value={perimetreFilter}
+                        onChange={(e) => setPerimetreFilter(e.target.value as 'nice-renovation' | 'tous')}
+                        className="rounded-lg border border-slate-700/70 bg-slate-800/50 px-2 py-1 text-slate-200 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
+                        aria-label="Filtrer par périmètre"
+                      >
+                        <option value="nice-renovation">NICE RÉNOVATION</option>
+                        <option value="tous">Tous les périmètres</option>
+                      </select>
+                      <label htmlFor="date-filter-other" className="sr-only">Période</label>
+                      <select
+                        id="date-filter-other"
+                        value={dateFilter}
+                        onChange={(e) => setDateFilter(e.target.value as DateFilterId)}
+                        className="rounded-lg border border-slate-700/70 bg-slate-800/50 px-2 py-1 text-slate-200 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
+                        aria-label="Période (date)"
+                      >
+                        {DATE_FILTER_OPTIONS.map((o) => (
+                          <option key={o.id} value={o.id}>{o.label}</option>
+                        ))}
+                      </select>
+                      <label htmlFor="chantier-filter-other" className="sr-only">Chantier</label>
+                      <select
+                        id="chantier-filter-other"
+                        value={chantierFilter}
+                        onChange={(e) => setChantierFilter(e.target.value)}
+                        className="rounded-lg border border-slate-700/70 bg-slate-800/50 px-2 py-1 text-slate-200 max-w-[140px] truncate focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
+                        aria-label="Filtrer par chantier"
+                      >
+                        {CHANTIERS_FILTER_MOCK.map((o) => (
+                          <option key={o.id} value={o.id}>{o.label}</option>
+                        ))}
+                      </select>
+                      <label htmlFor="equipe-filter-other" className="sr-only">Équipe</label>
+                      <select
+                        id="equipe-filter-other"
+                        value={equipeFilter}
+                        onChange={(e) => setEquipeFilter(e.target.value)}
+                        className="rounded-lg border border-slate-700/70 bg-slate-800/50 px-2 py-1 text-slate-200 max-w-[140px] truncate focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
+                        aria-label="Filtrer par équipe"
+                      >
+                        {EQUIPES_FILTER_MOCK.map((o) => (
+                          <option key={o.id} value={o.id}>{o.label}</option>
+                        ))}
+                      </select>
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <button
@@ -595,13 +730,15 @@ function DashboardContent() {
           )}
         </DashboardCleanLayout>
         <DashboardModals />
+        <RisquesCritiquesModal open={risquesModalOpen} onClose={() => setRisquesModalOpen(false)} />
         <DashboardBottomNav />
-      </>
+        </>
+      </DashboardErrorBoundary>
     );
   }
 
   return (
-    <>
+    <DashboardErrorBoundary>
       <Suspense fallback={null}>
         <DashboardUrlSync />
       </Suspense>
@@ -624,7 +761,7 @@ function DashboardContent() {
                 <DashboardBreadcrumbs className="text-xs" />
                 <div className="h-4 w-px bg-slate-800/60" />
                 <div className="flex items-center gap-2 min-w-0">
-                  <span className="text-[10px] uppercase tracking-wider text-slate-500 font-medium whitespace-nowrap">Maître d'ouvrage</span>
+                  <span className="text-[10px] uppercase tracking-wider text-slate-400 font-medium whitespace-nowrap">Maître d'ouvrage</span>
                   <h1 className="text-xs font-medium text-slate-400 truncate">{pageTitle}</h1>
                 </div>
               </div>
@@ -864,7 +1001,7 @@ function DashboardContent() {
                   )}
                 </div>
 
-                <div className="text-[11px] text-slate-500 flex items-center gap-2">
+                <div className="text-[11px] text-slate-400 flex items-center gap-2">
                   <span>Mise à jour : {formatTimeAgo(lastUpdate)}</span>
                   {isRefreshing && (
                     <span className="inline-flex items-center gap-1 text-blue-400">
@@ -880,10 +1017,10 @@ function DashboardContent() {
             {topKpis.length === 0 ? (
               <div className="py-10 text-center">
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-slate-900/50 border border-slate-800/70 mb-3">
-                  <Info className="h-5 w-5 text-slate-500" />
+                  <Info className="h-5 w-5 text-slate-400" />
                 </div>
                 <div className="text-sm text-slate-300">Aucun indicateur trouvé</div>
-                <div className="text-xs text-slate-500 mt-1">Affiner la recherche ou effacer le filtre.</div>
+                <div className="text-xs text-slate-400 mt-1">Affiner la recherche ou effacer le filtre.</div>
               </div>
             ) : (
               <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-dashboard">
@@ -930,7 +1067,8 @@ function DashboardContent() {
       </div>
 
       <DashboardModals />
-    </>
+      <RisquesCritiquesModal open={risquesModalOpen} onClose={() => setRisquesModalOpen(false)} />
+    </DashboardErrorBoundary>
   );
 }
 
@@ -938,12 +1076,25 @@ function DashboardContent() {
    KPI Card PRO (horizontal tile)
 ========================= */
 
+/** Tailles audit : XL = KPIs critiques, L = importants, M = secondaires, S = détails */
+const kpiCardProRootSizes = {
+  xl: 'min-w-[240px] w-[240px] sm:min-w-[260px] sm:w-[260px] px-5 py-4',
+  lg: 'min-w-[220px] w-[220px] sm:min-w-[240px] sm:w-[240px] px-4 py-3.5',
+  md: 'min-w-[200px] w-[200px] sm:min-w-[220px] sm:w-[220px] px-4 py-3',
+  sm: 'min-w-[180px] w-[180px] sm:min-w-[200px] sm:w-[200px] px-3 py-2.5',
+} as const;
+const kpiCardProValueSizes = { xl: 'text-2xl sm:text-3xl', lg: 'text-xl sm:text-2xl', md: 'text-xl', sm: 'text-lg' } as const;
+const kpiCardProIconSizes = { xl: 'h-10 w-10', lg: 'h-9 w-9', md: 'h-9 w-9', sm: 'h-8 w-8' } as const;
+
 const KPICardPro = memo(function KPICardPro({
   kpi,
   onClick,
+  size = 'md',
 }: {
   kpi: KPIData;
   onClick?: () => void;
+  /** XL = critique (CA, Trésorerie), L = important, M = secondaire, S = détail */
+  size?: 'xl' | 'lg' | 'md' | 'sm';
 }) {
   const Icon = kpi.icon;
 
@@ -964,12 +1115,12 @@ const KPICardPro = memo(function KPICardPro({
           onClick={onClick}
           title={kpi.label}
           className={cn(
-            'flex-shrink-0 min-w-[200px] w-[200px] sm:min-w-[220px] sm:w-[220px] rounded-2xl border',
-            'px-4 py-3 text-left',
+            'flex-shrink-0 rounded-2xl border text-left',
             'transition-all duration-200 ease-out',
             'hover:translate-y-[-2px] hover:shadow-xl hover:shadow-black/20',
             'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950',
-            toneClasses
+            toneClasses,
+            kpiCardProRootSizes[size]
           )}
           aria-label={`${kpi.label}: ${kpi.value} (${kpi.delta})`}
         >
@@ -978,13 +1129,13 @@ const KPICardPro = memo(function KPICardPro({
               <div className="text-[11px] text-slate-400 uppercase tracking-wide break-words line-clamp-2 leading-tight" style={{ wordBreak: 'break-word' }}>
                 {kpi.label}
               </div>
-              <div className="text-xl font-semibold text-slate-100 mt-0.5 leading-tight tabular-nums">{String(kpi.value)}</div>
+              <div className={cn('font-semibold text-slate-100 mt-0.5 leading-tight tabular-nums', kpiCardProValueSizes[size])}>{String(kpi.value)}</div>
               <div className="text-xs text-slate-400 mt-1.5 flex items-center gap-1">
-                <Activity className="h-4 w-4 text-slate-500 flex-shrink-0" aria-hidden />
+                <Activity className="h-4 w-4 text-slate-400 flex-shrink-0" aria-hidden />
                 <span>{kpi.delta}</span>
               </div>
             </div>
-            <div className="h-9 w-9 flex-shrink-0 rounded-xl bg-slate-900/40 border border-slate-800/70 flex items-center justify-center">
+            <div className={cn('flex-shrink-0 rounded-xl bg-slate-900/40 border border-slate-800/70 flex items-center justify-center', kpiCardProIconSizes[size])}>
               <Icon className="h-4 w-4 text-slate-200" aria-hidden />
             </div>
           </div>

@@ -145,7 +145,7 @@ function CapacityView({ data }: { data: typeof capacityData }) {
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-medium text-slate-300">Plan de charge par équipe</h3>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" className="h-8 text-slate-500">
+          <Button variant="ghost" size="sm" className="h-8 text-slate-400">
             <Calendar className="h-4 w-4 mr-1" />
             Période
           </Button>
@@ -159,7 +159,7 @@ function CapacityView({ data }: { data: typeof capacityData }) {
             <div className="flex items-center justify-between mb-3">
               <div>
                 <p className="text-sm font-medium text-slate-300">{team.team}</p>
-                <p className="text-xs text-slate-500">{team.members} membres • {team.projects} projets</p>
+                <p className="text-xs text-slate-400">{team.members} membres • {team.projects} projets</p>
               </div>
               <div className="text-right">
                 <span className={cn(
@@ -210,11 +210,11 @@ function SkillsView({ data }: { data: typeof skillsMatrix }) {
         <table className="w-full">
           <thead>
             <tr className="border-b border-slate-800/50">
-              <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Compétence</th>
-              <th className="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase">Disponibles</th>
-              <th className="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase">Requis</th>
-              <th className="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase">Écart</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Statut</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-400 uppercase">Compétence</th>
+              <th className="px-4 py-3 text-center text-xs font-medium text-slate-400 uppercase">Disponibles</th>
+              <th className="px-4 py-3 text-center text-xs font-medium text-slate-400 uppercase">Requis</th>
+              <th className="px-4 py-3 text-center text-xs font-medium text-slate-400 uppercase">Écart</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-400 uppercase">Statut</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-800/50">
@@ -283,11 +283,11 @@ function SubcontractorsView({ data }: { data: typeof subcontractors }) {
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center">
-                  <Truck className="h-5 w-5 text-slate-500" />
+                  <Truck className="h-5 w-5 text-slate-400" />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-slate-300">{sub.name}</p>
-                  <p className="text-xs text-slate-500">{sub.domain}</p>
+                  <p className="text-xs text-slate-400">{sub.domain}</p>
                 </div>
               </div>
               <Badge
@@ -305,7 +305,7 @@ function SubcontractorsView({ data }: { data: typeof subcontractors }) {
             <div className="mt-4 flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div>
-                  <p className="text-xs text-slate-500">Performance</p>
+                  <p className="text-xs text-slate-400">Performance</p>
                   <p className={cn(
                     'text-sm font-medium',
                     sub.performance >= 90 ? 'text-emerald-400' :
@@ -315,7 +315,7 @@ function SubcontractorsView({ data }: { data: typeof subcontractors }) {
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-slate-500">Contrats</p>
+                  <p className="text-xs text-slate-400">Contrats</p>
                   <p className="text-sm font-medium text-slate-300">{sub.contracts}</p>
                 </div>
               </div>
@@ -355,7 +355,7 @@ function StatCard({
     <div className="bg-slate-900/60 rounded-lg p-3 border border-slate-800/50">
       <div className="flex items-center gap-2 mb-2">
         <Icon className={cn('h-4 w-4', iconColor)} />
-        <span className="text-xs text-slate-500">{label}</span>
+        <span className="text-xs text-slate-400">{label}</span>
       </div>
       <span className="text-xl font-bold text-slate-200">{value}</span>
     </div>

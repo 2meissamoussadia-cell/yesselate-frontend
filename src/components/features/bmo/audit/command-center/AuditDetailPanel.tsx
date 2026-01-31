@@ -82,7 +82,7 @@ export function AuditDetailPanel() {
               variant="ghost"
               size="sm"
               onClick={closeDetailPanel}
-              className="h-7 w-7 p-0 text-slate-500 hover:text-slate-300"
+              className="h-7 w-7 p-0 text-slate-400 hover:text-slate-300"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -151,7 +151,7 @@ function EventDetailContent({ data }: { data: Record<string, unknown> }) {
 
       {Boolean(data.trend) ? (
         <div className="flex items-center gap-2 text-sm">
-          <span className="text-slate-500">Tendance:</span>
+          <span className="text-slate-400">Tendance:</span>
           <span
             className={cn(
               'font-medium',
@@ -167,11 +167,11 @@ function EventDetailContent({ data }: { data: Record<string, unknown> }) {
 
       <div className="pt-4 border-t border-slate-800/50 space-y-3 text-sm">
         <div className="flex items-center gap-3">
-          <Clock className="h-4 w-4 text-slate-500" />
+          <Clock className="h-4 w-4 text-slate-400" />
           <span className="text-slate-400">Dernière mise à jour: il y a quelques minutes</span>
         </div>
         <div className="flex items-center gap-3">
-          <User className="h-4 w-4 text-slate-500" />
+          <User className="h-4 w-4 text-slate-400" />
           <span className="text-slate-400">Utilisateur: Système</span>
         </div>
       </div>
@@ -201,7 +201,7 @@ function SecurityDetailContent({ data }: { data: Record<string, unknown> }) {
           <span className="text-slate-400">Type: Tentative d'accès non autorisé</span>
         </div>
         <div className="flex items-center gap-3">
-          <Clock className="h-4 w-4 text-slate-500" />
+          <Clock className="h-4 w-4 text-slate-400" />
           <span className="text-slate-400">Détecté: il y a 15 minutes</span>
         </div>
       </div>
@@ -233,7 +233,7 @@ function ComplianceDetailContent({ data }: { data: Record<string, unknown> }) {
           <span className="text-slate-400">Statut: Conforme aux normes</span>
         </div>
         <div className="flex items-center gap-3">
-          <Clock className="h-4 w-4 text-slate-500" />
+          <Clock className="h-4 w-4 text-slate-400" />
           <span className="text-slate-400">Dernière vérification: aujourd'hui</span>
         </div>
       </div>
@@ -265,7 +265,7 @@ function TraceDetailContent({ data }: { data: Record<string, unknown> }) {
           <span className="text-slate-400">Traçabilité complète disponible</span>
         </div>
         <div className="flex items-center gap-3">
-          <Clock className="h-4 w-4 text-slate-500" />
+          <Clock className="h-4 w-4 text-slate-400" />
           <span className="text-slate-400">Dernière trace: il y a 5 minutes</span>
         </div>
       </div>

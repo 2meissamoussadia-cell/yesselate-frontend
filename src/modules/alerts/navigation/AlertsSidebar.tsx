@@ -124,7 +124,7 @@ export function AlertsSidebar({
           >
             <Search className="h-4 w-4 mr-2" />
             Rechercher...
-            <kbd className="ml-auto text-xs bg-slate-800 text-slate-500 px-1.5 py-0.5 rounded">
+            <kbd className="ml-auto text-xs bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">
               ⌘K
             </kbd>
           </Button>
@@ -202,7 +202,7 @@ export function AlertsSidebar({
                             'w-full flex items-center gap-2 px-3 py-1.5 rounded text-xs transition-colors',
                             isSubActive
                               ? 'bg-slate-800/80 text-slate-100'
-                              : 'text-slate-500 hover:text-slate-200 hover:bg-slate-800/30'
+                              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/30'
                           )}
                         >
                           <span className="flex-1 text-left">{subNode.label}</span>
@@ -228,7 +228,7 @@ export function AlertsSidebar({
       {/* Footer */}
       {!collapsed && (
         <div className="border-t border-slate-700/50 p-3">
-          <div className="text-xs text-slate-500 text-center">Alertes v2.0</div>
+          <div className="text-xs text-slate-400 text-center">Alertes v2.0</div>
         </div>
       )}
     </aside>

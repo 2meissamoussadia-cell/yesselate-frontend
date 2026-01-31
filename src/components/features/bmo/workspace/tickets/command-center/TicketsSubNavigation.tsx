@@ -115,7 +115,7 @@ export const TicketsSubNavigation = React.memo(function TicketsSubNavigation({
     <div className="bg-slate-900/60 border-b border-slate-700/50">
       {/* Breadcrumb */}
       <div className="px-4 py-2 flex items-center gap-2 text-sm border-b border-slate-800/50">
-        <span className="text-slate-500">Tickets</span>
+        <span className="text-slate-400">Tickets</span>
         <ChevronRight className="h-3 w-3 text-slate-600" />
         {mainCategoryData && (
           <>
@@ -129,7 +129,7 @@ export const TicketsSubNavigation = React.memo(function TicketsSubNavigation({
             {filter && (
               <>
                 <ChevronRight className="h-3 w-3 text-slate-600" />
-                <span className="text-slate-500 text-xs">
+                <span className="text-slate-400 text-xs">
                   {filters.find((f) => f.id === filter)?.label}
                 </span>
               </>
@@ -180,7 +180,7 @@ export const TicketsSubNavigation = React.memo(function TicketsSubNavigation({
       {/* Filters (Niveau 3) */}
       {filters.length > 0 && onFilterChange && (
         <div className="flex items-center gap-1 px-4 py-1.5 bg-slate-800/30 border-t border-slate-800/50 overflow-x-auto scrollbar-hide">
-          <span className="text-xs text-slate-500 mr-2">Filtrer:</span>
+          <span className="text-xs text-slate-400 mr-2">Filtrer:</span>
           {filters.map((f) => {
             const isActive = filter === f.id;
 
@@ -192,7 +192,7 @@ export const TicketsSubNavigation = React.memo(function TicketsSubNavigation({
                   'flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium transition-all whitespace-nowrap',
                   isActive
                     ? 'bg-slate-700/60 text-slate-200 border border-slate-600/50'
-                    : 'text-slate-500 hover:text-slate-400 hover:bg-slate-800/40 border border-transparent'
+                    : 'text-slate-400 hover:text-slate-400 hover:bg-slate-800/40 border border-transparent'
                 )}
               >
                 <span>{f.label}</span>
@@ -200,7 +200,7 @@ export const TicketsSubNavigation = React.memo(function TicketsSubNavigation({
                   <span
                     className={cn(
                       'text-xs px-1.5 py-0.5 rounded',
-                      isActive ? 'bg-slate-600/50 text-slate-300' : 'bg-slate-700/40 text-slate-500',
+                      isActive ? 'bg-slate-600/50 text-slate-300' : 'bg-slate-700/40 text-slate-400',
                       f.badgeType === 'critical' && 'bg-red-500/30 text-red-400',
                       f.badgeType === 'warning' && 'bg-amber-500/30 text-amber-400'
                     )}

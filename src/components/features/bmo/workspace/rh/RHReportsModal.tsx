@@ -196,7 +196,7 @@ export function RHReportsModal({ open, onClose }: Props) {
           <div className="p-4 rounded-xl bg-gradient-to-br from-blue-500/10 to-blue-500/5 border border-blue-500/20">
             <div className="flex items-center gap-2 mb-1">
               <FileText className="w-5 h-5 text-blue-500" />
-              <span className="text-sm text-slate-500">Rapports</span>
+              <span className="text-sm text-slate-400">Rapports</span>
             </div>
             <p className="text-2xl font-bold">{stats.total}</p>
           </div>
@@ -204,7 +204,7 @@ export function RHReportsModal({ open, onClose }: Props) {
           <div className="p-4 rounded-xl bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20">
             <div className="flex items-center gap-2 mb-1">
               <Clock className="w-5 h-5 text-emerald-500" />
-              <span className="text-sm text-slate-500">Planifiés</span>
+              <span className="text-sm text-slate-400">Planifiés</span>
             </div>
             <p className="text-2xl font-bold">{stats.scheduled}</p>
           </div>
@@ -212,7 +212,7 @@ export function RHReportsModal({ open, onClose }: Props) {
           <div className="p-4 rounded-xl bg-gradient-to-br from-purple-500/10 to-purple-500/5 border border-purple-500/20">
             <div className="flex items-center gap-2 mb-1">
               <Download className="w-5 h-5 text-purple-500" />
-              <span className="text-sm text-slate-500">Générations</span>
+              <span className="text-sm text-slate-400">Générations</span>
             </div>
             <p className="text-2xl font-bold">{stats.totalGenerations}</p>
           </div>
@@ -244,7 +244,7 @@ export function RHReportsModal({ open, onClose }: Props) {
                     "px-3 py-1.5 rounded-lg text-sm font-medium transition-all",
                     filterType === type
                       ? "bg-white dark:bg-slate-700 shadow-sm"
-                      : "text-slate-500 hover:text-slate-700"
+                      : "text-slate-400 hover:text-slate-700"
                   )}
                 >
                   {type === 'all' ? 'Tous' : type === 'standard' ? 'Standard' : type === 'scheduled' ? 'Planifiés' : 'Personnalisés'}
@@ -265,7 +265,7 @@ export function RHReportsModal({ open, onClose }: Props) {
         {/* Liste des rapports */}
         <div className="space-y-3">
           {filteredReports.length === 0 ? (
-            <div className="text-center py-12 text-slate-500">
+            <div className="text-center py-12 text-slate-400">
               <FileText className="w-12 h-12 mx-auto mb-3 opacity-30" />
               <p>Aucun rapport trouvé</p>
             </div>
@@ -304,7 +304,7 @@ export function RHReportsModal({ open, onClose }: Props) {
                         )}
                       </div>
 
-                      <p className="text-sm text-slate-500 line-clamp-1 mb-2">
+                      <p className="text-sm text-slate-400 line-clamp-1 mb-2">
                         {report.description}
                       </p>
 

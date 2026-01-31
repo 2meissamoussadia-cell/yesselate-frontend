@@ -5,7 +5,7 @@
 
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, memo } from 'react';
 import { cn } from '@/lib/utils';
 import { formatMoneyCompact } from '@lib-root/dashboard/kpi';
 import type { CashflowMonthMock } from '../../data/financesGlobalesMock';
@@ -15,9 +15,11 @@ export interface CashflowChartProps {
   className?: string;
   /** Hauteur du graphique (px) */
   height?: number;
+  /** Devise affichée (défaut XOF pour cohérence cockpit) */
+  currency?: string;
 }
 
-export function CashflowChart({ data, className, height = 220 }: CashflowChartProps) {
+export const CashflowChart = memo(function CashflowChart({ data, className, height = 220, currency = 'XOF' }: CashflowChartProps) {
   const maxAbs = useMemo(() => {
     let max = 0;
     data.forEach((d) => {
@@ -32,7 +34,7 @@ export function CashflowChart({ data, className, height = 220 }: CashflowChartPr
     <div className={cn('rounded-xl border border-slate-700/60 bg-slate-900/60 overflow-hidden', className)}>
       <div className="px-4 py-3 border-b border-slate-700/50">
         <h3 className="text-sm font-semibold text-slate-100">Cashflow prévisionnel</h3>
-        <p className="text-xs text-slate-500 mt-0.5">3 mois passés • 3 mois futurs (prévision)</p>
+        <p className="text-xs text-slate-400 mt-0.5">3 mois passés • 3 mois futurs (prévision)</p>
       </div>
       <div className="p-4">
         <div className="flex items-end gap-2 sm:gap-3" style={{ height }}>
@@ -46,16 +48,16 @@ export function CashflowChart({ data, className, height = 220 }: CashflowChartPr
                 <div
                   className="w-full rounded-t bg-emerald-500/70 hover:bg-emerald-500/90 transition-colors"
                   style={{ height: `${scale(d.entrees) * 0.4}%`, minHeight: 2 }}
-                  title={`Entrées: ${formatMoneyCompact(d.entrees)}`}
+                  title={`Entrées: ${formatMoneyCompact(d.entrees, currency)}`}
                 />
                 {/* Sorties (barre ambre) */}
                 <div
                   className="w-full rounded-t bg-amber-500/60 hover:bg-amber-500/80 transition-colors"
                   style={{ height: `${scale(d.sorties) * 0.4}%`, minHeight: 2 }}
-                  title={`Sorties: ${formatMoneyCompact(d.sorties)}`}
+                  title={`Sorties: ${formatMoneyCompact(d.sorties, currency)}`}
                 />
               </div>
-              <span className={cn('text-[10px] font-medium truncate w-full text-center', d.previsionnel ? 'text-slate-500' : 'text-slate-400')}>
+              <span className={cn('text-[10px] font-medium truncate w-full text-center', d.previsionnel ? 'text-slate-400' : 'text-slate-400')}>
                 {d.label}
               </span>
               {d.previsionnel && (
@@ -73,15 +75,15 @@ export function CashflowChart({ data, className, height = 220 }: CashflowChartPr
             <span className="w-2.5 h-2.5 rounded bg-amber-500/60" />
             Sorties
           </span>
-          <span className="text-slate-500">• Solde = Entrées − Sorties</span>
+          <span className="text-slate-400">• Solde = Entrées − Sorties</span>
         </div>
         {/* Solde par mois (ligne secondaire) */}
         <div className="mt-3 pt-3 border-t border-slate-700/50 flex flex-wrap gap-2">
           {data.map((d) => (
             <div key={d.mois} className="flex items-center gap-1.5">
-              <span className="text-slate-500 text-[10px]">{d.label}:</span>
+              <span className="text-slate-400 text-[10px]">{d.label}:</span>
               <span className={cn('text-[10px] font-medium', d.solde >= 0 ? 'text-emerald-400' : 'text-rose-400')}>
-                {d.solde >= 0 ? '+' : ''}{formatMoneyCompact(d.solde)}
+                {d.solde >= 0 ? '+' : ''}{formatMoneyCompact(d.solde, currency)}
               </span>
             </div>
           ))}
@@ -89,4 +91,4 @@ export function CashflowChart({ data, className, height = 220 }: CashflowChartPr
       </div>
     </div>
   );
-}
+});

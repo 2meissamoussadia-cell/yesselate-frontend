@@ -153,7 +153,7 @@ export function RHLiveCounters({ onOpenQueue, compact = false }: Props) {
             <div className={cn("text-2xl font-bold tabular-nums", c.color)}>
               {value}
             </div>
-            <div className="text-xs text-slate-500 mt-1">{c.label}</div>
+            <div className="text-xs text-slate-400 mt-1">{c.label}</div>
           </button>
         );
       })}

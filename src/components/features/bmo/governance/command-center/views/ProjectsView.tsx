@@ -184,7 +184,7 @@ export function ProjectsView() {
             size="sm"
             className={cn(
               'h-8 w-8 p-0',
-              viewMode === 'table' ? 'text-blue-400 bg-blue-500/10' : 'text-slate-500'
+              viewMode === 'table' ? 'text-blue-400 bg-blue-500/10' : 'text-slate-400'
             )}
             onClick={() => setViewMode('table')}
           >
@@ -195,7 +195,7 @@ export function ProjectsView() {
             size="sm"
             className={cn(
               'h-8 w-8 p-0',
-              viewMode === 'cards' ? 'text-blue-400 bg-blue-500/10' : 'text-slate-500'
+              viewMode === 'cards' ? 'text-blue-400 bg-blue-500/10' : 'text-slate-400'
             )}
             onClick={() => setViewMode('cards')}
           >
@@ -236,7 +236,7 @@ function StatCard({
     <div className="bg-slate-900/60 rounded-lg p-3 border border-slate-800/50">
       <div className="flex items-center gap-2 mb-2">
         <Icon className={cn('h-4 w-4', iconColor)} />
-        <span className="text-xs text-slate-500">{label}</span>
+        <span className="text-xs text-slate-400">{label}</span>
       </div>
       <span className="text-xl font-bold text-slate-200">{value}</span>
     </div>
@@ -271,7 +271,7 @@ function ProjectCardsView({
             <div className="flex items-start justify-between gap-2 mb-3">
               <div>
                 <p className="text-sm font-medium text-slate-300">{project.designation}</p>
-                <p className="text-xs text-slate-500">{project.reference}</p>
+                <p className="text-xs text-slate-400">{project.reference}</p>
               </div>
               <Badge variant="default" className={cn('text-xs', status.color)}>
                 {status.label}
@@ -281,7 +281,7 @@ function ProjectCardsView({
             <div className="space-y-3">
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs text-slate-500">Avancement</span>
+                  <span className="text-xs text-slate-400">Avancement</span>
                   <span className="text-xs text-slate-400">{project.progress ?? 0}%</span>
                 </div>
                 <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
@@ -298,11 +298,11 @@ function ProjectCardsView({
               </div>
 
               <div className="flex items-center justify-between text-xs">
-                <div className="flex items-center gap-1 text-slate-500">
+                <div className="flex items-center gap-1 text-slate-400">
                   <Users className="h-3 w-3" />
                   {project.responsable}
                 </div>
-                <div className="flex items-center gap-1 text-slate-500">
+                <div className="flex items-center gap-1 text-slate-400">
                   <Clock className="h-3 w-3" />
                   {project.dateEcheance}
                 </div>
@@ -336,7 +336,7 @@ function MilestonesView({ milestones }: { milestones: any[] }) {
     <div className="p-4 space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-medium text-slate-300">Jalons à venir</h3>
-        <Button variant="ghost" size="sm" className="text-slate-500">
+        <Button variant="ghost" size="sm" className="text-slate-400">
           <Calendar className="h-4 w-4 mr-1" />
           Vue calendrier
         </Button>
@@ -359,7 +359,7 @@ function MilestonesView({ milestones }: { milestones: any[] }) {
                 </div>
                 <div>
                   <p className="text-sm text-slate-300">{milestone.name}</p>
-                  <p className="text-xs text-slate-500">{milestone.project}</p>
+                  <p className="text-xs text-slate-400">{milestone.project}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -405,8 +405,8 @@ function BlockersView() {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-sm font-medium text-slate-300">{blocker.title}</p>
-                <p className="text-xs text-slate-500 mt-1">Projet: {blocker.project}</p>
-                <p className="text-xs text-slate-500">Responsable: {blocker.owner}</p>
+                <p className="text-xs text-slate-400 mt-1">Projet: {blocker.project}</p>
+                <p className="text-xs text-slate-400">Responsable: {blocker.owner}</p>
               </div>
               <div className="text-right">
                 <Badge
@@ -433,7 +433,7 @@ function BlockersView() {
 
 function DependenciesView() {
   return (
-    <div className="flex items-center justify-center h-full text-slate-500">
+    <div className="flex items-center justify-center h-full text-slate-400">
       <div className="text-center">
         <GitBranch className="h-12 w-12 mx-auto mb-4 opacity-50" />
         <p className="text-sm">Vue des dépendances inter-projets</p>

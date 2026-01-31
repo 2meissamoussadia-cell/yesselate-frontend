@@ -22,7 +22,7 @@ export default function ReunionsTransversesPage() {
       <GouvernanceHeader
         title="Réunions transverses"
         subtitle="Calendrier des réunions transverses"
-        onExport={() => console.log('Export réunions transverses')}
+        onExport={() => { /* TODO: export réunions transverses */ }}
       />
 
       {isLoading ? (
@@ -57,7 +57,7 @@ export default function ReunionsTransversesPage() {
                     )}
                   </div>
                 </div>
-                <button className="rounded-xl bg-emerald-500/15 px-3 py-1.5 text-xs font-medium text-emerald-200 ring-1 ring-emerald-500/30 hover:bg-emerald-500/25">
+                <button type="button" aria-label="Voir la réunion" className="rounded-xl bg-emerald-500/15 px-3 py-2 min-h-[44px] text-xs font-medium text-emerald-200 ring-1 ring-emerald-500/30 hover:bg-emerald-500/25 focus-visible:outline focus-visible:ring-2 focus-visible:ring-emerald-500">
                   Voir détails
                 </button>
               </div>

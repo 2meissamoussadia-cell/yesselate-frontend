@@ -122,7 +122,7 @@ function ConferenceDetailModal({
           </Button>
         </div>
         <p className="text-slate-400">Détails complets de la conférence {conferenceId}</p>
-        <p className="text-slate-500 text-sm mt-4">Contenu détaillé à implémenter</p>
+        <p className="text-slate-400 text-sm mt-4">Contenu détaillé à implémenter</p>
       </div>
     </div>
   );

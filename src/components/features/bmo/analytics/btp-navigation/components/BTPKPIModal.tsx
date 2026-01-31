@@ -187,7 +187,7 @@ export function BTPKPIModal({ isOpen, onClose, kpi, currentValue = 0, target }: 
                 <p className="text-2xl font-bold text-slate-200">
                   {target.toLocaleString()} {kpi.unit}
                 </p>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-slate-400 mt-1">
                   Écart: {((currentValue / target) * 100 - 100).toFixed(1)}%
                 </p>
               </div>
@@ -379,7 +379,7 @@ export function BTPKPIModal({ isOpen, onClose, kpi, currentValue = 0, target }: 
                   </div>
                   <p className="text-xs text-slate-400 mb-2">{rec.description}</p>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-slate-500">Impact: {rec.impact}</span>
+                    <span className="text-xs text-slate-400">Impact: {rec.impact}</span>
                     <Button variant="ghost" size="sm" className="text-xs ml-auto">
                       Appliquer
                     </Button>

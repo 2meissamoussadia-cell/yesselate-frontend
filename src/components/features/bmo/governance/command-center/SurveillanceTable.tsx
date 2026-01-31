@@ -127,7 +127,7 @@ export function SurveillanceTable({
       <div className="flex items-center justify-between px-4 py-2 border-b border-slate-700/50 bg-slate-900/40">
         <div className="flex items-center gap-3">
           {title && <h3 className="text-sm font-medium text-slate-300">{title}</h3>}
-          <span className="text-xs text-slate-500">{items.length} éléments</span>
+          <span className="text-xs text-slate-400">{items.length} éléments</span>
           {someSelected && (
             <span className="text-xs text-blue-400">{selectedItems.length} sélectionné(s)</span>
           )}
@@ -136,7 +136,7 @@ export function SurveillanceTable({
           <Button
             variant="ghost"
             size="sm"
-            className="h-7 px-2 text-slate-500 hover:text-slate-300"
+            className="h-7 px-2 text-slate-400 hover:text-slate-300"
           >
             <Filter className="h-3.5 w-3.5 mr-1" />
             <span className="text-xs">Filtres</span>
@@ -144,7 +144,7 @@ export function SurveillanceTable({
           <Button
             variant="ghost"
             size="sm"
-            className="h-7 px-2 text-slate-500 hover:text-slate-300"
+            className="h-7 px-2 text-slate-400 hover:text-slate-300"
           >
             <Columns className="h-3.5 w-3.5 mr-1" />
             <span className="text-xs">Colonnes</span>
@@ -152,7 +152,7 @@ export function SurveillanceTable({
           <Button
             variant="ghost"
             size="sm"
-            className="h-7 px-2 text-slate-500 hover:text-slate-300"
+            className="h-7 px-2 text-slate-400 hover:text-slate-300"
           >
             <Download className="h-3.5 w-3.5 mr-1" />
             <span className="text-xs">Export</span>
@@ -160,7 +160,7 @@ export function SurveillanceTable({
           <Button
             variant="ghost"
             size="sm"
-            className="h-7 w-7 p-0 text-slate-500 hover:text-slate-300"
+            className="h-7 w-7 p-0 text-slate-400 hover:text-slate-300"
           >
             <RefreshCw className="h-3.5 w-3.5" />
           </Button>
@@ -351,7 +351,7 @@ export function SurveillanceTable({
                               style={{ width: `${item.progress}%` }}
                             />
                           </div>
-                          <span className="text-xs text-slate-500 w-8 text-right">
+                          <span className="text-xs text-slate-400 w-8 text-right">
                             {item.progress}%
                           </span>
                         </div>
@@ -365,7 +365,7 @@ export function SurveillanceTable({
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-7 w-7 p-0 text-slate-500 hover:text-slate-300"
+                            className="h-7 w-7 p-0 text-slate-400 hover:text-slate-300"
                           >
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
@@ -375,14 +375,14 @@ export function SurveillanceTable({
                             onClick={() => onAction?.('view', item)}
                             className="text-slate-300 focus:bg-slate-800"
                           >
-                            <Eye className="h-4 w-4 mr-2 text-slate-500" />
+                            <Eye className="h-4 w-4 mr-2 text-slate-400" />
                             Voir les détails
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => onAction?.('edit', item)}
                             className="text-slate-300 focus:bg-slate-800"
                           >
-                            <Edit className="h-4 w-4 mr-2 text-slate-500" />
+                            <Edit className="h-4 w-4 mr-2 text-slate-400" />
                             Modifier
                           </DropdownMenuItem>
                           <DropdownMenuSeparator className="bg-slate-700" />
@@ -397,7 +397,7 @@ export function SurveillanceTable({
                             onClick={() => onAction?.('pause', item)}
                             className="text-slate-300 focus:bg-slate-800"
                           >
-                            <Pause className="h-4 w-4 mr-2 text-slate-500" />
+                            <Pause className="h-4 w-4 mr-2 text-slate-400" />
                             Mettre en pause
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -411,7 +411,7 @@ export function SurveillanceTable({
         </table>
 
         {items.length === 0 && (
-          <div className="flex items-center justify-center py-12 text-slate-500 text-sm">
+          <div className="flex items-center justify-center py-12 text-slate-400 text-sm">
             Aucun élément à afficher
           </div>
         )}
@@ -436,7 +436,7 @@ function ColumnHeader({
   return (
     <th
       className={cn(
-        'px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider',
+        'px-3 py-2 text-left text-xs font-medium text-slate-400 uppercase tracking-wider',
         sortable && 'cursor-pointer hover:text-slate-400 select-none',
         className
       )}

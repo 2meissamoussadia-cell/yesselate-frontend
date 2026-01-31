@@ -68,7 +68,7 @@ export function DashboardModulesBar() {
       aria-label="Raccourcis modules"
     >
       <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 sm:justify-between">
-        <span className="text-[10px] uppercase tracking-wider text-slate-500 font-medium shrink-0 py-0.5">
+        <span className="text-[10px] uppercase tracking-wider text-slate-400 font-medium shrink-0 py-0.5">
           Accès rapide
         </span>
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 min-w-0">

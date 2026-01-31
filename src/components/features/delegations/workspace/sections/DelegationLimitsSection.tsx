@@ -30,7 +30,7 @@ function formatAmount(amount: number | undefined, currency: string = 'XOF'): str
 
 export function DelegationLimitsSection({ delegation, sub }: Props) {
   if (!delegation) {
-    return <div className="text-slate-500 text-center py-8">Aucune donnée</div>;
+    return <div className="text-slate-400 text-center py-8">Aucune donnée</div>;
   }
 
   // Vue par défaut
@@ -49,19 +49,19 @@ export function DelegationLimitsSection({ delegation, sub }: Props) {
               <div className="text-2xl font-bold text-emerald-600">
                 {formatAmount(delegation.maxAmount, delegation.currency)}
               </div>
-              <div className="text-xs text-slate-500">Plafond / opération</div>
+              <div className="text-xs text-slate-400">Plafond / opération</div>
             </div>
             <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-center">
               <div className="text-2xl font-bold text-blue-600">
                 {formatAmount(delegation.maxTotalAmount, delegation.currency)}
               </div>
-              <div className="text-xs text-slate-500">Plafond cumulé</div>
+              <div className="text-xs text-slate-400">Plafond cumulé</div>
             </div>
             <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-center">
               <div className="text-2xl font-bold text-purple-600">
                 {formatAmount(delegation.metrics?.remainingAmount, delegation.currency)}
               </div>
-              <div className="text-xs text-slate-500">Restant</div>
+              <div className="text-xs text-slate-400">Restant</div>
             </div>
           </div>
         </div>
@@ -75,7 +75,7 @@ export function DelegationLimitsSection({ delegation, sub }: Props) {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <div className="text-sm text-slate-500 mb-1">Horaires autorisés</div>
+              <div className="text-sm text-slate-400 mb-1">Horaires autorisés</div>
               <div className="font-medium">
                 {delegation.allowedHoursStart != null && delegation.allowedHoursEnd != null
                   ? `${delegation.allowedHoursStart}h - ${delegation.allowedHoursEnd}h`
@@ -83,7 +83,7 @@ export function DelegationLimitsSection({ delegation, sub }: Props) {
               </div>
             </div>
             <div>
-              <div className="text-sm text-slate-500 mb-1">Jours autorisés</div>
+              <div className="text-sm text-slate-400 mb-1">Jours autorisés</div>
               <div className="font-medium">
                 {delegation.allowedDays?.length
                   ? (Array.isArray(delegation.allowedDays) ? delegation.allowedDays : JSON.parse(delegation.allowedDays)).join(', ')
@@ -91,11 +91,11 @@ export function DelegationLimitsSection({ delegation, sub }: Props) {
               </div>
             </div>
             <div>
-              <div className="text-sm text-slate-500 mb-1">Max opérations / jour</div>
+              <div className="text-sm text-slate-400 mb-1">Max opérations / jour</div>
               <div className="font-medium">{delegation.maxDailyOps ?? 'Illimité'}</div>
             </div>
             <div>
-              <div className="text-sm text-slate-500 mb-1">Max opérations / mois</div>
+              <div className="text-sm text-slate-400 mb-1">Max opérations / mois</div>
               <div className="font-medium">{delegation.maxMonthlyOps ?? 'Illimité'}</div>
             </div>
           </div>
@@ -158,7 +158,7 @@ export function DelegationLimitsSection({ delegation, sub }: Props) {
         <ExceptionsDetail delegation={delegation} />
       );
     default:
-      return <div className="text-slate-500">Sous-section inconnue</div>;
+      return <div className="text-slate-400">Sous-section inconnue</div>;
   }
 }
 
@@ -214,13 +214,13 @@ function ThresholdsDetail({ delegation }: { delegation: any }) {
         <Banknote className="w-5 h-5 text-emerald-500" />
         Seuils financiers
       </h2>
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-400">
         Définit les plafonds financiers pour cette délégation.
       </p>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="p-4 rounded-xl border border-slate-200/70 dark:border-slate-700">
-          <div className="text-sm text-slate-500 mb-2">Plafond par opération</div>
+          <div className="text-sm text-slate-400 mb-2">Plafond par opération</div>
           <div className="text-3xl font-bold text-emerald-600">
             {formatAmount(delegation.maxAmount, delegation.currency)}
           </div>
@@ -230,7 +230,7 @@ function ThresholdsDetail({ delegation }: { delegation: any }) {
         </div>
         
         <div className="p-4 rounded-xl border border-slate-200/70 dark:border-slate-700">
-          <div className="text-sm text-slate-500 mb-2">Plafond cumulé (période)</div>
+          <div className="text-sm text-slate-400 mb-2">Plafond cumulé (période)</div>
           <div className="text-3xl font-bold text-blue-600">
             {formatAmount(delegation.maxTotalAmount, delegation.currency)}
           </div>
@@ -271,7 +271,7 @@ function DualControlDetail({ delegation }: { delegation: any }) {
         <UserCheck className="w-5 h-5 text-amber-500" />
         Co-signature / Double validation
       </h2>
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-400">
         La double validation (dual control) exige qu&apos;une seconde personne approuve l&apos;opération.
       </p>
       
@@ -285,7 +285,7 @@ function DualControlDetail({ delegation }: { delegation: any }) {
             <div className="font-medium">
               Double validation {delegation.requiresDualControl ? 'activée' : 'désactivée'}
             </div>
-            <div className="text-sm text-slate-500">
+            <div className="text-sm text-slate-400">
               {delegation.requiresDualControl
                 ? 'Chaque utilisation nécessite une validation par un co-approbateur.'
                 : 'Les opérations peuvent être effectuées sans validation supplémentaire.'}
@@ -304,7 +304,7 @@ function DualControlDetail({ delegation }: { delegation: any }) {
                 <UserCheck className="w-4 h-4 text-amber-500" />
                 <div>
                   <div className="font-medium">{actor.user?.name || actor.userName}</div>
-                  <div className="text-xs text-slate-500">{actor.user?.role || actor.userRole}</div>
+                  <div className="text-xs text-slate-400">{actor.user?.role || actor.userRole}</div>
                 </div>
               </div>
             ))}
@@ -322,12 +322,12 @@ function ExclusionsDetail({ delegation }: { delegation: any }) {
         <XCircle className="w-5 h-5 text-rose-500" />
         Exclusions
       </h2>
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-400">
         Liste des éléments explicitement exclus du périmètre de cette délégation.
       </p>
       
       <div className="p-4 rounded-xl border border-slate-200/70 dark:border-slate-700">
-        <p className="text-sm text-slate-500 text-center py-4">
+        <p className="text-sm text-slate-400 text-center py-4">
           Les exclusions sont définies dans les sections Périmètre (fournisseurs, projets, etc.)
           avec le mode &quot;Liste noire&quot;.
         </p>
@@ -343,7 +343,7 @@ function ExceptionsDetail({ delegation }: { delegation: any }) {
         <AlertTriangle className="w-5 h-5 text-amber-500" />
         Exceptions
       </h2>
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-400">
         Cas particuliers où les règles normales peuvent être contournées avec justification.
       </p>
       

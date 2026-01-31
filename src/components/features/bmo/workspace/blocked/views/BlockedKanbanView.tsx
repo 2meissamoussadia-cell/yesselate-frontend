@@ -78,7 +78,7 @@ const COLUMN_CONFIG: Record<
   },
   closed: {
     label: 'Fermé',
-    color: 'bg-slate-700/20 text-slate-500 border-slate-700/30',
+    color: 'bg-slate-700/20 text-slate-400 border-slate-700/30',
     icon: <Clock className="h-4 w-4" />,
     description: 'Dossier archivé',
   },
@@ -417,7 +417,7 @@ export function BlockedKanbanView({ className }: BlockedKanbanViewProps) {
                           </p>
                         </div>
                         <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Move className="h-4 w-4 text-slate-500" />
+                          <Move className="h-4 w-4 text-slate-400" />
                         </div>
                       </div>
 
@@ -470,7 +470,7 @@ export function BlockedKanbanView({ className }: BlockedKanbanViewProps) {
 
                 {/* Empty state */}
                 {columnDossiers.length === 0 && (
-                  <div className="text-center py-8 text-slate-500 text-sm">
+                  <div className="text-center py-8 text-slate-400 text-sm">
                     <p>Aucun dossier</p>
                   </div>
                 )}

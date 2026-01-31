@@ -163,7 +163,7 @@ export const DelaysAnalyseCausesPage = memo(function DelaysAnalyseCausesPage() {
       label: 'Actions correctives',
       sortable: false,
       render: (value: string[] | undefined) => {
-        if (!value || value.length === 0) return <span className="text-slate-500">-</span>;
+        if (!value || value.length === 0) return <span className="text-slate-400">-</span>;
         return (
           <div className="flex flex-wrap gap-1">
             {value.slice(0, 2).map((action, idx) => (
@@ -175,7 +175,7 @@ export const DelaysAnalyseCausesPage = memo(function DelaysAnalyseCausesPage() {
               </span>
             ))}
             {value.length > 2 && (
-              <span className="text-xs text-slate-500">+{value.length - 2}</span>
+              <span className="text-xs text-slate-400">+{value.length - 2}</span>
             )}
           </div>
         );
@@ -211,7 +211,7 @@ export const DelaysAnalyseCausesPage = memo(function DelaysAnalyseCausesPage() {
         >
           <Clock className="h-3.5 w-3.5" />
           Centre d&apos;alertes — Retards projets
-          <ExternalLink className="h-3 w-3 text-slate-500" />
+          <ExternalLink className="h-3 w-3 text-slate-400" />
         </Link>
       </div>
       <DashboardSection title="Analyse des Causes de Retards" description="Analyse approfondie des causes des retards">

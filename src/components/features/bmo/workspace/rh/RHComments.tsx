@@ -234,7 +234,7 @@ export function RHComments({ demandId, currentUser, readOnly = false }: Props) {
         {/* Liste des commentaires */}
         <div className="space-y-4 max-h-[400px] overflow-y-auto mb-4 pr-2">
           {sortedComments.length === 0 ? (
-            <div className="text-center py-8 text-slate-500">
+            <div className="text-center py-8 text-slate-400">
               <MessageCircle className="w-12 h-12 mx-auto mb-3 opacity-30" />
               <p>Aucun commentaire pour le moment</p>
               <p className="text-sm mt-1">Soyez le premier à commenter</p>
@@ -301,7 +301,7 @@ export function RHComments({ demandId, currentUser, readOnly = false }: Props) {
                       {/* Réponse à */}
                       {replyToComment && (
                         <div className="mt-1 mb-2 p-2 rounded-lg bg-slate-100 dark:bg-slate-700/50 border-l-2 border-orange-500">
-                          <div className="text-xs text-slate-500 flex items-center gap-1">
+                          <div className="text-xs text-slate-400 flex items-center gap-1">
                             <Reply className="w-3 h-3" />
                             En réponse à {replyToComment.author.name}
                           </div>
@@ -362,19 +362,19 @@ export function RHComments({ demandId, currentUser, readOnly = false }: Props) {
                         <div className="flex items-center gap-2 mt-3">
                           <button
                             onClick={() => setReplyingTo(comment.id)}
-                            className="text-xs text-slate-500 hover:text-orange-500 flex items-center gap-1"
+                            className="text-xs text-slate-400 hover:text-orange-500 flex items-center gap-1"
                           >
                             <Reply className="w-3 h-3" /> Répondre
                           </button>
                           <button
                             onClick={() => handleReaction(comment.id, '👍')}
-                            className="text-xs text-slate-500 hover:text-orange-500"
+                            className="text-xs text-slate-400 hover:text-orange-500"
                           >
                             👍
                           </button>
                           <button
                             onClick={() => handleReaction(comment.id, '❤️')}
-                            className="text-xs text-slate-500 hover:text-orange-500"
+                            className="text-xs text-slate-400 hover:text-orange-500"
                           >
                             ❤️
                           </button>
@@ -382,13 +382,13 @@ export function RHComments({ demandId, currentUser, readOnly = false }: Props) {
                             <>
                               <button
                                 onClick={() => handleEdit(comment.id)}
-                                className="text-xs text-slate-500 hover:text-blue-500 flex items-center gap-1"
+                                className="text-xs text-slate-400 hover:text-blue-500 flex items-center gap-1"
                               >
                                 <Edit2 className="w-3 h-3" /> Modifier
                               </button>
                               <button
                                 onClick={() => handleDelete(comment.id)}
-                                className="text-xs text-slate-500 hover:text-red-500 flex items-center gap-1"
+                                className="text-xs text-slate-400 hover:text-red-500 flex items-center gap-1"
                               >
                                 <Trash2 className="w-3 h-3" /> Supprimer
                               </button>
@@ -398,7 +398,7 @@ export function RHComments({ demandId, currentUser, readOnly = false }: Props) {
                             onClick={() => handlePin(comment.id)}
                             className={cn(
                               "text-xs flex items-center gap-1",
-                              comment.isPinned ? "text-amber-500" : "text-slate-500 hover:text-amber-500"
+                              comment.isPinned ? "text-amber-500" : "text-slate-400 hover:text-amber-500"
                             )}
                           >
                             <Pin className="w-3 h-3" /> {comment.isPinned ? 'Désépingler' : 'Épingler'}
@@ -464,20 +464,20 @@ export function RHComments({ demandId, currentUser, readOnly = false }: Props) {
                         onChange={e => setIsInternal(e.target.checked)}
                         className="w-4 h-4 rounded border-slate-300 dark:border-slate-600 accent-purple-500"
                       />
-                      <span className="text-slate-500 flex items-center gap-1">
+                      <span className="text-slate-400 flex items-center gap-1">
                         🔒 Commentaire interne
                       </span>
                     </label>
 
                     <button
-                      className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500"
+                      className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400"
                       title="Joindre un fichier"
                     >
                       <Paperclip className="w-4 h-4" />
                     </button>
 
                     <button
-                      className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500"
+                      className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400"
                       title="Mentionner quelqu'un"
                       onClick={() => setShowMentions(!showMentions)}
                     >

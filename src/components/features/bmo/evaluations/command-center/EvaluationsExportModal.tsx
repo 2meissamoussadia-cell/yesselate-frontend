@@ -165,7 +165,7 @@ export function EvaluationsExportModal({ open, onClose, filteredCount = 0, selec
                   {format.icon}
                   <span className="font-medium text-sm">{format.label}</span>
                 </div>
-                <p className="text-xs text-slate-500">{format.description}</p>
+                <p className="text-xs text-slate-400">{format.description}</p>
               </button>
             ))}
           </div>
@@ -261,7 +261,7 @@ export function EvaluationsExportModal({ open, onClose, filteredCount = 0, selec
               <p className="text-sm font-medium text-slate-700 dark:text-slate-200">
                 Résumé de l'export
               </p>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-slate-400 mt-1">
                 {FORMAT_OPTIONS.find(f => f.id === config.format)?.label} • 
                 {config.scope.includes('all') ? ' Toutes évaluations' : ` ${config.scope.length} catégorie(s)`} • 
                 {DATE_RANGE_OPTIONS.find(r => r.id === config.dateRange)?.label}

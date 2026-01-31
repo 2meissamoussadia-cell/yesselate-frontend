@@ -10,6 +10,7 @@
 import { useState, useEffect } from 'react';
 import { X, Search, User, Calendar, FileText, AlertTriangle, Loader2 } from 'lucide-react';
 import { employeesApiService } from '@/lib/services/employees-documents-api';
+import { logger } from '@/lib/utils/logger';
 import type { Employee } from '@/lib/types/substitution.types';
 
 interface CreateSubstitutionModalProps {
@@ -105,12 +106,12 @@ export function CreateSubstitutionModal({
         createdAt: new Date().toISOString(),
       };
 
-      console.log('[CreateSubstitution] Created:', newSubstitution);
+      logger.debug('CreateSubstitution created', { component: 'CreateSubstitutionModal', id: newSubstitution?.id });
       
       onSuccess?.(newSubstitution);
       handleClose();
     } catch (error) {
-      console.error('Create error:', error);
+      logger.error('Create error', error instanceof Error ? error : undefined, { component: 'CreateSubstitutionModal' });
       setErrors({ submit: 'Erreur lors de la création' });
     } finally {
       setLoading(false);

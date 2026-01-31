@@ -98,7 +98,7 @@ export function ContratsDetailView({ tabId, data }: Props) {
 
   if (!contrat) {
     return (
-      <div className="text-center py-12 text-slate-500">
+      <div className="text-center py-12 text-slate-400">
         <FileText className="w-12 h-12 mx-auto mb-3 opacity-30" />
         <p>Contrat non trouvé</p>
       </div>
@@ -124,19 +124,19 @@ export function ContratsDetailView({ tabId, data }: Props) {
               <span className={cn("px-3 py-1 rounded text-sm font-medium", style.bg, style.text)}>
                 {contrat.urgency.toUpperCase()}
               </span>
-              <span className="text-sm text-slate-500">
+              <span className="text-sm text-slate-400">
                 {contratsApiService.getTypeLabel(contrat.type)}
               </span>
             </div>
             <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">{contrat.title}</h1>
-            <p className="text-slate-500 mt-1">{contrat.description}</p>
+            <p className="text-slate-400 mt-1">{contrat.description}</p>
           </div>
 
           <div className="text-right">
             <p className="text-2xl font-mono font-bold text-purple-600 dark:text-purple-400">
               {contratsApiService.formatMontant(contrat.montant)} FCFA
             </p>
-            <p className="text-sm text-slate-500 mt-1">Durée: {contrat.duree} mois</p>
+            <p className="text-sm text-slate-400 mt-1">Durée: {contrat.duree} mois</p>
           </div>
         </div>
 
@@ -144,11 +144,11 @@ export function ContratsDetailView({ tabId, data }: Props) {
         <div className="mt-4 p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs text-slate-500 mb-1">Fournisseur</p>
+              <p className="text-xs text-slate-400 mb-1">Fournisseur</p>
               <p className="font-semibold text-slate-900 dark:text-slate-100">{contrat.fournisseur.name}</p>
             </div>
             <div className="flex items-center gap-4 text-sm">
-              <span className="flex items-center gap-1 text-slate-500">
+              <span className="flex items-center gap-1 text-slate-400">
                 <User className="w-4 h-4" />
                 {contrat.fournisseur.contact}
               </span>
@@ -162,7 +162,7 @@ export function ContratsDetailView({ tabId, data }: Props) {
 
         {/* Validations progress */}
         <div className="mt-4">
-          <p className="text-xs text-slate-500 mb-2">Validations requises</p>
+          <p className="text-xs text-slate-400 mb-2">Validations requises</p>
           <div className="flex items-center gap-2">
             {Object.entries(contrat.validations).map(([key, done]) => (
               <div
@@ -171,7 +171,7 @@ export function ContratsDetailView({ tabId, data }: Props) {
                   "flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium",
                   done
                     ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400"
-                    : "bg-slate-100 dark:bg-slate-800 text-slate-500"
+                    : "bg-slate-100 dark:bg-slate-800 text-slate-400"
                 )}
               >
                 {done ? <CheckCircle className="w-4 h-4" /> : <Clock className="w-4 h-4" />}
@@ -197,7 +197,7 @@ export function ContratsDetailView({ tabId, data }: Props) {
               "flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors",
               activeSection === id
                 ? "border-purple-500 text-purple-600 dark:text-purple-400"
-                : "border-transparent text-slate-500 hover:text-slate-700"
+                : "border-transparent text-slate-400 hover:text-slate-700"
             )}
           >
             <Icon className="w-4 h-4" />
@@ -211,33 +211,33 @@ export function ContratsDetailView({ tabId, data }: Props) {
         {activeSection === 'info' && (
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
             <div>
-              <p className="text-xs text-slate-500 mb-1">Bureau responsable</p>
+              <p className="text-xs text-slate-400 mb-1">Bureau responsable</p>
               <p className="font-medium text-slate-900 dark:text-slate-100">{contrat.bureau}</p>
             </div>
             <div>
-              <p className="text-xs text-slate-500 mb-1">Responsable</p>
+              <p className="text-xs text-slate-400 mb-1">Responsable</p>
               <p className="font-medium text-slate-900 dark:text-slate-100">{contrat.responsible}</p>
             </div>
             <div>
-              <p className="text-xs text-slate-500 mb-1">Date de réception</p>
+              <p className="text-xs text-slate-400 mb-1">Date de réception</p>
               <p className="font-medium text-slate-900 dark:text-slate-100">
                 {new Date(contrat.dateReception).toLocaleDateString('fr-FR')}
               </p>
             </div>
             <div>
-              <p className="text-xs text-slate-500 mb-1">Date d'échéance validation</p>
+              <p className="text-xs text-slate-400 mb-1">Date d'échéance validation</p>
               <p className="font-medium text-slate-900 dark:text-slate-100">
                 {new Date(contrat.dateEcheance).toLocaleDateString('fr-FR')}
               </p>
             </div>
             <div>
-              <p className="text-xs text-slate-500 mb-1">Date début contrat</p>
+              <p className="text-xs text-slate-400 mb-1">Date début contrat</p>
               <p className="font-medium text-slate-900 dark:text-slate-100">
                 {new Date(contrat.dateDebut).toLocaleDateString('fr-FR')}
               </p>
             </div>
             <div>
-              <p className="text-xs text-slate-500 mb-1">Date fin contrat</p>
+              <p className="text-xs text-slate-400 mb-1">Date fin contrat</p>
               <p className="font-medium text-slate-900 dark:text-slate-100">
                 {new Date(contrat.dateFin).toLocaleDateString('fr-FR')}
               </p>
@@ -245,22 +245,22 @@ export function ContratsDetailView({ tabId, data }: Props) {
 
             {/* Conditions */}
             <div className="col-span-full">
-              <p className="text-xs text-slate-500 mb-2">Conditions contractuelles</p>
+              <p className="text-xs text-slate-400 mb-2">Conditions contractuelles</p>
               <div className="grid grid-cols-2 gap-4 p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
                 <div>
-                  <p className="text-xs text-slate-500">Paiement</p>
+                  <p className="text-xs text-slate-400">Paiement</p>
                   <p className="text-sm font-medium text-slate-900 dark:text-slate-100">{contrat.conditions.paiement}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-slate-500">Livraison</p>
+                  <p className="text-xs text-slate-400">Livraison</p>
                   <p className="text-sm font-medium text-slate-900 dark:text-slate-100">{contrat.conditions.livraison}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-slate-500">Garantie</p>
+                  <p className="text-xs text-slate-400">Garantie</p>
                   <p className="text-sm font-medium text-slate-900 dark:text-slate-100">{contrat.conditions.garantie}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-slate-500">Pénalités</p>
+                  <p className="text-xs text-slate-400">Pénalités</p>
                   <p className="text-sm font-medium text-slate-900 dark:text-slate-100">{contrat.conditions.penalites}</p>
                 </div>
               </div>
@@ -269,7 +269,7 @@ export function ContratsDetailView({ tabId, data }: Props) {
             {/* Risques */}
             {contrat.risques.length > 0 && (
               <div className="col-span-full">
-                <p className="text-xs text-slate-500 mb-2">Risques identifiés</p>
+                <p className="text-xs text-slate-400 mb-2">Risques identifiés</p>
                 <div className="space-y-2">
                   {contrat.risques.map((risque, idx) => (
                     <div key={idx} className={cn(
@@ -280,7 +280,7 @@ export function ContratsDetailView({ tabId, data }: Props) {
                     )}>
                       <p className="text-sm font-medium text-slate-900 dark:text-slate-100">{risque.description}</p>
                       {risque.mitigation && (
-                        <p className="text-xs text-slate-500 mt-1">Mitigation: {risque.mitigation}</p>
+                        <p className="text-xs text-slate-400 mt-1">Mitigation: {risque.mitigation}</p>
                       )}
                     </div>
                   ))}
@@ -305,7 +305,7 @@ export function ContratsDetailView({ tabId, data }: Props) {
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="font-medium text-slate-900 dark:text-slate-100">{clause.title}</p>
-                    <p className="text-sm text-slate-500 mt-1">{clause.content}</p>
+                    <p className="text-sm text-slate-400 mt-1">{clause.content}</p>
                     {clause.comment && (
                       <p className="text-sm text-amber-600 dark:text-amber-400 mt-2 flex items-center gap-1">
                         <AlertTriangle className="w-4 h-4" />
@@ -331,7 +331,7 @@ export function ContratsDetailView({ tabId, data }: Props) {
         {activeSection === 'documents' && (
           <div className="space-y-2">
             {contrat.documents.length === 0 ? (
-              <p className="text-center py-8 text-slate-500">Aucun document attaché</p>
+              <p className="text-center py-8 text-slate-400">Aucun document attaché</p>
             ) : (
               contrat.documents.map((doc) => (
                 <div key={doc.id} className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
@@ -339,13 +339,13 @@ export function ContratsDetailView({ tabId, data }: Props) {
                     <FileText className="w-8 h-8 text-slate-400" />
                     <div>
                       <p className="font-medium text-slate-900 dark:text-slate-100">{doc.name}</p>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-slate-400">
                         {(doc.size / 1024 / 1024).toFixed(1)} MB • {new Date(doc.uploadedAt).toLocaleDateString('fr-FR')}
                       </p>
                     </div>
                   </div>
                   <button className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700">
-                    <Download className="w-4 h-4 text-slate-500" />
+                    <Download className="w-4 h-4 text-slate-400" />
                   </button>
                 </div>
               ))
@@ -360,7 +360,7 @@ export function ContratsDetailView({ tabId, data }: Props) {
                 <div className="w-2 h-2 mt-2 rounded-full bg-purple-500" />
                 <div>
                   <p className="text-sm font-medium text-slate-900 dark:text-slate-100">{event.action}</p>
-                  <p className="text-sm text-slate-500">{event.details}</p>
+                  <p className="text-sm text-slate-400">{event.details}</p>
                   <p className="text-xs text-slate-400 mt-1">
                     Par {event.by} • {new Date(event.at).toLocaleString('fr-FR')}
                   </p>

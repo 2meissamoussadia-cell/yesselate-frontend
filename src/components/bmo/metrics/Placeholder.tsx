@@ -23,7 +23,7 @@ export const Placeholder = memo(function Placeholder({
   return (
     <div
       className={cn(
-        'flex flex-col items-center justify-center gap-2 text-center text-slate-500 text-sm',
+        'flex flex-col items-center justify-center gap-2 text-center text-slate-400 text-sm',
         'min-h-[120px]',
         className
       )}

@@ -90,8 +90,10 @@ export function AlertListModal({ isOpen, onClose, severity }: AlertListModalProp
             </span>
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="text-slate-400 hover:text-white transition-colors p-2 hover:bg-slate-800 rounded-lg"
+            className="text-slate-400 hover:text-white transition-colors p-2 hover:bg-slate-800 rounded-lg focus-visible:outline focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
+            aria-label="Fermer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -156,7 +158,7 @@ export function AlertListModal({ isOpen, onClose, severity }: AlertListModalProp
                           <span>{new Date(alert.firstSeen).toLocaleDateString('fr-FR')}</span>
                         </div>
                         {alert.count > 1 && (
-                          <span className="text-slate-500">×{alert.count}</span>
+                          <span className="text-slate-400">×{alert.count}</span>
                         )}
                       </div>
                     </div>

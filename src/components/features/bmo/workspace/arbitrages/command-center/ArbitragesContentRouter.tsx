@@ -69,7 +69,7 @@ export const ArbitragesContentRouter = React.memo(function ArbitragesContentRout
         <h3 className="text-lg font-semibold text-slate-300 mb-2">
           {category} {subCategory && `- ${subCategory}`}
         </h3>
-        <p className="text-slate-500">Contenu en cours de développement</p>
+        <p className="text-slate-400">Contenu en cours de développement</p>
       </div>
     </div>
   );
@@ -202,7 +202,7 @@ const OverviewDashboard = React.memo(function OverviewDashboard() {
                   </div>
                   <div>
                     <p className="font-medium text-slate-200">{cat.name}</p>
-                    <p className="text-xs text-slate-500">Arbitrages</p>
+                    <p className="text-xs text-slate-400">Arbitrages</p>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
@@ -354,7 +354,7 @@ const PendingArbitragesView = React.memo(function PendingArbitragesView() {
         <h3 className="text-lg font-semibold text-slate-300 mb-2">
           Arbitrages en attente
         </h3>
-        <p className="text-slate-500">23 arbitrages en attente de traitement</p>
+        <p className="text-slate-400">23 arbitrages en attente de traitement</p>
       </div>
     </div>
   );
@@ -371,7 +371,7 @@ const ResolvedArbitragesView = React.memo(function ResolvedArbitragesView() {
         <h3 className="text-lg font-semibold text-slate-300 mb-2">
           Arbitrages résolus
         </h3>
-        <p className="text-slate-500">52 arbitrages résolus ce mois</p>
+        <p className="text-slate-400">52 arbitrages résolus ce mois</p>
       </div>
     </div>
   );
@@ -388,7 +388,7 @@ const CategoryView = React.memo(function CategoryView({ subCategory }: { subCate
         <h3 className="text-lg font-semibold text-slate-300 mb-2">
           Vue par catégorie
         </h3>
-        <p className="text-slate-500">
+        <p className="text-slate-400">
           {subCategory ? `Filtré par: ${subCategory}` : 'Toutes les catégories'}
         </p>
       </div>

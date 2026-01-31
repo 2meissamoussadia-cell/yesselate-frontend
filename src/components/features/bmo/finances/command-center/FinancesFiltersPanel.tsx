@@ -185,7 +185,7 @@ export function FinancesFiltersPanel({
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="h-7 w-7 p-0 text-slate-500 hover:text-slate-300"
+            className="h-7 w-7 p-0 text-slate-400 hover:text-slate-300"
           >
             <X className="h-4 w-4" />
           </Button>
@@ -214,7 +214,7 @@ export function FinancesFiltersPanel({
                       variant="ghost"
                       size="sm"
                       onClick={() => clearSection(section.id)}
-                      className="h-6 text-xs text-slate-500 hover:text-slate-300"
+                      className="h-6 text-xs text-slate-400 hover:text-slate-300"
                     >
                       Effacer
                     </Button>

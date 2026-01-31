@@ -104,13 +104,15 @@ export function GouvernanceSidebar({
     return (
       <button
         key={item.id}
+        type="button"
         onClick={() => {
           if (item.route) {
             router.push(item.route);
           }
         }}
+        aria-label={`Aller à ${item.label}`}
         className={cn(
-          'w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 text-left',
+          'w-full flex items-center gap-2 px-3 py-2.5 min-h-[44px] rounded-lg transition-all duration-200 text-left focus-visible:outline focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
           'group relative',
           isActive
             ? 'bg-blue-500/10 border border-blue-500/30 text-blue-300'
@@ -119,7 +121,7 @@ export function GouvernanceSidebar({
       >
         {/* Indicator */}
         {isActive && (
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 rounded-r-full bg-blue-400" />
+          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 rounded-r-full bg-blue-400" aria-hidden />
         )}
 
         {/* Icon */}
@@ -129,6 +131,7 @@ export function GouvernanceSidebar({
               'h-4 w-4 flex-shrink-0 transition-all duration-200',
               isActive ? 'text-blue-400 scale-110' : 'text-slate-400 group-hover:text-slate-200'
             )}
+            aria-hidden
           />
         )}
 
@@ -175,8 +178,10 @@ export function GouvernanceSidebar({
         <button
           type="button"
           onClick={() => toggleDomain(domainKey)}
+          aria-label={`${domain.label}${badgeCount !== null && badgeCount > 0 ? `, ${badgeCount} éléments` : ''}`}
+          aria-expanded={isExpanded}
           className={cn(
-            'w-full flex items-center justify-between rounded-xl px-3 py-2 text-left text-sm transition ring-1 ring-transparent',
+            'w-full flex items-center justify-between rounded-xl px-3 py-2.5 min-h-[44px] text-left text-sm transition ring-1 ring-transparent focus-visible:outline focus-visible:ring-2 focus-visible:ring-sky-500',
             hasActiveItem ? 'bg-sky-500/10 ring-sky-500/20' : 'hover:bg-white/5'
           )}
         >
@@ -187,7 +192,7 @@ export function GouvernanceSidebar({
                 hasActiveItem ? 'bg-sky-500/15 ring-sky-500/20' : 'bg-white/5 ring-white/10'
               )}
             >
-              {DomainIcon && <DomainIcon className="h-4 w-4" />}
+              {DomainIcon && <DomainIcon className="h-4 w-4" aria-hidden />}
             </span>
             {!collapsed && (
               <>
@@ -207,9 +212,9 @@ export function GouvernanceSidebar({
           {!collapsed && (
             <span className="text-slate-400">
               {isExpanded ? (
-                <ChevronDown className="h-4 w-4" />
+                <ChevronDown className="h-4 w-4" aria-hidden />
               ) : (
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className="h-4 w-4" aria-hidden />
               )}
             </span>
           )}
@@ -237,26 +242,28 @@ export function GouvernanceSidebar({
       <div className="flex items-center justify-between p-3 border-b border-slate-700/50">
         {!collapsed && (
           <div className="flex items-center gap-2">
-            <CalendarClock className="h-5 w-5 text-blue-400" />
+            <CalendarClock className="h-5 w-5 text-blue-400" aria-hidden />
             <span className="font-semibold text-slate-200 text-sm">
               Centre de Commande
             </span>
           </div>
         )}
         {collapsed && (
-          <CalendarClock className="h-5 w-5 text-blue-400 mx-auto" />
+          <CalendarClock className="h-5 w-5 text-blue-400 mx-auto" aria-hidden />
         )}
         {onToggleCollapse && (
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={onToggleCollapse}
-            className="h-7 w-7 p-0 text-slate-400 hover:text-slate-200 hover:bg-slate-700/50"
+            aria-label={collapsed ? 'Agrandir la barre latérale' : 'Réduire la barre latérale'}
+            className="min-h-[44px] min-w-[44px] p-0 text-slate-400 hover:text-slate-200 hover:bg-slate-700/50 focus-visible:outline focus-visible:ring-2 focus-visible:ring-sky-500"
           >
             {collapsed ? (
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-4 w-4" aria-hidden />
             ) : (
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-4 w-4" aria-hidden />
             )}
           </Button>
         )}
@@ -270,7 +277,7 @@ export function GouvernanceSidebar({
             <input
               type="text"
               placeholder="Rechercher…"
-              className="w-full rounded-xl bg-white/5 px-3 py-2 pl-8 text-sm text-slate-200 ring-1 ring-white/10 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500/40"
+              className="w-full rounded-xl bg-white/5 px-3 py-2 pl-8 text-sm text-slate-200 ring-1 ring-white/10 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/40"
             />
           </div>
         </div>
@@ -286,7 +293,7 @@ export function GouvernanceSidebar({
       {/* Footer */}
       {!collapsed && (
         <div className="border-t border-slate-700/50 p-3">
-          <div className="text-xs text-slate-500 text-center">
+          <div className="text-xs text-slate-400 text-center">
             Gouvernance v1.0
           </div>
         </div>

@@ -34,7 +34,7 @@ export function ExportModal({ open, onClose, format = 'json' }: ExportModalProps
         </div>
         <div className="p-6 space-y-4">
           <p className="text-sm text-slate-400">Format demandé : <span className="font-medium text-slate-200">{format.toUpperCase()}</span></p>
-          <p className="text-xs text-slate-500">L’export réel sera branché sur l’API (filtres, plage, limites).</p>
+          <p className="text-xs text-slate-400">L’export réel sera branché sur l’API (filtres, plage, limites).</p>
           <div className="flex justify-end gap-2">
             <Button variant="outline" size="sm" onClick={onClose}>Annuler</Button>
             <Button size="sm" onClick={onClose}>Exporter</Button>

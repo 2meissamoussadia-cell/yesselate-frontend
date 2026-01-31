@@ -39,10 +39,12 @@ function PointAttentionCard({
 
   return (
     <button
+      type="button"
       onClick={onClick}
+      aria-label={`Voir le point d'attention : ${point.titre}`}
       className={cn(
-        'w-full flex items-center justify-between gap-3 rounded-xl bg-white/5 px-3 py-2 ring-1 ring-white/10',
-        'hover:bg-white/10 transition-colors text-left'
+        'w-full flex items-center justify-between gap-3 rounded-xl bg-white/5 px-3 py-2.5 min-h-[44px] ring-1 ring-white/10',
+        'hover:bg-white/10 transition-colors text-left focus-visible:outline focus-visible:ring-2 focus-visible:ring-sky-500'
       )}
     >
       <div className="min-w-0 flex-1">

@@ -11,7 +11,7 @@ export function PaiementsWorkspaceContent() {
 
   if (!activeTab) {
     return (
-      <div className="flex items-center justify-center h-64 text-slate-500">
+      <div className="flex items-center justify-center h-64 text-slate-400">
         <div className="text-center">
           <FileText className="w-12 h-12 mx-auto mb-3 opacity-30" />
           <p>Aucun onglet sélectionné</p>
@@ -29,13 +29,13 @@ export function PaiementsWorkspaceContent() {
     case 'fournisseurs': return <PlaceholderView icon={<Building2 className="w-12 h-12" />} title="Par fournisseur" description="Paiements groupés par fournisseur" />;
     case 'audit': return <PlaceholderView icon={<Shield className="w-12 h-12" />} title="Audit" description="Registre des décisions" />;
     case 'analytics': return <PlaceholderView icon={<BarChart3 className="w-12 h-12" />} title="Analytics" description="Statistiques" />;
-    default: return <div className="flex items-center justify-center h-64 text-slate-500"><FileText className="w-12 h-12 mx-auto mb-3 opacity-30" /><p>Type non supporté</p></div>;
+    default: return <div className="flex items-center justify-center h-64 text-slate-400"><FileText className="w-12 h-12 mx-auto mb-3 opacity-30" /><p>Type non supporté</p></div>;
   }
 }
 
 function PlaceholderView({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
   return (
-    <div className="flex items-center justify-center h-64 text-slate-500">
+    <div className="flex items-center justify-center h-64 text-slate-400">
       <div className="text-center">
         <div className="mx-auto mb-4 opacity-30">{icon}</div>
         <p className="font-semibold">{title}</p>

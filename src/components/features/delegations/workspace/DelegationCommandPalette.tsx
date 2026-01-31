@@ -404,7 +404,7 @@ export function DelegationCommandPalette() {
                          dark:border-slate-800 dark:bg-[#141414]/70 dark:text-white
                          focus:outline-none focus:ring-2 focus:ring-purple-500/30"
             />
-            <kbd className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 text-xs text-slate-500">
+            <kbd className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 text-xs text-slate-400">
               Esc
             </kbd>
           </div>
@@ -413,7 +413,7 @@ export function DelegationCommandPalette() {
         {/* Results */}
         <div className="max-h-[400px] overflow-auto p-2">
           {filtered.length === 0 && (
-            <div className="text-center py-8 text-slate-500">
+            <div className="text-center py-8 text-slate-400">
               <Key className="w-8 h-8 mx-auto mb-2 opacity-50" />
               Aucun résultat pour &quot;{query}&quot;
             </div>
@@ -447,7 +447,7 @@ export function DelegationCommandPalette() {
                         setQuery('');
                       }}
                     >
-                      <Icon className={cn("w-4 h-4 flex-none", isSelected ? "text-purple-500" : "text-slate-500")} />
+                      <Icon className={cn("w-4 h-4 flex-none", isSelected ? "text-purple-500" : "text-slate-400")} />
                       <div className="flex-1 text-left min-w-0">
                         <div className="truncate">{cmd.title}</div>
                         {cmd.description && (

@@ -48,7 +48,7 @@ export function ExecutiveDashboardView() {
           >
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-slate-400">{kpi.label}</span>
-              <kpi.icon className="h-4 w-4 text-slate-500" />
+              <kpi.icon className="h-4 w-4 text-slate-400" />
             </div>
             <div className="flex items-center gap-2">
               <span className="text-2xl font-semibold text-slate-200">{kpi.value}</span>
@@ -86,7 +86,7 @@ export function ExecutiveDashboardView() {
             >
               <div className="flex-1">
                 <p className="text-sm font-medium text-slate-200">{alert.title}</p>
-                <p className="text-xs text-slate-500 mt-1">Impact: {alert.impact}</p>
+                <p className="text-xs text-slate-400 mt-1">Impact: {alert.impact}</p>
               </div>
               <Badge
                 variant={alert.priority === 'critical' ? 'destructive' : 'warning'}
@@ -125,7 +125,7 @@ export function ExecutiveDashboardView() {
       <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-4">
         <h3 className="text-lg font-semibold text-slate-200 mb-4">Graphiques de synthèse</h3>
         <div className="h-64 flex items-center justify-center bg-slate-900/50 rounded border border-slate-700/30">
-          <p className="text-sm text-slate-500">Graphiques de synthèse à implémenter</p>
+          <p className="text-sm text-slate-400">Graphiques de synthèse à implémenter</p>
         </div>
       </div>
     </div>

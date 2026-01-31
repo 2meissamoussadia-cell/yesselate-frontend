@@ -207,7 +207,7 @@ export function CommentModal({ open, onClose, alert, onConfirm }: CommentModalPr
         {/* Alert Preview */}
         <div className="p-3 rounded-lg bg-slate-800/30 border border-slate-700/50">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono text-slate-500">{alert.id}</span>
+            <span className="text-xs font-mono text-slate-400">{alert.id}</span>
             <Badge variant={alert.severity === 'critical' ? 'destructive' : 'warning'}>
               {alert.severity}
             </Badge>
@@ -297,9 +297,9 @@ export function CommentModal({ open, onClose, alert, onConfirm }: CommentModalPr
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="Ajoutez votre commentaire... Utilisez @ pour mentionner, # pour les tags, et Markdown pour formater."
-                className="w-full min-h-[200px] max-h-[400px] px-4 py-3 rounded-lg bg-slate-800/50 border border-slate-700 text-sm text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 resize-none font-mono"
+                className="w-full min-h-[200px] max-h-[400px] px-4 py-3 rounded-lg bg-slate-800/50 border border-slate-700 text-sm text-slate-200 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 resize-none font-mono"
               />
-              <div className="absolute bottom-3 right-3 text-xs text-slate-500">
+              <div className="absolute bottom-3 right-3 text-xs text-slate-400">
                 {characterCount} caractères
               </div>
             </div>
@@ -327,7 +327,7 @@ export function CommentModal({ open, onClose, alert, onConfirm }: CommentModalPr
                   ) : (
                     <div className="w-full h-24 flex flex-col items-center justify-center">
                       <File className="w-8 h-8 text-slate-400 mb-1" />
-                      <p className="text-xs text-slate-500 px-2 truncate w-full text-center">
+                      <p className="text-xs text-slate-400 px-2 truncate w-full text-center">
                         {attachment.file.name}
                       </p>
                     </div>

@@ -27,7 +27,7 @@ export function Breadcrumbs({
   items,
   homeHref = '/',
   className,
-  separator = <ChevronRight className="w-4 h-4 text-slate-500" />,
+  separator = <ChevronRight className="w-4 h-4 text-slate-400" />,
   maxItems = 5,
 }: BreadcrumbsProps) {
   // Limiter le nombre d'items si nécessaire
@@ -57,7 +57,7 @@ export function Breadcrumbs({
           <div key={index} className="flex items-center gap-2">
             {separator}
             {isEllipsis ? (
-              <span className="text-slate-500">...</span>
+              <span className="text-slate-400">...</span>
             ) : isLast ? (
               <span className="text-slate-200 font-medium" aria-current="page">
                 {item.icon && <span className="mr-1.5">{item.icon}</span>}

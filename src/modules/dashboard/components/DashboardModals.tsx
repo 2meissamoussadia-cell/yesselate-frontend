@@ -5,7 +5,7 @@
 
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
@@ -27,6 +27,19 @@ function inferKpiType(label: string): KpiType {
 export function DashboardModals() {
   const modal = useDashboardCommandCenterStore((s) => s.modal);
   const closeModal = useDashboardCommandCenterStore((s) => s.closeModal);
+
+  // Escape ferme le modal ouvert (WCAG, raccourcis clavier)
+  useEffect(() => {
+    if (!modal.isOpen) return;
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeModal();
+      }
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [modal.isOpen, closeModal]);
 
   const kpiForDrillDown = useMemo(() => {
     if (modal.type !== 'kpi-drilldown' || !modal.data?.kpi) return null;
@@ -59,7 +72,7 @@ export function DashboardModals() {
   // shortcuts : raccourcis clavier
   if (modal.type === 'shortcuts') {
     const shortcuts = [
-      { key: 'Ctrl + /', description: 'Ouvrir la palette de commandes' },
+      { key: '?', description: 'Afficher cette aide' },
       { key: 'Ctrl + K', description: 'Recherche globale' },
       { key: 'Ctrl + R', description: 'Actualiser les données' },
       { key: 'Ctrl + E', description: 'Exporter les données' },

@@ -357,7 +357,7 @@ function TimelineItem({
       </div>
       <div className="flex-1 pb-4">
         <div className="text-sm font-medium text-slate-200">{action}</div>
-        <div className="text-xs text-slate-500 mt-1">
+        <div className="text-xs text-slate-400 mt-1">
           {user} • {date}
         </div>
       </div>

@@ -62,7 +62,7 @@ export function BlockingPointsView() {
                   >
                     {blockage.priority === 'critical' ? 'Critique' : 'Élevé'}
                   </Badge>
-                  <div className="flex items-center gap-1 text-xs text-slate-500">
+                  <div className="flex items-center gap-1 text-xs text-slate-400">
                     <Clock className="h-3 w-3" />
                     <span>Bloqué depuis {blockage.blockingFor}</span>
                   </div>

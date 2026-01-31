@@ -210,7 +210,7 @@ export function TransactionDetailModal({
                   <div className="p-4 rounded-lg bg-slate-800/30 border border-slate-700/30">
                     <div className="flex items-center gap-2 mb-2">
                       <FileText className="w-4 h-4 text-slate-400" />
-                      <p className="text-xs text-slate-500">Catégorie</p>
+                      <p className="text-xs text-slate-400">Catégorie</p>
                     </div>
                     <p className="text-sm font-medium text-slate-200">
                       {transaction.category}
@@ -220,7 +220,7 @@ export function TransactionDetailModal({
                   <div className="p-4 rounded-lg bg-slate-800/30 border border-slate-700/30">
                     <div className="flex items-center gap-2 mb-2">
                       <Calendar className="w-4 h-4 text-slate-400" />
-                      <p className="text-xs text-slate-500">Date</p>
+                      <p className="text-xs text-slate-400">Date</p>
                     </div>
                     <p className="text-sm font-medium text-slate-200">
                       {formatDate(transaction.date)}
@@ -230,7 +230,7 @@ export function TransactionDetailModal({
                   <div className="p-4 rounded-lg bg-slate-800/30 border border-slate-700/30">
                     <div className="flex items-center gap-2 mb-2">
                       <Building2 className="w-4 h-4 text-slate-400" />
-                      <p className="text-xs text-slate-500">Bureau</p>
+                      <p className="text-xs text-slate-400">Bureau</p>
                     </div>
                     <p className="text-sm font-medium text-slate-200">
                       {transaction.bureau}
@@ -241,7 +241,7 @@ export function TransactionDetailModal({
                     <div className="p-4 rounded-lg bg-slate-800/30 border border-slate-700/30">
                       <div className="flex items-center gap-2 mb-2">
                         <CreditCard className="w-4 h-4 text-slate-400" />
-                        <p className="text-xs text-slate-500">Mode de paiement</p>
+                        <p className="text-xs text-slate-400">Mode de paiement</p>
                       </div>
                       <p className="text-sm font-medium text-slate-200">
                         {transaction.paymentMethod}
@@ -257,7 +257,7 @@ export function TransactionDetailModal({
                       <div className="p-4 rounded-lg bg-slate-800/30 border border-slate-700/30">
                         <div className="flex items-center gap-2 mb-2">
                           <User className="w-4 h-4 text-slate-400" />
-                          <p className="text-xs text-slate-500">Client</p>
+                          <p className="text-xs text-slate-400">Client</p>
                         </div>
                         <p className="text-sm font-medium text-slate-200">
                           {transaction.client}
@@ -269,7 +269,7 @@ export function TransactionDetailModal({
                       <div className="p-4 rounded-lg bg-slate-800/30 border border-slate-700/30">
                         <div className="flex items-center gap-2 mb-2">
                           <FileText className="w-4 h-4 text-slate-400" />
-                          <p className="text-xs text-slate-500">Projet</p>
+                          <p className="text-xs text-slate-400">Projet</p>
                         </div>
                         <p className="text-sm font-medium text-slate-200">
                           {transaction.project}
@@ -282,7 +282,7 @@ export function TransactionDetailModal({
                 {/* Reference */}
                 {transaction.reference && (
                   <div className="p-4 rounded-lg bg-slate-800/30 border border-slate-700/30">
-                    <p className="text-xs text-slate-500 mb-1">Référence</p>
+                    <p className="text-xs text-slate-400 mb-1">Référence</p>
                     <p className="text-sm font-mono text-slate-200">
                       {transaction.reference}
                     </p>
@@ -292,14 +292,14 @@ export function TransactionDetailModal({
                 {/* Notes */}
                 {transaction.notes && (
                   <div className="p-4 rounded-lg bg-slate-800/30 border border-slate-700/30">
-                    <p className="text-xs text-slate-500 mb-2">Notes</p>
+                    <p className="text-xs text-slate-400 mb-2">Notes</p>
                     <p className="text-sm text-slate-300">{transaction.notes}</p>
                   </div>
                 )}
 
                 {/* Metadata */}
                 <div className="pt-4 border-t border-slate-800/50">
-                  <div className="grid grid-cols-2 gap-4 text-xs text-slate-500">
+                  <div className="grid grid-cols-2 gap-4 text-xs text-slate-400">
                     <div>
                       <span className="block">Créé par:</span>
                       <span className="text-slate-400">{transaction.createdBy}</span>

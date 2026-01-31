@@ -266,7 +266,7 @@ export function SystemLogsCommandPalette() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Rechercher une commande, catégorie, filtre..."
-            className="flex-1 bg-transparent text-slate-200 placeholder:text-slate-500 outline-none text-sm"
+            className="flex-1 bg-transparent text-slate-200 placeholder:text-slate-400 outline-none text-sm"
           />
           <button
             onClick={toggleCommandPalette}
@@ -287,7 +287,7 @@ export function SystemLogsCommandPalette() {
             <div className="py-2">
               {Object.entries(groupedCommands).map(([category, cmds]) => (
                 <div key={category}>
-                  <div className="px-4 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wide">
+                  <div className="px-4 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wide">
                     {categoryLabels[category] || category}
                   </div>
                   {cmds.map((cmd, idx) => {
@@ -328,7 +328,7 @@ export function SystemLogsCommandPalette() {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between px-4 py-2 border-t border-slate-800/50 text-xs text-slate-500">
+        <div className="flex items-center justify-between px-4 py-2 border-t border-slate-800/50 text-xs text-slate-400">
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1">
               <kbd className="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700">↑</kbd>

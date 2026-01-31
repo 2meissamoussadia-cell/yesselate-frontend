@@ -248,7 +248,7 @@ export function RHMetricsDashboard() {
             <BarChart3 className="w-6 h-6 text-orange-500" />
             Tableau de bord RH
           </h2>
-          <p className="text-sm text-slate-500 mt-0.5">
+          <p className="text-sm text-slate-400 mt-0.5">
             Vue d&apos;ensemble des performances
           </p>
         </div>
@@ -262,7 +262,7 @@ export function RHMetricsDashboard() {
                 "px-4 py-2 rounded-lg text-sm font-medium transition-all",
                 selectedPeriod === period
                   ? "bg-white dark:bg-slate-700 shadow-sm"
-                  : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                  : "text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
               )}
             >
               {period === 'day' ? 'Jour' : period === 'week' ? 'Semaine' : period === 'month' ? 'Mois' : 'Année'}
@@ -287,13 +287,13 @@ export function RHMetricsDashboard() {
 
                 <div className="text-2xl font-bold">
                   {card.value}
-                  {card.unit && <span className="text-sm font-normal text-slate-500 ml-1">{card.unit}</span>}
+                  {card.unit && <span className="text-sm font-normal text-slate-400 ml-1">{card.unit}</span>}
                 </div>
-                <div className="text-xs text-slate-500 mt-1">{card.label}</div>
+                <div className="text-xs text-slate-400 mt-1">{card.label}</div>
 
                 {card.target && (
                   <div className="mt-3">
-                    <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+                    <div className="flex items-center justify-between text-xs text-slate-400 mb-1">
                       <span>Objectif: {card.target}</span>
                       <span>{Math.round((Number(card.value) / card.target) * 100)}%</span>
                     </div>
@@ -327,7 +327,7 @@ export function RHMetricsDashboard() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-sm font-medium">{item.label}</span>
-                      <span className="text-sm text-slate-500">{item.value}</span>
+                      <span className="text-sm text-slate-400">{item.value}</span>
                     </div>
                     <ProgressBar 
                       value={item.value} 
@@ -360,7 +360,7 @@ export function RHMetricsDashboard() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-sm font-medium">{item.label}</span>
-                      <span className="text-sm text-slate-500">{item.value}</span>
+                      <span className="text-sm text-slate-400">{item.value}</span>
                     </div>
                     <ProgressBar 
                       value={item.value} 
@@ -386,11 +386,11 @@ export function RHMetricsDashboard() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-slate-500 mb-1">Montant total validé</div>
+                <div className="text-sm text-slate-400 mb-1">Montant total validé</div>
                 <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
                   {metrics.totalAmount.toLocaleString()} FCFA
                 </div>
-                <div className="text-xs text-slate-500 mt-1">
+                <div className="text-xs text-slate-400 mt-1">
                   Dépenses approuvées
                 </div>
               </div>
@@ -404,11 +404,11 @@ export function RHMetricsDashboard() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-slate-500 mb-1">Score de performance</div>
+                <div className="text-sm text-slate-400 mb-1">Score de performance</div>
                 <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                   92%
                 </div>
-                <div className="text-xs text-slate-500 mt-1 flex items-center gap-1">
+                <div className="text-xs text-slate-400 mt-1 flex items-center gap-1">
                   <TrendingUp className="w-3 h-3 text-emerald-500" />
                   +5% vs période précédente
                 </div>
@@ -423,11 +423,11 @@ export function RHMetricsDashboard() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-slate-500 mb-1">Demandes / jour</div>
+                <div className="text-sm text-slate-400 mb-1">Demandes / jour</div>
                 <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
                   8.5
                 </div>
-                <div className="text-xs text-slate-500 mt-1 flex items-center gap-1">
+                <div className="text-xs text-slate-400 mt-1 flex items-center gap-1">
                   <Zap className="w-3 h-3 text-amber-500" />
                   Objectif: 10 / jour
                 </div>

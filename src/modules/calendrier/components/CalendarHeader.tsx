@@ -75,7 +75,7 @@ export function CalendarHeader({
             {autoBreadcrumb.map((part, index) => (
               <React.Fragment key={index}>
                 {index > 0 && (
-                  <ChevronRight className="h-4 w-4 text-slate-500" />
+                  <ChevronRight className="h-4 w-4 text-slate-400" />
                 )}
                 <span
                   className={cn(

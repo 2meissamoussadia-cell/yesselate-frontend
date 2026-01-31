@@ -174,7 +174,7 @@ export function DemandesRHDepensesView({ subCategory = 'all' }: DemandesRHDepens
                     </div>
                   </div>
                 </div>
-                <ChevronRight className="w-5 h-5 text-slate-500 group-hover:text-emerald-400 transition-colors flex-shrink-0" />
+                <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-emerald-400 transition-colors flex-shrink-0" />
               </div>
             </button>
           ))

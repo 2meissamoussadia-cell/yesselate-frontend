@@ -27,7 +27,7 @@ export function ClientsDirectionPanel({ open, onClose }: Props) {
     <div className="fixed top-0 right-0 h-full w-80 bg-white dark:bg-[#1f1f1f] border-l border-slate-200 dark:border-slate-800 shadow-xl z-40 flex flex-col">
       <div className="flex-none p-4 border-b border-slate-200 dark:border-slate-800">
         <div className="flex items-center justify-between">
-          <div><h3 className="font-semibold">Centre de Pilotage</h3><p className="text-xs text-slate-500">Clients en temps réel</p></div>
+          <div><h3 className="font-semibold">Centre de Pilotage</h3><p className="text-xs text-slate-400">Clients en temps réel</p></div>
           <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"><X className="w-4 h-4" /></button>
         </div>
       </div>
@@ -55,12 +55,12 @@ export function ClientsDirectionPanel({ open, onClose }: Props) {
               <div className="p-3 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
                 <TrendingUp className="w-4 h-4 text-cyan-500 mb-1" />
                 <p className="text-xl font-bold text-cyan-600">{stats.active}</p>
-                <p className="text-xs text-slate-500">Actifs</p>
+                <p className="text-xs text-slate-400">Actifs</p>
               </div>
               <div className="p-3 rounded-xl bg-blue-500/10 border border-blue-500/20">
                 <Users className="w-4 h-4 text-blue-500 mb-1" />
                 <p className="text-xl font-bold text-blue-600">{stats.prospect}</p>
-                <p className="text-xs text-slate-500">Prospects</p>
+                <p className="text-xs text-slate-400">Prospects</p>
               </div>
             </div>
 
@@ -85,7 +85,7 @@ export function ClientsDirectionPanel({ open, onClose }: Props) {
       </div>
 
       <div className="flex-none p-4 border-t border-slate-200 dark:border-slate-800">
-        <p className="text-xs text-slate-500 text-center">Mise à jour auto toutes les 30s</p>
+        <p className="text-xs text-slate-400 text-center">Mise à jour auto toutes les 30s</p>
       </div>
     </div>
   );

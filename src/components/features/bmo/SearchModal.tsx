@@ -230,7 +230,7 @@ export function SearchModal() {
             onChange={(e) => setSearchQuery(e.target.value)}
             className={cn(
               'flex-1 bg-transparent text-lg outline-none',
-              darkMode ? 'placeholder:text-slate-500' : 'placeholder:text-gray-400'
+              darkMode ? 'placeholder:text-slate-400' : 'placeholder:text-gray-400'
             )}
             autoFocus
           />
@@ -242,14 +242,14 @@ export function SearchModal() {
         {/* Résultats */}
         <div className="max-h-[400px] overflow-y-auto p-2">
           {searchQuery.trim() === '' ? (
-            <div className="p-8 text-center text-slate-500">
+            <div className="p-8 text-center text-slate-400">
               <p className="text-sm">Commencez à taper pour rechercher...</p>
               <p className="text-xs mt-2">
                 Recherchez par ID, nom, type ou contenu
               </p>
             </div>
           ) : results.length === 0 ? (
-            <div className="p-8 text-center text-slate-500">
+            <div className="p-8 text-center text-slate-400">
               <p className="text-4xl mb-2">🔍</p>
               <p className="text-sm">Aucun résultat pour "{searchQuery}"</p>
             </div>
@@ -281,7 +281,7 @@ export function SearchModal() {
                     <p className="font-semibold text-sm truncate">{result.title}</p>
                     <p className="text-xs text-slate-400 truncate">{result.subtitle}</p>
                   </div>
-                  <span className="text-slate-500">→</span>
+                  <span className="text-slate-400">→</span>
                 </div>
               ))}
             </div>
@@ -289,7 +289,7 @@ export function SearchModal() {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between p-3 border-t border-slate-700 text-[10px] text-slate-500">
+        <div className="flex items-center justify-between p-3 border-t border-slate-700 text-[10px] text-slate-400">
           <div className="flex items-center gap-3">
             <span>↑↓ Navigation</span>
             <span>↵ Sélectionner</span>

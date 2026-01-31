@@ -182,6 +182,6 @@ export function AnalyticsWorkspaceContent() {
   }
 
   // Fallback
-  return <div className="p-8 text-center text-slate-500">Vue non gérée: {activeTab.type}</div>;
+  return <div className="p-8 text-center text-slate-400">Vue non gérée: {activeTab.type}</div>;
 }
 

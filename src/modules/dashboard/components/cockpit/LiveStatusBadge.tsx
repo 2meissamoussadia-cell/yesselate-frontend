@@ -70,10 +70,10 @@ export function LiveStatusBadge({
         </span>
       )}
       {isLoading && (
-        <span className="text-[10px] text-slate-500 animate-pulse">mise à jour…</span>
+        <span className="text-[10px] text-slate-400 animate-pulse">mise à jour…</span>
       )}
       {!compact && (lastUpdatedAt != null || lastUpdateText !== '—') && (
-        <span className="text-[10px] text-slate-500" title="Dernière mise à jour des données">
+        <span className="text-[10px] text-slate-400" title="Dernière mise à jour des données">
           Dernière màj: {lastUpdateText}
         </span>
       )}

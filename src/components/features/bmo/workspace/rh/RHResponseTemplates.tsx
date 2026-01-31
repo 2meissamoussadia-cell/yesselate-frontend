@@ -353,7 +353,7 @@ export function RHResponseTemplates({ onSelect, selectedType }: Props) {
       case 'info_request':
         return { icon: AlertTriangle, color: 'text-amber-500', bg: 'bg-amber-500/10', label: 'Demande info' };
       default:
-        return { icon: FileText, color: 'text-slate-500', bg: 'bg-slate-500/10', label: 'Générique' };
+        return { icon: FileText, color: 'text-slate-400', bg: 'bg-slate-500/10', label: 'Générique' };
     }
   };
 
@@ -366,7 +366,7 @@ export function RHResponseTemplates({ onSelect, selectedType }: Props) {
             <FileText className="w-5 h-5 text-orange-500" />
             Modèles de réponse
           </h2>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-400">
             {filteredTemplates.length} modèle{filteredTemplates.length > 1 ? 's' : ''}
           </p>
         </div>
@@ -435,7 +435,7 @@ export function RHResponseTemplates({ onSelect, selectedType }: Props) {
                   "px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
                   filterType === type
                     ? "bg-white dark:bg-slate-700 shadow-sm"
-                    : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                    : "text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
                 )}
               >
                 {config.label}
@@ -452,14 +452,14 @@ export function RHResponseTemplates({ onSelect, selectedType }: Props) {
             className="w-4 h-4 rounded accent-orange-500"
           />
           <Star className={cn("w-4 h-4", showFavoritesOnly ? "text-amber-500 fill-amber-500" : "text-slate-400")} />
-          <span className="text-slate-500">Favoris</span>
+          <span className="text-slate-400">Favoris</span>
         </label>
       </div>
 
       {/* Liste des templates */}
       <div className="grid gap-3">
         {filteredTemplates.length === 0 ? (
-          <div className="text-center py-12 text-slate-500">
+          <div className="text-center py-12 text-slate-400">
             <FileText className="w-12 h-12 mx-auto mb-3 opacity-30" />
             <p>Aucun modèle trouvé</p>
           </div>
@@ -495,7 +495,7 @@ export function RHResponseTemplates({ onSelect, selectedType }: Props) {
                         </Badge>
                       </div>
 
-                      <p className="text-sm text-slate-500 line-clamp-2 mb-2">
+                      <p className="text-sm text-slate-400 line-clamp-2 mb-2">
                         {template.content}
                       </p>
 
@@ -504,7 +504,7 @@ export function RHResponseTemplates({ onSelect, selectedType }: Props) {
                           {template.tags.map(tag => (
                             <span 
                               key={tag}
-                              className="px-1.5 py-0.5 rounded text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-500"
+                              className="px-1.5 py-0.5 rounded text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-400"
                             >
                               #{tag}
                             </span>
@@ -668,7 +668,7 @@ function TemplateEditModal({
             rows={6}
             placeholder="Écrivez le contenu du modèle... Utilisez {VARIABLE} pour les champs dynamiques."
           />
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-400 mt-1">
             Variables disponibles: {'{ID_DEMANDE}'}, {'{SOLDE}'}, {'{MONTANT}'}, {'{DELAI}'}, {'{DOCUMENTS_MANQUANTS}'}
           </p>
         </div>

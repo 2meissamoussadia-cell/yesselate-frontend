@@ -224,7 +224,7 @@ export function ExportModal({ open, onClose, onExport }: ExportModalProps) {
                         )}>
                           {format.label}
                         </div>
-                        <div className="text-xs text-slate-500">
+                        <div className="text-xs text-slate-400">
                           {format.description}
                         </div>
                       </div>
@@ -392,7 +392,7 @@ export function ExportModal({ open, onClose, onExport }: ExportModalProps) {
                 </label>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs text-slate-500 mb-1">Du</label>
+                    <label className="block text-xs text-slate-400 mb-1">Du</label>
                     <input
                       type="date"
                       value={config.filters.dateRange?.start || ''}
@@ -410,7 +410,7 @@ export function ExportModal({ open, onClose, onExport }: ExportModalProps) {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-slate-500 mb-1">Au</label>
+                    <label className="block text-xs text-slate-400 mb-1">Au</label>
                     <input
                       type="date"
                       value={config.filters.dateRange?.end || ''}
@@ -463,7 +463,7 @@ export function ExportModal({ open, onClose, onExport }: ExportModalProps) {
                       )}>
                         Inclure les contacts
                       </div>
-                      <div className="text-xs text-slate-500">
+                      <div className="text-xs text-slate-400">
                         Exporter une feuille séparée avec tous les contacts
                       </div>
                     </div>
@@ -493,7 +493,7 @@ export function ExportModal({ open, onClose, onExport }: ExportModalProps) {
                       )}>
                         Inclure les interactions
                       </div>
-                      <div className="text-xs text-slate-500">
+                      <div className="text-xs text-slate-400">
                         Historique complet des interactions avec chaque client
                       </div>
                     </div>
@@ -523,7 +523,7 @@ export function ExportModal({ open, onClose, onExport }: ExportModalProps) {
                       )}>
                         Inclure les contrats
                       </div>
-                      <div className="text-xs text-slate-500">
+                      <div className="text-xs text-slate-400">
                         Détails de tous les contrats en cours et expirés
                       </div>
                     </div>

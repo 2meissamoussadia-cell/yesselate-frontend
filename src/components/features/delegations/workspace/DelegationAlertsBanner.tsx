@@ -144,7 +144,7 @@ export function DelegationAlertsBanner() {
                 </span>
               )}
             </div>
-            <div className="text-xs text-slate-500">
+            <div className="text-xs text-slate-400">
               {visibleAlerts.length} alerte{visibleAlerts.length > 1 ? 's' : ''} active{visibleAlerts.length > 1 ? 's' : ''}
             </div>
           </div>
@@ -216,7 +216,7 @@ function AlertItem({
             >
               {alert.delegationTitle}
             </button>
-            <div className="text-xs text-slate-500 truncate">
+            <div className="text-xs text-slate-400 truncate">
               {alert.bureau} • {alert.message}
             </div>
           </div>

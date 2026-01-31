@@ -60,7 +60,7 @@ export function DelegationWorkspaceContent() {
         <h2 className="text-2xl font-bold text-slate-700 dark:text-slate-200 mb-2">
           Gestion des Délégations
         </h2>
-        <p className="text-slate-500 mb-6 max-w-md">
+        <p className="text-slate-400 mb-6 max-w-md">
           Gérez les délégations de pouvoirs avec une traçabilité complète. 
           Chaque action génère une décision hashée pour anti-contestation.
         </p>
@@ -100,7 +100,7 @@ export function DelegationWorkspaceContent() {
               data: { queue: 'expired' } 
             })}
           >
-            <Inbox className="w-4 h-4 text-slate-500" /> Expirées
+            <Inbox className="w-4 h-4 text-slate-400" /> Expirées
           </FluentButton>
           <FluentButton
             variant="secondary"
@@ -279,14 +279,14 @@ export function DelegationWorkspaceContent() {
   // Report
   if (activeTab.type === 'report') {
     return (
-      <div className="p-6 text-center text-slate-500">
+      <div className="p-6 text-center text-slate-400">
         Rapport : {activeTab.data?.reportId ?? 'inconnu'}
       </div>
     );
   }
 
   // Fallback
-  return <div className="p-8 text-center text-slate-500">Vue non gérée: {activeTab.type}</div>;
+  return <div className="p-8 text-center text-slate-400">Vue non gérée: {activeTab.type}</div>;
 }
 
 // ============================================
@@ -349,7 +349,7 @@ function ExtendDelegationForm({ delegationId, onSuccess, onCancel }: ModalFormPr
 
   return (
     <div className="space-y-4">
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-400">
         Prolonger la délégation d&apos;une durée supplémentaire.
       </p>
       {error && (
@@ -358,7 +358,7 @@ function ExtendDelegationForm({ delegationId, onSuccess, onCancel }: ModalFormPr
         </div>
       )}
       <div>
-        <label className="text-sm text-slate-500">Nouvelle date de fin *</label>
+        <label className="text-sm text-slate-400">Nouvelle date de fin *</label>
         <input
           type="date"
           className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
@@ -369,7 +369,7 @@ function ExtendDelegationForm({ delegationId, onSuccess, onCancel }: ModalFormPr
         />
       </div>
       <div>
-        <label className="text-sm text-slate-500">Référence décision (optionnel)</label>
+        <label className="text-sm text-slate-400">Référence décision (optionnel)</label>
         <input
           type="text"
           className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
@@ -379,7 +379,7 @@ function ExtendDelegationForm({ delegationId, onSuccess, onCancel }: ModalFormPr
         />
       </div>
       <div>
-        <label className="text-sm text-slate-500">Motif (optionnel)</label>
+        <label className="text-sm text-slate-400">Motif (optionnel)</label>
         <textarea
           className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
           rows={2}
@@ -446,11 +446,11 @@ function SuspendDelegationForm({ delegationId, onSuccess, onCancel }: ModalFormP
           {error}
         </div>
       )}
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-400">
         La délégation sera temporairement inactive. Elle pourra être réactivée ultérieurement.
       </p>
       <div>
-        <label className="text-sm text-slate-500">Motif de suspension *</label>
+        <label className="text-sm text-slate-400">Motif de suspension *</label>
         <textarea
           className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
           rows={3}
@@ -461,7 +461,7 @@ function SuspendDelegationForm({ delegationId, onSuccess, onCancel }: ModalFormP
         />
       </div>
       <div>
-        <label className="text-sm text-slate-500">Réactivation prévue (optionnel)</label>
+        <label className="text-sm text-slate-400">Réactivation prévue (optionnel)</label>
         <input
           type="date"
           className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
@@ -518,7 +518,7 @@ function RevokeDelegationForm({ delegationId, onSuccess, onCancel }: ModalFormPr
         </p>
       </div>
       <div>
-        <label className="text-sm text-slate-500">Motif de révocation *</label>
+        <label className="text-sm text-slate-400">Motif de révocation *</label>
         <textarea
           className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
           rows={3}
@@ -575,7 +575,7 @@ function AddActorForm({ delegationId, onSuccess, onCancel }: ModalFormProps) {
   return (
     <div className="space-y-4">
       <div>
-        <label className="text-sm text-slate-500">Personne *</label>
+        <label className="text-sm text-slate-400">Personne *</label>
         <input
           type="text"
           className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
@@ -585,7 +585,7 @@ function AddActorForm({ delegationId, onSuccess, onCancel }: ModalFormProps) {
         />
       </div>
       <div>
-        <label className="text-sm text-slate-500">Rôle *</label>
+        <label className="text-sm text-slate-400">Rôle *</label>
         <select
           className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
           value={roleType}
@@ -635,7 +635,7 @@ function AddPolicyForm({ delegationId, onSuccess, onCancel }: ModalFormProps) {
   return (
     <div className="space-y-4">
       <div>
-        <label className="text-sm text-slate-500">Type d&apos;action *</label>
+        <label className="text-sm text-slate-400">Type d&apos;action *</label>
         <select
           className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
           value={action}
@@ -650,7 +650,7 @@ function AddPolicyForm({ delegationId, onSuccess, onCancel }: ModalFormProps) {
         </select>
       </div>
       <div>
-        <label className="text-sm text-slate-500">Plafond (XOF)</label>
+        <label className="text-sm text-slate-400">Plafond (XOF)</label>
         <input
           type="number"
           className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
@@ -707,7 +707,7 @@ function AddEngagementForm({ delegationId, onSuccess, onCancel }: ModalFormProps
   return (
     <div className="space-y-4">
       <div>
-        <label className="text-sm text-slate-500">Type *</label>
+        <label className="text-sm text-slate-400">Type *</label>
         <select
           className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
           value={engagementType}
@@ -722,7 +722,7 @@ function AddEngagementForm({ delegationId, onSuccess, onCancel }: ModalFormProps
         </select>
       </div>
       <div>
-        <label className="text-sm text-slate-500">Titre *</label>
+        <label className="text-sm text-slate-400">Titre *</label>
         <input
           type="text"
           className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
@@ -732,7 +732,7 @@ function AddEngagementForm({ delegationId, onSuccess, onCancel }: ModalFormProps
         />
       </div>
       <div>
-        <label className="text-sm text-slate-500">Description</label>
+        <label className="text-sm text-slate-400">Description</label>
         <textarea
           className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
           rows={3}
@@ -771,11 +771,11 @@ function ExportAuditForm({ delegationId, onSuccess, onCancel }: ModalFormProps) 
 
   return (
     <div className="space-y-4">
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-400">
         Télécharger le journal d&apos;audit complet de cette délégation.
       </p>
       <div>
-        <label className="text-sm text-slate-500">Format</label>
+        <label className="text-sm text-slate-400">Format</label>
         <select
           className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
           value={format}

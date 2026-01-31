@@ -34,7 +34,7 @@ export const CalendrierContentRouter = React.memo(function CalendrierContentRout
           <p className="text-lg font-semibold text-slate-300 mb-2">
             Chargement...
           </p>
-          <p className="text-slate-500">Sélection d'une section en cours</p>
+          <p className="text-slate-400">Sélection d'une section en cours</p>
         </div>
       </div>
     );
@@ -97,7 +97,7 @@ export const CalendrierContentRouter = React.memo(function CalendrierContentRout
         <p className="text-lg font-semibold text-slate-300 mb-2">
           {domain} - {section || 'Aucune section'} - {view || 'Aucune vue'}
         </p>
-        <p className="text-slate-500">Contenu en cours de développement</p>
+        <p className="text-slate-400">Contenu en cours de développement</p>
       </div>
     </div>
   );

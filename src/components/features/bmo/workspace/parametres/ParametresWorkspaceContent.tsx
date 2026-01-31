@@ -10,7 +10,7 @@ export function ParametresWorkspaceContent() {
   const { tabs, activeTabId } = useParametresWorkspaceStore();
   const activeTab = tabs.find(t => t.id === activeTabId);
 
-  if (!activeTab) return <div className="flex items-center justify-center h-64 text-slate-500"><Settings className="w-12 h-12 opacity-30" /></div>;
+  if (!activeTab) return <div className="flex items-center justify-center h-64 text-slate-400"><Settings className="w-12 h-12 opacity-30" /></div>;
 
   switch (activeTab.type) {
     case 'general': return <GeneralSettings />;
@@ -32,14 +32,14 @@ function GeneralSettings() {
     <div className="space-y-8 max-w-4xl">
       <div>
         <h2 className="text-lg font-bold mb-1">Paramètres Généraux</h2>
-        <p className="text-sm text-slate-500">Configurez les préférences globales du système</p>
+        <p className="text-sm text-slate-400">Configurez les préférences globales du système</p>
       </div>
       <div className="space-y-6">
         <SettingsSection title="Apparence" icon={<Monitor className="w-5 h-5" />}>
           <div className="grid grid-cols-3 gap-3">
             <button onClick={() => setTheme('light')} className={cn("p-4 rounded-xl border-2 transition-all", theme === 'light' ? "border-teal-500 bg-teal-500/10" : "border-slate-200 dark:border-slate-700 hover:border-teal-500/50")}><Sun className="w-6 h-6 mx-auto mb-2 text-amber-500" /><span className="text-sm font-medium">Clair</span></button>
             <button onClick={() => setTheme('dark')} className={cn("p-4 rounded-xl border-2 transition-all", theme === 'dark' ? "border-teal-500 bg-teal-500/10" : "border-slate-200 dark:border-slate-700 hover:border-teal-500/50")}><Moon className="w-6 h-6 mx-auto mb-2 text-indigo-500" /><span className="text-sm font-medium">Sombre</span></button>
-            <button onClick={() => setTheme('system')} className={cn("p-4 rounded-xl border-2 transition-all", theme === 'system' ? "border-teal-500 bg-teal-500/10" : "border-slate-200 dark:border-slate-700 hover:border-teal-500/50")}><Monitor className="w-6 h-6 mx-auto mb-2 text-slate-500" /><span className="text-sm font-medium">Système</span></button>
+            <button onClick={() => setTheme('system')} className={cn("p-4 rounded-xl border-2 transition-all", theme === 'system' ? "border-teal-500 bg-teal-500/10" : "border-slate-200 dark:border-slate-700 hover:border-teal-500/50")}><Monitor className="w-6 h-6 mx-auto mb-2 text-slate-400" /><span className="text-sm font-medium">Système</span></button>
           </div>
         </SettingsSection>
         <SettingsSection title="Langue" icon={<Globe className="w-5 h-5" />}>
@@ -51,8 +51,8 @@ function GeneralSettings() {
         </SettingsSection>
         <SettingsSection title="Organisation" icon={<Building2 className="w-5 h-5" />}>
           <div className="space-y-3">
-            <div className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50"><div><p className="font-medium">Nom de l'entreprise</p><p className="text-sm text-slate-500">BTP Excellence SA</p></div><button className="text-teal-500 text-sm font-medium">Modifier</button></div>
-            <div className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50"><div><p className="font-medium">Fuseau horaire</p><p className="text-sm text-slate-500">Africa/Abidjan (GMT+0)</p></div><button className="text-teal-500 text-sm font-medium">Modifier</button></div>
+            <div className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50"><div><p className="font-medium">Nom de l'entreprise</p><p className="text-sm text-slate-400">BTP Excellence SA</p></div><button className="text-teal-500 text-sm font-medium">Modifier</button></div>
+            <div className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50"><div><p className="font-medium">Fuseau horaire</p><p className="text-sm text-slate-400">Africa/Abidjan (GMT+0)</p></div><button className="text-teal-500 text-sm font-medium">Modifier</button></div>
           </div>
         </SettingsSection>
         <SettingsSection title="Comportement" icon={<RefreshCw className="w-5 h-5" />}>
@@ -68,7 +68,7 @@ function SecuritySettings() {
   const [sessionTimeout, setSessionTimeout] = useState(30);
   return (
     <div className="space-y-8 max-w-4xl">
-      <div><h2 className="text-lg font-bold mb-1">Sécurité</h2><p className="text-sm text-slate-500">Paramètres de sécurité et authentification</p></div>
+      <div><h2 className="text-lg font-bold mb-1">Sécurité</h2><p className="text-sm text-slate-400">Paramètres de sécurité et authentification</p></div>
 
       <BtpSecurityWidget criticalEventsCount={3} compliancePercent={92} />
 
@@ -79,7 +79,7 @@ function SecuritySettings() {
         </div>
       </SettingsSection>
       <SettingsSection title="Sessions actives" icon={<Monitor className="w-5 h-5" />}>
-        <div className="space-y-3">{[{ device: 'Windows PC - Chrome', location: 'Abidjan, CI', current: true }, { device: 'iPhone 14 - Safari', location: 'Abidjan, CI', current: false }].map((s, i) => <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50"><div className="flex items-center gap-3"><Monitor className="w-5 h-5 text-slate-400" /><div><p className="font-medium">{s.device}</p><p className="text-xs text-slate-500">{s.location}</p></div></div>{s.current ? <span className="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-600">Actuelle</span> : <button className="text-xs text-red-500 hover:underline">Déconnecter</button>}</div>)}</div>
+        <div className="space-y-3">{[{ device: 'Windows PC - Chrome', location: 'Abidjan, CI', current: true }, { device: 'iPhone 14 - Safari', location: 'Abidjan, CI', current: false }].map((s, i) => <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50"><div className="flex items-center gap-3"><Monitor className="w-5 h-5 text-slate-400" /><div><p className="font-medium">{s.device}</p><p className="text-xs text-slate-400">{s.location}</p></div></div>{s.current ? <span className="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-600">Actuelle</span> : <button className="text-xs text-red-500 hover:underline">Déconnecter</button>}</div>)}</div>
       </SettingsSection>
     </div>
   );
@@ -89,7 +89,7 @@ function NotificationsSettings() {
   const [email, setEmail] = useState(true); const [push, setPush] = useState(true); const [sms, setSms] = useState(false);
   return (
     <div className="space-y-8 max-w-4xl">
-      <div><h2 className="text-lg font-bold mb-1">Notifications</h2><p className="text-sm text-slate-500">Gérez vos préférences de notification</p></div>
+      <div><h2 className="text-lg font-bold mb-1">Notifications</h2><p className="text-sm text-slate-400">Gérez vos préférences de notification</p></div>
       <SettingsSection title="Canaux" icon={<Bell className="w-5 h-5" />}>
         <div className="space-y-4"><ToggleItem label="Email" description="Recevoir des notifications par email" checked={email} onChange={setEmail} /><ToggleItem label="Notifications push" description="Notifications dans le navigateur" checked={push} onChange={setPush} /><ToggleItem label="SMS" description="Alertes critiques par SMS" checked={sms} onChange={setSms} /></div>
       </SettingsSection>
@@ -101,9 +101,9 @@ function IntegrationsSettings() {
   const integrations = [{ name: 'API REST', status: 'connected', icon: '🌐' }, { name: 'WebSocket', status: 'connected', icon: '📡' }, { name: 'Email SMTP', status: 'connected', icon: '📧' }, { name: 'SMS Gateway', status: 'disconnected', icon: '📱' }];
   return (
     <div className="space-y-8 max-w-4xl">
-      <div><h2 className="text-lg font-bold mb-1">Intégrations</h2><p className="text-sm text-slate-500">Connexions aux services externes</p></div>
+      <div><h2 className="text-lg font-bold mb-1">Intégrations</h2><p className="text-sm text-slate-400">Connexions aux services externes</p></div>
       <SettingsSection title="Services connectés" icon={<Plug className="w-5 h-5" />}>
-        <div className="space-y-3">{integrations.map((int, i) => <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50"><div className="flex items-center gap-3"><span className="text-2xl">{int.icon}</span><div><p className="font-medium">{int.name}</p><p className="text-xs text-slate-500">{int.status === 'connected' ? 'Connecté' : 'Déconnecté'}</p></div></div><span className={cn("w-3 h-3 rounded-full", int.status === 'connected' ? 'bg-emerald-500' : 'bg-red-500')} /></div>)}</div>
+        <div className="space-y-3">{integrations.map((int, i) => <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50"><div className="flex items-center gap-3"><span className="text-2xl">{int.icon}</span><div><p className="font-medium">{int.name}</p><p className="text-xs text-slate-400">{int.status === 'connected' ? 'Connecté' : 'Déconnecté'}</p></div></div><span className={cn("w-3 h-3 rounded-full", int.status === 'connected' ? 'bg-emerald-500' : 'bg-red-500')} /></div>)}</div>
       </SettingsSection>
     </div>
   );
@@ -112,7 +112,7 @@ function IntegrationsSettings() {
 function PermissionsSettings() {
   return (
     <div className="space-y-8 max-w-4xl">
-      <div><h2 className="text-lg font-bold mb-1">Permissions</h2><p className="text-sm text-slate-500">Gestion des rôles et permissions (DG, MOA, MOE, OPC)</p></div>
+      <div><h2 className="text-lg font-bold mb-1">Permissions</h2><p className="text-sm text-slate-400">Gestion des rôles et permissions (DG, MOA, MOE, OPC)</p></div>
       <SettingsSection title="Utilisateurs et rôles" icon={<Users className="w-5 h-5" />}>
         <UserRoleManager onRoleChange={(userId, role) => { /* à brancher sur API */ }} />
       </SettingsSection>
@@ -124,9 +124,9 @@ function BackupSettings() {
   const backups = [{ date: '2026-01-10 06:00', size: '2.4 GB', status: 'success' }, { date: '2026-01-09 06:00', size: '2.3 GB', status: 'success' }, { date: '2026-01-08 06:00', size: '2.3 GB', status: 'failed' }];
   return (
     <div className="space-y-8 max-w-4xl">
-      <div><h2 className="text-lg font-bold mb-1">Sauvegardes</h2><p className="text-sm text-slate-500">Gestion des sauvegardes système</p></div>
+      <div><h2 className="text-lg font-bold mb-1">Sauvegardes</h2><p className="text-sm text-slate-400">Gestion des sauvegardes système</p></div>
       <SettingsSection title="Sauvegardes récentes" icon={<Database className="w-5 h-5" />}>
-        <div className="space-y-3">{backups.map((b, i) => <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50"><div className="flex items-center gap-3">{b.status === 'success' ? <Check className="w-5 h-5 text-emerald-500" /> : <AlertTriangle className="w-5 h-5 text-red-500" />}<div><p className="font-medium">{b.date}</p><p className="text-xs text-slate-500">{b.size}</p></div></div><button className="text-teal-500 text-sm font-medium">Restaurer</button></div>)}</div>
+        <div className="space-y-3">{backups.map((b, i) => <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50"><div className="flex items-center gap-3">{b.status === 'success' ? <Check className="w-5 h-5 text-emerald-500" /> : <AlertTriangle className="w-5 h-5 text-red-500" />}<div><p className="font-medium">{b.date}</p><p className="text-xs text-slate-400">{b.size}</p></div></div><button className="text-teal-500 text-sm font-medium">Restaurer</button></div>)}</div>
         <button className="w-full mt-4 px-4 py-3 rounded-xl bg-teal-500 text-white font-medium hover:bg-teal-600 flex items-center justify-center gap-2"><Database className="w-4 h-4" />Créer une sauvegarde</button>
       </SettingsSection>
     </div>
@@ -138,8 +138,8 @@ function SettingsSection({ title, icon, children }: { title: string; icon: React
 }
 
 function ToggleItem({ label, description, checked, onChange }: { label: string; description: string; checked: boolean; onChange: (v: boolean) => void }) {
-  return (<div className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50"><div><p className="font-medium">{label}</p><p className="text-xs text-slate-500">{description}</p></div><button onClick={() => onChange(!checked)} className={cn("w-12 h-7 rounded-full transition-colors relative", checked ? "bg-teal-500" : "bg-slate-300 dark:bg-slate-600")}><span className={cn("absolute top-1 w-5 h-5 rounded-full bg-white shadow transition-transform", checked ? "left-6" : "left-1")} /></button></div>);
+  return (<div className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50"><div><p className="font-medium">{label}</p><p className="text-xs text-slate-400">{description}</p></div><button onClick={() => onChange(!checked)} className={cn("w-12 h-7 rounded-full transition-colors relative", checked ? "bg-teal-500" : "bg-slate-300 dark:bg-slate-600")}><span className={cn("absolute top-1 w-5 h-5 rounded-full bg-white shadow transition-transform", checked ? "left-6" : "left-1")} /></button></div>);
 }
 
-function PlaceholderView({ icon, title }: { icon: React.ReactNode; title: string }) { return <div className="flex items-center justify-center h-64 text-slate-500"><div className="text-center"><div className="mx-auto mb-4 opacity-30">{icon}</div><p className="font-semibold">{title}</p></div></div>; }
+function PlaceholderView({ icon, title }: { icon: React.ReactNode; title: string }) { return <div className="flex items-center justify-center h-64 text-slate-400"><div className="text-center"><div className="mx-auto mb-4 opacity-30">{icon}</div><p className="font-semibold">{title}</p></div></div>; }
 

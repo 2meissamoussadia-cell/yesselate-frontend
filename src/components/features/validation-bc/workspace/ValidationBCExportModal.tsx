@@ -46,7 +46,7 @@ export function ValidationBCExportModal({ open, onClose, onExport }: ValidationB
               }`}
             >
               <div className="font-semibold text-sm">CSV</div>
-              <div className="text-xs text-slate-500">Excel compatible</div>
+              <div className="text-xs text-slate-400">Excel compatible</div>
             </button>
 
             <button
@@ -58,7 +58,7 @@ export function ValidationBCExportModal({ open, onClose, onExport }: ValidationB
               }`}
             >
               <div className="font-semibold text-sm">JSON</div>
-              <div className="text-xs text-slate-500">Format API</div>
+              <div className="text-xs text-slate-400">Format API</div>
             </button>
 
             <button
@@ -70,7 +70,7 @@ export function ValidationBCExportModal({ open, onClose, onExport }: ValidationB
               }`}
             >
               <div className="font-semibold text-sm">PDF</div>
-              <div className="text-xs text-slate-500">Document</div>
+              <div className="text-xs text-slate-400">Document</div>
             </button>
           </div>
         </div>

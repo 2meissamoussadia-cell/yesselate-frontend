@@ -487,7 +487,7 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
       {hasMounted && (favoriteToShow.length > 0 || isCurrentFavorite) && (
         <div className="flex-shrink-0 p-2 border-t border-slate-800/70">
           <div className="flex items-center justify-between gap-2 px-2 py-1">
-            <p id="sidebar-favorites-label" className="text-[10px] uppercase tracking-wider text-slate-500 font-medium">
+            <p id="sidebar-favorites-label" className="text-[10px] uppercase tracking-wider text-slate-400 font-medium">
               {t('dashboard.sidebar.favorites')}
             </p>
             <TooltipProvider delayDuration={300}>
@@ -500,7 +500,7 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
                       'p-1 rounded-md transition-colors',
                       isCurrentFavorite
                         ? 'text-amber-400 hover:text-amber-300'
-                        : 'text-slate-500 hover:text-slate-300'
+                        : 'text-slate-400 hover:text-slate-300'
                     )}
                     aria-label={isCurrentFavorite ? t('dashboard.sidebar.removeFavorite') : t('dashboard.sidebar.addFavorite')}
                     aria-describedby="sidebar-favorites-label"
@@ -525,7 +525,7 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
                   <button
                     type="button"
                     onClick={() => navigate(m as Parameters<typeof navigate>[0], s, l)}
-                    className="w-full text-left px-2 py-1.5 rounded-lg text-xs text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 truncate transition-colors"
+                    className="w-full text-left px-3 py-2 min-h-[44px] rounded-lg text-xs text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 truncate transition-colors focus-visible:outline focus-visible:ring-2 focus-visible:ring-sky-500"
                     aria-label={label}
                   >
                     {label}
@@ -538,7 +538,7 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
       )}
       {hasMounted && recentToShow.length > 0 && (
         <div className="flex-shrink-0 p-2 border-t border-slate-800/70" role="region" aria-labelledby="sidebar-recent-label">
-          <p id="sidebar-recent-label" className="px-2 py-1 text-[10px] uppercase tracking-wider text-slate-500 font-medium">
+          <p id="sidebar-recent-label" className="px-2 py-1 text-[10px] uppercase tracking-wider text-slate-400 font-medium">
             {t('dashboard.sidebar.recentlyVisited')}
           </p>
           <ul className="space-y-0.5 mt-1" role="list" aria-labelledby="sidebar-recent-label">
@@ -547,7 +547,7 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
                 <button
                   type="button"
                   onClick={() => navigate(m as Parameters<typeof navigate>[0], s, l)}
-                  className="w-full text-left px-2 py-1.5 rounded-lg text-xs text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 truncate transition-colors"
+                  className="w-full text-left px-3 py-2 min-h-[44px] rounded-lg text-xs text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 truncate transition-colors focus-visible:outline focus-visible:ring-2 focus-visible:ring-sky-500"
                   aria-label={label}
                 >
                   {label}

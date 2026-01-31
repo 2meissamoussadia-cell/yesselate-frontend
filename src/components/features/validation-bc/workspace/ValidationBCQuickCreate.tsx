@@ -71,7 +71,7 @@ export function ValidationBCQuickCreateModal({ open, onClose, onSuccess }: Valid
       <div className="space-y-4">
         {!type ? (
           <>
-            <div className="text-sm text-slate-500 mb-4">
+            <div className="text-sm text-slate-400 mb-4">
               Sélectionnez le type de document à créer
             </div>
 
@@ -83,7 +83,7 @@ export function ValidationBCQuickCreateModal({ open, onClose, onSuccess }: Valid
                 <FileText className="w-6 h-6 text-blue-500 flex-none" />
                 <div>
                   <div className="font-semibold">Bon de commande</div>
-                  <div className="text-sm text-slate-500">Créer un nouveau BC</div>
+                  <div className="text-sm text-slate-400">Créer un nouveau BC</div>
                 </div>
               </button>
 
@@ -94,7 +94,7 @@ export function ValidationBCQuickCreateModal({ open, onClose, onSuccess }: Valid
                 <Receipt className="w-6 h-6 text-emerald-500 flex-none" />
                 <div>
                   <div className="font-semibold">Facture</div>
-                  <div className="text-sm text-slate-500">Enregistrer une facture</div>
+                  <div className="text-sm text-slate-400">Enregistrer une facture</div>
                 </div>
               </button>
 
@@ -105,7 +105,7 @@ export function ValidationBCQuickCreateModal({ open, onClose, onSuccess }: Valid
                 <FileEdit className="w-6 h-6 text-purple-500 flex-none" />
                 <div>
                   <div className="font-semibold">Avenant</div>
-                  <div className="text-sm text-slate-500">Modifier un contrat existant</div>
+                  <div className="text-sm text-slate-400">Modifier un contrat existant</div>
                 </div>
               </button>
             </div>

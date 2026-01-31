@@ -282,7 +282,7 @@ export function CalendarGrid({
         {DAYS_FR.map((day) => (
           <div
             key={day}
-            className="py-2 text-center text-xs font-medium text-slate-500 uppercase"
+            className="py-2 text-center text-xs font-medium text-slate-400 uppercase"
           >
             {day}
           </div>
@@ -358,7 +358,7 @@ export function CalendarGrid({
                   );
                 })}
                 {dayEvents.length > 3 && (
-                  <div className="text-xs text-slate-500 pl-1">
+                  <div className="text-xs text-slate-400 pl-1">
                     +{dayEvents.length - 3} autres
                   </div>
                 )}
@@ -370,7 +370,7 @@ export function CalendarGrid({
 
       {/* Legend */}
       <div className="flex items-center gap-4 px-4 py-2 border-t border-slate-700/50 bg-slate-900/40">
-        <span className="text-xs text-slate-500">Légende:</span>
+        <span className="text-xs text-slate-400">Légende:</span>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1">
             <div className="w-2 h-2 rounded-full bg-blue-500" />
@@ -428,7 +428,7 @@ export function EventDetail({ event, onClose }: EventDetailProps) {
           </Badge>
           <h3 className="text-sm font-semibold text-slate-200">{event.title}</h3>
         </div>
-        <button onClick={onClose} className="text-slate-500 hover:text-slate-300">
+        <button onClick={onClose} className="text-slate-400 hover:text-slate-300">
           ×
         </button>
       </div>
@@ -459,7 +459,7 @@ export function EventDetail({ event, onClose }: EventDetailProps) {
         )}
 
         {event.project && (
-          <div className="text-slate-500 italic">
+          <div className="text-slate-400 italic">
             Projet: {event.project}
           </div>
         )}
@@ -507,13 +507,13 @@ export function MiniCalendar({
         <div className="flex">
           <button
             onClick={() => setCurrentDate(new Date(currentYear, currentMonth - 1, 1))}
-            className="p-1 text-slate-500 hover:text-slate-300"
+            className="p-1 text-slate-400 hover:text-slate-300"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
           <button
             onClick={() => setCurrentDate(new Date(currentYear, currentMonth + 1, 1))}
-            className="p-1 text-slate-500 hover:text-slate-300"
+            className="p-1 text-slate-400 hover:text-slate-300"
           >
             <ChevronRight className="w-4 h-4" />
           </button>

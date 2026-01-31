@@ -106,32 +106,32 @@ export function AlerteCard({ alerte, onClick, onAction, className }: AlerteCardP
         <div className="flex flex-wrap items-center gap-4 text-xs">
           {alerte.bureau && (
             <div className="flex items-center gap-1.5">
-              <Building2 className="h-4 w-4 text-slate-500" />
+              <Building2 className="h-4 w-4 text-slate-400" />
               <span className="text-slate-400">{alerte.bureau}</span>
             </div>
           )}
           {alerte.responsable && (
             <div className="flex items-center gap-1.5">
-              <User className="h-4 w-4 text-slate-500" />
+              <User className="h-4 w-4 text-slate-400" />
               <span className="text-slate-400">{alerte.responsable}</span>
             </div>
           )}
           {alerte.montant && (
             <div className="flex items-center gap-1.5">
-              <DollarSign className="h-4 w-4 text-slate-500" />
+              <DollarSign className="h-4 w-4 text-slate-400" />
               <span className="text-slate-400">
                 {alerte.montant.toLocaleString('fr-FR')} {alerte.devise || 'XOF'}
               </span>
             </div>
           )}
           <div className="flex items-center gap-1.5">
-            <Clock className="h-4 w-4 text-slate-500" />
+            <Clock className="h-4 w-4 text-slate-400" />
             <span className="text-slate-400">{daysSince} jour{daysSince > 1 ? 's' : ''}</span>
           </div>
         </div>
 
         <div className="flex items-center justify-between pt-2 border-t border-slate-700/50">
-          <p className="text-xs text-slate-500">Créé le {formatDate(alerte.dateCreation)}</p>
+          <p className="text-xs text-slate-400">Créé le {formatDate(alerte.dateCreation)}</p>
           {onAction && (
             <Button
               size="sm"

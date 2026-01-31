@@ -36,11 +36,11 @@ export function StatsModal({ open, onClose }: StatsModalProps) {
           <div className="grid grid-cols-2 gap-3">
             <div className="rounded-lg border border-slate-700/50 bg-slate-800/30 p-4 text-center">
               <div className="text-2xl font-bold text-slate-200">—</div>
-              <div className="text-xs text-slate-500">Total logs</div>
+              <div className="text-xs text-slate-400">Total logs</div>
             </div>
             <div className="rounded-lg border border-slate-700/50 bg-slate-800/30 p-4 text-center">
               <div className="text-2xl font-bold text-slate-200">—</div>
-              <div className="text-xs text-slate-500">Erreurs (24h)</div>
+              <div className="text-xs text-slate-400">Erreurs (24h)</div>
             </div>
           </div>
           <div className="flex justify-end">

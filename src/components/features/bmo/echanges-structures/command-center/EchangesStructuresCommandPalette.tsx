@@ -217,21 +217,21 @@ export function EchangesStructuresCommandPalette() {
       <div className="fixed top-[20%] left-1/2 -translate-x-1/2 w-full max-w-xl z-[101] animate-in fade-in-0 zoom-in-95 duration-200">
         <div className="bg-slate-900 border border-slate-700 rounded-lg shadow-2xl overflow-hidden">
           <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-800">
-            <Search className="h-5 w-5 text-slate-500 flex-shrink-0" />
+            <Search className="h-5 w-5 text-slate-400 flex-shrink-0" />
             <input
               ref={inputRef}
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Rechercher une page, action..."
-              className="flex-1 bg-transparent text-slate-200 placeholder:text-slate-500 text-sm outline-none"
+              className="flex-1 bg-transparent text-slate-200 placeholder:text-slate-400 text-sm outline-none"
             />
-            <kbd className="text-xs bg-slate-800 text-slate-500 px-1.5 py-0.5 rounded">ESC</kbd>
+            <kbd className="text-xs bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">ESC</kbd>
           </div>
           <div className="max-h-[50vh] overflow-y-auto py-2">
             {Object.entries(groupedCommands).map(([category, items]) => (
               <div key={category}>
-                <div className="px-4 py-1.5 text-xs font-medium text-slate-500 uppercase tracking-wider">
+                <div className="px-4 py-1.5 text-xs font-medium text-slate-400 uppercase tracking-wider">
                   {category}
                 </div>
                 {items.map((cmd) => {
@@ -251,11 +251,11 @@ export function EchangesStructuresCommandPalette() {
                           : 'text-slate-300 hover:bg-slate-800/50'
                       )}
                     >
-                      <Icon className="h-4 w-4 text-slate-500 flex-shrink-0" />
+                      <Icon className="h-4 w-4 text-slate-400 flex-shrink-0" />
                       <div className="flex-1 min-w-0">
                         <div className="text-sm font-medium truncate">{cmd.label}</div>
                         {cmd.description && (
-                          <div className="text-xs text-slate-500 truncate">{cmd.description}</div>
+                          <div className="text-xs text-slate-400 truncate">{cmd.description}</div>
                         )}
                       </div>
                     </button>
@@ -264,7 +264,7 @@ export function EchangesStructuresCommandPalette() {
               </div>
             ))}
             {filteredCommands.length === 0 && (
-              <div className="px-4 py-8 text-center text-slate-500 text-sm">
+              <div className="px-4 py-8 text-center text-slate-400 text-sm">
                 Aucun résultat pour &quot;{query}&quot;
               </div>
             )}

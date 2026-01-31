@@ -125,7 +125,7 @@ export function EquipementsSubNavigation({
   return (
     <div className="bg-slate-900/60 border-b border-slate-700/50">
       <div className="px-4 py-2 flex items-center gap-2 text-sm border-b border-slate-800/50">
-        <span className="text-slate-500">Maître d'ouvrage</span>
+        <span className="text-slate-400">Maître d'ouvrage</span>
         <ChevronRight className="h-3 w-3 text-slate-600" />
         <span className="text-slate-400">Équipements</span>
         <ChevronRight className="h-3 w-3 text-slate-600" />
@@ -139,7 +139,7 @@ export function EquipementsSubNavigation({
         {activeFilter && (
           <>
             <ChevronRight className="h-3 w-3 text-slate-600" />
-            <span className="text-slate-500 text-xs">
+            <span className="text-slate-400 text-xs">
               {filters.find((f) => f.id === activeFilter)?.label}
             </span>
           </>
@@ -187,14 +187,14 @@ export function EquipementsSubNavigation({
 
       {filters.length > 0 && (
         <div className="flex items-center gap-1 px-4 py-1.5 bg-slate-800/30 border-t border-slate-800/50 overflow-x-auto scrollbar-hide">
-          <span className="text-xs text-slate-500 mr-2">Filtrer:</span>
+          <span className="text-xs text-slate-400 mr-2">Filtrer:</span>
           <button
             onClick={() => onFilterChange?.(null)}
             className={cn(
               'flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium transition-all whitespace-nowrap',
               activeFilter === null
                 ? 'bg-slate-700/60 text-slate-200 border border-slate-600/50'
-                : 'text-slate-500 hover:text-slate-400 hover:bg-slate-800/40 border border-transparent'
+                : 'text-slate-400 hover:text-slate-400 hover:bg-slate-800/40 border border-transparent'
             )}
           >
             Tous
@@ -209,12 +209,12 @@ export function EquipementsSubNavigation({
                   'flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium transition-all whitespace-nowrap',
                   isActive
                     ? 'bg-slate-700/60 text-slate-200 border border-slate-600/50'
-                    : 'text-slate-500 hover:text-slate-400 hover:bg-slate-800/40 border border-transparent'
+                    : 'text-slate-400 hover:text-slate-400 hover:bg-slate-800/40 border border-transparent'
                 )}
               >
                 <span>{filter.label}</span>
                 {filter.count !== undefined && (
-                  <span className={cn('text-xs px-1.5 py-0.5 rounded', isActive ? 'bg-slate-600/50 text-slate-300' : 'bg-slate-700/40 text-slate-500')}>
+                  <span className={cn('text-xs px-1.5 py-0.5 rounded', isActive ? 'bg-slate-600/50 text-slate-300' : 'bg-slate-700/40 text-slate-400')}>
                     {filter.count}
                   </span>
                 )}

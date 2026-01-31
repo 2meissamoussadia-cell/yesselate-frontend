@@ -153,7 +153,7 @@ export function DashboardSidebar() {
                 <Icon
                   className={cn(
                     'h-5 w-5 transition-colors',
-                    isActive ? category.color : 'text-slate-500'
+                    isActive ? category.color : 'text-slate-400'
                   )}
                 />
                 {!sidebarCollapsed && (
@@ -198,7 +198,7 @@ export function DashboardSidebar() {
       {/* Footer */}
       <div className="border-t border-slate-700/50 p-3">
         {!sidebarCollapsed && (
-          <div className="text-xs text-slate-500 text-center">
+          <div className="text-xs text-slate-400 text-center">
             Dashboard BMO v3.0
           </div>
         )}

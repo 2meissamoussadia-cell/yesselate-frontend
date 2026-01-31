@@ -59,7 +59,7 @@ export function LitigesCommandPalette({ open, onClose, onOpenStats, onRefresh }:
         <div className="max-h-[60vh] overflow-y-auto py-2">
           {groupedCommands.map(({ category, items }) => (
             <div key={category} className="mb-1">
-              <div className="px-4 py-2 text-xs font-semibold text-slate-500 uppercase">{categoryLabels[category]}</div>
+              <div className="px-4 py-2 text-xs font-semibold text-slate-400 uppercase">{categoryLabels[category]}</div>
               {items.map(cmd => {
                 const globalIdx = filteredCommands.indexOf(cmd);
                 const isSelected = globalIdx === selectedIndex;
@@ -67,7 +67,7 @@ export function LitigesCommandPalette({ open, onClose, onOpenStats, onRefresh }:
                 return (
                   <button key={cmd.id} onClick={cmd.action} onMouseEnter={() => setSelectedIndex(globalIdx)} className={cn("w-full flex items-center gap-3 px-4 py-3 text-left", isSelected ? "bg-red-500/10 text-red-600 dark:text-red-400" : "hover:bg-slate-100 dark:hover:bg-slate-800/60")}>
                     <div className={cn("p-2 rounded-lg", isSelected ? "bg-red-500/20" : "bg-slate-100 dark:bg-slate-800")}><Icon className="w-4 h-4" /></div>
-                    <div className="flex-1 min-w-0"><div className="font-medium">{cmd.label}</div>{cmd.description && <div className="text-xs text-slate-500 truncate">{cmd.description}</div>}</div>
+                    <div className="flex-1 min-w-0"><div className="font-medium">{cmd.label}</div>{cmd.description && <div className="text-xs text-slate-400 truncate">{cmd.description}</div>}</div>
                     {cmd.shortcut && <kbd className={cn("px-2 py-1 rounded text-xs font-mono", isSelected ? "bg-red-500/20" : "bg-slate-100 dark:bg-slate-800")}>{cmd.shortcut}</kbd>}
                     <ArrowRight className={cn("w-4 h-4", isSelected ? "opacity-100" : "opacity-0")} />
                   </button>

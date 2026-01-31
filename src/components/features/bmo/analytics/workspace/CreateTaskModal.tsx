@@ -6,6 +6,7 @@ import { FluentButton } from '@/components/ui/fluent-button';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, User, FileText, AlertCircle, CheckCircle, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/utils/logger';
 import { useAnalyticsToast } from './AnalyticsToast';
 
 interface CreateTaskModalProps {
@@ -80,18 +81,17 @@ export function CreateTaskModal({ open, onClose, data }: CreateTaskModalProps) {
     setIsSubmitting(true);
     try {
       // Ici, on pourrait envoyer la tâche à l'API
-      if (process.env.NODE_ENV === 'development') {
-        console.log('Création de tâche:', {
-          title,
-          description,
-          priority,
-          assignedTo,
-          dueDate,
-          category,
-          kpiId: data?.kpiId,
-          kpiName: data?.kpiName,
-        });
-      }
+      logger.debug('Création de tâche', {
+        component: 'CreateTaskModal',
+        title,
+        description,
+        priority,
+        assignedTo,
+        dueDate,
+        category,
+        kpiId: data?.kpiId,
+        kpiName: data?.kpiName,
+      });
 
       // Simuler un appel API
       await new Promise(resolve => setTimeout(resolve, 500));
@@ -123,7 +123,7 @@ export function CreateTaskModal({ open, onClose, data }: CreateTaskModalProps) {
             <p className="text-xs text-slate-400 mb-1">KPI associé</p>
             <p className="text-sm font-medium text-slate-200">{data.kpiName}</p>
             {data.kpiId && (
-              <p className="text-xs text-slate-500 mt-1">ID: {data.kpiId}</p>
+              <p className="text-xs text-slate-400 mt-1">ID: {data.kpiId}</p>
             )}
           </div>
         )}

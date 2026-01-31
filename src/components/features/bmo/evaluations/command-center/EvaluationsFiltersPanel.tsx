@@ -268,7 +268,7 @@ export function EvaluationsFiltersPanel({
           <FilterSection title="Score Global" icon={<Target className="w-4 h-4 text-amber-400" />}>
             <div className="space-y-3">
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">Score minimum</label>
+                <label className="text-xs text-slate-400 mb-1 block">Score minimum</label>
                 <input
                   type="number"
                   min="0"
@@ -280,7 +280,7 @@ export function EvaluationsFiltersPanel({
                 />
               </div>
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">Score maximum</label>
+                <label className="text-xs text-slate-400 mb-1 block">Score maximum</label>
                 <input
                   type="number"
                   min="0"
@@ -298,7 +298,7 @@ export function EvaluationsFiltersPanel({
           <FilterSection title="Période de création" icon={<Calendar className="w-4 h-4 text-blue-400" />}>
             <div className="space-y-2">
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">Du</label>
+                <label className="text-xs text-slate-400 mb-1 block">Du</label>
                 <input
                   type="date"
                   value={filters.dateRange?.start || ''}
@@ -307,7 +307,7 @@ export function EvaluationsFiltersPanel({
                 />
               </div>
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">Au</label>
+                <label className="text-xs text-slate-400 mb-1 block">Au</label>
                 <input
                   type="date"
                   value={filters.dateRange?.end || ''}
@@ -362,7 +362,7 @@ export function EvaluationsFiltersPanel({
               value={filters.search || ''}
               onChange={(e) => setFilters({ ...filters, search: e.target.value || undefined })}
               placeholder="Nom, rôle, ID..."
-              className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-200 placeholder:text-slate-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-200 placeholder:text-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
             />
           </FilterSection>
         </div>

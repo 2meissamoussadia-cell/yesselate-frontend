@@ -22,7 +22,7 @@ export default function SyntheseRisquesPage() {
       <GouvernanceHeader
         title="Synthèse risques"
         subtitle="Vue d'ensemble des risques majeurs avec probabilité et impact"
-        onExport={() => console.log('Export synthèse risques')}
+        onExport={() => { /* TODO: export synthèse risques */ }}
       />
 
       {isLoading ? (

@@ -10,6 +10,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from '@/lib/utils/logger';
 
 // ============================================
 // TYPES
@@ -194,7 +195,7 @@ export class RateLimiter {
    */
   addToWhitelist(ip: string): void {
     this.whitelist.add(ip);
-    console.log(`[RateLimit] Whitelisted IP: ${ip}`);
+    logger.debug(`Whitelisted IP: ${ip}`, { component: 'rateLimiter' });
   }
 
   /**
@@ -202,7 +203,7 @@ export class RateLimiter {
    */
   addToBlacklist(ip: string): void {
     this.blacklist.add(ip);
-    console.log(`[RateLimit] Blacklisted IP: ${ip}`);
+    logger.debug(`Blacklisted IP: ${ip}`, { component: 'rateLimiter' });
   }
 
   /**
@@ -254,7 +255,7 @@ export class RateLimiter {
       }
 
       if (cleaned > 0) {
-        console.log(`[RateLimit] Cleaned ${cleaned} expired entries`);
+        logger.debug(`Cleaned ${cleaned} expired entries`, { component: 'rateLimiter' });
       }
     }, 5 * 60 * 1000); // Toutes les 5 min
   }

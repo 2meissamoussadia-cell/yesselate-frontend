@@ -168,8 +168,8 @@ export function CockpitLayout({
                         "text-[10px]",
                         kpi.trendType === "up" && "text-emerald-400",
                         kpi.trendType === "down" && "text-rose-400",
-                        kpi.trendType === "neutral" && "text-slate-500",
-                        !kpi.trendType && (kpi.trend > 0 ? "text-emerald-400" : "text-slate-500")
+                        kpi.trendType === "neutral" && "text-slate-400",
+                        !kpi.trendType && (kpi.trend > 0 ? "text-emerald-400" : "text-slate-400")
                       )}
                     >
                       {kpi.trend > 0 ? `↑+${kpi.trend}%` : kpi.trend < 0 ? `↓${kpi.trend}%` : "—"}
@@ -244,7 +244,7 @@ function CollapsibleSidebar({ isOpen, onToggle, sections }: CollapsibleSidebarPr
           <section className="space-y-1 px-1" aria-label={section.title}>
             <h2
               className={cn(
-                "px-2 mb-2 text-[9px] font-semibold uppercase tracking-wider text-slate-500 whitespace-nowrap transition-opacity",
+                "px-2 mb-2 text-[9px] font-semibold uppercase tracking-wider text-slate-400 whitespace-nowrap transition-opacity",
                 isOpen ? "opacity-100" : "opacity-0"
               )}
             >

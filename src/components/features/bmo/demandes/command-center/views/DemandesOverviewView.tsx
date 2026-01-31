@@ -111,7 +111,7 @@ export function DemandesOverviewView() {
                 </div>
                 <div className="mt-3">
                   <p className="text-2xl font-bold text-slate-200">{kpi.value}</p>
-                  <p className="text-sm text-slate-500 mt-0.5">{kpi.label}</p>
+                  <p className="text-sm text-slate-400 mt-0.5">{kpi.label}</p>
                 </div>
               </button>
             );
@@ -156,7 +156,7 @@ export function DemandesOverviewView() {
                 />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-slate-200 truncate">{action.title}</p>
-                  <p className="text-xs text-slate-500 truncate">{action.id}</p>
+                  <p className="text-xs text-slate-400 truncate">{action.id}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant="default" className="text-xs border-slate-700 text-slate-400">
@@ -235,7 +235,7 @@ export function DemandesOverviewView() {
                 <div className="flex items-center gap-3">
                   <Icon className={cn('w-5 h-5', colorClasses[type.color])} />
                   <div>
-                    <p className="text-sm text-slate-500">{type.label}</p>
+                    <p className="text-sm text-slate-400">{type.label}</p>
                     <p className="text-xl font-semibold text-slate-200">{type.count}</p>
                   </div>
                 </div>

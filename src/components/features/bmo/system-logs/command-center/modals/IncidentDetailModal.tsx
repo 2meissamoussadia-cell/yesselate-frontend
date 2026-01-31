@@ -40,7 +40,7 @@ export function IncidentDetailModal({ open, onClose, incidentId }: IncidentDetai
           <p className="text-sm text-slate-400">
             Incident : <span className="font-medium text-slate-200">{incidentId || '—'}</span>
           </p>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-400">
             Détails à charger depuis l’API (timeline, impact, résolution).
           </p>
         </div>

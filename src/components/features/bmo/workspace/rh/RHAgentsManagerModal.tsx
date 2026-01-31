@@ -137,19 +137,19 @@ export function RHAgentsManagerModal({ open, onClose }: RHAgentsManagerModalProp
         {/* Statistiques */}
         <div className="grid grid-cols-4 gap-4">
           <div className="rounded-xl border border-slate-200 dark:border-slate-700 p-4 bg-gradient-to-br from-blue-500/5 to-blue-500/10">
-            <p className="text-sm text-slate-500">Total agents</p>
+            <p className="text-sm text-slate-400">Total agents</p>
             <p className="text-2xl font-bold">{stats.total}</p>
           </div>
           <div className="rounded-xl border border-slate-200 dark:border-slate-700 p-4 bg-gradient-to-br from-green-500/5 to-green-500/10">
-            <p className="text-sm text-slate-500">Actifs</p>
+            <p className="text-sm text-slate-400">Actifs</p>
             <p className="text-2xl font-bold text-green-600">{stats.actifs}</p>
           </div>
           <div className="rounded-xl border border-slate-200 dark:border-slate-700 p-4 bg-gradient-to-br from-slate-500/5 to-slate-500/10">
-            <p className="text-sm text-slate-500">Inactifs</p>
+            <p className="text-sm text-slate-400">Inactifs</p>
             <p className="text-2xl font-bold text-slate-600">{stats.inactifs}</p>
           </div>
           <div className="rounded-xl border border-slate-200 dark:border-slate-700 p-4 bg-gradient-to-br from-purple-500/5 to-purple-500/10">
-            <p className="text-sm text-slate-500">Bureaux</p>
+            <p className="text-sm text-slate-400">Bureaux</p>
             <p className="text-2xl font-bold text-purple-600">{stats.bureaux}</p>
           </div>
         </div>
@@ -210,7 +210,7 @@ export function RHAgentsManagerModal({ open, onClose }: RHAgentsManagerModalProp
                       <h4 className="font-semibold">
                         {agent.prenom} {agent.nom}
                       </h4>
-                      <span className="text-xs text-slate-500">{agent.matricule}</span>
+                      <span className="text-xs text-slate-400">{agent.matricule}</span>
                       <Badge
                         variant={agent.statut === 'actif' ? 'success' : 'default'}
                         className="text-xs"
@@ -254,15 +254,15 @@ export function RHAgentsManagerModal({ open, onClose }: RHAgentsManagerModalProp
                     {/* Soldes de congés */}
                     <div className="flex gap-3 mt-2">
                       <div className="text-xs">
-                        <span className="text-slate-500">Congés annuels:</span>{' '}
+                        <span className="text-slate-400">Congés annuels:</span>{' '}
                         <span className="font-semibold text-blue-600">{agent.soldeConges.annuel}j</span>
                       </div>
                       <div className="text-xs">
-                        <span className="text-slate-500">Maladie:</span>{' '}
+                        <span className="text-slate-400">Maladie:</span>{' '}
                         <span className="font-semibold text-green-600">{agent.soldeConges.maladie}j</span>
                       </div>
                       <div className="text-xs">
-                        <span className="text-slate-500">Exceptionnel:</span>{' '}
+                        <span className="text-slate-400">Exceptionnel:</span>{' '}
                         <span className="font-semibold text-purple-600">{agent.soldeConges.exceptionnel}j</span>
                       </div>
                     </div>

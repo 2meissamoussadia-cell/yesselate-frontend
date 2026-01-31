@@ -83,7 +83,7 @@ export const AuditContentRouter = React.memo(function AuditContentRouter({
         <h3 className="text-lg font-semibold text-slate-300 mb-2">
           {category} - {subCategory}
         </h3>
-        <p className="text-slate-500">Contenu en cours de développement</p>
+        <p className="text-slate-400">Contenu en cours de développement</p>
       </div>
     </div>
   );
@@ -154,7 +154,7 @@ const OverviewDashboard = React.memo(function OverviewDashboard() {
           <h3 className="text-sm font-semibold text-slate-200">Événements récents</h3>
         </div>
         <div className="p-4">
-          <div className="text-sm text-slate-500 text-center py-8">
+          <div className="text-sm text-slate-400 text-center py-8">
             Liste des événements récents en cours de développement
           </div>
         </div>
@@ -173,7 +173,7 @@ const EventsView = React.memo(function EventsView({ subCategory }: { subCategory
         <div className="text-center">
           <Activity className="w-12 h-12 text-cyan-400 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-slate-300 mb-2">Événements</h3>
-          <p className="text-slate-500">Sous-catégorie: {subCategory}</p>
+          <p className="text-slate-400">Sous-catégorie: {subCategory}</p>
           <p className="text-sm text-slate-600 mt-2">Contenu en cours de développement</p>
         </div>
       </div>
@@ -191,7 +191,7 @@ const SecurityView = React.memo(function SecurityView({ subCategory }: { subCate
         <div className="text-center">
           <Lock className="w-12 h-12 text-red-400 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-slate-300 mb-2">Sécurité</h3>
-          <p className="text-slate-500">Sous-catégorie: {subCategory}</p>
+          <p className="text-slate-400">Sous-catégorie: {subCategory}</p>
           <p className="text-sm text-slate-600 mt-2">Contenu en cours de développement</p>
         </div>
       </div>
@@ -209,7 +209,7 @@ const ComplianceView = React.memo(function ComplianceView({ subCategory }: { sub
         <div className="text-center">
           <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-slate-300 mb-2">Conformité</h3>
-          <p className="text-slate-500">Sous-catégorie: {subCategory}</p>
+          <p className="text-slate-400">Sous-catégorie: {subCategory}</p>
           <p className="text-sm text-slate-600 mt-2">Contenu en cours de développement</p>
         </div>
       </div>
@@ -227,7 +227,7 @@ const PerformanceView = React.memo(function PerformanceView({ subCategory }: { s
         <div className="text-center">
           <Gauge className="w-12 h-12 text-blue-400 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-slate-300 mb-2">Performance</h3>
-          <p className="text-slate-500">Sous-catégorie: {subCategory}</p>
+          <p className="text-slate-400">Sous-catégorie: {subCategory}</p>
           <p className="text-sm text-slate-600 mt-2">Contenu en cours de développement</p>
         </div>
       </div>
@@ -245,7 +245,7 @@ const SystemLogsView = React.memo(function SystemLogsView({ subCategory }: { sub
         <div className="text-center">
           <FileText className="w-12 h-12 text-slate-400 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-slate-300 mb-2">Logs Système</h3>
-          <p className="text-slate-500">Sous-catégorie: {subCategory}</p>
+          <p className="text-slate-400">Sous-catégorie: {subCategory}</p>
           <p className="text-sm text-slate-600 mt-2">Contenu en cours de développement</p>
         </div>
       </div>
@@ -263,7 +263,7 @@ const TraceabilityView = React.memo(function TraceabilityView({ subCategory }: {
         <div className="text-center">
           <ScanSearch className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-slate-300 mb-2">Traçabilité</h3>
-          <p className="text-slate-500">Sous-catégorie: {subCategory}</p>
+          <p className="text-slate-400">Sous-catégorie: {subCategory}</p>
           <p className="text-sm text-slate-600 mt-2">Contenu en cours de développement</p>
         </div>
       </div>
@@ -281,7 +281,7 @@ const ReportsView = React.memo(function ReportsView({ subCategory }: { subCatego
         <div className="text-center">
           <FileBarChart className="w-12 h-12 text-slate-400 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-slate-300 mb-2">Rapports</h3>
-          <p className="text-slate-500">Sous-catégorie: {subCategory}</p>
+          <p className="text-slate-400">Sous-catégorie: {subCategory}</p>
           <p className="text-sm text-slate-600 mt-2">Contenu en cours de développement</p>
         </div>
       </div>
@@ -299,7 +299,7 @@ const SettingsView = React.memo(function SettingsView({ subCategory }: { subCate
         <div className="text-center">
           <Settings className="w-12 h-12 text-slate-400 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-slate-300 mb-2">Paramètres</h3>
-          <p className="text-slate-500">Sous-catégorie: {subCategory}</p>
+          <p className="text-slate-400">Sous-catégorie: {subCategory}</p>
           <p className="text-sm text-slate-600 mt-2">Contenu en cours de développement</p>
         </div>
       </div>
@@ -348,7 +348,7 @@ const DashboardCard = React.memo(function DashboardCard({
       </div>
       <h3 className="text-sm font-medium text-slate-400 mb-1">{title}</h3>
       <p className="text-2xl font-bold text-slate-200 mb-1">{value}</p>
-      <p className="text-xs text-slate-500">{subtitle}</p>
+      <p className="text-xs text-slate-400">{subtitle}</p>
     </div>
   );
 });

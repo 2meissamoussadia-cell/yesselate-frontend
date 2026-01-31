@@ -232,7 +232,7 @@ export function StrategicViewView() {
                   {kpi.value}
                 </div>
               </div>
-              <div className="text-xs text-slate-500">{kpi.subValue}</div>
+              <div className="text-xs text-slate-400">{kpi.subValue}</div>
             </div>
           );
         })}
@@ -253,7 +253,7 @@ export function StrategicViewView() {
             <Button
               variant="ghost"
               size="sm"
-              className="text-xs text-slate-500 hover:text-slate-300"
+              className="text-xs text-slate-400 hover:text-slate-300"
               onClick={() => navigate('decisions-arbitrages' as any)}
             >
               Voir tout
@@ -284,9 +284,9 @@ export function StrategicViewView() {
                       )}
                     </div>
                     <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-xs text-slate-500">{decision.ref}</span>
+                      <span className="text-xs text-slate-400">{decision.ref}</span>
                       <span className="text-xs text-slate-600">•</span>
-                      <span className="text-xs text-slate-500">{decision.type}</span>
+                      <span className="text-xs text-slate-400">{decision.type}</span>
                     </div>
                   </div>
                 </div>
@@ -329,7 +329,7 @@ export function StrategicViewView() {
             <Button
               variant="ghost"
               size="sm"
-              className="text-xs text-slate-500 hover:text-slate-300"
+              className="text-xs text-slate-400 hover:text-slate-300"
               onClick={() => navigate('escalades-blocages' as any)}
             >
               Voir tout
@@ -350,9 +350,9 @@ export function StrategicViewView() {
                   <div className="min-w-0 flex-1">
                     <p className="text-sm text-slate-300 truncate">{esc.title}</p>
                     <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-xs text-slate-500">{esc.ref}</span>
+                      <span className="text-xs text-slate-400">{esc.ref}</span>
                       <span className="text-xs text-slate-600">•</span>
-                      <span className="text-xs text-slate-500">{esc.origin}</span>
+                      <span className="text-xs text-slate-400">{esc.origin}</span>
                     </div>
                   </div>
                 </div>
@@ -376,7 +376,7 @@ export function StrategicViewView() {
           <Button
             variant="ghost"
             size="sm"
-            className="text-xs text-slate-500 hover:text-slate-300"
+            className="text-xs text-slate-400 hover:text-slate-300"
             onClick={() => navigate('projets-sensibles' as any)}
           >
             Voir tout
@@ -387,22 +387,22 @@ export function StrategicViewView() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-slate-800/50">
-                <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">
+                <th className="px-4 py-2 text-left text-xs font-medium text-slate-400 uppercase">
                   Projet
                 </th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">
+                <th className="px-4 py-2 text-left text-xs font-medium text-slate-400 uppercase">
                   Avancement
                 </th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">
+                <th className="px-4 py-2 text-left text-xs font-medium text-slate-400 uppercase">
                   Statut
                 </th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">
+                <th className="px-4 py-2 text-left text-xs font-medium text-slate-400 uppercase">
                   Budget
                 </th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">
+                <th className="px-4 py-2 text-left text-xs font-medium text-slate-400 uppercase">
                   Écart délai
                 </th>
-                <th className="px-4 py-2 text-right text-xs font-medium text-slate-500 uppercase">
+                <th className="px-4 py-2 text-right text-xs font-medium text-slate-400 uppercase">
                   Actions
                 </th>
               </tr>
@@ -478,7 +478,7 @@ export function StrategicViewView() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-7 px-2 text-slate-500 hover:text-slate-300"
+                      className="h-7 px-2 text-slate-400 hover:text-slate-300"
                       onClick={(e) => {
                         e.stopPropagation();
                         openModal('project-detail', project);

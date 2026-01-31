@@ -123,7 +123,7 @@ export const BudgetConsommationPage = memo(function BudgetConsommationPage() {
           <span className="text-slate-200">{value}</span>
         </div>
       ) : (
-        <span className="text-slate-500">-</span>
+        <span className="text-slate-400">-</span>
       ),
     },
     {

@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { employesApiService } from '@/lib/services/employesApiService';
@@ -198,7 +199,7 @@ function EmployeDetailModal({ onClose, data }: { onClose: () => void; data?: any
             className="flex-1 border-slate-700"
             onClick={() => {
               // Open edit modal
-              console.log('Edit employee');
+              logger.debug('Edit employee', { component: 'EmployesModals' });
             }}
           >
             <Edit className="w-4 h-4 mr-2" />

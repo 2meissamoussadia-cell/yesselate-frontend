@@ -158,11 +158,11 @@ export const ValidationsCircuitPage = memo(function ValidationsCircuitPage() {
           {value ? (
             <CheckCircle2 className="h-4 w-4 text-emerald-400" />
           ) : (
-            <AlertCircle className="h-4 w-4 text-slate-500" />
+            <AlertCircle className="h-4 w-4 text-slate-400" />
           )}
           <span className={cn(
             'text-sm',
-            value ? 'text-emerald-300' : 'text-slate-500'
+            value ? 'text-emerald-300' : 'text-slate-400'
           )}>
             {value ? 'Actif' : 'Inactif'}
           </span>

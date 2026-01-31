@@ -212,7 +212,7 @@ function UrgenteCard({ demande, onClick }: { demande: Demande; onClick?: () => v
           {demande.description && (
             <p className="text-sm text-slate-400 mb-3 line-clamp-2">{demande.description}</p>
           )}
-          <div className="flex items-center gap-4 text-xs text-slate-500">
+          <div className="flex items-center gap-4 text-xs text-slate-400">
             <span>{demande.createdBy}</span>
             <span>{new Date(demande.createdAt).toLocaleDateString('fr-FR')}</span>
             <span className="capitalize">{demande.service}</span>

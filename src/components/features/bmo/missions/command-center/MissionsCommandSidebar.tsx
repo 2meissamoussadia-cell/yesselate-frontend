@@ -277,7 +277,7 @@ export function MissionsCommandSidebar({
                 <Icon
                   className={cn(
                     'h-5 w-5 flex-shrink-0',
-                    isActive ? 'text-indigo-400' : 'text-slate-500 group-hover:text-slate-400'
+                    isActive ? 'text-indigo-400' : 'text-slate-400 group-hover:text-slate-400'
                   )}
                 />
 
@@ -317,7 +317,7 @@ export function MissionsCommandSidebar({
       {/* Footer */}
       {!collapsed && stats && (
         <div className="flex-shrink-0 px-4 py-3 border-t border-slate-800/50">
-          <div className="text-xs text-slate-500">
+          <div className="text-xs text-slate-400">
             <div className="flex items-center justify-between mb-1">
               <span>Sur site</span>
               <span className="font-medium text-emerald-400">

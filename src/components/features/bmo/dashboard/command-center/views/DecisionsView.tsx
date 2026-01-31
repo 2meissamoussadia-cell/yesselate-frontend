@@ -302,7 +302,7 @@ export function DecisionsView() {
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap mb-2">
-                        <span className="text-xs font-mono text-slate-500">{decision.id}</span>
+                        <span className="text-xs font-mono text-slate-400">{decision.id}</span>
                          <Badge
                            variant={
                              decision.status === 'executed'
@@ -333,9 +333,9 @@ export function DecisionsView() {
                       </div>
 
                       <p className="text-sm font-medium text-slate-200">{decision.subject}</p>
-                      <p className="text-xs text-slate-500 mt-1">{decision.description}</p>
+                      <p className="text-xs text-slate-400 mt-1">{decision.description}</p>
 
-                      <div className="flex items-center gap-4 mt-3 text-xs text-slate-500">
+                      <div className="flex items-center gap-4 mt-3 text-xs text-slate-400">
                         <div className="flex items-center gap-1">
                           <User className="w-3 h-3" />
                           {decision.author}

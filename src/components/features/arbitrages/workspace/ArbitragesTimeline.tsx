@@ -81,7 +81,7 @@ export function ArbitragesTimeline({ open, onClose, arbitrageId }: Props) {
       case 'complement':
         return <FileText className="w-4 h-4 text-amber-500" />;
       case 'commentaire':
-        return <MessageSquare className="w-4 h-4 text-slate-500" />;
+        return <MessageSquare className="w-4 h-4 text-slate-400" />;
       case 'analyse':
         return <Search className="w-4 h-4 text-purple-500" />;
       default:
@@ -142,7 +142,7 @@ export function ArbitragesTimeline({ open, onClose, arbitrageId }: Props) {
         )}
 
         {!loading && events.length === 0 && (
-          <div className="p-8 text-center text-slate-500">
+          <div className="p-8 text-center text-slate-400">
             <History className="w-12 h-12 mx-auto mb-3 text-slate-300" />
             <p>Aucun événement dans la timeline</p>
           </div>
@@ -185,7 +185,7 @@ export function ArbitragesTimeline({ open, onClose, arbitrageId }: Props) {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 mt-3 text-xs text-slate-500">
+                    <div className="flex items-center gap-2 mt-3 text-xs text-slate-400">
                       <User className="w-3 h-3" />
                       <span>{event.actor}</span>
                       {event.actorRole && (

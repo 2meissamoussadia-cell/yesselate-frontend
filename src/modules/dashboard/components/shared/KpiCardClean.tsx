@@ -48,7 +48,7 @@ export function KpiCardClean({
         onClick && 'cursor-pointer hover:shadow-xl'
       )}
     >
-      <div className="text-sm text-slate-500 dark:text-slate-400 mb-2">{title}</div>
+      <div className="text-sm text-slate-400 dark:text-slate-400 mb-2">{title}</div>
       <div className="text-3xl font-black text-slate-900 dark:text-white mb-1">{value}</div>
       <div
         className={cn(

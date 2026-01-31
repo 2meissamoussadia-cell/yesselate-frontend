@@ -522,7 +522,7 @@ export function AnalyticsComparisonView({ category, subCategory = 'all' }: Analy
                         <span className="text-2xl">{bureau.icon}</span>
                         <div className="flex-1 min-w-0">
                           <div className="font-semibold text-sm truncate">{bureau.code}</div>
-                          <div className="text-xs text-slate-500 truncate">{bureau.name}</div>
+                          <div className="text-xs text-slate-400 truncate">{bureau.name}</div>
                         </div>
                       </div>
                       {perf && (
@@ -533,7 +533,7 @@ export function AnalyticsComparisonView({ category, subCategory = 'all' }: Analy
                           >
                             {perf.score}
                           </Badge>
-                          <span className="text-xs text-slate-500">{perf.totalDemands} dem.</span>
+                          <span className="text-xs text-slate-400">{perf.totalDemands} dem.</span>
                         </div>
                       )}
                     </button>
@@ -1197,7 +1197,7 @@ function PeriodsComparisonView({
               <div>
                 <p className="text-xs text-slate-400 mb-1">Période Actuelle</p>
                 <p className="text-2xl font-bold text-slate-200">{currentPeriod?.value || 0}</p>
-                <p className="text-xs text-slate-500 mt-1">{currentPeriod?.label}</p>
+                <p className="text-xs text-slate-400 mt-1">{currentPeriod?.label}</p>
               </div>
               <Activity className="w-8 h-8 text-blue-400" />
             </div>
@@ -1210,7 +1210,7 @@ function PeriodsComparisonView({
               <div>
                 <p className="text-xs text-slate-400 mb-1">Période Précédente</p>
                 <p className="text-2xl font-bold text-slate-200">{previousPeriod?.value || 0}</p>
-                <p className="text-xs text-slate-500 mt-1">{previousPeriod?.label}</p>
+                <p className="text-xs text-slate-400 mt-1">{previousPeriod?.label}</p>
               </div>
               <Clock className="w-8 h-8 text-slate-400" />
             </div>
@@ -1495,7 +1495,7 @@ function PeriodsComparisonView({
                     {trendAnalysis.isImproving ? '+' : ''}{trendAnalysis.globalTrendPercent}%
                   </span>
                 </div>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-slate-400 mt-1">
                   {trendAnalysis.isImproving ? 'Amélioration' : trendAnalysis.isDegrading ? 'Dégradation' : 'Stable'}
                 </p>
               </div>
@@ -1511,7 +1511,7 @@ function PeriodsComparisonView({
                     {trendAnalysis.problematicPeriods.length}
                   </span>
                 </div>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-slate-400 mt-1">
                   {trendAnalysis.problematicPeriods.length > 0 ? 'Action requise' : 'Aucun problème'}
                 </p>
               </div>
@@ -1524,7 +1524,7 @@ function PeriodsComparisonView({
                     {trendAnalysis.worstPeriod?.label || 'N/A'}
                   </span>
                 </div>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-slate-400 mt-1">
                   {trendAnalysis.worstPeriod ? `${trendAnalysis.worstPeriod.value} alertes` : 'Aucune'}
                 </p>
               </div>
@@ -1597,7 +1597,7 @@ function PeriodsComparisonView({
                         <div className="flex items-center gap-2">
                           <div>
                             <div className="font-semibold text-slate-200">{period.label}</div>
-                            <div className="text-xs text-slate-500">{period.period}</div>
+                            <div className="text-xs text-slate-400">{period.period}</div>
                           </div>
                           {isProblematic && (
                             <AlertTriangle className="w-4 h-4 text-red-400" />
@@ -1621,7 +1621,7 @@ function PeriodsComparisonView({
                             {isPositiveChange ? '+' : ''}{periodChange} ({periodChangePercent}%)
                           </span>
                         )}
-                        {idx === 0 && <span className="text-slate-500 text-xs">-</span>}
+                        {idx === 0 && <span className="text-slate-400 text-xs">-</span>}
                       </td>
                       <td className="py-2 px-3 text-center">
                         {idx > 0 && (
@@ -1631,7 +1631,7 @@ function PeriodsComparisonView({
                             <TrendingDown className="w-4 h-4 text-red-400 mx-auto" />
                           )
                         )}
-                        {idx === 0 && <span className="text-slate-500 text-xs">-</span>}
+                        {idx === 0 && <span className="text-slate-400 text-xs">-</span>}
                       </td>
                       <td className="py-2 px-3 text-center">
                         <div className="flex items-center justify-center gap-1">

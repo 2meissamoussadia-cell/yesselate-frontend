@@ -231,9 +231,9 @@ export const AlertesSidebar = React.memo(function AlertesSidebar({
               {hasChildren && (
                 <div className="flex-shrink-0">
                   {isExpanded ? (
-                    <ChevronDown className="h-4 w-4 text-slate-500" />
+                    <ChevronDown className="h-4 w-4 text-slate-400" />
                   ) : (
-                    <ChevronRight className="h-4 w-4 text-slate-500" />
+                    <ChevronRight className="h-4 w-4 text-slate-400" />
                   )}
                 </div>
               )}
@@ -401,7 +401,7 @@ export const AlertesSidebar = React.memo(function AlertesSidebar({
       {/* Footer */}
       <div className="border-t border-slate-700/50 p-3">
         {!collapsed && (
-          <div className="text-xs text-slate-500 text-center">
+          <div className="text-xs text-slate-400 text-center">
             Alertes v1.0
           </div>
         )}

@@ -327,9 +327,9 @@ export function BTPElementDetailView({
                       <div className="flex-1">
                         <p className="text-sm text-slate-300">{event.event}</p>
                         <div className="flex items-center gap-2 mt-1">
-                          <span className="text-xs text-slate-500">{event.date}</span>
-                          <span className="text-xs text-slate-500">•</span>
-                          <span className="text-xs text-slate-500">{event.user}</span>
+                          <span className="text-xs text-slate-400">{event.date}</span>
+                          <span className="text-xs text-slate-400">•</span>
+                          <span className="text-xs text-slate-400">{event.user}</span>
                         </div>
                       </div>
                     </div>
@@ -414,7 +414,7 @@ export function BTPElementDetailView({
                       >
                         <div>
                           <p className="text-sm text-slate-300">{jalon.nom}</p>
-                          <p className="text-xs text-slate-500">{jalon.date}</p>
+                          <p className="text-xs text-slate-400">{jalon.date}</p>
                         </div>
                         <Badge
                           variant={
@@ -449,7 +449,7 @@ export function BTPElementDetailView({
                     >
                       <div>
                         <p className="text-sm text-slate-300">{resource.nom}</p>
-                        <p className="text-xs text-slate-500">{resource.role}</p>
+                        <p className="text-xs text-slate-400">{resource.role}</p>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-sm text-slate-300">{resource.charge}%</span>
@@ -510,7 +510,7 @@ export function BTPElementDetailView({
                         <FileText className="h-4 w-4 text-slate-400" />
                         <div>
                           <p className="text-sm text-slate-300">{doc.nom}</p>
-                          <p className="text-xs text-slate-500">{doc.type} • {doc.date}</p>
+                          <p className="text-xs text-slate-400">{doc.type} • {doc.date}</p>
                         </div>
                       </div>
                       <Button variant="ghost" size="sm" className="text-xs">

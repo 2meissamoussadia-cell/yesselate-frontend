@@ -2,6 +2,7 @@
 
 import { Bell, X, Check, AlertTriangle, Info, CheckCircle2, Clock } from 'lucide-react';
 import { useGovernanceCommandCenterStore } from '@/lib/stores/governanceCommandCenterStore';
+import { logger } from '@/lib/utils/logger';
 import { Badge, Button } from '@/components/ui';
 
 interface Notification {
@@ -86,12 +87,12 @@ export function NotificationsPanel() {
 
   const markAllAsRead = () => {
     // TODO: Implémenter la logique réelle
-    console.log('Mark all as read');
+    logger.debug('Mark all as read', { component: 'NotificationsPanel' });
   };
 
   const markAsRead = (id: string) => {
     // TODO: Implémenter la logique réelle
-    console.log('Mark as read:', id);
+    logger.debug('Mark as read', { component: 'NotificationsPanel', id });
   };
 
   if (!notificationsPanelOpen) return null;
@@ -169,11 +170,11 @@ export function NotificationsPanel() {
                           <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-1.5" />
                         )}
                       </div>
-                      <p className={`text-xs mt-1 ${notification.isRead ? 'text-slate-500' : 'text-slate-400'}`}>
+                      <p className={`text-xs mt-1 ${notification.isRead ? 'text-slate-400' : 'text-slate-400'}`}>
                         {notification.message}
                       </p>
                       <div className="flex items-center justify-between mt-2">
-                        <span className="text-xs text-slate-500">{notification.time}</span>
+                        <span className="text-xs text-slate-400">{notification.time}</span>
                         {notification.actionLabel && notification.onAction && (
                           <Button
                             variant="ghost"

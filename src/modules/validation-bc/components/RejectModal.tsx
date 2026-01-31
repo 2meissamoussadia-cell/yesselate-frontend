@@ -139,7 +139,7 @@ export function RejectModal({
           <div className="space-y-2">
             <Label htmlFor="comment" className="text-slate-300">
               Commentaire {isCommentRequired && <span className="text-red-400">*</span>}
-              {!isCommentRequired && <span className="text-slate-500">(optionnel)</span>}
+              {!isCommentRequired && <span className="text-slate-400">(optionnel)</span>}
             </Label>
             <Textarea
               id="comment"

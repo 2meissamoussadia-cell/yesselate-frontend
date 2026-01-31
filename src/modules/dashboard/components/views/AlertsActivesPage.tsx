@@ -150,13 +150,13 @@ export const AlertsActivesPage = memo(function AlertsActivesPage() {
       key: 'bureau',
       label: 'Bureau',
       sortable: true,
-      render: (value) => value || <span className="text-slate-500">-</span>,
+      render: (value) => value || <span className="text-slate-400">-</span>,
     },
     {
       key: 'domain',
       label: 'Domaine',
       sortable: true,
-      render: (value) => value || <span className="text-slate-500">-</span>,
+      render: (value) => value || <span className="text-slate-400">-</span>,
     },
     {
       key: 'lastSeen',
@@ -194,6 +194,7 @@ export const AlertsActivesPage = memo(function AlertsActivesPage() {
   
   return (
     <DashboardPageLayout>
+      <h1 id="alerts-page-title" className="sr-only">Centre d&apos;alertes</h1>
       <DashboardSection title="Alertes Actives" description="Alertes nécessitant une attention immédiate">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {kpis.map((kpi) => (

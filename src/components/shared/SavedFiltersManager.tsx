@@ -328,7 +328,7 @@ export function SavedFiltersManager<T = any>({
               Tous les filtres ({savedFilters.length})
             </h3>
             {savedFilters.length === 0 ? (
-              <div className="text-center py-8 text-slate-500">
+              <div className="text-center py-8 text-slate-400">
                 <Star className="h-8 w-8 mx-auto mb-2 opacity-30" />
                 <p className="text-sm">Aucun filtre sauvegardé</p>
                 <p className="text-xs mt-1">Configurez des filtres et sauvegardez-les pour un accès rapide</p>
@@ -443,7 +443,7 @@ function FilterItem<T = any>({
                   'h-4 w-4',
                   filter.isFavorite
                     ? 'text-amber-400 fill-amber-400'
-                    : 'text-slate-500 hover:text-amber-400'
+                    : 'text-slate-400 hover:text-amber-400'
                 )}
               />
             </button>
@@ -459,7 +459,7 @@ function FilterItem<T = any>({
               {filter.description}
             </p>
           )}
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-400 mt-1">
             {new Date(filter.createdAt).toLocaleDateString('fr-FR')}
           </p>
         </div>

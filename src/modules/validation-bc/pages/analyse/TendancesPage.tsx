@@ -61,7 +61,7 @@ export function TendancesPage() {
           <h3 className="text-sm font-semibold text-slate-300 mb-1">
             Évolution sur 7 derniers jours
           </h3>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-400">
             Analyse détaillée des tendances de validation
           </p>
         </div>

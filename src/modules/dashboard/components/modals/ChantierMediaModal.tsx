@@ -23,7 +23,7 @@ type TabId = 'photos' | 'documents' | 'plan';
 
 function ImagePlaceholder({ label }: { label: string }) {
   return (
-    <div className="h-full w-full flex flex-col items-center justify-center bg-slate-800/80 text-slate-500" aria-hidden>
+    <div className="h-full w-full flex flex-col items-center justify-center bg-slate-800/80 text-slate-400" aria-hidden>
       <ImageIcon className="h-8 w-8 mb-1" />
       <span className="text-[10px] truncate max-w-full px-1 text-center">{label}</span>
     </div>
@@ -93,7 +93,7 @@ export function ChantierMediaModal({ chantier, onClose }: ChantierMediaModalProp
               <h2 id="chantier-media-title" className="text-base font-semibold text-slate-100 truncate">
                 {chantier.id} — Photos & Documents
               </h2>
-              <p className="text-xs text-slate-500 truncate">
+              <p className="text-xs text-slate-400 truncate">
                 {totalPhotos} photos • {documents.length} documents • {planVsReel.length} plan vs réalité
               </p>
             </div>
@@ -130,16 +130,16 @@ export function ChantierMediaModal({ chantier, onClose }: ChantierMediaModalProp
             <div className="space-y-6">
               {photosByPhase.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12 rounded-xl border border-dashed border-slate-700/60 bg-slate-900/30">
-                  <ImageIcon className="h-10 w-10 text-slate-500 mb-2" />
+                  <ImageIcon className="h-10 w-10 text-slate-400 mb-2" />
                   <p className="text-sm text-slate-400">Aucune photo pour ce chantier</p>
-                  <p className="text-xs text-slate-500 mt-1">Upload mobile ouvriers • Géolocalisation GPS • Timeline automatique</p>
+                  <p className="text-xs text-slate-400 mt-1">Upload mobile ouvriers • Géolocalisation GPS • Timeline automatique</p>
                 </div>
               ) : (
                 photosByPhase.map(({ phase, photos, label }) => (
                   <div key={phase}>
                     <h3 className="text-sm font-semibold text-slate-200 mb-2 flex items-center gap-2">
                       <span>{label}</span>
-                      <span className="text-slate-500 font-normal">({photos.length} photo{photos.length > 1 ? 's' : ''})</span>
+                      <span className="text-slate-400 font-normal">({photos.length} photo{photos.length > 1 ? 's' : ''})</span>
                     </h3>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                       {photos.map((photo) => (
@@ -183,9 +183,9 @@ export function ChantierMediaModal({ chantier, onClose }: ChantierMediaModalProp
             <div className="space-y-2">
               {documents.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12 rounded-xl border border-dashed border-slate-700/60 bg-slate-900/30">
-                  <FileText className="h-10 w-10 text-slate-500 mb-2" />
+                  <FileText className="h-10 w-10 text-slate-400 mb-2" />
                   <p className="text-sm text-slate-400">Aucun document attaché</p>
-                  <p className="text-xs text-slate-500 mt-1">Devis PDF • Contrats signés • Factures fournisseurs</p>
+                  <p className="text-xs text-slate-400 mt-1">Devis PDF • Contrats signés • Factures fournisseurs</p>
                 </div>
               ) : (
                 documents.map((doc) => (
@@ -204,7 +204,7 @@ export function ChantierMediaModal({ chantier, onClose }: ChantierMediaModalProp
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium truncate">{doc.name}</p>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-slate-400">
                         {documentTypeLabels[doc.type]} {doc.signed && '• Signé'} • {formatSize(doc.size)} • {formatDate(doc.date)}
                       </p>
                     </div>
@@ -218,9 +218,9 @@ export function ChantierMediaModal({ chantier, onClose }: ChantierMediaModalProp
             <div className="space-y-6">
               {planVsReel.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12 rounded-xl border border-dashed border-slate-700/60 bg-slate-900/30">
-                  <FileCheck className="h-10 w-10 text-slate-500 mb-2" />
+                  <FileCheck className="h-10 w-10 text-slate-400 mb-2" />
                   <p className="text-sm text-slate-400">Aucune comparaison plan vs réalité</p>
-                  <p className="text-xs text-slate-500 mt-1">Photo plan vs réalité • Slider avant/après</p>
+                  <p className="text-xs text-slate-400 mt-1">Photo plan vs réalité • Slider avant/après</p>
                 </div>
               ) : (
                 planVsReel.map((plan) => (

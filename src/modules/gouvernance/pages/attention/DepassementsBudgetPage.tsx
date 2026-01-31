@@ -23,7 +23,7 @@ export default function DepassementsBudgetPage() {
       <GouvernanceHeader
         title="Dépassements budgétaires"
         subtitle="Projets avec dépassement de budget nécessitant une attention"
-        onExport={() => console.log('Export dépassements')}
+        onExport={() => { /* TODO: export dépassements */ }}
       />
 
       {isLoading ? (
@@ -56,7 +56,7 @@ export default function DepassementsBudgetPage() {
                     {budget.budget_consomme.toLocaleString('fr-FR')}€
                   </div>
                 </div>
-                <button className="rounded-xl bg-rose-500/20 px-3 py-1.5 text-xs font-medium text-rose-200 ring-1 ring-rose-500/30 hover:bg-rose-500/30">
+                <button type="button" aria-label="Voir le dépassement" className="rounded-xl bg-rose-500/20 px-3 py-2 min-h-[44px] text-xs font-medium text-rose-200 ring-1 ring-rose-500/30 hover:bg-rose-500/30 focus-visible:outline focus-visible:ring-2 focus-visible:ring-rose-500">
                   Traiter
                 </button>
               </div>

@@ -343,9 +343,9 @@ export function BudgetKpiPage({ data: apiData }: BudgetKpiPageProps = {}) {
       <MockDataIndicator message="Données mockées - Phase 1 (Backend en attente)" />
       <DashboardPageLayout maxWidth="xl" padding="md">
       {/* Logique métier (Odoo-style) : App → Modèle → Workflow Budget */}
-      <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+      <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-slate-300">
         <span className="inline-flex items-center gap-1.5 rounded-md border border-slate-800/60 bg-slate-900/40 px-2 py-1">
-          <span className="font-medium text-slate-400">App</span>
+          <span className="font-medium text-slate-300">App</span>
           <span>{appMeta?.name ?? 'Performance'}</span>
         </span>
         <span className="text-slate-600">•</span>
@@ -375,7 +375,7 @@ export function BudgetKpiPage({ data: apiData }: BudgetKpiPageProps = {}) {
           <h1 className="text-slate-50 font-semibold text-xl sm:text-2xl">
             KPIs Budget
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-slate-300 text-sm mt-1">
             Indicateurs budgétaires (règles domaine: gouvernance/budget) — lecture instantanée + drill-down
           </p>
         </div>

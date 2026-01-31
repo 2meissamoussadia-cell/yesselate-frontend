@@ -75,7 +75,7 @@ export const DashboardFooter = memo(function DashboardFooter({
             </div>
           </TooltipContent>
         </Tooltip>
-        <span className="text-slate-500 hidden sm:inline">•</span>
+        <span className="text-slate-400 hidden sm:inline">•</span>
         <Tooltip>
           <TooltipTrigger asChild>
             <button
@@ -91,6 +91,10 @@ export const DashboardFooter = memo(function DashboardFooter({
           <TooltipContent side="top" className="max-w-xs">
             <div className="space-y-1.5 text-xs">
               <div className="font-semibold mb-2">Raccourcis clavier</div>
+              <div className="flex items-center justify-between gap-4">
+                <span>Afficher cette aide</span>
+                <kbd className="px-1.5 py-0.5 bg-slate-700 rounded text-[10px]">?</kbd>
+              </div>
               <div className="flex items-center justify-between gap-4">
                 <span>Ouvrir la palette</span>
                 <kbd className="px-1.5 py-0.5 bg-slate-700 rounded text-[10px]">Ctrl+K</kbd>

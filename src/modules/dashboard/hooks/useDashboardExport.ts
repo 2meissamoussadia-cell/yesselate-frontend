@@ -58,10 +58,6 @@ export function useDashboardExport() {
       document.body.removeChild(a);
       window.URL.revokeObjectURL(urlObj);
 
-      // Log du hash si disponible
-      if (hash) {
-        console.log('[Export] Document hash:', hash);
-      }
     },
     [nav, locale, currency, authHeaders]
   );

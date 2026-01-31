@@ -206,7 +206,7 @@ export function AlertExportModal({ open, onClose }: AlertExportModalProps) {
                     )}>
                       <Icon className={cn(
                         "w-5 h-5",
-                        isSelected ? "text-purple-500" : "text-slate-500"
+                        isSelected ? "text-purple-500" : "text-slate-400"
                       )} />
                     </div>
                     <div className="flex-1">
@@ -220,7 +220,7 @@ export function AlertExportModal({ open, onClose }: AlertExportModalProps) {
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">
+                      <p className="text-xs text-slate-400 dark:text-slate-400">
                         {format.description}
                       </p>
                     </div>
@@ -254,7 +254,7 @@ export function AlertExportModal({ open, onClose }: AlertExportModalProps) {
                 <p className="text-sm font-medium text-slate-700 dark:text-slate-200">
                   Inclure les alertes résolues
                 </p>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-400">
                   Exporter également les alertes qui ont été résolues
                 </p>
               </div>
@@ -272,7 +272,7 @@ export function AlertExportModal({ open, onClose }: AlertExportModalProps) {
                   <p className="text-sm font-medium text-slate-700 dark:text-slate-200">
                     Inclure la timeline
                   </p>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-slate-400">
                     Exporter l'historique complet des événements
                   </p>
                 </div>
@@ -288,7 +288,7 @@ export function AlertExportModal({ open, onClose }: AlertExportModalProps) {
           </h3>
           <div className="grid grid-cols-3 gap-4 text-sm">
             <div>
-              <p className="text-slate-500">Alertes</p>
+              <p className="text-slate-400">Alertes</p>
               <p className="text-lg font-bold text-slate-700 dark:text-slate-200">
                 {includeResolved 
                   ? filterAlertsByQueue('all').length 
@@ -296,13 +296,13 @@ export function AlertExportModal({ open, onClose }: AlertExportModalProps) {
               </p>
             </div>
             <div>
-              <p className="text-slate-500">Format</p>
+              <p className="text-slate-400">Format</p>
               <p className="text-lg font-bold text-slate-700 dark:text-slate-200 uppercase">
                 {selectedFormat}
               </p>
             </div>
             <div>
-              <p className="text-slate-500">Taille estimée</p>
+              <p className="text-slate-400">Taille estimée</p>
               <p className="text-lg font-bold text-slate-700 dark:text-slate-200">
                 ~{Math.round(filterAlertsByQueue('all').length * 0.5)}KB
               </p>

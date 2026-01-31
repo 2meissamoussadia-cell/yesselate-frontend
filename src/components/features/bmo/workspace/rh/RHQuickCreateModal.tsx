@@ -193,7 +193,7 @@ export function RHQuickCreateModal({ open, onClose, onSuccess }: RHQuickCreateMo
                 </div>
                 
                 <h3 className="font-bold text-lg mb-2">{item.type}</h3>
-                <p className="text-sm text-slate-500">{item.description}</p>
+                <p className="text-sm text-slate-400">{item.description}</p>
               </div>
             </button>
           );
@@ -219,7 +219,7 @@ export function RHQuickCreateModal({ open, onClose, onSuccess }: RHQuickCreateMo
               </div>
               <div>
                 <p className="font-semibold">{selectedType}</p>
-                <p className="text-xs text-slate-500">{item.description}</p>
+                <p className="text-xs text-slate-400">{item.description}</p>
               </div>
             </>
           );
@@ -400,7 +400,7 @@ export function RHQuickCreateModal({ open, onClose, onSuccess }: RHQuickCreateMo
         </label>
         <div className="border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-6 text-center">
           <Upload className="w-8 h-8 mx-auto mb-2 text-slate-400" />
-          <p className="text-sm text-slate-500 mb-2">
+          <p className="text-sm text-slate-400 mb-2">
             Glissez vos fichiers ici ou cliquez pour parcourir
           </p>
           <input

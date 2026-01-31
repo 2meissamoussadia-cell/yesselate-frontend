@@ -199,7 +199,7 @@ export function ValidationBC360Panel({ documentId, documentType }: Props) {
             Dossier 360° — Pilotage
           </h3>
           {riskSummary && (
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-slate-400 mt-1">
               Risque principal : <span className={cn('font-medium', riskSummary.score >= 15 ? 'text-red-500' : riskSummary.score >= 9 ? 'text-amber-500' : 'text-emerald-500')}>
                 {riskSummary.category} (score {riskSummary.score})
               </span>
@@ -223,7 +223,7 @@ export function ValidationBC360Panel({ documentId, documentType }: Props) {
             'flex-1 px-4 py-3 text-sm font-medium transition-colors flex items-center justify-center gap-2',
             tab === 'stakeholders' 
               ? 'text-purple-600 border-b-2 border-purple-500 bg-purple-50/50 dark:bg-purple-950/20' 
-              : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+              : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
           )}
         >
           <Users className="w-4 h-4" />
@@ -235,7 +235,7 @@ export function ValidationBC360Panel({ documentId, documentType }: Props) {
             'flex-1 px-4 py-3 text-sm font-medium transition-colors flex items-center justify-center gap-2',
             tab === 'tasks' 
               ? 'text-blue-600 border-b-2 border-blue-500 bg-blue-50/50 dark:bg-blue-950/20' 
-              : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+              : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
           )}
         >
           <ClipboardList className="w-4 h-4" />
@@ -247,7 +247,7 @@ export function ValidationBC360Panel({ documentId, documentType }: Props) {
             'flex-1 px-4 py-3 text-sm font-medium transition-colors flex items-center justify-center gap-2',
             tab === 'risks' 
               ? 'text-amber-600 border-b-2 border-amber-500 bg-amber-50/50 dark:bg-amber-950/20' 
-              : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+              : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
           )}
         >
           <Shield className="w-4 h-4" />
@@ -305,7 +305,7 @@ export function ValidationBC360Panel({ documentId, documentType }: Props) {
                           {ROLE_LABELS[s.role]}
                         </span>
                         {s.required && (
-                          <span className="text-xs text-slate-500">• Requis</span>
+                          <span className="text-xs text-slate-400">• Requis</span>
                         )}
                       </div>
                     </div>
@@ -319,7 +319,7 @@ export function ValidationBC360Panel({ documentId, documentType }: Props) {
                 </div>
               ))}
               {stakeholders.length === 0 && (
-                <p className="text-center py-6 text-slate-500 text-sm">Aucune partie prenante</p>
+                <p className="text-center py-6 text-slate-400 text-sm">Aucune partie prenante</p>
               )}
             </div>
           </div>
@@ -379,7 +379,7 @@ export function ValidationBC360Panel({ documentId, documentType }: Props) {
                             <StatusIcon className="w-3 h-3" />
                             {config.label}
                           </span>
-                          {t.assignee && <span className="text-xs text-slate-500">{t.assignee}</span>}
+                          {t.assignee && <span className="text-xs text-slate-400">{t.assignee}</span>}
                           {t.dueAt && <span className="text-xs text-slate-400">Échéance: {t.dueAt}</span>}
                         </div>
                       </div>
@@ -394,7 +394,7 @@ export function ValidationBC360Panel({ documentId, documentType }: Props) {
                 );
               })}
               {tasks.length === 0 && (
-                <p className="text-center py-6 text-slate-500 text-sm">Aucune tâche</p>
+                <p className="text-center py-6 text-slate-400 text-sm">Aucune tâche</p>
               )}
             </div>
           </div>
@@ -473,7 +473,7 @@ export function ValidationBC360Panel({ documentId, documentType }: Props) {
                 );
               })}
               {risks.length === 0 && (
-                <p className="text-center py-6 text-slate-500 text-sm">Aucun risque identifié</p>
+                <p className="text-center py-6 text-slate-400 text-sm">Aucun risque identifié</p>
               )}
             </div>
           </div>

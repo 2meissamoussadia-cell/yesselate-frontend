@@ -185,7 +185,7 @@ export function ValidationBCPredictiveAnalytics({ open, onClose }: Props) {
                 </div>
                 <div>
                   <div className="font-semibold">Score de santé global</div>
-                  <div className="text-sm text-slate-500">
+                  <div className="text-sm text-slate-400">
                     Basé sur les KPIs de validation
                   </div>
                 </div>
@@ -194,11 +194,11 @@ export function ValidationBCPredictiveAnalytics({ open, onClose }: Props) {
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div className="text-center">
                   <div className="font-bold text-blue-600">{insights.kpis.validationRate.toFixed(1)}%</div>
-                  <div className="text-xs text-slate-500">Taux validation</div>
+                  <div className="text-xs text-slate-400">Taux validation</div>
                 </div>
                 <div className="text-center">
                   <div className="font-bold text-purple-600">{insights.kpis.slaCompliance.toFixed(1)}%</div>
-                  <div className="text-xs text-slate-500">Conformité SLA</div>
+                  <div className="text-xs text-slate-400">Conformité SLA</div>
                 </div>
               </div>
             </div>
@@ -208,22 +208,22 @@ export function ValidationBCPredictiveAnalytics({ open, onClose }: Props) {
               <div className="p-3 rounded-xl border border-slate-200/70 bg-white/80 dark:border-slate-800 dark:bg-[#1f1f1f]/60 text-center">
                 <Target className="w-5 h-5 mx-auto mb-1 text-blue-500" />
                 <div className="text-lg font-bold">{insights.kpis.avgProcessingTime.toFixed(1)}h</div>
-                <div className="text-xs text-slate-500">Temps moyen</div>
+                <div className="text-xs text-slate-400">Temps moyen</div>
               </div>
               <div className="p-3 rounded-xl border border-slate-200/70 bg-white/80 dark:border-slate-800 dark:bg-[#1f1f1f]/60 text-center">
                 <BarChart2 className="w-5 h-5 mx-auto mb-1 text-emerald-500" />
                 <div className="text-lg font-bold">{insights.predictions.expectedVolumeToday}</div>
-                <div className="text-xs text-slate-500">Prévu aujourd'hui</div>
+                <div className="text-xs text-slate-400">Prévu aujourd'hui</div>
               </div>
               <div className="p-3 rounded-xl border border-slate-200/70 bg-white/80 dark:border-slate-800 dark:bg-[#1f1f1f]/60 text-center">
                 <Zap className="w-5 h-5 mx-auto mb-1 text-amber-500" />
                 <div className="text-lg font-bold">{insights.kpis.anomalyRate.toFixed(1)}%</div>
-                <div className="text-xs text-slate-500">Taux anomalies</div>
+                <div className="text-xs text-slate-400">Taux anomalies</div>
               </div>
               <div className="p-3 rounded-xl border border-slate-200/70 bg-white/80 dark:border-slate-800 dark:bg-[#1f1f1f]/60 text-center">
                 <Clock className="w-5 h-5 mx-auto mb-1 text-purple-500" />
                 <div className="text-lg font-bold">{insights.predictions.expectedVolumeWeek}</div>
-                <div className="text-xs text-slate-500">Prévu semaine</div>
+                <div className="text-xs text-slate-400">Prévu semaine</div>
               </div>
             </div>
 
@@ -239,7 +239,7 @@ export function ValidationBCPredictiveAnalytics({ open, onClose }: Props) {
                     <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-white/50 dark:bg-slate-800/30">
                       <div>
                         <div className="font-medium text-sm">{bottleneck.bureau}</div>
-                        <div className="text-xs text-slate-500">{bottleneck.reason}</div>
+                        <div className="text-xs text-slate-400">{bottleneck.reason}</div>
                       </div>
                       <div className="text-right">
                         <div className="text-sm font-bold text-amber-600">+{bottleneck.estimatedDelay}h</div>
@@ -303,7 +303,7 @@ export function ValidationBCPredictiveAnalytics({ open, onClose }: Props) {
                           </span>
                           <span className="font-medium text-sm">{rec.title}</span>
                         </div>
-                        <div className="text-xs text-slate-500 mt-1">{rec.description}</div>
+                        <div className="text-xs text-slate-400 mt-1">{rec.description}</div>
                         <div className="text-xs text-purple-600 dark:text-purple-400 mt-1">💡 {rec.impact}</div>
                       </div>
                       <FluentButton size="xs" variant="secondary">
@@ -327,7 +327,7 @@ export function ValidationBCPredictiveAnalytics({ open, onClose }: Props) {
                   <div key={perf.bureau} className="flex items-center justify-between py-2 border-b border-slate-100 dark:border-slate-800 last:border-0">
                     <div className="flex items-center gap-3">
                       <span className="font-medium w-16">{perf.bureau}</span>
-                      <span className="text-sm text-slate-500">{perf.pending} en attente</span>
+                      <span className="text-sm text-slate-400">{perf.pending} en attente</span>
                     </div>
                     <div className="flex items-center gap-4 text-sm">
                       <span>{perf.avgProcessingTime.toFixed(1)}h</span>
@@ -350,7 +350,7 @@ export function ValidationBCPredictiveAnalytics({ open, onClose }: Props) {
 
         {/* Footer */}
         <div className="flex justify-between items-center pt-4 border-t border-slate-200 dark:border-slate-700">
-          <div className="text-xs text-slate-500 flex items-center gap-2">
+          <div className="text-xs text-slate-400 flex items-center gap-2">
             <Brain className="w-3.5 h-3.5" />
             Analyses mises à jour en temps réel
           </div>

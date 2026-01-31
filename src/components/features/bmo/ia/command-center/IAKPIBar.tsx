@@ -160,7 +160,7 @@ export const IAKPIBar = React.memo(function IAKPIBar({
             variant="ghost"
             size="sm"
             onClick={handleRefresh}
-            className="h-6 w-6 p-0 text-slate-500 hover:text-slate-300"
+            className="h-6 w-6 p-0 text-slate-400 hover:text-slate-300"
           >
             <RefreshCw className={cn('h-3 w-3', isRefreshing && 'animate-spin')} />
           </Button>
@@ -168,7 +168,7 @@ export const IAKPIBar = React.memo(function IAKPIBar({
             variant="ghost"
             size="sm"
             onClick={onToggleCollapse}
-            className="h-6 w-6 p-0 text-slate-500 hover:text-slate-300"
+            className="h-6 w-6 p-0 text-slate-400 hover:text-slate-300"
           >
             {collapsed ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
           </Button>
@@ -201,14 +201,14 @@ const KPICard = React.memo(function KPICard({ kpi }: { kpi: KPIItem }) {
   const trendColors = {
     up: kpi.status === 'critical' ? 'text-red-400' : 'text-emerald-400',
     down: kpi.status === 'critical' ? 'text-emerald-400' : 'text-amber-400',
-    stable: 'text-slate-500',
+    stable: 'text-slate-400',
   };
 
   return (
     <div className="bg-slate-900/60 px-3 py-2 hover:bg-slate-800/40 transition-colors">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0 flex-1">
-          <p className="text-xs text-slate-500 truncate mb-0.5">
+          <p className="text-xs text-slate-400 truncate mb-0.5">
             {kpi.label}
           </p>
           <div className="flex items-baseline gap-2">

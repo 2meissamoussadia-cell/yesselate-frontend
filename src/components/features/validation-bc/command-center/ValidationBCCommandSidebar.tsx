@@ -216,7 +216,7 @@ export function ValidationBCCommandSidebar({
       {/* Footer */}
       <div className="border-t border-slate-700/50 p-3">
         {!collapsed && (
-          <div className="flex items-center gap-2 text-xs text-slate-500">
+          <div className="flex items-center gap-2 text-xs text-slate-400">
             <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
             <span>Connecté • Temps réel</span>
           </div>

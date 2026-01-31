@@ -124,7 +124,7 @@ export const FinancesContentRouter = React.memo(function FinancesContentRouter({
         <h3 className="text-lg font-semibold text-slate-300 mb-2">
           {category} - {subCategory}
         </h3>
-        <p className="text-slate-500">Contenu en cours de développement</p>
+        <p className="text-slate-400">Contenu en cours de développement</p>
       </div>
     </div>
   );
@@ -329,7 +329,7 @@ const OverviewDashboard = React.memo(function OverviewDashboard({
                       <p className="text-sm font-medium text-slate-200 truncate">
                         {tx.description}
                       </p>
-                      <p className="text-xs text-slate-500 mt-0.5">{tx.date}</p>
+                      <p className="text-xs text-slate-400 mt-0.5">{tx.date}</p>
                     </div>
                   </div>
                   <div className="text-right">
@@ -376,7 +376,7 @@ const OverviewDashboard = React.memo(function OverviewDashboard({
                   )}
                 >
                   <p className="text-sm font-medium text-slate-200">{alert.title}</p>
-                  <p className="text-xs text-slate-500 mt-1">{alert.project}</p>
+                  <p className="text-xs text-slate-400 mt-1">{alert.project}</p>
                 </div>
               ))}
             </div>
@@ -445,7 +445,7 @@ const OverviewDashboard = React.memo(function OverviewDashboard({
                   style={{ width: `${budget.progress}%` }}
                 />
               </div>
-              <p className="text-xs text-slate-500">{budget.progress}%</p>
+              <p className="text-xs text-slate-400">{budget.progress}%</p>
             </div>
           ))}
         </div>
@@ -625,7 +625,7 @@ const BudgetView = React.memo(function BudgetView({
                   </div>
                   <div>
                     <p className="text-sm font-medium text-slate-200">{budget.name}</p>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-slate-400">
                       {(budget.consumed / 1000000000).toFixed(2)} Md / {(budget.allocated / 1000000000).toFixed(2)} Md
                     </p>
                   </div>
@@ -658,7 +658,7 @@ const BudgetView = React.memo(function BudgetView({
                     style={{ width: `${Math.min(percentage, 100)}%` }}
                   />
                 </div>
-                <div className="flex items-center justify-between text-xs text-slate-500">
+                <div className="flex items-center justify-between text-xs text-slate-400">
                   <span>Restant: {((budget.allocated - budget.consumed) / 1000000000).toFixed(2)} Md</span>
                   <span>
                     {budget.status === 'exceeded' ? 'Dépassé' : budget.status === 'warning' ? 'Attention' : 'OK'}
@@ -688,7 +688,7 @@ const PendingView = React.memo(function PendingView({
         <h3 className="text-lg font-semibold text-slate-300 mb-2">
           Transactions en Attente
         </h3>
-        <p className="text-slate-500">Contenu en cours de développement</p>
+        <p className="text-slate-400">Contenu en cours de développement</p>
       </div>
     </div>
   );
@@ -711,7 +711,7 @@ const OverdueView = React.memo(function OverdueView({
         <h3 className="text-lg font-semibold text-slate-300 mb-2">
           Impayés et Retards
         </h3>
-        <p className="text-slate-500">Contenu en cours de développement</p>
+        <p className="text-slate-400">Contenu en cours de développement</p>
       </div>
     </div>
   );
@@ -732,7 +732,7 @@ const ValidatedView = React.memo(function ValidatedView({
         <h3 className="text-lg font-semibold text-slate-300 mb-2">
           Transactions Validées
         </h3>
-        <p className="text-slate-500">Contenu en cours de développement</p>
+        <p className="text-slate-400">Contenu en cours de développement</p>
       </div>
     </div>
   );
@@ -753,7 +753,7 @@ const ReportsView = React.memo(function ReportsView({
         <h3 className="text-lg font-semibold text-slate-300 mb-2">
           Rapports Financiers
         </h3>
-        <p className="text-slate-500">Contenu en cours de développement</p>
+        <p className="text-slate-400">Contenu en cours de développement</p>
       </div>
     </div>
   );
@@ -774,7 +774,7 @@ const AnalyticsView = React.memo(function AnalyticsView({
         <h3 className="text-lg font-semibold text-slate-300 mb-2">
           Analytics Financier
         </h3>
-        <p className="text-slate-500">Contenu en cours de développement</p>
+        <p className="text-slate-400">Contenu en cours de développement</p>
       </div>
     </div>
   );
@@ -795,7 +795,7 @@ const ArchiveView = React.memo(function ArchiveView({
         <h3 className="text-lg font-semibold text-slate-300 mb-2">
           Archives Financières
         </h3>
-        <p className="text-slate-500">Contenu en cours de développement</p>
+        <p className="text-slate-400">Contenu en cours de développement</p>
       </div>
     </div>
   );

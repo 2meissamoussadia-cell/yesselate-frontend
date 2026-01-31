@@ -23,7 +23,7 @@ export default function IndicateursConformitePage() {
       <GouvernanceHeader
         title="Indicateurs conformité"
         subtitle="Vue d'ensemble des indicateurs de conformité et performance"
-        onExport={() => console.log('Export indicateurs conformité')}
+        onExport={() => { /* TODO: export indicateurs conformité */ }}
       />
 
       {isLoading ? (

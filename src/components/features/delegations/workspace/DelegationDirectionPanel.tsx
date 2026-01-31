@@ -236,7 +236,7 @@ export function DelegationDirectionPanel() {
             </div>
             <div>
               <div className="font-semibold text-sm">Score de santé</div>
-              <div className="text-xs text-slate-500">
+              <div className="text-xs text-slate-400">
                 {insights.kpis.active} actives • {insights.kpis.usagesThisMonth} utilisations ce mois
               </div>
             </div>
@@ -245,15 +245,15 @@ export function DelegationDirectionPanel() {
           <div className="flex items-center gap-4 text-sm">
             <div className="text-center">
               <div className="font-bold text-emerald-600">{insights.kpis.active}</div>
-              <div className="text-xs text-slate-500">Actives</div>
+              <div className="text-xs text-slate-400">Actives</div>
             </div>
             <div className="text-center">
               <div className="font-bold text-amber-600">{insights.kpis.suspended}</div>
-              <div className="text-xs text-slate-500">Suspendues</div>
+              <div className="text-xs text-slate-400">Suspendues</div>
             </div>
             <div className="text-center">
               <div className="font-bold text-rose-600">{insights.kpis.revoked}</div>
-              <div className="text-xs text-slate-500">Révoquées</div>
+              <div className="text-xs text-slate-400">Révoquées</div>
             </div>
           </div>
         </div>
@@ -288,7 +288,7 @@ export function DelegationDirectionPanel() {
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
                     <div className="font-medium text-sm truncate">{d.title || d.code}</div>
-                    <div className="text-xs text-slate-500">{d.delegateName} • {d.bureau}</div>
+                    <div className="text-xs text-slate-400">{d.delegateName} • {d.bureau}</div>
                   </div>
                   <span className={cn(
                     "px-2 py-0.5 rounded text-xs font-medium flex-none",
@@ -301,7 +301,7 @@ export function DelegationDirectionPanel() {
             ))}
             
             {(!insights?.toDecide.expiringSoon || insights.toDecide.expiringSoon.length === 0) && (
-              <div className="text-center py-4 text-sm text-slate-500">
+              <div className="text-center py-4 text-sm text-slate-400">
                 <CheckCircle2 className="w-8 h-8 mx-auto mb-2 text-emerald-300" />
                 Aucune délégation urgente
               </div>
@@ -426,7 +426,7 @@ export function DelegationDirectionPanel() {
             {(!insights?.risks.highValueUsages?.length && 
               !insights?.risks.highFrequency?.length && 
               !insights?.risks.deniedEvents?.length) && (
-              <div className="text-center py-4 text-sm text-slate-500">
+              <div className="text-center py-4 text-sm text-slate-400">
                 <Shield className="w-8 h-8 mx-auto mb-2 text-emerald-300" />
                 Aucune anomalie détectée
               </div>
@@ -462,14 +462,14 @@ export function DelegationDirectionPanel() {
             Simulateur d&apos;acte
           </h3>
           
-          <p className="text-xs text-slate-500 mb-3">
+          <p className="text-xs text-slate-400 mb-3">
             Testez si une action serait autorisée avant de l&apos;exécuter.
           </p>
           
           <div className="space-y-3">
             {/* Délégation */}
             <div>
-              <label className="text-xs text-slate-500">Délégation</label>
+              <label className="text-xs text-slate-400">Délégation</label>
               <select
                 className="mt-1 w-full rounded-lg border border-slate-200/70 bg-white/90 p-2 text-sm outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                 value={simDelegationId}
@@ -483,7 +483,7 @@ export function DelegationDirectionPanel() {
             
             {/* Action */}
             <div>
-              <label className="text-xs text-slate-500">Action</label>
+              <label className="text-xs text-slate-400">Action</label>
               <select
                 className="mt-1 w-full rounded-lg border border-slate-200/70 bg-white/90 p-2 text-sm outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                 value={simAction}
@@ -500,7 +500,7 @@ export function DelegationDirectionPanel() {
             {/* Bureau + Montant */}
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="text-xs text-slate-500">Bureau</label>
+                <label className="text-xs text-slate-400">Bureau</label>
                 <input
                   type="text"
                   className="mt-1 w-full rounded-lg border border-slate-200/70 bg-white/90 p-2 text-sm outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
@@ -510,7 +510,7 @@ export function DelegationDirectionPanel() {
                 />
               </div>
               <div>
-                <label className="text-xs text-slate-500">Montant (XOF)</label>
+                <label className="text-xs text-slate-400">Montant (XOF)</label>
                 <input
                   type="number"
                   className="mt-1 w-full rounded-lg border border-slate-200/70 bg-white/90 p-2 text-sm outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"

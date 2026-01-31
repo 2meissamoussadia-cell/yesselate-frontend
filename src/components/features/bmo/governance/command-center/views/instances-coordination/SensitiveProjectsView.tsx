@@ -93,12 +93,12 @@ export function SensitiveProjectsView() {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                   <div className="flex items-center gap-2">
-                    <DollarSign className="h-4 w-4 text-slate-500" />
+                    <DollarSign className="h-4 w-4 text-slate-400" />
                     <span className="text-slate-400">Budget:</span>
                     <span className="text-slate-300">{project.budget}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-slate-500" />
+                    <Calendar className="h-4 w-4 text-slate-400" />
                     <span className="text-slate-400">Retard:</span>
                     <span className={cn(
                       'text-slate-300',

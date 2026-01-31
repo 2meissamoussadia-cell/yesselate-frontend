@@ -238,7 +238,7 @@ export function InteractionModal({
                 }}
                 placeholder="Ex: Suivi projet, Réclamation, Demo produit..."
                 className={cn(
-                  'w-full px-4 py-2 rounded-lg bg-slate-800/50 border text-slate-200 placeholder:text-slate-500',
+                  'w-full px-4 py-2 rounded-lg bg-slate-800/50 border text-slate-200 placeholder:text-slate-400',
                   errors.subject ? 'border-rose-500/50' : 'border-slate-700/50 focus:border-cyan-500/50',
                   'focus:outline-none focus:ring-2 focus:ring-cyan-500/20'
                 )}
@@ -265,7 +265,7 @@ export function InteractionModal({
                 placeholder="Détaillez le contenu de l'interaction..."
                 rows={4}
                 className={cn(
-                  'w-full px-4 py-2 rounded-lg bg-slate-800/50 border text-slate-200 placeholder:text-slate-500 resize-none',
+                  'w-full px-4 py-2 rounded-lg bg-slate-800/50 border text-slate-200 placeholder:text-slate-400 resize-none',
                   errors.description ? 'border-rose-500/50' : 'border-slate-700/50 focus:border-cyan-500/50',
                   'focus:outline-none focus:ring-2 focus:ring-cyan-500/20'
                 )}
@@ -285,7 +285,7 @@ export function InteractionModal({
                   Date *
                 </label>
                 <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <input
                     type="date"
                     value={formData.date}
@@ -299,7 +299,7 @@ export function InteractionModal({
                   Heure
                 </label>
                 <div className="relative">
-                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <input
                     type="time"
                     value={formData.time}
@@ -317,7 +317,7 @@ export function InteractionModal({
                   value={formData.duration}
                   onChange={(e) => setFormData({ ...formData, duration: parseInt(e.target.value) || undefined })}
                   placeholder="30"
-                  className="w-full px-4 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20"
+                  className="w-full px-4 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20"
                 />
               </div>
             </div>
@@ -329,14 +329,14 @@ export function InteractionModal({
               </label>
               <div className="flex gap-2 mb-2">
                 <div className="relative flex-1">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <input
                     type="text"
                     value={participantInput}
                     onChange={(e) => setParticipantInput(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addParticipant())}
                     placeholder="Nom du participant"
-                    className="w-full pl-10 pr-4 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20"
+                    className="w-full pl-10 pr-4 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20"
                   />
                 </div>
                 <Button
@@ -412,7 +412,7 @@ export function InteractionModal({
                 onChange={(e) => setFormData({ ...formData, followUp: e.target.value })}
                 placeholder="Quelle est la prochaine étape ?..."
                 rows={2}
-                className="w-full px-4 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-200 placeholder:text-slate-500 resize-none focus:outline-none focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20"
+                className="w-full px-4 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-200 placeholder:text-slate-400 resize-none focus:outline-none focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20"
               />
             </div>
 
@@ -443,7 +443,7 @@ export function InteractionModal({
 
           {/* Footer */}
           <div className="flex items-center justify-between px-6 py-4 border-t border-slate-800/50 bg-slate-900/60">
-            <div className="text-sm text-slate-500">
+            <div className="text-sm text-slate-400">
               * Champs obligatoires
             </div>
             <div className="flex items-center gap-2">

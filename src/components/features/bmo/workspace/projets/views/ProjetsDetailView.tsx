@@ -41,7 +41,7 @@ export function ProjetsDetailView({ tabId, data }: Props) {
   }, [projetId]);
 
   if (loading) return <div className="animate-pulse space-y-4"><div className="h-32 rounded-xl bg-slate-100 dark:bg-slate-800" /><div className="h-64 rounded-xl bg-slate-100 dark:bg-slate-800" /></div>;
-  if (!projet) return <div className="text-center py-12 text-slate-500"><Building2 className="w-12 h-12 mx-auto mb-3 opacity-30" /><p>Projet non trouvé</p></div>;
+  if (!projet) return <div className="text-center py-12 text-slate-400"><Building2 className="w-12 h-12 mx-auto mb-3 opacity-30" /><p>Projet non trouvé</p></div>;
 
   const style = STATUS_STYLES[projet.status];
   const progressColor = projetsApiService.getProgressColor(projet.progress);
@@ -58,7 +58,7 @@ export function ProjetsDetailView({ tabId, data }: Props) {
               <span className="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 text-xs text-slate-600 dark:text-slate-400">{projet.bureau}</span>
             </div>
             <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">{projet.name}</h1>
-            <p className="text-slate-500 mt-1">Client: {projet.client}</p>
+            <p className="text-slate-400 mt-1">Client: {projet.client}</p>
           </div>
           <button className="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2">
             <Edit className="w-4 h-4" />Modifier
@@ -68,7 +68,7 @@ export function ProjetsDetailView({ tabId, data }: Props) {
         {/* Progress */}
         <div className="mt-6">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-slate-500">Avancement global</span>
+            <span className="text-sm text-slate-400">Avancement global</span>
             <span className="text-lg font-bold text-slate-900 dark:text-slate-100">{projet.progress}%</span>
           </div>
           <div className="h-3 rounded-full bg-slate-200 dark:bg-slate-700">
@@ -81,17 +81,17 @@ export function ProjetsDetailView({ tabId, data }: Props) {
           <div className="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-center">
             <DollarSign className="w-5 h-5 mx-auto mb-2 text-orange-500" />
             <p className="text-lg font-bold text-slate-900 dark:text-slate-100">{projet.budget}</p>
-            <p className="text-xs text-slate-500">Budget FCFA</p>
+            <p className="text-xs text-slate-400">Budget FCFA</p>
           </div>
           <div className="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-center">
             <TrendingUp className="w-5 h-5 mx-auto mb-2 text-amber-500" />
             <p className="text-lg font-bold text-slate-900 dark:text-slate-100">{projet.spent}</p>
-            <p className="text-xs text-slate-500">Dépensé FCFA</p>
+            <p className="text-xs text-slate-400">Dépensé FCFA</p>
           </div>
           <div className="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-center">
             <Users className="w-5 h-5 mx-auto mb-2 text-blue-500" />
             <p className="text-lg font-bold text-slate-900 dark:text-slate-100">{projet.team}</p>
-            <p className="text-xs text-slate-500">Agents</p>
+            <p className="text-xs text-slate-400">Agents</p>
           </div>
         </div>
       </div>
@@ -104,7 +104,7 @@ export function ProjetsDetailView({ tabId, data }: Props) {
           { id: 'equipe', label: 'Équipe', icon: Users },
           { id: 'risques', label: 'Risques', icon: AlertTriangle },
         ].map(({ id, label, icon: Icon }) => (
-          <button key={id} onClick={() => setActiveSection(id as typeof activeSection)} className={cn("flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors", activeSection === id ? "border-orange-500 text-orange-600 dark:text-orange-400" : "border-transparent text-slate-500 hover:text-slate-700")}>
+          <button key={id} onClick={() => setActiveSection(id as typeof activeSection)} className={cn("flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors", activeSection === id ? "border-orange-500 text-orange-600 dark:text-orange-400" : "border-transparent text-slate-400 hover:text-slate-700")}>
             <Icon className="w-4 h-4" />{label}
           </button>
         ))}
@@ -116,11 +116,11 @@ export function ProjetsDetailView({ tabId, data }: Props) {
           <div className="space-y-6">
             <div>
               <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-2">Description</h3>
-              <p className="text-slate-500">{projet.description || 'Aucune description disponible.'}</p>
+              <p className="text-slate-400">{projet.description || 'Aucune description disponible.'}</p>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div><p className="text-xs text-slate-500 mb-1">Bureau responsable</p><p className="font-medium text-slate-900 dark:text-slate-100">{projet.bureau}</p></div>
-              <div><p className="text-xs text-slate-500 mb-1">Client</p><p className="font-medium text-slate-900 dark:text-slate-100">{projet.client}</p></div>
+              <div><p className="text-xs text-slate-400 mb-1">Bureau responsable</p><p className="font-medium text-slate-900 dark:text-slate-100">{projet.bureau}</p></div>
+              <div><p className="text-xs text-slate-400 mb-1">Client</p><p className="font-medium text-slate-900 dark:text-slate-100">{projet.client}</p></div>
             </div>
           </div>
         )}
@@ -128,15 +128,15 @@ export function ProjetsDetailView({ tabId, data }: Props) {
           <div className="space-y-4">
             <div className="grid grid-cols-3 gap-4">
               <div className="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-                <p className="text-xs text-slate-500 mb-1">Budget total</p>
+                <p className="text-xs text-slate-400 mb-1">Budget total</p>
                 <p className="text-xl font-bold text-slate-900 dark:text-slate-100">{projet.budget} FCFA</p>
               </div>
               <div className="p-4 rounded-lg bg-amber-500/10">
-                <p className="text-xs text-slate-500 mb-1">Dépensé</p>
+                <p className="text-xs text-slate-400 mb-1">Dépensé</p>
                 <p className="text-xl font-bold text-amber-600">{projet.spent} FCFA</p>
               </div>
               <div className="p-4 rounded-lg bg-emerald-500/10">
-                <p className="text-xs text-slate-500 mb-1">Reste</p>
+                <p className="text-xs text-slate-400 mb-1">Reste</p>
                 <p className="text-xl font-bold text-emerald-600">
                   {projetsApiService.formatMontant(
                     parseFloat(projet.budget.replace(/[M,]/g, '')) * 1000000 -
@@ -148,13 +148,13 @@ export function ProjetsDetailView({ tabId, data }: Props) {
           </div>
         )}
         {activeSection === 'equipe' && (
-          <div className="text-center py-8 text-slate-500">
+          <div className="text-center py-8 text-slate-400">
             <Users className="w-12 h-12 mx-auto mb-3 opacity-30" />
             <p>{projet.team} agents affectés à ce projet</p>
           </div>
         )}
         {activeSection === 'risques' && (
-          <div className="text-center py-8 text-slate-500">
+          <div className="text-center py-8 text-slate-400">
             <AlertTriangle className="w-12 h-12 mx-auto mb-3 opacity-30" />
             <p>Analyse des risques en cours de développement</p>
           </div>
@@ -167,7 +167,7 @@ export function ProjetsDetailView({ tabId, data }: Props) {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="font-semibold text-red-600 dark:text-red-400">⚠️ Projet bloqué</h3>
-              <p className="text-sm text-slate-500">Ce projet nécessite une action de déblocage.</p>
+              <p className="text-sm text-slate-400">Ce projet nécessite une action de déblocage.</p>
             </div>
             <button className="px-6 py-2.5 rounded-lg bg-red-500 text-white font-medium hover:bg-red-600">
               Débloquer le projet

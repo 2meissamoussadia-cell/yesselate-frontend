@@ -155,7 +155,7 @@ export function RHBudgetManagerModal({ open, onClose }: Props) {
           <div className="p-4 rounded-xl bg-gradient-to-br from-blue-500/10 to-blue-500/5 border border-blue-500/20">
             <div className="flex items-center gap-2 mb-2">
               <Wallet className="w-5 h-5 text-blue-500" />
-              <span className="text-sm text-slate-500">Budget total</span>
+              <span className="text-sm text-slate-400">Budget total</span>
             </div>
             <p className="text-xl font-bold">{formatAmount(globalStats.totalBudget)}</p>
           </div>
@@ -163,16 +163,16 @@ export function RHBudgetManagerModal({ open, onClose }: Props) {
           <div className="p-4 rounded-xl bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20">
             <div className="flex items-center gap-2 mb-2">
               <TrendingDown className="w-5 h-5 text-emerald-500" />
-              <span className="text-sm text-slate-500">Consommé</span>
+              <span className="text-sm text-slate-400">Consommé</span>
             </div>
             <p className="text-xl font-bold">{formatAmount(globalStats.totalConsumed)}</p>
-            <p className="text-xs text-slate-500">{globalStats.consumedPercent.toFixed(1)}% du budget</p>
+            <p className="text-xs text-slate-400">{globalStats.consumedPercent.toFixed(1)}% du budget</p>
           </div>
           
           <div className="p-4 rounded-xl bg-gradient-to-br from-purple-500/10 to-purple-500/5 border border-purple-500/20">
             <div className="flex items-center gap-2 mb-2">
               <TrendingUp className="w-5 h-5 text-purple-500" />
-              <span className="text-sm text-slate-500">Restant</span>
+              <span className="text-sm text-slate-400">Restant</span>
             </div>
             <p className="text-xl font-bold">{formatAmount(globalStats.remaining)}</p>
           </div>
@@ -180,10 +180,10 @@ export function RHBudgetManagerModal({ open, onClose }: Props) {
           <div className="p-4 rounded-xl bg-gradient-to-br from-red-500/10 to-red-500/5 border border-red-500/20">
             <div className="flex items-center gap-2 mb-2">
               <AlertTriangle className="w-5 h-5 text-red-500" />
-              <span className="text-sm text-slate-500">Alertes</span>
+              <span className="text-sm text-slate-400">Alertes</span>
             </div>
             <p className="text-xl font-bold">{globalStats.criticalCount + globalStats.warningCount}</p>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-400">
               {globalStats.criticalCount} critique, {globalStats.warningCount} attention
             </p>
           </div>
@@ -201,7 +201,7 @@ export function RHBudgetManagerModal({ open, onClose }: Props) {
                     "px-3 py-1.5 rounded-lg text-sm font-medium transition-all",
                     filterBureau === bureau
                       ? "bg-white dark:bg-slate-700 shadow-sm"
-                      : "text-slate-500 hover:text-slate-700"
+                      : "text-slate-400 hover:text-slate-700"
                   )}
                 >
                   {bureau === 'all' ? 'Tous' : bureau}
@@ -250,7 +250,7 @@ export function RHBudgetManagerModal({ open, onClose }: Props) {
                           {statusConfig.label}
                         </Badge>
                       </div>
-                      <p className="text-sm text-slate-500 mt-1">
+                      <p className="text-sm text-slate-400 mt-1">
                         Année {budget.year} • Mis à jour {new Date(budget.lastUpdated).toLocaleDateString('fr-FR')}
                       </p>
                     </div>
@@ -268,7 +268,7 @@ export function RHBudgetManagerModal({ open, onClose }: Props) {
                   {/* Barre de progression globale */}
                   <div className="mb-4">
                     <div className="flex items-center justify-between text-sm mb-1">
-                      <span className="text-slate-500">Consommation globale</span>
+                      <span className="text-slate-400">Consommation globale</span>
                       <span className={cn("font-semibold", statusConfig.textColor)}>
                         {percentUsed.toFixed(1)}%
                       </span>
@@ -279,7 +279,7 @@ export function RHBudgetManagerModal({ open, onClose }: Props) {
                         style={{ width: `${Math.min(percentUsed, 100)}%` }}
                       />
                     </div>
-                    <div className="flex items-center justify-between text-xs mt-1 text-slate-500">
+                    <div className="flex items-center justify-between text-xs mt-1 text-slate-400">
                       <span>{formatAmount(budget.consumed)}</span>
                       <span>{formatAmount(budget.total)}</span>
                     </div>
@@ -301,7 +301,7 @@ export function RHBudgetManagerModal({ open, onClose }: Props) {
                                 style={{ width: `${Math.min(catPercent, 100)}%` }}
                               />
                             </div>
-                            <p className="text-[10px] text-slate-500 mt-1">{catPercent.toFixed(0)}%</p>
+                            <p className="text-[10px] text-slate-400 mt-1">{catPercent.toFixed(0)}%</p>
                           </div>
                         );
                       }
@@ -344,15 +344,15 @@ export function RHBudgetManagerModal({ open, onClose }: Props) {
                       </div>
                       <div className="space-y-1 text-xs">
                         <div className="flex justify-between">
-                          <span className="text-slate-500">Alloué</span>
+                          <span className="text-slate-400">Alloué</span>
                           <span>{formatAmount(allocated)}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-slate-500">Consommé</span>
+                          <span className="text-slate-400">Consommé</span>
                           <span>{formatAmount(consumed)}</span>
                         </div>
                         <div className="flex justify-between font-medium">
-                          <span className="text-slate-500">Restant</span>
+                          <span className="text-slate-400">Restant</span>
                           <span className={remaining < 0 ? 'text-red-500' : 'text-emerald-500'}>
                             {formatAmount(remaining)}
                           </span>

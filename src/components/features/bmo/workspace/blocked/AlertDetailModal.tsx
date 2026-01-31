@@ -202,11 +202,11 @@ export function AlertDetailModal({ open, onClose, alertData }: AlertDetailModalP
                 </div>
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <span className="text-slate-500">Retard</span>
+                    <span className="text-slate-400">Retard</span>
                     <p className="font-semibold mt-1">{alertData.daysOverdue} jours</p>
                   </div>
                   <div>
-                    <span className="text-slate-500">SLA cible</span>
+                    <span className="text-slate-400">SLA cible</span>
                     <p className="font-semibold mt-1">{alertData.slaTarget} heures</p>
                   </div>
                 </div>
@@ -215,7 +215,7 @@ export function AlertDetailModal({ open, onClose, alertData }: AlertDetailModalP
               {/* Dossier Info */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <div className="flex items-center gap-2 text-slate-500 mb-2">
+                  <div className="flex items-center gap-2 text-slate-400 mb-2">
                     <Building2 className="w-4 h-4" />
                     <span className="text-xs">Bureau</span>
                   </div>
@@ -223,7 +223,7 @@ export function AlertDetailModal({ open, onClose, alertData }: AlertDetailModalP
                 </div>
 
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <div className="flex items-center gap-2 text-slate-500 mb-2">
+                  <div className="flex items-center gap-2 text-slate-400 mb-2">
                     <User className="w-4 h-4" />
                     <span className="text-xs">Assigné à</span>
                   </div>
@@ -231,7 +231,7 @@ export function AlertDetailModal({ open, onClose, alertData }: AlertDetailModalP
                 </div>
 
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <div className="flex items-center gap-2 text-slate-500 mb-2">
+                  <div className="flex items-center gap-2 text-slate-400 mb-2">
                     <AlertTriangle className="w-4 h-4" />
                     <span className="text-xs">Impact</span>
                   </div>
@@ -247,7 +247,7 @@ export function AlertDetailModal({ open, onClose, alertData }: AlertDetailModalP
                 </div>
 
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <div className="flex items-center gap-2 text-slate-500 mb-2">
+                  <div className="flex items-center gap-2 text-slate-400 mb-2">
                     <Calendar className="w-4 h-4" />
                     <span className="text-xs">Créé le</span>
                   </div>
@@ -294,7 +294,7 @@ export function AlertDetailModal({ open, onClose, alertData }: AlertDetailModalP
                   <div className="flex-1 pb-6">
                     <div className="flex items-center justify-between mb-1">
                       <span className="font-medium text-slate-200">{event.actorName}</span>
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs text-slate-400">
                         {new Date(event.timestamp).toLocaleString('fr-FR')}
                       </span>
                     </div>

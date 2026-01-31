@@ -115,7 +115,7 @@ export function SubstitutionStatsModal({ open, onClose }: StatsModalProps) {
                       <Users className="h-5 w-5 text-blue-400" />
                     </div>
                     <div className="text-3xl font-bold text-white">{stats.total}</div>
-                    <div className="text-xs text-slate-500 mt-1">substitutions</div>
+                    <div className="text-xs text-slate-400 mt-1">substitutions</div>
                   </div>
 
                   <div className="p-6 bg-slate-800 rounded-lg border border-slate-700">
@@ -135,7 +135,7 @@ export function SubstitutionStatsModal({ open, onClose }: StatsModalProps) {
                       <Clock className="h-5 w-5 text-orange-400" />
                     </div>
                     <div className="text-3xl font-bold text-orange-400">{stats.avgDelay.toFixed(1)}j</div>
-                    <div className="text-xs text-slate-500 mt-1">jours</div>
+                    <div className="text-xs text-slate-400 mt-1">jours</div>
                   </div>
 
                   <div className="p-6 bg-slate-800 rounded-lg border border-slate-700">
@@ -155,28 +155,28 @@ export function SubstitutionStatsModal({ open, onClose }: StatsModalProps) {
                     <div className="text-center p-4 bg-slate-900 rounded-lg">
                       <div className="text-2xl font-bold text-green-400">{stats.active}</div>
                       <div className="text-sm text-slate-400 mt-1">Actives</div>
-                      <div className="text-xs text-slate-500 mt-1">
+                      <div className="text-xs text-slate-400 mt-1">
                         {getPercentage(stats.active, stats.total)}%
                       </div>
                     </div>
                     <div className="text-center p-4 bg-slate-900 rounded-lg">
                       <div className="text-2xl font-bold text-yellow-400">{stats.pending}</div>
                       <div className="text-sm text-slate-400 mt-1">En attente</div>
-                      <div className="text-xs text-slate-500 mt-1">
+                      <div className="text-xs text-slate-400 mt-1">
                         {getPercentage(stats.pending, stats.total)}%
                       </div>
                     </div>
                     <div className="text-center p-4 bg-slate-900 rounded-lg">
                       <div className="text-2xl font-bold text-blue-400">{stats.completed}</div>
                       <div className="text-sm text-slate-400 mt-1">Terminées</div>
-                      <div className="text-xs text-slate-500 mt-1">
+                      <div className="text-xs text-slate-400 mt-1">
                         {getPercentage(stats.completed, stats.total)}%
                       </div>
                     </div>
                     <div className="text-center p-4 bg-slate-900 rounded-lg">
                       <div className="text-2xl font-bold text-red-400">{stats.expired}</div>
                       <div className="text-sm text-slate-400 mt-1">Expirées</div>
-                      <div className="text-xs text-slate-500 mt-1">
+                      <div className="text-xs text-slate-400 mt-1">
                         {getPercentage(stats.expired, stats.total)}%
                       </div>
                     </div>
@@ -224,11 +224,11 @@ export function SubstitutionStatsModal({ open, onClose }: StatsModalProps) {
                           <div className="flex items-center justify-between">
                             <div>
                               <div className="font-semibold text-white">{bureau}</div>
-                              <div className="text-xs text-slate-500">Bureau</div>
+                              <div className="text-xs text-slate-400">Bureau</div>
                             </div>
                             <div className="text-right">
                               <div className="text-2xl font-bold text-blue-400">{count}</div>
-                              <div className="text-xs text-slate-500">
+                              <div className="text-xs text-slate-400">
                                 {getPercentage(count as number, stats.total)}%
                               </div>
                             </div>
@@ -303,7 +303,7 @@ export function SubstitutionStatsModal({ open, onClose }: StatsModalProps) {
 
         {/* Footer */}
         <div className="flex items-center justify-between pt-4 border-t border-slate-800">
-          <div className="text-sm text-slate-500">
+          <div className="text-sm text-slate-400">
             {stats && `Dernière mise à jour: ${new Date(stats.ts).toLocaleString('fr-FR')}`}
           </div>
           <Button variant="outline" onClick={onClose}>

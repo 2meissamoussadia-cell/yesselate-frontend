@@ -35,7 +35,7 @@ export function ValidationBCNotifications() {
     <FluentModal open={open} title="Notifications" onClose={() => setOpen(false)}>
       <div className="space-y-3">
         {activeNotifications.length === 0 ? (
-          <div className="text-center py-8 text-slate-500">
+          <div className="text-center py-8 text-slate-400">
             <Bell className="w-12 h-12 mx-auto mb-2 opacity-30" />
             <p>Aucune notification</p>
           </div>
@@ -56,7 +56,7 @@ export function ValidationBCNotifications() {
 
               <div className="flex-1 min-w-0">
                 <div className="text-sm font-medium">{notif.message}</div>
-                <div className="text-xs text-slate-500 mt-1">{notif.createdAt}</div>
+                <div className="text-xs text-slate-400 mt-1">{notif.createdAt}</div>
               </div>
 
               <button

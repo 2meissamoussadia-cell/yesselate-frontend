@@ -184,7 +184,7 @@ export function BlockedBureauView({ tabId, data }: Props) {
             <Building2 className="w-5 h-5 text-slate-400" />
             Vue par Bureau
           </h2>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-sm text-slate-400 mt-1">
             Répartition des blocages par bureau responsable
           </p>
         </div>
@@ -205,7 +205,7 @@ export function BlockedBureauView({ tabId, data }: Props) {
         <div className="p-4 rounded-xl border bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-2 mb-2">
             <Building2 className="w-4 h-4 text-slate-400" />
-            <span className="text-xs text-slate-500">Bureaux</span>
+            <span className="text-xs text-slate-400">Bureaux</span>
           </div>
           <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">{totalStats.bureaux}</p>
         </div>
@@ -213,7 +213,7 @@ export function BlockedBureauView({ tabId, data }: Props) {
         <div className="p-4 rounded-xl border bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-2 mb-2">
             <AlertCircle className="w-4 h-4 text-red-500" />
-            <span className="text-xs text-slate-500">Critiques</span>
+            <span className="text-xs text-slate-400">Critiques</span>
           </div>
           <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">{totalStats.critical}</p>
         </div>
@@ -221,15 +221,15 @@ export function BlockedBureauView({ tabId, data }: Props) {
         <div className="p-4 rounded-xl border bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-2 mb-2">
             <Clock className="w-4 h-4 text-orange-500" />
-            <span className="text-xs text-slate-500">Délai moyen</span>
+            <span className="text-xs text-slate-400">Délai moyen</span>
           </div>
-          <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">{totalStats.avgDelay}<span className="text-base font-normal text-slate-500">j</span></p>
+          <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">{totalStats.avgDelay}<span className="text-base font-normal text-slate-400">j</span></p>
         </div>
 
         <div className="p-4 rounded-xl border bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-2 mb-2">
             <BarChart3 className="w-4 h-4 text-slate-400" />
-            <span className="text-xs text-slate-500">Total</span>
+            <span className="text-xs text-slate-400">Total</span>
           </div>
           <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">{totalStats.total}</p>
         </div>
@@ -282,17 +282,17 @@ export function BlockedBureauView({ tabId, data }: Props) {
                     {/* Stats inline */}
                     <div className="flex items-center gap-4 text-sm">
                       <div className="text-center">
-                        <p className="text-xs text-slate-500">Total</p>
+                        <p className="text-xs text-slate-400">Total</p>
                         <p className="text-lg font-bold text-slate-900 dark:text-slate-100">{stats.total}</p>
                       </div>
                       {stats.critical > 0 && (
                         <div className="text-center">
-                          <p className="text-xs text-slate-500">Critiques</p>
+                          <p className="text-xs text-slate-400">Critiques</p>
                           <p className="text-lg font-bold text-red-600 dark:text-red-400">{stats.critical}</p>
                         </div>
                       )}
                       <div className="text-center">
-                        <p className="text-xs text-slate-500">Délai moy.</p>
+                        <p className="text-xs text-slate-400">Délai moy.</p>
                         <p className="text-lg font-bold text-orange-600 dark:text-orange-400">{stats.avgDelay}j</p>
                       </div>
                     </div>
@@ -311,23 +311,23 @@ export function BlockedBureauView({ tabId, data }: Props) {
                   {/* Stats détaillées */}
                   <div className="grid grid-cols-5 gap-4 mb-4">
                     <div className="p-3 rounded-lg bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800">
-                      <p className="text-xs text-slate-500 mb-1">Total</p>
+                      <p className="text-xs text-slate-400 mb-1">Total</p>
                       <p className="text-xl font-bold text-slate-900 dark:text-slate-100">{stats.total}</p>
                     </div>
                     <div className="p-3 rounded-lg bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800">
-                      <p className="text-xs text-slate-500 mb-1">Critiques</p>
+                      <p className="text-xs text-slate-400 mb-1">Critiques</p>
                       <p className="text-xl font-bold text-slate-900 dark:text-slate-100">{stats.critical}</p>
                     </div>
                     <div className="p-3 rounded-lg bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800">
-                      <p className="text-xs text-slate-500 mb-1">Élevé</p>
+                      <p className="text-xs text-slate-400 mb-1">Élevé</p>
                       <p className="text-xl font-bold text-slate-900 dark:text-slate-100">{stats.high}</p>
                     </div>
                     <div className="p-3 rounded-lg bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800">
-                      <p className="text-xs text-slate-500 mb-1">Moyen</p>
+                      <p className="text-xs text-slate-400 mb-1">Moyen</p>
                       <p className="text-xl font-bold text-slate-900 dark:text-slate-100">{stats.medium}</p>
                     </div>
                     <div className="p-3 rounded-lg bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800">
-                      <p className="text-xs text-slate-500 mb-1">Montant</p>
+                      <p className="text-xs text-slate-400 mb-1">Montant</p>
                       <p className="text-sm font-bold text-slate-900 dark:text-slate-100">
                         {formatAmount(stats.totalAmount)} FCFA
                       </p>
@@ -346,7 +346,7 @@ export function BlockedBureauView({ tabId, data }: Props) {
 
                   {/* Liste des dossiers */}
                   <div className="space-y-2">
-                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-2">
+                    <p className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
                       Dossiers ({stats.dossiers.length})
                     </p>
                     {stats.dossiers.slice(0, 5).map(dossier => (
@@ -374,7 +374,7 @@ export function BlockedBureauView({ tabId, data }: Props) {
                             {dossier.subject}
                           </p>
                         </div>
-                        <div className="flex items-center gap-2 text-xs text-slate-500">
+                        <div className="flex items-center gap-2 text-xs text-slate-400">
                           <Clock className="w-3 h-3" />
                           J+{dossier.delay}
                         </div>
@@ -404,7 +404,7 @@ export function BlockedBureauView({ tabId, data }: Props) {
 
       {/* Empty state */}
       {sortedBureaux.length === 0 && (
-        <div className="text-center py-12 text-slate-500">
+        <div className="text-center py-12 text-slate-400">
           <Building2 className="w-12 h-12 mx-auto mb-3 opacity-30" />
           <p className="font-medium">Aucun blocage par bureau</p>
         </div>

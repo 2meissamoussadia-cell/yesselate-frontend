@@ -65,7 +65,7 @@ export function ValidationBCStatsModal() {
               <div className="p-4 rounded-xl border border-blue-200/50 bg-blue-50/50 dark:border-blue-800/30 dark:bg-blue-900/20">
                 <div className="flex items-center gap-2 mb-2">
                   <PieChart className="w-4 h-4 text-blue-500" />
-                  <span className="text-xs text-slate-500">Total</span>
+                  <span className="text-xs text-slate-400">Total</span>
                 </div>
                 <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{stats.total}</div>
               </div>
@@ -73,7 +73,7 @@ export function ValidationBCStatsModal() {
               <div className="p-4 rounded-xl border border-emerald-200/50 bg-emerald-50/50 dark:border-emerald-800/30 dark:bg-emerald-900/20">
                 <div className="flex items-center gap-2 mb-2">
                   <BarChart2 className="w-4 h-4 text-emerald-500" />
-                  <span className="text-xs text-slate-500">Validés</span>
+                  <span className="text-xs text-slate-400">Validés</span>
                 </div>
                 <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{stats.validated}</div>
               </div>
@@ -81,7 +81,7 @@ export function ValidationBCStatsModal() {
               <div className="p-4 rounded-xl border border-amber-200/50 bg-amber-50/50 dark:border-amber-800/30 dark:bg-amber-900/20">
                 <div className="flex items-center gap-2 mb-2">
                   <TrendingUp className="w-4 h-4 text-amber-500" />
-                  <span className="text-xs text-slate-500">En attente</span>
+                  <span className="text-xs text-slate-400">En attente</span>
                 </div>
                 <div className="text-2xl font-bold text-amber-600 dark:text-amber-400">{stats.pending}</div>
               </div>
@@ -89,12 +89,12 @@ export function ValidationBCStatsModal() {
 
             <div className="grid grid-cols-2 gap-3">
               <div className="p-4 rounded-xl border border-red-200/50 bg-red-50/50 dark:border-red-800/30 dark:bg-red-900/20">
-                <div className="text-xs text-slate-500 mb-1">Rejetés</div>
+                <div className="text-xs text-slate-400 mb-1">Rejetés</div>
                 <div className="text-xl font-bold text-red-600 dark:text-red-400">{stats.rejected}</div>
               </div>
 
               <div className="p-4 rounded-xl border border-orange-200/50 bg-orange-50/50 dark:border-orange-800/30 dark:bg-orange-900/20">
-                <div className="text-xs text-slate-500 mb-1">Anomalies</div>
+                <div className="text-xs text-slate-400 mb-1">Anomalies</div>
                 <div className="text-xl font-bold text-orange-600 dark:text-orange-400">{stats.anomalies}</div>
               </div>
             </div>

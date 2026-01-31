@@ -27,7 +27,7 @@ export function RHWorkspaceContent() {
           </div>
           
           <h2 className="text-xl font-semibold mb-2">Console Demandes RH</h2>
-          <p className="text-slate-500 mb-6 max-w-md mx-auto">
+          <p className="text-slate-400 mb-6 max-w-md mx-auto">
             Gérez les congés, dépenses, déplacements et avances. Traçabilité complète pour audit.
           </p>
           
@@ -79,7 +79,7 @@ export function RHWorkspaceContent() {
 
   return (
     <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-6 dark:border-slate-800 dark:bg-[#1f1f1f]/70">
-      <div className="text-center text-slate-500">
+      <div className="text-center text-slate-400">
         Vue non supportée : {tab.type}
       </div>
     </div>

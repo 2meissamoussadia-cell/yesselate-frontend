@@ -236,7 +236,7 @@ function getPriorityColor(priority?: string): string {
 function getStatusBadge(status?: string): { label: string; bg: string; text: string } {
   switch (status?.toLowerCase()) {
     case 'completed': return { label: 'Terminé', bg: 'bg-emerald-100 dark:bg-emerald-900/30', text: 'text-emerald-700 dark:text-emerald-300' };
-    case 'cancelled': return { label: 'Annulé', bg: 'bg-slate-100 dark:bg-slate-800', text: 'text-slate-500' };
+    case 'cancelled': return { label: 'Annulé', bg: 'bg-slate-100 dark:bg-slate-800', text: 'text-slate-400' };
     case 'in_progress': return { label: 'En cours', bg: 'bg-blue-100 dark:bg-blue-900/30', text: 'text-blue-700 dark:text-blue-300' };
     default: return { label: 'Planifié', bg: 'bg-slate-100 dark:bg-slate-800', text: 'text-slate-600 dark:text-slate-400' };
   }
@@ -805,7 +805,7 @@ export function CalendarMonthView({ tabId }: CalendarMonthViewProps) {
         {pinnedDates.length > 0 && (
           <div className="px-4 py-2 border-t border-slate-200 dark:border-slate-700 flex items-center gap-2 overflow-x-auto">
             <Star className="w-4 h-4 text-amber-500 flex-shrink-0" />
-            <span className="text-xs text-slate-500 flex-shrink-0">Épinglées:</span>
+            <span className="text-xs text-slate-400 flex-shrink-0">Épinglées:</span>
             {pinnedDates.map(dateStr => {
               const d = new Date(dateStr);
               return (
@@ -839,7 +839,7 @@ export function CalendarMonthView({ tabId }: CalendarMonthViewProps) {
             <div className="flex-1 flex items-center justify-center">
               <div className="flex flex-col items-center gap-3">
                 <RefreshCw className="w-8 h-8 text-blue-500 animate-spin" />
-                <span className="text-slate-500">Chargement du calendrier...</span>
+                <span className="text-slate-400">Chargement du calendrier...</span>
               </div>
             </div>
           ) : error ? (
@@ -877,7 +877,7 @@ export function CalendarMonthView({ tabId }: CalendarMonthViewProps) {
                             {event.hasConflict && <AlertTriangle className="w-4 h-4 text-rose-500" />}
                             {event.isOverdue && <Clock className="w-4 h-4 text-amber-500" />}
                           </div>
-                          <div className="flex flex-wrap items-center gap-3 text-sm text-slate-500">
+                          <div className="flex flex-wrap items-center gap-3 text-sm text-slate-400">
                             <span className="flex items-center gap-1">
                               <Calendar className="w-3.5 h-3.5" />
                               {event.start.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })}
@@ -950,7 +950,7 @@ export function CalendarMonthView({ tabId }: CalendarMonthViewProps) {
                             ? "bg-indigo-500 text-white"
                             : day.isCurrentMonth
                             ? "text-slate-700 dark:text-slate-200"
-                            : "text-slate-400 dark:text-slate-500"
+                            : "text-slate-400 dark:text-slate-400"
                         )}
                       >
                         {day.date.getDate()}
@@ -1006,7 +1006,7 @@ export function CalendarMonthView({ tabId }: CalendarMonthViewProps) {
                         </button>
                       ))}
                       {day.events.length > (isCompact ? 2 : 3) && (
-                        <div className="text-[10px] sm:text-xs text-slate-500 pl-1">
+                        <div className="text-[10px] sm:text-xs text-slate-400 pl-1">
                           +{day.events.length - (isCompact ? 2 : 3)} autres
                         </div>
                       )}
@@ -1029,7 +1029,7 @@ export function CalendarMonthView({ tabId }: CalendarMonthViewProps) {
                 <h3 className="font-semibold text-slate-800 dark:text-slate-100">
                   {formatDateFull(selectedDate)}
                 </h3>
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-slate-400">
                   {selectedDayEvents.length} événement{selectedDayEvents.length !== 1 ? 's' : ''}
                 </p>
               </div>
@@ -1082,7 +1082,7 @@ export function CalendarMonthView({ tabId }: CalendarMonthViewProps) {
               {selectedDayEvents.length === 0 ? (
                 <div className="text-center py-8">
                   <Calendar className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                  <p className="text-slate-500 mb-4">Aucun événement ce jour</p>
+                  <p className="text-slate-400 mb-4">Aucun événement ce jour</p>
                   <FluentButton size="sm" variant="primary" onClick={() => handleCreateEvent(selectedDate)}>
                     <Plus className="w-4 h-4 mr-2" />
                     Créer un événement
@@ -1123,7 +1123,7 @@ export function CalendarMonthView({ tabId }: CalendarMonthViewProps) {
                               <span className="font-medium text-sm truncate">{event.title}</span>
                             </div>
 
-                            <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 mb-2">
+                            <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400 mb-2">
                               <span className="flex items-center gap-1">
                                 <Clock className="w-3 h-3" />
                                 {formatTime(event.start)} - {formatTime(event.end)}
@@ -1190,7 +1190,7 @@ export function CalendarMonthView({ tabId }: CalendarMonthViewProps) {
             </div>
 
             {/* Panel footer */}
-            <div className="flex-shrink-0 p-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
+            <div className="flex-shrink-0 p-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-400">
               <span>Double-clic pour créer</span>
               <span>
                 {lastRefresh && `MAJ ${lastRefresh.toLocaleTimeString('fr-FR')}`}
@@ -1204,7 +1204,7 @@ export function CalendarMonthView({ tabId }: CalendarMonthViewProps) {
           FOOTER
       ============================================ */}
       <div className="flex-shrink-0 border-t border-slate-200 dark:border-slate-800 px-4 py-2 bg-white dark:bg-slate-900 flex items-center justify-between">
-        <div className="flex items-center gap-4 text-xs text-slate-500 overflow-x-auto">
+        <div className="flex items-center gap-4 text-xs text-slate-400 overflow-x-auto">
           {CATEGORIES.slice(1).map(cat => (
             <span key={cat.id} className="flex items-center gap-1 flex-shrink-0">
               <span className={cn("w-2.5 h-2.5 rounded", cat.color)} />
@@ -1236,7 +1236,7 @@ export function CalendarMonthView({ tabId }: CalendarMonthViewProps) {
         onClose={() => setQuickCreateOpen(false)}
       >
         <div className="space-y-4">
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-400">
             Créez rapidement un événement pour cette date ou ouvrez l&apos;assistant complet.
           </p>
 
@@ -1288,7 +1288,7 @@ export function CalendarMonthView({ tabId }: CalendarMonthViewProps) {
               <div className="flex-1">
                 <h3 className="font-semibold text-lg">{selectedEventDetail.title}</h3>
                 {selectedEventDetail.description && (
-                  <p className="text-sm text-slate-500 mt-1">{selectedEventDetail.description}</p>
+                  <p className="text-sm text-slate-400 mt-1">{selectedEventDetail.description}</p>
                 )}
               </div>
             </div>
@@ -1390,7 +1390,7 @@ export function CalendarMonthView({ tabId }: CalendarMonthViewProps) {
         onClose={() => setExportOpen(false)}
       >
         <div className="space-y-4">
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-400">
             Exportez les événements du mois de {MONTHS_FR[currentDate.getMonth()]} {currentDate.getFullYear()}.
           </p>
 
@@ -1403,7 +1403,7 @@ export function CalendarMonthView({ tabId }: CalendarMonthViewProps) {
               }}
             >
               <div className="font-medium">iCal (.ics)</div>
-              <div className="text-xs text-slate-500 mt-1">Outlook, Google Calendar</div>
+              <div className="text-xs text-slate-400 mt-1">Outlook, Google Calendar</div>
             </button>
             <button
               className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-blue-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left"
@@ -1413,7 +1413,7 @@ export function CalendarMonthView({ tabId }: CalendarMonthViewProps) {
               }}
             >
               <div className="font-medium">CSV</div>
-              <div className="text-xs text-slate-500 mt-1">Excel, Sheets</div>
+              <div className="text-xs text-slate-400 mt-1">Excel, Sheets</div>
             </button>
             <button
               className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-blue-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left"
@@ -1423,7 +1423,7 @@ export function CalendarMonthView({ tabId }: CalendarMonthViewProps) {
               }}
             >
               <div className="font-medium">PDF</div>
-              <div className="text-xs text-slate-500 mt-1">Document imprimable</div>
+              <div className="text-xs text-slate-400 mt-1">Document imprimable</div>
             </button>
             <button
               className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-blue-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left"
@@ -1433,7 +1433,7 @@ export function CalendarMonthView({ tabId }: CalendarMonthViewProps) {
               }}
             >
               <div className="font-medium">JSON</div>
-              <div className="text-xs text-slate-500 mt-1">Données brutes</div>
+              <div className="text-xs text-slate-400 mt-1">Données brutes</div>
             </button>
           </div>
 

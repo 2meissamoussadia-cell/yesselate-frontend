@@ -31,7 +31,7 @@ export function ClientsStatsModal({ open, onClose }: Props) {
         <div className="p-6 border-b border-slate-200/70 dark:border-slate-800 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-xl bg-cyan-500/10"><BarChart3 className="w-5 h-5 text-cyan-500" /></div>
-            <div><h2 className="text-lg font-bold">Statistiques Clients</h2><p className="text-sm text-slate-500">Vue d'ensemble du portefeuille clients</p></div>
+            <div><h2 className="text-lg font-bold">Statistiques Clients</h2><p className="text-sm text-slate-400">Vue d'ensemble du portefeuille clients</p></div>
           </div>
           <button onClick={onClose} className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"><X className="w-5 h-5" /></button>
         </div>
@@ -45,22 +45,22 @@ export function ClientsStatsModal({ open, onClose }: Props) {
                 <div className="p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-center">
                   <Users className="w-6 h-6 mx-auto mb-2 text-cyan-500" />
                   <p className="text-3xl font-bold text-cyan-600">{stats.total}</p>
-                  <p className="text-sm text-slate-500">Total</p>
+                  <p className="text-sm text-slate-400">Total</p>
                 </div>
                 <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-center">
                   <CheckCircle className="w-6 h-6 mx-auto mb-2 text-emerald-500" />
                   <p className="text-3xl font-bold text-emerald-600">{stats.active}</p>
-                  <p className="text-sm text-slate-500">Actifs</p>
+                  <p className="text-sm text-slate-400">Actifs</p>
                 </div>
                 <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-center">
                   <AlertTriangle className="w-6 h-6 mx-auto mb-2 text-red-500" />
                   <p className="text-3xl font-bold text-red-600">{stats.litige}</p>
-                  <p className="text-sm text-slate-500">En litige</p>
+                  <p className="text-sm text-slate-400">En litige</p>
                 </div>
                 <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20 text-center">
                   <UserPlus className="w-6 h-6 mx-auto mb-2 text-blue-500" />
                   <p className="text-3xl font-bold text-blue-600">{stats.prospect}</p>
-                  <p className="text-sm text-slate-500">Prospects</p>
+                  <p className="text-sm text-slate-400">Prospects</p>
                 </div>
               </div>
 
@@ -68,12 +68,12 @@ export function ClientsStatsModal({ open, onClose }: Props) {
                 <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-center">
                   <DollarSign className="w-6 h-6 mx-auto mb-2 text-emerald-500" />
                   <p className="text-2xl font-bold text-emerald-600">{clientsApiService.formatMontant(stats.chiffreAffairesTotal)} FCFA</p>
-                  <p className="text-sm text-slate-500">Chiffre d'affaires total</p>
+                  <p className="text-sm text-slate-400">Chiffre d'affaires total</p>
                 </div>
                 <div className="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-center">
                   <Building2 className="w-6 h-6 mx-auto mb-2 text-indigo-500" />
                   <p className="text-2xl font-bold text-indigo-600">{stats.projetsEnCours} / {stats.projetsTotal}</p>
-                  <p className="text-sm text-slate-500">Projets en cours / Total</p>
+                  <p className="text-sm text-slate-400">Projets en cours / Total</p>
                 </div>
               </div>
 

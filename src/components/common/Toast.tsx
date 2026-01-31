@@ -223,7 +223,7 @@ function ToastItem({ toast, onClose }: ToastItemProps) {
           {/* Close button */}
           <button
             onClick={() => onClose(toast.id)}
-            className="flex-shrink-0 p-1 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 transition-colors"
+            className="flex-shrink-0 p-1 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-400 dark:text-slate-400 transition-colors"
           >
             <X className="w-4 h-4" />
           </button>

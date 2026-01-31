@@ -58,7 +58,7 @@ export function ValidationHeader({
             variant="ghost"
             size="sm"
             onClick={goBack}
-            className="h-8 w-8 p-0 text-slate-500 hover:text-slate-300"
+            className="h-8 w-8 p-0 text-slate-400 hover:text-slate-300"
             title="Retour (Alt+←)"
           >
             <ChevronLeft className="h-4 w-4" />
@@ -92,11 +92,11 @@ export function ValidationHeader({
           variant="ghost"
           size="sm"
           onClick={onSearch}
-          className="h-8 px-3 text-slate-500 hover:text-slate-300 hover:bg-slate-800/50"
+          className="h-8 px-3 text-slate-400 hover:text-slate-300 hover:bg-slate-800/50"
         >
           <Search className="h-4 w-4 mr-2" />
           <span className="text-xs hidden sm:inline">Rechercher</span>
-          <kbd className="ml-2 text-xs bg-slate-800 text-slate-500 px-1.5 py-0.5 rounded hidden sm:inline">
+          <kbd className="ml-2 text-xs bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded hidden sm:inline">
             ⌘K
           </kbd>
         </Button>
@@ -107,7 +107,7 @@ export function ValidationHeader({
         <Button
           variant="ghost"
           size="sm"
-          className="h-8 w-8 p-0 relative text-slate-500 hover:text-slate-300"
+          className="h-8 w-8 p-0 relative text-slate-400 hover:text-slate-300"
           title="Notifications"
         >
           <Bell className="h-4 w-4" />
@@ -122,7 +122,7 @@ export function ValidationHeader({
         <Button
           variant="ghost"
           size="sm"
-          className="h-8 w-8 p-0 text-slate-500 hover:text-slate-300"
+          className="h-8 w-8 p-0 text-slate-400 hover:text-slate-300"
         >
           <MoreHorizontal className="h-4 w-4" />
         </Button>

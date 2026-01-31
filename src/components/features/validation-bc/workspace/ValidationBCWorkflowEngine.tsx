@@ -242,7 +242,7 @@ export function ValidationBCWorkflowEngine({ open, onClose, documentId, document
                           </span>
                         )}
                       </div>
-                      <div className="flex items-center gap-3 mt-1 text-xs text-slate-500">
+                      <div className="flex items-center gap-3 mt-1 text-xs text-slate-400">
                         <span className="flex items-center gap-1">
                           <User className="w-3 h-3" />
                           {step.role}
@@ -304,7 +304,7 @@ export function ValidationBCWorkflowEngine({ open, onClose, documentId, document
             </div>
 
             {/* Légende */}
-            <div className="flex items-center gap-4 pt-4 border-t border-slate-200 dark:border-slate-700 text-xs text-slate-500">
+            <div className="flex items-center gap-4 pt-4 border-t border-slate-200 dark:border-slate-700 text-xs text-slate-400">
               <div className="flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
                 <span>Validé</span>

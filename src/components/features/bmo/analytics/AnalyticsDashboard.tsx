@@ -128,7 +128,7 @@ export function AnalyticsDashboard({
               ~{monthlyAverages.demandes}/mois
             </p>
             {previousPeriod && (
-              <p className="text-[10px] text-slate-500 mt-1">
+              <p className="text-[10px] text-slate-400 mt-1">
                 Période précédente: {previousPeriod.demandes.toLocaleString()}
               </p>
             )}
@@ -158,7 +158,7 @@ export function AnalyticsDashboard({
               {((yearlyTotals.validations / yearlyTotals.demandes) * 100).toFixed(1)}% taux
             </p>
             {previousPeriod && (
-              <p className="text-[10px] text-slate-500 mt-1">
+              <p className="text-[10px] text-slate-400 mt-1">
                 Période précédente: {previousPeriod.validations.toLocaleString()}
               </p>
             )}
@@ -188,7 +188,7 @@ export function AnalyticsDashboard({
               {((yearlyTotals.rejets / yearlyTotals.demandes) * 100).toFixed(1)}% taux
             </p>
             {previousPeriod && (
-              <p className="text-[10px] text-slate-500 mt-1">
+              <p className="text-[10px] text-slate-400 mt-1">
                 Période précédente: {previousPeriod.rejets.toLocaleString()}
               </p>
             )}
@@ -214,7 +214,7 @@ export function AnalyticsDashboard({
             <p className="text-xs text-slate-400">
               {yearlyTotals.budget.toFixed(1)} Mds FCFA
             </p>
-            <p className="text-[10px] text-slate-500 mt-1">
+            <p className="text-[10px] text-slate-400 mt-1">
               ~{monthlyAverages.budget} Mds/mois
             </p>
           </CardContent>

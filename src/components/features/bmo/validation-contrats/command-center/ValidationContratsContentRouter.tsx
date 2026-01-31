@@ -412,17 +412,17 @@ function FinancialContent({ subCategory }: { subCategory: string | null }) {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-slate-800/40 rounded-lg p-6 border border-slate-700/50">
-          <p className="text-xs text-slate-500 mb-2">Montant total</p>
+          <p className="text-xs text-slate-400 mb-2">Montant total</p>
           <p className="text-2xl font-bold text-slate-200">245M FCFA</p>
           <p className="text-xs text-emerald-400 mt-1">+12M ce mois</p>
         </div>
         <div className="bg-slate-800/40 rounded-lg p-6 border border-slate-700/50">
-          <p className="text-xs text-slate-500 mb-2">Montant moyen</p>
+          <p className="text-xs text-slate-400 mb-2">Montant moyen</p>
           <p className="text-2xl font-bold text-slate-200">3.4M FCFA</p>
-          <p className="text-xs text-slate-500 mt-1">par contrat</p>
+          <p className="text-xs text-slate-400 mt-1">par contrat</p>
         </div>
         <div className="bg-slate-800/40 rounded-lg p-6 border border-slate-700/50">
-          <p className="text-xs text-slate-500 mb-2">En attente</p>
+          <p className="text-xs text-slate-400 mb-2">En attente</p>
           <p className="text-2xl font-bold text-slate-200">41M FCFA</p>
           <p className="text-xs text-amber-400 mt-1">12 contrats</p>
         </div>
@@ -506,10 +506,10 @@ function StatCard({ title, value, trend, color }: StatCardProps) {
 
   return (
     <div className={`rounded-lg p-6 border ${colorClasses[color]}`}>
-      <p className="text-xs text-slate-500 mb-2">{title}</p>
+      <p className="text-xs text-slate-400 mb-2">{title}</p>
       <div className="flex items-baseline gap-2">
         <p className={`text-2xl font-bold ${textColorClasses[color]}`}>{value}</p>
-        <span className="text-xs text-slate-500">{trend}</span>
+        <span className="text-xs text-slate-400">{trend}</span>
       </div>
     </div>
   );

@@ -152,7 +152,7 @@ export function BlockedStatsModal({ open, onClose }: Props) {
             <BarChart3 className="w-6 h-6 text-orange-500" />
             <div>
               <h2 className="text-lg font-bold">Statistiques des blocages</h2>
-              <p className="text-sm text-slate-500">Tableau de bord en temps réel</p>
+              <p className="text-sm text-slate-400">Tableau de bord en temps réel</p>
             </div>
           </div>
           <button
@@ -168,7 +168,7 @@ export function BlockedStatsModal({ open, onClose }: Props) {
           {loading ? (
             <div className="flex items-center justify-center py-12">
               <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
-              <span className="ml-3 text-slate-500">Chargement des statistiques...</span>
+              <span className="ml-3 text-slate-400">Chargement des statistiques...</span>
             </div>
           ) : (
           <>
@@ -183,7 +183,7 @@ export function BlockedStatsModal({ open, onClose }: Props) {
           )}>
             <div className="flex items-center justify-center gap-2 mb-2">
               <Target className={cn("w-5 h-5", getRiskColor(stats.riskScore))} />
-              <span className="text-sm font-medium text-slate-500">Score de risque global</span>
+              <span className="text-sm font-medium text-slate-400">Score de risque global</span>
             </div>
             <p className={cn("text-5xl font-bold", getRiskColor(stats.riskScore))}>
               {stats.riskScore}
@@ -198,10 +198,10 @@ export function BlockedStatsModal({ open, onClose }: Props) {
             <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/50 dark:border-slate-800/50">
               <div className="flex items-center gap-2 mb-2">
                 <AlertCircle className="w-4 h-4 text-red-500" />
-                <span className="text-xs text-slate-500">Critiques</span>
+                <span className="text-xs text-slate-400">Critiques</span>
               </div>
               <p className="text-2xl font-bold text-red-600 dark:text-red-400">{stats.critical}</p>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-slate-400 mt-1">
                 {stats.total > 0 ? Math.round(stats.critical / stats.total * 100) : 0}% du total
               </p>
             </div>
@@ -209,10 +209,10 @@ export function BlockedStatsModal({ open, onClose }: Props) {
             <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/50 dark:border-slate-800/50">
               <div className="flex items-center gap-2 mb-2">
                 <Clock className="w-4 h-4 text-orange-500" />
-                <span className="text-xs text-slate-500">Délai moyen</span>
+                <span className="text-xs text-slate-400">Délai moyen</span>
               </div>
               <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">{stats.avgDelay}j</p>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-slate-400 mt-1">
                 Max: {stats.maxDelay}j
               </p>
             </div>
@@ -220,19 +220,19 @@ export function BlockedStatsModal({ open, onClose }: Props) {
             <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/50 dark:border-slate-800/50">
               <div className="flex items-center gap-2 mb-2">
                 <Wallet className="w-4 h-4 text-emerald-500" />
-                <span className="text-xs text-slate-500">Montant bloqué</span>
+                <span className="text-xs text-slate-400">Montant bloqué</span>
               </div>
               <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{formatAmount(stats.totalAmount)}</p>
-              <p className="text-xs text-slate-500 mt-1">FCFA</p>
+              <p className="text-xs text-slate-400 mt-1">FCFA</p>
             </div>
 
             <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/50 dark:border-slate-800/50">
               <div className="flex items-center gap-2 mb-2">
                 <TrendingUp className="w-4 h-4 text-purple-500" />
-                <span className="text-xs text-slate-500">Priorité moy.</span>
+                <span className="text-xs text-slate-400">Priorité moy.</span>
               </div>
               <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">{stats.avgPriority}</p>
-              <p className="text-xs text-slate-500 mt-1">Score composite</p>
+              <p className="text-xs text-slate-400 mt-1">Score composite</p>
             </div>
           </div>
 
@@ -247,7 +247,7 @@ export function BlockedStatsModal({ open, onClose }: Props) {
                 { label: 'Faible', value: stats.low, color: 'bg-slate-400', pct: stats.total > 0 ? stats.low / stats.total * 100 : 0 },
               ].map(item => (
                 <div key={item.label} className="flex items-center gap-3">
-                  <span className="text-xs w-16 text-slate-500">{item.label}</span>
+                  <span className="text-xs w-16 text-slate-400">{item.label}</span>
                   <div className="flex-1 h-4 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                     <div 
                       className={cn("h-full rounded-full transition-all", item.color)}
@@ -269,7 +269,7 @@ export function BlockedStatsModal({ open, onClose }: Props) {
                   <div key={type} className="flex items-center justify-between p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/50">
                     <span className="text-sm font-medium">{type}</span>
                     <div className="flex items-center gap-3">
-                      <span className="text-xs text-slate-500">{formatAmount(amount)}</span>
+                      <span className="text-xs text-slate-400">{formatAmount(amount)}</span>
                       <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-slate-200 dark:bg-slate-700">
                         {count}
                       </span>
@@ -295,7 +295,7 @@ export function BlockedStatsModal({ open, onClose }: Props) {
                       )}
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="text-xs text-slate-500">{formatAmount(amount)}</span>
+                      <span className="text-xs text-slate-400">{formatAmount(amount)}</span>
                       <span className={cn(
                         "px-2 py-0.5 rounded-full text-xs font-bold",
                         critical > 0 ? "bg-red-500/20 text-red-600" : "bg-slate-200 dark:bg-slate-700"
@@ -330,7 +330,7 @@ export function BlockedStatsModal({ open, onClose }: Props) {
                     "text-xl font-bold",
                     range === '30j+' && count > 0 ? "text-red-500" : ""
                   )}>{count}</p>
-                  <p className="text-xs text-slate-500">{range}</p>
+                  <p className="text-xs text-slate-400">{range}</p>
                 </div>
               ))}
             </div>
@@ -341,7 +341,7 @@ export function BlockedStatsModal({ open, onClose }: Props) {
 
         {/* Footer */}
         <div className="px-6 py-4 border-t border-slate-200/70 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30">
-          <div className="flex items-center justify-between text-xs text-slate-500">
+          <div className="flex items-center justify-between text-xs text-slate-400">
             <span>Total: {stats.total} dossiers bloqués</span>
             <span>Dernière mise à jour: {new Date().toLocaleString('fr-FR')}</span>
           </div>

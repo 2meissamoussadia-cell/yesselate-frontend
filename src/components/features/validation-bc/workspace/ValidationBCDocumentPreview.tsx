@@ -43,7 +43,7 @@ const DOC_ICONS = {
   word: { icon: File, color: 'text-blue-500' },
   image: { icon: FileImage, color: 'text-purple-500' },
   archive: { icon: Archive, color: 'text-amber-500' },
-  other: { icon: File, color: 'text-slate-500' },
+  other: { icon: File, color: 'text-slate-400' },
 };
 
 const STATUS_CONFIG = {
@@ -170,7 +170,7 @@ export function ValidationBCDocumentPreview({
     return (
       <div className="p-8 text-center rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-800">
         <FileText className="w-12 h-12 mx-auto mb-4 text-slate-300" />
-        <p className="text-slate-500">Aucun document joint</p>
+        <p className="text-slate-400">Aucun document joint</p>
         {!readOnly && onRequestDocument && (
           <button
             onClick={() => setRequestModalOpen(true)}
@@ -210,7 +210,7 @@ export function ValidationBCDocumentPreview({
               </span>
             )}
             {groupedDocs.missing.length > 0 && (
-              <span className="flex items-center gap-1 text-sm text-slate-500">
+              <span className="flex items-center gap-1 text-sm text-slate-400">
                 <AlertTriangle className="w-4 h-4" /> {groupedDocs.missing.length}
               </span>
             )}
@@ -219,7 +219,7 @@ export function ValidationBCDocumentPreview({
         
         {totalRequired > 0 && (
           <div className="flex items-center gap-2">
-            <span className="text-sm text-slate-500">Pièces obligatoires :</span>
+            <span className="text-sm text-slate-400">Pièces obligatoires :</span>
             <span className={cn(
               'px-2 py-0.5 rounded text-sm font-medium',
               verifiedRequired === totalRequired 
@@ -239,7 +239,7 @@ export function ValidationBCDocumentPreview({
 
         return (
           <div key={category} className="space-y-3">
-            <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider">
+            <h3 className="text-sm font-medium text-slate-400 uppercase tracking-wider">
               {CATEGORY_LABELS[category]}
             </h3>
             <div className="grid gap-3">
@@ -278,7 +278,7 @@ export function ValidationBCDocumentPreview({
                           {statusConfig.label}
                         </span>
                       </div>
-                      <div className="flex items-center gap-4 text-sm text-slate-500 mt-1">
+                      <div className="flex items-center gap-4 text-sm text-slate-400 mt-1">
                         <span className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
                           {doc.date}
@@ -331,7 +331,7 @@ export function ValidationBCDocumentPreview({
         <button
           onClick={() => setRequestModalOpen(true)}
           className="w-full p-4 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 
-                     text-slate-500 hover:border-blue-400 hover:text-blue-500 transition-colors
+                     text-slate-400 hover:border-blue-400 hover:text-blue-500 transition-colors
                      flex items-center justify-center gap-2"
         >
           <AlertTriangle className="w-4 h-4" />
@@ -361,7 +361,7 @@ export function ValidationBCDocumentPreview({
                   >
                     <ChevronLeft className="w-5 h-5" />
                   </button>
-                  <span className="text-sm text-slate-500 px-2">
+                  <span className="text-sm text-slate-400 px-2">
                     {currentIndex + 1} / {documents.length}
                   </span>
                   <button
@@ -397,7 +397,7 @@ export function ValidationBCDocumentPreview({
 
                 <button
                   onClick={handleReset}
-                  className="px-3 py-1.5 rounded-lg text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                  className="px-3 py-1.5 rounded-lg text-sm text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                 >
                   Réinitialiser
                 </button>
@@ -437,11 +437,11 @@ export function ValidationBCDocumentPreview({
                   <div className="text-center">
                     {getDocIcon(selectedDoc.type)}
                     <div className="mt-4 text-lg font-semibold">{selectedDoc.name}</div>
-                    <div className="mt-2 text-slate-500 capitalize">{selectedDoc.type}</div>
+                    <div className="mt-2 text-slate-400 capitalize">{selectedDoc.type}</div>
                     <div className="mt-1 text-sm text-slate-400">{selectedDoc.size || 'Taille inconnue'}</div>
                     
                     <div className="mt-8 p-6 rounded-xl bg-slate-50 dark:bg-slate-700/50">
-                      <p className="text-sm text-slate-500">🔍 Prévisualisation simulée</p>
+                      <p className="text-sm text-slate-400">🔍 Prévisualisation simulée</p>
                       <p className="text-xs text-slate-400 mt-2">
                         En production, le contenu réel du document serait affiché ici.
                       </p>
@@ -457,7 +457,7 @@ export function ValidationBCDocumentPreview({
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium">Vérification du document</p>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-sm text-slate-400">
                       Confirmez que ce document est valide et conforme
                     </p>
                   </div>

@@ -116,7 +116,7 @@ export function BlockedLiveCounters({ onOpenQueue, compact = false }: Props) {
             "flex items-center gap-1.5 px-2 py-1 rounded-lg transition-colors",
             stats.critical > 0 
               ? "bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-500/20" 
-              : "text-slate-500"
+              : "text-slate-400"
           )}
         >
           <AlertCircle className="w-4 h-4" />
@@ -129,7 +129,7 @@ export function BlockedLiveCounters({ onOpenQueue, compact = false }: Props) {
             "flex items-center gap-1.5 px-2 py-1 rounded-lg transition-colors",
             stats.high > 0 
               ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20" 
-              : "text-slate-500"
+              : "text-slate-400"
           )}
         >
           <AlertTriangle className="w-4 h-4" />
@@ -159,13 +159,13 @@ export function BlockedLiveCounters({ onOpenQueue, compact = false }: Props) {
             "w-5 h-5",
             stats.critical > 0 ? "text-red-500" : "text-slate-400"
           )} />
-          <span className="text-xs text-slate-500 font-medium">Critiques</span>
+          <span className="text-xs text-slate-400 font-medium">Critiques</span>
         </div>
         <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
           {stats.critical}
         </p>
         {stats.critical > 0 && (
-          <p className="text-xs text-slate-500 mt-1 flex items-center gap-1">
+          <p className="text-xs text-slate-400 mt-1 flex items-center gap-1">
             <Zap className="w-3 h-3 text-orange-500" />
             Action immédiate
           </p>
@@ -182,7 +182,7 @@ export function BlockedLiveCounters({ onOpenQueue, compact = false }: Props) {
             "w-5 h-5",
             stats.high > 0 ? "text-amber-500" : "text-slate-400"
           )} />
-          <span className="text-xs text-slate-500 font-medium">Élevé</span>
+          <span className="text-xs text-slate-400 font-medium">Élevé</span>
         </div>
         <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
           {stats.high}
@@ -196,7 +196,7 @@ export function BlockedLiveCounters({ onOpenQueue, compact = false }: Props) {
       >
         <div className="flex items-center gap-2 mb-2">
           <Clock className="w-5 h-5 text-blue-500" />
-          <span className="text-xs text-slate-500 font-medium">Moyen</span>
+          <span className="text-xs text-slate-400 font-medium">Moyen</span>
         </div>
         <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
           {stats.medium}
@@ -207,12 +207,12 @@ export function BlockedLiveCounters({ onOpenQueue, compact = false }: Props) {
       <div className="p-4 rounded-xl border bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 text-left">
         <div className="flex items-center gap-2 mb-2">
           <Clock className="w-5 h-5 text-orange-500" />
-          <span className="text-xs text-slate-500 font-medium">Délai moy.</span>
+          <span className="text-xs text-slate-400 font-medium">Délai moy.</span>
         </div>
         <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
-          {stats.avgDelay}<span className="text-base font-normal text-slate-500">j</span>
+          {stats.avgDelay}<span className="text-base font-normal text-slate-400">j</span>
         </p>
-        <p className="text-xs text-slate-500 mt-1">
+        <p className="text-xs text-slate-400 mt-1">
           {stats.avgDelay > 7 ? (
             <span className="flex items-center gap-1">
               <TrendingUp className="w-3 h-3 text-amber-500" /> Élevé
@@ -229,24 +229,24 @@ export function BlockedLiveCounters({ onOpenQueue, compact = false }: Props) {
       <div className="p-4 rounded-xl border bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 text-left">
         <div className="flex items-center gap-2 mb-2">
           <span className="text-base">💰</span>
-          <span className="text-xs text-slate-500 font-medium">Montant bloqué</span>
+          <span className="text-xs text-slate-400 font-medium">Montant bloqué</span>
         </div>
         <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
           {formatAmount(stats.totalAmount)}
         </p>
-        <p className="text-xs text-slate-500 mt-1">FCFA</p>
+        <p className="text-xs text-slate-400 mt-1">FCFA</p>
       </div>
 
       {/* Priorité moyenne */}
       <div className="p-4 rounded-xl border bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 text-left">
         <div className="flex items-center gap-2 mb-2">
           <TrendingUp className="w-5 h-5 text-purple-500" />
-          <span className="text-xs text-slate-500 font-medium">Score priorité</span>
+          <span className="text-xs text-slate-400 font-medium">Score priorité</span>
         </div>
         <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
           {stats.avgPriority}
         </p>
-        <p className="text-xs text-slate-500 mt-1">
+        <p className="text-xs text-slate-400 mt-1">
           Impact × Délai × Montant
         </p>
       </div>
@@ -257,7 +257,7 @@ export function BlockedLiveCounters({ onOpenQueue, compact = false }: Props) {
           <div className="p-4 rounded-xl border bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-3">
               <Building2 className="w-4 h-4 text-slate-400" />
-              <span className="text-xs text-slate-500 font-medium uppercase tracking-wider">
+              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">
                 Top bureaux impactés
               </span>
             </div>

@@ -245,7 +245,7 @@ export function DelegationDetailView({ delegationId }: Props) {
     return (
       <div className="flex items-center justify-center py-16">
         <RefreshCw className="w-6 h-6 animate-spin text-slate-400" />
-        <span className="ml-2 text-slate-500">Chargement...</span>
+        <span className="ml-2 text-slate-400">Chargement...</span>
       </div>
     );
   }
@@ -254,7 +254,7 @@ export function DelegationDetailView({ delegationId }: Props) {
     return (
       <div className="p-6 text-center">
         <AlertTriangle className="w-8 h-8 text-rose-500 mx-auto mb-2" />
-        <p className="text-slate-500">{error || 'Délégation introuvable.'}</p>
+        <p className="text-slate-400">{error || 'Délégation introuvable.'}</p>
         <FluentButton size="sm" variant="secondary" onClick={loadData} className="mt-4">
           Réessayer
         </FluentButton>
@@ -276,7 +276,7 @@ export function DelegationDetailView({ delegationId }: Props) {
               {getStatusBadge(data.status)}
             </div>
             
-            <p className="text-sm text-slate-500 mb-3">{data.object}</p>
+            <p className="text-sm text-slate-400 mb-3">{data.object}</p>
             
             <div className="flex flex-wrap gap-4 text-sm">
               <div className="flex items-center gap-1.5">
@@ -359,11 +359,11 @@ export function DelegationDetailView({ delegationId }: Props) {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4 pt-4 border-t border-slate-200/70 dark:border-slate-700/50">
           <div className="text-center">
             <div className="text-2xl font-bold text-purple-600">{data.usageCount}</div>
-            <div className="text-xs text-slate-500">Utilisations</div>
+            <div className="text-xs text-slate-400">Utilisations</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-emerald-600">{formatAmount(data.usageTotalAmount, data.currency)}</div>
-            <div className="text-xs text-slate-500">Montant cumulé</div>
+            <div className="text-xs text-slate-400">Montant cumulé</div>
           </div>
           <div className="text-center">
             <div className={cn(
@@ -372,7 +372,7 @@ export function DelegationDetailView({ delegationId }: Props) {
             )}>
               {data.metrics.daysToExpiry}j
             </div>
-            <div className="text-xs text-slate-500">Avant expiration</div>
+            <div className="text-xs text-slate-400">Avant expiration</div>
           </div>
           <div className="text-center">
             <div className={cn(
@@ -381,7 +381,7 @@ export function DelegationDetailView({ delegationId }: Props) {
             )}>
               {data.metrics.usageRate ?? 0}%
             </div>
-            <div className="text-xs text-slate-500">Plafond utilisé</div>
+            <div className="text-xs text-slate-400">Plafond utilisé</div>
           </div>
         </div>
       </div>
@@ -398,7 +398,7 @@ export function DelegationDetailView({ delegationId }: Props) {
                 "flex items-center gap-2 px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors",
                 activeTab === tab.id
                   ? "text-purple-600 border-b-2 border-purple-500 bg-purple-500/5"
-                  : "text-slate-500 hover:text-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                  : "text-slate-400 hover:text-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50"
               )}
             >
               {tab.icon}
@@ -447,7 +447,7 @@ export function DelegationDetailView({ delegationId }: Props) {
         onClose={() => setActionModalOpen(false)}
       >
         <div className="space-y-4">
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-400">
             {actionType === 'suspend' && 'La délégation sera temporairement inactive. Elle pourra être réactivée.'}
             {actionType === 'revoke' && 'La délégation sera définitivement révoquée. Cette action est irréversible.'}
             {actionType === 'extend' && `La délégation sera prolongée de ${data.extensionDays} jours.`}
@@ -489,28 +489,28 @@ function TabResume({ data }: { data: DelegationFullResponse }) {
           
           <dl className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <dt className="text-slate-500">ID</dt>
+              <dt className="text-slate-400">ID</dt>
               <dd className="font-mono">{data.id}</dd>
             </div>
             {data.code && (
               <div className="flex justify-between">
-                <dt className="text-slate-500">Code</dt>
+                <dt className="text-slate-400">Code</dt>
                 <dd className="font-mono">{data.code}</dd>
               </div>
             )}
             <div className="flex justify-between">
-              <dt className="text-slate-500">Catégorie</dt>
+              <dt className="text-slate-400">Catégorie</dt>
               <dd>{data.category}</dd>
             </div>
             {data.legalBasis && (
               <div className="flex justify-between">
-                <dt className="text-slate-500">Base juridique</dt>
+                <dt className="text-slate-400">Base juridique</dt>
                 <dd>{data.legalBasis}</dd>
               </div>
             )}
             {data.decisionRef && (
               <div className="flex justify-between">
-                <dt className="text-slate-500">Décision</dt>
+                <dt className="text-slate-400">Décision</dt>
                 <dd>{data.decisionRef} ({formatDate(data.decisionDate)})</dd>
               </div>
             )}
@@ -525,9 +525,9 @@ function TabResume({ data }: { data: DelegationFullResponse }) {
           
           <div className="space-y-3">
             <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-              <div className="text-xs text-slate-500 mb-1">Délégant (Grantor)</div>
+              <div className="text-xs text-slate-400 mb-1">Délégant (Grantor)</div>
               <div className="font-medium">{data.grantor.name}</div>
-              {data.grantor.role && <div className="text-sm text-slate-500">{data.grantor.role}</div>}
+              {data.grantor.role && <div className="text-sm text-slate-400">{data.grantor.role}</div>}
               {data.grantor.email && <div className="text-xs text-slate-400">{data.grantor.email}</div>}
             </div>
             
@@ -536,7 +536,7 @@ function TabResume({ data }: { data: DelegationFullResponse }) {
             <div className="p-3 rounded-xl bg-purple-50 dark:bg-purple-900/20">
               <div className="text-xs text-purple-600 mb-1">Délégataire (Delegate)</div>
               <div className="font-medium">{data.delegate.name}</div>
-              {data.delegate.role && <div className="text-sm text-slate-500">{data.delegate.role}</div>}
+              {data.delegate.role && <div className="text-sm text-slate-400">{data.delegate.role}</div>}
               {data.delegate.email && <div className="text-xs text-slate-400">{data.delegate.email}</div>}
             </div>
           </div>
@@ -556,19 +556,19 @@ function TabResume({ data }: { data: DelegationFullResponse }) {
       {/* Hashes */}
       <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50">
         <h3 className="font-semibold flex items-center gap-2 mb-3">
-          <Hash className="w-4 h-4 text-slate-500" />
+          <Hash className="w-4 h-4 text-slate-400" />
           Traçabilité cryptographique
         </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
           <div>
-            <div className="text-xs text-slate-500 mb-1">Hash décision</div>
+            <div className="text-xs text-slate-400 mb-1">Hash décision</div>
             <div className="font-mono text-xs bg-white dark:bg-slate-700 px-2 py-1 rounded">
               {data.decisionHash || '—'}
             </div>
           </div>
           <div>
-            <div className="text-xs text-slate-500 mb-1">Hash tête de chaîne</div>
+            <div className="text-xs text-slate-400 mb-1">Hash tête de chaîne</div>
             <div className="font-mono text-xs bg-white dark:bg-slate-700 px-2 py-1 rounded">
               {data.headHash || '—'}
             </div>
@@ -585,7 +585,7 @@ function TabPerimetre({ data }: { data: DelegationFullResponse }) {
       return <span className="text-emerald-600">Tous {label}</span>;
     }
     if (!list || list.length === 0) {
-      return <span className="text-slate-500">Non défini</span>;
+      return <span className="text-slate-400">Non défini</span>;
     }
     return (
       <div>
@@ -673,7 +673,7 @@ function TabPerimetre({ data }: { data: DelegationFullResponse }) {
                 )}
               </div>
               
-              <div className="flex flex-wrap gap-3 text-xs text-slate-500">
+              <div className="flex flex-wrap gap-3 text-xs text-slate-400">
                 {p.maxAmount && (
                   <span>Plafond : {formatAmount(p.maxAmount, p.currency)}</span>
                 )}
@@ -691,7 +691,7 @@ function TabPerimetre({ data }: { data: DelegationFullResponse }) {
           ))}
           
           {data.policies.length === 0 && (
-            <p className="text-sm text-slate-500">Aucune politique définie.</p>
+            <p className="text-sm text-slate-400">Aucune politique définie.</p>
           )}
         </div>
       </div>
@@ -714,21 +714,21 @@ function TabLimites({ data }: { data: DelegationFullResponse }) {
             <div className="text-2xl font-bold text-emerald-600">
               {formatAmount(data.maxAmount, data.currency)}
             </div>
-            <div className="text-xs text-slate-500">Plafond par opération</div>
+            <div className="text-xs text-slate-400">Plafond par opération</div>
           </div>
           
           <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-center">
             <div className="text-2xl font-bold text-blue-600">
               {formatAmount(data.maxTotalAmount, data.currency)}
             </div>
-            <div className="text-xs text-slate-500">Plafond cumulé</div>
+            <div className="text-xs text-slate-400">Plafond cumulé</div>
           </div>
           
           <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-center">
             <div className="text-2xl font-bold text-purple-600">
               {formatAmount(data.metrics.remainingAmount ?? undefined, data.currency)}
             </div>
-            <div className="text-xs text-slate-500">Montant restant</div>
+            <div className="text-xs text-slate-400">Montant restant</div>
           </div>
         </div>
       </div>
@@ -742,7 +742,7 @@ function TabLimites({ data }: { data: DelegationFullResponse }) {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="p-4 rounded-xl border border-slate-200/70 dark:border-slate-700">
-            <div className="text-sm text-slate-500 mb-1">Horaires autorisés</div>
+            <div className="text-sm text-slate-400 mb-1">Horaires autorisés</div>
             <div className="font-medium">
               {data.allowedHoursStart != null && data.allowedHoursEnd != null
                 ? `${data.allowedHoursStart}h - ${data.allowedHoursEnd}h`
@@ -751,7 +751,7 @@ function TabLimites({ data }: { data: DelegationFullResponse }) {
           </div>
           
           <div className="p-4 rounded-xl border border-slate-200/70 dark:border-slate-700">
-            <div className="text-sm text-slate-500 mb-1">Jours autorisés</div>
+            <div className="text-sm text-slate-400 mb-1">Jours autorisés</div>
             <div className="font-medium">
               {data.allowedDays?.length
                 ? data.allowedDays.join(', ')
@@ -770,12 +770,12 @@ function TabLimites({ data }: { data: DelegationFullResponse }) {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="p-4 rounded-xl border border-slate-200/70 dark:border-slate-700">
-            <div className="text-sm text-slate-500 mb-1">Max par jour</div>
+            <div className="text-sm text-slate-400 mb-1">Max par jour</div>
             <div className="font-medium">{data.maxDailyOps ?? 'Illimité'}</div>
           </div>
           
           <div className="p-4 rounded-xl border border-slate-200/70 dark:border-slate-700">
-            <div className="text-sm text-slate-500 mb-1">Max par mois</div>
+            <div className="text-sm text-slate-400 mb-1">Max par mois</div>
             <div className="font-medium">{data.maxMonthlyOps ?? 'Illimité'}</div>
           </div>
         </div>
@@ -844,7 +844,7 @@ function TabActeurs({ data }: { data: DelegationFullResponse }) {
 
   return (
     <div className="space-y-4">
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-400">
         Matrice des acteurs impliqués dans cette délégation.
       </p>
       
@@ -852,13 +852,13 @@ function TabActeurs({ data }: { data: DelegationFullResponse }) {
         {data.actors.map(actor => (
           <div key={actor.id} className="p-4 rounded-xl border border-slate-200/70 dark:border-slate-700 flex items-start gap-4">
             <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
-              <UserCheck className="w-5 h-5 text-slate-500" />
+              <UserCheck className="w-5 h-5 text-slate-400" />
             </div>
             
             <div className="flex-1">
               <div className="flex items-center gap-2">
                 <span className="font-medium">{actor.user.name}</span>
-                <span className={cn("text-xs font-medium", roleLabels[actor.roleType]?.color || 'text-slate-500')}>
+                <span className={cn("text-xs font-medium", roleLabels[actor.roleType]?.color || 'text-slate-400')}>
                   {roleLabels[actor.roleType]?.label || actor.roleType}
                 </span>
                 {actor.required && (
@@ -866,10 +866,10 @@ function TabActeurs({ data }: { data: DelegationFullResponse }) {
                 )}
               </div>
               
-              {actor.user.role && <div className="text-sm text-slate-500">{actor.user.role}</div>}
+              {actor.user.role && <div className="text-sm text-slate-400">{actor.user.role}</div>}
               {actor.user.email && <div className="text-xs text-slate-400">{actor.user.email}</div>}
               
-              <div className="flex gap-3 mt-2 text-xs text-slate-500">
+              <div className="flex gap-3 mt-2 text-xs text-slate-400">
                 {actor.canApprove && <span className="text-emerald-600">✓ Peut valider</span>}
                 {actor.canRevoke && <span className="text-rose-600">✓ Peut révoquer</span>}
                 {actor.mustBeNotified && <span className="text-blue-600">✓ Notifié</span>}
@@ -883,7 +883,7 @@ function TabActeurs({ data }: { data: DelegationFullResponse }) {
         ))}
         
         {data.actors.length === 0 && (
-          <p className="text-sm text-slate-500 text-center py-8">Aucun acteur défini.</p>
+          <p className="text-sm text-slate-400 text-center py-8">Aucun acteur défini.</p>
         )}
       </div>
     </div>
@@ -902,7 +902,7 @@ function TabEngagements({ data }: { data: DelegationFullResponse }) {
 
   return (
     <div className="space-y-4">
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-400">
         Obligations et engagements du délégataire.
       </p>
       
@@ -932,14 +932,14 @@ function TabEngagements({ data }: { data: DelegationFullResponse }) {
                 <p className="text-sm text-slate-600 dark:text-slate-300">{eng.description}</p>
                 
                 {eng.frequency && (
-                  <div className="mt-2 text-xs text-slate-500">
+                  <div className="mt-2 text-xs text-slate-400">
                     Fréquence : {eng.frequency}
                   </div>
                 )}
                 
                 {eng.requiredDocs?.length && eng.requiredDocs.length > 0 && (
                   <div className="mt-2">
-                    <div className="text-xs text-slate-500 mb-1">Documents requis :</div>
+                    <div className="text-xs text-slate-400 mb-1">Documents requis :</div>
                     <div className="flex flex-wrap gap-1">
                       {eng.requiredDocs.map((doc, i) => (
                         <span key={i} className={cn(
@@ -958,7 +958,7 @@ function TabEngagements({ data }: { data: DelegationFullResponse }) {
         ))}
         
         {data.engagements.length === 0 && (
-          <p className="text-sm text-slate-500 text-center py-8">Aucun engagement défini.</p>
+          <p className="text-sm text-slate-400 text-center py-8">Aucun engagement défini.</p>
         )}
       </div>
     </div>
@@ -969,7 +969,7 @@ function TabAudit({ data }: { data: DelegationFullResponse }) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-slate-400">
           Journal d&apos;audit immuable (chaînage cryptographique).
         </p>
         <FluentButton size="sm" variant="secondary">
@@ -998,7 +998,7 @@ function TabAudit({ data }: { data: DelegationFullResponse }) {
                 <div className="flex items-center gap-2 mb-1">
                   <span className="font-medium text-sm capitalize">{event.eventType.toLowerCase()}</span>
                   <span className="text-xs text-slate-400">•</span>
-                  <span className="text-xs text-slate-500">{formatDateTime(event.createdAt)}</span>
+                  <span className="text-xs text-slate-400">{formatDateTime(event.createdAt)}</span>
                 </div>
                 
                 <div className="text-sm text-slate-600 dark:text-slate-300">
@@ -1006,7 +1006,7 @@ function TabAudit({ data }: { data: DelegationFullResponse }) {
                 </div>
                 
                 {event.targetDoc && (
-                  <div className="text-xs text-slate-500 mt-1">
+                  <div className="text-xs text-slate-400 mt-1">
                     Document : {event.targetDoc.ref} ({event.targetDoc.type})
                     {event.targetDoc.amount && ` — ${formatAmount(event.targetDoc.amount)}`}
                   </div>
@@ -1022,7 +1022,7 @@ function TabAudit({ data }: { data: DelegationFullResponse }) {
         ))}
         
         {data.events.length === 0 && (
-          <p className="text-sm text-slate-500 text-center py-8">Aucun événement enregistré.</p>
+          <p className="text-sm text-slate-400 text-center py-8">Aucun événement enregistré.</p>
         )}
       </div>
     </div>
@@ -1085,7 +1085,7 @@ function TabSimulateur({
       {/* Formulaire */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="text-sm text-slate-500">Action</label>
+          <label className="text-sm text-slate-400">Action</label>
           <select
             className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
             value={simAction}
@@ -1098,7 +1098,7 @@ function TabSimulateur({
         </div>
         
         <div>
-          <label className="text-sm text-slate-500">Bureau</label>
+          <label className="text-sm text-slate-400">Bureau</label>
           <input
             type="text"
             className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
@@ -1109,7 +1109,7 @@ function TabSimulateur({
         </div>
         
         <div>
-          <label className="text-sm text-slate-500">Montant (XOF)</label>
+          <label className="text-sm text-slate-400">Montant (XOF)</label>
           <input
             type="number"
             className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
@@ -1120,7 +1120,7 @@ function TabSimulateur({
         </div>
         
         <div>
-          <label className="text-sm text-slate-500">Projet (optionnel)</label>
+          <label className="text-sm text-slate-400">Projet (optionnel)</label>
           <input
             type="text"
             className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
@@ -1131,7 +1131,7 @@ function TabSimulateur({
         </div>
         
         <div>
-          <label className="text-sm text-slate-500">Fournisseur (optionnel)</label>
+          <label className="text-sm text-slate-400">Fournisseur (optionnel)</label>
           <input
             type="text"
             className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
@@ -1220,7 +1220,7 @@ function TabSimulateur({
             </div>
           )}
           
-          <div className="mt-3 pt-3 border-t border-slate-200/50 flex items-center gap-4 text-xs text-slate-500">
+          <div className="mt-3 pt-3 border-t border-slate-200/50 flex items-center gap-4 text-xs text-slate-400">
             <span>Niveau de risque : <strong>{simResult.riskLevel}</strong></span>
           </div>
         </div>

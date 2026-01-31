@@ -37,7 +37,7 @@ export const CalendrierBreadcrumb = React.memo(function CalendrierBreadcrumb({
   return (
     <div className={cn('flex items-center gap-2 px-4 py-2 text-sm', className)}>
       {/* Calendrier */}
-      <span className="text-slate-500">Calendrier</span>
+      <span className="text-slate-400">Calendrier</span>
       
       {/* Domaine */}
       {domain && (
@@ -77,7 +77,7 @@ export const CalendrierBreadcrumb = React.memo(function CalendrierBreadcrumb({
       {view && viewData && (
         <>
           <ChevronRight className="h-3 w-3 text-slate-600" />
-          <span className="text-slate-500 text-xs">{viewData.label}</span>
+          <span className="text-slate-400 text-xs">{viewData.label}</span>
         </>
       )}
     </div>

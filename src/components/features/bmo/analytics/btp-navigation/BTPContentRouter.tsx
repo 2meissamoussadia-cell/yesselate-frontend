@@ -192,7 +192,7 @@ function NotFoundView({ message }: { message: string }) {
       <div className="text-center">
         <BarChart3 className="w-16 h-16 text-slate-600 mx-auto mb-4" />
         <h3 className="text-lg font-semibold text-slate-300 mb-2">Vue non trouvée</h3>
-        <p className="text-slate-500 text-sm">{message}</p>
+        <p className="text-slate-400 text-sm">{message}</p>
       </div>
     </div>
   );

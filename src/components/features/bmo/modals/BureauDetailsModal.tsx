@@ -241,7 +241,7 @@ export function BureauDetailsModal() {
                       <div className="flex items-center gap-3">
                         <div className="text-right text-[10px]">
                           <p className="text-slate-400">{member.email}</p>
-                          <p className="text-slate-500">{member.phone}</p>
+                          <p className="text-slate-400">{member.phone}</p>
                         </div>
                         <div className="flex items-center gap-1">
                           <span className={cn('w-2 h-2 rounded-full', status.bg)} />
@@ -278,7 +278,7 @@ export function BureauDetailsModal() {
                       <p className="font-medium">{activity.action}</p>
                       <p className="text-[10px] text-slate-400">Par {activity.agent}</p>
                     </div>
-                    <p className="text-[10px] text-slate-500">{activity.date}</p>
+                    <p className="text-[10px] text-slate-400">{activity.date}</p>
                   </div>
                 ))}
               </CardContent>
@@ -295,7 +295,7 @@ export function BureauDetailsModal() {
               <p className="text-sm text-slate-400 mt-2">
                 Détails non disponibles pour ce bureau
               </p>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-slate-400 mt-1">
                 Les informations détaillées seront bientôt ajoutées
               </p>
             </div>

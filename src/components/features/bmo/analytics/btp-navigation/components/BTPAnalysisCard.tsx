@@ -48,7 +48,7 @@ export function BTPAnalysisCard({
       <FluentCardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <FluentCardTitle className="text-sm font-medium text-slate-400">{title}</FluentCardTitle>
-          {Icon && <Icon className="h-4 w-4 text-slate-500" />}
+          {Icon && <Icon className="h-4 w-4 text-slate-400" />}
         </div>
       </FluentCardHeader>
       <FluentCardContent>
@@ -63,7 +63,7 @@ export function BTPAnalysisCard({
             >
               {TrendIcon && <TrendIcon className="h-3.5 w-3.5" />}
               <span>{Math.abs(trend.value)}%</span>
-              <span className="text-slate-500">{trend.label}</span>
+              <span className="text-slate-400">{trend.label}</span>
             </div>
           )}
           {children}

@@ -27,7 +27,7 @@ export function BMOModulePlaceholder({
         {description && (
           <p className="text-slate-300">{description}</p>
         )}
-        <p className="text-slate-500 italic">
+        <p className="text-slate-400 italic">
           Module en construction — KPIs, tableaux et workflows à venir.
         </p>
       </div>

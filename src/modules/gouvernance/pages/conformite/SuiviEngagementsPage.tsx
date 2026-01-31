@@ -30,7 +30,7 @@ export default function SuiviEngagementsPage() {
       <GouvernanceHeader
         title="Suivi des engagements"
         subtitle="Dashboard des engagements financiers, calendaires et qualité"
-        onExport={() => console.log('Export engagements')}
+        onExport={() => { /* TODO: export engagements */ }}
       />
 
       {isLoading ? (

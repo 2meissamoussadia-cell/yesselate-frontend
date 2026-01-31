@@ -27,7 +27,7 @@ export function TicketsDirectionPanel({ open, onClose }: Props) {
     <div className="fixed top-0 right-0 h-full w-80 bg-white dark:bg-[#1f1f1f] border-l border-slate-200 dark:border-slate-800 shadow-xl z-40 flex flex-col">
       <div className="flex-none p-4 border-b border-slate-200 dark:border-slate-800">
         <div className="flex items-center justify-between">
-          <div><h3 className="font-semibold">Centre de Pilotage</h3><p className="text-xs text-slate-500">Tickets en temps réel</p></div>
+          <div><h3 className="font-semibold">Centre de Pilotage</h3><p className="text-xs text-slate-400">Tickets en temps réel</p></div>
           <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"><X className="w-4 h-4" /></button>
         </div>
       </div>
@@ -57,12 +57,12 @@ export function TicketsDirectionPanel({ open, onClose }: Props) {
               <div className="p-3 rounded-xl bg-blue-500/10 border border-blue-500/20">
                 <AlertTriangle className="w-4 h-4 text-blue-500 mb-1" />
                 <p className="text-xl font-bold text-blue-600">{stats.open}</p>
-                <p className="text-xs text-slate-500">Ouverts</p>
+                <p className="text-xs text-slate-400">Ouverts</p>
               </div>
               <div className="p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
                 <Clock className="w-4 h-4 text-indigo-500 mb-1" />
                 <p className="text-xl font-bold text-indigo-600">{stats.inProgress}</p>
-                <p className="text-xs text-slate-500">En cours</p>
+                <p className="text-xs text-slate-400">En cours</p>
               </div>
             </div>
 
@@ -75,11 +75,11 @@ export function TicketsDirectionPanel({ open, onClose }: Props) {
               <h4 className="font-medium mb-3">Performance</h4>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-slate-500">Temps moyen</span>
+                  <span className="text-sm text-slate-400">Temps moyen</span>
                   <span className="font-medium text-purple-600">{stats.avgResolutionTime}h</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-slate-500">En attente</span>
+                  <span className="text-sm text-slate-400">En attente</span>
                   <span className="font-medium text-amber-600">{stats.pending}</span>
                 </div>
               </div>
@@ -89,7 +89,7 @@ export function TicketsDirectionPanel({ open, onClose }: Props) {
       </div>
 
       <div className="flex-none p-4 border-t border-slate-200 dark:border-slate-800">
-        <p className="text-xs text-slate-500 text-center">Mise à jour auto toutes les 30s</p>
+        <p className="text-xs text-slate-400 text-center">Mise à jour auto toutes les 30s</p>
       </div>
     </div>
   );

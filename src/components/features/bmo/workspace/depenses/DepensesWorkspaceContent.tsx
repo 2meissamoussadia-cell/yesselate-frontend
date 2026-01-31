@@ -44,7 +44,7 @@ export function DepensesWorkspaceContent() {
     openTab({ type: 'depense', id: `depense:${depense.id}`, title: depense.id, icon: '💸', data: { depenseId: depense.id } });
   };
 
-  if (!activeTab) return <div className="flex items-center justify-center h-64 text-slate-500"><div className="text-center"><FileText className="w-12 h-12 mx-auto mb-3 opacity-30" /><p>Aucun onglet</p></div></div>;
+  if (!activeTab) return <div className="flex items-center justify-center h-64 text-slate-400"><div className="text-center"><FileText className="w-12 h-12 mx-auto mb-3 opacity-30" /><p>Aucun onglet</p></div></div>;
 
   if (activeTab.type === 'budgets') return <PlaceholderView icon={<PiggyBank className="w-12 h-12" />} title="Suivi des budgets" />;
   if (activeTab.type === 'categories') return <PlaceholderView icon={<FolderTree className="w-12 h-12" />} title="Par catégorie" />;
@@ -58,7 +58,7 @@ export function DepensesWorkspaceContent() {
           <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
             {queue === 'pending' ? 'En attente' : queue === 'approved' ? 'Approuvées' : queue === 'rejected' ? 'Rejetées' : queue === 'paid' ? 'Payées' : 'Toutes les dépenses'}
           </h2>
-          <p className="text-sm text-slate-500">{depenses.length} dépense(s)</p>
+          <p className="text-sm text-slate-400">{depenses.length} dépense(s)</p>
         </div>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -69,7 +69,7 @@ export function DepensesWorkspaceContent() {
       {loading ? (
         <div className="space-y-3">{[...Array(5)].map((_, i) => <div key={i} className="h-24 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />)}</div>
       ) : depenses.length === 0 ? (
-        <div className="py-12 text-center text-slate-500"><DollarSign className="w-12 h-12 mx-auto mb-3 opacity-30" /><p className="font-medium">Aucune dépense trouvée</p></div>
+        <div className="py-12 text-center text-slate-400"><DollarSign className="w-12 h-12 mx-auto mb-3 opacity-30" /><p className="font-medium">Aucune dépense trouvée</p></div>
       ) : (
         <div className="space-y-2">
           {depenses.map(depense => {
@@ -88,7 +88,7 @@ export function DepensesWorkspaceContent() {
                         <span className="text-xs px-2 py-0.5 rounded bg-purple-500/10 text-purple-600">{depense.category}</span>
                       </div>
                       <p className="font-medium text-slate-900 dark:text-slate-100">{depense.description}</p>
-                      <div className="flex items-center gap-4 mt-2 text-xs text-slate-500">
+                      <div className="flex items-center gap-4 mt-2 text-xs text-slate-400">
                         <span className="flex items-center gap-1"><User className="w-3 h-3" />{depense.demandeur}</span>
                         <span className="flex items-center gap-1"><Building2 className="w-3 h-3" />{depense.bureau}</span>
                         <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{new Date(depense.date).toLocaleDateString('fr-FR')}</span>
@@ -106,9 +106,9 @@ export function DepensesWorkspaceContent() {
                 {isExpanded && (
                   <div className="px-4 pb-4 pt-0 border-t border-slate-200/70 dark:border-slate-800">
                     <div className="grid grid-cols-3 gap-4 py-4">
-                      <div><p className="text-xs text-slate-500 mb-1">Projet</p><p className="font-medium text-slate-900 dark:text-slate-100">{depense.projet || 'N/A'}</p></div>
-                      <div><p className="text-xs text-slate-500 mb-1">Justificatif</p><p className="font-medium text-slate-900 dark:text-slate-100">{depense.justificatif ? '✅ Fourni' : '❌ Manquant'}</p></div>
-                      <div><p className="text-xs text-slate-500 mb-1">Bureau</p><p className="font-medium text-slate-900 dark:text-slate-100">{depense.bureau}</p></div>
+                      <div><p className="text-xs text-slate-400 mb-1">Projet</p><p className="font-medium text-slate-900 dark:text-slate-100">{depense.projet || 'N/A'}</p></div>
+                      <div><p className="text-xs text-slate-400 mb-1">Justificatif</p><p className="font-medium text-slate-900 dark:text-slate-100">{depense.justificatif ? '✅ Fourni' : '❌ Manquant'}</p></div>
+                      <div><p className="text-xs text-slate-400 mb-1">Bureau</p><p className="font-medium text-slate-900 dark:text-slate-100">{depense.bureau}</p></div>
                     </div>
                     <div className="flex items-center gap-2 pt-2 border-t border-slate-200/70 dark:border-slate-800">
                       <button onClick={() => handleOpenDetail(depense)} className="flex-1 px-4 py-2 rounded-lg bg-purple-500 text-white text-sm font-medium hover:bg-purple-600">Voir le détail</button>
@@ -126,6 +126,6 @@ export function DepensesWorkspaceContent() {
 }
 
 function PlaceholderView({ icon, title }: { icon: React.ReactNode; title: string }) {
-  return <div className="flex items-center justify-center h-64 text-slate-500"><div className="text-center"><div className="mx-auto mb-4 opacity-30">{icon}</div><p className="font-semibold">{title}</p><p className="text-xs mt-4 text-slate-400">En cours de développement</p></div></div>;
+  return <div className="flex items-center justify-center h-64 text-slate-400"><div className="text-center"><div className="mx-auto mb-4 opacity-30">{icon}</div><p className="font-semibold">{title}</p><p className="text-xs mt-4 text-slate-400">En cours de développement</p></div></div>;
 }
 

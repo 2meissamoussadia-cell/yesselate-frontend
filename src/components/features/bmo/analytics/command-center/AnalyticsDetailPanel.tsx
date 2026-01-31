@@ -132,7 +132,7 @@ export function AnalyticsDetailPanel() {
               variant="ghost"
               size="sm"
               onClick={closeDetailPanel}
-              className="h-7 w-7 p-0 text-slate-500 hover:text-slate-300"
+              className="h-7 w-7 p-0 text-slate-400 hover:text-slate-300"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -221,19 +221,19 @@ function BureauDetailContent({ data }: { data: Record<string, unknown> }) {
           </h5>
           <div className="grid grid-cols-2 gap-2">
             <div className="bg-slate-800/30 rounded-lg p-2">
-              <div className="text-xs text-slate-500 mb-1">Total demandes</div>
+              <div className="text-xs text-slate-400 mb-1">Total demandes</div>
               <div className="text-sm font-semibold text-slate-200">{perf.totalDemands || 0}</div>
             </div>
             <div className="bg-slate-800/30 rounded-lg p-2">
-              <div className="text-xs text-slate-500 mb-1">Validées</div>
+              <div className="text-xs text-slate-400 mb-1">Validées</div>
               <div className="text-sm font-semibold text-emerald-400">{perf.validated || 0}</div>
             </div>
             <div className="bg-slate-800/30 rounded-lg p-2">
-              <div className="text-xs text-slate-500 mb-1">En attente</div>
+              <div className="text-xs text-slate-400 mb-1">En attente</div>
               <div className="text-sm font-semibold text-amber-400">{perf.pending || 0}</div>
             </div>
             <div className="bg-slate-800/30 rounded-lg p-2">
-              <div className="text-xs text-slate-500 mb-1">Retard</div>
+              <div className="text-xs text-slate-400 mb-1">Retard</div>
               <div className="text-sm font-semibold text-red-400">{perf.overdue || 0}</div>
             </div>
           </div>
@@ -333,7 +333,7 @@ function KPIDetailContent({ data }: { data: Record<string, unknown> }) {
       {/* Title */}
       <div>
         <h4 className="text-lg font-semibold text-slate-200 mb-1">{data.name as string}</h4>
-        <p className="text-sm text-slate-500">{data.category as string}</p>
+        <p className="text-sm text-slate-400">{data.category as string}</p>
       </div>
 
       {/* Résumé - Valeur, Delta, Statut */}
@@ -341,7 +341,7 @@ function KPIDetailContent({ data }: { data: Record<string, unknown> }) {
         <div className="flex items-baseline gap-2 mb-2">
           <span className="text-3xl font-bold text-slate-100">{data.value as string}</span>
           {typeof data.unit === 'string' && data.unit && (
-            <span className="text-sm text-slate-500">{data.unit}</span>
+            <span className="text-sm text-slate-400">{data.unit}</span>
           )}
         </div>
         <div className="flex items-center gap-3 mb-3">
@@ -387,7 +387,7 @@ function KPIDetailContent({ data }: { data: Record<string, unknown> }) {
           ) : null}
         </div>
         {typeof data.lastUpdate === 'string' && data.lastUpdate ? (
-          <div className="flex items-center gap-1.5 text-xs text-slate-500 pt-2 border-t border-slate-700/50">
+          <div className="flex items-center gap-1.5 text-xs text-slate-400 pt-2 border-t border-slate-700/50">
             <Clock className="h-3 w-3" />
             <span>MàJ: {data.lastUpdate}</span>
           </div>
@@ -404,7 +404,7 @@ function KPIDetailContent({ data }: { data: Record<string, unknown> }) {
           <div className="space-y-1.5 text-xs">
             {((data.metadata as any))?.threshold?.success && (
               <div className="flex justify-between items-center">
-                <span className="text-slate-500">Succès</span>
+                <span className="text-slate-400">Succès</span>
                 <Badge variant="default" className="text-xs">
                   ≥ {((data.metadata as any).threshold as any).success}%
                 </Badge>
@@ -412,7 +412,7 @@ function KPIDetailContent({ data }: { data: Record<string, unknown> }) {
             )}
             {((data.metadata as any))?.threshold?.warning && (
               <div className="flex justify-between items-center">
-                <span className="text-slate-500">Attention</span>
+                <span className="text-slate-400">Attention</span>
                 <Badge variant="warning" className="text-xs">
                   ≥ {((data.metadata as any).threshold as any).warning}%
                 </Badge>
@@ -420,7 +420,7 @@ function KPIDetailContent({ data }: { data: Record<string, unknown> }) {
             )}
             {((data.metadata as any))?.threshold?.critical && (
               <div className="flex justify-between items-center">
-                <span className="text-slate-500">Critique</span>
+                <span className="text-slate-400">Critique</span>
                 <Badge variant="destructive" className="text-xs">
                   &lt; {((data.metadata as any).threshold as any).critical}%
                 </Badge>
@@ -443,25 +443,25 @@ function KPIDetailContent({ data }: { data: Record<string, unknown> }) {
           <div className="space-y-1.5 text-xs">
             {(data.metadata as any)?.owner && (
               <div className="flex justify-between">
-                <span className="text-slate-500">Propriétaire</span>
+                <span className="text-slate-400">Propriétaire</span>
                 <span className="text-slate-300 font-medium">{(data.metadata as any).owner}</span>
               </div>
             )}
             {(data.metadata as any)?.dataSource && (
               <div className="flex justify-between">
-                <span className="text-slate-500">Source</span>
+                <span className="text-slate-400">Source</span>
                 <span className="text-slate-300 font-medium">{(data.metadata as any).dataSource}</span>
               </div>
             )}
             {(data.metadata as any)?.updateFrequency && (
               <div className="flex justify-between">
-                <span className="text-slate-500">Fréquence</span>
+                <span className="text-slate-400">Fréquence</span>
                 <span className="text-slate-300 font-medium">{(data.metadata as any).updateFrequency}</span>
               </div>
             )}
             {(data.metadata as any)?.formula && (
               <div className="pt-1.5 border-t border-slate-700/50">
-                <span className="text-slate-500 block mb-1">Formule</span>
+                <span className="text-slate-400 block mb-1">Formule</span>
                 <code className="text-xs font-mono text-blue-400 bg-slate-900/50 px-2 py-1 rounded">
                   {(data.metadata as any).formula}
                 </code>
@@ -490,7 +490,7 @@ function KPIDetailContent({ data }: { data: Record<string, unknown> }) {
               <Activity className="h-3.5 w-3.5 text-blue-400" />
               <h5 className="text-xs font-semibold text-slate-400 uppercase">Historique 7j</h5>
             </div>
-            <span className="text-xs text-slate-500">Voir plus →</span>
+            <span className="text-xs text-slate-400">Voir plus →</span>
           </div>
           <div className="h-16 bg-slate-900/50 rounded flex items-center justify-center">
             <span className="text-xs text-slate-600">Sparkline graphique</span>
@@ -510,13 +510,13 @@ function KPIDetailContent({ data }: { data: Record<string, unknown> }) {
           <div className="space-y-1.5 text-xs">
             {(data.relatedKpiIds && Array.isArray(data.relatedKpiIds) && (data.relatedKpiIds as any[]).length > 0) ? (
               <div className="flex items-center justify-between">
-                <span className="text-slate-500">KPIs liés</span>
+                <span className="text-slate-400">KPIs liés</span>
                 <span className="text-slate-300 font-medium">{(data.relatedKpiIds as any[]).length}</span>
               </div>
             ) : null}
             {(data.relatedAlertIds && Array.isArray(data.relatedAlertIds) && (data.relatedAlertIds as any[]).length > 0) ? (
               <div className="flex items-center justify-between">
-                <span className="text-slate-500">Alertes liées</span>
+                <span className="text-slate-400">Alertes liées</span>
                 <Badge variant="warning" className="text-xs">
                   {(data.relatedAlertIds as any[]).length}
                 </Badge>
@@ -524,7 +524,7 @@ function KPIDetailContent({ data }: { data: Record<string, unknown> }) {
             ) : null}
             {(data.relatedReportIds && Array.isArray(data.relatedReportIds) && (data.relatedReportIds as any[]).length > 0) ? (
               <div className="flex items-center justify-between">
-                <span className="text-slate-500">Rapports liés</span>
+                <span className="text-slate-400">Rapports liés</span>
                 <span className="text-slate-300 font-medium">{(data.relatedReportIds as any[]).length}</span>
               </div>
             ) : null}
@@ -610,19 +610,19 @@ function AlertDetailContent({ data }: { data: Record<string, unknown> }) {
       <div className="space-y-2 text-sm">
         {Boolean(data.category) && (
           <div className="flex justify-between">
-            <span className="text-slate-500">Catégorie</span>
+            <span className="text-slate-400">Catégorie</span>
             <span className="text-slate-300 font-medium">{data.category as string}</span>
           </div>
         )}
         {Boolean(data.createdAt) && (
           <div className="flex justify-between">
-            <span className="text-slate-500">Créé le</span>
+            <span className="text-slate-400">Créé le</span>
             <span className="text-slate-300">{data.createdAt as string}</span>
           </div>
         )}
         {typeof data.status === 'string' && data.status ? (
           <div className="flex justify-between">
-            <span className="text-slate-500">Statut</span>
+            <span className="text-slate-400">Statut</span>
             <Badge variant={data.status === 'active' ? 'destructive' : 'default'}>
               {data.status === 'active' ? 'Actif' : 'Résolu'}
             </Badge>
@@ -642,7 +642,7 @@ function ReportDetailContent({ data }: { data: Record<string, unknown> }) {
       {/* Title */}
       <div>
         <h4 className="text-lg font-semibold text-slate-200 mb-1">{data.title as string}</h4>
-        <p className="text-sm text-slate-500">{data.type as string}</p>
+        <p className="text-sm text-slate-400">{data.type as string}</p>
       </div>
 
       {/* Status */}
@@ -664,13 +664,13 @@ function ReportDetailContent({ data }: { data: Record<string, unknown> }) {
       <div className="space-y-2 text-sm">
         {Boolean(data.createdAt) ? (
           <div className="flex justify-between">
-            <span className="text-slate-500">Créé le</span>
+            <span className="text-slate-400">Créé le</span>
             <span className="text-slate-300">{data.createdAt as string}</span>
           </div>
         ) : null}
         {Boolean(data.period) ? (
           <div className="flex justify-between">
-            <span className="text-slate-500">Période</span>
+            <span className="text-slate-400">Période</span>
             <span className="text-slate-300">{data.period as string}</span>
           </div>
         ) : null}

@@ -156,7 +156,7 @@ function ShortcutsSection() {
                   <div className="flex items-center gap-1">
                     {shortcut.keys.map((key, i) => (
                       <React.Fragment key={i}>
-                        {i > 0 && <span className="text-slate-500 text-xs mx-1">+</span>}
+                        {i > 0 && <span className="text-slate-400 text-xs mx-1">+</span>}
                         <kbd className="px-3 py-1.5 bg-slate-700 rounded-md text-xs font-mono text-slate-200 border border-slate-600">
                           {key}
                         </kbd>
@@ -326,11 +326,11 @@ function RolesSection() {
                   <h4 className="text-sm font-semibold text-slate-200 mb-1">{role.name}</h4>
                   <div className="grid grid-cols-1 gap-2 text-xs">
                     <div>
-                      <span className="text-slate-500 font-medium">Permissions:</span>
+                      <span className="text-slate-400 font-medium">Permissions:</span>
                       <span className="text-slate-400 ml-2">{role.permissions}</span>
                     </div>
                     <div>
-                      <span className="text-slate-500 font-medium">Responsabilités:</span>
+                      <span className="text-slate-400 font-medium">Responsabilités:</span>
                       <span className="text-slate-400 ml-2">{role.responsibilities}</span>
                     </div>
                   </div>

@@ -200,7 +200,7 @@ export function ValidationBCDelegationManager({ open, onClose }: Props) {
             </FluentButton>
           </div>
         ) : delegations.length === 0 ? (
-          <div className="text-center py-12 text-slate-500">
+          <div className="text-center py-12 text-slate-400">
             <UserCheck className="w-10 h-10 mx-auto mb-2 text-slate-300" />
             <div>Aucune délégation</div>
             <FluentButton size="sm" variant="primary" onClick={() => setCreateOpen(true)} className="mt-4">
@@ -244,7 +244,7 @@ export function ValidationBCDelegationManager({ open, onClose }: Props) {
                         </div>
                         <div className="text-sm">
                           <div className="font-medium">{delegation.delegatorName}</div>
-                          <div className="text-xs text-slate-500">{delegation.delegatorRole}</div>
+                          <div className="text-xs text-slate-400">{delegation.delegatorRole}</div>
                         </div>
                       </div>
                       <ChevronRight className="w-4 h-4 text-slate-300" />
@@ -254,7 +254,7 @@ export function ValidationBCDelegationManager({ open, onClose }: Props) {
                         </div>
                         <div className="text-sm">
                           <div className="font-medium">{delegation.delegateName}</div>
-                          <div className="text-xs text-slate-500">{delegation.delegateRole}</div>
+                          <div className="text-xs text-slate-400">{delegation.delegateRole}</div>
                         </div>
                       </div>
                     </div>
@@ -273,25 +273,25 @@ export function ValidationBCDelegationManager({ open, onClose }: Props) {
                 {/* Scope */}
                 <div className="grid grid-cols-2 gap-2 text-xs mb-3">
                   <div className="p-2 rounded-lg bg-white/50 dark:bg-slate-800/30">
-                    <div className="text-slate-500 mb-0.5">Documents</div>
+                    <div className="text-slate-400 mb-0.5">Documents</div>
                     <div className="font-medium">{delegation.scope.documentTypes.join(', ')}</div>
                   </div>
                   <div className="p-2 rounded-lg bg-white/50 dark:bg-slate-800/30">
-                    <div className="text-slate-500 mb-0.5">Plafond</div>
+                    <div className="text-slate-400 mb-0.5">Plafond</div>
                     <div className="font-medium">{formatAmount(delegation.scope.maxAmount)}</div>
                   </div>
                   <div className="p-2 rounded-lg bg-white/50 dark:bg-slate-800/30">
-                    <div className="text-slate-500 mb-0.5">Bureaux</div>
+                    <div className="text-slate-400 mb-0.5">Bureaux</div>
                     <div className="font-medium">{delegation.scope.bureaux?.join(', ') || 'Tous'}</div>
                   </div>
                   <div className="p-2 rounded-lg bg-white/50 dark:bg-slate-800/30">
-                    <div className="text-slate-500 mb-0.5">Actions</div>
+                    <div className="text-slate-400 mb-0.5">Actions</div>
                     <div className="font-medium">{delegation.scope.actions.length} autorisées</div>
                   </div>
                 </div>
 
                 {/* Footer */}
-                <div className="flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-200/50 dark:border-slate-700/50">
+                <div className="flex items-center justify-between text-xs text-slate-400 pt-2 border-t border-slate-200/50 dark:border-slate-700/50">
                   <div className="flex items-center gap-3">
                     <span className="flex items-center gap-1">
                       <Calendar className="w-3 h-3" />

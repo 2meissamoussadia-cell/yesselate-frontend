@@ -170,7 +170,7 @@ export function BTPNotificationSystem({
                 >
                   {notification.alert.category}
                 </Badge>
-                <span className="text-xs text-slate-500">
+                <span className="text-xs text-slate-400">
                   {new Date(notification.alert.detectedAt).toLocaleTimeString()}
                 </span>
               </div>

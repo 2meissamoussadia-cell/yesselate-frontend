@@ -240,7 +240,7 @@ export function AlertDetailModal({ alert, isOpen, onClose }: AlertDetailModalPro
                     </p>
                   </div>
                   {(alert as any).ackedBy && (
-                    <p className="text-xs text-slate-500 mt-1">par {(alert as any).ackedBy}</p>
+                    <p className="text-xs text-slate-400 mt-1">par {(alert as any).ackedBy}</p>
                   )}
                 </div>
               )}
@@ -254,7 +254,7 @@ export function AlertDetailModal({ alert, isOpen, onClose }: AlertDetailModalPro
                     </p>
                   </div>
                   {(alert as any).closedBy && (
-                    <p className="text-xs text-slate-500 mt-1">par {(alert as any).closedBy}</p>
+                    <p className="text-xs text-slate-400 mt-1">par {(alert as any).closedBy}</p>
                   )}
                 </div>
               )}

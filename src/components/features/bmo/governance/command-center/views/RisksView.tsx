@@ -158,28 +158,28 @@ function RiskRegisterView({ risks }: { risks: SurveillanceItem[] }) {
       <div className="grid grid-cols-4 gap-4 p-4 border-b border-slate-800/50">
         <div className="bg-slate-900/60 rounded-lg p-3 border border-slate-800/50">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-slate-500">Risques actifs</span>
-            <AlertTriangle className="h-4 w-4 text-slate-500" />
+            <span className="text-xs text-slate-400">Risques actifs</span>
+            <AlertTriangle className="h-4 w-4 text-slate-400" />
           </div>
           <p className="text-xl font-bold text-slate-200 mt-1">{risks.length}</p>
         </div>
         <div className="bg-slate-900/60 rounded-lg p-3 border border-red-500/20">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-slate-500">Critiques</span>
+            <span className="text-xs text-slate-400">Critiques</span>
             <XCircle className="h-4 w-4 text-red-400" />
           </div>
           <p className="text-xl font-bold text-red-400 mt-1">{criticalCount}</p>
         </div>
         <div className="bg-slate-900/60 rounded-lg p-3 border border-orange-500/20">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-slate-500">Élevés</span>
+            <span className="text-xs text-slate-400">Élevés</span>
             <AlertTriangle className="h-4 w-4 text-orange-400" />
           </div>
           <p className="text-xl font-bold text-orange-400 mt-1">{highCount}</p>
         </div>
         <div className="bg-slate-900/60 rounded-lg p-3 border border-emerald-500/20">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-slate-500">Mitigés ce mois</span>
+            <span className="text-xs text-slate-400">Mitigés ce mois</span>
             <Shield className="h-4 w-4 text-emerald-400" />
           </div>
           <p className="text-xl font-bold text-emerald-400 mt-1">8</p>
@@ -188,7 +188,7 @@ function RiskRegisterView({ risks }: { risks: SurveillanceItem[] }) {
 
       {/* Risk Matrix Preview */}
       <div className="p-4 border-b border-slate-800/50">
-        <h4 className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-3">
+        <h4 className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-3">
           Matrice Probabilité / Impact
         </h4>
         <div className="grid grid-cols-4 gap-1 h-24">
@@ -220,7 +220,7 @@ function RiskRegisterView({ risks }: { risks: SurveillanceItem[] }) {
           </div>
           {/* Impact: Mineur */}
           <div className="bg-emerald-500/10 rounded-bl flex items-center justify-center">
-            <span className="text-xs text-slate-500">0</span>
+            <span className="text-xs text-slate-400">0</span>
           </div>
           <div className="bg-emerald-500/20 flex items-center justify-center">
             <span className="text-xs text-emerald-400">3</span>
@@ -288,7 +288,7 @@ function AlertsListView({ alerts }: { alerts: AlertItem[] }) {
                   'h-7 px-2 text-xs',
                   filter === f
                     ? 'bg-slate-800 text-slate-200'
-                    : 'text-slate-500 hover:text-slate-300'
+                    : 'text-slate-400 hover:text-slate-300'
                 )}
                 onClick={() => setFilter(f)}
               >
@@ -298,7 +298,7 @@ function AlertsListView({ alerts }: { alerts: AlertItem[] }) {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" className="h-8 text-slate-500">
+          <Button variant="ghost" size="sm" className="h-8 text-slate-400">
             <BellOff className="h-4 w-4 mr-1" />
             Tout marquer lu
           </Button>
@@ -332,7 +332,7 @@ function AlertsListView({ alerts }: { alerts: AlertItem[] }) {
                     )}>
                       {alert.title}
                     </p>
-                    <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">
+                    <p className="text-xs text-slate-400 mt-0.5 line-clamp-1">
                       {alert.description}
                     </p>
                   </div>
@@ -341,7 +341,7 @@ function AlertsListView({ alerts }: { alerts: AlertItem[] }) {
                   )}
                 </div>
                 <div className="flex items-center gap-3 mt-2">
-                  <Badge variant="default" className="text-xs bg-slate-800 text-slate-500 border-slate-700">
+                  <Badge variant="default" className="text-xs bg-slate-800 text-slate-400 border-slate-700">
                     {alert.project}
                   </Badge>
                   <span className="text-xs text-slate-600">{alert.source}</span>
@@ -396,7 +396,7 @@ function MitigationView() {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-sm font-medium text-slate-300">{m.plan}</p>
-                <p className="text-xs text-slate-500 mt-1">Risque: {m.risk}</p>
+                <p className="text-xs text-slate-400 mt-1">Risque: {m.risk}</p>
               </div>
               <Badge
                 className={cn(
@@ -411,7 +411,7 @@ function MitigationView() {
             </div>
             <div className="mt-3">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-xs text-slate-500">Avancement</span>
+                <span className="text-xs text-slate-400">Avancement</span>
                 <span className="text-xs text-slate-400">{m.progress}%</span>
               </div>
               <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
@@ -430,7 +430,7 @@ function MitigationView() {
 
 function MonitoringView() {
   return (
-    <div className="flex items-center justify-center h-full text-slate-500">
+    <div className="flex items-center justify-center h-full text-slate-400">
       <div className="text-center">
         <Eye className="h-12 w-12 mx-auto mb-4 opacity-50" />
         <p className="text-sm">Surveillance en temps réel</p>

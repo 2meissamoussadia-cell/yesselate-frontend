@@ -30,7 +30,7 @@ export function CockpitPhase6Section() {
   return (
     <DashboardPanel padding="md" className="min-h-[320px]">
       <div className="flex items-center gap-2 mb-4">
-        <span className="text-[10px] uppercase tracking-wider text-slate-500 font-medium">Phase 6</span>
+        <span className="text-[10px] uppercase tracking-wider text-slate-400 font-medium">Phase 6</span>
         <h3 className="text-slate-100 font-semibold text-base">Photos GPS · Plan AR · Pointage · Drone</h3>
       </div>
 

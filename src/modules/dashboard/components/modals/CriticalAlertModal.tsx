@@ -86,13 +86,13 @@ export function CriticalAlertModal({
         <div className="px-6 pb-6 space-y-4">
           {alert.reason && (
             <div>
-              <span className="text-xs font-medium uppercase text-slate-500">Raison</span>
+              <span className="text-xs font-medium uppercase text-slate-400">Raison</span>
               <p className="text-sm text-slate-200 mt-1">{alert.reason}</p>
             </div>
           )}
           {alert.impact && (
             <div>
-              <span className="text-xs font-medium uppercase text-slate-500">Impact</span>
+              <span className="text-xs font-medium uppercase text-slate-400">Impact</span>
               <p className="text-sm text-amber-300 mt-1">{alert.impact}</p>
             </div>
           )}

@@ -109,7 +109,7 @@ export function BmoSidebar({
       </div>
 
       {/* Modules par groupe */}
-      <nav className="flex-1 overflow-y-auto py-2 scrollbar-dashboard">
+      <nav className="flex-1 min-w-0 overflow-x-hidden overflow-y-auto py-2 scrollbar-dashboard">
         {(['pilotage', 'execution', 'support', 'systeme'] as const).map((group) => (
           <div key={group} className={cn(!collapsed && 'mb-4')}>
             {!collapsed && (

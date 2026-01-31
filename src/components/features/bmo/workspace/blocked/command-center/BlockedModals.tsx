@@ -507,7 +507,7 @@ function DossierDetailModal({ onClose, data }: { onClose: () => void; data: Reco
               {/* Header */}
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-sm font-mono text-slate-500">{dossier.id}</p>
+                  <p className="text-sm font-mono text-slate-400">{dossier.id}</p>
                   <h3 className="text-xl font-semibold text-slate-100 mt-1">{dossier.subject}</h3>
                 </div>
                 <Badge className={cn("border", impactColors[dossier.impact])}>
@@ -518,14 +518,14 @@ function DossierDetailModal({ onClose, data }: { onClose: () => void; data: Reco
               {/* Info Grid */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <div className="flex items-center gap-2 text-slate-500 mb-1">
+                  <div className="flex items-center gap-2 text-slate-400 mb-1">
                     <Building2 className="w-4 h-4" />
                     <span className="text-xs">Bureau</span>
                   </div>
                   <p className="font-medium text-slate-200">{dossier.bureau}</p>
                 </div>
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <div className="flex items-center gap-2 text-slate-500 mb-1">
+                  <div className="flex items-center gap-2 text-slate-400 mb-1">
                     <Clock className="w-4 h-4" />
                     <span className="text-xs">Délai</span>
                   </div>
@@ -537,14 +537,14 @@ function DossierDetailModal({ onClose, data }: { onClose: () => void; data: Reco
                   </p>
                 </div>
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <div className="flex items-center gap-2 text-slate-500 mb-1">
+                  <div className="flex items-center gap-2 text-slate-400 mb-1">
                     <FileText className="w-4 h-4" />
                     <span className="text-xs">Type</span>
                   </div>
                   <p className="font-medium text-slate-200">{dossier.type}</p>
                 </div>
                 <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                  <div className="flex items-center gap-2 text-slate-500 mb-1">
+                  <div className="flex items-center gap-2 text-slate-400 mb-1">
                     <AlertCircle className="w-4 h-4" />
                     <span className="text-xs">Montant</span>
                   </div>
@@ -567,7 +567,7 @@ function DossierDetailModal({ onClose, data }: { onClose: () => void; data: Reco
               )}
             </div>
           ) : (
-            <div className="text-center py-12 text-slate-500">
+            <div className="text-center py-12 text-slate-400">
               Dossier non trouvé
             </div>
           )}

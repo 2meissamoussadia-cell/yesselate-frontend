@@ -435,7 +435,7 @@ export function ApiRequestWorkbench({ endpoint }: { endpoint: EndpointLike }) {
                       <span className="text-[10px] text-slate-400 font-mono">{h.durationMs}ms</span>
                       <span className="text-[10px] text-slate-400 font-mono">{Math.round(h.responseBytes / 1024)}KB</span>
                     </div>
-                    <p className="text-[10px] text-slate-500 mt-1">
+                    <p className="text-[10px] text-slate-400 mt-1">
                       {new Date(h.createdAt).toLocaleString('fr-FR')}
                     </p>
                   </div>

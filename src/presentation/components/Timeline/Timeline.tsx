@@ -69,7 +69,7 @@ export function Timeline({
                   </p>
                 )}
                 {item.date && (
-                  <p className="text-xs text-slate-500 mt-1">{item.date}</p>
+                  <p className="text-xs text-slate-400 mt-1">{item.date}</p>
                 )}
               </div>
             </div>
@@ -119,7 +119,7 @@ export function Timeline({
                     )}
                   </div>
                   {item.date && (
-                    <span className="text-xs text-slate-500 whitespace-nowrap">
+                    <span className="text-xs text-slate-400 whitespace-nowrap">
                       {item.date}
                     </span>
                   )}

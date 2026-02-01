@@ -569,7 +569,7 @@ function ActionsTab({
       description: string;
       priority: 'high' | 'medium' | 'low';
       actionType: 'alert' | 'task' | 'meeting' | 'review' | 'escalate';
-      icon: React.ElementType;
+      icon: React.ComponentType<{ className?: string }>;
     }> = [];
 
     if (isCritical) {

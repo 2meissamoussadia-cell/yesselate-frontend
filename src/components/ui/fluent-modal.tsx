@@ -14,6 +14,8 @@ type Props = {
   maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl' | 'full';
   noPadding?: boolean;
   dark?: boolean; // Force dark theme (ERP)
+  hideHeader?: boolean;
+  size?: string; // Alias for maxWidth (sm, md, lg, xl, etc.)
 };
 
 const maxWidthClasses: Record<string, string> = {
@@ -30,7 +32,8 @@ const maxWidthClasses: Record<string, string> = {
   full: 'max-w-[95vw]',
 };
 
-export function FluentModal({ open, title, onClose, children, className, maxWidth = '3xl', noPadding = false, dark = false }: Props) {
+export function FluentModal({ open, title, onClose, children, className, maxWidth: maxWidthProp, size, noPadding = false, dark = false, hideHeader = false }: Props) {
+  const maxWidth = (maxWidthProp ?? (size as Props['maxWidth']) ?? '3xl') as Props['maxWidth'];
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -63,7 +66,7 @@ export function FluentModal({ open, title, onClose, children, className, maxWidt
           className={cn(
             "w-full rounded-2xl backdrop-blur-xl shadow-xl",
             "max-h-[85vh] overflow-hidden",
-            maxWidthClasses[maxWidth] || 'max-w-3xl',
+            maxWidthClasses[maxWidth ?? '3xl'] || 'max-w-3xl',
             dark 
               ? "bg-slate-900/95 text-slate-100 border border-slate-800/60"
               : "border border-slate-200/70 bg-white/90 dark:border-slate-800 dark:bg-[#1f1f1f]/85",
@@ -71,6 +74,7 @@ export function FluentModal({ open, title, onClose, children, className, maxWidt
           )}
           onClick={(e) => e.stopPropagation()}
         >
+          {!hideHeader && (
           <div className={cn(
             "flex items-center justify-between gap-3 px-4 py-3",
             dark 
@@ -97,9 +101,10 @@ export function FluentModal({ open, title, onClose, children, className, maxWidt
               <X className="h-5 w-5" />
             </button>
           </div>
+          )}
 
           <div className={cn(
-            "overflow-auto max-h-[calc(90vh-56px)]",
+            hideHeader ? "overflow-auto max-h-[85vh]" : "overflow-auto max-h-[calc(90vh-56px)]",
             !noPadding && "p-6",
             noPadding && "!p-0 !overflow-visible"
           )}>

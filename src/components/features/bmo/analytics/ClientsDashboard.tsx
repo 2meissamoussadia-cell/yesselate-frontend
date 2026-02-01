@@ -100,8 +100,8 @@ export function ClientsDashboard({ clientsGlobalStats, evolution }: ClientsDashb
             <CardTitle className="text-sm">📊 Nouveaux clients (mensuel)</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-72">
-              <ResponsiveContainer width="100%" height="100%">
+            <div className="h-72 min-h-[200px]">
+              <ResponsiveContainer width="100%" height="100%" minHeight={200}>
                 <BarChart data={evolution}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
                   <XAxis dataKey="month" tick={{ fill: '#94a3b8', fontSize: 10 }} axisLine={false} tickLine={false} />
@@ -127,8 +127,8 @@ export function ClientsDashboard({ clientsGlobalStats, evolution }: ClientsDashb
             <CardTitle className="text-sm">📈 Chiffre d'affaires (mensuel)</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-72">
-              <ResponsiveContainer width="100%" height="100%">
+            <div className="h-72 min-h-[200px]">
+              <ResponsiveContainer width="100%" height="100%" minHeight={200}>
                 <LineChart data={evolution}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
                   <XAxis dataKey="month" tick={{ fill: '#94a3b8', fontSize: 10 }} axisLine={false} tickLine={false} />

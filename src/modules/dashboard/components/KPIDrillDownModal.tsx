@@ -162,8 +162,8 @@ export function KPIDrillDownModal({ kpi, isOpen, onClose, historicalData }: KPID
           {/* Graphique historique */}
           <div className="bg-slate-800/30 rounded-xl p-6 border border-slate-700/50">
             <h3 className="text-lg font-semibold text-slate-200 mb-4">Évolution historique</h3>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
+            <div className="h-64 min-h-[200px]">
+              <ResponsiveContainer width="100%" height="100%" minHeight={200}>
                 <LineChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.1)" />
                   <XAxis 

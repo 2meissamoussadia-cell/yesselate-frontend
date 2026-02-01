@@ -24,7 +24,7 @@ interface EmptyStateProps {
   variant?: EmptyStateVariant;
   title?: string;
   description?: string;
-  icon?: React.ElementType;
+  icon?: React.ComponentType<{ className?: string }>;
   action?: {
     label: string;
     onClick: () => void;
@@ -36,7 +36,7 @@ interface EmptyStateProps {
   className?: string;
 }
 
-const defaultConfig: Record<EmptyStateVariant, { icon: React.ElementType; title: string; description: string }> = {
+const defaultConfig: Record<EmptyStateVariant, { icon: React.ComponentType<{ className?: string }>; title: string; description: string }> = {
   'no-data': {
     icon: Inbox,
     title: 'Aucune donnée',

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import { Suspense, useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { useAppStore, useBMOStore } from '@/lib/stores';
 import { Badge } from '@/components/ui/badge';
@@ -651,7 +651,7 @@ const subCategoriesMap: Record<string, Array<{ id: string; label: string; badge?
   ],
 };
 
-export default function SystemLogsPage() {
+function SystemLogsPageContent() {
   const { darkMode } = useAppStore();
   const { addToast, addActionLog } = useBMOStore();
 
@@ -1985,5 +1985,21 @@ export default function SystemLogsPage() {
       {/* Detail Panel */}
       <SystemLogsDetailPanel />
     </div>
+  );
+}
+
+function SystemLogsFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-950">
+      <div className="animate-spin rounded-full h-10 w-10 border-2 border-blue-500 border-t-transparent" />
+    </div>
+  );
+}
+
+export default function SystemLogsPage() {
+  return (
+    <Suspense fallback={<SystemLogsFallback />}>
+      <SystemLogsPageContent />
+    </Suspense>
   );
 }

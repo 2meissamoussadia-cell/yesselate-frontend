@@ -279,7 +279,7 @@ export function DirecteurTravauxPage() {
                     <div>
                       <div className="font-semibold text-slate-200">{budget.projet}</div>
                       <div className="text-xs text-slate-400">
-                        {(budget.budgetConsomme / 1000000).toFixed(1)}M / {(budget.budgetAlloue / 1000000).toFixed(1)}M FCFA
+                        {(budget.budgetConsomme / 1000000).toFixed(1)}M / {(budget.budgetAlloue / 1000000).toFixed(1)}M XOF
                       </div>
                     </div>
                   </div>

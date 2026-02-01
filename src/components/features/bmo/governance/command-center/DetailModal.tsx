@@ -51,7 +51,7 @@ export function DetailModal() {
     full: 'max-w-[90vw]',
   };
 
-  const tabs: { id: DetailTab; label: string; icon: React.ElementType }[] = [
+  const tabs: { id: DetailTab; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
     { id: 'info', label: 'Informations', icon: FolderKanban },
     { id: 'timeline', label: 'Historique', icon: History },
     { id: 'comments', label: 'Commentaires', icon: MessageSquare },
@@ -339,7 +339,7 @@ function InfoField({
 }: {
   label: string;
   value: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   badge?: boolean;
   badgeColor?: string;
 }) {

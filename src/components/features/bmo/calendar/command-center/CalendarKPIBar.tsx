@@ -45,7 +45,7 @@ interface KPI {
   id: string;
   label: string;
   value: string | number;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   status: 'success' | 'warning' | 'critical' | 'neutral';
   trend?: 'up' | 'down' | 'stable';
   sparkline?: number[];

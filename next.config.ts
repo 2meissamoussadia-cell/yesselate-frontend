@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // Contourner l'échec "spawn EPERM" du check TypeScript (Windows/sandbox). Vérifier les types avec `npx tsc --noEmit` en CI si besoin.
   typescript: {
+    // Activer après création des services manquants (risk.service, priority.service)
     ignoreBuildErrors: true,
   },
   // Configuration des images

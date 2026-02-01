@@ -303,7 +303,7 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
     (node: NavNode, level: number, parentMain?: string, parentSub?: string): React.ReactNode => {
       const hasExternalHref = Boolean(node.externalHref);
       const hasChildren = !hasExternalHref && Boolean(node.children?.length);
-      // PILOTAGE : un seul niveau dans la sidebar, la sous-navigation (Cockpit DG, Gouvernance, …) est dans la barre d’onglets
+      // PILOTAGE : un seul niveau dans la sidebar, la sous-navigation (Dashboard, Gouvernance, …) est dans la barre d’onglets
       const isPilotageSingleLevel = level === 0 && node.id === 'pilotage';
       const showChildren = hasChildren && !isPilotageSingleLevel;
       const isExpanded = expandedNodes.has(node.id);
@@ -319,7 +319,7 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
       const label = t(node.i18nKey ?? node.label ?? node.id);
       const externalHref = node.externalHref;
 
-      // Pour PILOTAGE en mode "un seul niveau", cible = première sous-vue autorisée (ex. Cockpit DG)
+      // Pour PILOTAGE en mode "un seul niveau", cible = première sous-vue autorisée (ex. Dashboard)
       const pilotageFirstChild = isPilotageSingleLevel
         ? getAccessibleChildren(node, level, parentMain)[0]
         : null;

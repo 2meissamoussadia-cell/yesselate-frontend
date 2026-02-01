@@ -149,7 +149,7 @@ export const ChantierSphere = React.memo(function ChantierSphere({
             <div className="px-3 py-2 space-y-1 text-slate-300">
               <div className="flex justify-between gap-3">
                 <span className="text-slate-400">CA</span>
-                <span className="font-medium text-slate-200">{(chantier.ca / 1000).toFixed(0)}k FCFA</span>
+                <span className="font-medium text-slate-200">{(chantier.ca / 1000).toFixed(0)}k XOF</span>
               </div>
               <div className="flex justify-between gap-3">
                 <span className="text-slate-400">Marge</span>

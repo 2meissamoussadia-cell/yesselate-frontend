@@ -39,7 +39,7 @@ interface ConfirmDialogProps {
   confirmationText?: string;
 }
 
-const variantConfig: Record<ConfirmVariant, { icon: React.ElementType; iconColor: string; buttonClass: string }> = {
+const variantConfig: Record<ConfirmVariant, { icon: React.ComponentType<{ className?: string }>; iconColor: string; buttonClass: string }> = {
   danger: {
     icon: Trash2,
     iconColor: 'text-red-400',

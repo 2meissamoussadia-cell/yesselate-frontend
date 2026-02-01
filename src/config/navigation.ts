@@ -26,7 +26,7 @@ export const navigationConfig: NavigationConfig = [
         icon: '📊',
         ariaLabel: 'Tableau de bord',
         children: [
-          { id: 'dashboard-cockpit', label: 'Cockpit DG', path: b('/dashboard'), ariaLabel: 'Cockpit direction générale' },
+          { id: 'dashboard-cockpit', label: 'Dashboard', path: b('/dashboard'), ariaLabel: 'Dashboard pilotage (vue DG)' },
           { id: 'dashboard-kpis', label: 'KPIs', path: b('/dashboard/kpis'), ariaLabel: 'Indicateurs clés' },
           { id: 'dashboard-rapports', label: 'Rapports', path: b('/dashboard/rapports'), ariaLabel: 'Rapports' },
         ],

@@ -19,7 +19,7 @@ export interface KPICardData {
   sparkline?: number[];
 }
 
-interface KPICardProps {
+export interface KPICardProps {
   kpi: KPICardData;
   /** Spec audit : XL = KPIs critiques (CA, Trésorerie), L = importants, M = secondaires, S = détails */
   size?: 'sm' | 'md' | 'lg' | 'xl';

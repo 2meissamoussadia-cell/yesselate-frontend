@@ -31,10 +31,12 @@ interface Props {
   open: boolean;
   onClose: () => void;
   onExport?: (format: ExportFormat) => Promise<void>;
+  format?: string;
+  queue?: string;
 }
 
-export function DelegationExportModal({ open, onClose, onExport }: Props) {
-  const [selectedFormat, setSelectedFormat] = useState<ExportFormat>('csv');
+export function DelegationExportModal({ open, onClose, onExport, format, queue }: Props) {
+  const [selectedFormat, setSelectedFormat] = useState<ExportFormat>((format as ExportFormat) || 'csv');
   const [exporting, setExporting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -171,8 +173,7 @@ export function DelegationExportModal({ open, onClose, onExport }: Props) {
           </FluentButton>
           <FluentButton
             onClick={handleExport}
-            loading={exporting}
-            disabled={success}
+            disabled={success || exporting}
           >
             <Download className="w-4 h-4 mr-2" />
             Exporter

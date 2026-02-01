@@ -47,7 +47,7 @@ export function BudgetLineChart() {
         pointBorderColor="#22c55e"
         useMesh
         theme={{
-          textColor: "#e5e7eb",
+          text: { fill: "#e5e7eb" },
           axis: { ticks: { text: { fill: "#9ca3af" } } },
           grid: { line: { stroke: "#1f2933", strokeWidth: 1 } },
         }}

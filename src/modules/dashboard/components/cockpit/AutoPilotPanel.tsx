@@ -67,7 +67,7 @@ export function AutoPilotPanel({ decisions, onApprove, className }: AutoPilotPan
                   {d.insight.chantier_id} • {d.insight.confidence}% conf.
                 </p>
                 <p className="text-[10px] text-slate-400 mt-0.5">
-                  Impact : {d.insight.impact_financial.toLocaleString('fr-FR')} FCFA
+                  Impact : {d.insight.impact_financial.toLocaleString('fr-FR')} XOF
                 </p>
               </div>
             </div>

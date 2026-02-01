@@ -936,7 +936,7 @@ function ConfirmModal({ onClose, data }: { onClose: () => void; data: Record<str
 // Helper Components
 // ================================
 interface MetricCardProps {
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   label: string;
   value: string | number;
   color: 'blue' | 'rose' | 'amber' | 'emerald' | 'purple';

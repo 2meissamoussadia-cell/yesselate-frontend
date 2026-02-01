@@ -15,8 +15,7 @@ const events = [
 
 export function BMOCalendar() {
   function handleDateClick(arg: { dateStr: string }) {
-    // ouvrir un drawer / formulaire BMO
-    console.log("Clicked date", arg.dateStr);
+    // TODO: ouvrir un drawer / formulaire BMO pour la date arg.dateStr
   }
 
   return (

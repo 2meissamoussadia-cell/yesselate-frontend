@@ -214,7 +214,6 @@ export function ValidationBCRequestJustificatif({
       open={open}
       onClose={onClose}
       title="Demandes de pièces justificatives"
-      icon={<Paperclip className="w-5 h-5 text-purple-500" />}
       size="xl"
     >
       <div className="space-y-6">

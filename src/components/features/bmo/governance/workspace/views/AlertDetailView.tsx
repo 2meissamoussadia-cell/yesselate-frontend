@@ -400,7 +400,7 @@ export function AlertDetailView({ alertId }: AlertDetailViewProps) {
 interface InfoRowProps {
   label: string;
   value: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   valueColor?: string;
 }
 

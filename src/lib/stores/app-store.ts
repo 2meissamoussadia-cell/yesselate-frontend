@@ -10,6 +10,9 @@ import { persist } from 'zustand/middleware';
 /** Locales supportées (FR / EN / AR) */
 export type SupportedLocale = 'fr-FR' | 'en-GB' | 'ar-MA';
 
+/** Taille du texte BMO (page, modules, sections) */
+export type BmoFontSizeScale = 'small' | 'medium' | 'large';
+
 interface AppState {
   // Theme
   darkMode: boolean;
@@ -24,6 +27,10 @@ interface AppState {
   // Locale préférée (sélecteur FR/EN/AR). null = utiliser la locale serveur.
   localeOverride: SupportedLocale | null;
   setLocaleOverride: (value: SupportedLocale | null) => void;
+
+  // Taille du texte BMO (topbar, pages, modules, sections)
+  fontSizeScale: BmoFontSizeScale;
+  setFontSizeScale: (value: BmoFontSizeScale) => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -42,6 +49,10 @@ export const useAppStore = create<AppState>()(
       // Locale - null = serveur
       localeOverride: null,
       setLocaleOverride: (value) => set({ localeOverride: value }),
+
+      // Taille du texte BMO
+      fontSizeScale: 'medium',
+      setFontSizeScale: (value) => set({ fontSizeScale: value }),
     }),
     {
       name: 'nice-renovation-app-storage',
@@ -49,6 +60,7 @@ export const useAppStore = create<AppState>()(
         darkMode: state.darkMode,
         sidebarOpen: state.sidebarOpen,
         localeOverride: state.localeOverride,
+        fontSizeScale: state.fontSizeScale,
       }),
     }
   )

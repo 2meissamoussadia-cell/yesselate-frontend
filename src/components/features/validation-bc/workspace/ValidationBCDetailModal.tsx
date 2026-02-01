@@ -345,7 +345,7 @@ export function ValidationBCDetailModal({
                     <div className="flex-1">
                       <p className="text-sm font-medium text-slate-200">Document créé</p>
                       <p className="text-xs text-slate-400">
-                        {document.dateCreation ? formatDate(document.dateCreation) : 'Date inconnue'}
+                        {document.createdAt ? formatDate(document.createdAt) : 'Date inconnue'}
                       </p>
                     </div>
                   </div>

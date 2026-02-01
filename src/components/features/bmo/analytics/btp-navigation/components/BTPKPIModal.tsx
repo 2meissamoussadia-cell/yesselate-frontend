@@ -163,13 +163,13 @@ export function BTPKPIModal({ isOpen, onClose, kpi, currentValue = 0, target }: 
       ]}
     >
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-6">
-          <TabsTrigger value="overview">Vue d'ensemble</TabsTrigger>
-          <TabsTrigger value="history">Historique</TabsTrigger>
-          <TabsTrigger value="comparisons">Comparaisons</TabsTrigger>
-          <TabsTrigger value="causes">Causes</TabsTrigger>
-          <TabsTrigger value="settings">Paramétrage</TabsTrigger>
-          <TabsTrigger value="recommendations">IA</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1">
+          <TabsTrigger value="overview" className="text-xs truncate">Vue d'ensemble</TabsTrigger>
+          <TabsTrigger value="history" className="text-xs truncate">Historique</TabsTrigger>
+          <TabsTrigger value="comparisons" className="text-xs truncate">Comparaisons</TabsTrigger>
+          <TabsTrigger value="causes" className="text-xs truncate">Causes</TabsTrigger>
+          <TabsTrigger value="settings" className="text-xs truncate">Paramétrage</TabsTrigger>
+          <TabsTrigger value="recommendations" className="text-xs truncate">IA</TabsTrigger>
         </TabsList>
 
         {/* Vue d'Ensemble */}

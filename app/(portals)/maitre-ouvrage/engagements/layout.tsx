@@ -14,7 +14,7 @@ const iconByTabId: Record<string, typeof FileText> = {
   payments: CreditCard,
 };
 
-const engagementsTabs: PortalModuleTab[] = (engagementsFinancesSubNav.tabs ?? []).map((tab) => {
+const engagementsTabs: PortalModuleTab[] = (engagementsFinancesSubNav.tabs ?? []).map((tab: { id: string; label: string; path?: string }) => {
   const path = tab.path ?? `/maitre-ouvrage/engagements/${tab.id}`;
   const icon = iconByTabId[tab.id] ?? Wallet;
   return { id: tab.id, label: tab.label, path, icon };

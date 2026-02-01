@@ -14,7 +14,7 @@ const iconByTabId: Record<string, typeof LayoutDashboard> = {
   quality: ShieldCheck,
 };
 
-const alertsTabs: PortalModuleTab[] = (alertsCenterSubNav.tabs ?? []).map((tab) => {
+const alertsTabs: PortalModuleTab[] = (alertsCenterSubNav.tabs ?? []).map((tab: { id: string; label: string; path?: string }) => {
   const path = tab.path ?? `/maitre-ouvrage/alerts/${tab.id}`;
   const icon = iconByTabId[tab.id] ?? LayoutDashboard;
   return { id: tab.id, label: tab.label, path, icon };

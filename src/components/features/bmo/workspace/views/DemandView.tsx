@@ -291,6 +291,9 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
   const {
     budgetUsage,
     budgetMetrics,
+    budgetCritical,
+    budgetWarning,
+    budgetRemaining,
     globalRiskScore: maxRiskScore,
     riskLevel,
     risks: evaluatedRisks,

@@ -14,7 +14,14 @@ export type DashboardMainCategory =
   | 'finance' 
   | 'clients' 
   | 'rh' 
-  | 'systeme';
+  | 'systeme'
+  | 'overview' 
+  | 'performance' 
+  | 'actions' 
+  | 'risks' 
+  | 'decisions' 
+  | 'realtime'
+  | 'administration';
 
 export type DashboardSubCategory =
   | 'summary'
@@ -85,7 +92,9 @@ export interface DashboardCommandCenterStore {
   setFilter: (filter: string | null) => void;
   resetNavigation: () => void;
   goBack: () => void;
+  goForward: () => void;
   navigationHistory: DashboardNavigation[];
+  forwardHistory: DashboardNavigation[];
 
   // UI State
   sidebarCollapsed: boolean;
@@ -162,6 +171,7 @@ export const useDashboardCommandCenterStore = create<DashboardCommandCenterStore
       },
       lastNavigatedAt: 0,
       navigationHistory: [],
+      forwardHistory: [],
 
       // Cache initial
       cache: {},
@@ -212,6 +222,7 @@ export const useDashboardCommandCenterStore = create<DashboardCommandCenterStore
             navigation: { ...newNavigation }, // Nouvel objet pour forcer le re-render
             lastNavigatedAt: Date.now(),
             navigationHistory: [...state.navigationHistory, current].slice(-20),
+            forwardHistory: [], // Nouvelle navigation vide la pile "avancer"
           };
 
           return updated;
@@ -275,24 +286,46 @@ export const useDashboardCommandCenterStore = create<DashboardCommandCenterStore
               subSubCategory: 'default',
             },
             navigationHistory: [],
+            forwardHistory: [],
           },
           false,
           { type: 'resetNavigation' }
         );
       },
 
-      // Go back dans l'historique
+      // Retour : aller à la vue précédente
       goBack: () => {
         const history = get().navigationHistory;
         if (history.length === 0) return;
         const previous = history[history.length - 1];
+        const current = get().navigation;
         set(
           (state) => ({
             navigation: previous,
             navigationHistory: state.navigationHistory.slice(0, -1),
+            forwardHistory: [...state.forwardHistory, current].slice(-20),
+            lastNavigatedAt: Date.now(),
           }),
           false,
           { type: 'goBack' }
+        );
+      },
+
+      // Avancer : revenir après un "retour"
+      goForward: () => {
+        const forward = get().forwardHistory;
+        if (forward.length === 0) return;
+        const next = forward[forward.length - 1];
+        const current = get().navigation;
+        set(
+          (state) => ({
+            navigation: next,
+            forwardHistory: state.forwardHistory.slice(0, -1),
+            navigationHistory: [...state.navigationHistory, current].slice(-20),
+            lastNavigatedAt: Date.now(),
+          }),
+          false,
+          { type: 'goForward' }
         );
       },
 

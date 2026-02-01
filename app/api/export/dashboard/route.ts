@@ -8,7 +8,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { logger } from '@lib-root/server/logging';
 import { safeCell, sanitizeFilename } from '@/modules/dashboard/utils/exportHelpers';
-import { extractContextFromHeaders } from '@lib-root/server/dashboard/context';
+import { extractContextFromHeaders, type RequestContext } from '@lib-root/server/dashboard/context';
 import { hydrateContext } from '@lib-root/server/dashboard/context_ext';
 import { can } from '@lib-root/server/security/policy';
 import { DashboardReadService } from '@lib-root/server/dashboard/services/dashboardReadService';
@@ -187,7 +187,7 @@ export async function GET(req: NextRequest) {
   const svc = new DashboardReadService(repo as any);
   
   // Phase P12.b: Timeout pour exports lourds
-  const dataPromise = svc.getData(main, sub ?? null, leaf ?? null, ctx);
+  const dataPromise = svc.getData(main, sub ?? null, leaf ?? null, ctx as RequestContext);
   const timeoutPromise = new Promise((_, reject) => 
     setTimeout(() => reject(new Error('Export timeout')), EXPORT_TIMEOUT_MS)
   );

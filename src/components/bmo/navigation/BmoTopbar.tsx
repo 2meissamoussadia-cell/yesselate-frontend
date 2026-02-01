@@ -3,11 +3,12 @@
 /**
  * BmoTopbar — Barre supérieure BMO : recherche, fil d'Ariane (centre), user, notifications.
  * Spec Dashboard ERP BTP : menu utilisateur (Mon profil, Paramètres, Déconnexion).
+ * Optimisé : un seul selector store dashboard, styles partagés, bouton Avancer corrigé.
  */
 
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { Menu, Search, Bell, ChevronRight, User, Settings, LogOut, ChevronDown, Globe } from 'lucide-react';
+import { Menu, Search, Bell, ChevronRight, ChevronLeft, ChevronDown, MoreVertical } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getModuleByPath, bmoModuleGroupLabels } from '@/lib/navigation/bmoModules';
 import {
@@ -17,15 +18,24 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuLabel,
+  DropdownMenuSubTrigger,
 } from '@/components/ui/dropdown-menu';
-import { DarkModeToggle } from '@/components/ui/DarkModeToggle';
 import { useAppStore, type SupportedLocale } from '@/lib/stores/app-store';
+import { useShallow } from 'zustand/react/shallow';
+import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
+import { dashboardNavigationConfig } from '@/modules/dashboard/navigation/dashboardNavigationConfig';
 
 const LOCALE_OPTIONS: { value: SupportedLocale; label: string }[] = [
   { value: 'fr-FR', label: 'Français' },
   { value: 'en-GB', label: 'English' },
   { value: 'ar-MA', label: 'العربية' },
 ];
+
+const BTN_ICON_CLASS = 'p-1.5 rounded transition-colors';
+const BTN_ICON_DARK = 'hover:bg-slate-800/80 text-slate-400 hover:text-slate-200';
+const BTN_ICON_LIGHT = 'hover:bg-slate-100 text-slate-400 hover:text-slate-700';
+
+type MoreMenuSubId = 'fichier' | 'edition' | 'affichage' | 'parametrage' | 'reglage';
 
 export interface BmoTopbarProps {
   user?: { name: string; role: string; initials?: string };
@@ -40,7 +50,7 @@ export interface BmoTopbarProps {
   className?: string;
 }
 
-/** Dérive un libellé court depuis le pathname (fallback si pas dans le sitemap). */
+/** Dérive un libellé court depuis le pathname (hors dashboard). */
 function getBreadcrumbFromPath(pathname: string): { group: string; page: string } {
   const module = getModuleByPath(pathname);
   if (module) {
@@ -50,10 +60,8 @@ function getBreadcrumbFromPath(pathname: string): { group: string; page: string 
     };
   }
   if (!pathname || pathname === '/maitre-ouvrage' || pathname === '/maitre-ouvrage/') {
-    return { group: 'PILOTAGE', page: 'Cockpit DG' };
+    return { group: 'PILOTAGE', page: 'Dashboard' };
   }
-  if (pathname.includes('/dashboard')) return { group: 'PILOTAGE', page: 'Dashboard' };
-  if (pathname.includes('/cockpit')) return { group: 'PILOTAGE', page: 'Cockpit DG' };
   if (pathname.includes('/alerts')) return { group: 'PILOTAGE', page: 'Alertes & Incidents' };
   if (pathname.includes('/governance')) return { group: 'PILOTAGE', page: 'Gouvernance' };
   if (pathname.includes('/chantiers')) return { group: 'EXÉCUTION', page: 'Chantiers' };
@@ -61,6 +69,23 @@ function getBreadcrumbFromPath(pathname: string): { group: string; page: string 
   const segment = pathname.split('/').filter(Boolean).pop();
   const label = segment ? segment.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()) : 'Maître d\'ouvrage';
   return { group: 'PILOTAGE', page: label };
+}
+
+/** Fil d'Ariane dynamique à partir du store de navigation (dashboard uniquement). */
+function getBreadcrumbFromDashboardNavigation(
+  mainCategory: string,
+  subCategory: string | null,
+  subSubCategory: string | null
+): { group: string; page: string } {
+  const main = mainCategory as keyof typeof dashboardNavigationConfig;
+  const mainNode = dashboardNavigationConfig[main];
+  const group = mainNode?.label ?? mainCategory;
+  if (!subCategory) {
+    return { group, page: mainNode?.children?.[0]?.label ?? 'Dashboard' };
+  }
+  const subNode = mainNode?.children?.find((c) => c.id === subCategory);
+  const page = subNode?.label ?? subCategory;
+  return { group, page };
 }
 
 export function BmoTopbar({
@@ -74,16 +99,93 @@ export function BmoTopbar({
 }: BmoTopbarProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const { darkMode, setDarkMode, localeOverride, setLocaleOverride } = useAppStore();
-  const breadcrumb = useMemo(() => getBreadcrumbFromPath(pathname ?? ''), [pathname]);
+  const { darkMode, setDarkMode, localeOverride, setLocaleOverride, fontSizeScale, setFontSizeScale } = useAppStore();
+  const isDashboard = pathname?.includes('/maitre-ouvrage/dashboard') ?? false;
+
+  const dashboard = useDashboardCommandCenterStore(
+    useShallow((s) => ({
+      navigation: s.navigation,
+      goBack: s.goBack,
+      goForward: s.goForward,
+      navigate: s.navigate,
+      navigationHistory: s.navigationHistory,
+      forwardHistory: s.forwardHistory,
+      toggleSidebar: s.toggleSidebar,
+    }))
+  );
+  const {
+    navigation,
+    goBack,
+    goForward,
+    navigate,
+    navigationHistory,
+    forwardHistory,
+    toggleSidebar,
+  } = dashboard;
+
+  const breadcrumb = useMemo(() => {
+    if (isDashboard) {
+      return getBreadcrumbFromDashboardNavigation(
+        navigation.mainCategory,
+        navigation.subCategory,
+        navigation.subSubCategory
+      );
+    }
+    return getBreadcrumbFromPath(pathname ?? '');
+  }, [isDashboard, pathname, navigation.mainCategory, navigation.subCategory, navigation.subSubCategory]);
+
+  const currentMainSections = useMemo(() => {
+    const main = navigation.mainCategory as keyof typeof dashboardNavigationConfig;
+    return dashboardNavigationConfig[main]?.children ?? [];
+  }, [navigation.mainCategory]);
+
+  const canGoBack = isDashboard && navigationHistory.length > 0;
+  const canGoForward = isDashboard && forwardHistory.length > 0;
+  const basePath = pathname ?? '/maitre-ouvrage/dashboard';
+
+  const goToCurrentMainHome = useCallback(() => {
+    const main = navigation.mainCategory as keyof typeof dashboardNavigationConfig;
+    const firstSub = dashboardNavigationConfig[main]?.children?.[0]?.id ?? 'dashboard';
+    const q = new URLSearchParams();
+    q.set('main', navigation.mainCategory);
+    q.set('sub', firstSub);
+    q.set('leaf', 'default');
+    router.push(`${basePath}?${q.toString()}`);
+    navigate(navigation.mainCategory, firstSub, 'default');
+  }, [navigation.mainCategory, navigate, router, basePath]);
+
+  const handleGoBack = useCallback(() => {
+    if (!canGoBack) return;
+    const prev = navigationHistory[navigationHistory.length - 1];
+    const q = new URLSearchParams();
+    q.set('main', prev.mainCategory);
+    if (prev.subCategory) q.set('sub', prev.subCategory);
+    if (prev.subSubCategory) q.set('leaf', prev.subSubCategory);
+    router.push(`${basePath}?${q.toString()}`);
+    goBack();
+  }, [canGoBack, navigationHistory, goBack, router, basePath]);
+
+  const handleGoForward = useCallback(() => {
+    if (!canGoForward) return;
+    const next = forwardHistory[forwardHistory.length - 1];
+    const q = new URLSearchParams();
+    q.set('main', next.mainCategory);
+    if (next.subCategory) q.set('sub', next.subCategory);
+    if (next.subSubCategory) q.set('leaf', next.subSubCategory);
+    router.push(`${basePath}?${q.toString()}`);
+    goForward();
+  }, [canGoForward, forwardHistory, goForward, router, basePath]);
+
   const parametresPath = '/maitre-ouvrage/parametres';
   const displayLocale = localeOverride ?? 'fr-FR';
-  const currentLabel = LOCALE_OPTIONS.find((o) => o.value === displayLocale)?.label ?? 'Français';
+  const btnIconCn = cn(BTN_ICON_CLASS, darkMode ? BTN_ICON_DARK : BTN_ICON_LIGHT);
+  const [moreMenuSub, setMoreMenuSub] = useState<MoreMenuSubId | null>(null);
 
   return (
     <header
+      data-testid="bmo-topbar"
       className={cn(
-        'h-14 shrink-0 flex items-center justify-between gap-4 px-4 sm:px-6 border-b backdrop-blur-sm transition-colors',
+        'relative z-[40] h-11 shrink-0 flex items-center justify-between gap-2 px-3 sm:px-4 border-b backdrop-blur-sm transition-colors text-[11px]',
         darkMode
           ? 'border-slate-800/70 bg-slate-950/80'
           : 'border-slate-200 bg-white/95',
@@ -91,104 +193,148 @@ export function BmoTopbar({
       )}
       role="banner"
     >
-      {/* Gauche : menu (trois traits) + recherche */}
-      <div className="flex items-center gap-2 min-w-0 shrink-0">
+      {/* Gauche : menu hamburger + séparateur + recherche */}
+      <div className="flex items-center gap-0.5 min-w-0 shrink-0">
         {onMenuClick && (
           <button
             type="button"
             onClick={onMenuClick}
-            className={cn(
-              'p-2 rounded-lg transition-colors',
-              darkMode ? 'hover:bg-slate-800/80 text-slate-400 hover:text-slate-200' : 'hover:bg-slate-100 text-slate-400 hover:text-slate-700'
-            )}
+            className={btnIconCn}
             aria-label="Ouvrir le menu"
             title="Menu"
           >
-            <Menu className="h-5 w-5" aria-hidden />
+            <Menu className="h-4 w-4" aria-hidden />
           </button>
         )}
+        <div className={cn('w-px h-5 mx-0.5 shrink-0', darkMode ? 'bg-slate-700/80' : 'bg-slate-300')} aria-hidden />
         {onSearchClick && (
           <button
             type="button"
+            data-testid="topbar-search"
             onClick={onSearchClick}
-            className={cn(
-              'p-2 rounded-lg transition-colors',
-              darkMode ? 'hover:bg-slate-800/80 text-slate-400 hover:text-slate-200' : 'hover:bg-slate-100 text-slate-400 hover:text-slate-700'
-            )}
+            className={btnIconCn}
             aria-label="Rechercher (⌘K)"
             title="Rechercher (⌘K)"
           >
-            <Search className="h-4 w-4" aria-hidden />
+            <Search className="h-3.5 w-3.5" aria-hidden />
           </button>
         )}
       </div>
 
-      {/* Centre : fil d'Ariane décalé à gauche */}
-      <div className="flex-1 min-w-0 flex items-center justify-start">
-        <nav aria-label="Fil d'Ariane" className={cn('flex items-center gap-1.5 text-xs', darkMode ? 'text-slate-400' : 'text-slate-400')}>
-          <span className={cn('font-medium', darkMode ? 'text-slate-300' : 'text-slate-600')}>{breadcrumb.group}</span>
-          <ChevronRight className={cn('h-3.5 w-3.5 shrink-0', darkMode ? 'text-slate-600' : 'text-slate-400')} aria-hidden />
-          <span className={cn('font-medium truncate max-w-[180px] sm:max-w-[240px]', darkMode ? 'text-slate-200' : 'text-slate-800')} aria-current="page">
+      {/* Centre : Retour / Avancer (dashboard) + fil d'Ariane */}
+      <div className="flex-1 min-w-0 flex items-center justify-start gap-1.5 overflow-hidden">
+        {isDashboard && (
+          <div className="flex items-center gap-0.5 shrink-0">
+            <button
+              type="button"
+              onClick={handleGoBack}
+              disabled={!canGoBack}
+              className={cn(btnIconCn, 'p-1 disabled:opacity-40 disabled:pointer-events-none', !darkMode && 'text-slate-500 hover:text-slate-800')}
+              aria-label="Revenir à la vue précédente"
+              title="Revenir en arrière"
+            >
+              <ChevronLeft className="h-3.5 w-3.5" aria-hidden />
+            </button>
+            <button
+              type="button"
+              onClick={handleGoForward}
+              disabled={!canGoForward}
+              className={cn(btnIconCn, 'p-1 disabled:opacity-40 disabled:pointer-events-none', !darkMode && 'text-slate-500 hover:text-slate-800')}
+              aria-label="Aller à la vue suivante"
+              title="Avancer"
+            >
+              <ChevronRight className="h-3.5 w-3.5" aria-hidden />
+            </button>
+          </div>
+        )}
+        <nav data-testid="topbar-breadcrumb" aria-label="Fil d'Ariane" className={cn('flex items-center gap-1 text-[11px] min-w-0', darkMode ? 'text-slate-400' : 'text-slate-400')}>
+          {isDashboard ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className={cn(
+                    'font-medium truncate max-w-[120px] sm:max-w-[160px] text-left min-h-[44px] py-2 px-2 -mx-1 rounded flex items-center gap-1',
+                    darkMode ? 'text-slate-300 hover:text-slate-100 hover:bg-slate-800/50' : 'text-slate-600 hover:text-slate-800 hover:bg-slate-100',
+                    'cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent'
+                  )}
+                  title={`Choisir une section — ${breadcrumb.group}`}
+                  aria-label={`Choisir une section — ${breadcrumb.group}`}
+                  aria-haspopup="true"
+                >
+                  {breadcrumb.group}
+                  <ChevronDown className="h-3 w-3 shrink-0 opacity-70" aria-hidden />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="min-w-[220px]">
+                <DropdownMenuLabel className="text-slate-400 font-normal">
+                  Choisir une section — {breadcrumb.group}
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {currentMainSections.map((section) => {
+                  const goToSection = () => {
+                    const q = new URLSearchParams();
+                    q.set('main', navigation.mainCategory);
+                    q.set('sub', section.id);
+                    q.set('leaf', 'default');
+                    router.push(`${pathname ?? '/maitre-ouvrage/dashboard'}?${q.toString()}`);
+                    navigate(navigation.mainCategory, section.id, 'default');
+                  };
+                  return (
+                    <DropdownMenuItem
+                      key={section.id}
+                      onClick={goToSection}
+                      className="flex items-center gap-2 cursor-pointer py-1.5 pr-2 pl-2 text-sm"
+                    >
+                      <ChevronRight className="h-3 w-3 shrink-0 text-slate-400" aria-hidden />
+                      <span className="truncate min-w-0">{section.label}</span>
+                    </DropdownMenuItem>
+                  );
+                })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <span
+              className={cn(
+                'font-medium truncate max-w-[100px] sm:max-w-[140px] py-1 px-1.5',
+                darkMode ? 'text-slate-300' : 'text-slate-600'
+              )}
+            >
+              {breadcrumb.group}
+            </span>
+          )}
+          <ChevronRight className={cn('h-3 w-3 shrink-0', darkMode ? 'text-slate-600' : 'text-slate-400')} aria-hidden />
+          <button
+            type="button"
+            onClick={isDashboard ? goToCurrentMainHome : undefined}
+            className={cn(
+              'font-medium truncate max-w-[160px] sm:max-w-[200px] text-left py-1 px-1.5',
+              darkMode ? 'text-slate-200 hover:text-slate-100' : 'text-slate-800 hover:text-slate-900',
+              isDashboard && 'hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 rounded'
+            )}
+            title={isDashboard ? `Accueil — ${breadcrumb.group}` : undefined}
+            aria-current="page"
+          >
             {breadcrumb.page}
-          </span>
+          </button>
         </nav>
       </div>
 
-      {/* Droite : langue, thème, notifications, user */}
-      <div className="flex items-center gap-2 shrink-0">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button
-              type="button"
-              className={cn(
-                'flex items-center gap-1.5 px-2 py-1.5 rounded-lg transition-colors text-xs font-medium',
-                darkMode ? 'hover:bg-slate-800/80 text-slate-400 hover:text-slate-200' : 'hover:bg-slate-100 text-slate-600 hover:text-slate-800'
-              )}
-              aria-label="Changer la langue"
-              aria-haspopup="true"
-            >
-              <Globe className="h-4 w-4 shrink-0" aria-hidden />
-              <span className="hidden sm:inline max-w-[4rem] truncate">{currentLabel}</span>
-              <ChevronDown className="h-3 w-3 shrink-0 hidden sm:block" aria-hidden />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel className="text-slate-400 font-normal">Langue</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {LOCALE_OPTIONS.map(({ value, label }) => (
-              <DropdownMenuItem
-                key={value}
-                onClick={() => setLocaleOverride(value)}
-                className={cn(
-                  'flex items-center gap-2',
-                  displayLocale === value && (darkMode ? 'bg-slate-800/60 text-slate-200' : 'bg-slate-100 text-slate-800')
-                )}
-              >
-                {label}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <DarkModeToggle
-          darkMode={darkMode}
-          setDarkMode={setDarkMode}
-          className={darkMode ? undefined : 'border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700'}
-        />
+      {/* Droite : séparateur + notifications + user + menu trois points (tout à droite) */}
+      <div className="flex items-center gap-1 shrink-0 ml-auto">
+        <div className={cn('w-px h-5 mr-0.5 shrink-0', darkMode ? 'bg-slate-700/80' : 'bg-slate-300')} aria-hidden />
         {onNotificationsClick && (
           <button
             type="button"
             onClick={onNotificationsClick}
-            className={cn(
-              'relative p-2 rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950',
-              darkMode ? 'hover:bg-slate-800/80 text-slate-400 hover:text-slate-200' : 'hover:bg-slate-100 text-slate-400 hover:text-slate-700'
-            )}
+            className={cn(btnIconCn, 'relative focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/60')}
             aria-label={notificationCount > 0 ? `Notifications (${notificationCount} non lues)` : 'Notifications'}
             title={notificationCount > 0 ? `${notificationCount} notification(s) non lue(s)` : 'Notifications'}
           >
-            <Bell className="h-4 w-4" aria-hidden />
+            <Bell className="h-3.5 w-3.5" aria-hidden />
             {notificationCount > 0 && (
               <span
-                className="absolute -right-0.5 -top-0.5 flex h-5 w-5 min-w-[20px] items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white"
+                className="absolute -right-0.5 -top-0.5 flex h-4 w-4 min-w-[16px] items-center justify-center rounded-full bg-rose-500 text-[9px] font-bold text-white"
                 aria-hidden
               >
                 {notificationCount > 99 ? '99+' : notificationCount}
@@ -201,7 +347,7 @@ export function BmoTopbar({
             <button
               type="button"
               className={cn(
-                'flex items-center gap-2 pl-2 border-l rounded-r-lg transition-colors text-left min-w-0',
+                'flex items-center gap-1.5 pl-1.5 border-l transition-colors text-left min-w-0 rounded-r',
                 darkMode
                   ? 'border-slate-800/70 hover:bg-slate-800/60'
                   : 'border-slate-200 hover:bg-slate-100'
@@ -210,44 +356,202 @@ export function BmoTopbar({
               aria-haspopup="true"
             >
               <div
-                className="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400 text-xs font-semibold shrink-0"
+                className="w-6 h-6 rounded bg-amber-500/20 flex items-center justify-center text-amber-400 text-[10px] font-semibold shrink-0"
                 aria-hidden
               >
                 {user.initials ?? user.name.slice(0, 2).toUpperCase()}
               </div>
               <div className="hidden sm:block text-left min-w-0">
-                <div className={cn('text-xs font-medium leading-tight truncate', darkMode ? 'text-slate-200' : 'text-slate-800')}>
+                <div className={cn('text-[11px] font-medium leading-tight truncate', darkMode ? 'text-slate-200' : 'text-slate-800')}>
                   {user.name}
                 </div>
-                <div className={cn('text-[10px] flex items-center gap-1', darkMode ? 'text-slate-400' : 'text-slate-400')}>
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" aria-hidden />
+                <div className={cn('text-[9px] flex items-center gap-1', darkMode ? 'text-slate-400' : 'text-slate-400')}>
+                  <span className="w-1 h-1 rounded-full bg-emerald-500 shrink-0" aria-hidden />
                   {user.role}
                 </div>
               </div>
-              <ChevronDown className={cn('h-3.5 w-3.5 shrink-0 hidden sm:block', darkMode ? 'text-slate-400' : 'text-slate-400')} aria-hidden />
+              <ChevronDown className={cn('h-3 w-3 shrink-0 hidden sm:block', darkMode ? 'text-slate-400' : 'text-slate-400')} aria-hidden />
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="min-w-[11rem]">
-            <DropdownMenuLabel className="text-slate-400 font-normal">
+          <DropdownMenuContent align="end" className="min-w-[10rem] text-[11px]">
+            <DropdownMenuLabel className="text-slate-400 font-normal text-[10px]">
               {user.name} — {user.role}
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => router.push(parametresPath)} className="flex items-center gap-2">
-              <User className="h-3.5 w-3.5" />
-              Mon profil
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => router.push(parametresPath)} className="flex items-center gap-2">
-              <Settings className="h-3.5 w-3.5" />
-              Paramètres
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => onLogout?.()}
-              className="text-rose-300 hover:text-rose-200 hover:bg-rose-500/10 focus:bg-rose-500/10 flex items-center gap-2"
+              className="text-rose-300 hover:text-rose-200 hover:bg-rose-500/10 focus:bg-rose-500/10"
             >
-              <LogOut className="h-3.5 w-3.5" />
               Déconnexion
             </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {/* Menu trois points : 5 sous-menus (Fichier, Édition, Affichage, Paramétrage, Réglage) — clic pour afficher le contenu */}
+        <DropdownMenu onOpenChange={(open) => !open && setMoreMenuSub(null)}>
+          <DropdownMenuTrigger asChild>
+            <button
+              type="button"
+              data-testid="topbar-menu-more"
+              className={cn(btnIconCn, 'rounded-r')}
+              aria-label="Menu (Fichier, Édition, Affichage, Paramétrage, Réglage)"
+              title="Menu"
+            >
+              <MoreVertical className="h-4 w-4" aria-hidden />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align="end"
+            sideOffset={4}
+            className={cn(
+              'flex max-h-[85vh] p-0',
+              moreMenuSub ? 'min-w-[460px]' : 'min-w-[180px]'
+            )}
+          >
+            {/* Liste des 5 sous-menus — cliquer pour afficher le contenu à droite (largeur fixe pour éviter le chevauchement) */}
+            <div
+              className={cn(
+                'flex flex-col w-[180px] shrink-0 border-r py-1 pr-0',
+                darkMode ? 'border-slate-700' : 'border-slate-200'
+              )}
+            >
+              <DropdownMenuSubTrigger onClick={() => setMoreMenuSub('fichier')} className={cn(moreMenuSub === 'fichier' && (darkMode ? 'bg-slate-800' : 'bg-slate-100'))}>
+                Fichier <ChevronRight className="ml-auto h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden />
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubTrigger onClick={() => setMoreMenuSub('edition')} className={cn(moreMenuSub === 'edition' && (darkMode ? 'bg-slate-800' : 'bg-slate-100'))}>
+                Édition <ChevronRight className="ml-auto h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden />
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubTrigger onClick={() => setMoreMenuSub('affichage')} className={cn(moreMenuSub === 'affichage' && (darkMode ? 'bg-slate-800' : 'bg-slate-100'))}>
+                Affichage <ChevronRight className="ml-auto h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden />
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubTrigger onClick={() => setMoreMenuSub('parametrage')} className={cn(moreMenuSub === 'parametrage' && (darkMode ? 'bg-slate-800' : 'bg-slate-100'))}>
+                Paramétrage <ChevronRight className="ml-auto h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden />
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubTrigger onClick={() => setMoreMenuSub('reglage')} className={cn(moreMenuSub === 'reglage' && (darkMode ? 'bg-slate-800' : 'bg-slate-100'))}>
+                Réglage <ChevronRight className="ml-auto h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden />
+              </DropdownMenuSubTrigger>
+            </div>
+            {/* Contenu du sous-menu sélectionné — panneau à droite, sans chevaucher la liste */}
+            {moreMenuSub && (
+              <div
+                className={cn(
+                  'flex flex-col w-[280px] shrink-0 max-h-[85vh] overflow-y-auto py-1 pl-2',
+                  darkMode ? 'bg-slate-900/50' : 'bg-slate-50/80'
+                )}
+              >
+                {moreMenuSub === 'fichier' && (
+                  <>
+                    <DropdownMenuItem onClick={() => router.push('/maitre-ouvrage/demandes')}>Nouvelle demande</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => router.push('/maitre-ouvrage/documents')}>Ouvrir / Documents</DropdownMenuItem>
+                    <DropdownMenuItem>Nouveau chantier</DropdownMenuItem>
+                    <DropdownMenuItem>Nouveau devis</DropdownMenuItem>
+                    <DropdownMenuItem>Importer des données</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Enregistrer <kbd className="ml-auto text-xs">⌘S</kbd></DropdownMenuItem>
+                    <DropdownMenuItem>Enregistrer sous</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Exporter (PDF)</DropdownMenuItem>
+                    <DropdownMenuItem>Exporter (Excel)</DropdownMenuItem>
+                    <DropdownMenuItem>Exporter (CSV)</DropdownMenuItem>
+                    <DropdownMenuItem>Imprimer <kbd className="ml-auto text-xs">⌘P</kbd></DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Modèles et modèles de documents</DropdownMenuItem>
+                    <DropdownMenuItem>Fermer</DropdownMenuItem>
+                  </>
+                )}
+                {moreMenuSub === 'edition' && (
+                  <>
+                    <DropdownMenuItem>Annuler <kbd className="ml-auto text-xs">⌘Z</kbd></DropdownMenuItem>
+                    <DropdownMenuItem>Rétablir <kbd className="ml-auto text-xs">⌘⇧Z</kbd></DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Copier <kbd className="ml-auto text-xs">⌘C</kbd></DropdownMenuItem>
+                    <DropdownMenuItem>Coller <kbd className="ml-auto text-xs">⌘V</kbd></DropdownMenuItem>
+                    <DropdownMenuItem>Couper <kbd className="ml-auto text-xs">⌘X</kbd></DropdownMenuItem>
+                    <DropdownMenuItem>Dupliquer</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Tout sélectionner <kbd className="ml-auto text-xs">⌘A</kbd></DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onSearchClick?.()}>Rechercher <kbd className="ml-auto text-xs">⌘K</kbd></DropdownMenuItem>
+                    <DropdownMenuItem>Rechercher et remplacer</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Préférences d&apos;édition</DropdownMenuItem>
+                  </>
+                )}
+                {moreMenuSub === 'affichage' && (
+                  <>
+                    <DropdownMenuItem>Zoom + <kbd className="ml-auto text-xs">⌘+</kbd></DropdownMenuItem>
+                    <DropdownMenuItem>Zoom − <kbd className="ml-auto text-xs">⌘-</kbd></DropdownMenuItem>
+                    <DropdownMenuItem>Taille réelle <kbd className="ml-auto text-xs">⌘0</kbd></DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Plein écran <kbd className="ml-auto text-xs">F11</kbd></DropdownMenuItem>
+                    <DropdownMenuItem onClick={toggleSidebar}>Replier / Déplier la barre latérale</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => window.location.reload()}>Actualiser la page</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Vue Grille</DropdownMenuItem>
+                    <DropdownMenuItem>Vue Liste</DropdownMenuItem>
+                    <DropdownMenuItem>Densité compacte</DropdownMenuItem>
+                    <DropdownMenuItem>Filtres visibles</DropdownMenuItem>
+                    <DropdownMenuItem>Barre d&apos;outils</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => setDarkMode(!darkMode)}>Thème : {darkMode ? 'Sombre' : 'Clair'}</DropdownMenuItem>
+                  </>
+                )}
+                {moreMenuSub === 'parametrage' && (
+                  <>
+                    <DropdownMenuLabel className="text-slate-400 font-normal text-xs pt-1" data-testid="topbar-menu-parametrage-content">Langue de l&apos;interface</DropdownMenuLabel>
+                    {LOCALE_OPTIONS.map(({ value, label }) => (
+                      <DropdownMenuItem
+                        key={value}
+                        onClick={() => setLocaleOverride(value)}
+                        className={cn(displayLocale === value && (darkMode ? 'bg-slate-800/60' : 'bg-slate-100'))}
+                      >
+                        {label}
+                      </DropdownMenuItem>
+                    ))}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => router.push(parametresPath)}>Mon profil</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => router.push(parametresPath)}>Préférences</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onNotificationsClick?.()}>Notifications</DropdownMenuItem>
+                    <DropdownMenuItem>Confidentialité</DropdownMenuItem>
+                    <DropdownMenuItem>Sécurité du compte</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Raccourcis clavier</DropdownMenuItem>
+                    <DropdownMenuItem>Aide</DropdownMenuItem>
+                    <DropdownMenuItem>À propos de Yessalate</DropdownMenuItem>
+                  </>
+                )}
+                {moreMenuSub === 'reglage' && (
+                  <>
+                    <DropdownMenuLabel className="text-slate-400 font-normal text-[10px] pt-1" data-testid="topbar-menu-reglage-content">Taille du texte</DropdownMenuLabel>
+                    {(['small', 'medium', 'large'] as const).map((size) => (
+                      <DropdownMenuItem
+                        key={size}
+                        onClick={() => setFontSizeScale(size)}
+                        className={cn(fontSizeScale === size && (darkMode ? 'bg-slate-800/60' : 'bg-slate-100'))}
+                      >
+                        {size === 'small' && 'Réduire'}
+                        {size === 'medium' && 'Normal'}
+                        {size === 'large' && 'Augmenter'}
+                      </DropdownMenuItem>
+                    ))}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => router.push('/maitre-ouvrage/parametres')}>Paramètres du module</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => router.push('/maitre-ouvrage/parametres/referentiels')}>Référentiels</DropdownMenuItem>
+                    <DropdownMenuItem>Droits d&apos;accès & rôles</DropdownMenuItem>
+                    <DropdownMenuItem>Unités et devises</DropdownMenuItem>
+                    <DropdownMenuItem>Périmètres et périmètres métier</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Connexions & intégrations</DropdownMenuItem>
+                    <DropdownMenuItem>API & webhooks</DropdownMenuItem>
+                    <DropdownMenuItem>Exports planifiés</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Sauvegardes</DropdownMenuItem>
+                    <DropdownMenuItem>Journal d&apos;audit</DropdownMenuItem>
+                    <DropdownMenuItem>Logs d&apos;activité</DropdownMenuItem>
+                    <DropdownMenuItem>Maintenance & santé du système</DropdownMenuItem>
+                  </>
+                )}
+              </div>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

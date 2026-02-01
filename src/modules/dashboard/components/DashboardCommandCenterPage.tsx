@@ -86,8 +86,8 @@ export function DashboardCommandCenterPage() {
 
         {/* Main */}
         <main className="flex min-w-0 flex-1 flex-col">
-          {/* Header sticky : breadcrumbs + KPI strip */}
-          <header className="sticky top-0 z-30 border-b border-slate-800/60 bg-slate-950/70 backdrop-blur-xl min-w-0">
+          {/* Header sticky : z-30 pour rester sous la topbar BMO (z-40) */}
+          <header className="sticky top-0 z-[30] border-b border-slate-800/60 bg-slate-950/70 backdrop-blur-xl min-w-0">
             <div className="mx-auto w-full min-w-0 max-w-[1600px] px-4 sm:px-6 lg:px-8">
               <div className="py-4">
                 <DashboardBreadcrumbs />

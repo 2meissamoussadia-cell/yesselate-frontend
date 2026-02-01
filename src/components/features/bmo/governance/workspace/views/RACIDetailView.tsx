@@ -308,7 +308,7 @@ export function RACIDetailView({ activityId }: RACIDetailViewProps) {
 interface InfoRowProps {
   label: string;
   value: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   valueColor?: string;
 }
 

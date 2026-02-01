@@ -19,6 +19,7 @@ export interface Delegation {
   status: string;
   bureau: string;
   agentName: string;
+  agentRole?: string | null;
   actorName?: string;
   delegatorName?: string;
   scope?: string;
@@ -29,6 +30,7 @@ export interface Delegation {
   createdAt: string;
   updatedAt?: string;
   daysLeft?: number;
+  expiringSoon?: boolean;
   events?: DelegationEvent[];
 }
 

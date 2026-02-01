@@ -32,7 +32,7 @@ import {
 export interface TicketsCategory {
   id: string;
   label: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   badge?: number | string;
   badgeType?: 'default' | 'warning' | 'critical' | 'success';
   description?: string;

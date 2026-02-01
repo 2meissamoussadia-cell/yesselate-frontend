@@ -31,7 +31,7 @@ interface CommandItem {
   type: 'navigation' | 'action' | 'search-result';
   label: string;
   description?: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   category?: string;
   action: () => void;
 }

@@ -7,6 +7,8 @@ import type {
   Evenement,
   Absence,
   Affectation,
+} from '../types/calendrier.types';
+import type {
   Conflit,
   ConflitDetectionResult,
   ConflitType,

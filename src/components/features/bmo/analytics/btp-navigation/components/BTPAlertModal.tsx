@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react';
 import { BTPIntelligentModal } from './BTPIntelligentModal';
-import { AlertTriangle, CheckCircle, Clock, User, FileText, TrendingUp } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Clock, User, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -96,7 +96,7 @@ export function BTPAlertModal({ isOpen, onClose, alert }: BTPAlertModalProps) {
         {
           label: 'Marquer en cours',
           onClick: () => {
-            console.log('Mark as in progress');
+            logger.debug('Marquer en cours', { component: 'BTPAlertModal', alertId: alert.id });
           },
           variant: 'secondary',
         },
@@ -110,13 +110,13 @@ export function BTPAlertModal({ isOpen, onClose, alert }: BTPAlertModalProps) {
       ]}
     >
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full" aria-label="Détail de l'alerte">
-        <TabsList className="grid w-full grid-cols-6" aria-label="Sections du détail alerte">
-          <TabsTrigger value="info">Informations</TabsTrigger>
-          <TabsTrigger value="impact">Impact</TabsTrigger>
-          <TabsTrigger value="causes">Causes</TabsTrigger>
-          <TabsTrigger value="actions">Actions</TabsTrigger>
-          <TabsTrigger value="resolution">Résolution</TabsTrigger>
-          <TabsTrigger value="history">Historique</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1" aria-label="Sections du détail alerte">
+          <TabsTrigger value="info" className="text-xs truncate">Informations</TabsTrigger>
+          <TabsTrigger value="impact" className="text-xs truncate">Impact</TabsTrigger>
+          <TabsTrigger value="causes" className="text-xs truncate">Causes</TabsTrigger>
+          <TabsTrigger value="actions" className="text-xs truncate">Actions</TabsTrigger>
+          <TabsTrigger value="resolution" className="text-xs truncate">Résolution</TabsTrigger>
+          <TabsTrigger value="history" className="text-xs truncate">Historique</TabsTrigger>
         </TabsList>
 
         {/* Informations */}

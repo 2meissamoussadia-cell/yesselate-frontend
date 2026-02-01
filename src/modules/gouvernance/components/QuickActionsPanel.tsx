@@ -17,7 +17,7 @@ interface QuickActionsPanelProps {
 interface QuickAction {
   id: string;
   label: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
 }
 
 const quickActions: QuickAction[] = [

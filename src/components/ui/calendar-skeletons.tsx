@@ -203,7 +203,7 @@ export function CalendarDashboardSkeleton() {
       {/* Upcoming Events */}
       <div className="border border-white/10 rounded-lg p-6">
         <Skeleton className="h-6 w-40 mb-4" variant="rounded" />
-        <CalendarListSkeleton events={3} />
+        <CalendarListSkeleton count={3} />
       </div>
     </div>
   );

@@ -124,7 +124,7 @@ export function DemandesRHFiltersPanel({
   const renderFilterSection = (
     id: keyof DemandesRHActiveFilters,
     label: string,
-    icon: React.ElementType,
+    icon: React.ComponentType<{ className?: string }>,
     options: { id: string; label: string; value: string }[]
   ) => {
     const Icon = icon;

@@ -37,13 +37,13 @@ export function FluentTabs({
 
   childrenArray.forEach((child) => {
     if (React.isValidElement(child)) {
-      if (child.type === FluentTabsTrigger || child.props?.role === 'trigger') {
+      if (child.type === FluentTabsTrigger || (child.props as { role?: string })?.role === 'trigger') {
         triggers.push(child);
-      } else if (child.type === FluentTabsContent || child.props?.role === 'content') {
+      } else if (child.type === FluentTabsContent || (child.props as { role?: string })?.role === 'content') {
         contents.push(child);
       } else if (child.type === FluentTabsList) {
         // Si c'est un TabsList, extraire ses enfants
-        React.Children.forEach(child.props.children, (listChild) => {
+        React.Children.forEach((child.props as { children?: React.ReactNode }).children, (listChild) => {
           if (React.isValidElement(listChild)) {
             triggers.push(listChild);
           }
@@ -60,7 +60,7 @@ export function FluentTabs({
         <div className="flex bg-[rgb(var(--surface-2)/0.8)] backdrop-blur-sm rounded-lg p-1 border border-[rgb(var(--border)/0.3)]">
           {triggers.map((trigger) => {
             if (React.isValidElement(trigger)) {
-              const tabValue = trigger.props.value;
+              const tabValue = (trigger.props as { value?: string }).value ?? '';
               const isActive = value === tabValue;
               return React.cloneElement(trigger as React.ReactElement<FluentTabsTriggerProps>, {
                 key: tabValue,
@@ -83,10 +83,11 @@ export function FluentTabs({
       <div className="relative">
         <AnimatePresence mode="wait">
           {contents.map((content) => {
-            if (React.isValidElement(content) && value === content.props.value) {
+            if (React.isValidElement(content) && value === (content.props as { value?: string }).value) {
+              const contentValue = (content.props as { value?: string }).value;
               return (
                 <motion.div
-                  key={content.props.value}
+                  key={contentValue}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}

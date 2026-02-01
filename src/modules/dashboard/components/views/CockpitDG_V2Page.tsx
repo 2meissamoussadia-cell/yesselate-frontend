@@ -304,7 +304,7 @@ export function CockpitDG_V2Page() {
               >
                 <p className="text-xs font-medium text-slate-200 line-clamp-2">{i.prediction}</p>
                 <p className="text-[10px] text-slate-400 mt-1">
-                  {i.chantier_id} • {i.confidence}% • {i.impact_financial.toLocaleString('fr-FR')} FCFA
+                  {i.chantier_id} • {i.confidence}% • {i.impact_financial.toLocaleString('fr-FR')} XOF
                 </p>
               </div>
             ))}

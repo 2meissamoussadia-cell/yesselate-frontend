@@ -1382,7 +1382,7 @@ function QuickActionButton({
   color,
   onClick,
 }: {
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   title: string;
   description: string;
   color: 'orange' | 'green' | 'purple' | 'blue' | 'emerald';
@@ -1422,7 +1422,7 @@ function StatCard({
   color,
   onClick,
 }: {
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   label: string;
   value: number | string;
   color: 'rose' | 'amber' | 'emerald' | 'blue' | 'purple' | 'orange' | 'pink';
@@ -1754,7 +1754,7 @@ function SettingsCard({
   title,
   description,
 }: {
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   title: string;
   description: string;
 }) {

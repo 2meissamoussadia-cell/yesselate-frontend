@@ -371,12 +371,13 @@ export function ValidationBCWorkspaceContent() {
 
   // Render content based on tab type
   if (activeTab.type === 'inbox') {
-    const queue = activeTab.data?.queue || 'all';
+    const queue = typeof activeTab.data?.queue === 'string' ? activeTab.data.queue : 'all';
     return <InboxContent queue={queue} />;
   }
 
   if (activeTab.type === 'bc' || activeTab.type === 'facture' || activeTab.type === 'avenant') {
-    const documentId = activeTab.data?.documentId || activeTab.id.split(':').pop() || '';
+    const rawId = activeTab.data?.documentId;
+    const documentId = (typeof rawId === 'string' ? rawId : activeTab.id.split(':').pop()) || '';
     const documentType = activeTab.type as 'bc' | 'facture' | 'avenant';
     if (!documentId) {
       return (

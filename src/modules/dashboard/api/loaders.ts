@@ -57,7 +57,7 @@ import type {
   DashboardViewData,
 } from '../types/dashboardDataTypes';
 import { fetchDashboardView } from './client';
-import { createLogger } from '../utils/logger';
+import { createLogger } from '../utils/logger.server';
 
 const logger = createLogger('DashboardLoaders');
 

@@ -10,6 +10,7 @@ import { X, Save, Download, Share2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import { zIndexClass } from '@/modules/dashboard/utils/zIndex';
 
 interface BTPIntelligentModalProps {
   isOpen: boolean;
@@ -71,13 +72,14 @@ export function BTPIntelligentModal({
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop — z-index modal pour rester au-dessus de la topbar / sidebar */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+            className={cn('fixed inset-0 bg-black/60 backdrop-blur-sm', zIndexClass('modalHigh'))}
+            aria-hidden
           />
 
           {/* Modal */}
@@ -86,21 +88,25 @@ export function BTPIntelligentModal({
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             className={cn(
-              'fixed inset-0 z-50 flex items-center justify-center p-4',
+              'fixed inset-0 flex items-center justify-center p-4',
+              zIndexClass('modalHigh'),
               className
             )}
             onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="btp-modal-title"
           >
             <div
               className={cn(
-                'bg-slate-900 rounded-xl border border-slate-700 shadow-2xl flex flex-col max-h-[90vh] w-full',
+                'bg-slate-900 rounded-xl border border-slate-700 shadow-2xl flex flex-col min-h-0 max-h-[90vh] w-full',
                 sizeClasses[size]
               )}
             >
               {/* Header */}
-              <div className="flex items-start justify-between px-6 py-4 border-b border-slate-800">
-                <div className="flex-1">
-                  <h2 className="text-lg font-semibold text-slate-200 mb-1">{title}</h2>
+              <div className="flex items-start justify-between px-6 py-4 border-b border-slate-800 shrink-0">
+                <div className="flex-1 min-w-0">
+                  <h2 id="btp-modal-title" className="text-lg font-semibold text-slate-200 mb-1">{title}</h2>
                   {description && (
                     <p className="text-sm text-slate-300">{description}</p>
                   )}
@@ -115,12 +121,12 @@ export function BTPIntelligentModal({
                 </button>
               </div>
 
-              {/* Content */}
-              <div className="flex-1 overflow-y-auto p-6">{children}</div>
+              {/* Content — min-h-0 pour que le flex autorise le scroll */}
+              <div className="flex-1 min-h-0 overflow-y-auto p-6">{children}</div>
 
               {/* Footer with Actions */}
               {allActions.length > 0 && (
-                <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-slate-800">
+                <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-slate-800 shrink-0">
                   {allActions.map((action, index) => {
                     const Icon = action.icon;
                     return (

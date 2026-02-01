@@ -3,7 +3,7 @@
     "label": "PILOTAGE",
     "requires": { "perm": "dashboard:read" },
     "sub": {
-      "dashboard": { "label": "Cockpit DG", "leaf": { "default": { "label": "Cockpit DG", "component": "DashboardDGLayout" } } },
+      "dashboard": { "label": "Dashboard", "leaf": { "default": { "label": "Dashboard", "component": "DashboardDGLayout" }, "cockpit-detail": { "label": "Vue DG", "component": "DashboardDGLayout" }, "vue-dg-kpis": { "label": "KPIs", "component": "DashboardDGLayout" }, "vue-dg-sante": { "label": "Santé", "component": "DashboardDGLayout" }, "vue-dg-kpis-budget": { "label": "Budget", "component": "DashboardDGLayout" }, "vue-dg-kpis-consommation": { "label": "Consommation", "component": "DashboardDGLayout" }, "vue-dg-kpis-tresorerie": { "label": "Trésorerie", "component": "DashboardDGLayout" }, "vue-dg-kpis-chantiers": { "label": "Chantiers", "component": "DashboardDGLayout" }, "vue-dg-kpis-avancement": { "label": "Avancement", "component": "DashboardDGLayout" }, "vue-dg-kpis-accidents": { "label": "Accidents", "component": "DashboardDGLayout" }, "vue-dg-kpis-conformite": { "label": "Conformité", "component": "DashboardDGLayout" }, "vue-dg-sante-synthese": { "label": "Synthèse", "component": "DashboardDGLayout" }, "vue-dg-sante-phase4": { "label": "Phase 4", "component": "DashboardDGLayout" }, "vue-dg-sante-critiques": { "label": "Critiques", "component": "DashboardDGLayout" }, "vue-dg-sante-tous": { "label": "Tous chantiers", "component": "DashboardDGLayout" }, "vue-dg-sante-finances": { "label": "Finances", "component": "DashboardDGLayout" } } },
       "cockpit-advanced": { "label": "Vue avancée 3D", "leaf": { "default": { "label": "Vue avancée 3D", "component": "CockpitDG_V2Page" } } },
       "gouvernance": { "label": "Gouvernance & décisions", "leaf": { "default": { "label": "Gouvernance", "component": "SummaryDashboardPage" } } },
       "calendrier": { "label": "Calendrier & échéances", "leaf": { "default": { "label": "Calendrier", "component": "SummaryDashboardPage" } } },
@@ -88,7 +88,7 @@
             "component": "SummaryPointsPage"
           },
           "cockpit": {
-            "label": "Cockpit DG",
+            "label": "Dashboard",
             "component": "CockpitDGPage"
           },
           "cockpit-v2": {

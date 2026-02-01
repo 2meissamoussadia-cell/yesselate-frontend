@@ -127,15 +127,15 @@ function StatDetailContent({ data }: { data: Record<string, unknown> }) {
           <span className={cn('text-3xl font-bold', statusColors[data.status as keyof typeof statusColors] || 'text-slate-300')}>
             {data.value as string | number}
           </span>
-          {data.trendValue && (
+          {data.trendValue != null && (
             <span className={cn('text-sm font-medium', data.trend === 'up' ? 'text-emerald-400' : data.trend === 'down' ? 'text-amber-400' : 'text-slate-400')}>
-              {data.trendValue as string}
+              {String(data.trendValue)}
             </span>
           )}
         </div>
       </div>
 
-      {data.trend && (
+      {data.trend ? (
         <div className="flex items-center gap-2">
           <TrendIcon className={cn(
             'h-4 w-4',
@@ -145,9 +145,9 @@ function StatDetailContent({ data }: { data: Record<string, unknown> }) {
             {data.trend === 'up' ? 'En hausse' : data.trend === 'down' ? 'En baisse' : 'Stable'}
           </span>
         </div>
-      )}
+      ) : null}
 
-      {data.sparkline && (
+      {data.sparkline ? (
         <div className="mt-4">
           <h5 className="text-xs font-medium text-slate-400 mb-2">Évolution</h5>
           <div className="flex items-end gap-1 h-20">
@@ -164,7 +164,7 @@ function StatDetailContent({ data }: { data: Record<string, unknown> }) {
             })}
           </div>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

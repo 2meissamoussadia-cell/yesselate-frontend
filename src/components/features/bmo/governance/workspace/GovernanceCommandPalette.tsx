@@ -31,7 +31,7 @@ interface Command {
   id: string;
   label: string;
   description?: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   shortcut?: string;
   category: 'navigation' | 'action' | 'settings';
   action: () => void;

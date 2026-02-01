@@ -91,9 +91,9 @@ export function FilterBar({
     onChange: (v: string) => void;
     options: Array<{ value: string; label: string }> | string[];
   }) => {
-    const items = Array.isArray(opts) && typeof opts[0] === 'string'
-      ? [{ value: '', label: opts[0] }, ...opts.slice(1).map((o) => ({ value: o, label: o }))]
-      : opts as Array<{ value: string; label: string }>;
+    const items: Array<{ value: string; label: string }> = Array.isArray(opts) && opts.length > 0 && typeof opts[0] === 'string'
+      ? [{ value: '', label: opts[0] }, ...(opts as string[]).slice(1).map((o) => ({ value: o, label: o }))]
+      : (opts as Array<{ value: string; label: string }>);
     return (
       <div className="flex flex-col gap-0.5">
         <label className="text-[11px] text-slate-400 font-medium">{label}</label>

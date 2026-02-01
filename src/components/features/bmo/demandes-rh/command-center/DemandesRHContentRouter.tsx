@@ -89,7 +89,7 @@ function PlaceholderView({
   subCategory: string;
   icon: string;
 }) {
-  const IconMap: Record<string, React.ElementType> = {
+  const IconMap: Record<string, React.ComponentType<{ className?: string }>> = {
     Plane,
     Wallet,
     AlertTriangle,

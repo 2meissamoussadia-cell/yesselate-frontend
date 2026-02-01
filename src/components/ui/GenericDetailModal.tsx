@@ -49,6 +49,7 @@ export interface GenericDetailModalProps {
   // Contenu principal
   title: string;
   subtitle?: string;
+  headerBadge?: React.ReactNode;
   statusBadge?: {
     label: string;
     variant: 'default' | 'warning' | 'critical' | 'success' | 'info';
@@ -57,6 +58,7 @@ export interface GenericDetailModalProps {
   // Tabs
   tabs: TabConfig[];
   defaultActiveTab?: string;
+  defaultTab?: string;
   
   // Actions
   actions?: ActionButton[];
@@ -66,6 +68,10 @@ export interface GenericDetailModalProps {
   onNext?: () => void;
   hasNext?: boolean;
   hasPrevious?: boolean;
+  navigationLabel?: string;
+  
+  // Actions secondaires
+  secondaryActions?: ActionButton[];
   
   // Options
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
@@ -82,9 +88,11 @@ export function GenericDetailModal({
   onClose,
   title,
   subtitle,
+  headerBadge,
   statusBadge,
   tabs,
-  defaultActiveTab,
+  defaultActiveTab: defaultActiveTabProp,
+  defaultTab,
   actions,
   onPrevious,
   onNext,
@@ -94,6 +102,7 @@ export function GenericDetailModal({
   loading = false,
   className,
 }: GenericDetailModalProps) {
+  const defaultActiveTab = defaultActiveTabProp ?? defaultTab;
   const [activeTab, setActiveTab] = useState(defaultActiveTab || tabs[0]?.id);
 
   // Reset active tab when modal opens
@@ -180,6 +189,7 @@ export function GenericDetailModal({
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white truncate">
                 {title}
               </h2>
+              {headerBadge}
               {statusBadge && (
                 <Badge
                   variant={

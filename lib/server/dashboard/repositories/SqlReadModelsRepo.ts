@@ -432,7 +432,7 @@ export class SqlReadModelsRepo implements ReadModelsRepo {
       };
     } catch (error) {
       const err = error instanceof Error ? error : new Error(String(error));
-      const logger = await import('@/modules/dashboard/utils/logger').then(m => m.createLogger('SqlReadModelsRepo'));
+      const logger = await import('@/modules/dashboard/utils/logger.server').then(m => m.createLogger('SqlReadModelsRepo'));
       logger.error('Error loading KPIs achats', { tenantId: ctx.tenantId, action: 'loadKpisAchats' }, err);
       return {
         leadTimeJours: 0,

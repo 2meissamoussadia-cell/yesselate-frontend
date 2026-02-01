@@ -30,6 +30,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BTPKPIWidget } from './BTPKPIWidget';
 import { BTPVisualization } from './BTPVisualization';
 import { BTPElementEditForm } from './BTPElementEditForm';
+import { logger } from '@/lib/utils/logger';
 import { Clock } from 'lucide-react';
 
 interface BTPElementDetailViewProps {
@@ -583,7 +584,7 @@ export function BTPElementDetailView({
                   throw new Error('Erreur lors de la sauvegarde');
                 }
               } catch (error) {
-                console.error('Error saving element:', error);
+                logger.error('Error saving element', error instanceof Error ? error : undefined, { component: 'BTPElementDetailView', elementId });
                 throw error;
               }
             }}

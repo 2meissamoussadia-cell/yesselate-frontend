@@ -7,7 +7,7 @@ export default function AreaChartImpl({ data, series }: { data: any[]; series: A
   const { t, fmt } = useI18n();
   if (!data?.length) return <div className="text-slate-400 flex items-center justify-center h-full">{t('empty.noData')}</div>;
   return (
-    <ResponsiveContainer width="100%" height="100%">
+    <ResponsiveContainer width="100%" height="100%" minHeight={200}>
       <AreaChart data={data}>
         <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.3}/>
         <XAxis 

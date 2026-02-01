@@ -3,6 +3,8 @@
  * En production : remplacer par Redis ou table DB avec TTL.
  */
 
+import { randomBytes } from 'node:crypto';
+
 const EXPIRY_DAYS_DEFAULT = 7;
 
 export type ShareRole = 'client' | 'associe';
@@ -18,7 +20,7 @@ export interface SharePayload {
 const store = new Map<string, SharePayload>();
 
 function randomToken(): string {
-  return crypto.randomBytes(24).toString('base64url');
+  return randomBytes(24).toString('base64url');
 }
 
 export function createShareToken(options: {

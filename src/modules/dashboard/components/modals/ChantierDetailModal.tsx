@@ -51,7 +51,7 @@ export function ChantierDetailModal({ chantier, onClose }: ChantierDetailModalPr
             <div>
               <span className="text-slate-400">CA</span>
               <p className="font-semibold text-slate-200">
-                {(chantier.ca / 1000).toFixed(0)}k FCFA
+                {(chantier.ca / 1000).toFixed(0)}k XOF
               </p>
             </div>
             <div>

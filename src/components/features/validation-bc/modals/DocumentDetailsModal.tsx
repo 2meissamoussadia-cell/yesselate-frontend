@@ -667,7 +667,7 @@ export function DocumentDetailsModal({
                             >
                               {index + 1}
                             </div>
-                            {index < fullDetails.workflow.etapes.length - 1 && (
+                            {index < (fullDetails.workflow?.etapes?.length ?? 1) - 1 && (
                               <div className="w-0.5 h-12 bg-slate-700 my-1" />
                             )}
                           </div>

@@ -4,6 +4,7 @@
  * BmoSidebar — Sidebar BMO qui lit la config bmoModules.
  * Groupes : PILOTAGE, EXÉCUTION, SUPPORT.
  * Logo entreprise : un seul emplacement (sidebar) pour éviter doublon avec la topbar.
+ * Dashboard (cockpit) : lien avec query pour forcer la vue Cockpit DG et réaction au clic.
  */
 
 import React from 'react';
@@ -13,6 +14,9 @@ import { usePathname } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { bmoModules, bmoModuleGroupLabels, getModuleByPath } from '@/lib/navigation/bmoModules';
+
+/** URL du dashboard (PILOTAGE > Dashboard). Force une navigation visible au clic. */
+const DASHBOARD_COCKPIT_HREF = '/maitre-ouvrage/dashboard?main=pilotage&sub=dashboard&leaf=default';
 
 const COMPANY_LOGO_SRC = '/images/log_yessalate.png';
 
@@ -120,13 +124,16 @@ export function BmoSidebar({
             <ul className="space-y-0.5">
               {byGroup[group].map((m) => {
                 const Icon = m.icon;
+                const isDashboard = m.id === 'cockpit';
+                const href = isDashboard ? DASHBOARD_COCKPIT_HREF : m.href;
                 const isActive =
                   currentModule?.id === m.id ||
                   (pathname ?? '').startsWith(m.href);
                 return (
                   <li key={m.id}>
                     <Link
-                      href={m.href}
+                      href={href}
+                      onClick={() => onCollapse?.()}
                       className={cn(
                         'flex items-center gap-2 px-3 py-2 text-sm transition-colors',
                         collapsed ? 'justify-center' : '',
@@ -135,6 +142,7 @@ export function BmoSidebar({
                           : 'hover:bg-slate-800/80 text-slate-300 hover:text-slate-100 border-l-2 border-transparent'
                       )}
                       aria-current={isActive ? 'page' : undefined}
+                      aria-label={m.label}
                     >
                       <Icon className="h-4 w-4 shrink-0 text-slate-400" aria-hidden />
                       {!collapsed && (

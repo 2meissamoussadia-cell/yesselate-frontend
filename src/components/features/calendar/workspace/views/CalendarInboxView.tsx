@@ -1058,8 +1058,8 @@ export function CalendarInboxView({ tabId, queue }: CalendarInboxViewProps) {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1">
-                        {event.hasConflict && <AlertTriangle className="w-4 h-4 text-rose-500" title="Conflit" />}
-                        {event.isOverdue && <Clock className="w-4 h-4 text-amber-500" title="Retard SLA" />}
+                        {event.hasConflict && <span title="Conflit"><AlertTriangle className="w-4 h-4 text-rose-500" aria-hidden /></span>}
+                        {event.isOverdue && <span title="Retard SLA"><Clock className="w-4 h-4 text-amber-500" aria-hidden /></span>}
                       </div>
                     </td>
                     <td className="px-4 py-3">

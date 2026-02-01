@@ -70,16 +70,16 @@ export function DelegationCommitmentsSection({ delegation, onAddEngagement }: Pr
       {/* Par type */}
       {Object.entries(byType).map(([type, items]) => {
         const config = TYPE_CONFIG[type] || { label: type, icon: <FileText className="w-4 h-4" />, color: 'text-slate-600' };
-        
+        const itemList = Array.isArray(items) ? items : [];
         return (
           <div key={type}>
             <h3 className={cn("font-medium mb-3 flex items-center gap-2", config.color)}>
               {config.icon}
-              {config.label}s ({items.length})
+              {config.label}s ({itemList.length})
             </h3>
             
             <div className="space-y-2">
-              {items.map((eng: any) => (
+              {itemList.map((eng: any) => (
                 <EngagementCard key={eng.id} engagement={eng} />
               ))}
             </div>

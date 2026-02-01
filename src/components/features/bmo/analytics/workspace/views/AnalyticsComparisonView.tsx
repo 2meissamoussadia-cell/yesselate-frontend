@@ -1115,7 +1115,7 @@ function PeriodsComparisonView({
   
   // Mapper les recommandations pour inclure les icônes React
   const recommendationsWithIcons = useMemo(() => {
-    const iconMap: Record<string, React.ElementType> = {
+    const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
       'rec-degrading': AlertTriangle,
       'rec-worst-period': BarChart3,
       'rec-problematic': Target,

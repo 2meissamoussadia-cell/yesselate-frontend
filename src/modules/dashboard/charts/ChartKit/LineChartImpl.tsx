@@ -63,7 +63,7 @@ export default function LineChartImpl({ data, title, className }: LineChartImplP
 
   return (
     <ChartContainer title={title} className={className}>
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer width="100%" height="100%" minHeight={200}>
         <RechartsLineChart data={data}>
           <CartesianGrid 
             strokeDasharray="3 3" 

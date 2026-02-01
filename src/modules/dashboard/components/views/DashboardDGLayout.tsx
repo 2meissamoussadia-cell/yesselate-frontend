@@ -155,7 +155,7 @@ function MiniTable({
 // ---------------------------------------------------------------------------
 
 export interface DashboardDGLayoutProps {
-  /** Contenu personnalisé (ex. DashboardAccueil3P). Si fourni, remplace le contenu par défaut (onglets + KPI + synthèse). */
+  /** Contenu personnalisé (ex. DashboardHome). Si fourni, remplace le contenu par défaut (onglets + KPI + synthèse). */
   content?: React.ReactNode;
 }
 
@@ -192,7 +192,7 @@ export function DashboardDGLayout({ content }: DashboardDGLayoutProps = {}) {
   const routeKey = `${main ?? 'pilotage'}::${sub ?? 'dashboard'}`;
   const activeTabIndex = routeToTab[routeKey] ?? 0;
 
-  // Quand un contenu personnalisé est fourni (ex. DashboardAccueil3P), ne pas afficher le header
+  // Quand un contenu personnalisé est fourni (ex. DashboardHome), ne pas afficher le header
   // pour éviter la duplication avec le header de la page (breadcrumbs, SubNav, KPIs, actions).
   const showHeader = content == null || content === undefined;
   return (

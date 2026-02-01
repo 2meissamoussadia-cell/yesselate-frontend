@@ -264,7 +264,6 @@ export function ValidationBCMultiLevelValidation({
       open={open}
       onClose={onClose}
       title="Validation multi-niveaux"
-      icon={<Shield className="w-5 h-5 text-blue-500" />}
       size="xl"
     >
       <div className="space-y-6">

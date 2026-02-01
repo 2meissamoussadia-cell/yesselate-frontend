@@ -42,5 +42,5 @@
     "**/*.mts",
     "src/types/**/*.d.ts"
   ],
-  "exclude": ["node_modules", "CLIENTS_MODULE_EXAMPLES.tsx", "**/*.stories.*", "**/*.stories.tsx", "**/*.stories.ts", "**/GenericModalsTemplate.tsx"]
+  "exclude": ["node_modules", "CLIENTS_MODULE_EXAMPLES.tsx", "**/*.stories.*", "**/*.stories.tsx", "**/*.stories.ts", "**/GenericModalsTemplate.tsx", "apps", "e2e", "__tests__", "src/__tests__", "lib/server/**/__tests__", "playwright.config.ts", "tests", "bench", "jobs", "**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx"]
 }

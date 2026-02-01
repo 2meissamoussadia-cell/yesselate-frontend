@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { toast } from 'sonner';
 import { formatMoneyCompact } from '@lib-root/dashboard/kpi';
 import type { CashFlowPrevision, ScenarioTresorerie } from '../../types/tresoreriePrevisionnelle';
 import {
@@ -42,6 +43,8 @@ export interface TresoreriePrevisionnelleWidgetProps {
   className?: string;
   /** Clic "Relancer créances > 30j" */
   onRelancerCreances?: () => void;
+  /** Appelé après un export CSV réussi (pour historique session) */
+  onExportSuccess?: () => void;
 }
 
 function formatDateLabel(dateStr: string): string {
@@ -152,6 +155,11 @@ export const TresoreriePrevisionnelleWidget = memo(function TresoreriePrevisionn
               a.download = `tresorerie-previsionnelle-90j-${scenario}.csv`;
               a.click();
               URL.revokeObjectURL(url);
+              toast.success('Export CSV réussi', {
+                description: `Fichier téléchargé : tresorerie-previsionnelle-90j-${scenario}.csv`,
+                duration: 3000,
+              });
+              onExportSuccess?.();
             }}
             className="inline-flex items-center gap-1.5 rounded-lg border border-slate-600 bg-slate-800/60 px-2 py-1.5 min-h-[44px] text-[11px] text-slate-300 hover:bg-slate-700/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
             aria-label="Exporter le graphique en CSV"
@@ -182,8 +190,8 @@ export const TresoreriePrevisionnelleWidget = memo(function TresoreriePrevisionn
       </div>
 
       <div className="p-4">
-        <div className="h-[200px] w-full" role="img" aria-label={`Graphique prévisionnel trésorerie J+${horizon}, solde prévu et seuil minimal`}>
-          <ResponsiveContainer width="100%" height="100%">
+        <div className="h-[200px] w-full min-h-[120px]" role="img" aria-label={`Graphique prévisionnel trésorerie J+${horizon}, solde prévu et seuil minimal`} style={{ minHeight: 120 }}>
+          <ResponsiveContainer width="100%" height={200} minHeight={120}>
             <AreaChart data={chartData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }} aria-hidden="true">
               <defs>
                 <linearGradient id="areaSoldePositif" x1="0" y1="0" x2="0" y2="1">
@@ -201,13 +209,15 @@ export const TresoreriePrevisionnelleWidget = memo(function TresoreriePrevisionn
                 tick={{ fontSize: 10, fill: '#94a3b8' }}
                 tickLine={false}
                 axisLine={{ stroke: '#475569' }}
+                label={{ value: 'Date', position: 'insideBottom', offset: -4, fill: '#94a3b8', fontSize: 11 }}
               />
               <YAxis
                 tick={{ fontSize: 10, fill: '#94a3b8' }}
                 tickLine={false}
                 axisLine={false}
                 tickFormatter={(v) => formatMoneyCompact(v, CURRENCY)}
-                width={52}
+                width={56}
+                label={{ value: 'Solde (XOF)', angle: -90, position: 'insideLeft', fill: '#94a3b8', fontSize: 11 }}
               />
               <Tooltip content={<CustomTooltip />} />
               <ReferenceLine
@@ -228,9 +238,16 @@ export const TresoreriePrevisionnelleWidget = memo(function TresoreriePrevisionn
             </AreaChart>
           </ResponsiveContainer>
         </div>
-        <p className="text-[10px] text-slate-400 mt-1">
-          Ligne rouge en pointillés : seuil minimal {formatMoneyCompact(seuilMinimal, CURRENCY)}
-        </p>
+        <div className="flex flex-wrap items-center gap-4 mt-2 text-[10px] text-slate-400" role="list" aria-label="Légende du graphique">
+          <span className="inline-flex items-center gap-1.5">
+            <span className="w-4 h-0.5 bg-emerald-400 rounded" aria-hidden />
+            Solde prévu (courbe)
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="w-4 h-0.5 border-t-2 border-dashed border-rose-400 rounded" aria-hidden />
+            Seuil minimal ({formatMoneyCompact(seuilMinimal, CURRENCY)})
+          </span>
+        </div>
 
         {tensions.length > 0 && (
           <div className="mt-4 space-y-2">

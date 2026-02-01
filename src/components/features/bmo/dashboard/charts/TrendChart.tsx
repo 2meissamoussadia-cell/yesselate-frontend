@@ -41,8 +41,8 @@ export function TrendChart({
   showLegend = true,
 }: TrendChartProps) {
   return (
-    <div className="w-full" style={{ height }}>
-      <ResponsiveContainer width="100%" height="100%">
+    <div className="w-full" style={{ height, minHeight: 120 }}>
+      <ResponsiveContainer width="100%" height="100%" minHeight={120}>
         <LineChart data={data} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
           {showGrid && (
             <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.3} />

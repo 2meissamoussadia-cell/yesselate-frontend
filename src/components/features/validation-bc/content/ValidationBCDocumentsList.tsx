@@ -356,8 +356,9 @@ export function ValidationBCDocumentsList({
                 </TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>
-                    <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                    <DropdownMenuTrigger asChild>
                       <Button
+                        onClick={(e) => e.stopPropagation()}
                         variant="ghost"
                         size="sm"
                         className="h-8 w-8 p-0 text-slate-400 hover:text-slate-200"

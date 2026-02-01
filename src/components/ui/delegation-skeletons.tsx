@@ -15,11 +15,16 @@ import { cn } from '@/lib/utils';
 interface SkeletonProps {
   className?: string;
   variant?: 'default' | 'rounded' | 'circle';
+  width?: string | number;
+  style?: React.CSSProperties;
 }
 
-function Skeleton({ className, variant = 'default' }: SkeletonProps) {
+function Skeleton({ className, variant = 'default', width, style }: SkeletonProps) {
+  const computedStyle: React.CSSProperties = { ...style };
+  if (width) computedStyle.width = typeof width === 'number' ? `${width}px` : width;
   return (
     <div
+      style={Object.keys(computedStyle).length ? computedStyle : undefined}
       className={cn(
         'animate-pulse bg-white/5',
         variant === 'rounded' && 'rounded-lg',
@@ -244,8 +249,8 @@ export function DelegationChartSkeleton() {
             <Skeleton className="h-4 w-24" variant="rounded" />
             <Skeleton 
               className="h-8" 
-              variant="rounded"
-              style={{ width: `${Math.random() * 50 + 30}%` }}
+              variant="default"
+              width={`${30 + i * 8}%`}
             />
           </div>
         ))}

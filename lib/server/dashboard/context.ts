@@ -63,7 +63,7 @@ export async function enrichContextWithRbac(ctx: RequestContext, reqId?: string)
     // Enrichir avec les rôles, scopes, permissions et feature flags depuis la DB/cache
     return {
       ...ctx,
-      roles: cached.roles?.length ? cached.roles : ctx.roles,
+      roles: (cached.roles?.length ? cached.roles : ctx.roles) as Role[],
       scopes: cached.scopes,
       perms: cached.perms,
       permissions: cached.perms, // Alias pour compatibilité

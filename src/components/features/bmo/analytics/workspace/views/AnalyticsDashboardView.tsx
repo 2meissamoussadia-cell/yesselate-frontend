@@ -129,8 +129,8 @@ export function AnalyticsDashboardView() {
             <FluentCardTitle className="text-sm">📈 Évolution (30 derniers jours)</FluentCardTitle>
           </FluentCardHeader>
           <FluentCardContent>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
+            <div className="h-64 min-h-[200px]">
+              <ResponsiveContainer width="100%" height="100%" minHeight={200}>
                 <AreaChart data={evolutionData}>
                   <defs>
                     <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
@@ -180,8 +180,8 @@ export function AnalyticsDashboardView() {
             <FluentCardTitle className="text-sm">📊 Comparaison mensuelle</FluentCardTitle>
           </FluentCardHeader>
           <FluentCardContent>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
+            <div className="h-64 min-h-[200px]">
+              <ResponsiveContainer width="100%" height="100%" minHeight={200}>
                 <BarChart data={comparisonData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
                   <XAxis 
@@ -247,8 +247,8 @@ export function AnalyticsDashboardView() {
             <FluentCardTitle className="text-sm">🏢 Top 5 Bureaux (Score)</FluentCardTitle>
           </FluentCardHeader>
           <FluentCardContent>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
+            <div className="h-64 min-h-[200px]">
+              <ResponsiveContainer width="100%" height="100%" minHeight={200}>
                 <BarChart data={bureauData} layout="vertical">
                   <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
                   <XAxis 
@@ -293,8 +293,8 @@ export function AnalyticsDashboardView() {
             <FluentCardTitle className="text-sm">💰 Répartition Budget</FluentCardTitle>
           </FluentCardHeader>
           <FluentCardContent>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
+            <div className="h-64 min-h-[200px]">
+              <ResponsiveContainer width="100%" height="100%" minHeight={200}>
                 <PieChart>
                   <Pie
                     data={financialData}

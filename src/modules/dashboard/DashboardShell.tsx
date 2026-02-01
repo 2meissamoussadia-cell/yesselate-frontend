@@ -60,7 +60,7 @@ export function DashboardShell() {
     <div className="flex h-full">
       <DashboardSidebar />
       <main className="flex-1 min-w-0">
-        <div className="sticky top-0 z-20">
+        <div className="sticky top-0 z-[30]">
           <DashboardBreadcrumbs />
           <DashboardKPIBar onExport={onExport} />
           <DashboardSubNavigation />

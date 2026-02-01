@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 interface DropdownContextType {
   open: boolean;
   setOpen: (open: boolean) => void;
+  onOpenChange?: (open: boolean) => void;
 }
 
 const DropdownContext = React.createContext<DropdownContextType | undefined>(undefined);
@@ -22,13 +23,23 @@ function useDropdownContext() {
 // DropdownMenu Root
 interface DropdownMenuProps {
   children: React.ReactNode;
+  /** Appelé quand le menu s'ouvre ou se ferme (utile pour réinitialiser un sous-menu). */
+  onOpenChange?: (open: boolean) => void;
 }
 
-function DropdownMenu({ children }: DropdownMenuProps) {
+function DropdownMenu({ children, onOpenChange }: DropdownMenuProps) {
   const [open, setOpen] = React.useState(false);
 
+  const setOpenWithCallback = React.useCallback(
+    (next: boolean) => {
+      setOpen(next);
+      if (!next) onOpenChange?.(false);
+    },
+    [onOpenChange]
+  );
+
   return (
-    <DropdownContext.Provider value={{ open, setOpen }}>
+    <DropdownContext.Provider value={{ open, setOpen: setOpenWithCallback, onOpenChange }}>
       <div className="relative inline-block text-left">{children}</div>
     </DropdownContext.Provider>
   );
@@ -41,11 +52,13 @@ interface DropdownMenuTriggerProps {
 }
 
 function DropdownMenuTrigger({ asChild, children }: DropdownMenuTriggerProps) {
-  const { open, setOpen } = useDropdownContext();
+  const { open, setOpen, onOpenChange } = useDropdownContext();
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setOpen(!open);
+    const next = !open;
+    setOpen(next);
+    if (next) onOpenChange?.(true);
   };
 
   if (asChild && React.isValidElement(children)) {
@@ -74,16 +87,18 @@ function DropdownMenuTrigger({ asChild, children }: DropdownMenuTriggerProps) {
 // DropdownMenuContent
 interface DropdownMenuContentProps {
   align?: 'start' | 'center' | 'end';
+  sideOffset?: number;
   className?: string;
   children: React.ReactNode;
 }
 
 function DropdownMenuContent({
   align = 'end',
+  sideOffset,
   className,
   children,
 }: DropdownMenuContentProps) {
-  const { open, setOpen } = useDropdownContext();
+  const { open, setOpen, onOpenChange } = useDropdownContext();
   const ref = React.useRef<HTMLDivElement>(null);
 
   // Close on click outside
@@ -119,11 +134,13 @@ function DropdownMenuContent({
     end: 'right-0',
   };
 
+  const marginTop = sideOffset !== undefined ? sideOffset : 4;
   return (
     <div
       ref={ref}
+      style={{ marginTop: `${marginTop}px` }}
       className={cn(
-        'absolute z-50 mt-1 min-w-[8rem] overflow-hidden rounded-md border border-slate-700 bg-slate-900 p-1 shadow-lg',
+        'absolute z-50 min-w-[8rem] overflow-hidden rounded-md border border-slate-700 bg-slate-900 p-1 shadow-lg',
         'animate-in fade-in-0 zoom-in-95',
         alignClasses[align],
         className
@@ -213,6 +230,45 @@ function DropdownMenuLabel({ className, children }: DropdownMenuLabelProps) {
   );
 }
 
+// DropdownMenuSubTrigger — ouvre un sous-menu au clic sans fermer le menu principal
+interface DropdownMenuSubTriggerProps {
+  className?: string;
+  disabled?: boolean;
+  onClick?: (e: React.MouseEvent) => void;
+  children: React.ReactNode;
+}
+
+function DropdownMenuSubTrigger({
+  className,
+  disabled,
+  onClick,
+  children,
+}: DropdownMenuSubTriggerProps) {
+  const handleClick = (e: React.MouseEvent) => {
+    if (disabled) return;
+    onClick?.(e);
+    // Ne pas appeler setOpen(false) : le menu reste ouvert pour afficher le sous-contenu
+  };
+
+  return (
+    <button
+      type="button"
+      role="menuitem"
+      disabled={disabled}
+      onClick={handleClick}
+      className={cn(
+        'relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none',
+        'text-slate-300 transition-colors',
+        'hover:bg-slate-800 focus:bg-slate-800',
+        disabled && 'pointer-events-none opacity-50',
+        className
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+
 export {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -220,5 +276,6 @@ export {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuLabel,
+  DropdownMenuSubTrigger,
 };
 

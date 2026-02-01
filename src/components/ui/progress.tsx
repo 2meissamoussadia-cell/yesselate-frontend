@@ -8,9 +8,10 @@ interface ProgressProps {
   value: number; // 0-100
   className?: string;
   variant?: 'default' | 'success' | 'warning' | 'error';
+  indicatorClassName?: string;
 }
 
-export function Progress({ value, className, variant = 'default' }: ProgressProps) {
+export function Progress({ value, className, variant = 'default', indicatorClassName }: ProgressProps) {
   const clampedValue = Math.min(100, Math.max(0, value));
 
   const variantClasses = {
@@ -30,7 +31,7 @@ export function Progress({ value, className, variant = 'default' }: ProgressProp
       aria-label={`Progression: ${clampedValue}%`}
     >
       <div
-        className={cn('h-full transition-all duration-300', variantClasses[variant])}
+        className={cn('h-full transition-all duration-300', indicatorClassName ?? variantClasses[variant])}
         style={{ width: `${clampedValue}%` }}
       />
     </div>

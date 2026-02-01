@@ -28,10 +28,20 @@ import {
   Settings,
   FileSpreadsheet,
   ChevronDown,
+  SlidersHorizontal,
+  MoreVertical,
 } from 'lucide-react';
 
 import { toast } from 'sonner';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu';
 import { ErrorBoundary } from '@/components/shared/ErrorBoundary';
 import { DashboardErrorBoundary } from '@/modules/dashboard/components/shared/DashboardErrorBoundary';
 
@@ -48,13 +58,14 @@ import {
   ContentLoadingSkeleton,
   DashboardModulesBar,
   DashboardCleanLayout,
-  DashboardAccueil3P,
+  DashboardHome,
+  PilotageHome,
 } from '@/modules/dashboard';
+import { getSectionFocusForLeaf } from '@/modules/dashboard/navigation/leafToSectionMap';
 import { DashboardShell } from '@/modules/dashboard/components/shared/DashboardShell';
 
 import { DashboardModals } from '@/components/features/bmo/dashboard/command-center/DashboardModals';
 import { DashboardCommandPalette } from '@/components/features/bmo/dashboard/command-center/DashboardCommandPalette';
-import { DashboardBottomNav } from '@/modules/dashboard/components/mobile/DashboardBottomNav';
 import { getKPIMappingByLabel } from '@/lib/mappings/dashboardKPIMapping';
 import { useDashboardKPIs } from '@/lib/hooks/useDashboardKPIs';
 import {
@@ -266,6 +277,17 @@ function DashboardContent() {
 
   const topKpis = allKpis;
 
+  const veilleBadges = useMemo(() => {
+    const badges: Record<string, number> = {};
+    for (const kpi of allKpis) {
+      const v = typeof kpi.value === 'number' ? kpi.value : parseInt(String(kpi.value), 10);
+      if (Number.isNaN(v)) continue;
+      if (kpi.label === 'Blocages' || kpi.label?.includes('Blocages')) badges.alertes = v;
+      if (kpi.label === 'Décisions en attente' || kpi.label?.includes('Décisions')) badges.decisions = v;
+    }
+    return badges;
+  }, [allKpis]);
+
   // stats sidebar (clés alignées sur DashboardMainCategory)
   const stats = useMemo(
     () => ({
@@ -410,11 +432,17 @@ function DashboardContent() {
   }, [mainCategory, subCategory, subSubCategory]);
 
   const pathname = usePathname();
-  // Vue d'accueil Cockpit DG = uniquement quand pilotage + dashboard (pas quand alertes/gouvernance/calendrier/analytics).
+  // Vue d'accueil Dashboard (fusion Cockpit DG) = uniquement quand pilotage + dashboard (pas alertes/gouvernance/calendrier/analytics).
   // Ne pas utiliser pathname seul : sur /maitre-ouvrage/dashboard le contenu doit changer selon la sub (subsidebar).
   const isCockpitHome =
     (mainCategory === 'pilotage' && subCategory === 'dashboard') ||
     ((mainCategory as string) === 'overview' && (subCategory === 'summary' || !subCategory));
+  const dashboardSectionFocus = useMemo(
+    () => (isCockpitHome ? getSectionFocusForLeaf(subSubCategory) : undefined),
+    [isCockpitHome, subSubCategory]
+  );
+  const hasSectionSelected = Boolean(dashboardSectionFocus);
+  const usePilotageHome = isCockpitHome && !hasSectionSelected && subSubCategory !== 'cockpit-detail';
   const useCleanLayout = true; // Refonte UX — layout Procore / SAP Fiori
 
   if (useCleanLayout) {
@@ -426,312 +454,217 @@ function DashboardContent() {
         </Suspense>
         <DashboardCommandPalette kpis={allKpis} />
         <DashboardCleanLayout lastUpdate={formatTimeAgo(lastUpdate)} hideHeader>
-          {isCockpitHome ? (
-            <div className="flex-1 min-h-0 min-w-0 flex overflow-hidden" role="region" aria-labelledby="dashboard-page-title">
-              <h1 id="dashboard-page-title" className="sr-only">{pageTitle}</h1>
-              <DashboardSubSidebar />
-              <div className="flex-1 min-h-0 min-w-0 flex flex-col overflow-hidden">
-                <div className="shrink-0 border-b border-slate-800/60 bg-slate-950/50">
-                  <DashboardSubNavigation stats={stats} mainTabsOnly />
-                  <div className={cn('border-b border-slate-800/60 bg-slate-950/40')}>
-                    <button
-                      type="button"
-                      onClick={toggleKpiStrip}
-                      className={cn(
-                        'w-full px-4 sm:px-6 py-2.5 flex items-center justify-between gap-2 text-left text-sm font-medium text-slate-200 hover:bg-slate-800/50 transition-colors',
-                        'focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500/50'
-                      )}
-                      aria-expanded={!kpiStripCollapsed}
-                      aria-controls="dashboard-kpi-strip"
-                      id="dashboard-kpi-strip-toggle"
-                    >
-                      <span className="text-[10px] uppercase tracking-wider text-slate-300">Indicateurs clés</span>
-                      <ChevronDown className={cn('h-4 w-4 shrink-0 text-slate-400 transition-transform duration-200', kpiStripCollapsed && '-rotate-90')} aria-hidden />
-                    </button>
-                    {!kpiStripCollapsed && (
-                      <div id="dashboard-kpi-strip" className={cn('px-4 sm:px-6 pb-3 pt-0')} role="region" aria-labelledby="dashboard-kpi-strip-toggle" aria-live="polite" aria-atomic="false">
-                        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-dashboard min-w-0" role="list" style={{ scrollbarGutter: 'stable' }}>
-                          {topKpis.slice(0, 6).map((kpi, idx) => (
-                            <KPICardPro
-                              key={kpi.label}
-                              kpi={kpi}
-                              onClick={() => handleKPIClick(kpi)}
-                              size={idx < 2 ? 'xl' : idx < 4 ? 'lg' : 'md'}
-                            />
-                          ))}
+          {/* BmoSidebar (principal) + SubSidebar (dashboard) + colonne SubNav / KPI / toolbar / contenu */}
+          <div className="flex-1 min-h-0 min-w-0 flex overflow-hidden" role="region" aria-labelledby="dashboard-page-title">
+            <h1 id="dashboard-page-title" className="sr-only">{pageTitle}</h1>
+            <DashboardSubSidebar />
+            <div className="flex-1 min-h-0 min-w-0 flex flex-col overflow-hidden">
+              <div className="shrink-0 border-b border-slate-800/60 bg-slate-950/50">
+                <DashboardSubNavigation stats={stats} mainTabsOnly />
+              {!hasSectionSelected && (
+              <div className={cn('border-b border-slate-800/60 bg-slate-950/40')}>
+                <button
+                  type="button"
+                  onClick={toggleKpiStrip}
+                  className={cn(
+                    'w-full px-4 sm:px-6 py-2.5 flex items-center justify-between gap-2 text-left text-sm font-medium text-slate-200 hover:bg-slate-800/50 transition-colors',
+                    'focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500/50'
+                  )}
+                  aria-expanded={!kpiStripCollapsed}
+                  aria-controls="dashboard-kpi-strip"
+                  id="dashboard-kpi-strip-toggle"
+                >
+                  <span className="text-[10px] uppercase tracking-wider text-slate-300">Indicateurs clés</span>
+                  <ChevronDown className={cn('h-4 w-4 shrink-0 text-slate-400 transition-transform duration-200', kpiStripCollapsed && '-rotate-90')} aria-hidden />
+                </button>
+                {!kpiStripCollapsed && (
+                  <div id="dashboard-kpi-strip" className={cn('px-4 sm:px-6 pb-3 pt-0')} role="region" aria-labelledby="dashboard-kpi-strip-toggle" aria-live="polite" aria-atomic="false">
+                    <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-dashboard min-w-0" role="list" style={{ scrollbarGutter: 'stable' }}>
+                      {topKpis.slice(0, 6).map((kpi, idx) => (
+                        <KPICardPro
+                          key={kpi.label}
+                          kpi={kpi}
+                          onClick={() => handleKPIClick(kpi)}
+                          size={idx < 2 ? 'xl' : idx < 4 ? 'lg' : 'md'}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+              )}
+              {/* Toolbar compacte : Filtres + Actions (pattern Procore / Linear / Notion) */}
+              <div className="px-4 sm:px-6 py-2 flex items-center justify-between gap-3 border-b border-slate-800/60 bg-slate-950/30">
+                <div className="flex items-center gap-2">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            type="button"
+                            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-700/60 bg-slate-800/40 text-[11px] text-slate-300 hover:bg-slate-700/50 hover:text-slate-200 transition-colors"
+                            aria-label="Filtres et périmètre"
+                          >
+                            <SlidersHorizontal className="h-3.5 w-3.5" />
+                            <span>Filtres</span>
+                            <ChevronDown className="h-3 w-3 opacity-70" />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>Périmètre, période, chantier, équipe</TooltipContent>
+                      </Tooltip>
+                    </PopoverTrigger>
+                    <PopoverContent align="start" className="w-72 border-slate-800 bg-slate-900/95 text-slate-100">
+                      <div className="space-y-3">
+                        <p className="text-[10px] text-slate-400">Dernière MAJ : {formatTimeAgo(lastUpdate)}</p>
+                        <div>
+                          <label htmlFor="popover-perimetre" className="block text-[11px] text-slate-400 mb-1">Périmètre</label>
+                          <select
+                            id="popover-perimetre"
+                            value={perimetreFilter}
+                            onChange={(e) => setPerimetreFilter(e.target.value as 'nice-renovation' | 'tous')}
+                            className="w-full rounded-lg border border-slate-700 bg-slate-800/80 px-3 py-2 text-[11px] text-slate-200 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
+                          >
+                            <option value="nice-renovation">NICE RÉNOVATION</option>
+                            <option value="tous">Tous les périmètres</option>
+                          </select>
                         </div>
+                        {!isCockpitHome && (
+                          <>
+                            <div>
+                              <label htmlFor="popover-date" className="block text-[11px] text-slate-400 mb-1">Période</label>
+                              <select
+                                id="popover-date"
+                                value={dateFilter}
+                                onChange={(e) => setDateFilter(e.target.value as DateFilterId)}
+                                className="w-full rounded-lg border border-slate-700 bg-slate-800/80 px-3 py-2 text-[11px] text-slate-200 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
+                              >
+                                {DATE_FILTER_OPTIONS.map((o) => (
+                                  <option key={o.id} value={o.id}>{o.label}</option>
+                                ))}
+                              </select>
+                            </div>
+                            <div>
+                              <label htmlFor="popover-chantier" className="block text-[11px] text-slate-400 mb-1">Chantier</label>
+                              <select
+                                id="popover-chantier"
+                                value={chantierFilter}
+                                onChange={(e) => setChantierFilter(e.target.value)}
+                                className="w-full rounded-lg border border-slate-700 bg-slate-800/80 px-3 py-2 text-[11px] text-slate-200 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
+                              >
+                                {CHANTIERS_FILTER_MOCK.map((o) => (
+                                  <option key={o.id} value={o.id}>{o.label}</option>
+                                ))}
+                              </select>
+                            </div>
+                            <div>
+                              <label htmlFor="popover-equipe" className="block text-[11px] text-slate-400 mb-1">Équipe</label>
+                              <select
+                                id="popover-equipe"
+                                value={equipeFilter}
+                                onChange={(e) => setEquipeFilter(e.target.value)}
+                                className="w-full rounded-lg border border-slate-700 bg-slate-800/80 px-3 py-2 text-[11px] text-slate-200 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
+                              >
+                                {EQUIPES_FILTER_MOCK.map((o) => (
+                                  <option key={o.id} value={o.id}>{o.label}</option>
+                                ))}
+                              </select>
+                            </div>
+                          </>
+                        )}
                       </div>
-                    )}
-                  </div>
-                  <div className="px-4 sm:px-6 py-2 flex items-center justify-between gap-3 border-b border-slate-800/60 bg-slate-950/30">
-                    <div className="flex items-center gap-3 text-[11px] text-slate-300 min-w-0">
-                      <span>Dernière MAJ : {formatTimeAgo(lastUpdate)}</span>
-                      <label htmlFor="perimetre-filter" className="sr-only">Périmètre</label>
-                      <select
-                        id="perimetre-filter"
-                        value={perimetreFilter}
-                        onChange={(e) => setPerimetreFilter(e.target.value as 'nice-renovation' | 'tous')}
-                        className="rounded-lg border border-slate-700/70 bg-slate-800/50 px-2 py-1 text-slate-200 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
-                        aria-label="Filtrer par périmètre"
-                      >
-                        <option value="nice-renovation">NICE RÉNOVATION</option>
-                        <option value="tous">Tous les périmètres</option>
-                      </select>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <button
-                            type="button"
-                            onClick={() => refreshAllKPIs()}
-                            disabled={isRefreshing}
-                            className="p-1.5 rounded-lg hover:bg-slate-800/60 text-slate-400 hover:text-slate-200 disabled:opacity-50"
-                            aria-label="Rafraîchir"
-                          >
-                            <RefreshCw className={cn('h-3.5 w-3.5', isRefreshing && 'animate-spin')} />
-                          </button>
-                        </TooltipTrigger>
-                        <TooltipContent>Rafraîchir (Ctrl+R)</TooltipContent>
-                      </Tooltip>
-                    </div>
-                    <div className="relative" ref={exportMenuRef}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <button
-                            type="button"
-                            onClick={() => setShowExportMenu((v) => !v)}
-                            disabled={!!exportingFormat}
-                            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-700/60 bg-slate-800/40 text-[11px] text-slate-300 hover:bg-slate-700/50 disabled:opacity-50"
-                            aria-label="Exporter"
-                            aria-expanded={showExportMenu}
-                          >
-                            <Download className="h-3.5 w-3.5" />
-                            <span>Exporter</span>
-                          </button>
-                        </TooltipTrigger>
-                        <TooltipContent>Exporter en PDF ou Excel</TooltipContent>
-                      </Tooltip>
-                      {showExportMenu && (
-                        <div className="absolute right-0 top-full mt-1 w-44 z-50 rounded-lg border border-slate-700/70 bg-slate-900 shadow-xl overflow-hidden">
-                          <button
-                            type="button"
-                            disabled={!!exportingFormat}
-                            onClick={() => handleExportDirect('pdf')}
-                            className="w-full px-3 py-2 text-left text-[11px] text-slate-200 hover:bg-slate-800 flex items-center gap-2 disabled:opacity-60"
-                          >
-                            <FileText className="h-3 w-3" /> PDF
-                          </button>
-                          <button
-                            type="button"
-                            disabled={!!exportingFormat}
-                            onClick={() => handleExportDirect('excel')}
-                            className="w-full px-3 py-2 text-left text-[11px] text-slate-200 hover:bg-slate-800 flex items-center gap-2 disabled:opacity-60"
-                          >
-                            <FileSpreadsheet className="h-3 w-3" /> Excel
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <div className="px-4 sm:px-6 py-2">
-                    <KPIAlertsSystem
-                      kpis={allKpis.map((k) => ({
-                        label: k.label,
-                        value: k.value,
-                        delta: k.delta,
-                        tone: k.tone,
-                        trend: k.trend,
-                        icon: k.icon,
-                      }))}
-                      onAlert={(alert) => {
-                        log.info('Alerte KPI', {
-                          kpiId: alert.kpiId,
-                          kpiLabel: alert.kpiLabel,
-                          message: alert.message,
-                          severity: alert.severity,
-                          timestamp: alert.timestamp?.toISOString?.(),
-                        });
-                      }}
-                    />
-                  </div>
+                    </PopoverContent>
+                  </Popover>
+                  <span className="text-[10px] text-slate-500 hidden sm:inline">
+                    {perimetreFilter === 'tous' ? 'Tous' : 'NICE RÉNOVATION'}
+                  </span>
                 </div>
-                <div className="flex-1 min-h-0 overflow-auto animate-fadeIn pb-20 md:pb-0">
-                  <DashboardAccueil3P kpis={allKpis} perimetreFilter={perimetreFilter} />
-                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          type="button"
+                          className="p-2 rounded-lg border border-slate-700/60 bg-slate-800/40 text-slate-400 hover:bg-slate-700/50 hover:text-slate-200 transition-colors"
+                          aria-label="Actions"
+                        >
+                          <MoreVertical className="h-4 w-4" />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>Rafraîchir, Exporter</TooltipContent>
+                    </Tooltip>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48 border-slate-800 bg-slate-900/95 text-slate-100">
+                    <DropdownMenuItem
+                      onClick={() => refreshAllKPIs()}
+                      disabled={isRefreshing}
+                      className="text-[11px] cursor-pointer"
+                    >
+                      <RefreshCw className={cn('h-3.5 w-3.5 mr-2', isRefreshing && 'animate-spin')} />
+                      Rafraîchir
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => { handleExportDirect('pdf'); }}
+                      disabled={!!exportingFormat}
+                      className="text-[11px] cursor-pointer"
+                    >
+                      <FileText className="h-3.5 w-3.5 mr-2" />
+                      Exporter en PDF
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => { handleExportDirect('excel'); }}
+                      disabled={!!exportingFormat}
+                      className="text-[11px] cursor-pointer"
+                    >
+                      <FileSpreadsheet className="h-3.5 w-3.5 mr-2" />
+                      Exporter en Excel
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              <div className="px-4 sm:px-6 py-2">
+                <KPIAlertsSystem
+                  kpis={allKpis.map((k) => ({
+                    label: k.label,
+                    value: k.value,
+                    delta: k.delta,
+                    tone: k.tone,
+                    trend: k.trend,
+                    icon: k.icon,
+                  }))}
+                  onAlert={(alert) => {
+                    log.info('Alerte KPI', {
+                      kpiId: alert.kpiId,
+                      kpiLabel: alert.kpiLabel,
+                      message: alert.message,
+                      severity: alert.severity,
+                      timestamp: alert.timestamp?.toISOString?.(),
+                    });
+                  }}
+                />
               </div>
             </div>
-          ) : (
-            <div className="flex-1 min-h-0 min-w-0 flex overflow-hidden" role="region" aria-labelledby="dashboard-page-title-other">
-              <h1 id="dashboard-page-title-other" className="sr-only">{pageTitle}</h1>
-              <DashboardSubSidebar />
-              <div className="flex-1 min-h-0 min-w-0 flex flex-col overflow-hidden">
-                <div className="shrink-0 border-b border-slate-800/60 bg-slate-950/50">
-                  <DashboardSubNavigation stats={stats} mainTabsOnly />
-                  <div className={cn('border-b border-slate-800/60 bg-slate-950/40')}>
-                    <button
-                      type="button"
-                      onClick={toggleKpiStrip}
-                      className={cn(
-                        'w-full px-4 sm:px-6 py-2.5 flex items-center justify-between gap-2 text-left text-sm font-medium text-slate-200 hover:bg-slate-800/50 transition-colors',
-                        'focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500/50'
-                      )}
-                      aria-expanded={!kpiStripCollapsed}
-                      aria-controls="dashboard-kpi-strip-other"
-                      id="dashboard-kpi-strip-toggle-other"
-                    >
-                      <span className="text-[10px] uppercase tracking-wider text-slate-300">Indicateurs clés</span>
-                      <ChevronDown className={cn('h-4 w-4 shrink-0 text-slate-400 transition-transform duration-200', kpiStripCollapsed && '-rotate-90')} aria-hidden />
-                    </button>
-                    {!kpiStripCollapsed && (
-                      <div id="dashboard-kpi-strip-other" className={cn('px-4 sm:px-6 pb-3 pt-0')} role="region" aria-labelledby="dashboard-kpi-strip-toggle-other" aria-live="polite" aria-atomic="false">
-                        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-dashboard min-w-0" role="list" style={{ scrollbarGutter: 'stable' }}>
-                          {topKpis.slice(0, 6).map((kpi, idx) => (
-                            <KPICardPro
-                              key={kpi.label}
-                              kpi={kpi}
-                              onClick={() => handleKPIClick(kpi)}
-                              size={idx < 2 ? 'xl' : idx < 4 ? 'lg' : 'md'}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    )}
+            <div className="flex-1 min-h-0 overflow-auto animate-fadeIn" data-testid="dashboard-content">
+              {isCockpitHome ? (
+                usePilotageHome ? (
+                  <PilotageHome veilleBadges={veilleBadges} />
+                ) : (
+                  <DashboardHome kpis={allKpis} perimetreFilter={perimetreFilter} sectionFocus={dashboardSectionFocus} />
+                )
+              ) : (
+                <ErrorBoundary>
+                  <div key={`${mainCategory}-${subCategory}-${subSubCategory}`} className="p-4 sm:p-6">
+                    <Suspense fallback={<ContentLoadingSkeleton showCharts={true} showTable={false} kpiCount={6} />}>
+                      <DashboardViewRouter />
+                    </Suspense>
                   </div>
-                  <div className="px-4 sm:px-6 py-2 flex items-center justify-between gap-3 border-b border-slate-800/60 bg-slate-950/30">
-                    <div className="flex items-center gap-3 text-[11px] text-slate-300 min-w-0 flex-wrap">
-                      <span>Dernière MAJ : {formatTimeAgo(lastUpdate)}</span>
-                      <label htmlFor="perimetre-filter-other" className="sr-only">Périmètre</label>
-                      <select
-                        id="perimetre-filter-other"
-                        value={perimetreFilter}
-                        onChange={(e) => setPerimetreFilter(e.target.value as 'nice-renovation' | 'tous')}
-                        className="rounded-lg border border-slate-700/70 bg-slate-800/50 px-2 py-1 text-slate-200 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
-                        aria-label="Filtrer par périmètre"
-                      >
-                        <option value="nice-renovation">NICE RÉNOVATION</option>
-                        <option value="tous">Tous les périmètres</option>
-                      </select>
-                      <label htmlFor="date-filter-other" className="sr-only">Période</label>
-                      <select
-                        id="date-filter-other"
-                        value={dateFilter}
-                        onChange={(e) => setDateFilter(e.target.value as DateFilterId)}
-                        className="rounded-lg border border-slate-700/70 bg-slate-800/50 px-2 py-1 text-slate-200 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
-                        aria-label="Période (date)"
-                      >
-                        {DATE_FILTER_OPTIONS.map((o) => (
-                          <option key={o.id} value={o.id}>{o.label}</option>
-                        ))}
-                      </select>
-                      <label htmlFor="chantier-filter-other" className="sr-only">Chantier</label>
-                      <select
-                        id="chantier-filter-other"
-                        value={chantierFilter}
-                        onChange={(e) => setChantierFilter(e.target.value)}
-                        className="rounded-lg border border-slate-700/70 bg-slate-800/50 px-2 py-1 text-slate-200 max-w-[140px] truncate focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
-                        aria-label="Filtrer par chantier"
-                      >
-                        {CHANTIERS_FILTER_MOCK.map((o) => (
-                          <option key={o.id} value={o.id}>{o.label}</option>
-                        ))}
-                      </select>
-                      <label htmlFor="equipe-filter-other" className="sr-only">Équipe</label>
-                      <select
-                        id="equipe-filter-other"
-                        value={equipeFilter}
-                        onChange={(e) => setEquipeFilter(e.target.value)}
-                        className="rounded-lg border border-slate-700/70 bg-slate-800/50 px-2 py-1 text-slate-200 max-w-[140px] truncate focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
-                        aria-label="Filtrer par équipe"
-                      >
-                        {EQUIPES_FILTER_MOCK.map((o) => (
-                          <option key={o.id} value={o.id}>{o.label}</option>
-                        ))}
-                      </select>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <button
-                            type="button"
-                            onClick={() => refreshAllKPIs()}
-                            disabled={isRefreshing}
-                            className="p-1.5 rounded-lg hover:bg-slate-800/60 text-slate-400 hover:text-slate-200 disabled:opacity-50"
-                            aria-label="Rafraîchir"
-                          >
-                            <RefreshCw className={cn('h-3.5 w-3.5', isRefreshing && 'animate-spin')} />
-                          </button>
-                        </TooltipTrigger>
-                        <TooltipContent>Rafraîchir (Ctrl+R)</TooltipContent>
-                      </Tooltip>
-                    </div>
-                    <div className="relative" ref={exportMenuRef}>
-                      <button
-                        type="button"
-                        onClick={() => setShowExportMenu((v) => !v)}
-                        disabled={!!exportingFormat}
-                        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-700/60 bg-slate-800/40 text-[11px] text-slate-300 hover:bg-slate-700/50 disabled:opacity-50"
-                        aria-label="Exporter"
-                        aria-expanded={showExportMenu}
-                      >
-                        <Download className="h-3.5 w-3.5" />
-                        <span>Exporter</span>
-                      </button>
-                      {showExportMenu && (
-                        <div className="absolute right-0 top-full mt-1 w-44 z-50 rounded-lg border border-slate-700/70 bg-slate-900 shadow-xl overflow-hidden">
-                          <button
-                            type="button"
-                            disabled={!!exportingFormat}
-                            onClick={() => handleExportDirect('pdf')}
-                            className="w-full px-3 py-2 text-left text-[11px] text-slate-200 hover:bg-slate-800 flex items-center gap-2 disabled:opacity-60"
-                          >
-                            <FileText className="h-3 w-3" /> PDF
-                          </button>
-                          <button
-                            type="button"
-                            disabled={!!exportingFormat}
-                            onClick={() => handleExportDirect('excel')}
-                            className="w-full px-3 py-2 text-left text-[11px] text-slate-200 hover:bg-slate-800 flex items-center gap-2 disabled:opacity-60"
-                          >
-                            <FileSpreadsheet className="h-3 w-3" /> Excel
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <div className="px-4 sm:px-6 py-2">
-                    <KPIAlertsSystem
-                      kpis={allKpis.map((k) => ({
-                        label: k.label,
-                        value: k.value,
-                        delta: k.delta,
-                        tone: k.tone,
-                        trend: k.trend,
-                        icon: k.icon,
-                      }))}
-                      onAlert={(alert) => {
-                        log.info('Alerte KPI', {
-                          kpiId: alert.kpiId,
-                          kpiLabel: alert.kpiLabel,
-                          message: alert.message,
-                          severity: alert.severity,
-                          timestamp: alert.timestamp?.toISOString?.(),
-                        });
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="flex-1 min-h-0 overflow-auto pb-20 md:pb-0">
-                  <ErrorBoundary>
-                    <div key={`${mainCategory}-${subCategory}-${subSubCategory}`} className="animate-fadeIn p-4 sm:p-6">
-                      <Suspense fallback={<ContentLoadingSkeleton showCharts={true} showTable={false} kpiCount={6} />}>
-                        <DashboardViewRouter />
-                      </Suspense>
-                    </div>
-                  </ErrorBoundary>
-                </div>
-              </div>
+                </ErrorBoundary>
+              )}
             </div>
-          )}
+            </div>
+          </div>
         </DashboardCleanLayout>
         <DashboardModals />
         <RisquesCritiquesModal open={risquesModalOpen} onClose={() => setRisquesModalOpen(false)} />
-        <DashboardBottomNav />
         </>
       </DashboardErrorBoundary>
     );

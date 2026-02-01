@@ -16,6 +16,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/utils/logger';
 
 interface SimulationParameter {
   id: string;
@@ -99,7 +100,7 @@ export function BTPSimulationModal({
       }
       setActiveTab('results');
     } catch (error) {
-      console.error('Simulation error:', error);
+      logger.error('Simulation error', error instanceof Error ? error : undefined, { component: 'BTPSimulationModal' });
       // Fallback avec simulation mockée en cas d'erreur
       const mockResults: Record<string, number> = {};
       parameters.forEach((param) => {
@@ -161,10 +162,10 @@ export function BTPSimulationModal({
       ]}
     >
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="parameters">Paramètres</TabsTrigger>
-          <TabsTrigger value="results">Résultats</TabsTrigger>
-          <TabsTrigger value="scenarios">Scénarios</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3 gap-1">
+          <TabsTrigger value="parameters" className="text-xs truncate">Paramètres</TabsTrigger>
+          <TabsTrigger value="results" className="text-xs truncate">Résultats</TabsTrigger>
+          <TabsTrigger value="scenarios" className="text-xs truncate">Scénarios</TabsTrigger>
         </TabsList>
 
         {/* Paramètres */}

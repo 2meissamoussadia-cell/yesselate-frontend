@@ -4,6 +4,7 @@
  * ✅ Amélioré avec ErrorBoundary et gestion d'erreurs
  * Phase P12: Bootstrap i18n server-side (charge messages depuis JSON)
  */
+export const dynamic = 'force-dynamic';
 
 import React, { Suspense } from 'react';
 import { headers } from 'next/headers';

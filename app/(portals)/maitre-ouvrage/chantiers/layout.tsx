@@ -6,7 +6,7 @@ import { PortalModuleCleanLayout } from '@/components/bmo/layout/PortalModuleCle
 import type { PortalModuleTab } from '@/components/bmo/layout/PortalModuleCleanLayout';
 import { projectsProgramsSubNav } from '@/lib/navigation/subnav/projectsPrograms';
 
-const chantiersTabs: PortalModuleTab[] = (projectsProgramsSubNav.tabs ?? []).map((tab) => {
+const chantiersTabs: PortalModuleTab[] = (projectsProgramsSubNav.tabs ?? []).map((tab: { id: string; label: string; path?: string }) => {
   const path = tab.path ?? `/maitre-ouvrage/chantiers/${tab.id}`;
   const icon =
     tab.id === 'programs'

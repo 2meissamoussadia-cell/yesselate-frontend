@@ -4,7 +4,7 @@
  */
 
 import { z } from 'zod';
-import { PeriodDataSchema } from './PeriodSchema';
+import { PeriodDataSchema, ValidationError } from './PeriodSchema';
 
 export const TrendAnalysisConfigSchema = z.object({
   subCategory: z.string(),
@@ -46,7 +46,7 @@ export function validateTrendAnalysis(data: unknown): TrendAnalysis {
     return TrendAnalysisSchema.parse(data);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ValidationError('Invalid trend analysis data', error.errors);
+      throw new ValidationError('Invalid trend analysis data', error.issues);
     }
     throw error;
   }
@@ -60,12 +60,11 @@ export function validateTrendAnalysisConfig(data: unknown): TrendAnalysisConfig 
     return TrendAnalysisConfigSchema.parse(data);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ValidationError('Invalid trend analysis config', error.errors);
+      throw new ValidationError('Invalid trend analysis config', error.issues);
     }
     throw error;
   }
 }
 
-// ValidationError est exporté depuis PeriodSchema
 export { ValidationError } from './PeriodSchema';
 

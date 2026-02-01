@@ -205,7 +205,7 @@ export function ConducteurTravauxPage() {
                           {projet.evenements} événement{projet.evenements > 1 ? 's' : ''}
                         </div>
                         <div className="text-xs text-slate-400">
-                          {(projet.budgetConsomme / 1000000).toFixed(1)}M / {(projet.budgetAlloue / 1000000).toFixed(1)}M FCFA
+                          {(projet.budgetConsomme / 1000000).toFixed(1)}M / {(projet.budgetAlloue / 1000000).toFixed(1)}M XOF
                         </div>
                       </div>
                       <ChevronRight className={cn(

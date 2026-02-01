@@ -229,7 +229,7 @@ interface MiniStatProps {
   label: string;
   value: number;
   color: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
 }
 
 function MiniStat({ label, value, color, icon: Icon }: MiniStatProps) {

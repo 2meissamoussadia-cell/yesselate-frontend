@@ -1,20 +1,23 @@
 'use client';
 
 /**
- * Cockpit DG — Rapports (sous-page sitemap).
+ * Cockpit DG fusionné dans le Dashboard.
+ * Rapports → redirection vers Dashboard > Pilotage > Analytics.
  */
 
-import { BusinessWindow } from '@/components/ui/BusinessWindow';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
-export default function CockpitRapportsPage() {
+export default function CockpitRapportsRedirectPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace('/maitre-ouvrage/dashboard?main=pilotage&sub=analytics&leaf=default');
+  }, [router]);
+
   return (
-    <BusinessWindow title="Cockpit DG — Rapports">
-      <p className="text-sm text-slate-400 mb-4">
-        Rapports de synthèse, exports, historiques.
-      </p>
-      <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-6 text-center text-slate-500 text-sm">
-        Liste des rapports et exports à brancher.
-      </div>
-    </BusinessWindow>
+    <div className="flex min-h-[200px] items-center justify-center bg-slate-950">
+      <p className="text-slate-400 text-sm">Redirection vers Analytics & rapports…</p>
+    </div>
   );
 }

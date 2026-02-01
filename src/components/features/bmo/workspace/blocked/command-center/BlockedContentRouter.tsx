@@ -1777,7 +1777,7 @@ function AuditView() {
 // ═══════════════════════════════════════════════════════════════════════════
 
 interface StatCardProps {
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   label: string;
   value: string | number;
   color: 'blue' | 'rose' | 'emerald' | 'amber' | 'purple' | 'orange' | 'slate';
@@ -1825,7 +1825,7 @@ function StatCard({ icon: Icon, label, value, color, onClick }: StatCardProps) {
 }
 
 interface QuickActionButtonProps {
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   title: string;
   description: string;
   color: 'orange' | 'purple' | 'blue' | 'green';

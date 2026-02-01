@@ -19,7 +19,7 @@ import { ValidationBCRemindersSystem } from './ValidationBCRemindersSystem';
 import { ValidationBCMultiLevelValidation } from './ValidationBCMultiLevelValidation';
 import { ValidationBCRequestJustificatif } from './ValidationBCRequestJustificatif';
 import { ValidationBCHelpModal } from '../modals/ValidationBCHelpModal';
-import type { ValidationDocument } from '@/lib/types/document-validation.types';
+import type { ValidationDocument } from '@/lib/services/validation-bc-api';
 
 // ================================
 // Types
@@ -88,8 +88,14 @@ export function ValidationBCModals({
         open={true}
         document={modal.data.document}
         onClose={onClose}
-        onValidate={onValidation || (async () => {})}
-        onReject={onRejection || (async () => {})}
+        onValidate={(_comment: string) => {
+          const doc = modal.data?.document;
+          if (doc) void onValidation?.(doc);
+        }}
+        onReject={(_reason: string) => {
+          const doc = modal.data?.document;
+          if (doc) void onRejection?.(doc);
+        }}
       />
     );
   }
@@ -137,23 +143,21 @@ export function ValidationBCModals({
   }
 
   // Multi-Level Validation Modal
-  if (modal.type === 'multi-level-validation' && modal.data?.document) {
+  if (modal.type === 'multi-level-validation') {
     return (
       <ValidationBCMultiLevelValidation
         open={true}
         onClose={onClose}
-        document={modal.data.document}
       />
     );
   }
 
   // Request Justificatif Modal
-  if (modal.type === 'request-justificatif' && modal.data?.document) {
+  if (modal.type === 'request-justificatif') {
     return (
       <ValidationBCRequestJustificatif
         open={true}
         onClose={onClose}
-        document={modal.data.document}
       />
     );
   }

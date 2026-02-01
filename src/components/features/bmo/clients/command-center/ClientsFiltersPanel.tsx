@@ -31,7 +31,7 @@ interface FilterOption {
 interface FilterGroup {
   id: string;
   label: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   options: FilterOption[];
   type: 'checkbox' | 'radio';
 }

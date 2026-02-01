@@ -4,6 +4,8 @@
 
 import type { Jalon } from './calendrier.types';
 
+export type { Jalon };
+
 export interface SLAMetrics {
   jours_restants: number;
   jours_ecoules: number;

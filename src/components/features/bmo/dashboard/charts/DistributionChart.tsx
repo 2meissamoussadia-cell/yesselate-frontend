@@ -50,8 +50,8 @@ export function DistributionChart({
 }: DistributionChartProps) {
   if (type === 'pie') {
     return (
-      <div className="w-full" style={{ height }}>
-        <ResponsiveContainer width="100%" height="100%">
+      <div className="w-full" style={{ height, minHeight: 120 }}>
+        <ResponsiveContainer width="100%" height="100%" minHeight={120}>
           <PieChart>
             <Pie
               data={data}
@@ -94,8 +94,8 @@ export function DistributionChart({
 
   // Bar Chart
   return (
-    <div className="w-full" style={{ height }}>
-      <ResponsiveContainer width="100%" height="100%">
+    <div className="w-full" style={{ height, minHeight: 120 }}>
+      <ResponsiveContainer width="100%" height="100%" minHeight={120}>
         <BarChart data={data} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.3} />
           <XAxis

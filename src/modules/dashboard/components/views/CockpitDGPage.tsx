@@ -71,7 +71,7 @@ const CockpitPhase6Section = dynamic(
   { ssr: false }
 );
 
-/** Cartes d’accès rapide aux modules métier (même logique que DashboardAccueil3P) */
+/** Cartes d’accès rapide aux modules métier (même logique que DashboardHome) */
 const MODULES_METIER: Array<{
   id: string;
   title: string;

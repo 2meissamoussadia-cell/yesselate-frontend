@@ -17,7 +17,7 @@ export interface UserWithRole {
 }
 
 export interface UserRoleManagerProps {
-  users: UserWithRole[];
+  users?: UserWithRole[];
   onRoleChange?: (userId: string, role: RoleId) => void;
   className?: string;
 }

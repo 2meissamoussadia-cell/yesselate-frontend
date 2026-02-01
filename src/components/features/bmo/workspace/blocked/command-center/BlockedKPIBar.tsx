@@ -28,7 +28,7 @@ interface KPIItem {
   id: string;
   label: string;
   value: string | number;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   trend: 'up' | 'down' | 'stable';
   trendValue?: string;
   status: 'success' | 'warning' | 'critical' | 'neutral';

@@ -38,7 +38,7 @@ export function MonthlyComparisonChart({ data }: { data?: MonthlyComparisonData[
 
   return (
     <ChartContainer title="Comparaison mensuelle">
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer width="100%" height="100%" minHeight={200}>
         <BarChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
           <CartesianGrid {...chartStyles.grid} />
           <XAxis dataKey="month" {...chartStyles.axis} />

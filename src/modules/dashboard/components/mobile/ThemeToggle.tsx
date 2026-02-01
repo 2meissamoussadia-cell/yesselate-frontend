@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 import { useDashboardThemeStore, applyTheme, subscribeSystemTheme, type DashboardTheme } from '@/lib/stores/dashboardThemeStore';
 import { touchTarget } from '../../utils/dashboardDesignTokens';
 
-const THEMES: { id: DashboardTheme; label: string; icon: React.ElementType }[] = [
+const THEMES: { id: DashboardTheme; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: 'system', label: 'Système (auto)', icon: Monitor },
   { id: 'dark', label: 'Sombre', icon: Moon },
   { id: 'dakar', label: 'Dakar (soleil)', icon: CloudSun },

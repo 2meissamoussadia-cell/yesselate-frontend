@@ -566,7 +566,7 @@ export function TicketsDecisionCenter({ open, onClose }: Props) {
 // ================================
 
 interface StatCardProps {
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   label: string;
   value: number;
   color: 'rose' | 'amber' | 'blue' | 'purple' | 'emerald';
@@ -602,7 +602,7 @@ function StatCard({ icon: Icon, label, value, color, onClick }: StatCardProps) {
 }
 
 interface QuickActionButtonProps {
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   title: string;
   description: string;
   color: 'orange' | 'blue' | 'green' | 'purple';

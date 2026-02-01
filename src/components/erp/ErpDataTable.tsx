@@ -206,7 +206,7 @@ export function ErpDataTable<T extends { id: string }>({
                             align === 'center' && 'text-center'
                           )}
                         >
-                          {content ?? '—'}
+                          {content != null && (typeof content === 'string' || typeof content === 'number' || typeof content === 'boolean' || React.isValidElement(content as React.ReactElement)) ? (content as React.ReactNode) : '—'}
                         </td>
                       );
                     })}
@@ -220,7 +220,7 @@ export function ErpDataTable<T extends { id: string }>({
                     <tr className="bg-slate-900/40 border-b border-slate-800/50">
                       <td
                         colSpan={
-                          (renderExpandedRow ? 1 : 0) + (selectable ? 1 : 0) + columns.length + (renderRowActions ? 1 : 0)
+                          (renderExpandedRow != null ? 1 : 0) + (selectable ? 1 : 0) + columns.length + (renderRowActions != null ? 1 : 0)
                         }
                         className="p-0"
                       >

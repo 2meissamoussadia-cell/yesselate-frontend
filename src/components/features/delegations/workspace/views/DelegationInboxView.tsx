@@ -120,17 +120,17 @@ export function DelegationInboxView({ tab }: { tab: DelegationTab }) {
         d.type.toLowerCase().includes(q) ||
         d.agentName.toLowerCase().includes(q) ||
         d.bureau.toLowerCase().includes(q) ||
-        d.scope.toLowerCase().includes(q) ||
-        d.delegatorName.toLowerCase().includes(q)
+        (d.scope ?? '').toLowerCase().includes(q) ||
+        (d.delegatorName ?? '').toLowerCase().includes(q)
       );
     }
     
     result = [...result].sort((a, b) => {
       let cmp = 0;
       if (sortKey === 'usageCount') {
-        cmp = a.usageCount - b.usageCount;
+        cmp = (a.usageCount ?? 0) - (b.usageCount ?? 0);
       } else if (sortKey === 'endDate') {
-        cmp = new Date(a.endDate).getTime() - new Date(b.endDate).getTime();
+        cmp = new Date(a.endDate ?? 0).getTime() - new Date(b.endDate ?? 0).getTime();
       } else {
         cmp = String(a[sortKey]).localeCompare(String(b[sortKey]));
       }
@@ -153,7 +153,7 @@ export function DelegationInboxView({ tab }: { tab: DelegationTab }) {
   const stats = useMemo(() => ({
     total: items.length,
     expiringSoon: items.filter(d => d.expiringSoon).length,
-    totalUsage: items.reduce((a, d) => a + d.usageCount, 0),
+    totalUsage: items.reduce((a, d) => a + (d.usageCount ?? 0), 0),
     byBureau: Object.entries(
       items.reduce((acc, d) => {
         acc[d.bureau] = (acc[d.bureau] ?? 0) + 1;
@@ -425,7 +425,7 @@ export function DelegationInboxView({ tab }: { tab: DelegationTab }) {
                   "text-sm",
                   d.expiringSoon ? "text-amber-500 font-semibold" : "text-slate-400"
                 )}>
-                  {formatDate(d.endDate)}
+                  {formatDate(d.endDate ?? '')}
                   {d.expiringSoon && <AlertTriangle className="w-3 h-3 inline ml-1" />}
                 </span>
               </div>

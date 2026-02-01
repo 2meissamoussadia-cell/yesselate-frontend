@@ -24,7 +24,7 @@ import { Button } from '@/components/ui/button';
 interface CounterData {
   label: string;
   value: number;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   color: string;
   trend?: 'up' | 'down' | 'same';
   action: () => void;

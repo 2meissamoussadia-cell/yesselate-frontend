@@ -23,7 +23,7 @@ import { useDashboardCommandCenterStore, type DashboardMainCategory } from '@/li
 
 interface NavItem {
   id: DashboardMainCategory;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   label: string;
   badge?: number;
   badgeVariant?: 'default' | 'warning' | 'critical' | 'success';

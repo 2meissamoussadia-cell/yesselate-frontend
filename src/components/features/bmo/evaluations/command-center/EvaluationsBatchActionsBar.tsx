@@ -24,7 +24,7 @@ interface EvaluationsBatchActionsBarProps {
   onClearSelection?: () => void;
   actions?: Array<{
     id: string;
-    icon: React.ElementType;
+    icon: React.ComponentType<{ className?: string }>;
     label: string;
     variant?: 'default' | 'warning' | 'danger';
   }>;

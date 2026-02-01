@@ -20,7 +20,7 @@ interface SubNavItem {
   badgeVariant?: 'default' | 'warning' | 'critical' | 'success';
 }
 
-const subCategoriesMap: Record<DashboardMainCategory, SubNavItem[]> = {
+const subCategoriesMap: Partial<Record<DashboardMainCategory, SubNavItem[]>> = {
   overview: [
     { id: 'summary', label: 'Synthèse' },
     { id: 'kpis', label: 'KPIs' },

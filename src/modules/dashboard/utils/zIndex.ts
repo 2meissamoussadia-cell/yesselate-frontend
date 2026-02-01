@@ -21,6 +21,8 @@ export const Z_INDEX = {
   subNavigation: 13,
   subnav: 13, // alias pour la barre d’onglets DG
   
+  headerSticky: 30,
+
   // Dropdowns
   dropdown: 20,
   dropdownMenu: 21,
@@ -31,14 +33,24 @@ export const Z_INDEX = {
   tooltip: 31,
   popover: 32,
   
+  // Topbar BMO (au-dessus du header sticky)
+  topbar: 40,
+
   // Notifications
   notification: 40,
   alert: 41,
-  
-  // Critical
+
+  // Sidebar drawer BMO
+  sidebarDrawer: 50,
+
+  // Critical / modals
   modal: 50,
   modalOverlay: 51,
   loading: 52,
+
+  // Modals cockpit / fullscreen (z-[100]/z-[110] existants)
+  modalHigh: 100,
+  modalHighest: 110,
 } as const;
 
 /**

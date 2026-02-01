@@ -58,7 +58,7 @@ export function BarChartImpl({
 
   return (
     <ChartContainer title={title} className={className}>
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer width="100%" height="100%" minHeight={200}>
         <RechartsBarChart data={data} margin={margin}>
           <CartesianGrid {...chartStyles.grid} />
           <XAxis

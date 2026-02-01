@@ -4,6 +4,7 @@
  */
 
 import { z } from 'zod';
+import { ValidationError } from './PeriodSchema';
 
 export const AlertSchema = z.object({
   id: z.string().uuid(),
@@ -40,7 +41,7 @@ export function validateAlert(data: unknown): Alert {
     return AlertSchema.parse(data);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ValidationError('Invalid alert data', error.errors);
+      throw new Error(`Invalid alert data: ${JSON.stringify((error as z.ZodError).issues)}`);
     }
     throw error;
   }
@@ -54,12 +55,11 @@ export function validateAlertArray(data: unknown): Alert[] {
     return z.array(AlertSchema).parse(data);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ValidationError('Invalid alert array', error.errors);
+      throw new ValidationError('Invalid alert array', error.issues);
     }
     throw error;
   }
 }
 
-// ValidationError est exporté depuis PeriodSchema
 export { ValidationError } from './PeriodSchema';
 

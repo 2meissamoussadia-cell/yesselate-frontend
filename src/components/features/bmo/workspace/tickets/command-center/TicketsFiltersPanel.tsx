@@ -467,7 +467,7 @@ export function TicketsFiltersPanel() {
 // Helper Components
 interface FilterSectionProps {
   title: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   expanded: boolean;
   onToggle: () => void;
   count?: number;

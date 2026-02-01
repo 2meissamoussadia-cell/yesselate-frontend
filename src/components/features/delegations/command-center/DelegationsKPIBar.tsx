@@ -96,6 +96,7 @@ interface DelegationStats {
   revoked?: number;
   suspended?: number;
   expiring?: number;
+  totalUsage?: number;
   performanceScore?: number;
   alerts?: number;
 }
@@ -137,8 +138,8 @@ export const DelegationsKPIBar = React.memo(function DelegationsKPIBar({
         case 'delegations-expiring':
           return { 
             ...kpi, 
-            value: stats.expiringSoon || 0,
-            status: (stats.expiringSoon || 0) > 0 ? 'warning' : 'neutral',
+            value: stats.expiring || 0,
+            status: ((stats.expiring || 0) > 0 ? 'warning' : 'neutral') as 'warning' | 'neutral',
           };
         case 'usage-total':
           return { ...kpi, value: stats.totalUsage || 0 };

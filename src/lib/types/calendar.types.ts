@@ -5,7 +5,7 @@
 export type CalendarView = 'week' | 'day' | 'month' | 'agenda' | 'gantt';
 export type Priority = 'critical' | 'urgent' | 'normal';
 export type Severity = 'critical' | 'warning' | 'info' | 'success';
-export type Status = 'open' | 'done' | 'snoozed' | 'ack' | 'blocked';
+export type Status = 'open' | 'done' | 'snoozed' | 'ack' | 'blocked' | 'in-progress' | 'cancelled';
 
 export type CalendarKind =
   | 'meeting'
@@ -33,6 +33,7 @@ export interface CalendarItem {
   slaDueAt?: string; // ISO
   project?: string;
   originalSource?: 'agenda' | 'payment' | 'contract' | 'blocked' | 'absence';
+  notation?: number;
 }
 
 export interface SLAStatus {

@@ -58,7 +58,7 @@ export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> =
     icon: Gauge,
     requires: { perm: 'dashboard:read' },
     children: [
-      { id: 'dashboard', label: 'Cockpit DG', icon: Gauge, to: '/dg/cockpit', requires: { perm: 'dashboard:read', roles: ['DG', 'DIRECTION'] } },
+      { id: 'dashboard', label: 'Dashboard', icon: Gauge, to: '/maitre-ouvrage/dashboard', requires: { perm: 'dashboard:read', roles: ['DG', 'DIRECTION'] } },
       { id: 'alertes', label: "Centre d'alertes", icon: AlertTriangle, badge: 4, badgeType: 'critical' },
       { id: 'gouvernance', label: 'Gouvernance & décisions', icon: Building2, badge: 7, badgeType: 'warning' },
       { id: 'calendrier', label: 'Calendrier & échéances', icon: Calendar },

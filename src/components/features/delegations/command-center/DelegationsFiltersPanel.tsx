@@ -75,12 +75,16 @@ export function DelegationsFiltersPanel() {
   };
 
   const toggleArrayFilter = (key: 'bureaux' | 'types' | 'statuses' | 'priorities' | 'tags', value: string) => {
-    setLocalFilters(prev => ({
-      ...prev,
-      [key]: prev[key].includes(value)
-        ? prev[key].filter(v => v !== value)
-        : [...prev[key], value],
-    }));
+    setLocalFilters(prev => {
+      const arr = prev[key] as readonly string[];
+      const includes = arr.includes(value);
+      return {
+        ...prev,
+        [key]: includes
+          ? arr.filter(v => v !== value)
+          : [...arr, value],
+      } as typeof prev;
+    });
   };
 
   return (

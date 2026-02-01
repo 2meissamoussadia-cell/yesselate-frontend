@@ -15,6 +15,7 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { exportToCSV, exportToJSON, exportToExcel } from '@/application/utils/exportUtils';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/utils/logger';
 
 interface ExportOption {
   id: string;
@@ -157,7 +158,7 @@ export function BTPExportModal({
 
       onClose();
     } catch (error) {
-      console.error('Export error:', error);
+      logger.error('Export error', error instanceof Error ? error : undefined, { component: 'BTPExportModal' });
     } finally {
       setIsExporting(false);
     }

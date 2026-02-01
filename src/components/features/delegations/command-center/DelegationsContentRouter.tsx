@@ -27,7 +27,7 @@ export const DelegationsContentRouter = React.memo(function DelegationsContentRo
 
   // Vue d'ensemble - Dashboard
   if (category === 'overview') {
-    return <OverviewView onNavigate={navigate} />;
+    return <OverviewView onNavigate={navigate as (main: string, sub?: string | null, filter?: string | null) => void} />;
   }
 
   // Catégories avec vues inbox
@@ -58,6 +58,7 @@ export const DelegationsContentRouter = React.memo(function DelegationsContentRo
             category === 'suspended' ? '⏸️' :
             '⏰',
       data: { queue },
+      createdAt: Date.now(),
     };
 
     return (
@@ -718,7 +719,7 @@ const StatCard = React.memo(function StatCard({
 }: {
   title: string;
   value: number;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   color: string;
   bgColor: string;
   borderColor: string;
@@ -751,7 +752,7 @@ const CategoryCard = React.memo(function CategoryCard({
 }: {
   title: string;
   description: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   onClick: () => void;
 }) {
   return (

@@ -38,7 +38,7 @@ export function validatePeriodData(data: unknown): PeriodData {
     return PeriodDataSchema.parse(data);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ValidationError('Invalid period data', error.errors);
+      throw new ValidationError('Invalid period data', error.issues);
     }
     throw error;
   }
@@ -52,7 +52,7 @@ export function validatePeriodDataArray(data: unknown): PeriodData[] {
     return z.array(PeriodDataSchema).parse(data);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ValidationError('Invalid period data array', error.errors);
+      throw new ValidationError('Invalid period data array', error.issues);
     }
     throw error;
   }

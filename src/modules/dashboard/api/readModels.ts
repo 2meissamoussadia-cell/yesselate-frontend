@@ -17,7 +17,7 @@ import type {
   DashboardViewData,
 } from '../types/dashboardDataTypes';
 import type { SecurityContext } from './types';
-import { createLogger } from '../utils/logger';
+import { createLogger } from '../utils/logger.server';
 
 const logger = createLogger('ReadModels');
 

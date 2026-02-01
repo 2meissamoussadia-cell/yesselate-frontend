@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { X, Save } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/utils/logger';
 
 interface ElementEditFormData {
   nom?: string;
@@ -81,7 +82,7 @@ export function BTPElementEditForm({
     try {
       await onSave(formData);
     } catch (error) {
-      console.error('Error saving element:', error);
+      logger.error('Error saving element', error instanceof Error ? error : undefined, { component: 'BTPElementEditForm', elementId });
     } finally {
       setIsSaving(false);
     }

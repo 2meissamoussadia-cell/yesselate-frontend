@@ -266,8 +266,8 @@ export function CalendarWorkspaceContent() {
   // Wizard (création/modification)
   if (activeTab.type === 'wizard') {
     const action = (activeTab.data?.action as 'create' | 'edit') || 'create';
-    const eventId = activeTab.data?.eventId;
-    const prefillDate = activeTab.data?.prefillDate;
+    const eventId = activeTab.data?.eventId as string | undefined;
+    const prefillDate = typeof activeTab.data?.prefillDate === 'string' ? activeTab.data.prefillDate : undefined;
 
     return (
       <CalendarWizardView
@@ -313,7 +313,7 @@ export function CalendarWorkspaceContent() {
             Rapport
           </h3>
           <p className="text-slate-400 mb-4">
-            ID: {activeTab.data?.reportId ?? 'inconnu'}
+            ID: {typeof activeTab.data?.reportId === 'string' ? activeTab.data.reportId : 'inconnu'}
           </p>
           <FluentButton
             size="sm"
@@ -421,20 +421,22 @@ function CalendarEventViewer({ tabId, eventId, onOpenModal }: CalendarEventViewe
     );
   }
 
-  const categoryColor = {
+  const categoryColorMap: Record<string, string> = {
     meeting: 'bg-blue-500',
     site_visit: 'bg-emerald-500',
     deadline: 'bg-amber-500',
     validation: 'bg-purple-500',
     payment: 'bg-green-500',
     absence: 'bg-slate-400',
-  }[event.category?.toLowerCase()] || 'bg-indigo-500';
+  };
+  const categoryColor = (event.category && categoryColorMap[event.category.toLowerCase()]) || 'bg-indigo-500';
 
-  const statusBadge = {
+  const statusBadgeMap: Record<string, { label: string; bg: string; text: string }> = {
     completed: { label: 'Terminé', bg: 'bg-emerald-100 dark:bg-emerald-900/30', text: 'text-emerald-700 dark:text-emerald-300' },
     cancelled: { label: 'Annulé', bg: 'bg-slate-100 dark:bg-slate-800', text: 'text-slate-400' },
     in_progress: { label: 'En cours', bg: 'bg-blue-100 dark:bg-blue-900/30', text: 'text-blue-700' },
-  }[event.status?.toLowerCase()] || { label: 'Planifié', bg: 'bg-indigo-100 dark:bg-indigo-900/30', text: 'text-indigo-700' };
+  };
+  const statusBadge = (event.status && statusBadgeMap[event.status.toLowerCase()]) || { label: 'Planifié', bg: 'bg-indigo-100 dark:bg-indigo-900/30', text: 'text-indigo-700' };
 
   return (
     <div className="h-full bg-slate-50 dark:bg-slate-900/50 overflow-auto">

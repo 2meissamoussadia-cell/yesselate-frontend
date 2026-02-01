@@ -6,7 +6,7 @@
  * Architecture cohérente avec Analytics/Gouvernance
  */
 
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, { Suspense, useEffect, useState, useCallback, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -150,10 +150,6 @@ const filtersMap: Record<string, SubCategory[]> = {
 // ================================
 // Main Component
 // ================================
-export default function EvaluationsPage() {
-  return <EvaluationsPageContent />;
-}
-
 function EvaluationsPageContent() {
   const { addToast, addActionLog } = useBMOStore();
 
@@ -965,5 +961,21 @@ function EvaluationsPageContent() {
         onClearSelection={handleClearSelection}
       />
     </div>
+  );
+}
+
+function EvaluationsFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-950">
+      <div className="animate-spin rounded-full h-10 w-10 border-2 border-blue-500 border-t-transparent" />
+    </div>
+  );
+}
+
+export default function EvaluationsPage() {
+  return (
+    <Suspense fallback={<EvaluationsFallback />}>
+      <EvaluationsPageContent />
+    </Suspense>
   );
 }

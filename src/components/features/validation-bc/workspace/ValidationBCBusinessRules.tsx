@@ -49,7 +49,7 @@ interface BusinessRule {
   violations: number;
   lastCheck: string;
   threshold?: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   color: string;
 }
 
@@ -179,7 +179,7 @@ function KPICard({
   trendValue, 
   color 
 }: { 
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   label: string;
   value: number | string;
   unit?: string;

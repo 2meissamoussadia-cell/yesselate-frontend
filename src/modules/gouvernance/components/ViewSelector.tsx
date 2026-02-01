@@ -14,7 +14,7 @@ interface ViewSelectorProps {
   className?: string;
 }
 
-const viewOptions: { value: VueGouvernance; label: string; icon: React.ElementType }[] = [
+const viewOptions: { value: VueGouvernance; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { value: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { value: 'list', label: 'Liste', icon: List },
   { value: 'matrix', label: 'Matrice', icon: Grid3x3 },

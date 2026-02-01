@@ -26,6 +26,7 @@ import {
   HelpCircle,
   ArrowRight,
   Command,
+  X,
 } from 'lucide-react';
 import { useDashboardCommandCenterStore, type DashboardMainCategory } from '@/lib/stores/dashboardCommandCenterStore';
 import { dashboardNavigationConfig } from '@/modules/dashboard/navigation/dashboardNavigationConfig';
@@ -39,7 +40,7 @@ interface CommandItem {
   type: 'navigation' | 'action' | 'recent';
   label: string;
   hint?: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   shortcut?: string;
   action: () => void;
   keywords?: string[];
@@ -258,6 +259,19 @@ function DashboardCommandPaletteInner({
     }
   }, [commandPaletteOpen]);
 
+  // Fermer avec Échap partout (même si le focus n'est pas dans l'input)
+  useEffect(() => {
+    if (!commandPaletteOpen) return;
+    const onEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        toggleCommandPalette();
+      }
+    };
+    window.addEventListener('keydown', onEscape);
+    return () => window.removeEventListener('keydown', onEscape);
+  }, [commandPaletteOpen, toggleCommandPalette]);
+
   // Keyboard navigation
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -290,32 +304,44 @@ function DashboardCommandPaletteInner({
 
   return (
     <>
-      {/* Overlay */}
+      {/* Overlay léger : clic pour fermer */}
       <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+        className="fixed inset-0 bg-black/30 z-[100]"
         onClick={toggleCommandPalette}
+        aria-hidden
       />
 
-      {/* Modal */}
-      <div className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh] px-4">
+      {/* Conteneur : clic en dehors du panneau ferme aussi */}
+      <div
+        className="fixed inset-0 z-[101] flex items-start justify-center pt-[12vh] px-4 pointer-events-none"
+        aria-modal
+        aria-label="Recherche et commandes"
+      >
         <div
-          className="w-full max-w-xl bg-slate-900 rounded-xl border border-slate-700/50 shadow-2xl overflow-hidden"
+          className="w-full max-w-md bg-slate-900 rounded-xl border border-slate-700/50 shadow-xl overflow-hidden pointer-events-auto"
           onClick={(e) => e.stopPropagation()}
+          role="dialog"
         >
-          {/* Header */}
+          {/* Header avec bouton Fermer visible */}
           <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-800/50">
-            <Command className="w-5 h-5 text-slate-400" />
+            <Command className="w-5 h-5 text-slate-400 shrink-0" />
             <Input
               autoFocus
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Rechercher une commande..."
-              className="flex-1 bg-transparent border-0 text-slate-200 placeholder:text-slate-400 focus-visible:ring-0"
+              className="flex-1 bg-transparent border-0 text-slate-200 placeholder:text-slate-400 focus-visible:ring-0 min-w-0"
             />
-            <kbd className="px-2 py-1 rounded bg-slate-800 text-xs text-slate-400 font-mono">
-              ESC
-            </kbd>
+            <button
+              type="button"
+              onClick={toggleCommandPalette}
+              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50"
+              aria-label="Fermer la recherche"
+              title="Fermer (Échap)"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
 
           {/* Liste des commandes */}

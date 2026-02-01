@@ -65,13 +65,13 @@ export function DashboardPanel({
               </div>
             )}
             {title && (
-              <h2 id={titleId} className="text-base font-semibold tracking-tight text-slate-50">
+              <h2 id={titleId} className="text-lg font-bold tracking-tight text-slate-50">
                 {title}
               </h2>
             )}
           </div>
           {subtitle && (
-            <p className="text-xs text-slate-400">{subtitle}</p>
+            <p className="text-sm text-slate-400 mt-0.5 leading-relaxed">{subtitle}</p>
           )}
         </div>
       )}

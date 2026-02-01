@@ -48,7 +48,7 @@ export function TrendsChart({ trends }: { trends?: TrendData[] }) {
 
   return (
     <ChartContainer title="Évolution (30 derniers jours)">
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer width="100%" height="100%" minHeight={200}>
         <LineChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
           <CartesianGrid {...chartStyles.grid} />
           <XAxis dataKey="date" {...chartStyles.axis} />

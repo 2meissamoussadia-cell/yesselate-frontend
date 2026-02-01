@@ -139,16 +139,18 @@ export function adaptCalendrierData(
 export function adaptCalendrierOverview(
   apiOverview: CalendrierOverviewResponse
 ): CalendrierOverview {
+  const stats = apiOverview.stats;
+  const s = stats as unknown as Record<string, number | undefined>;
   return {
-    evenements_total: apiOverview.evenements_total || 0,
-    evenements_aujourdhui: apiOverview.evenements_aujourdhui || 0,
-    evenements_semaine: apiOverview.evenements_semaine || 0,
-    jalons_total: apiOverview.jalons_total || 0,
-    jalons_retard: apiOverview.jalons_retard || 0,
-    jalons_sla_risque: apiOverview.jalons_sla_risque || 0,
-    absences_total: apiOverview.absences_total || 0,
-    sur_allocations: apiOverview.sur_allocations || 0,
-    conflits_detectes: apiOverview.conflits_detectes || 0,
+    evenements_total: s?.evenements_total ?? apiOverview.evenements?.length ?? 0,
+    evenements_aujourdhui: s?.evenements_aujourdhui ?? 0,
+    evenements_semaine: s?.evenements_semaine ?? 0,
+    jalons_total: stats?.jalons_total_count ?? apiOverview.jalons?.length ?? 0,
+    jalons_retard: stats?.jalons_retard_count ?? 0,
+    jalons_sla_risque: stats?.jalons_at_risk_count ?? 0,
+    absences_total: s?.absences_total ?? apiOverview.absences?.length ?? 0,
+    sur_allocations: stats?.sur_allocation_ressources_count ?? 0,
+    conflits_detectes: s?.conflits_detectes ?? 0,
   };
 }
 
@@ -158,18 +160,19 @@ export function adaptCalendrierOverview(
 export function adaptCalendrierStats(
   apiStats: ApiCalendrierStats
 ): CalendrierStats {
+  const s = apiStats as unknown as Record<string, number | undefined>;
   return {
-    evenements_total: apiStats.evenements_total || 0,
-    evenements_aujourdhui: apiStats.evenements_aujourdhui || 0,
-    evenements_semaine: apiStats.evenements_semaine || 0,
-    evenements_mois: apiStats.evenements_mois || 0,
-    jalons_total: apiStats.jalons_total || 0,
-    jalons_retard: apiStats.jalons_retard || 0,
-    jalons_sla_risque: apiStats.jalons_sla_risque || 0,
-    absences_total: apiStats.absences_total || 0,
-    sur_allocations: apiStats.sur_allocations || 0,
-    conflits_detectes: apiStats.conflits_detectes || 0,
-    taux_conformite_sla: apiStats.taux_conformite_sla || 0,
-    temps_moyen_completion: apiStats.temps_moyen_completion || 0,
+    evenements_total: s.evenements_total ?? 0,
+    evenements_aujourdhui: s.evenements_aujourdhui ?? 0,
+    evenements_semaine: s.evenements_semaine ?? 0,
+    evenements_mois: s.evenements_mois ?? 0,
+    jalons_total: apiStats.jalons_total_count ?? 0,
+    jalons_retard: apiStats.jalons_retard_count ?? 0,
+    jalons_sla_risque: apiStats.jalons_at_risk_count ?? 0,
+    absences_total: s.absences_total ?? 0,
+    sur_allocations: apiStats.sur_allocation_ressources_count ?? 0,
+    conflits_detectes: s.conflits_detectes ?? 0,
+    taux_conformite_sla: s.taux_conformite_sla ?? 0,
+    temps_moyen_completion: s.temps_moyen_completion ?? 0,
   };
 }

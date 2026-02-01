@@ -4,6 +4,8 @@
 
 import type { Recurrence, RecurrenceType } from './calendrier.types';
 
+export type { Recurrence, RecurrenceType };
+
 export interface RecurrencePattern {
   recurrence: Recurrence;
   occurrences: Date[]; // Dates générées

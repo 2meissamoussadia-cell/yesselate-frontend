@@ -1169,7 +1169,7 @@ function StatCard({
 }: {
   label: string;
   value: number;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   color: string;
   badge?: string;
 }) {
@@ -1523,7 +1523,7 @@ function EmptyState({
   message,
   action,
 }: {
-  icon?: React.ElementType;
+  icon?: React.ComponentType<{ className?: string }>;
   message: string;
   action?: React.ReactNode;
 }) {

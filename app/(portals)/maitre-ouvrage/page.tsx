@@ -1,7 +1,7 @@
 /**
  * Maître d'Ouvrage — Page racine BMO v1
  * Redirige vers le Dashboard (/maitre-ouvrage/dashboard) pour afficher
- * la synthèse pilotage, KPIs, Vue finance DG, Risques & Phase 4 (DashboardAccueil3P).
+ * la synthèse pilotage, KPIs, Vue finance DG, Risques & Phase 4 (DashboardHome).
  */
 
 'use client';

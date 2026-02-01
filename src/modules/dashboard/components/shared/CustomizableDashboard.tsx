@@ -119,7 +119,7 @@ export function CustomizableDashboard({
 
       {/* Panneau Ajouter widget (mode édition) */}
       {editing && availableToAdd.length > 0 && (
-        <div className="fixed left-4 top-24 z-40 w-56 rounded-xl border border-slate-700 bg-slate-900 p-4 shadow-xl">
+        <div className="fixed left-4 top-28 z-[30] w-56 rounded-xl border border-slate-700 bg-slate-900 p-4 shadow-xl">
           <h3 className="mb-3 text-sm font-bold text-slate-200">Ajouter un widget</h3>
           <div className="space-y-1">
             {availableToAdd.map((id) => (

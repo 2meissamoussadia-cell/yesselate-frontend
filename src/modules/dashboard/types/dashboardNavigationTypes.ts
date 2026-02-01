@@ -5,14 +5,21 @@
 
 import type React from 'react';
 
-/** Arborescence métier DG : 6 blocs (référence ERP-BTP) */
+/** Arborescence métier DG : 6 blocs (référence ERP-BTP) + BMO legacy */
 export type DashboardMainCategory =
   | 'pilotage'
   | 'chantiers'
   | 'finance'
   | 'clients'
   | 'rh'
-  | 'systeme';
+  | 'systeme'
+  | 'overview'
+  | 'performance'
+  | 'actions'
+  | 'risks'
+  | 'decisions'
+  | 'realtime'
+  | 'administration';
 
 /** Sous-catégories par bloc (ids des items sidebar) */
 export type DashboardSubCategory =

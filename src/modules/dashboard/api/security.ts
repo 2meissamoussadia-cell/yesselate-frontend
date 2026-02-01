@@ -11,7 +11,7 @@
 
 import { NextRequest } from 'next/server';
 import type { SecurityContext, NavKey } from './types';
-import { createLogger } from '../utils/logger';
+import { createLogger } from '../utils/logger.server';
 import { verifyJWT, type JWTPayload } from '@lib-root/server/security/jwt';
 import { getSessionCookie } from '@lib-root/server/security/cookies';
 import { extractContextFromHeaders } from '@lib-root/server/dashboard/context';

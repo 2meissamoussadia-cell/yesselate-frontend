@@ -89,7 +89,7 @@ interface ModalWrapperProps {
   onClose: () => void;
   title: string;
   subtitle?: string;
-  icon?: React.ElementType;
+  icon?: React.ComponentType<{ className?: string }>;
   iconColor?: string;
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
   children: React.ReactNode;
@@ -1345,7 +1345,7 @@ function StatKPI({
   trend,
   color,
 }: {
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   label: string;
   value: string | number;
   trend?: number;
@@ -1387,7 +1387,7 @@ function StatKPI({
   );
 }
 
-function MetricCard({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: string | number }) {
+function MetricCard({ icon: Icon, label, value }: { icon: React.ComponentType<{ className?: string }>; label: string; value: string | number }) {
   return (
     <div className="p-3 rounded-lg border border-slate-700/50 bg-slate-800/20">
       <div className="flex items-center gap-2 mb-1">

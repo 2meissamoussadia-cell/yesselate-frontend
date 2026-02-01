@@ -1165,7 +1165,7 @@ function InteractionsView({ subCategory }: { subCategory: string }) {
 // Helper Components
 // ================================
 interface StatCardProps {
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   label: string;
   value: string | number;
   color: 'blue' | 'rose' | 'emerald' | 'amber' | 'purple' | 'cyan' | 'slate';
@@ -1203,7 +1203,7 @@ function StatCard({ icon: Icon, label, value, color, onClick }: StatCardProps) {
 }
 
 interface QuickActionButtonProps {
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   title: string;
   description: string;
   color: 'cyan' | 'blue' | 'purple' | 'emerald' | 'amber';

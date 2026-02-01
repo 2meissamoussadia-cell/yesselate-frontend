@@ -4,7 +4,7 @@
 
 import { useState, useCallback, useRef } from 'react';
 
-interface BulkOperationProgress {
+export interface BulkOperationProgress {
   isRunning: boolean;
   current: number;
   total: number;

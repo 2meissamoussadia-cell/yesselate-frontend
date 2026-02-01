@@ -89,7 +89,7 @@ export function CreateEventModal({
     }
   }, [initialDate]);
 
-  const eventTypes: { id: EventType; label: string; icon: React.ElementType; color: string }[] = [
+  const eventTypes: { id: EventType; label: string; icon: React.ComponentType<{ className?: string }>; color: string }[] = [
     { id: 'meeting', label: 'Réunion', icon: Users, color: 'blue' },
     { id: 'deadline', label: 'Échéance', icon: Clock, color: 'amber' },
     { id: 'milestone', label: 'Jalon', icon: CheckCircle, color: 'emerald' },

@@ -283,7 +283,7 @@ export const DemandesKpiPage = memo(function DemandesKpiPage({ data: apiData }: 
     {
       id: '7',
       label: 'Reste à facturer',
-      value: formatKPICurrency(kpiCalculations.resteAFacturer, 'FCFA'),
+      value: formatKPICurrency(kpiCalculations.resteAFacturer, 'XOF'),
       trend: '-5%',
       trendDirection: 'down',
       icon: FileText,

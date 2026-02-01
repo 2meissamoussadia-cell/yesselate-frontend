@@ -10,7 +10,7 @@ import dynamic from 'next/dynamic';
 import { FileText, CheckCircle2, DollarSign, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DashboardAdvancedView } from '../components/DashboardAdvancedView';
-import { DashboardAccueil3P } from '../components/views/DashboardAccueil3P';
+import { DashboardHome } from '../components/views/DashboardHome';
 import { CockpitDGPage } from '../components/views/CockpitDGPage';
 import { CockpitDG_V2Page } from '../components/views/CockpitDG_V2Page';
 import { RapportDGPage } from '../components/views/RapportDGPage';
@@ -496,13 +496,13 @@ const financeBudget = createLazyView(() => import('../components/views/BudgetKpi
 const financeValidation = createLazyView(() => import('../components/views/ValidationPaiementsPage').then(m => ({ default: m.ValidationPaiementsPage as React.ComponentType<{ data?: unknown }> })));
 const clientsProjets = createLazyView(() => import('../components/views/ProjetKpiPage').then(m => ({ default: m.ProjetKpiPage })) as Promise<{ default: React.ComponentType<{ data?: unknown }> }>, { passData: true });
 
-// Cockpit DG = entrée par défaut (clé canonique pilotage::dashboard::default ; alias dashboard pour robustesse)
+// Dashboard = entrée par défaut (clé canonique pilotage::dashboard::default ; fusion Cockpit DG)
 const dgCockpitEntry: ViewEntry<DashboardViewData> = {
   id: 'dg-cockpit',
-  title: 'Cockpit DG',
+  title: 'Dashboard',
   ttl: 60_000,
   loader: loadOverviewSummaryDashboard,
-  render: () => <DashboardDGLayout content={<DashboardAccueil3P />} />,
+  render: () => <DashboardDGLayout content={<DashboardHome />} />,
 };
 
 export const dashboardRegistry: DashboardRegistry = {

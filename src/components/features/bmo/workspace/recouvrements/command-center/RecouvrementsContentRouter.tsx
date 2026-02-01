@@ -252,7 +252,7 @@ function QuickActionCard({
   color,
   onClick,
 }: {
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   title: string;
   count: number;
   suffix?: string;

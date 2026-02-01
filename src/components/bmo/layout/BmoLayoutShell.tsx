@@ -19,6 +19,12 @@ export interface BmoLayoutShellProps {
   className?: string;
 }
 
+const FONT_SCALE_CLASSES = {
+  small: 'bmo-font-small text-[87.5%]',
+  medium: 'bmo-font-medium',
+  large: 'bmo-font-large text-[112.5%]',
+} as const;
+
 export function BmoLayoutShell({
   children,
   sidebarCollapsed: controlledCollapsed,
@@ -27,6 +33,7 @@ export function BmoLayoutShell({
 }: BmoLayoutShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const darkMode = useAppStore((s) => s.darkMode);
+  const fontSizeScale = useAppStore((s) => s.fontSizeScale);
   const toggleSidebar = useCallback(() => setSidebarOpen((o) => !o), []);
   const closeSidebar = useCallback(() => setSidebarOpen(false), []);
 
@@ -45,15 +52,15 @@ export function BmoLayoutShell({
         <button
           type="button"
           aria-label="Fermer le menu"
-          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-[2px] transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+          className="fixed inset-0 z-[45] bg-black/50 backdrop-blur-[2px] transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
           onClick={closeSidebar}
         />
       )}
 
-      {/* Sidebar en tiroir : cachée par défaut, slide au clic sur hamburger */}
+      {/* Sidebar en tiroir : z-[50] pour rester au-dessus de la topbar (z-40) et de l'overlay (z-45) */}
       <div
         className={cn(
-          'fixed left-0 top-0 bottom-0 z-50 w-56 flex flex-col border-r shadow-xl transition-all duration-300 ease-out',
+          'fixed left-0 top-0 bottom-0 z-[50] w-56 flex flex-col border-r shadow-xl transition-all duration-300 ease-out',
           darkMode ? 'bg-slate-950 border-slate-800/70' : 'bg-white border-slate-200',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         )}
@@ -75,7 +82,15 @@ export function BmoLayoutShell({
             if (typeof document !== 'undefined') document.dispatchEvent(event);
           }}
         />
-        <main className="flex-1 min-h-0 min-w-0 max-w-full overflow-x-hidden overflow-y-auto scrollbar-dashboard" id="main-content" role="main" tabIndex={-1}>
+        <main
+          className={cn(
+            'flex-1 min-h-0 min-w-0 max-w-full overflow-x-hidden overflow-y-auto scrollbar-dashboard',
+            FONT_SCALE_CLASSES[fontSizeScale]
+          )}
+          id="main-content"
+          role="main"
+          tabIndex={-1}
+        >
           {children}
         </main>
       </div>

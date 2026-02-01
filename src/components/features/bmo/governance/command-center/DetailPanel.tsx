@@ -192,7 +192,7 @@ function InfoRow({
   label,
   value,
 }: {
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   label: string;
   value: string;
 }) {
@@ -250,7 +250,7 @@ function QuickActionButton({
   label,
   warning = false,
 }: {
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   label: string;
   warning?: boolean;
 }) {

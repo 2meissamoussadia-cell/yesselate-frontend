@@ -226,7 +226,7 @@ export function LogDetailModal({ open, onClose, logId }: LogDetailModalProps) {
 // ================================
 // Details Tab
 // ================================
-function DetailsTab({ log, levelColors, sourceIcons }: { log: LogEntry; levelColors: Record<string, string>; sourceIcons: Record<string, React.ElementType> }) {
+function DetailsTab({ log, levelColors, sourceIcons }: { log: LogEntry; levelColors: Record<string, string>; sourceIcons: Record<string, React.ComponentType<{ className?: string }>> }) {
   const SourceIcon = sourceIcons[log.source as keyof typeof sourceIcons] || Terminal;
 
   return (
@@ -438,7 +438,7 @@ function HistoryTab({ log }: { log: LogEntry }) {
     commented: 'Commenté',
   };
 
-  const actionIcons: Record<string, React.ElementType> = {
+  const actionIcons: Record<string, React.ComponentType<{ className?: string }>> = {
     read: Eye,
     archived: Archive,
     resolved: CheckCircle,

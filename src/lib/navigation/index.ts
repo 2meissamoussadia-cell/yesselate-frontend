@@ -31,3 +31,11 @@ export {
   type BmoSitemapModule,
   type BmoSitemapChild,
 } from './bmoModules';
+export {
+  PILOTAGE_CARDS,
+  VEILLE_SIGNALS,
+  getModuleHref,
+  getModulePath,
+  type ModuleLink,
+  type ModuleLinkTarget,
+} from './moduleLinks';

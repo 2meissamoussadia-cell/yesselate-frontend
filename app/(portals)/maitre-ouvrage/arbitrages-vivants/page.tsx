@@ -6,7 +6,7 @@
  * Architecture multi-niveaux cohérente avec Analytics et Gouvernance
  */
 
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { Suspense, useState, useCallback, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -108,7 +108,7 @@ const subCategoriesMap: Record<string, SubCategory[]> = {
 // ================================
 // Main Component
 // ================================
-export default function ArbitragesVivantsPage() {
+function ArbitragesVivantsPageContent() {
   const { addToast, addActionLog, currentUser } = useBMOStore();
   const {
     commandPaletteOpen,
@@ -444,6 +444,22 @@ export default function ArbitragesVivantsPage() {
         onClose={() => setHelpModalOpen(false)}
       />
     </div>
+  );
+}
+
+function ArbitragesVivantsFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-950">
+      <div className="animate-spin rounded-full h-10 w-10 border-2 border-blue-500 border-t-transparent" />
+    </div>
+  );
+}
+
+export default function ArbitragesVivantsPage() {
+  return (
+    <Suspense fallback={<ArbitragesVivantsFallback />}>
+      <ArbitragesVivantsPageContent />
+    </Suspense>
   );
 }
 

@@ -123,7 +123,7 @@ export interface RejectDocumentPayload {
 }
 
 export interface BatchActionPayload {
-  action: 'validate' | 'reject' | 'archive' | 'delete';
+  action: 'validate' | 'reject' | 'archive' | 'delete' | 'suspend' | 'reactivate';
   documentIds: string[];
   reason?: string;
 }

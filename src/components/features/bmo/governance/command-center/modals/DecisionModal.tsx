@@ -240,7 +240,7 @@ function InfoCard({
   valueClass = '',
   highlight = false,
 }: {
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   label: string;
   value: string;
   valueClass?: string;
@@ -268,7 +268,7 @@ function DecisionOption({
   selected,
   onClick,
 }: {
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   label: string;
   description: string;
   color: 'emerald' | 'red' | 'amber';

@@ -4,13 +4,14 @@
 
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import type { MessagesExternesMainCategory } from '../types/messagesExternesNavigationTypes';
 import { messagesExternes } from '@/lib/data';
 import type { ExternalMessage } from '@/lib/types/bmo.types';
+import { useBMOStore } from '@/lib/stores';
 
 type MessageItem = typeof messagesExternes[number];
 

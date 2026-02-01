@@ -280,7 +280,7 @@ export function DelegationWorkspaceContent() {
   if (activeTab.type === 'report') {
     return (
       <div className="p-6 text-center text-slate-400">
-        Rapport : {activeTab.data?.reportId ?? 'inconnu'}
+        Rapport : {typeof activeTab.data?.reportId === 'string' ? activeTab.data.reportId : 'inconnu'}
       </div>
     );
   }

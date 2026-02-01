@@ -72,7 +72,7 @@ export interface ValidationDocument {
 export interface ServiceQueue {
   service: ServiceSource;
   name: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   color: string;
   bgColor: string;
   documents: {
@@ -254,8 +254,8 @@ function getPriorityColor(priority: string): string {
   return colors[priority] || colors.low;
 }
 
-function getDocTypeIcon(type: DocumentType): React.ElementType {
-  const icons: Record<DocumentType, React.ElementType> = {
+function getDocTypeIcon(type: DocumentType): React.ComponentType<{ className?: string }> {
+  const icons: Record<DocumentType, React.ComponentType<{ className?: string }>> = {
     bc: FileText,
     facture: Receipt,
     avenant: FileEdit,

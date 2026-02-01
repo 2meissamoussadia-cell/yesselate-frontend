@@ -104,7 +104,7 @@ export function DecisionDetailModal({
 
   if (!isOpen) return null;
 
-  const tabs: { id: TabId; label: string; icon: React.ElementType }[] = [
+  const tabs: { id: TabId; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
     { id: 'details', label: 'Détails', icon: FileText },
     { id: 'timeline', label: 'Timeline', icon: History },
     { id: 'documents', label: 'Documents', icon: Paperclip },

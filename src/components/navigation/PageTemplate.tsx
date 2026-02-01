@@ -112,7 +112,7 @@ export function PageTemplate({
     >
       {/* En-tête compact : masqué sur dashboard/cockpit pour utiliser toute la page (header propre au dashboard). */}
       {!useFullPage && (
-        <header className="shrink-0 border-b border-slate-800/60 bg-slate-950/40">
+        <header className="shrink-0 border-b border-slate-200 bg-white/80 dark:border-slate-800/60 dark:bg-slate-950/40">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 px-4 sm:px-6 py-1.5 min-w-0">
             {breadcrumbs.length > 0 && !pathname?.startsWith('/maitre-ouvrage') && (
               <nav
@@ -180,7 +180,7 @@ export function PageTemplate({
 
       <div
         className={cn(
-          'flex-1 min-h-0 min-w-0 max-w-full overflow-x-hidden overflow-y-auto bg-slate-950/30',
+          'flex-1 min-h-0 min-w-0 max-w-full overflow-x-hidden overflow-y-auto bg-gray-50/80 dark:bg-slate-950/30',
           !fullBleed && !useFullPage && 'px-2 sm:px-4 py-2'
         )}
       >
@@ -203,7 +203,7 @@ export function PageTemplate({
       </div>
 
       {footerSlot && (
-        <footer className="border-t border-slate-800/60 bg-slate-950/60 px-4 sm:px-6 py-3">
+        <footer className="border-t border-slate-200 bg-white/80 dark:border-slate-800/60 dark:bg-slate-950/60 px-4 sm:px-6 py-3">
           {footerSlot}
         </footer>
       )}

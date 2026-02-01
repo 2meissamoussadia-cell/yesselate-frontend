@@ -8,7 +8,7 @@
 
 import React, { useCallback, useMemo, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { Menu, Search, Bell, ChevronRight, ChevronLeft, ChevronDown, MoreVertical } from 'lucide-react';
+import { Menu, Search, Bell, ChevronRight, ChevronLeft, ChevronDown, MoreVertical, Sun, Moon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getModuleByPath, bmoModuleGroupLabels } from '@/lib/navigation/bmoModules';
 import {
@@ -31,9 +31,8 @@ const LOCALE_OPTIONS: { value: SupportedLocale; label: string }[] = [
   { value: 'ar-MA', label: 'العربية' },
 ];
 
-const BTN_ICON_CLASS = 'p-1.5 rounded transition-colors';
-const BTN_ICON_DARK = 'hover:bg-slate-800/80 text-slate-400 hover:text-slate-200';
-const BTN_ICON_LIGHT = 'hover:bg-slate-100 text-slate-400 hover:text-slate-700';
+const BTN_ICON_CLASS =
+  'p-1.5 rounded transition-colors text-slate-500 hover:text-slate-700 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800/80';
 
 type MoreMenuSubId = 'fichier' | 'edition' | 'affichage' | 'parametrage' | 'reglage';
 
@@ -141,6 +140,9 @@ export function BmoTopbar({
 
   const canGoBack = isDashboard && navigationHistory.length > 0;
   const canGoForward = isDashboard && forwardHistory.length > 0;
+
+  // La recherche est dans le hero (PilotageHome) → jamais afficher la barre search en topbar sur le dashboard
+  const showTopbarSearch = false;
   const basePath = pathname ?? '/maitre-ouvrage/dashboard';
 
   const goToCurrentMainHome = useCallback(() => {
@@ -178,17 +180,16 @@ export function BmoTopbar({
 
   const parametresPath = '/maitre-ouvrage/parametres';
   const displayLocale = localeOverride ?? 'fr-FR';
-  const btnIconCn = cn(BTN_ICON_CLASS, darkMode ? BTN_ICON_DARK : BTN_ICON_LIGHT);
+  const btnIconCn = BTN_ICON_CLASS;
   const [moreMenuSub, setMoreMenuSub] = useState<MoreMenuSubId | null>(null);
 
   return (
     <header
       data-testid="bmo-topbar"
+      suppressHydrationWarning
       className={cn(
         'relative z-[40] h-11 shrink-0 flex items-center justify-between gap-2 px-3 sm:px-4 border-b backdrop-blur-sm transition-colors text-[11px]',
-        darkMode
-          ? 'border-slate-800/70 bg-slate-950/80'
-          : 'border-slate-200 bg-white/95',
+        'border-slate-200 bg-white/95 dark:border-slate-800/70 dark:bg-slate-950/80',
         className
       )}
       role="banner"
@@ -206,15 +207,15 @@ export function BmoTopbar({
             <Menu className="h-4 w-4" aria-hidden />
           </button>
         )}
-        <div className={cn('w-px h-5 mx-0.5 shrink-0', darkMode ? 'bg-slate-700/80' : 'bg-slate-300')} aria-hidden />
-        {onSearchClick && (
+        <div className="w-px h-5 mx-0.5 shrink-0 bg-slate-300 dark:bg-slate-700/80" aria-hidden />
+        {onSearchClick && !isDashboard && (
           <button
             type="button"
             data-testid="topbar-search"
             onClick={onSearchClick}
             className={btnIconCn}
-            aria-label="Rechercher (⌘K)"
-            title="Rechercher (⌘K)"
+            aria-label="Rechercher (Ctrl+K)"
+            title="Rechercher (Ctrl+K)"
           >
             <Search className="h-3.5 w-3.5" aria-hidden />
           </button>
@@ -229,7 +230,7 @@ export function BmoTopbar({
               type="button"
               onClick={handleGoBack}
               disabled={!canGoBack}
-              className={cn(btnIconCn, 'p-1 disabled:opacity-40 disabled:pointer-events-none', !darkMode && 'text-slate-500 hover:text-slate-800')}
+              className={cn(btnIconCn, 'p-1 disabled:opacity-40 disabled:pointer-events-none')}
               aria-label="Revenir à la vue précédente"
               title="Revenir en arrière"
             >
@@ -239,7 +240,7 @@ export function BmoTopbar({
               type="button"
               onClick={handleGoForward}
               disabled={!canGoForward}
-              className={cn(btnIconCn, 'p-1 disabled:opacity-40 disabled:pointer-events-none', !darkMode && 'text-slate-500 hover:text-slate-800')}
+              className={cn(btnIconCn, 'p-1 disabled:opacity-40 disabled:pointer-events-none')}
               aria-label="Aller à la vue suivante"
               title="Avancer"
             >
@@ -247,7 +248,7 @@ export function BmoTopbar({
             </button>
           </div>
         )}
-        <nav data-testid="topbar-breadcrumb" aria-label="Fil d'Ariane" className={cn('flex items-center gap-1 text-[11px] min-w-0', darkMode ? 'text-slate-400' : 'text-slate-400')}>
+        <nav data-testid="topbar-breadcrumb" aria-label="Fil d'Ariane" className="flex items-center gap-1 text-[11px] min-w-0 text-slate-500 dark:text-slate-400">
           {isDashboard ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -255,7 +256,7 @@ export function BmoTopbar({
                   type="button"
                   className={cn(
                     'font-medium truncate max-w-[120px] sm:max-w-[160px] text-left min-h-[44px] py-2 px-2 -mx-1 rounded flex items-center gap-1',
-                    darkMode ? 'text-slate-300 hover:text-slate-100 hover:bg-slate-800/50' : 'text-slate-600 hover:text-slate-800 hover:bg-slate-100',
+                    'text-slate-600 hover:text-slate-800 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-slate-100 dark:hover:bg-slate-800/50',
                     'cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent'
                   )}
                   title={`Choisir une section — ${breadcrumb.group}`}
@@ -297,19 +298,19 @@ export function BmoTopbar({
             <span
               className={cn(
                 'font-medium truncate max-w-[100px] sm:max-w-[140px] py-1 px-1.5',
-                darkMode ? 'text-slate-300' : 'text-slate-600'
+                'text-slate-600 dark:text-slate-300'
               )}
             >
               {breadcrumb.group}
             </span>
           )}
-          <ChevronRight className={cn('h-3 w-3 shrink-0', darkMode ? 'text-slate-600' : 'text-slate-400')} aria-hidden />
+          <ChevronRight className="h-3 w-3 shrink-0 text-slate-400 dark:text-slate-600" aria-hidden />
           <button
             type="button"
             onClick={isDashboard ? goToCurrentMainHome : undefined}
             className={cn(
               'font-medium truncate max-w-[160px] sm:max-w-[200px] text-left py-1 px-1.5',
-              darkMode ? 'text-slate-200 hover:text-slate-100' : 'text-slate-800 hover:text-slate-900',
+              'text-slate-800 hover:text-slate-900 dark:text-slate-200 dark:hover:text-slate-100',
               isDashboard && 'hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 rounded'
             )}
             title={isDashboard ? `Accueil — ${breadcrumb.group}` : undefined}
@@ -318,23 +319,65 @@ export function BmoTopbar({
             {breadcrumb.page}
           </button>
         </nav>
+        {showTopbarSearch && (
+          <button
+            type="button"
+            onClick={onSearchClick}
+            className={cn(
+              'flex-1 min-w-0 max-w-md flex items-center gap-2.5 px-3 py-2 rounded-xl cursor-pointer',
+              'border-0 transition-all duration-200 text-left',
+              'bg-slate-100/90 text-slate-500 hover:text-slate-800 hover:bg-slate-100 focus-visible:ring-2 focus-visible:ring-sky-400/40 dark:bg-slate-800/50 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800/70 dark:focus-visible:ring-sky-500/40'
+            )}
+            aria-label="Rechercher (Ctrl+K)"
+            title="Rechercher — Ctrl+K"
+          >
+            <Search className="h-4 w-4 shrink-0 opacity-70" aria-hidden />
+            <span className="flex-1 min-w-0 truncate text-[13px]" title="Accéder à un module, une action, un chiffre">
+              Module, action, chiffre…
+            </span>
+            <kbd className="hidden sm:inline-flex px-1.5 py-0.5 rounded text-[10px] font-medium tabular-nums opacity-50" title="Raccourci recherche">
+              Ctrl+K
+            </kbd>
+          </button>
+        )}
       </div>
 
       {/* Droite : séparateur + notifications + user + menu trois points (tout à droite) */}
       <div className="flex items-center gap-1 shrink-0 ml-auto">
-        <div className={cn('w-px h-5 mr-0.5 shrink-0', darkMode ? 'bg-slate-700/80' : 'bg-slate-300')} aria-hidden />
+        <div className="w-px h-5 mr-0.5 shrink-0 bg-slate-300 dark:bg-slate-700/80" aria-hidden />
+        <button
+          type="button"
+          onClick={() => setDarkMode(!darkMode)}
+          className={cn(
+            'relative p-2 rounded-lg transition-all duration-200',
+            darkMode ? 'hover:bg-slate-800/60 text-slate-400 hover:text-amber-400' : 'hover:bg-slate-100 text-slate-500 hover:text-amber-600',
+            'focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent'
+          )}
+          aria-label={darkMode ? 'Activer le mode clair' : 'Activer le mode sombre'}
+          title={darkMode ? 'Mode clair' : 'Mode sombre'}
+        >
+          {darkMode ? (
+            <Sun className="h-4 w-4" aria-hidden strokeWidth={1.5} />
+          ) : (
+            <Moon className="h-4 w-4" aria-hidden strokeWidth={1.5} />
+          )}
+        </button>
         {onNotificationsClick && (
           <button
             type="button"
             onClick={onNotificationsClick}
-            className={cn(btnIconCn, 'relative focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/60')}
+            className={cn(
+              'relative p-2 rounded-lg transition-all duration-200',
+              'hover:bg-slate-100 text-slate-500 hover:text-slate-800 dark:hover:bg-slate-800/60 dark:text-slate-400 dark:hover:text-slate-100',
+              'focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent'
+            )}
             aria-label={notificationCount > 0 ? `Notifications (${notificationCount} non lues)` : 'Notifications'}
-            title={notificationCount > 0 ? `${notificationCount} notification(s) non lue(s)` : 'Notifications'}
+            title={notificationCount > 0 ? `${notificationCount} notification(s)` : 'Notifications'}
           >
-            <Bell className="h-3.5 w-3.5" aria-hidden />
+            <Bell className="h-4 w-4" aria-hidden strokeWidth={1.5} />
             {notificationCount > 0 && (
               <span
-                className="absolute -right-0.5 -top-0.5 flex h-4 w-4 min-w-[16px] items-center justify-center rounded-full bg-rose-500 text-[9px] font-bold text-white"
+                className="absolute right-0 top-0 flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 bg-rose-500/95 text-[10px] font-semibold text-white shadow-sm ring-2 ring-slate-950"
                 aria-hidden
               >
                 {notificationCount > 99 ? '99+' : notificationCount}
@@ -362,15 +405,15 @@ export function BmoTopbar({
                 {user.initials ?? user.name.slice(0, 2).toUpperCase()}
               </div>
               <div className="hidden sm:block text-left min-w-0">
-                <div className={cn('text-[11px] font-medium leading-tight truncate', darkMode ? 'text-slate-200' : 'text-slate-800')}>
+                <div className="text-[11px] font-medium leading-tight truncate text-slate-800 dark:text-slate-200">
                   {user.name}
                 </div>
-                <div className={cn('text-[9px] flex items-center gap-1', darkMode ? 'text-slate-400' : 'text-slate-400')}>
+                <div className="text-[9px] flex items-center gap-1 text-slate-500 dark:text-slate-400">
                   <span className="w-1 h-1 rounded-full bg-emerald-500 shrink-0" aria-hidden />
                   {user.role}
                 </div>
               </div>
-              <ChevronDown className={cn('h-3 w-3 shrink-0 hidden sm:block', darkMode ? 'text-slate-400' : 'text-slate-400')} aria-hidden />
+              <ChevronDown className="h-3 w-3 shrink-0 hidden sm:block text-slate-500 dark:text-slate-400" aria-hidden />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="min-w-[10rem] text-[11px]">
@@ -412,22 +455,22 @@ export function BmoTopbar({
             <div
               className={cn(
                 'flex flex-col w-[180px] shrink-0 border-r py-1 pr-0',
-                darkMode ? 'border-slate-700' : 'border-slate-200'
+                'border-slate-200 dark:border-slate-700'
               )}
             >
-              <DropdownMenuSubTrigger onClick={() => setMoreMenuSub('fichier')} className={cn(moreMenuSub === 'fichier' && (darkMode ? 'bg-slate-800' : 'bg-slate-100'))}>
+              <DropdownMenuSubTrigger onClick={() => setMoreMenuSub('fichier')} className={cn(moreMenuSub === 'fichier' && 'bg-slate-100 dark:bg-slate-800')}>
                 Fichier <ChevronRight className="ml-auto h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden />
               </DropdownMenuSubTrigger>
-              <DropdownMenuSubTrigger onClick={() => setMoreMenuSub('edition')} className={cn(moreMenuSub === 'edition' && (darkMode ? 'bg-slate-800' : 'bg-slate-100'))}>
+              <DropdownMenuSubTrigger onClick={() => setMoreMenuSub('edition')} className={cn(moreMenuSub === 'edition' && 'bg-slate-100 dark:bg-slate-800')}>
                 Édition <ChevronRight className="ml-auto h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden />
               </DropdownMenuSubTrigger>
-              <DropdownMenuSubTrigger onClick={() => setMoreMenuSub('affichage')} className={cn(moreMenuSub === 'affichage' && (darkMode ? 'bg-slate-800' : 'bg-slate-100'))}>
+              <DropdownMenuSubTrigger onClick={() => setMoreMenuSub('affichage')} className={cn(moreMenuSub === 'affichage' && 'bg-slate-100 dark:bg-slate-800')}>
                 Affichage <ChevronRight className="ml-auto h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden />
               </DropdownMenuSubTrigger>
-              <DropdownMenuSubTrigger onClick={() => setMoreMenuSub('parametrage')} className={cn(moreMenuSub === 'parametrage' && (darkMode ? 'bg-slate-800' : 'bg-slate-100'))}>
+              <DropdownMenuSubTrigger onClick={() => setMoreMenuSub('parametrage')} className={cn(moreMenuSub === 'parametrage' && 'bg-slate-100 dark:bg-slate-800')}>
                 Paramétrage <ChevronRight className="ml-auto h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden />
               </DropdownMenuSubTrigger>
-              <DropdownMenuSubTrigger onClick={() => setMoreMenuSub('reglage')} className={cn(moreMenuSub === 'reglage' && (darkMode ? 'bg-slate-800' : 'bg-slate-100'))}>
+              <DropdownMenuSubTrigger onClick={() => setMoreMenuSub('reglage')} className={cn(moreMenuSub === 'reglage' && 'bg-slate-100 dark:bg-slate-800')}>
                 Réglage <ChevronRight className="ml-auto h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden />
               </DropdownMenuSubTrigger>
             </div>
@@ -436,7 +479,7 @@ export function BmoTopbar({
               <div
                 className={cn(
                   'flex flex-col w-[280px] shrink-0 max-h-[85vh] overflow-y-auto py-1 pl-2',
-                  darkMode ? 'bg-slate-900/50' : 'bg-slate-50/80'
+                  'bg-slate-50/80 dark:bg-slate-900/50'
                 )}
               >
                 {moreMenuSub === 'fichier' && (
@@ -502,7 +545,7 @@ export function BmoTopbar({
                       <DropdownMenuItem
                         key={value}
                         onClick={() => setLocaleOverride(value)}
-                        className={cn(displayLocale === value && (darkMode ? 'bg-slate-800/60' : 'bg-slate-100'))}
+                        className={cn(displayLocale === value && 'bg-slate-100 dark:bg-slate-800/60')}
                       >
                         {label}
                       </DropdownMenuItem>
@@ -526,7 +569,7 @@ export function BmoTopbar({
                       <DropdownMenuItem
                         key={size}
                         onClick={() => setFontSizeScale(size)}
-                        className={cn(fontSizeScale === size && (darkMode ? 'bg-slate-800/60' : 'bg-slate-100'))}
+                        className={cn(fontSizeScale === size && 'bg-slate-100 dark:bg-slate-800/60')}
                       >
                         {size === 'small' && 'Réduire'}
                         {size === 'medium' && 'Normal'}

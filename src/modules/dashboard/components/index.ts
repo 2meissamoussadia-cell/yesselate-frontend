@@ -43,6 +43,8 @@ export { DashboardCleanLayout } from './shared/DashboardCleanLayout';
 export { DashboardCleanHome } from './shared/DashboardCleanHome';
 export { KpiCardClean } from './shared/KpiCardClean';
 export type { KpiCardCleanColor, KpiCardCleanProps } from './shared/KpiCardClean';
+export { TickerBar } from './shared/TickerBar';
+export type { TickerItem } from './shared/TickerBar';
 
 // Export des vues
 export * from './views';

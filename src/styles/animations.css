@@ -100,6 +100,19 @@
   }
 }
 
+/* Logo 3D rotation — rotation complète sur l'axe Y */
+@keyframes logo-spin-3d {
+  from {
+    transform: perspective(500px) rotateY(0deg);
+  }
+  to {
+    transform: perspective(500px) rotateY(360deg);
+  }
+}
+.animate-logo-spin-3d {
+  animation: logo-spin-3d 8s linear infinite;
+}
+
 /* Spinner Animation */
 @keyframes spin {
   from {
@@ -257,6 +270,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .animate-logo-spin-3d {
+    animation: none;
+  }
   .dashboard-skeleton-shimmer {
     animation: none;
     background: rgba(30, 41, 59, 0.5);
@@ -288,4 +304,20 @@
 }
 .scrollbar-dashboard::-webkit-scrollbar-corner {
   background: transparent;
+}
+
+/* Ticker / Marquee (style tableau de bourse) */
+@keyframes ticker-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+.animate-ticker {
+  animation: ticker-scroll 40s linear infinite;
+}
+.animate-ticker:hover {
+  animation-play-state: paused;
 }

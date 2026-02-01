@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { useParametresWorkspaceStore } from '@/lib/stores/parametresWorkspaceStore';
-import { Search, ArrowRight, Settings, Shield, Bell, Plug, Users, Database, RefreshCw, Save } from 'lucide-react';
+import { Search, ArrowRight, Settings, Shield, Bell, Plug, Users, Database, RefreshCw, Save, LayoutDashboard } from 'lucide-react';
 import { cn } from '@/lib/utils';
 interface Command { id: string; label: string; description?: string; icon: React.ComponentType<{ className?: string }>; category: 'navigation' | 'action'; shortcut?: string; action: () => void; }
 interface Props { open: boolean; onClose: () => void; onSave: () => void; }
@@ -10,6 +10,7 @@ export function ParametresCommandPalette({ open, onClose, onSave }: Props) {
   const { openTab } = useParametresWorkspaceStore(); const [query, setQuery] = useState(''); const [selectedIndex, setSelectedIndex] = useState(0); const inputRef = useRef<HTMLInputElement>(null);
   const commands: Command[] = useMemo(() => [
     { id: 'nav-general', label: 'Général', description: 'Paramètres généraux', icon: Settings, category: 'navigation', shortcut: '⌘1', action: () => { openTab({ type: 'general', id: 'general', title: 'Général', icon: '⚙️', data: {}, closable: false }); onClose(); } },
+    { id: 'nav-dashboard', label: 'Dashboard', description: 'Cartes à défiler, diaporama', icon: LayoutDashboard, category: 'navigation', action: () => { openTab({ type: 'dashboard', id: 'dashboard', title: 'Dashboard', icon: '📊', data: {} }); onClose(); } },
     { id: 'nav-security', label: 'Sécurité', description: 'Paramètres de sécurité', icon: Shield, category: 'navigation', action: () => { openTab({ type: 'security', id: 'security', title: 'Sécurité', icon: '🔒', data: {} }); onClose(); } },
     { id: 'nav-notifications', label: 'Notifications', icon: Bell, category: 'navigation', action: () => { openTab({ type: 'notifications', id: 'notifications', title: 'Notifications', icon: '🔔', data: {} }); onClose(); } },
     { id: 'nav-integrations', label: 'Intégrations', icon: Plug, category: 'navigation', action: () => { openTab({ type: 'integrations', id: 'integrations', title: 'Intégrations', icon: '🔌', data: {} }); onClose(); } },

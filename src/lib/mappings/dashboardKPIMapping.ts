@@ -596,3 +596,13 @@ export function getKPIMappingByLabel(label: string): KPIMapping | undefined {
   );
 }
 
+/**
+ * Liste des critères KPI disponibles pour le diaporama (cartes à défiler).
+ * Utilisée dans les réglages BMO pour permettre à l'utilisateur de choisir
+ * quels indicateurs afficher dans le bandeau du bas.
+ */
+export const AVAILABLE_TICKER_CRITERIA = [
+  ...Object.values(DASHBOARD_KPI_MAPPINGS).map((m) => ({ id: m.metadata.id, label: m.display.label })),
+  { id: 'chantiers-en-cours', label: 'Chantiers en cours' }, // présent dans mock "tous"
+];
+

@@ -32,7 +32,6 @@ export function BmoLayoutShell({
   className,
 }: BmoLayoutShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const darkMode = useAppStore((s) => s.darkMode);
   const fontSizeScale = useAppStore((s) => s.fontSizeScale);
   const toggleSidebar = useCallback(() => setSidebarOpen((o) => !o), []);
   const closeSidebar = useCallback(() => setSidebarOpen(false), []);
@@ -41,7 +40,7 @@ export function BmoLayoutShell({
     <div
       className={cn(
         'flex h-screen w-screen overflow-hidden transition-colors',
-        darkMode ? 'bg-slate-950 text-slate-100' : 'bg-gray-50 text-slate-900',
+        'bg-gray-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100',
         className
       )}
     >
@@ -61,7 +60,7 @@ export function BmoLayoutShell({
       <div
         className={cn(
           'fixed left-0 top-0 bottom-0 z-[50] w-56 flex flex-col border-r shadow-xl transition-all duration-300 ease-out',
-          darkMode ? 'bg-slate-950 border-slate-800/70' : 'bg-white border-slate-200',
+          'bg-white border-slate-200 dark:bg-slate-950 dark:border-slate-800/70',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >

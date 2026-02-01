@@ -14,7 +14,7 @@
 export { CockpitDGPage } from './CockpitDGPage';
 export { DashboardDGLayout } from './DashboardDGLayout';
 export { DashboardHome } from './DashboardHome';
-export { PilotageHome } from './PilotageHome';
+export { PilotageHome, type PilotageHomeProps, type KpiForStrip } from './PilotageHome';
 export { PilotageChoicePanel } from './PilotageChoicePanel';
 export { AccessDeniedView } from './AccessDeniedView';
 export { EmptyState } from './EmptyState';

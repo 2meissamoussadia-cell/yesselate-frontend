@@ -4,7 +4,7 @@ import { persist } from 'zustand/middleware';
 // ================================
 // Types
 // ================================
-export type ParametreTabType = 'general' | 'security' | 'notifications' | 'integrations' | 'permissions' | 'backup';
+export type ParametreTabType = 'general' | 'security' | 'notifications' | 'integrations' | 'permissions' | 'backup' | 'dashboard';
 
 export interface ParametreTab {
   id: string;

@@ -4,7 +4,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export type ParametresTabType = 'general' | 'security' | 'notifications' | 'integrations' | 'permissions' | 'backup';
+export type ParametresTabType = 'general' | 'security' | 'notifications' | 'integrations' | 'permissions' | 'backup' | 'dashboard';
 
 export interface ParametresTab { id: string; type: ParametresTabType; title: string; icon: string; data: Record<string, unknown>; closable?: boolean; }
 

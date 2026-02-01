@@ -15,6 +15,7 @@ import { ToastProvider } from '@/components/ui/toast';
 import { Toaster } from 'sonner';
 import { NotificationPanel } from '@/components/notifications';
 import { OfflineBanner } from '@/components/shared/OfflineBanner';
+import { ThemeSync } from '@/components/shared/ThemeSync';
 import { useBMOStore } from '@/lib/stores/bmo-store';
 
 export interface BmoPortalLayoutProps {
@@ -45,6 +46,7 @@ export function BmoPortalLayout({ children }: BmoPortalLayoutProps) {
 
   return (
     <FluentProviderClient>
+      <ThemeSync />
       <OfflineBanner />
       <ToastProvider>
         <BmoLayoutShell>

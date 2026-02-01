@@ -533,17 +533,19 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
         {liveAnnouncement}
       </div>
       <h1 className="sr-only">Dashboard — Vue d&apos;ensemble</h1>
-      {/* Retour (vue focalisée) */}
+      {/* Retour (vue focalisée) : la topbar est masquée, cette barre sert de barre d'outil de la page */}
       {sectionFocus && (
-        <button
-          type="button"
-          onClick={() => navigate('pilotage', 'dashboard', 'default')}
-          className="flex items-center gap-2 mb-4 text-sm text-slate-400 hover:text-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 rounded px-1 -ml-1"
-          aria-label="Retour à l'accueil Pilotage"
-        >
-          <ArrowLeft className="h-4 w-4" aria-hidden />
-          Retour à l'accueil
-        </button>
+        <div className="mb-4 pb-2 border-b border-slate-800/60">
+          <button
+            type="button"
+            onClick={() => navigate('pilotage', 'dashboard', 'default')}
+            className="flex items-center gap-2 text-sm text-slate-400 hover:text-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 rounded px-1 -ml-1"
+            aria-label="Retour à l'accueil Pilotage"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden />
+            Retour à l'accueil
+          </button>
+        </div>
       )}
       {/* Filtre affichage + bascule Vue classique / personnalisable — masqué en vue focalisée */}
       {!sectionFocus && (

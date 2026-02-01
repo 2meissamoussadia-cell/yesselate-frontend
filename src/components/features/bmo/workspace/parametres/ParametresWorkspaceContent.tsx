@@ -1,7 +1,9 @@
 'use client';
 import { useState } from 'react';
 import { useParametresWorkspaceStore } from '@/lib/stores/parametresWorkspaceStore';
-import { Settings, Shield, Bell, Plug, Users, Database, Save, Globe, Building2, Moon, Sun, Monitor, ChevronRight, Check, AlertTriangle, RefreshCw } from 'lucide-react';
+import { useTickerCardsSettingsStore } from '@/lib/stores/tickerCardsSettingsStore';
+import { AVAILABLE_TICKER_CRITERIA } from '@/lib/mappings/dashboardKPIMapping';
+import { Settings, Shield, Bell, Plug, Users, Database, Save, Globe, Building2, Moon, Sun, Monitor, ChevronRight, Check, AlertTriangle, RefreshCw, LayoutDashboard, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { UserRoleManager } from '@/components/admin';
 import { BtpSecurityWidget } from '@/components/bmo/security/BtpSecurityWidget';
@@ -19,6 +21,7 @@ export function ParametresWorkspaceContent() {
     case 'integrations': return <IntegrationsSettings />;
     case 'permissions': return <PermissionsSettings />;
     case 'backup': return <BackupSettings />;
+    case 'dashboard': return <DashboardSettings />;
     default: return <PlaceholderView icon={<Settings className="w-12 h-12" />} title="Paramètres" />;
   }
 }
@@ -115,6 +118,60 @@ function PermissionsSettings() {
       <div><h2 className="text-lg font-bold mb-1">Permissions</h2><p className="text-sm text-slate-400">Gestion des rôles et permissions (DG, MOA, MOE, OPC)</p></div>
       <SettingsSection title="Utilisateurs et rôles" icon={<Users className="w-5 h-5" />}>
         <UserRoleManager onRoleChange={(userId, role) => { /* à brancher sur API */ }} />
+      </SettingsSection>
+    </div>
+  );
+}
+
+function DashboardSettings() {
+  const { enabledLabels, setEnabledLabels, resetToDefault } = useTickerCardsSettingsStore();
+  const allLabels = AVAILABLE_TICKER_CRITERIA.map((c) => c.label);
+  const handleToggle = (label: string) => {
+    if (enabledLabels.length === 0) {
+      setEnabledLabels(allLabels.filter((l) => l !== label));
+    } else {
+      const next = enabledLabels.includes(label)
+        ? enabledLabels.filter((l) => l !== label)
+        : [...enabledLabels, label];
+      setEnabledLabels(next.length === allLabels.length ? [] : next);
+    }
+  };
+  return (
+    <div className="space-y-8 max-w-4xl">
+      <div><h2 className="text-lg font-bold mb-1">Tableau de bord</h2><p className="text-sm text-slate-400">Paramètres du dashboard et du diaporama</p></div>
+      <SettingsSection title="Cartes à défiler" icon={<LayoutDashboard className="w-5 h-5" />}>
+        <p className="text-sm text-slate-400 mb-4">Choisissez les critères affichés dans le diaporama en bas du dashboard. Si aucun n&apos;est décoché, tous les indicateurs disponibles s&apos;affichent par défaut.</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {AVAILABLE_TICKER_CRITERIA.map(({ id, label }) => {
+            const checked = enabledLabels.length === 0 || enabledLabels.includes(label);
+            return (
+              <label
+                key={id}
+                className={cn(
+                  "flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-colors",
+                  checked
+                    ? "border-teal-500/50 bg-teal-500/5 dark:bg-teal-500/10"
+                    : "border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 hover:border-slate-300 dark:hover:border-slate-600"
+                )}
+              >
+                <input
+                  type="checkbox"
+                  checked={checked}
+                  onChange={() => handleToggle(label)}
+                  className="w-4 h-4 rounded border-slate-300 text-teal-500 focus:ring-teal-500"
+                />
+                <span className="text-sm font-medium">{label}</span>
+              </label>
+            );
+          })}
+        </div>
+        <button
+          onClick={resetToDefault}
+          className="mt-4 flex items-center gap-2 text-sm text-slate-400 hover:text-teal-500 transition-colors"
+        >
+          <RotateCcw className="w-4 h-4" />
+          Réinitialiser (afficher tous par défaut)
+        </button>
       </SettingsSection>
     </div>
   );

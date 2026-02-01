@@ -41,6 +41,11 @@ export default function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning>
       <body className="antialiased" suppressHydrationWarning>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){var s=localStorage.getItem('nice-renovation-app-storage');var d=true;try{var p=s?JSON.parse(s):null;if(p&&p.state&&typeof p.state.darkMode==='boolean')d=p.state.darkMode;}catch(e){}var r=document.documentElement;if(d){r.classList.add('dark');r.classList.remove('light');}else{r.classList.add('light');r.classList.remove('dark');}})();`,
+          }}
+        />
         <QueryProvider>
           <Providers>
             {children}

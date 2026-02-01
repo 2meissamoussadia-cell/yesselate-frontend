@@ -45,14 +45,14 @@ export function BmoSidebar({
   return (
     <aside
       className={cn(
-        'flex flex-col h-full bg-slate-950 border-r border-slate-800/70 text-slate-100 shrink-0 overflow-hidden',
+        'flex flex-col h-full bg-white border-r border-slate-200 text-slate-900 dark:bg-slate-950 dark:border-slate-800/70 dark:text-slate-100 shrink-0 overflow-hidden',
         collapsed ? 'w-14' : 'w-56',
         className
       )}
       aria-label="Navigation BMO"
     >
       {/* Logo entreprise (un seul emplacement — pas de doublon avec la topbar) */}
-      <div className="flex items-center justify-between gap-2 h-14 px-2 border-b border-slate-800/70 shrink-0 min-w-0">
+      <div className="flex items-center justify-between gap-2 h-14 px-2 border-b border-slate-200 dark:border-slate-800/70 shrink-0 min-w-0">
         {collapsed ? (
           <>
             <div className="relative w-7 h-7 flex-shrink-0">
@@ -69,7 +69,7 @@ export function BmoSidebar({
               <button
                 type="button"
                 onClick={onCollapse}
-                className="p-1 rounded-lg hover:bg-slate-800/80 text-slate-400 hover:text-slate-200 transition-colors shrink-0"
+                className="p-1 rounded-lg hover:bg-slate-200 text-slate-500 hover:text-slate-800 dark:hover:bg-slate-800/80 dark:text-slate-400 dark:hover:text-slate-200 transition-colors shrink-0"
                 aria-label="Ouvrir le menu"
               >
                 <ChevronLeft className="h-4 w-4 rotate-180" aria-hidden />
@@ -94,7 +94,7 @@ export function BmoSidebar({
                   priority
                 />
               </span>
-              <span className="text-xs font-semibold tracking-wider text-amber-400/90 truncate">
+              <span className="text-xs font-semibold tracking-wider text-amber-600 dark:text-amber-400/90 truncate">
                 YESSALATE BMO
               </span>
             </Link>
@@ -102,7 +102,7 @@ export function BmoSidebar({
               <button
                 type="button"
                 onClick={onCollapse}
-                className="p-1.5 rounded-lg hover:bg-slate-800/80 text-slate-400 hover:text-slate-200 transition-colors shrink-0"
+                className="p-1.5 rounded-lg hover:bg-slate-200 text-slate-500 hover:text-slate-800 dark:hover:bg-slate-800/80 dark:text-slate-400 dark:hover:text-slate-200 transition-colors shrink-0"
                 aria-label="Réduire le menu"
               >
                 <ChevronLeft className="h-4 w-4" aria-hidden />
@@ -117,7 +117,7 @@ export function BmoSidebar({
         {(['pilotage', 'execution', 'support', 'systeme'] as const).map((group) => (
           <div key={group} className={cn(!collapsed && 'mb-4')}>
             {!collapsed && (
-              <div className="px-3 py-1.5 text-[10px] font-semibold tracking-wider text-amber-400/80 uppercase">
+              <div className="px-3 py-1.5 text-[10px] font-semibold tracking-wider text-amber-600 dark:text-amber-400/80 uppercase">
                 {bmoModuleGroupLabels[group]}
               </div>
             )}
@@ -139,7 +139,7 @@ export function BmoSidebar({
                         collapsed ? 'justify-center' : '',
                         isActive
                           ? 'bg-blue-600/20 text-slate-50 border-l-2 border-blue-500'
-                          : 'hover:bg-slate-800/80 text-slate-300 hover:text-slate-100 border-l-2 border-transparent'
+                          : 'hover:bg-slate-200 text-slate-600 hover:text-slate-900 dark:hover:bg-slate-800/80 dark:text-slate-300 dark:hover:text-slate-100 border-l-2 border-transparent'
                       )}
                       aria-current={isActive ? 'page' : undefined}
                       aria-label={m.label}

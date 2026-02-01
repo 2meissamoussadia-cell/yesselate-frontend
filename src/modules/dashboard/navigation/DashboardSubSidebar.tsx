@@ -107,7 +107,7 @@ export const DashboardSubSidebar = memo(function DashboardSubSidebar() {
       onMouseEnter={() => setExpanded(true)}
       onMouseLeave={() => setExpanded(false)}
       className={cn(
-        'shrink-0 flex flex-col border-r border-slate-800/70 bg-slate-950/60 overflow-y-auto overflow-x-hidden scrollbar-dashboard transition-[width] duration-200 ease-out',
+        'shrink-0 flex flex-col border-r border-slate-200 bg-gray-50 dark:border-slate-800/70 dark:bg-slate-950/60 overflow-y-auto overflow-x-hidden scrollbar-dashboard transition-[width] duration-200 ease-out',
         expanded ? 'w-52' : 'w-14'
       )}
       aria-label="Sub-navigation"
@@ -131,8 +131,8 @@ export const DashboardSubSidebar = memo(function DashboardSubSidebar() {
                   'focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950',
                   expanded ? 'px-3 justify-start' : 'px-2 justify-center',
                   active
-                    ? 'bg-sky-500/15 text-sky-100 border-l-2 border-sky-500'
-                    : 'text-slate-400 hover:bg-slate-800/80 hover:text-slate-200 border-l-2 border-transparent'
+                    ? 'bg-sky-500/15 text-sky-600 dark:text-sky-100 border-l-2 border-sky-500'
+                    : 'text-slate-500 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/80 dark:hover:text-slate-200 border-l-2 border-transparent'
                 )}
                 aria-current={active ? 'page' : undefined}
                 aria-label={subCat.label}
@@ -184,7 +184,7 @@ function PilotageHierarchySidebar({
       onMouseEnter={() => setExpanded(true)}
       onMouseLeave={() => setExpanded(false)}
       className={cn(
-        'shrink-0 flex flex-col border-r border-slate-800/70 bg-slate-950/60 overflow-y-auto overflow-x-hidden scrollbar-dashboard transition-[width] duration-200 ease-out',
+        'shrink-0 flex flex-col border-r border-slate-200 bg-gray-50 dark:border-slate-800/70 dark:bg-slate-950/60 overflow-y-auto overflow-x-hidden scrollbar-dashboard transition-[width] duration-200 ease-out',
         expanded ? 'w-64 min-w-[200px]' : 'w-14'
       )}
       aria-label="Navigation Pilotage hiérarchique"
@@ -246,7 +246,7 @@ function HierarchyNode({ node, expanded, expandedNodes, toggleNode, onSelect }: 
         <button
           type="button"
           onClick={handleChevronClick}
-          className="shrink-0 w-5 h-5 flex items-center justify-center rounded hover:bg-slate-800/60 focus:outline-none"
+          className="shrink-0 w-5 h-5 flex items-center justify-center rounded hover:bg-slate-200 dark:hover:bg-slate-800/60 focus:outline-none"
           aria-expanded={isExpanded}
           aria-label={isExpanded ? 'Replier' : 'Déplier'}
         >
@@ -284,7 +284,7 @@ function HierarchyNode({ node, expanded, expandedNodes, toggleNode, onSelect }: 
         {content}
       </div>
       {hasChildren && isExpanded && expanded && (
-        <div className="ml-3 mt-0.5 space-y-0.5 border-l border-slate-800/60 pl-2" role="group" aria-label={`Sous-dossiers de ${node.label}`}>
+        <div className="ml-3 mt-0.5 space-y-0.5 border-l border-slate-200 dark:border-slate-800/60 pl-2" role="group" aria-label={`Sous-dossiers de ${node.label}`}>
           {node.children!.map((child) => (
             <HierarchyNode
               key={child.id}

@@ -51,7 +51,7 @@ export function DashboardCleanLayout({
     <div
       className={cn(
         'h-full min-h-0 flex flex-col',
-        embedMode ? 'bg-slate-950 text-slate-100' : 'bg-gray-50 dark:bg-slate-900 text-slate-900 dark:text-white'
+        embedMode ? 'bg-gray-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100' : 'bg-gray-50 dark:bg-slate-900 text-slate-900 dark:text-white'
       )}
     >
       {!hideHeader && (

@@ -81,3 +81,6 @@ export type { CustomizableDashboardProps, WidgetDefinition } from './Customizabl
 
 export { CollapsibleSection } from './CollapsibleSection';
 export type { CollapsibleSectionProps, CollapsibleSectionPriority } from './CollapsibleSection';
+
+export { TickerBar } from './TickerBar';
+export type { TickerItem } from './TickerBar';

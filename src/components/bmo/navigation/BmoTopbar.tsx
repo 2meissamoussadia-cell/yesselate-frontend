@@ -224,7 +224,7 @@ export function BmoTopbar({
 
       {/* Centre : Retour / Avancer (dashboard) + fil d'Ariane */}
       <div className="flex-1 min-w-0 flex items-center justify-start gap-1.5 overflow-hidden">
-        {isDashboard && (
+        {isDashboard && (canGoBack || canGoForward) && (
           <div className="flex items-center gap-0.5 shrink-0">
             <button
               type="button"

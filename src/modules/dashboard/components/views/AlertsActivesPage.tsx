@@ -195,7 +195,14 @@ export const AlertsActivesPage = memo(function AlertsActivesPage() {
   return (
     <DashboardPageLayout>
       <h1 id="alerts-page-title" className="sr-only">Centre d&apos;alertes</h1>
-      <DashboardSection title="Alertes Actives" description="Alertes nécessitant une attention immédiate">
+      <DashboardSection
+        title="Alertes Actives"
+        description={
+          stats.total > 0
+            ? `${stats.total} alertes au total (${stats.critiques} critiques) — nécessitant une attention immédiate`
+            : 'Alertes nécessitant une attention immédiate'
+        }
+      >
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {kpis.map((kpi) => (
             <KPICard key={kpi.id} kpi={kpi} size="md" />

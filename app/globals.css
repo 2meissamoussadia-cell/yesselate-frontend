@@ -39,10 +39,154 @@
   --muted: 170 180 200;
 }
 
-/* Cadre viewport : pas de scroll horizontal (comportement logiciel métier type Odoo) */
+/* ====================================
+   DESIGN TOKENS THÈME (contraste WCAG)
+   ==================================== */
+:root {
+  --theme-bg-primary: #ffffff;
+  --theme-bg-secondary: #f8fafc;
+  --theme-bg-sidebar: #f8fafc;
+  --theme-text-primary: #0f172a;
+  --theme-text-secondary: #475569;
+  --theme-text-tertiary: #64748b;
+  --theme-border-primary: #e2e8f0;
+  --theme-border-subtle: #f1f5f9;
+  --theme-label-veille: #475569;
+  --theme-kpi-label: #475569;
+  --theme-chart-bg: #ffffff;
+  --theme-chart-grid: rgba(148, 163, 184, 0.2);
+  --theme-focus-ring: #0f172a;
+  --theme-accent: #06b6d4;
+}
+
+.dark,
+[data-theme="dark"] {
+  --theme-bg-primary: #0f172a;
+  --theme-bg-secondary: #1e293b;
+  --theme-bg-sidebar: #0f172a;
+  --theme-text-primary: #f1f5f9;
+  --theme-text-secondary: #cbd5e1;
+  --theme-text-tertiary: #94a3b8;
+  --theme-border-primary: #334155;
+  --theme-border-subtle: #475569;
+  --theme-label-veille: #cbd5e1;
+  --theme-kpi-label: #94a3b8;
+  --theme-chart-bg: #1e293b;
+  --theme-chart-grid: #475569;
+  --theme-focus-ring: #06b6d4;
+  --theme-accent: #22d3ee;
+  --theme-metric-positive: #4ade80;
+  --theme-metric-negative: #f87171;
+  --theme-metric-neutral: #fb923c;
+}
+
+/* Même logique pour le mode clair : variables déjà dans :root, règles explicites pour cohérence */
+.light,
+[data-theme="light"] {
+  --theme-bg-primary: #ffffff;
+  --theme-bg-secondary: #f8fafc;
+  --theme-bg-sidebar: #f8fafc;
+  --theme-text-primary: #0f172a;
+  --theme-text-secondary: #475569;
+  --theme-text-tertiary: #64748b;
+  --theme-border-primary: #e2e8f0;
+  --theme-border-subtle: #f1f5f9;
+  --theme-label-veille: #475569;
+  --theme-kpi-label: #475569;
+  --theme-chart-bg: #ffffff;
+  --theme-chart-grid: rgba(148, 163, 184, 0.2);
+  --theme-focus-ring: #0f172a;
+  --theme-accent: #06b6d4;
+  /* Contraste WCAG AA — variations positives/négatives */
+  --theme-metric-positive: #15803d; /* green-700 */
+  --theme-metric-negative: #b91c1c; /* red-700 */
+  --theme-metric-neutral: #ea580c; /* orange-600 */
+}
+
+/* Variations métriques — contraste WCAG AA en mode clair */
+.metric-positive,
+.light .metric-positive,
+[data-theme="light"] .metric-positive {
+  color: var(--theme-metric-positive) !important;
+}
+.metric-negative,
+.light .metric-negative,
+[data-theme="light"] .metric-negative {
+  color: var(--theme-metric-negative) !important;
+}
+.metric-neutral,
+.light .metric-neutral,
+[data-theme="light"] .metric-neutral {
+  color: var(--theme-metric-neutral) !important;
+}
+.dark .metric-positive,
+[data-theme="dark"] .metric-positive {
+  color: var(--theme-metric-positive) !important;
+}
+.dark .metric-negative,
+[data-theme="dark"] .metric-negative {
+  color: var(--theme-metric-negative) !important;
+}
+.dark .metric-neutral,
+[data-theme="dark"] .metric-neutral {
+  color: var(--theme-metric-neutral) !important;
+}
+
+/* Contraste label VEILLE — mode clair et mode sombre (même logique) */
+.light .veille-label,
+[data-theme="light"] .veille-label,
+.dark .veille-label,
+[data-theme="dark"] .veille-label {
+  color: var(--theme-label-veille) !important;
+}
+
+/* Labels KPI secondaires — mode clair et mode sombre (même logique) */
+.light .kpi-label,
+[data-theme="light"] .kpi-label,
+.dark .kpi-label,
+[data-theme="dark"] .kpi-label {
+  color: var(--theme-kpi-label) !important;
+}
+
+/* Graphiques : fond et bordure — mode clair et mode sombre (même logique) */
+.light .chart-container,
+[data-theme="light"] .chart-container,
+.dark .chart-container,
+[data-theme="dark"] .chart-container {
+  background-color: var(--theme-chart-bg) !important;
+  border-color: var(--theme-border-primary) !important;
+}
+
+/* Sidebar : fond cohérent — mode clair et mode sombre (même logique) */
+.light .sidebar-dashboard,
+.light [data-sidebar="dashboard"],
+[data-theme="light"] .sidebar-dashboard,
+[data-theme="light"] [data-sidebar="dashboard"],
+.dark .sidebar-dashboard,
+.dark [data-sidebar="dashboard"],
+[data-theme="dark"] .sidebar-dashboard,
+[data-theme="dark"] [data-sidebar="dashboard"] {
+  background-color: var(--theme-bg-sidebar) !important;
+}
+
+/* Focus clavier visible — mode clair et mode sombre (même logique) */
+.light *:focus-visible,
+[data-theme="light"] *:focus-visible {
+  outline: 2px solid var(--theme-focus-ring);
+  outline-offset: 2px;
+}
+.dark *:focus-visible,
+[data-theme="dark"] *:focus-visible {
+  outline: 2px solid var(--theme-focus-ring);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.2);
+}
+
+/* Cadre viewport + transition douce au changement de thème */
 html {
   overflow-x: hidden;
   max-width: 100vw;
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 /* Application des couleurs au body */
 body {
@@ -51,6 +195,7 @@ body {
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   overflow-x: hidden;
   max-width: 100vw;
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 /* Utilitaire : tout conteneur de page doit rester dans la largeur écran */
 .viewport-contained {

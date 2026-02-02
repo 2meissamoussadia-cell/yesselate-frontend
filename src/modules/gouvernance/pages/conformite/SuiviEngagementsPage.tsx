@@ -9,7 +9,7 @@ import React from 'react';
 import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { EngagementGouvernance } from '../../types/gouvernanceTypes';
-import { cn } from '@/lib/utils';
+import { cn, exportDataAsCSV } from '@/lib/utils';
 import { CheckCircle2, XCircle, Clock } from 'lucide-react';
 import { normalizeToArray } from '../../utils/dataNormalization';
 
@@ -26,11 +26,23 @@ export default function SuiviEngagementsPage() {
   };
 
   return (
-    <div className="h-full w-full bg-slate-950 text-white p-6">
+    <div className="h-full w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-white p-6">
       <GouvernanceHeader
         title="Suivi des engagements"
         subtitle="Dashboard des engagements financiers, calendaires et qualité"
-        onExport={() => { /* TODO: export engagements */ }}
+        onExport={() => {
+          const rows = engagements.map((e: EngagementGouvernance) => ({
+            reference: e.reference,
+            description: e.description,
+            type: e.type,
+            statut: e.statut,
+            projet: e.projet_nom ?? '',
+            date_engagement: e.date_engagement ?? '',
+            date_echeance: e.date_echeance ?? '',
+            montant: e.montant ?? '',
+          }));
+          exportDataAsCSV(rows, 'suivi-engagements');
+        }}
       />
 
       {isLoading ? (

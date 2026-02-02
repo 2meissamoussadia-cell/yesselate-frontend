@@ -6,6 +6,7 @@
 'use client';
 
 import React from 'react';
+import { ClipboardList, CheckCircle2, Eye, MessageCircle, XCircle } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -157,9 +158,9 @@ export function DecisionsEnAttenteModal({ open, onClose }: DecisionsEnAttenteMod
                           decision.urgence === 'basse' && 'bg-sky-500/20 text-sky-400'
                         )}
                       >
-                        {decision.urgence === 'haute' && '🔴 Haute'}
-                        {decision.urgence === 'moyenne' && '🟠 Moyenne'}
-                        {decision.urgence === 'basse' && '🔵 Basse'}
+                        {decision.urgence === 'haute' && 'Haute'}
+                        {decision.urgence === 'moyenne' && 'Moyenne'}
+                        {decision.urgence === 'basse' && 'Basse'}
                       </Badge>
                       {decision.delaiReponse <= 3 && (
                         <Badge variant="destructive">⏰ Urgent</Badge>
@@ -189,21 +190,25 @@ export function DecisionsEnAttenteModal({ open, onClose }: DecisionsEnAttenteMod
                 </div>
 
                 <div className="flex flex-wrap gap-2">
-                  <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white">
-                    ✅ Approuver
+                  <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white inline-flex items-center gap-1.5">
+                    <CheckCircle2 className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                    Approuver
                   </Button>
                   <Button
                     size="sm"
                     variant="outline"
-                    className="border-red-500/50 text-red-400"
+                    className="border-red-500/50 text-red-400 inline-flex items-center gap-1.5"
                   >
-                    ❌ Rejeter
+                    <XCircle className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                    Rejeter
                   </Button>
-                  <Button size="sm" variant="ghost" className="text-slate-400">
-                    💬 Demander + d&apos;infos
+                  <Button size="sm" variant="ghost" className="text-slate-400 inline-flex items-center gap-1.5">
+                    <MessageCircle className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                    Demander + d&apos;infos
                   </Button>
-                  <Button size="sm" variant="ghost" className="text-slate-400">
-                    👁️ Détails
+                  <Button size="sm" variant="ghost" className="text-slate-400 inline-flex items-center gap-1.5">
+                    <Eye className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                    Détails
                   </Button>
                 </div>
               </CardContent>

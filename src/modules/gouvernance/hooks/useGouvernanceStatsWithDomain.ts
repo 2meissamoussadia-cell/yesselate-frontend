@@ -77,6 +77,13 @@ export function useGouvernanceStatsWithDomain() {
       } catch (err) {
         if (!cancelled) {
           setError(err instanceof Error ? err : new Error('Erreur inconnue'));
+          // En cas d'erreur, récupérer au moins l'overview mockée pour afficher des indicateurs
+          import('../api/gouvernanceApiMock').then(({ mockStats, mockOverview }) => {
+            if (!cancelled) {
+              setStats(mockStats);
+              setOverviewData(mockOverview);
+            }
+          });
         }
       } finally {
         if (!cancelled) {

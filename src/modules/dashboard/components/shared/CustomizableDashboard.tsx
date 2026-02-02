@@ -119,8 +119,8 @@ export function CustomizableDashboard({
 
       {/* Panneau Ajouter widget (mode édition) */}
       {editing && availableToAdd.length > 0 && (
-        <div className="fixed left-4 top-28 z-[30] w-56 rounded-xl border border-slate-700 bg-slate-900 p-4 shadow-xl">
-          <h3 className="mb-3 text-sm font-bold text-slate-200">Ajouter un widget</h3>
+        <div className="fixed left-4 top-28 z-[30] w-56 rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 p-4 shadow-xl">
+          <h3 className="mb-3 text-sm font-bold text-slate-900 dark:text-slate-200">Ajouter un widget</h3>
           <div className="space-y-1">
             {availableToAdd.map((id) => (
               <button
@@ -140,7 +140,7 @@ export function CustomizableDashboard({
       {/* Grille de widgets */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {visibleIds.length === 0 ? (
-          <div className="col-span-2 rounded-xl border border-dashed border-slate-600 bg-slate-900/50 p-8 text-center text-sm text-slate-400">
+          <div className="col-span-2 rounded-xl border border-dashed border-slate-300 bg-slate-50 dark:border-slate-600 dark:bg-slate-900/50 p-8 text-center text-sm text-slate-500 dark:text-slate-400">
             Aucun widget affiché. Cliquez sur « Personnaliser » pour ajouter des widgets.
           </div>
         ) : (
@@ -148,8 +148,9 @@ export function CustomizableDashboard({
             <div
               key={id}
               className={cn(
-                'relative rounded-xl border bg-slate-900/60 overflow-hidden',
-                editing ? 'border-slate-600 ring-2 ring-sky-500/30' : 'border-slate-800/60'
+                'relative rounded-xl border overflow-hidden',
+                'bg-white dark:bg-slate-900/60',
+                editing ? 'border-slate-400 dark:border-slate-600 ring-2 ring-sky-500/30' : 'border-slate-200 dark:border-slate-800/60'
               )}
             >
               {editing && (

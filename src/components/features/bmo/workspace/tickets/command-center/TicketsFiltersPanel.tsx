@@ -96,7 +96,7 @@ const defaultFilters: FilterState = {
 };
 
 export function TicketsFiltersPanel() {
-  const { filtersPanelOpen, toggleFiltersPanel } = useTicketsWorkspaceStore();
+  const { filtersPanelOpen, toggleFiltersPanel, setFilters: setStoreFilters } = useTicketsWorkspaceStore();
   const [filters, setFilters] = useState<FilterState>(defaultFilters);
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['status', 'priority']));
   const [assignees, setAssignees] = useState<Array<{ id: string; name: string }>>([]);
@@ -143,8 +143,8 @@ export function TicketsFiltersPanel() {
   };
 
   const handleApply = () => {
+    setStoreFilters(filters);
     logger.debug('Applying filters', { component: 'TicketsFiltersPanel', filters });
-    // TODO: Apply filters to the ticket list
     toggleFiltersPanel();
   };
 

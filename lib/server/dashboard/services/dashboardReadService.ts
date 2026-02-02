@@ -331,6 +331,251 @@ export class DashboardReadService {
       }
     }
 
+    // ========== Performance Validation (mock) ==========
+    if (main === 'performance' && sub === 'validation') {
+      const now = new Date().toISOString().split('T')[0];
+      if (leaf === 'en-attente') {
+        return {
+          validations: [
+            { id: 'VAL-001', type: 'bc' as const, titre: 'BC Matériaux Chantier A', bureau: 'BMO', demandeur: 'J. Dupont', montant: 4500000, montantFormatted: '4.5M XOF', dateCreation: '2026-01-25', dateLimite: '2026-01-30', urgent: true, enRetard: false, niveau: 2, etapeActuelle: 'Validation DAF' },
+            { id: 'VAL-002', type: 'facture' as const, titre: 'Facture Fournisseur X', bureau: 'BF', demandeur: 'M. Martin', montant: 1200000, montantFormatted: '1.2M XOF', dateCreation: '2026-01-20', dateLimite: '2026-01-22', urgent: true, enRetard: true, niveau: 1, etapeActuelle: 'Rapprochement BC' },
+            { id: 'VAL-003', type: 'avenant' as const, titre: 'Avenant Contrat Villa Fann', bureau: 'BCG', demandeur: 'S. Diallo', montant: 8500000, montantFormatted: '8.5M XOF', dateCreation: '2026-01-28', dateLimite: '2026-02-05', urgent: false, enRetard: false, niveau: 1, etapeActuelle: 'Vérification technique' },
+          ],
+          stats: { total: 3, urgentes: 2, normales: 1, enRetard: 1 },
+        };
+      }
+      if (leaf === 'validees') {
+        return {
+          validations: [
+            { id: 'V-101', type: 'bc' as const, titre: 'BC Équipement', bureau: 'BMO', demandeur: 'J. Dupont', montant: 3200000, montantFormatted: '3.2M XOF', dateValidation: '2026-01-27', validePar: 'DAF', dureeValidation: 2 },
+            { id: 'V-102', type: 'facture' as const, titre: 'Facture ACME', bureau: 'BF', demandeur: 'M. Martin', montant: 980000, montantFormatted: '980K XOF', dateValidation: '2026-01-26', validePar: 'Comptabilité', dureeValidation: 1 },
+          ],
+          stats: { total: 45, cetteSemaine: 12, ceMois: 45, tempsMoyen: 2.5 },
+        };
+      }
+      if (leaf === 'rejetees') {
+        return {
+          validations: [
+            { id: 'R-201', type: 'bc' as const, titre: 'BC Non conforme', bureau: 'BMO', demandeur: 'J. Dupont', montant: 1500000, montantFormatted: '1.5M XOF', dateRejet: '2026-01-24', rejetePar: 'DAF', motif: 'Devis obsolète' },
+          ],
+          stats: { total: 8, cetteSemaine: 2, ceMois: 8, tauxRejet: 0.15 },
+        };
+      }
+    }
+
+    // ========== Performance Budget (mock) ==========
+    if (main === 'performance' && sub === 'budget') {
+      if (leaf === 'consommation') {
+        return {
+          consommation: [
+            { id: 'c1', projet: 'Villa Diamniadio', categorie: 'Bâtiment', bureau: 'BMO', budgetInitial: 36400000, budgetConsomme: 24700000, budgetRestant: 11700000, pourcentage: 68, tendance: 'up' as const },
+            { id: 'c2', projet: 'Complexe Résidentiel', categorie: 'VRD', bureau: 'BF', budgetInitial: 28200000, budgetConsomme: 22100000, budgetRestant: 6100000, pourcentage: 78, tendance: 'stable' as const },
+            { id: 'c3', categorie: 'Équipements', bureau: 'BCG', budgetInitial: 12000000, budgetConsomme: 8500000, budgetRestant: 3500000, pourcentage: 71, tendance: 'down' as const },
+          ],
+          stats: { totalConsomme: 55300000, totalBudget: 76600000, pourcentage: 72, parProjet: 2, parCategorie: 3 },
+        };
+      }
+      if (leaf === 'restant') {
+        return {
+          budgetRestant: [
+            { id: 'r1', projet: 'Villa Diamniadio', categorie: 'Bâtiment', bureau: 'BMO', budgetInitial: 36400000, budgetConsomme: 24700000, budgetRestant: 11700000, pourcentageRestant: 32, isCritique: false },
+            { id: 'r2', projet: 'Lot 4 Infra', categorie: 'VRD', bureau: 'BF', budgetInitial: 15000000, budgetConsomme: 13800000, budgetRestant: 1200000, pourcentageRestant: 8, isCritique: true },
+          ],
+          stats: { totalRestant: 12900000, parProjet: 2, parCategorie: 2, critique: 1 },
+        };
+      }
+      if (leaf === 'previsions') {
+        return {
+          previsions: [
+            { id: 'p1', periode: '2026-02', projet: 'Villa Diamniadio', categorie: 'Bâtiment', budgetPrevu: 5000000, budgetRealise: 0, variance: 0, variancePourcentage: 0 },
+            { id: 'p2', periode: '2026-Q1', categorie: 'VRD', budgetPrevu: 25000000, budgetRealise: 18500000, variance: -6500000, variancePourcentage: -26 },
+          ],
+          stats: { totalPrevu: 120000000, ceMois: 15000000, ceTrimestre: 45000000, cetteAnnee: 120000000 },
+        };
+      }
+      if (leaf === 'analyse') {
+        return {
+          analyses: [
+            { id: 'a1', projet: 'Villa Diamniadio', categorie: 'Bâtiment', periode: '2026-01', budgetInitial: 36400000, budgetConsomme: 24700000, budgetPrevu: 24000000, variance: 700000, variancePourcentage: 2.9, tendance: 'up' as const },
+          ],
+          stats: { variance: 700000, tendance: 2.5, ecartType: 1.2, projetsSurBudget: 8 },
+          tendances: [
+            { periode: '2026-01', consommation: 55300000, prevision: 52000000 },
+            { periode: '2025-12', consommation: 48500000, prevision: 50000000 },
+          ],
+        };
+      }
+    }
+
+    // ========== Performance Delays (mock) ==========
+    if (main === 'performance' && sub === 'delays') {
+      const today = new Date().toISOString().split('T')[0];
+      if (leaf === 'critiques') {
+        return {
+          retards: [
+            { id: 'D1', projet: 'Chantier A', type: 'validation' as const, titre: 'Validation BC retardée', bureau: 'BMO', dateEcheance: '2026-01-15', dateActuelle: today, joursRetard: 16, impactBudget: 500000, impactBudgetFormatted: '500K XOF', priorite: 'critical' as const, cause: 'Attente pièce justificative' },
+            { id: 'D2', type: 'paiement' as const, titre: 'Paiement fournisseur échu', bureau: 'BF', dateEcheance: '2026-01-20', dateActuelle: today, joursRetard: 11, impactBudget: 1200000, impactBudgetFormatted: '1.2M XOF', priorite: 'critical' as const },
+          ],
+          stats: { total: 2, plus30Jours: 0, plus60Jours: 0, impactBudget: 1700000 },
+        };
+      }
+      if (leaf === 'moyens') {
+        return {
+          retards: [
+            { id: 'M1', projet: 'Chantier B', type: 'demande' as const, titre: 'Demande avenant en cours', bureau: 'BCG', dateEcheance: '2026-01-25', dateActuelle: today, joursRetard: 6, tendance: 'stable' as const },
+          ],
+          stats: { total: 1, entre7et30Jours: 1, entre30et60Jours: 0, enAmelioration: 0 },
+        };
+      }
+      if (leaf === 'analyse-causes') {
+        return {
+          analyses: [
+            { id: 'AC1', cause: 'Pièces justificatives manquantes', occurrences: 12, projetsAffectes: 5, impactMoyen: 8, tendance: 'down' as const, actionsCorrectives: ['Checklist fournisseur'] },
+            { id: 'AC2', cause: 'Délai validation hiérarchique', occurrences: 8, projetsAffectes: 4, impactMoyen: 5, tendance: 'stable' as const },
+          ],
+          stats: { causesIdentifiees: 2, causesRecurrentes: 1, projetsAffectes: 6, tendance: -5 },
+        };
+      }
+    }
+
+    // ========== Performance Indicators (mock) ==========
+    if (main === 'performance' && sub === 'indicators') {
+      if (leaf === 'synthese') {
+        return {
+          synthese: [
+            { id: 's1', kpi: 'Délai moyen validation', valeur: 2.5, cible: 3, statut: 'atteint' as const, tendance: 'down' as const, evolution: -10 },
+            { id: 's2', kpi: 'Taux consommation budget', valeur: 72, cible: 80, statut: 'atteint' as const, tendance: 'stable' as const, evolution: 2 },
+            { id: 's3', kpi: 'Retards critiques', valeur: 2, cible: 0, statut: 'critique' as const, tendance: 'up' as const, evolution: 100 },
+          ],
+          stats: { scoreGlobal: 68, kpisAtteints: 2, kpisEnRetard: 1, tendance: 1 },
+        };
+      }
+      if (leaf === 'projets') {
+        return {
+          projets: [
+            { id: 'pr1', nom: 'Villa Diamniadio', bureau: 'BMO', progression: 68, statut: 'dans-les-temps' as const, budgetConsomme: 24700000, budgetPrevu: 36400000 },
+            { id: 'pr2', nom: 'Complexe Résidentiel', bureau: 'BF', progression: 78, statut: 'en-avance' as const, budgetConsomme: 22100000, budgetPrevu: 28200000 },
+            { id: 'pr3', nom: 'Lot 4 Infra', bureau: 'BCG', progression: 55, statut: 'en-retard' as const, joursRetard: 12, budgetConsomme: 13800000, budgetPrevu: 15000000 },
+          ],
+          stats: { total: 3, enAvance: 1, enRetard: 1, dansLesTemps: 1 },
+        };
+      }
+      if (leaf === 'demandes') {
+        return {
+          demandes: [
+            { id: 'dm1', type: 'BC', titre: 'BC Matériaux', bureau: 'BMO', statut: 'en-attente' as const, dateCreation: '2026-01-28', delaiTraitement: undefined },
+            { id: 'dm2', type: 'Facture', titre: 'Facture Fournisseur', bureau: 'BF', statut: 'traitee' as const, dateCreation: '2026-01-20', dateTraitement: '2026-01-26', delaiTraitement: 6 },
+          ],
+          stats: { total: 247, traitees: 180, enCours: 42, enAttente: 25 },
+        };
+      }
+      if (leaf === 'budget') {
+        return {
+          budget: [
+            { id: 'b1', projet: 'Villa Diamniadio', categorie: 'Bâtiment', budgetAlloue: 36400000, budgetConsomme: 24700000, budgetRestant: 11700000, pourcentage: 68 },
+            { id: 'b2', projet: 'Complexe Résidentiel', categorie: 'VRD', budgetAlloue: 28200000, budgetConsomme: 22100000, budgetRestant: 6100000, pourcentage: 78 },
+          ],
+          stats: { totalAlloue: 76600000, totalConsomme: 55300000, pourcentage: 72, reste: 21300000 },
+        };
+      }
+    }
+
+    // ========== Performance Trends (mock) ==========
+    if (main === 'performance' && sub === 'trends') {
+      if (leaf === 'mensuelles') {
+        return {
+          trends: [
+            { id: 'tm1', mois: '2026-01', label: 'Janvier 2026', projets: 42, demandes: 247, budgetConsomme: 55300000, budgetPrevu: 52000000, retards: 2, scorePerformance: 72, evolution: 2, tendance: 'up' as const },
+            { id: 'tm2', mois: '2025-12', label: 'Décembre 2025', projets: 40, demandes: 230, budgetConsomme: 48500000, budgetPrevu: 50000000, retards: 3, scorePerformance: 70, evolution: -1, tendance: 'down' as const },
+          ],
+          stats: { totalMois: 12, moyenneScore: 71, meilleurMois: '2026-01', pireMois: '2025-11', evolutionGlobale: 2 },
+        };
+      }
+      if (leaf === 'trimestrielles') {
+        return {
+          trends: [
+            { id: 'tt1', trimestre: '2026-Q1', label: 'Q1 2026', projets: 42, demandes: 680, budgetConsomme: 145000000, budgetPrevu: 150000000, retards: 5, scorePerformance: 72, evolution: 3, tendance: 'up' as const },
+            { id: 'tt2', trimestre: '2025-Q4', label: 'Q4 2025', projets: 40, demandes: 620, budgetConsomme: 138000000, budgetPrevu: 140000000, retards: 8, scorePerformance: 69, evolution: -2, tendance: 'down' as const },
+          ],
+          stats: { totalTrimestres: 4, moyenneScore: 70, meilleurTrimestre: '2026-Q1', pireTrimestre: '2025-Q3', evolutionGlobale: 3 },
+        };
+      }
+      if (leaf === 'annuelles') {
+        return {
+          trends: [
+            { id: 'ta1', annee: '2026', projets: 42, demandes: 2500, budgetConsomme: 580000000, budgetPrevu: 620000000, retards: 18, scorePerformance: 72, evolution: 4, tendance: 'up' as const },
+            { id: 'ta2', annee: '2025', projets: 38, demandes: 2200, budgetConsomme: 520000000, budgetPrevu: 550000000, retards: 25, scorePerformance: 68, evolution: -1, tendance: 'down' as const },
+          ],
+          stats: { totalAnnees: 2, moyenneScore: 70, meilleureAnnee: '2026', pireAnnee: '2025', evolutionGlobale: 4 },
+        };
+      }
+    }
+
+    // ========== Performance Comparison (mock) ==========
+    if (main === 'performance' && sub === 'comparison') {
+      if (leaf === 'bureaux') {
+        return {
+          comparaisons: [
+            { id: 'cb1', bureau: 'BMO', projets: 12, demandes: 85, budgetConsomme: 185000000, budgetPrevu: 200000000, retards: 2, scorePerformance: 78, rang: 1, ecartMoyen: 5 },
+            { id: 'cb2', bureau: 'BF', projets: 10, demandes: 72, budgetConsomme: 142000000, budgetPrevu: 165000000, retards: 4, scorePerformance: 72, rang: 2, ecartMoyen: -2 },
+            { id: 'cb3', bureau: 'BCG', projets: 8, demandes: 58, budgetConsomme: 98000000, budgetPrevu: 120000000, retards: 5, scorePerformance: 65, rang: 3, ecartMoyen: -8 },
+          ],
+          stats: { totalBureaux: 3, meilleurBureau: 'BMO', pireBureau: 'BCG', ecartMoyen: -1.5, moyenneScore: 72 },
+        };
+      }
+      if (leaf === 'projets') {
+        return {
+          comparaisons: [
+            { id: 'cp1', projet: 'Villa Diamniadio', bureau: 'BMO', progression: 68, budgetConsomme: 24700000, budgetPrevu: 36400000, retards: 0, scorePerformance: 85, rang: 1, ecartMoyen: 10 },
+            { id: 'cp2', projet: 'Complexe Résidentiel', bureau: 'BF', progression: 78, budgetConsomme: 22100000, budgetPrevu: 28200000, retards: 0, scorePerformance: 82, rang: 2, ecartMoyen: 5 },
+          ],
+          stats: { totalProjets: 2, meilleurProjet: 'Villa Diamniadio', pireProjet: 'Lot 4 Infra', ecartMoyen: 2, moyenneScore: 75 },
+        };
+      }
+      if (leaf === 'periode') {
+        return {
+          comparaisons: [
+            { id: 'cper1', periode: '2026-01', label: 'Janvier 2026', projets: 42, demandes: 247, budgetConsomme: 55300000, budgetPrevu: 52000000, retards: 2, scorePerformance: 72, evolution: 2 },
+            { id: 'cper2', periode: '2025-12', label: 'Décembre 2025', projets: 40, demandes: 230, budgetConsomme: 48500000, budgetPrevu: 50000000, retards: 3, scorePerformance: 70, evolution: -1 },
+          ],
+          stats: { meilleurePeriode: '2026-01', pirePeriode: '2025-11', tendance: 2, evolution: 2, moyenneScore: 71 },
+        };
+      }
+      if (leaf === 'benchmarking') {
+        return {
+          benchmarks: [
+            { id: 'bm1', kpi: 'Délai moyen validation (j)', valeurActuelle: 2.5, valeurStandard: 3, ecart: -16.7, statut: 'au-dessus' as const, secteur: 'BTP Sénégal' },
+            { id: 'bm2', kpi: 'Taux consommation budget %', valeurActuelle: 72, valeurStandard: 75, ecart: -4, statut: 'au-dessus' as const, secteur: 'BTP Sénégal' },
+            { id: 'bm3', kpi: 'Retards critiques', valeurActuelle: 2, valeurStandard: 1, ecart: 100, statut: 'en-dessous' as const, secteur: 'BTP Sénégal' },
+          ],
+          stats: { kpisAuDessus: 2, kpisEnDessous: 1, kpisDansLaMoyenne: 0, scoreGlobal: 68 },
+        };
+      }
+    }
+
+    // ========== Performance Stocks (mock, fallback si stocksRepo non dispo) ==========
+    if (main === 'performance' && sub === 'stocks') {
+      if (leaf === 'overview') {
+        return {
+          stocks: [
+            { id: 'st1', article: 'Ciment CPA 42.5', categorie: 'Matériaux', quantite: 450, quantiteMin: 100, quantiteMax: 500, valeurUnitaire: 5500, valeurTotale: 2475000, statut: 'normal' as const, dernierMouvement: '2026-01-28' },
+            { id: 'st2', article: 'Fer à béton T12', categorie: 'Matériaux', quantite: 25, quantiteMin: 50, quantiteMax: 200, valeurUnitaire: 1200, valeurTotale: 30000, statut: 'critique' as const, dernierMouvement: '2026-01-27' },
+            { id: 'st3', article: 'Peinture façade', categorie: 'Finitions', quantite: 80, quantiteMin: 60, quantiteMax: 150, valeurUnitaire: 8500, valeurTotale: 680000, statut: 'faible' as const, dernierMouvement: '2026-01-26' },
+          ],
+          stats: { totalArticles: 150, valeurTotale: 12500000, articlesFaibles: 5, articlesCritiques: 2 },
+        };
+      }
+      if (leaf === 'trends') {
+        return {
+          tendances: [
+            { id: 'tst1', article: 'Ciment CPA 42.5', categorie: 'Matériaux', periode: '2026-01', quantiteInitiale: 520, quantiteActuelle: 450, variation: -70, tendance: 'down' as const },
+            { id: 'tst2', article: 'Fer à béton T12', categorie: 'Matériaux', periode: '2026-01', quantiteInitiale: 80, quantiteActuelle: 25, variation: -55, tendance: 'down' as const },
+          ],
+          stats: { articlesEnBaisse: 2, articlesStables: 10, articlesEnHausse: 3, valeurTotale: 12500000 },
+        };
+      }
+    }
+
     // Fallback : retour vide
     return {};
   }

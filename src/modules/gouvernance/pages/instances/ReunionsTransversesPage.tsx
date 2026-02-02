@@ -10,6 +10,7 @@ import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { InstanceGouvernance } from '../../types/gouvernanceTypes';
 import { Users, Calendar } from 'lucide-react';
+import { exportDataAsCSV } from '@/lib/utils';
 import { normalizeToArray } from '../../utils/dataNormalization';
 
 export default function ReunionsTransversesPage() {
@@ -18,11 +19,23 @@ export default function ReunionsTransversesPage() {
   const reunions = normalizeToArray<InstanceGouvernance>(data);
 
   return (
-    <div className="h-full w-full bg-slate-950 text-white p-6">
+    <div className="h-full w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-white p-6">
       <GouvernanceHeader
         title="Réunions transverses"
         subtitle="Calendrier des réunions transverses"
-        onExport={() => { /* TODO: export réunions transverses */ }}
+        onExport={() => {
+          const rows = reunions
+            .filter((r: InstanceGouvernance) => r.type === 'TRANSVERSE')
+            .map((r: InstanceGouvernance) => ({
+              id: r.id,
+              nom: r.nom,
+              date: r.date,
+              heure: r.heure,
+              participants_count: r.participants_count,
+              decisions_count: r.decisions_count,
+            }));
+          exportDataAsCSV(rows, 'reunions_transverses');
+        }}
       />
 
       {isLoading ? (

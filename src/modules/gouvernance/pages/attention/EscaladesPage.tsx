@@ -10,7 +10,7 @@ import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { PointAttention } from '../../types/gouvernanceTypes';
 import { AlertTriangle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, exportDataAsCSV } from '@/lib/utils';
 import { normalizeToArray } from '../../utils/dataNormalization';
 
 export default function EscaladesPage() {
@@ -19,11 +19,23 @@ export default function EscaladesPage() {
   const escalades = normalizeToArray<PointAttention>(data);
 
   return (
-    <div className="h-full w-full bg-slate-950 text-white p-6">
+    <div className="h-full w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-white p-6">
       <GouvernanceHeader
         title="Escalades en cours"
         subtitle="Escalades actives nécessitant une intervention urgente"
-        onExport={() => { /* TODO: export escalades */ }}
+        onExport={() => {
+          const rows = escalades
+            .filter((e: PointAttention) => e.type === 'escalade')
+            .map((e: PointAttention) => ({
+              id: e.id,
+              titre: e.titre,
+              priorite: e.priorite,
+              impact: e.impact,
+              projet: e.projet_nom,
+              description: e.description ?? '',
+            }));
+          exportDataAsCSV(rows, 'escalades');
+        }}
       />
 
       {isLoading ? (

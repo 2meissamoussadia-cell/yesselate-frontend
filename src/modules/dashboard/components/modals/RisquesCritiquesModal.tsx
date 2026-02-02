@@ -17,6 +17,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { ClipboardList, Send, Eye } from 'lucide-react';
 
 interface Risque {
   id: string;
@@ -133,9 +134,9 @@ export function RisquesCritiquesModal({ open, onClose }: RisquesCritiquesModalPr
                           risque.gravite === 'moyen' && 'bg-sky-500/20 text-sky-400'
                         )}
                       >
-                        {risque.gravite === 'critique' && '🔴 Critique'}
-                        {risque.gravite === 'eleve' && '🟠 Élevé'}
-                        {risque.gravite === 'moyen' && '🔵 Moyen'}
+                        {risque.gravite === 'critique' && 'Critique'}
+                        {risque.gravite === 'eleve' && 'Élevé'}
+                        {risque.gravite === 'moyen' && 'Moyen'}
                       </Badge>
                       <span className="text-xs text-slate-400">{risque.type}</span>
                     </div>
@@ -153,14 +154,17 @@ export function RisquesCritiquesModal({ open, onClose }: RisquesCritiquesModalPr
                 </div>
 
                 <div className="flex flex-wrap gap-2">
-                  <Button size="sm" className="bg-amber-600 hover:bg-amber-700 text-white">
-                    📋 Plan d&apos;action
+                  <Button size="sm" className="bg-amber-600 hover:bg-amber-700 text-white inline-flex items-center gap-2">
+                    <ClipboardList className="h-3.5 w-3.5" aria-hidden />
+                    Plan d&apos;action
                   </Button>
-                  <Button size="sm" variant="outline" className="border-red-500/50 text-red-400">
-                    🔔 Escalader
+                  <Button size="sm" variant="outline" className="border-red-500/50 text-red-400 inline-flex items-center gap-2">
+                    <Send className="h-3.5 w-3.5" aria-hidden />
+                    Escalader
                   </Button>
-                  <Button size="sm" variant="ghost" className="text-slate-400">
-                    👁️ Détails
+                  <Button size="sm" variant="ghost" className="text-slate-400 inline-flex items-center gap-2">
+                    <Eye className="h-3.5 w-3.5" aria-hidden />
+                    Détails
                   </Button>
                 </div>
               </CardContent>

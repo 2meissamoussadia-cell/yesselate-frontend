@@ -127,13 +127,40 @@ export const spacing = {
 // ============================================
 // BORDURES - Rayons harmonisés
 // ============================================
-
+// Usage : sm = champs, badges | md = boutons, cartes | lg = panneaux, modales
 export const borderRadius = {
   sm: 'rounded-lg',
   md: 'rounded-xl',
   lg: 'rounded-2xl',
   full: 'rounded-full',
 } as const;
+
+// ============================================
+// COULEUR D'ACCENT PRINCIPALE - Boutons, focus, liens
+// ============================================
+export const accentPrimary = {
+  bg: 'bg-sky-500',
+  bgHover: 'hover:bg-sky-600',
+  text: 'text-sky-400',
+  ring: 'focus:ring-sky-500/50 focus:ring-2',
+  border: 'border-sky-500/50',
+} as const;
+
+// ============================================
+// Z-INDEX - Couches d'empilement
+// ============================================
+export const zIndex = {
+  dropdown: 50,
+  sticky: 10,
+  modal: 110,
+  toast: 120,
+  tooltip: 130,
+} as const;
+
+// ============================================
+// RÉDUCTION DES MOUVEMENTS - Accessibilité
+// ============================================
+export const reducedMotion = 'motion-reduce:transition-none motion-reduce:animate-none' as const;
 
 // ============================================
 // OMBRES - Système cohérent

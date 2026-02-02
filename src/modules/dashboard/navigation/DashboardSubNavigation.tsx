@@ -212,7 +212,7 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
   return (
     <div
       className={cn(
-        'border-b border-slate-800/80 bg-slate-950/80',
+        'border-b border-slate-200 bg-white/95 dark:border-slate-800/80 dark:bg-slate-950/80',
         zIndexClass('subnav')
       )}
     >
@@ -233,8 +233,8 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
           }}
           items={mainTabs as any}
           className="h-9 text-[11px]"
-          pillClassName="rounded-full bg-transparent"
-          pillItemClassName="rounded-full px-3 py-1.5 data-[state=active]:bg-slate-800 data-[state=active]:text-slate-50 data-[state=inactive]:bg-slate-900/40 data-[state=inactive]:text-slate-400"
+          pillClassName="rounded-full border border-slate-300 bg-slate-100 dark:border-slate-800/60 dark:bg-slate-950/30"
+          pillItemClassName="rounded-full px-3 py-1.5 data-[state=active]:bg-sky-600 data-[state=active]:text-white data-[state=inactive]:text-slate-600 dark:data-[state=active]:bg-slate-800 dark:data-[state=active]:text-slate-50 dark:data-[state=inactive]:bg-slate-900/40 dark:data-[state=inactive]:text-slate-400"
           underlineClassName="h-[2px] rounded-full bg-sky-500"
         />
       </div>

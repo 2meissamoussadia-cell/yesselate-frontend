@@ -130,13 +130,13 @@ export default function GouvernanceLayout({
           />
 
           {/* Titre module + contenu — aligné dashboard */}
-          <div className="shrink-0 px-4 py-2 border-b border-slate-800/50 bg-slate-950/40">
-            <h2 className="text-sm font-semibold text-slate-200 truncate">
+          <div className="shrink-0 px-4 py-2 border-b border-slate-200 bg-slate-50 dark:border-slate-800/50 dark:bg-slate-950/40">
+            <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-200 truncate">
               Gouvernance & Arbitrage
             </h2>
           </div>
           <main
-            className="flex-1 min-h-0 min-w-0 overflow-x-hidden overflow-y-auto px-2 sm:px-4 py-2 scrollbar-dashboard"
+            className="flex-1 min-h-0 min-w-0 overflow-x-hidden overflow-y-auto px-2 sm:px-4 py-2 scrollbar-dashboard bg-white dark:bg-transparent"
             role="main"
           >
             <GovernanceContentRouter

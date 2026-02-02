@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { X, Phone, ExternalLink, Mail, MessageCircle } from 'lucide-react';
+import { AlertTriangle, X, Phone, ExternalLink, Mail, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -61,7 +61,7 @@ export function CriticalAlertModal({
         <div className="flex items-start justify-between gap-4 p-6 pb-4">
           <div className="flex items-center gap-3 min-w-0">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-rose-500/20 border border-rose-500/50">
-              <span className="text-2xl" aria-hidden>🚨</span>
+              <AlertTriangle className="h-6 w-6 text-rose-400" aria-hidden />
             </div>
             <div className="min-w-0">
               <h2 id="critical-alert-title" className="text-lg font-bold text-rose-100 uppercase tracking-wide">

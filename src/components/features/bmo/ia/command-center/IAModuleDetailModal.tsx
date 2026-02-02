@@ -12,6 +12,7 @@
 import React, { useMemo } from 'react';
 import { GenericDetailModal, type TabConfig, type ActionButton } from '@/components/ui/GenericDetailModal';
 import { logger } from '@/lib/utils/logger';
+import { exportDataAsCSV } from '@/lib/utils';
 import {
   Brain,
   BarChart3,
@@ -166,7 +167,8 @@ export function IAModuleDetailModal({
       icon: <Download className="h-4 w-4" />,
       variant: 'ghost',
       onClick: () => {
-        // TODO: Implémenter export
+        const rows = [{ id: module.id, type: module.type, statut: module.status, nom: module.name ?? '', description: module.description ?? '' }];
+        exportDataAsCSV(rows, `ia-module-${module.id}`);
         logger.debug('Export', { component: 'IAModuleDetailModal', moduleId: module.id });
       },
     });

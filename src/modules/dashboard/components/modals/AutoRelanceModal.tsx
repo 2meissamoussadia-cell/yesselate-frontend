@@ -7,7 +7,9 @@
 
 import React, { useState } from 'react';
 import { X, Mail } from 'lucide-react';
+import { toast } from 'sonner';
 import { useToast } from '@/components/ui/toast';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 
 export interface AutoRelanceModalProps {
@@ -64,16 +66,16 @@ export function AutoRelanceModal({
 
           <div>
             <label htmlFor="relance-template" className="block text-xs font-medium text-slate-400 mb-1">Modèle d&apos;email</label>
-            <select
-              id="relance-template"
-              value={template}
-              onChange={(e) => setTemplate(e.target.value)}
-              className={cn('w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-200')}
-            >
-              <option value="relance_1">Relance 1 — Rappel échéance</option>
-              <option value="relance_2">Relance 2 — Relance courtoise</option>
-              <option value="relance_3">Relance 3 — Dernière relance</option>
-            </select>
+            <Select value={template} onValueChange={setTemplate}>
+              <SelectTrigger id="relance-template" className={cn('w-full rounded-xl border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-200')}>
+                <SelectValue placeholder="Modèle" />
+              </SelectTrigger>
+              <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+                <SelectItem value="relance_1">Relance 1 — Rappel échéance</SelectItem>
+                <SelectItem value="relance_2">Relance 2 — Relance courtoise</SelectItem>
+                <SelectItem value="relance_3">Relance 3 — Dernière relance</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="rounded-lg border border-slate-800 bg-slate-950/60 p-3 text-xs text-slate-400 max-h-32 overflow-y-auto">

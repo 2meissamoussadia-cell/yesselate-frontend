@@ -47,10 +47,10 @@ export function GouvernanceHeader({
     <div className={cn('mb-6', className)}>
       {/* Breadcrumb */}
       {breadcrumb && breadcrumb.length > 0 && (
-        <div className="mb-2 flex items-center gap-2 text-xs text-slate-400">
+        <div className="mb-2 flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
           {breadcrumb.map((item, index) => (
             <React.Fragment key={index}>
-              <span className={item.isLast ? 'text-slate-300 font-medium' : ''}>
+              <span className={item.isLast ? 'text-slate-700 dark:text-slate-300 font-medium' : ''}>
                 {item.label}
               </span>
               {!item.isLast && <span>/</span>}
@@ -62,12 +62,12 @@ export function GouvernanceHeader({
       {/* Header principal */}
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
-          <h1 className="text-2xl font-semibold text-white">{title}</h1>
+          <h1 className="text-2xl font-semibold text-slate-900 dark:text-white">{title}</h1>
           {subtitle && (
-            <p className="mt-1 text-sm text-slate-400">{subtitle}</p>
+            <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{subtitle}</p>
           )}
           {periode && (
-            <p className="mt-1 text-xs text-slate-400">
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
               Période : {periode === 'week' ? 'Semaine' : periode === 'month' ? 'Mois' : 'Trimestre'}
             </p>
           )}

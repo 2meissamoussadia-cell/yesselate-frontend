@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export { formatFCFA, formatFCFAWithCurrency, parseMoney } from './format-currency';
 export { parseFRDate, formatFRDate, formatISODate, isDateInRange } from './format-date';
-export { exportFacturesAsCSV } from './export';
+export { exportFacturesAsCSV, exportDataAsCSV } from './export';
 export {
   calculateBCPendingAmount,
   calculateBCValidatedAmount,

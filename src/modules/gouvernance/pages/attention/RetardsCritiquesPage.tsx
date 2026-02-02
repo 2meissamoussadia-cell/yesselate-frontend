@@ -10,6 +10,7 @@ import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { JalonGouvernance } from '../../types/gouvernanceTypes';
 import { Clock } from 'lucide-react';
+import { exportDataAsCSV } from '@/lib/utils';
 import { normalizeToArray } from '../../utils/dataNormalization';
 
 export default function RetardsCritiquesPage() {
@@ -18,11 +19,23 @@ export default function RetardsCritiquesPage() {
   const retards = normalizeToArray<JalonGouvernance>(data);
 
   return (
-    <div className="h-full w-full bg-slate-950 text-white p-6">
+    <div className="h-full w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-white p-6">
       <GouvernanceHeader
         title="Retards critiques"
         subtitle="Jalons en retard nécessitant une intervention urgente"
-        onExport={() => { /* TODO: export retards critiques */ }}
+        onExport={() => {
+          const rows = retards
+            .filter((j: JalonGouvernance) => j.est_retard && (j.retard_jours || 0) > 7)
+            .map((j: JalonGouvernance) => ({
+              id: j.id,
+              libelle: j.libelle,
+              projet_nom: j.projet_nom,
+              type: j.type,
+              retard_jours: j.retard_jours,
+              date_prevue: j.date_prevue,
+            }));
+          exportDataAsCSV(rows, 'retards_critiques');
+        }}
       />
 
       {isLoading ? (

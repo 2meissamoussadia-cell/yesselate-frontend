@@ -453,9 +453,7 @@ function ArbitragesVivantsFallback() {
       <div className="animate-spin rounded-full h-10 w-10 border-2 border-blue-500 border-t-transparent" />
     </div>
   );
-}
-
-export default function ArbitragesVivantsPage() {
+}export default function ArbitragesVivantsPage() {
   return (
     <Suspense fallback={<ArbitragesVivantsFallback />}>
       <ArbitragesVivantsPageContent />

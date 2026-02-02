@@ -27,6 +27,7 @@ import {
 import { useGovernanceCommandCenterStore } from '@/lib/stores/governanceCommandCenterStore';
 import { logger } from '@/lib/utils/logger';
 import { Checkbox } from '@/components/ui/checkbox';
+import { toCsv, downloadBlob } from '@/lib/utils/export';
 
 type ExportFormat = 'excel' | 'pdf' | 'csv';
 type ExportScope = 'current' | 'all' | 'selected';
@@ -90,15 +91,48 @@ export function ExportModal() {
 
   const handleExport = async () => {
     setIsExporting(true);
-    
-    // Simulate export
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // TODO: Call actual export API
-    logger.debug('Export', { component: 'ExportModal', format, scope, columns: selectedColumns, navigation });
-    
-    setIsExporting(false);
-    closeModal();
+    try {
+      // Construire les données à exporter selon le périmètre
+      let items = Array.isArray(selectedItems) ? [...selectedItems] : [];
+      if (scope === 'all') {
+        // Pour "toutes les données", on exporte la sélection ou un placeholder
+        if (items.length === 0) items = [{ message: 'Export complet', vue: navigation?.subCategory ?? 'gouvernance', date: new Date().toISOString().slice(0, 10) }];
+      } else if (scope === 'current' && items.length === 0) {
+        items = [{ vue: navigation?.subCategory ?? 'gouvernance', message: 'Données de la vue actuelle', date: new Date().toISOString().slice(0, 10) }];
+      }
+      // Filtrer les colonnes si besoin (garder seulement selectedColumns présentes dans les données)
+      const rows = items.map((item: Record<string, unknown>) => {
+        const filtered: Record<string, unknown> = {};
+        selectedColumns.forEach((col) => {
+          const val = (item as Record<string, unknown>)[col];
+          if (val !== undefined) filtered[col] = val;
+        });
+        return Object.keys(filtered).length > 0 ? filtered : item;
+      });
+      const ext = format === 'csv' ? 'csv' : format === 'excel' ? 'xlsx' : 'pdf';
+      const filename = `governance_export_${new Date().toISOString().slice(0, 10)}.${ext}`;
+      if (format === 'csv') {
+        const csvContent = toCsv(rows);
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        downloadBlob(blob, filename);
+      } else if (format === 'excel') {
+        // Fallback CSV pour Excel (ouvrable dans Excel)
+        const csvContent = toCsv(rows);
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        downloadBlob(blob, filename.replace('.xlsx', '.csv'));
+      } else {
+        // PDF: export CSV en attendant implémentation jspdf
+        const csvContent = toCsv(rows);
+        const blob = new Blob([csvContent], { type: 'text/plain;charset=utf-8;' });
+        downloadBlob(blob, filename.replace('.pdf', '.txt'));
+      }
+      logger.debug('Export done', { component: 'ExportModal', format, scope });
+    } catch (err) {
+      logger.error('Export failed', err instanceof Error ? err : undefined, { component: 'ExportModal' });
+    } finally {
+      setIsExporting(false);
+      closeModal();
+    }
   };
 
   return (

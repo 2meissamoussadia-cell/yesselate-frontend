@@ -38,6 +38,7 @@ export function DecisionModal() {
   const { modal, closeModal } = useGovernanceCommandCenterStore();
   const [selectedOption, setSelectedOption] = useState<'approve' | 'reject' | 'defer' | null>(null);
   const [comment, setComment] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Only render for decision type
   if (!modal.isOpen || modal.type !== 'decision') return null;
@@ -54,10 +55,31 @@ export function DecisionModal() {
   const impact = impactConfig[data.impact as keyof typeof impactConfig] || impactConfig.medium;
   const ImpactIcon = impact.icon;
 
-  const handleSubmit = () => {
-    // TODO: Call API to submit decision
-    logger.debug('Decision submitted', { component: 'DecisionModal', option: selectedOption, comment, data });
-    closeModal();
+  const handleSubmit = async () => {
+    if (!selectedOption) return;
+    setIsSubmitting(true);
+    try {
+      const res = await fetch('/api/gouvernance/decisions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          option: selectedOption,
+          comment: comment.trim() || undefined,
+          data: { ...data, ref: data.ref },
+        }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        logger.debug('Decision submitted', { component: 'DecisionModal', option: selectedOption, id: json.id });
+      } else {
+        logger.warn('Decision API error', { component: 'DecisionModal', error: json.error });
+      }
+    } catch (err) {
+      logger.error('Decision submit failed', err instanceof Error ? err : undefined, { component: 'DecisionModal' });
+    } finally {
+      setIsSubmitting(false);
+      closeModal();
+    }
   };
 
   return (
@@ -219,8 +241,8 @@ export function DecisionModal() {
                   ? 'bg-red-600 hover:bg-red-700'
                   : 'bg-blue-600 hover:bg-blue-700'
               )}
-              disabled={!selectedOption || (selectedOption === 'reject' && !comment.trim())}
-              onClick={handleSubmit}
+              disabled={!selectedOption || (selectedOption === 'reject' && !comment.trim()) || isSubmitting}
+              onClick={() => handleSubmit()}
             >
               {selectedOption === 'approve' ? 'Approuver' :
                selectedOption === 'reject' ? 'Rejeter' :

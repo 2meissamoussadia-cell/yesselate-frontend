@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Phone, Mail, Send } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -24,11 +24,11 @@ export interface ActionRapideButtonProps {
 
 const CONFIG: Record<
   ActionRapideType,
-  { icon: string; label: string }
+  { Icon: React.ComponentType<{ className?: string }>; label: string }
 > = {
-  appeler: { icon: '📞', label: 'Appeler entreprise' },
-  relancer: { icon: '📧', label: 'Relance automatique' },
-  escalader: { icon: '🔔', label: 'Escalade au DG' },
+  appeler: { Icon: Phone, label: 'Appeler entreprise' },
+  relancer: { Icon: Mail, label: 'Relance automatique' },
+  escalader: { Icon: Send, label: 'Escalade au DG' },
 };
 
 export function ActionRapideButton({
@@ -75,21 +75,22 @@ export function ActionRapideButton({
   };
 
   const config = CONFIG[type];
+  const Icon = config.Icon;
 
   return (
     <Button
       size="sm"
       onClick={handleAction}
       disabled={loading}
-      className={cn('relative', className)}
+      className={cn('relative inline-flex items-center gap-2', className)}
       aria-label={config.label}
     >
       {loading ? (
         <Loader2 className="w-4 h-4 animate-spin shrink-0" aria-hidden />
       ) : (
-        <span aria-hidden>{config.icon}</span>
+        <Icon className="w-4 h-4 shrink-0" aria-hidden />
       )}
-      <span className={loading ? 'ml-2' : 'ml-1.5'}>{config.label}</span>
+      <span>{config.label}</span>
     </Button>
   );
 }

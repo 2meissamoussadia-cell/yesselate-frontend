@@ -737,20 +737,27 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
             <div className={cn("absolute right-0 top-full mt-2 w-48 bg-slate-900/95 border border-slate-700/50 rounded-lg shadow-xl backdrop-blur-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pointer-events-none group-hover:pointer-events-auto", zIndexClass('dropdownMenu'))}>
               <div className="p-2 space-y-2">
                 <label className="text-xs text-slate-400 block">Intervalle de refresh</label>
-                <select
-                  value={refreshInterval}
-                  onChange={(e) => onRefreshIntervalChange?.(Number(e.target.value))}
-                  onClick={(e) => e.stopPropagation()}
-                  onMouseDown={(e) => e.stopPropagation()}
-                  className="w-full min-h-[44px] px-2 py-2 text-xs bg-slate-800/50 border border-slate-700/50 rounded text-slate-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                <Select
+                  value={String(refreshInterval)}
+                  onValueChange={(v) => onRefreshIntervalChange?.(Number(v))}
                 >
-                  <option value={60000}>1 minute</option>
-                  <option value={2 * 60000}>2 minutes</option>
-                  <option value={5 * 60000}>5 minutes</option>
-                  <option value={10 * 60000}>10 minutes</option>
-                  <option value={15 * 60000}>15 minutes</option>
-                  <option value={30 * 60000}>30 minutes</option>
-                </select>
+                  <SelectTrigger
+                    onClick={(e) => e.stopPropagation()}
+                    onMouseDown={(e) => e.stopPropagation()}
+                    className="w-full min-h-[44px] px-3 py-2 text-xs bg-slate-800/50 border-slate-700/50 rounded-xl text-slate-300 focus:ring-sky-500/50"
+                    aria-label="Intervalle de refresh"
+                  >
+                    <SelectValue placeholder="Intervalle" />
+                  </SelectTrigger>
+                  <SelectContent className="border-slate-700 bg-slate-900 text-slate-100" onCloseAutoFocus={(e) => e.preventDefault()}>
+                    <SelectItem value="60000">1 minute</SelectItem>
+                    <SelectItem value="120000">2 minutes</SelectItem>
+                    <SelectItem value="300000">5 minutes</SelectItem>
+                    <SelectItem value="600000">10 minutes</SelectItem>
+                    <SelectItem value="900000">15 minutes</SelectItem>
+                    <SelectItem value="1800000">30 minutes</SelectItem>
+                  </SelectContent>
+                </Select>
                 <p className="text-[10px] text-slate-400 pt-1 border-t border-slate-700">
                   Cliquez sur le bouton pour activer/désactiver
                 </p>

@@ -18,11 +18,23 @@ export default function ReunionsMOAMOEPage() {
   const reunions = normalizeToArray<InstanceGouvernance>(data);
 
   return (
-    <div className="h-full w-full bg-slate-950 text-white p-6">
+    <div className="h-full w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-white p-6">
       <GouvernanceHeader
         title="Réunions MOA/MOE"
         subtitle="Calendrier des réunions Maîtrise d'Ouvrage / Maîtrise d'Œuvre"
-        onExport={() => { /* TODO: export réunions MOA/MOE */ }}
+        onExport={() => {
+          const rows = reunions
+            .filter((r: InstanceGouvernance) => r.type === 'MOA-MOE')
+            .map((r: InstanceGouvernance) => ({
+              id: r.id,
+              nom: r.nom,
+              date: r.date,
+              heure: r.heure,
+              participants_count: r.participants_count,
+              decisions_count: r.decisions_count,
+            }));
+          exportDataAsCSV(rows, 'reunions_moa_moe');
+        }}
       />
 
       {isLoading ? (

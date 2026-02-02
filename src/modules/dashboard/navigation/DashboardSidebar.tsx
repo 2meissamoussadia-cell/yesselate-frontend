@@ -371,7 +371,13 @@ export const DashboardSidebar = React.memo(function DashboardSidebar({
           isActive={isActive}
           href={externalHref}
           onClick={handleClick}
-          ariaLabel={badge ? `${label}, ${badge} éléments` : label}
+          ariaLabel={
+            badge
+              ? level === 1 && (node.id === 'alerts' || node.id === 'alertes')
+                ? `${label}, ${badge} alertes critiques`
+                : `${label}, ${badge} éléments`
+              : label
+          }
           tooltipLabel={label}
         >
           {showChildren && isExpanded &&

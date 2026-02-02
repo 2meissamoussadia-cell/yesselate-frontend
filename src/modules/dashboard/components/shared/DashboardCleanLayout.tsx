@@ -69,7 +69,7 @@ export function DashboardCleanLayout({
               <input
                 type="search"
                 placeholder="Chantier, ouvrier, fournisseur..."
-                className="w-full h-10 pl-9 pr-4 rounded-xl bg-slate-100/50 dark:bg-slate-700/50 border border-slate-200/50 dark:border-slate-600 text-sm placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full h-10 pl-9 pr-4 rounded-xl bg-slate-100/50 dark:bg-slate-700/50 border border-slate-200/50 dark:border-slate-600 text-sm placeholder:text-slate-400 focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
                 aria-label="Rechercher chantier, ouvrier, fournisseur"
               />
             </div>
@@ -77,7 +77,7 @@ export function DashboardCleanLayout({
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             {headerRight ?? (
               <>
-                <div className="relative w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-600 dark:text-blue-400" title="Alertes">
+                <div className="relative w-10 h-10 rounded-xl bg-sky-100 dark:bg-sky-900/50 flex items-center justify-center text-sky-600 dark:text-sky-400" title="Alertes">
                   <Bell className="h-5 w-5" />
                   <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center">3</span>
                 </div>
@@ -130,7 +130,7 @@ export function DashboardCleanLayout({
                       'flex items-center gap-2 py-2.5 rounded-xl transition-all min-w-0',
                       expanded ? 'px-3 justify-start' : 'px-2 justify-center',
                       isActive
-                        ? 'bg-blue-500 text-white shadow-lg'
+                        ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/25'
                         : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'
                     )}
                     title={item.label}

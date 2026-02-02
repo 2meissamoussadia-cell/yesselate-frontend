@@ -8,6 +8,7 @@
 import React, { useState } from 'react';
 import { X, Calendar } from 'lucide-react';
 import { useToast } from '@/components/ui/toast';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 
 export interface ScheduleVisitModalProps {
@@ -71,15 +72,15 @@ export function ScheduleVisitModal({ isOpen, onClose, chantierNumero }: Schedule
 
           <div>
             <label htmlFor="visit-type" className="block text-xs font-medium text-slate-400 mb-1">Type de visite</label>
-            <select
-              id="visit-type"
-              value={typeVisite}
-              onChange={(e) => setTypeVisite(e.target.value as 'technique' | 'administrative')}
-              className={cn('w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-200')}
-            >
-              <option value="technique">Technique</option>
-              <option value="administrative">Administrative</option>
-            </select>
+            <Select value={typeVisite} onValueChange={(v) => setTypeVisite(v as 'technique' | 'administrative')}>
+              <SelectTrigger id="visit-type" className={cn('w-full rounded-xl border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-200')}>
+                <SelectValue placeholder="Type" />
+              </SelectTrigger>
+              <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+                <SelectItem value="technique">Technique</SelectItem>
+                <SelectItem value="administrative">Administrative</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <p className="text-xs text-slate-400">Participants et checklist : à préparer avant la visite.</p>

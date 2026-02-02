@@ -108,14 +108,14 @@ export function GovernanceSidebar({
 
     return (
       <div key={node.id}>
-        <button
+        <        button
           onClick={handleClick}
           className={cn(
             'w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 text-left',
-            'group relative',
+            'group relative border-l-2',
             isActive
-              ? 'bg-sky-500/15 text-sky-100 border-l-2 border-sky-500'
-              : 'text-slate-400 hover:bg-slate-800/80 hover:text-slate-200 border-l-2 border-transparent'
+              ? 'bg-sky-100 text-sky-700 border-sky-500 dark:bg-sky-500/15 dark:text-sky-100 dark:border-sky-500'
+              : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border-transparent dark:text-slate-400 dark:hover:bg-slate-800/80 dark:hover:text-slate-200'
           )}
         >
           {/* Icon */}
@@ -123,7 +123,7 @@ export function GovernanceSidebar({
             <Icon
               className={cn(
                 'h-3.5 w-3.5 flex-shrink-0 transition-all duration-200',
-                isActive ? 'text-sky-100' : 'text-slate-400 group-hover:text-slate-200'
+                isActive ? 'text-sky-700 dark:text-sky-100' : 'text-slate-500 group-hover:text-slate-700 dark:text-slate-400 dark:group-hover:text-slate-200'
               )}
             />
           )}
@@ -134,7 +134,7 @@ export function GovernanceSidebar({
               <span
                 className={cn(
                   'flex-1 transition-colors duration-200 text-sm',
-                  isActive ? 'text-sky-100' : 'text-slate-300'
+                  isActive ? 'text-sky-700 dark:text-sky-100' : 'text-slate-600 dark:text-slate-300'
                 )}
               >
                 {node.label}
@@ -179,24 +179,25 @@ export function GovernanceSidebar({
   return (
     <aside
       className={cn(
-        'shrink-0 flex flex-col border-r border-slate-800/70 bg-slate-950/60 overflow-y-auto overflow-x-hidden scrollbar-dashboard transition-[width] duration-200 ease-out',
+        'shrink-0 flex flex-col border-r overflow-y-auto overflow-x-hidden scrollbar-dashboard transition-[width] duration-200 ease-out',
+        'border-slate-200 bg-slate-50 dark:border-slate-800/70 dark:bg-slate-950/60',
         'z-40 h-full',
         collapsed ? 'w-14' : 'w-52'
       )}
       aria-label="Navigation Gouvernance"
     >
       {/* Header — aligné dashboard */}
-      <div className="flex items-center justify-between p-3 border-b border-slate-800/60">
+      <div className="flex items-center justify-between p-3 border-b border-slate-200 dark:border-slate-800/60">
         {!collapsed && (
           <div className="flex items-center gap-2">
-            <CalendarClock className="h-5 w-5 text-blue-400" aria-hidden />
-            <span className="font-semibold text-slate-200 text-sm">
+            <CalendarClock className="h-5 w-5 text-sky-600 dark:text-blue-400" aria-hidden />
+            <span className="font-semibold text-slate-900 dark:text-slate-200 text-sm">
               Centre de Commande
             </span>
           </div>
         )}
         {collapsed && (
-          <CalendarClock className="h-5 w-5 text-blue-400 mx-auto" aria-hidden />
+          <CalendarClock className="h-5 w-5 text-sky-600 dark:text-blue-400 mx-auto" aria-hidden />
         )}
         {onToggleCollapse && (
           <Button
@@ -205,7 +206,7 @@ export function GovernanceSidebar({
             size="sm"
             onClick={onToggleCollapse}
             aria-label={collapsed ? 'Agrandir la barre latérale' : 'Réduire la barre latérale'}
-            className="min-h-[44px] min-w-[44px] p-0 text-slate-400 hover:text-slate-200 hover:bg-slate-700/50 focus-visible:outline focus-visible:ring-2 focus-visible:ring-sky-500"
+            className="min-h-[44px] min-w-[44px] p-0 text-slate-600 hover:text-slate-900 hover:bg-slate-200 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-700/50 focus-visible:outline focus-visible:ring-2 focus-visible:ring-sky-500"
           >
             {collapsed ? (
               <ChevronRight className="h-4 w-4" aria-hidden />
@@ -242,8 +243,8 @@ export function GovernanceSidebar({
 
       {/* Footer — aligné dashboard */}
       {!collapsed && (
-        <div className="border-t border-slate-800/60 p-3">
-          <div className="text-xs text-slate-400 text-center">
+        <div className="border-t border-slate-200 dark:border-slate-800/60 p-3">
+          <div className="text-xs text-slate-500 dark:text-slate-400 text-center">
             Gouvernance
           </div>
         </div>

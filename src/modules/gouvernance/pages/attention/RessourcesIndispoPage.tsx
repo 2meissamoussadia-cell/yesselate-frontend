@@ -10,6 +10,7 @@ import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { PointAttention } from '../../types/gouvernanceTypes';
 import { UserX } from 'lucide-react';
+import { exportDataAsCSV } from '@/lib/utils';
 import { normalizeToArray } from '../../utils/dataNormalization';
 
 export default function RessourcesIndispoPage() {
@@ -18,11 +19,23 @@ export default function RessourcesIndispoPage() {
   const ressources = normalizeToArray<PointAttention>(data);
 
   return (
-    <div className="h-full w-full bg-slate-950 text-white p-6">
+    <div className="h-full w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-white p-6">
       <GouvernanceHeader
         title="Ressources indisponibles"
         subtitle="Ressources critiques indisponibles impactant les projets"
-        onExport={() => { /* TODO: export ressources indispo */ }}
+        onExport={() => {
+          const rows = ressources
+            .filter((r: PointAttention) => r.type === 'ressource-indispo')
+            .map((r: PointAttention) => ({
+              id: r.id,
+              titre: r.titre,
+              priorite: r.priorite,
+              impact: r.impact,
+              projet_nom: r.projet_nom,
+              description: r.description ?? '',
+            }));
+          exportDataAsCSV(rows, 'ressources_indisponibles');
+        }}
       />
 
       {isLoading ? (

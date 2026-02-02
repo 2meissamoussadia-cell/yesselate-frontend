@@ -13,6 +13,7 @@ import { FluentModal } from '@/components/ui/fluent-modal';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { cn } from '@/lib/utils';
 import { logger } from '@/lib/utils/logger';
+import { toCsv, downloadBlob, exportJsonFile } from '@/lib/utils/export';
 import {
   FileSpreadsheet,
   FileJson,
@@ -77,15 +78,23 @@ export function GovernanceExportModal({ open, onClose }: Props) {
     setSuccess(false);
 
     try {
-      // Simuler l'export (remplacer par vraie API)
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const dateStr = new Date().toISOString().split('T')[0];
+      const filename = `governance-${dateStr}.${selectedFormat}`;
+      const data = { export: 'governance', date: dateStr, generatedAt: new Date().toISOString() };
 
-      // Générer le fichier
-      const filename = `governance-${new Date().toISOString().split('T')[0]}.${selectedFormat}`;
-      
-      // TODO: Remplacer par vraie génération de fichier
-      logger.debug(`Exporting to ${filename}`, { component: 'GovernanceExportModal', action: 'export' });
-
+      if (selectedFormat === 'csv') {
+        const csvContent = toCsv([data]);
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        downloadBlob(blob, filename);
+      } else if (selectedFormat === 'json') {
+        exportJsonFile(data, filename);
+      } else {
+        // PDF: fallback CSV
+        const csvContent = toCsv([data]);
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        downloadBlob(blob, filename.replace('.pdf', '.csv'));
+      }
+      logger.debug(`Exported ${filename}`, { component: 'GovernanceExportModal', action: 'export' });
       setSuccess(true);
       
       setTimeout(() => {

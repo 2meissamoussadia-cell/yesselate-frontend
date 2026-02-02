@@ -16,9 +16,11 @@ export function ThemeSync() {
     if (darkMode) {
       root.classList.add('dark');
       root.classList.remove('light');
+      root.setAttribute('data-theme', 'dark');
     } else {
       root.classList.add('light');
       root.classList.remove('dark');
+      root.setAttribute('data-theme', 'light');
     }
   }, [darkMode]);
 

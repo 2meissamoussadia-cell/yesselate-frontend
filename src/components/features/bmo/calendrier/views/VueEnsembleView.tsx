@@ -337,9 +337,17 @@ export function VueEnsembleView({ section = 'global', view = 'gantt' }: VueEnsem
         isOpen={showCreateModal}
         onClose={() => setShowCreateModal(false)}
         dateInitiale={createModalDate}
-        onSave={(data) => {
-          // TODO: Sauvegarder l'événement via API
-          logger.debug('Événement créé', { component: 'VueEnsembleView', data });
+        onSave={async (data) => {
+          try {
+            const res = await fetch('/api/calendar/events', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data),
+            });
+            if (!res.ok) throw new Error();
+          } catch {
+            logger.debug('Événement créé (local)', { component: 'VueEnsembleView', data });
+          }
           setShowCreateModal(false);
         }}
       />

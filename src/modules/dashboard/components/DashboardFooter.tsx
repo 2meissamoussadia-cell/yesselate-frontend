@@ -172,7 +172,7 @@ export const DashboardFooter = memo(function DashboardFooter({
           <TooltipContent>
             <div className="space-y-1 text-xs">
               <p className="font-semibold">
-                {isOnline ? "✅ Connexion active" : "⚠️ Connexion perdue"}
+                {isOnline ? 'Connexion active' : 'Connexion perdue'}
               </p>
               {!isOnline && (
                 <>

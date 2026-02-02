@@ -13,6 +13,7 @@
 'use client';
 
 import React, { useMemo, useState, useCallback, memo } from 'react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   Building2, 
   TrendingUp, 
@@ -1694,38 +1695,38 @@ function BureauxPageInner() {
             </div>
 
             {/* Filtre par statut */}
-            <div className="flex items-center" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-              <label className="text-slate-300 whitespace-nowrap" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>Statut:</label>
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value as FilterOption)}
-                className="bg-slate-800/50 border border-slate-700/50 rounded-lg text-slate-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                style={{ padding: 'clamp(0.5rem, 0.75vw, 0.625rem) clamp(0.75rem, 1vw, 1rem)', minHeight: 'clamp(2.75rem, 3.5vw, 2.75rem)', fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}
-              >
-                <option value="all">Tous</option>
-                <option value="performant">Performant</option>
-                <option value="active">Actif</option>
-                <option value="warning">Attention</option>
-                <option value="critical">Critique</option>
-              </select>
+            <div className="flex items-center gap-2">
+              <label className="text-slate-300 whitespace-nowrap text-sm">Statut:</label>
+              <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as FilterOption)}>
+                <SelectTrigger className="min-w-[120px] min-h-[44px] bg-slate-800/50 border-slate-700/50 rounded-xl text-slate-300 text-sm focus:ring-sky-500/50" aria-label="Filtrer par statut">
+                  <SelectValue placeholder="Statut" />
+                </SelectTrigger>
+                <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+                  <SelectItem value="all">Tous</SelectItem>
+                  <SelectItem value="performant">Performant</SelectItem>
+                  <SelectItem value="active">Actif</SelectItem>
+                  <SelectItem value="warning">Attention</SelectItem>
+                  <SelectItem value="critical">Critique</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Tri */}
-            <div className="flex items-center" style={{ gap: 'clamp(0.5rem, 0.75vw, 0.75rem)' }}>
-              <label className="text-slate-400 whitespace-nowrap" style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}>Trier par:</label>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as SortOption)}
-                className="bg-slate-800/50 border border-slate-700/50 rounded-lg text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
-                style={{ padding: 'clamp(0.5rem, 0.75vw, 0.625rem) clamp(0.75rem, 1vw, 1rem)', fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}
-              >
-                <option value="performance">Performance</option>
-                <option value="criticity">Criticité</option>
-                <option value="name">Nom</option>
-                <option value="projects">Projets</option>
-                <option value="budget">Budget</option>
-                <option value="risks">Risques</option>
-              </select>
+            <div className="flex items-center gap-2">
+              <label className="text-slate-400 whitespace-nowrap text-sm">Trier par:</label>
+              <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortOption)}>
+                <SelectTrigger className="min-w-[120px] min-h-[44px] bg-slate-800/50 border-slate-700/50 rounded-xl text-slate-300 text-sm focus:ring-sky-500/50" aria-label="Trier par">
+                  <SelectValue placeholder="Tri" />
+                </SelectTrigger>
+                <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+                  <SelectItem value="performance">Performance</SelectItem>
+                  <SelectItem value="criticity">Criticité</SelectItem>
+                  <SelectItem value="name">Nom</SelectItem>
+                  <SelectItem value="projects">Projets</SelectItem>
+                  <SelectItem value="budget">Budget</SelectItem>
+                  <SelectItem value="risks">Risques</SelectItem>
+                </SelectContent>
+              </Select>
               <button
                 onClick={() => setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')}
                 className="bg-slate-800/50 border border-slate-700/50 text-slate-300 hover:bg-slate-800/70 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded-lg"

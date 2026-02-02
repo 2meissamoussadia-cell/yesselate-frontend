@@ -9,7 +9,7 @@ import React from 'react';
 import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { RisqueGouvernance } from '../../types/gouvernanceTypes';
-import { cn } from '@/lib/utils';
+import { cn, exportDataAsCSV } from '@/lib/utils';
 import { normalizeToArray } from '../../utils/dataNormalization';
 
 export default function SyntheseRisquesPage() {
@@ -18,11 +18,23 @@ export default function SyntheseRisquesPage() {
   const risques = normalizeToArray<RisqueGouvernance>(data);
 
   return (
-    <div className="h-full w-full bg-slate-950 text-white p-6">
+    <div className="h-full w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-white p-6">
       <GouvernanceHeader
         title="Synthèse risques"
         subtitle="Vue d'ensemble des risques majeurs avec probabilité et impact"
-        onExport={() => { /* TODO: export synthèse risques */ }}
+        onExport={() => {
+          const rows = risques.map((r: RisqueGouvernance) => ({
+            id: r.id,
+            titre: r.titre,
+            projet_nom: r.projet_nom,
+            probabilite: r.probabilite,
+            impact: r.impact,
+            exposition: r.exposition,
+            statut: r.statut,
+            description: r.description ?? '',
+          }));
+          exportDataAsCSV(rows, 'synthese_risques');
+        }}
       />
 
       {isLoading ? (

@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { formatMoneyCompact } from '@lib-root/dashboard/kpi';
 import type { CashFlowPrevision, ScenarioTresorerie } from '../../types/tresoreriePrevisionnelle';
@@ -98,13 +99,13 @@ export const TresoreriePrevisionnelleWidget = memo(function TresoreriePrevisionn
     if (!active || !payload?.length) return null;
     const p = payload[0].payload;
     return (
-      <div className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs shadow-xl">
-        <p className="font-medium text-slate-200">{p.dateLabel}</p>
-        <p className="text-slate-400">
-          Solde prévu : <span className="text-emerald-400 font-medium">{formatMoneyCompact(p.displayValue, CURRENCY)}</span>
+      <div className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs shadow-xl dark:border-slate-700 dark:bg-slate-900">
+        <p className="font-medium text-slate-800 dark:text-slate-200">{p.dateLabel}</p>
+        <p className="text-slate-600 dark:text-slate-400">
+          Solde prévu : <span className="text-emerald-600 dark:text-emerald-400 font-medium">{formatMoneyCompact(p.displayValue, CURRENCY)}</span>
         </p>
         {p.soldePrevu < seuilMinimal && (
-          <p className="text-rose-400 mt-1">Sous seuil minimal</p>
+          <p className="text-rose-600 dark:text-rose-400 mt-1">Sous seuil minimal</p>
         )}
       </div>
     );
@@ -122,21 +123,21 @@ export const TresoreriePrevisionnelleWidget = memo(function TresoreriePrevisionn
         <div className="flex flex-wrap items-center gap-2">
           <Select value={String(horizon)} onValueChange={(v) => setHorizon(Number(v) as HorizonTresorerie)}>
             <SelectTrigger
-              className="w-[100px] rounded-lg border-slate-700 bg-slate-800 px-2 py-1.5 min-h-[44px] text-[11px] text-slate-200 focus:ring-sky-500/50 dark:border-slate-700 dark:bg-slate-800"
+              className="w-[100px] rounded-lg border-slate-300 bg-slate-100 px-2 py-1.5 min-h-[44px] text-[11px] text-slate-800 focus:ring-sky-500/50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
               aria-label="Horizon prévisionnel"
             >
               <SelectValue placeholder="Horizon" />
             </SelectTrigger>
-            <SelectContent className="border-slate-700 bg-slate-900 dark:border-slate-700 dark:bg-slate-900">
-              <SelectItem value="30" className="text-slate-200 focus:bg-slate-800 focus:text-slate-100">J+30</SelectItem>
-              <SelectItem value="60" className="text-slate-200 focus:bg-slate-800 focus:text-slate-100">J+60</SelectItem>
-              <SelectItem value="90" className="text-slate-200 focus:bg-slate-800 focus:text-slate-100">J+90</SelectItem>
+            <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900">
+              <SelectItem value="30" className="text-slate-800 focus:bg-slate-100 focus:text-slate-900 dark:text-slate-200 dark:focus:bg-slate-800 dark:focus:text-slate-100">J+30</SelectItem>
+              <SelectItem value="60" className="text-slate-800 focus:bg-slate-100 focus:text-slate-900 dark:text-slate-200 dark:focus:bg-slate-800 dark:focus:text-slate-100">J+60</SelectItem>
+              <SelectItem value="90" className="text-slate-800 focus:bg-slate-100 focus:text-slate-900 dark:text-slate-200 dark:focus:bg-slate-800 dark:focus:text-slate-100">J+90</SelectItem>
             </SelectContent>
           </Select>
           <button
             type="button"
             onClick={() => setChartZoomed((z) => !z)}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-600 bg-slate-800/60 px-2 py-1.5 min-h-[44px] text-[11px] text-slate-300 hover:bg-slate-700/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-slate-100 px-2 py-1.5 min-h-[44px] text-[11px] text-slate-700 hover:bg-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 dark:border-slate-600 dark:bg-slate-800/60 dark:text-slate-300 dark:hover:bg-slate-700/60"
             aria-label={chartZoomed ? 'Réduire le graphique' : 'Agrandir le graphique'}
           >
             <ZoomIn className="h-3.5 w-3.5" aria-hidden />
@@ -161,7 +162,7 @@ export const TresoreriePrevisionnelleWidget = memo(function TresoreriePrevisionn
               });
               onExportSuccess?.();
             }}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-600 bg-slate-800/60 px-2 py-1.5 min-h-[44px] text-[11px] text-slate-300 hover:bg-slate-700/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-slate-100 px-2 py-1.5 min-h-[44px] text-[11px] text-slate-700 hover:bg-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 dark:border-slate-600 dark:bg-slate-800/60 dark:text-slate-300 dark:hover:bg-slate-700/60"
             aria-label="Exporter le graphique en CSV"
           >
             <Download className="h-3.5 w-3.5" aria-hidden />
@@ -169,19 +170,19 @@ export const TresoreriePrevisionnelleWidget = memo(function TresoreriePrevisionn
           </button>
           <Select value={scenario} onValueChange={(v) => setScenario(v as ScenarioTresorerie)}>
             <SelectTrigger
-              className="w-[180px] rounded-lg border-slate-700 bg-slate-800 px-2 py-1.5 min-h-[44px] text-[11px] text-slate-200 focus:ring-sky-500/50 dark:border-slate-700 dark:bg-slate-800"
+              className="w-[180px] rounded-lg border-slate-300 bg-slate-100 px-2 py-1.5 min-h-[44px] text-[11px] text-slate-800 focus:ring-sky-500/50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
               aria-label="Scénario trésorerie"
             >
               <SelectValue placeholder="Scénario" />
             </SelectTrigger>
-            <SelectContent className="border-slate-700 bg-slate-900 dark:border-slate-700 dark:bg-slate-900">
+            <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900">
               <SelectItem value="realiste" className="text-slate-200 focus:bg-slate-800 focus:text-slate-100">
                 Scénario réaliste
               </SelectItem>
-              <SelectItem value="optimiste" className="text-slate-200 focus:bg-slate-800 focus:text-slate-100">
+              <SelectItem value="optimiste" className="text-slate-800 focus:bg-slate-100 focus:text-slate-900 dark:text-slate-200 dark:focus:bg-slate-800 dark:focus:text-slate-100">
                 Scénario optimiste
               </SelectItem>
-              <SelectItem value="pessimiste" className="text-slate-200 focus:bg-slate-800 focus:text-slate-100">
+              <SelectItem value="pessimiste" className="text-slate-800 focus:bg-slate-100 focus:text-slate-900 dark:text-slate-200 dark:focus:bg-slate-800 dark:focus:text-slate-100">
                 Scénario pessimiste
               </SelectItem>
             </SelectContent>

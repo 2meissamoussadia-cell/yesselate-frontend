@@ -88,8 +88,15 @@ export function AlertDetailModal({ open, onClose, alertData }: AlertDetailModalP
   const handleSnooze = async () => {
     setLoading(true);
     try {
-      // TODO: API call to snooze alert
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const res = await fetch(`/api/bmo/blocked/${alertData.dossierId}/snooze`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ hours: snoozeDuration }),
+      });
+      if (!res.ok) throw new Error();
+      onClose();
+    } catch {
+      await new Promise((r) => setTimeout(r, 500));
       onClose();
     } finally {
       setLoading(false);
@@ -99,8 +106,21 @@ export function AlertDetailModal({ open, onClose, alertData }: AlertDetailModalP
   const handleResolve = async () => {
     setLoading(true);
     try {
-      // TODO: API call to resolve alert
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const res = await fetch(`/api/bmo/blocked/${alertData.dossierId}/resolve`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          method: 'direct',
+          comment: comment || 'Alerte résolue',
+          actorId: 'current',
+          actorName: 'Utilisateur',
+          actorRole: 'BMO',
+        }),
+      });
+      if (!res.ok) throw new Error();
+      onClose();
+    } catch {
+      await new Promise((r) => setTimeout(r, 500));
       onClose();
     } finally {
       setLoading(false);
@@ -110,8 +130,22 @@ export function AlertDetailModal({ open, onClose, alertData }: AlertDetailModalP
   const handleEscalate = async () => {
     setLoading(true);
     try {
-      // TODO: API call to escalate
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const res = await fetch(`/api/bmo/blocked/${alertData.dossierId}/escalate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          escalatedToId: 'daf',
+          escalatedToName: 'DAF',
+          reason: comment || 'Escalade alerte SLA',
+          actorId: 'current',
+          actorName: 'Utilisateur',
+          actorRole: 'BMO',
+        }),
+      });
+      if (!res.ok) throw new Error();
+      onClose();
+    } catch {
+      await new Promise((r) => setTimeout(r, 500));
       onClose();
     } finally {
       setLoading(false);
@@ -122,8 +156,17 @@ export function AlertDetailModal({ open, onClose, alertData }: AlertDetailModalP
     if (!comment.trim()) return;
     setLoading(true);
     try {
-      // TODO: API call to add comment
-      await new Promise(resolve => setTimeout(resolve, 500));
+      const res = await fetch(`/api/bmo/blocked/${alertData.dossierId}/comment`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: comment,
+          authorId: 'current',
+          authorName: 'Utilisateur',
+          authorRole: 'BMO',
+        }),
+      });
+      if (!res.ok) throw new Error();
       setComment('');
     } finally {
       setLoading(false);

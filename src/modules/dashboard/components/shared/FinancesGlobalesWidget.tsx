@@ -28,12 +28,13 @@ export function FinancesGlobalesWidget({ data, className, onCreancesClick }: Fin
   return (
     <div
       className={cn(
-        'rounded-xl border border-slate-700/60 bg-slate-900/60 overflow-hidden',
+        'rounded-xl border overflow-hidden',
+        'border-slate-200 bg-white dark:border-slate-700/60 dark:bg-slate-900/60',
         className
       )}
     >
-      <div className="px-4 py-3 border-b border-slate-700/50 bg-slate-900/80">
-        <h3 className="text-sm font-semibold text-slate-100 uppercase tracking-wider">
+      <div className="px-4 py-3 border-b border-slate-200 bg-slate-50 dark:border-slate-700/50 dark:bg-slate-900/80">
+        <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 uppercase tracking-wider">
           Finances {data.moisLabel}
         </h3>
       </div>
@@ -41,12 +42,12 @@ export function FinancesGlobalesWidget({ data, className, onCreancesClick }: Fin
         {/* CA Réalisé / Prévu (mois en cours) + barre */}
         <div>
           <div className="flex items-center justify-between gap-2 mb-1">
-            <span className="text-xs text-slate-400">CA réalisé (mois)</span>
-            <span className="text-sm font-semibold text-slate-200">
+            <span className="text-xs text-slate-500 dark:text-slate-400">CA réalisé (mois)</span>
+            <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
               {formatMoneyCompact(data.caRealise, CURRENCY)} / {formatMoneyCompact(data.caPrevu, CURRENCY)}
             </span>
           </div>
-          <div className="h-2 rounded-full bg-slate-800 overflow-hidden">
+          <div className="h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
             <div
               className={cn(
                 'h-full rounded-full transition-all',
@@ -55,13 +56,13 @@ export function FinancesGlobalesWidget({ data, className, onCreancesClick }: Fin
               style={{ width: `${Math.min(100, caPct)}%` }}
             />
           </div>
-          <p className="text-xs text-slate-400 mt-0.5">{caPct} % du prévu</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{caPct} % du prévu</p>
         </div>
 
         {/* Trésorerie + statut */}
         <div className="flex items-center justify-between gap-2">
-          <span className="text-xs text-slate-400">Trésorerie</span>
-          <span className="text-sm font-semibold text-slate-200">
+          <span className="text-xs text-slate-500 dark:text-slate-400">Trésorerie</span>
+          <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
             {formatMoneyCompact(data.tresorerie, CURRENCY)}
           </span>
           <TresorerieBadge status={data.tresorerieStatus} />
@@ -69,8 +70,8 @@ export function FinancesGlobalesWidget({ data, className, onCreancesClick }: Fin
 
         {/* Créances + alerte > 30j avec tooltip */}
         <div className="flex items-center justify-between gap-2">
-          <span className="text-xs text-slate-400">Créances</span>
-          <span className="text-sm font-semibold text-slate-200">
+          <span className="text-xs text-slate-500 dark:text-slate-400">Créances</span>
+          <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
             {formatMoneyCompact(data.creances, CURRENCY)}
           </span>
           {data.creancesPlus30j > 0 ? (
@@ -86,7 +87,7 @@ export function FinancesGlobalesWidget({ data, className, onCreancesClick }: Fin
                     ⚠️ {data.creancesPlus30j} créances &gt; 30 jours
                   </button>
                 ) : (
-                  <span className="text-xs font-medium text-amber-400 cursor-help" title="Créances &gt; 30 jours">
+                  <span className="text-xs font-medium text-amber-600 dark:text-amber-400 cursor-help" title="Créances &gt; 30 jours">
                     ⚠️ {data.creancesPlus30j} créances &gt; 30 jours
                   </span>
                 )}
@@ -102,16 +103,16 @@ export function FinancesGlobalesWidget({ data, className, onCreancesClick }: Fin
 
         {/* Dettes */}
         <div className="flex items-center justify-between gap-2">
-          <span className="text-xs text-slate-400">Dettes fournisseurs</span>
-          <span className="text-sm font-semibold text-slate-200">
+          <span className="text-xs text-slate-500 dark:text-slate-400">Dettes fournisseurs</span>
+          <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
             {formatMoneyCompact(data.dettes, CURRENCY)}
           </span>
         </div>
 
         {/* Marge moyenne + objectif */}
-        <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-700/50">
-          <span className="text-xs text-slate-400">Marge moyenne</span>
-          <span className="text-sm font-semibold text-slate-200">
+        <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-200 dark:border-slate-700/50">
+          <span className="text-xs text-slate-500 dark:text-slate-400">Marge moyenne</span>
+          <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
             {data.margeMoyennePct} %
           </span>
           <MargeBadge status={data.margeStatus} objectif={data.margeObjectifPct} />
@@ -123,9 +124,9 @@ export function FinancesGlobalesWidget({ data, className, onCreancesClick }: Fin
 
 function TresorerieBadge({ status }: { status: 'sain' | 'attention' | 'critique' }) {
   const config = {
-    sain: { label: 'Trésorerie : saine', className: 'text-emerald-400', icon: CheckCircle },
-    attention: { label: 'Trésorerie : attention', className: 'text-amber-400', icon: AlertTriangle },
-    critique: { label: 'Trésorerie : critique', className: 'text-rose-400', icon: AlertTriangle },
+    sain: { label: 'Trésorerie : saine', className: 'text-emerald-600 dark:text-emerald-400', icon: CheckCircle },
+    attention: { label: 'Trésorerie : attention', className: 'text-amber-600 dark:text-amber-400', icon: AlertTriangle },
+    critique: { label: 'Trésorerie : critique', className: 'text-rose-600 dark:text-rose-400', icon: AlertTriangle },
   };
   const c = config[status];
   const Icon = c.icon;
@@ -140,14 +141,14 @@ function TresorerieBadge({ status }: { status: 'sain' | 'attention' | 'critique'
 function MargeBadge({ status, objectif }: { status: 'ok' | 'sous_objectif'; objectif: number }) {
   if (status === 'ok') {
     return (
-      <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-400">
+      <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-600 dark:text-emerald-400">
         <CheckCircle className="h-3.5 w-3.5" />
         Objectif {objectif} %
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-400">
+    <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-600 dark:text-amber-400">
       <AlertTriangle className="h-3.5 w-3.5" />
       Sous objectif
     </span>

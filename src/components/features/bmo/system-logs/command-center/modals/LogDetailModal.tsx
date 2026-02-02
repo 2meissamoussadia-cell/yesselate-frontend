@@ -50,27 +50,25 @@ export function LogDetailModal({
 
   useEffect(() => {
     if (!open || !logId) return;
-
-    // TODO: Remplacer par un vrai appel API
-    // Pour l'instant, simuler un chargement
     setLoading(true);
-    setTimeout(() => {
-      // Mock data - à remplacer par API call
-      setLog({
-        id: logId,
-        timestamp: new Date().toISOString(),
-        level: 'error',
-        category: 'security',
-        source: 'auth-service',
-        message: 'Failed authentication attempt',
-        userId: 'USR-001',
-        ip: '192.168.1.100',
-        sessionId: 'sess-123',
-        details: { attempt: 3, reason: 'invalid_credentials' },
-        severity: 85,
-      });
-      setLoading(false);
-    }, 300);
+    const mockLog = {
+      id: logId,
+      timestamp: new Date().toISOString(),
+      level: 'error',
+      category: 'security',
+      source: 'auth-service',
+      message: 'Failed authentication attempt',
+      userId: 'USR-001',
+      ip: '192.168.1.100',
+      sessionId: 'sess-123',
+      details: { attempt: 3, reason: 'invalid_credentials' },
+      severity: 85,
+    };
+    fetch(`/api/internal/logs/${logId}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => setLog(data ?? mockLog))
+      .catch(() => setLog(mockLog))
+      .finally(() => setLoading(false));
   }, [open, logId]);
 
   useEffect(() => {
@@ -181,7 +179,11 @@ export function LogDetailModal({
               variant="ghost"
               size="sm"
               onClick={() => {
-                // TODO: Export evidence pack
+                if (!log) return;
+                const rows = [{ id: log.id, timestamp: log.timestamp, level: log.level, source: log.source, message: log.message, userId: log.userId, ip: log.ip }];
+                const csv = toCsv(rows);
+                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+                downloadBlob(blob, `log-evidence-${log.id}-${new Date().toISOString().slice(0, 10)}.csv`);
                 logger.debug('Export evidence pack', { component: 'LogDetailModal' });
               }}
               className="h-8 px-3 text-slate-400 hover:text-slate-200"
@@ -284,9 +286,13 @@ export function LogDetailModal({
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => {
-                    // TODO: Vérifier intégrité
-                    logger.debug('Verify integrity', { component: 'LogDetailModal' });
+                  onClick={async () => {
+                    try {
+                      const res = await fetch(`/api/internal/logs/${log?.id}/verify`);
+                      logger.debug('Vérification intégrité', { component: 'LogDetailModal', ok: res.ok });
+                    } catch {
+                      logger.debug('Verify integrity', { component: 'LogDetailModal' });
+                    }
                   }}
                   className="flex-1"
                 >

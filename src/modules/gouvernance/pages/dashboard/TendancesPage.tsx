@@ -6,6 +6,7 @@
 'use client';
 
 import React from 'react';
+import { exportDataAsCSV } from '@/lib/utils';
 import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { TendancesChart } from '../../components/TendancesChart';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';
@@ -14,11 +15,16 @@ export default function TendancesPage() {
   const { data: tendances, isLoading } = useGouvernanceData('tendances');
 
   return (
-    <div className="h-full w-full bg-slate-950 text-white p-6">
+    <div className="h-full w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-white p-6">
       <GouvernanceHeader
         title="Tendances mensuelles"
         subtitle="Évolution des indicateurs clés sur les derniers mois"
-        onExport={() => { /* TODO: export tendances */ }}
+        onExport={() => {
+          const rows = Array.isArray(tendances) && tendances.length > 0
+            ? tendances.map((t: Record<string, unknown>) => ({ ...t }))
+            : [{ export: 'tendances', date: new Date().toISOString().slice(0, 10), note: 'Données à venir' }];
+          exportDataAsCSV(rows, 'tendances');
+        }}
       />
 
       <div className="space-y-6">

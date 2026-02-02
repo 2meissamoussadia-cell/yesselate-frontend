@@ -54,7 +54,7 @@ export function useCockpitUrgentNotification(options: UseCockpitUrgentNotificati
       if (sound) playUrgentSound();
 
       if (browserNotification && 'Notification' in window && Notification.permission === 'granted') {
-        const title = msg.type === 'cockpit_emergency' || msg.type === 'emergency:alert' ? '🚨 Urgence Cockpit' : '⚠️ Alerte Cockpit';
+        const title = msg.type === 'cockpit_emergency' || msg.type === 'emergency:alert' ? 'Urgence Cockpit' : 'Alerte Cockpit';
         const body = (msg.data?.title as string) || (msg.data?.message as string) || msg.type;
         new Notification(title, { body, icon: '/favicon.ico' });
       }

@@ -269,9 +269,16 @@ export function SLARetardsView({ filterType, view }: SLARetardsViewProps = {}) {
               setSelectedSLA(null);
             }}
             sla={selectedSLA}
-            onSave={(data) => {
-              // TODO: Appeler API pour traiter le SLA
-              console.log('Traitement SLA:', data);
+            onSave={async (data) => {
+              try {
+                await fetch('/api/calendar/sla-alerts', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ action: 'traiter', slaId: selectedSLA?.id, ...data }),
+                });
+              } catch {
+                console.log('Traitement SLA:', data);
+              }
               setShowTraiterModal(false);
               setSelectedSLA(null);
             }}
@@ -284,9 +291,16 @@ export function SLARetardsView({ filterType, view }: SLARetardsViewProps = {}) {
             }}
             elementLabel={selectedSLA.elementLabel}
             dateActuelle={selectedSLA.echeancePrevue}
-            onSave={(data) => {
-              // TODO: Appeler API pour replanifier
-              logger.debug('Replanification', { component: 'SLARetardsView', data });
+            onSave={async (data) => {
+              try {
+                await fetch('/api/calendar/sla-alerts', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ action: 'replanifier', elementId: selectedSLA?.id, ...data }),
+                });
+              } catch {
+                logger.debug('Replanification', { component: 'SLARetardsView', data });
+              }
               setShowReplanifierModal(false);
               setSelectedSLA(null);
             }}

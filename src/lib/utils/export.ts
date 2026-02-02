@@ -121,6 +121,25 @@ export function exportJsonFile(data: unknown, filename: string) {
   downloadBlob(blob, filename);
 }
 
+/**
+ * Exporte des données génériques en CSV.
+ * Utilisé par les pages Gouvernance et autres modules.
+ */
+export function exportDataAsCSV(
+  rows: Array<Record<string, unknown>>,
+  filename: string,
+  addToast?: (msg: string, variant?: 'success' | 'warning' | 'info' | 'error') => void
+) {
+  if (rows.length === 0) {
+    addToast?.('Aucune donnée à exporter', 'warning');
+    return;
+  }
+  const csvContent = toCsv(rows);
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  downloadBlob(blob, `${filename}_${new Date().toISOString().slice(0, 10)}.csv`);
+  addToast?.(`Export ${filename} généré`, 'success');
+}
+
 export async function exportElementAsPdf(
   element: HTMLElement,
   filename: string,

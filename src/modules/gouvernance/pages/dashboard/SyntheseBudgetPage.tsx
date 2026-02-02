@@ -9,7 +9,7 @@ import React from 'react';
 import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { BudgetGouvernance } from '../../types/gouvernanceTypes';
-import { cn } from '@/lib/utils';
+import { cn, exportDataAsCSV } from '@/lib/utils';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { normalizeToArray } from '../../utils/dataNormalization';
 
@@ -19,11 +19,22 @@ export default function SyntheseBudgetPage() {
   const budgets = normalizeToArray<BudgetGouvernance>(data);
 
   return (
-    <div className="h-full w-full bg-slate-950 text-white p-6">
+    <div className="h-full w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-white p-6">
       <GouvernanceHeader
         title="Synthèse budget"
         subtitle="Vue d'ensemble des budgets par projet avec consommation et tendances"
-        onExport={() => { /* TODO: export synthèse budget */ }}
+        onExport={() => {
+          const rows = budgets.map((b: BudgetGouvernance) => ({
+            projet_id: b.projet_id,
+            projet_nom: b.projet_nom,
+            budget_initial: b.budget_initial,
+            budget_consomme: b.budget_consomme,
+            budget_restant: b.budget_restant,
+            depassement: b.depassement,
+            depassement_pourcent: b.depassement_pourcent,
+          }));
+          exportDataAsCSV(rows, 'synthese_budget');
+        }}
       />
 
       {isLoading ? (

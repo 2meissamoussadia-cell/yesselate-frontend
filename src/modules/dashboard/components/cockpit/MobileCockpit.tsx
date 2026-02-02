@@ -7,6 +7,7 @@
 
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import { Bell, FileText, Phone, Wallet } from 'lucide-react';
 import { useTouchGestures } from '../../hooks/useTouchGestures';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { cn } from '@/lib/utils';
@@ -53,8 +54,12 @@ export function MobileCockpit({ onDrilldown, onNewChantier }: MobileCockpitProps
           {QUADRANTS[activeQuadrant]}
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-xl bg-red-500/20 flex items-center justify-center animate-pulse text-lg" title="Alertes">🚨</div>
-          <div className="w-10 h-10 rounded-xl bg-green-500/20 flex items-center justify-center text-lg" title="Voice">🎙️</div>
+          <div className="w-10 h-10 rounded-xl bg-red-500/20 flex items-center justify-center animate-pulse" title="Alertes" aria-hidden>
+            <AlertTriangle className="h-5 w-5 text-red-400" />
+          </div>
+          <div className="w-10 h-10 rounded-xl bg-green-500/20 flex items-center justify-center" title="Voice" aria-hidden>
+            <Mic className="h-5 w-5 text-green-400" />
+          </div>
         </div>
       </header>
 
@@ -107,21 +112,22 @@ export function MobileCockpit({ onDrilldown, onNewChantier }: MobileCockpitProps
         </div>
       </div>
 
-      {/* Mobile Executive Controls (4 gros boutons) */}
+      {/* Mobile Executive Controls (4 gros boutons) — icônes Lucide, style moderne */}
       <footer className="h-20 shrink-0 bg-slate-900/95 backdrop-blur-xl border-t border-slate-700 p-3 flex items-center justify-center gap-3">
         {[
-          { icon: '🚨', label: 'Alertes' },
-          { icon: '💰', label: 'Budget' },
-          { icon: '📞', label: 'Contact' },
-          { icon: '📄', label: 'Documents' },
-        ].map(({ icon, label }, i) => (
+          { Icon: Bell, label: 'Alertes' },
+          { Icon: Wallet, label: 'Budget' },
+          { Icon: Phone, label: 'Contact' },
+          { Icon: FileText, label: 'Documents' },
+        ].map(({ Icon, label }, i) => (
           <button
             key={i}
             type="button"
-            className="w-14 h-14 rounded-xl bg-gradient-to-r from-slate-700 to-slate-600 flex items-center justify-center shadow-lg hover:shadow-blue-500/25 transition-all hover:scale-110 text-xl"
+            className="w-14 h-14 rounded-xl bg-slate-800/80 border border-slate-700/60 flex items-center justify-center shadow-lg hover:shadow-cyan-500/20 hover:border-cyan-500/40 transition-all duration-200 hover:scale-105 text-slate-200 hover:text-cyan-400"
             title={label}
+            aria-label={label}
           >
-            {icon}
+            <Icon className="w-6 h-6" aria-hidden />
           </button>
         ))}
       </footer>

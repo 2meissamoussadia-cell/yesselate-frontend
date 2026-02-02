@@ -283,46 +283,49 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
                 <label className="text-xs text-slate-400 mb-1 block">Période</label>
-                <select
-                  value={filters.period}
-                  onChange={(e) => setFilters(prev => ({ ...prev, period: e.target.value }))}
-                  className="w-full px-3 py-2 bg-slate-900/50 border border-slate-700/50 rounded-lg text-sm text-slate-200"
-                >
-                  <option value="7j">7 derniers jours</option>
-                  <option value="30j">30 derniers jours</option>
-                  <option value="90j">90 derniers jours</option>
-                  <option value="1an">1 an</option>
-                </select>
+                <Select value={filters.period} onValueChange={(v) => setFilters(prev => ({ ...prev, period: v }))}>
+                  <SelectTrigger className="w-full px-3 py-2 bg-slate-900/50 border-slate-700/50 rounded-xl text-sm text-slate-200 focus:ring-sky-500/50" aria-label="Période">
+                    <SelectValue placeholder="Période" />
+                  </SelectTrigger>
+                  <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+                    <SelectItem value="7j">7 derniers jours</SelectItem>
+                    <SelectItem value="30j">30 derniers jours</SelectItem>
+                    <SelectItem value="90j">90 derniers jours</SelectItem>
+                    <SelectItem value="1an">1 an</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               <div>
                 <label className="text-xs text-slate-400 mb-1 block">Catégorie</label>
-                <select
-                  value={filters.category}
-                  onChange={(e) => setFilters(prev => ({ ...prev, category: e.target.value }))}
-                  className="w-full px-3 py-2 bg-slate-900/50 border border-slate-700/50 rounded-lg text-sm text-slate-200"
-                >
-                  <option value="all">Toutes</option>
-                  <option value="rh">Demandes RH</option>
-                  <option value="bc">Validation BC</option>
-                  <option value="decision">Décisions</option>
-                  <option value="projet">Projets</option>
-                </select>
+                <Select value={filters.category} onValueChange={(v) => setFilters(prev => ({ ...prev, category: v }))}>
+                  <SelectTrigger className="w-full px-3 py-2 bg-slate-900/50 border-slate-700/50 rounded-xl text-sm text-slate-200 focus:ring-sky-500/50" aria-label="Catégorie">
+                    <SelectValue placeholder="Catégorie" />
+                  </SelectTrigger>
+                  <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+                    <SelectItem value="all">Toutes</SelectItem>
+                    <SelectItem value="rh">Demandes RH</SelectItem>
+                    <SelectItem value="bc">Validation BC</SelectItem>
+                    <SelectItem value="decision">Décisions</SelectItem>
+                    <SelectItem value="projet">Projets</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               <div>
                 <label className="text-xs text-slate-400 mb-1 block">Statut</label>
-                <select
-                  value={filters.statut}
-                  onChange={(e) => setFilters(prev => ({ ...prev, statut: e.target.value }))}
-                  className="w-full px-3 py-2 bg-slate-900/50 border border-slate-700/50 rounded-lg text-sm text-slate-200"
-                >
-                  <option value="all">Tous</option>
-                  <option value="validé">Validé</option>
-                  <option value="en attente">En attente</option>
-                  <option value="en cours">En cours</option>
-                  <option value="rejeté">Rejeté</option>
-                </select>
+                <Select value={filters.statut} onValueChange={(v) => setFilters(prev => ({ ...prev, statut: v }))}>
+                  <SelectTrigger className="w-full px-3 py-2 bg-slate-900/50 border-slate-700/50 rounded-xl text-sm text-slate-200 focus:ring-sky-500/50" aria-label="Statut">
+                    <SelectValue placeholder="Statut" />
+                  </SelectTrigger>
+                  <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+                    <SelectItem value="all">Tous</SelectItem>
+                    <SelectItem value="validé">Validé</SelectItem>
+                    <SelectItem value="en attente">En attente</SelectItem>
+                    <SelectItem value="en cours">En cours</SelectItem>
+                    <SelectItem value="rejeté">Rejeté</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               <div>

@@ -101,22 +101,23 @@ export const TickerBar = memo(function TickerBar({
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5, ease: 'easeInOut' }}
           className={cn(
-            'flex items-center gap-2 px-3 py-2 rounded-lg border min-w-[160px] max-w-[220px] group',
-            'transition-shadow duration-200 hover:shadow-md',
+            'flex items-center gap-2 px-3 py-2 rounded-lg border min-w-[160px] max-w-[220px] group cursor-pointer',
+            'transition-shadow duration-200 hover:shadow-md hover:scale-[1.02] active:scale-[0.99]',
             'focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50',
             toneClasses
           )}
+          title={item.label}
         >
-          <div className="flex-shrink-0 w-7 h-7 rounded-md bg-slate-200 dark:bg-slate-900/50 flex items-center justify-center">
-            <Icon className="h-3.5 w-3.5 text-slate-300" aria-hidden />
+          <div className="flex-shrink-0 w-7 h-7 rounded-md bg-slate-300 dark:bg-slate-900/50 flex items-center justify-center">
+            <Icon className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" aria-hidden />
           </div>
           <div className="flex-1 min-w-0 text-left">
-            <div className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-500 truncate" title={item.label}>
+            <div className="text-[10px] uppercase tracking-wider text-slate-600 dark:text-slate-300 truncate" title={item.label}>
               {SHORT_LABELS[item.label] ?? item.label}
             </div>
-            <div className="font-semibold text-slate-800 dark:text-slate-100 tabular-nums text-sm leading-tight">{String(item.value)}</div>
+            <div className="font-semibold text-slate-900 dark:text-slate-100 tabular-nums text-sm leading-tight">{String(item.value)}</div>
             {item.delta && item.delta !== '—' && (
-              <div className="text-[10px] text-slate-400">{item.delta}</div>
+              <div className="text-[10px] text-slate-600 dark:text-slate-400">{item.delta}</div>
             )}
           </div>
           <div className="flex-shrink-0 self-end">
@@ -142,7 +143,7 @@ export const TickerBar = memo(function TickerBar({
             );
           })}
           {items.length > maxDots && (
-            <span className="text-[10px] text-slate-500 ml-0.5">{index + 1}/{items.length}</span>
+            <span className="text-[10px] text-slate-600 dark:text-slate-500 ml-0.5">{index + 1}/{items.length}</span>
           )}
         </div>
       )}

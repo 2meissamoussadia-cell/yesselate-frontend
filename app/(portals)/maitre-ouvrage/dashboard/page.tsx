@@ -1064,7 +1064,7 @@ const KPICardPro = memo(function KPICardPro({
         >
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0 flex-1 overflow-hidden">
-              <div className="text-[11px] text-slate-400 uppercase tracking-wide break-words line-clamp-2 leading-tight" style={{ wordBreak: 'break-word' }}>
+              <div className="kpi-label text-[11px] text-slate-400 uppercase tracking-wide break-words line-clamp-2 leading-tight" style={{ wordBreak: 'break-word' }}>
                 {kpi.label}
               </div>
               <div className={cn('font-semibold text-slate-100 mt-0.5 leading-tight tabular-nums', kpiCardProValueSizes[size])}>{String(kpi.value)}</div>

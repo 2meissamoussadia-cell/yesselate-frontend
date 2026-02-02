@@ -45,10 +45,12 @@ export function BmoSidebar({
   return (
     <aside
       className={cn(
-        'flex flex-col h-full bg-white border-r border-slate-200 text-slate-900 dark:bg-slate-950 dark:border-slate-800/70 dark:text-slate-100 shrink-0 overflow-hidden',
+        'flex flex-col h-full bg-white border-r border-slate-200 text-slate-900 dark:border-slate-800/70 dark:text-slate-100 shrink-0 overflow-hidden sidebar-dashboard',
+        'dark:bg-[var(--theme-bg-sidebar)]',
         collapsed ? 'w-14' : 'w-56',
         className
       )}
+      data-sidebar="dashboard"
       aria-label="Navigation BMO"
     >
       {/* Logo entreprise (un seul emplacement — pas de doublon avec la topbar) */}

@@ -277,6 +277,12 @@
     animation: none;
     background: rgba(30, 41, 59, 0.5);
   }
+  /* Réduction des transitions sur le dashboard (accessibilité) */
+  [data-dashboard-reduce-motion],
+  .dashboard-panel,
+  .collapsible-section {
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* Scrollbar dashboard — design cohérent (visible, arrondi, contraste) */

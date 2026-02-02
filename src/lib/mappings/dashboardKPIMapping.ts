@@ -605,4 +605,3 @@ export const AVAILABLE_TICKER_CRITERIA = [
   ...Object.values(DASHBOARD_KPI_MAPPINGS).map((m) => ({ id: m.metadata.id, label: m.display.label })),
   { id: 'chantiers-en-cours', label: 'Chantiers en cours' }, // présent dans mock "tous"
 ];
-

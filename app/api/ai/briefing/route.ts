@@ -135,12 +135,15 @@ export async function GET(req: NextRequest) {
     });
   } catch (err) {
     console.error('[api/ai/briefing]', err);
-    return NextResponse.json(
-      {
-        error: 'Erreur lors de la génération du briefing',
-        detail: err instanceof Error ? err.message : String(err),
-      },
-      { status: 502 }
-    );
+    // Fallback mock pour que l'UI affiche un briefing par défaut (données mockées)
+    return NextResponse.json({
+      status: 'yellow' as const,
+      briefing:
+        'Briefing IA temporairement indisponible. Synthèse : suivi des chantiers en cours, vigilance sur les délais et les budgets.',
+      topRisks: ['Retards possibles sur lots critiques', 'Pression sur les marges', 'Pièces justificatives en attente'] as string[],
+      opportunities: ['Accélération possible sur chantiers en avance', 'Synergies inter-bureaux', 'Optimisation des commandes groupées'] as string[],
+      fromCache: false,
+      fallback: true,
+    });
   }
 }

@@ -9,7 +9,7 @@ import React from 'react';
 import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { BudgetGouvernance } from '../../types/gouvernanceTypes';
-import { cn } from '@/lib/utils';
+import { cn, exportDataAsCSV } from '@/lib/utils';
 import { AlertTriangle } from 'lucide-react';
 import { normalizeToArray } from '../../utils/dataNormalization';
 
@@ -19,11 +19,23 @@ export default function DepassementsBudgetPage() {
   const depassements = normalizeToArray<BudgetGouvernance>(data);
 
   return (
-    <div className="h-full w-full bg-slate-950 text-white p-6">
+    <div className="h-full w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-white p-6">
       <GouvernanceHeader
         title="Dépassements budgétaires"
         subtitle="Projets avec dépassement de budget nécessitant une attention"
-        onExport={() => { /* TODO: export dépassements */ }}
+        onExport={() => {
+          const rows = depassements
+            .filter((b: BudgetGouvernance) => (b.depassement || 0) > 0)
+            .map((b: BudgetGouvernance) => ({
+              projet_id: b.projet_id,
+              projet_nom: b.projet_nom,
+              budget_initial: b.budget_initial,
+              budget_consomme: b.budget_consomme,
+              depassement: b.depassement,
+              depassement_pourcent: b.depassement_pourcent,
+            }));
+          exportDataAsCSV(rows, 'depassements_budget');
+        }}
       />
 
       {isLoading ? (

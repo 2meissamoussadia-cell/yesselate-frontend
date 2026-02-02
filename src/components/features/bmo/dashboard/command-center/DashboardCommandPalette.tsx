@@ -306,7 +306,7 @@ function DashboardCommandPaletteInner({
     <>
       {/* Overlay léger : clic pour fermer */}
       <div
-        className="fixed inset-0 bg-black/30 z-[100]"
+        className="fixed inset-0 bg-black/50 dark:bg-black/30 z-[100] backdrop-blur-sm"
         onClick={toggleCommandPalette}
         aria-hidden
       />
@@ -318,25 +318,25 @@ function DashboardCommandPaletteInner({
         aria-label="Recherche et commandes"
       >
         <div
-          className="w-full max-w-md bg-slate-900 rounded-xl border border-slate-700/50 shadow-xl overflow-hidden pointer-events-auto"
+          className="w-full max-w-md rounded-xl border shadow-xl overflow-hidden pointer-events-auto bg-white border-slate-200 dark:bg-slate-900 dark:border-slate-700/50"
           onClick={(e) => e.stopPropagation()}
           role="dialog"
         >
           {/* Header avec bouton Fermer visible */}
-          <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-800/50">
-            <Command className="w-5 h-5 text-slate-400 shrink-0" />
+          <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-200 bg-slate-50 dark:border-slate-800/50 dark:bg-transparent">
+            <Command className="w-5 h-5 text-slate-500 dark:text-slate-400 shrink-0" />
             <Input
               autoFocus
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Rechercher une commande..."
-              className="flex-1 bg-transparent border-0 text-slate-200 placeholder:text-slate-400 focus-visible:ring-0 min-w-0"
+              className="flex-1 bg-transparent border-0 text-slate-900 placeholder:text-slate-500 dark:text-slate-200 dark:placeholder:text-slate-400 focus-visible:ring-0 min-w-0"
             />
             <button
               type="button"
               onClick={toggleCommandPalette}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50"
+              className="p-1.5 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-200 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800/80 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50"
               aria-label="Fermer la recherche"
               title="Fermer (Échap)"
             >
@@ -347,7 +347,7 @@ function DashboardCommandPaletteInner({
           {/* Liste des commandes */}
           <div className="max-h-80 overflow-y-auto">
             {filteredCommands.length === 0 ? (
-              <div className="px-4 py-8 text-center text-slate-400">
+              <div className="px-4 py-8 text-center text-slate-500 dark:text-slate-400">
                 Aucune commande trouvée
               </div>
             ) : (
@@ -366,19 +366,19 @@ function DashboardCommandPaletteInner({
                       onMouseEnter={() => setSelectedIndex(index)}
                       className={cn(
                         'w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors',
-                        isSelected ? 'bg-slate-800/80' : 'hover:bg-slate-800/40'
+                        isSelected ? 'bg-sky-100 dark:bg-slate-800/80' : 'hover:bg-slate-100 dark:hover:bg-slate-800/40'
                       )}
                     >
                       <div
                         className={cn(
                           'p-1.5 rounded-lg',
-                          isSelected ? 'bg-blue-500/20' : 'bg-slate-800/50'
+                          isSelected ? 'bg-sky-200 dark:bg-blue-500/20' : 'bg-slate-200 dark:bg-slate-800/50'
                         )}
                       >
                         <Icon
                           className={cn(
                             'w-4 h-4',
-                            isSelected ? 'text-blue-400' : 'text-slate-400'
+                            isSelected ? 'text-sky-700 dark:text-blue-400' : 'text-slate-600 dark:text-slate-400'
                           )}
                         />
                       </div>
@@ -386,21 +386,21 @@ function DashboardCommandPaletteInner({
                         <p
                           className={cn(
                             'text-sm font-medium',
-                            isSelected ? 'text-slate-200' : 'text-slate-300'
+                            isSelected ? 'text-slate-900 dark:text-slate-200' : 'text-slate-700 dark:text-slate-300'
                           )}
                         >
                           {cmd.label}
                         </p>
                         {cmd.hint && (
-                          <p className="text-xs text-slate-400 truncate">{cmd.hint}</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{cmd.hint}</p>
                         )}
                       </div>
                       {cmd.shortcut && (
-                        <kbd className="px-1.5 py-0.5 rounded bg-slate-800 text-xs text-slate-400 font-mono">
+                        <kbd className="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-xs text-slate-600 dark:text-slate-400 font-mono">
                           {cmd.shortcut}
                         </kbd>
                       )}
-                      {isSelected && <ArrowRight className="w-4 h-4 text-slate-400" />}
+                      {isSelected && <ArrowRight className="w-4 h-4 text-slate-500 dark:text-slate-400" />}
                     </button>
                   );
                 })}
@@ -409,13 +409,13 @@ function DashboardCommandPaletteInner({
           </div>
 
           {/* Footer */}
-          <div className="px-4 py-2 border-t border-slate-800/50 flex items-center justify-between text-xs text-slate-600">
+          <div className="px-4 py-2 border-t border-slate-200 dark:border-slate-800/50 flex items-center justify-between text-xs text-slate-500 dark:text-slate-600">
             <div className="flex items-center gap-4">
               <span>
-                <kbd className="px-1 py-0.5 rounded bg-slate-800">↑↓</kbd> naviguer
+                <kbd className="px-1 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400">↑↓</kbd> naviguer
               </span>
               <span>
-                <kbd className="px-1 py-0.5 rounded bg-slate-800">↵</kbd> sélectionner
+                <kbd className="px-1 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400">↵</kbd> sélectionner
               </span>
             </div>
             <span>⌘K pour ouvrir/fermer</span>

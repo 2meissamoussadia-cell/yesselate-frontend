@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, BarChart3, Download, Lock, Wallet } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -56,7 +56,12 @@ export function BudgetConsommeModal({ open, onClose }: BudgetConsommeModalProps)
         onClose={onClose}
       >
         <DialogHeader>
-          <DialogTitle className="text-slate-100">💰 Budget Consommé — Portefeuille</DialogTitle>
+          <DialogTitle className="text-slate-100">
+            <span className="flex items-center gap-2">
+              <Wallet className="h-5 w-5 text-amber-400 shrink-0" aria-hidden />
+              Budget Consommé — Portefeuille
+            </span>
+          </DialogTitle>
           <DialogDescription>Suivi de la consommation budgétaire par chantier</DialogDescription>
         </DialogHeader>
 
@@ -191,22 +196,24 @@ export function BudgetConsommeModal({ open, onClose }: BudgetConsommeModalProps)
                   <div className="flex flex-wrap gap-2">
                     <Button
                       size="sm"
-                      className="bg-sky-600 hover:bg-sky-700 text-white"
+                      className="bg-sky-600 hover:bg-sky-700 text-white inline-flex items-center gap-1.5"
                       onClick={() => {
                         toast.info('Voir détail budget', { description: 'Ouverture de la vue Budget & engagements…' });
                         onClose();
                       }}
                     >
-                      📊 Voir détail
+                      <BarChart3 className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                      Voir détail
                     </Button>
                     {alertLevel === 'critique' && (
                       <Button
                         size="sm"
                         variant="outline"
-                        className="border-amber-500/50 text-amber-400"
+                        className="border-amber-500/50 text-amber-400 inline-flex items-center gap-1.5"
                         onClick={() => toast.warning('Bloquer dépenses', { description: 'Action à confirmer avec le contrôleur de gestion. Fonctionnalité à venir.' })}
                       >
-                        🔒 Bloquer dépenses
+                        <Lock className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                        Bloquer dépenses
                       </Button>
                     )}
                   </div>
@@ -220,7 +227,10 @@ export function BudgetConsommeModal({ open, onClose }: BudgetConsommeModalProps)
           <Button variant="outline" onClick={onClose} className="border-slate-600">
             Fermer
           </Button>
-          <Button className="bg-sky-600 hover:bg-sky-700 text-white">📥 Exporter rapport</Button>
+          <Button className="bg-sky-600 hover:bg-sky-700 text-white inline-flex items-center gap-2">
+            <Download className="h-4 w-4 shrink-0" aria-hidden />
+            Exporter rapport
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

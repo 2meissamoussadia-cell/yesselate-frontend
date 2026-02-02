@@ -6,6 +6,7 @@
 'use client';
 
 import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { Mic } from 'lucide-react';
 import {
   EXECUTIVE_COMMANDS_V5,
   getCommandByShortcut,
@@ -389,7 +390,7 @@ export function ExecutiveControls() {
       {/* Dernière commande exécutée (feedback) */}
       {!voiceActive && lastCommand && !showShortcutsHelp && (
         <div className="fixed bottom-36 left-1/2 -translate-x-1/2 z-40 px-3 py-1.5 rounded-lg bg-green-500/20 border border-green-500/40 text-xs font-medium text-green-400">
-          ✅ Dernière: {lastCommand}
+          Dernière: {lastCommand}
         </div>
       )}
 

@@ -6,6 +6,7 @@
 'use client';
 
 import React from 'react';
+import { exportDataAsCSV } from '@/lib/utils';
 import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { KpiPanel } from '../../components/KpiPanel';
 import { TendancesChart } from '../../components/TendancesChart';
@@ -36,11 +37,21 @@ export default function TableauBordPage() {
   const pointsAttention = overviewData?.points_attention || [];
 
   return (
-    <div className="h-full w-full bg-slate-950 text-white p-6">
+    <div className="h-full w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-white p-6">
       <GouvernanceHeader
         title="Tableau de bord exécutif"
         subtitle="Vue synthétique des indicateurs stratégiques, alertes critiques et tendances"
-        onExport={() => { /* TODO: export */ }}
+        onExport={() => {
+          const rows = [{
+            projets_actifs: displayStats?.projets_actifs ?? 0,
+            budget_consomme: displayStats?.budget_consomme_pourcent ?? 0,
+            jalons_respectes: displayStats?.jalons_respectes_pourcent ?? 0,
+            risques_critiques: displayStats?.risques_critiques ?? 0,
+            validations_en_attente: displayStats?.validations_en_attente ?? 0,
+            date: new Date().toISOString().slice(0, 10),
+          }];
+          exportDataAsCSV(rows, 'tableau_bord_gouvernance');
+        }}
         onRefresh={() => window.location.reload()}
       />
 

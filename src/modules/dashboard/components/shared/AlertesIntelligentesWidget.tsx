@@ -41,20 +41,20 @@ export const AlertesIntelligentesWidget = memo(function AlertesIntelligentesWidg
   return (
     <div
       className={cn(
-        'rounded-xl border border-slate-700/60 bg-slate-900/60 overflow-hidden',
+        'rounded-xl border overflow-hidden border-slate-200 bg-white dark:border-slate-700/60 dark:bg-slate-900/60',
         className
       )}
     >
-      <div className="px-4 py-3 border-b border-slate-700/50 bg-slate-900/80 flex items-center justify-between gap-2">
+      <div className="px-4 py-3 border-b border-slate-200 bg-slate-50 dark:border-slate-700/50 dark:bg-slate-900/80 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <AlertTriangle className="h-4 w-4 text-amber-400" aria-hidden />
-          <h3 className="text-sm font-semibold text-slate-100">Alertes prédictives</h3>
+          <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400" aria-hidden />
+          <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">Alertes prédictives</h3>
         </div>
         {onVoirTout && (
           <button
             type="button"
             onClick={onVoirTout}
-            className="text-[11px] text-sky-400 hover:text-sky-300 flex items-center gap-1 rounded px-1.5 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
+            className="text-[11px] text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 flex items-center gap-1 rounded px-1.5 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-900"
             aria-label="Voir toutes les alertes (Centre d'alertes)"
           >
             Voir tout

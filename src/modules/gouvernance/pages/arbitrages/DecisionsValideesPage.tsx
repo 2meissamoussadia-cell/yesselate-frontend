@@ -10,7 +10,7 @@ import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { DecisionGouvernance } from '../../types/gouvernanceTypes';
 import { CheckCircle2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, exportDataAsCSV } from '@/lib/utils';
 import { normalizeToArray } from '../../utils/dataNormalization';
 
 export default function DecisionsValideesPage() {
@@ -19,11 +19,23 @@ export default function DecisionsValideesPage() {
   const decisions = normalizeToArray<DecisionGouvernance>(data);
 
   return (
-    <div className="h-full w-full bg-slate-950 text-white p-6">
+    <div className="h-full w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-white p-6">
       <GouvernanceHeader
         title="Décisions validées"
         subtitle="Historique des décisions validées récemment"
-        onExport={() => { /* TODO: export décisions validées */ }}
+        onExport={() => {
+          const rows = decisions
+            .filter((d: DecisionGouvernance) => d.statut === 'valide')
+            .map((d: DecisionGouvernance) => ({
+              reference: d.reference,
+              titre: d.titre,
+              type: d.type,
+              date_decision: d.date_decision ?? '',
+              impact: d.impact ?? '',
+              projet: d.projet_nom ?? '',
+            }));
+          exportDataAsCSV(rows, 'decisions-validees');
+        }}
       />
 
       {isLoading ? (

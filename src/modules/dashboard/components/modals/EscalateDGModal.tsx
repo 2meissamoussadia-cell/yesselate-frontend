@@ -9,6 +9,7 @@ import React, { useState } from 'react';
 import { X, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 import { useToast } from '@/components/ui/toast';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 
 export interface EscalateDGModalProps {
@@ -77,15 +78,15 @@ export function EscalateDGModal({
 
           <div>
             <label htmlFor="escalade-priorite" className="block text-xs font-medium text-slate-400 mb-1">Priorité</label>
-            <select
-              id="escalade-priorite"
-              value={priorite}
-              onChange={(e) => setPriorite(e.target.value as 'haute' | 'critique')}
-              className={cn('w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-200')}
-            >
-              <option value="haute">Haute</option>
-              <option value="critique">Critique</option>
-            </select>
+            <Select value={priorite} onValueChange={(v) => setPriorite(v as 'haute' | 'critique')}>
+              <SelectTrigger id="escalade-priorite" className={cn('w-full rounded-xl border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-200')}>
+                <SelectValue placeholder="Priorité" />
+              </SelectTrigger>
+              <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+                <SelectItem value="haute">Haute</SelectItem>
+                <SelectItem value="critique">Critique</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <div>

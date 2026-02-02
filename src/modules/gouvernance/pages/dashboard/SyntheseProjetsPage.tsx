@@ -9,7 +9,7 @@ import React from 'react';
 import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { ProjetGouvernance } from '../../types/gouvernanceTypes';
-import { cn } from '@/lib/utils';
+import { cn, exportDataAsCSV } from '@/lib/utils';
 import { normalizeToArray } from '../../utils/dataNormalization';
 
 export default function SyntheseProjetsPage() {
@@ -18,11 +18,25 @@ export default function SyntheseProjetsPage() {
   const projets = normalizeToArray<ProjetGouvernance>(data);
 
   return (
-    <div className="h-full w-full bg-slate-950 text-white p-6">
+    <div className="h-full w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-white p-6">
       <GouvernanceHeader
         title="Synthèse projets"
         subtitle="Vue d'ensemble de tous les projets avec indicateurs clés"
-        onExport={() => { /* TODO: export synthèse projets */ }}
+        onExport={() => {
+          const rows = projets.map((p: ProjetGouvernance) => ({
+            id: p.id,
+            nom: p.nom,
+            code: p.code,
+            statut: p.statut,
+            budget_total: p.budget_total,
+            budget_consomme: p.budget_consomme,
+            jalons_total: p.jalons_total,
+            jalons_valides: p.jalons_valides,
+            risques_count: p.risques_count,
+            exposition_financiere: p.exposition_financiere,
+          }));
+          exportDataAsCSV(rows, 'synthese_projets');
+        }}
       />
 
       {isLoading ? (

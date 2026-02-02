@@ -83,10 +83,10 @@ export function DashboardAlertProvider({ children }: { children: React.ReactNode
         playCriticalSound();
         vibrateCritical();
         setCriticalAlert(buildCriticalPayload(detail));
-        toast.error(`🚨 ${title}`, { duration: 5000 });
+        toast.error(title, { duration: 5000 });
       } else {
         playUrgentSound();
-        toast.warning(`⚠️ ${title}`, { duration: 4000 });
+        toast.warning(title, { duration: 4000 });
       }
     };
 

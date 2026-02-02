@@ -133,9 +133,16 @@ export function ConflitsView() {
             setSelectedConflit(null);
           }}
           conflit={selectedConflit}
-          onSave={(data) => {
-            // TODO: Appeler API pour résoudre le conflit
-            logger.debug('Résolution conflit', { component: 'ConflitsView', data });
+          onSave={async (data) => {
+            try {
+              await fetch('/api/calendar/conflicts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'resoudre', conflitId: selectedConflit?.id, ...data }),
+              });
+            } catch {
+              logger.debug('Résolution conflit', { component: 'ConflitsView', data });
+            }
             setShowResoudreModal(false);
             setSelectedConflit(null);
           }}

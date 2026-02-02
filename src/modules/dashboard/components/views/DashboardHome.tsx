@@ -21,12 +21,16 @@ import {
   ArrowUp,
   ArrowUpDown,
   Briefcase,
+  CalendarCheck,
   CheckCircle2,
   ChevronDown,
   ChevronUp,
   FileText,
   Gavel,
   HeartPulse,
+  Mail,
+  Phone,
+  Send,
   ShoppingCart,
   ThumbsUp,
   ShieldAlert,
@@ -38,9 +42,13 @@ import {
   History,
   Keyboard,
   Save,
+  Settings,
   Trash2,
+  Wallet,
+  ClipboardList,
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DashboardPanel } from '../shared/DashboardPanel';
 import { CollapsibleSection } from '../shared/CollapsibleSection';
 import { FinancesGlobalesWidget } from '../shared/FinancesGlobalesWidget';
@@ -58,6 +66,7 @@ import { getScoreQualiteBreakdown, getTypologieBlocages, getRoiParTypeChantier, 
 import type { Contact } from '../../types/dashboardDomain';
 import { getHealthBarBgClass, getHealthLabel } from '@lib-root/dashboard/kpi';
 import { computeSectionExpanded } from '../../utils/dashboardHomeSectionExpanded';
+import { typography } from '../../utils/dashboardDesignTokens';
 import { CallCompanyModal } from '../modals/CallCompanyModal';
 import { AutoRelanceModal } from '../modals/AutoRelanceModal';
 import { EscalateDGModal } from '../modals/EscalateDGModal';
@@ -138,23 +147,31 @@ function getChantierForDetail(numero: string, row?: Phase4Row): ChantierMock {
 
 type Phase4ActionType = 'call' | 'relance' | 'escalade' | 'visit';
 
-/** Actions rapides différenciées par chantier (ex: Appeler, Relance auto, Escalade DG). */
+/** Icône par type d'action (moderne, cohérent). */
+const PHASE4_ACTION_ICONS: Record<Phase4ActionType, React.ComponentType<{ className?: string }>> = {
+  call: Phone,
+  relance: Mail,
+  escalade: Send,
+  visit: CalendarCheck,
+};
+
+/** Actions rapides différenciées par chantier — libellés sans emoji, icônes Lucide. */
 const phase4Actions: Record<string, { label: string; variant: 'danger' | 'warning'; type: Phase4ActionType }> = {
-  '#042': { label: '📞 Appeler entreprise', variant: 'danger', type: 'call' },
-  '#038': { label: '📧 Relance automatique', variant: 'warning', type: 'relance' },
-  '#051': { label: '📤 Escalade au DG', variant: 'danger', type: 'escalade' },
-  '#033': { label: '📞 Appeler entreprise', variant: 'danger', type: 'call' },
-  '#047': { label: '✅ Planifier visite', variant: 'warning', type: 'visit' },
-  '#034': { label: '📞 Appeler entreprise', variant: 'danger', type: 'call' },
-  '#035': { label: '✅ Planifier visite', variant: 'warning', type: 'visit' },
-  '#036': { label: '📧 Relance automatique', variant: 'warning', type: 'relance' },
-  '#039': { label: '✅ Planifier visite', variant: 'warning', type: 'visit' },
-  '#040': { label: '📧 Relance automatique', variant: 'warning', type: 'relance' },
-  '#041': { label: '📞 Appeler entreprise', variant: 'danger', type: 'call' },
-  '#043': { label: '📤 Escalade au DG', variant: 'danger', type: 'escalade' },
-  '#044': { label: '📧 Relance automatique', variant: 'warning', type: 'relance' },
-  '#045': { label: '📞 Appeler entreprise', variant: 'danger', type: 'call' },
-  '#048': { label: '✅ Planifier visite', variant: 'warning', type: 'visit' },
+  '#042': { label: 'Appeler entreprise', variant: 'danger', type: 'call' },
+  '#038': { label: 'Relance automatique', variant: 'warning', type: 'relance' },
+  '#051': { label: 'Escalade au DG', variant: 'danger', type: 'escalade' },
+  '#033': { label: 'Appeler entreprise', variant: 'danger', type: 'call' },
+  '#047': { label: 'Planifier visite', variant: 'warning', type: 'visit' },
+  '#034': { label: 'Appeler entreprise', variant: 'danger', type: 'call' },
+  '#035': { label: 'Planifier visite', variant: 'warning', type: 'visit' },
+  '#036': { label: 'Relance automatique', variant: 'warning', type: 'relance' },
+  '#039': { label: 'Planifier visite', variant: 'warning', type: 'visit' },
+  '#040': { label: 'Relance automatique', variant: 'warning', type: 'relance' },
+  '#041': { label: 'Appeler entreprise', variant: 'danger', type: 'call' },
+  '#043': { label: 'Escalade au DG', variant: 'danger', type: 'escalade' },
+  '#044': { label: 'Relance automatique', variant: 'warning', type: 'relance' },
+  '#045': { label: 'Appeler entreprise', variant: 'danger', type: 'call' },
+  '#048': { label: 'Planifier visite', variant: 'warning', type: 'visit' },
 };
 
 /** Problème principal varié par chantier (évite répétition "Lot peinture" sur tous). */
@@ -215,6 +232,8 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
   /** Vues sauvegardées (filtres nommés) */
   const [savedViews, setSavedViews] = useState<SavedView[]>([]);
   const [showSavedViewsManage, setShowSavedViewsManage] = useState(false);
+  /** Id de la vue sauvegardée sélectionnée (pour Select contrôlé, réinitialisé après application) */
+  const [savedViewApplyId, setSavedViewApplyId] = useState('');
   /** Densité d'affichage : compact / normal / confortable */
   const [density, setDensity] = useState<Density>('normal');
   /** Annonce pour lecteurs d'écran (vue appliquée, vue sauvegardée) */
@@ -368,7 +387,7 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
   const [budgetConsommeModalOpen, setBudgetConsommeModalOpen] = useState(false);
   const [decisionsModalOpen, setDecisionsModalOpen] = useState(false);
 
-  /** Phase 2 : personnalisation cockpit (shell — à  venir) */
+  /** Phase 2 : personnalisation cockpit (shell — à venir) */
   const [showPersonalizeMessage, setShowPersonalizeMessage] = useState(false);
 
   /** Phase 4 : tri, filtre Santé, limite d'affichage (5 / 15) */
@@ -552,59 +571,58 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
       <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
           <label htmlFor="preset" className="text-[11px] text-slate-300 shrink-0">Vue :</label>
-          <select
-            id="preset"
+          <Select
             value={preset ?? 'custom'}
-            onChange={(e) => {
-              const v = e.target.value;
+            onValueChange={(v) => {
               const labels: Record<string, string> = { executive: 'Exécutive (DG)', financial: 'Financière', operational: 'Opérationnelle', hse: 'HSE', custom: 'Personnalisée' };
               if (v === 'custom') setPreset(null);
               else setPreset(v as 'executive' | 'financial' | 'operational' | 'hse');
               pushSessionAction(`Vue : ${labels[v] ?? v}`);
             }}
-            className="rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-1.5 text-[11px] text-slate-200 focus:border-sky-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 min-h-[44px]"
-            aria-label="Vue par rôle"
           >
-            <option value="executive">Exécutive (DG)</option>
-            <option value="financial">Financière</option>
-            <option value="operational">Opérationnelle</option>
-            <option value="hse">HSE</option>
-            <option value="custom">Personnalisée</option>
-          </select>
+            <SelectTrigger id="preset" className="rounded-xl border-slate-700 bg-slate-800/80 px-3 py-2 text-xs text-slate-200 min-h-[44px] w-auto data-[placeholder]:text-slate-400 focus:ring-sky-500/50 focus:ring-offset-slate-950 [&>span]:line-clamp-1" aria-label="Vue par rôle">
+              <SelectValue placeholder="Vue par rôle" />
+            </SelectTrigger>
+            <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+              <SelectItem value="executive">Exécutive (DG)</SelectItem>
+              <SelectItem value="financial">Financière</SelectItem>
+              <SelectItem value="operational">Opérationnelle</SelectItem>
+              <SelectItem value="hse">HSE</SelectItem>
+              <SelectItem value="custom">Personnalisée</SelectItem>
+            </SelectContent>
+          </Select>
           {preset === null && (
             <>
               <label htmlFor="display-mode" className="text-[11px] text-slate-400 shrink-0 ml-1">Affichage :</label>
-              <select
-                id="display-mode"
-                value={displayMode}
-                onChange={(e) => {
-                  const v = e.target.value as 'all' | 'synthetique' | 'critical';
-                  setDisplayMode(v);
-                  if (v === 'critical') setPhase4FilterSante('critique');
-                  const labels: Record<string, string> = { all: 'Tout afficher', synthetique: 'Synthétique', critical: 'Critiques uniquement' };
-                  pushSessionAction(`Affichage : ${labels[v] ?? v}`);
-                }}
-                className="rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-1.5 text-[11px] text-slate-200 focus:border-sky-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 min-h-[44px]"
-                aria-label="Mode d'affichage du dashboard"
-              >
-                <option value="all">Tout afficher</option>
-                <option value="synthetique">Synthétique (sections repliées)</option>
-                <option value="critical">Critiques uniquement</option>
-              </select>
+              <Select value={displayMode} onValueChange={(v) => {
+                const val = v as 'all' | 'synthetique' | 'critical';
+                setDisplayMode(val);
+                if (val === 'critical') setPhase4FilterSante('critique');
+                const labels: Record<string, string> = { all: 'Tout afficher', synthetique: 'Synthétique', critical: 'Critiques uniquement' };
+                pushSessionAction(`Affichage : ${labels[val] ?? val}`);
+              }}>
+                <SelectTrigger id="display-mode" className="rounded-xl border-slate-700 bg-slate-800/80 px-3 py-2 text-xs text-slate-200 min-h-[44px] w-auto focus:ring-sky-500/50 focus:ring-offset-slate-950" aria-label="Mode d'affichage du dashboard">
+                  <SelectValue placeholder="Affichage" />
+                </SelectTrigger>
+                <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+                  <SelectItem value="all">Tout afficher</SelectItem>
+                  <SelectItem value="synthetique">Synthétique (sections repliées)</SelectItem>
+                  <SelectItem value="critical">Critiques uniquement</SelectItem>
+                </SelectContent>
+              </Select>
             </>
           )}
           <label htmlFor="density" className="text-[11px] text-slate-300 shrink-0 ml-1">Densité :</label>
-          <select
-            id="density"
-            value={density}
-            onChange={(e) => setDensity(e.target.value as Density)}
-            className="rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-1.5 text-[11px] text-slate-200 focus:border-sky-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 min-h-[44px]"
-            aria-label="Densité d'affichage"
-          >
-            <option value="compact">Compact</option>
-            <option value="normal">Normal</option>
-            <option value="comfortable">Confortable</option>
-          </select>
+          <Select value={density} onValueChange={(v) => setDensity(v as Density)}>
+            <SelectTrigger id="density" className="rounded-xl border-slate-700 bg-slate-800/80 px-3 py-2 text-xs text-slate-200 min-h-[44px] w-auto focus:ring-sky-500/50 focus:ring-offset-slate-950" aria-label="Densité d'affichage">
+              <SelectValue placeholder="Densité" />
+            </SelectTrigger>
+            <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+              <SelectItem value="compact">Compact</SelectItem>
+              <SelectItem value="normal">Normal</SelectItem>
+              <SelectItem value="comfortable">Confortable</SelectItem>
+            </SelectContent>
+          </Select>
           <button
             type="button"
             onClick={saveCurrentView}
@@ -616,23 +634,21 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
           </button>
           {savedViews.length > 0 && (
             <>
-              <select
-                value=""
-                onChange={(e) => {
-                  const id = e.target.value;
-                  if (!id) return;
-                  const view = savedViews.find((v) => v.id === id);
-                  if (view) applySavedView(view);
-                  e.target.value = '';
-                }}
-                className="rounded-lg border border-slate-700 bg-slate-900/80 px-2 py-1.5 text-[11px] text-slate-200 min-h-[44px] max-w-[180px]"
-                aria-label="Appliquer une vue sauvegardée"
-              >
-                <option value="">Vues sauvegardées…</option>
-                {savedViews.map((v) => (
-                  <option key={v.id} value={v.id}>{v.name}</option>
-                ))}
-              </select>
+              <Select value={savedViewApplyId} onValueChange={(id) => {
+                if (!id) return;
+                const view = savedViews.find((v) => v.id === id);
+                if (view) applySavedView(view);
+                setSavedViewApplyId('');
+              }}>
+                <SelectTrigger className="rounded-xl border-slate-700 bg-slate-800/80 px-3 py-2 text-xs text-slate-200 min-h-[44px] max-w-[180px] focus:ring-sky-500/50 focus:ring-offset-slate-950" aria-label="Appliquer une vue sauvegardée">
+                  <SelectValue placeholder="Vues sauvegardées…" />
+                </SelectTrigger>
+                <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+                  {savedViews.map((v) => (
+                    <SelectItem key={v.id} value={v.id}>{v.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <button
                 type="button"
                 onClick={() => setShowSavedViewsManage((v) => !v)}
@@ -749,25 +765,25 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
         <>
       {/* KPIs COMPACTS COLLAPSIBLES — masqué en vue focalisée (ex. Budget) */}
       {(!sectionFocus || sectionFocus === 'indicateurs') && (
-      <div className="rounded-2xl border border-slate-800/80 bg-slate-950/80 overflow-hidden transition-all duration-300">
+      <div className="rounded-2xl border overflow-hidden transition-all duration-300 border-slate-200 bg-white dark:border-slate-800/80 dark:bg-slate-950/80">
         {/* Header cliquable */}
         <button
           type="button"
           onClick={() => setKpisExpanded(!kpisExpanded)}
-          className="w-full px-4 py-3 min-h-[44px] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 hover:bg-slate-900/40 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 focus-visible:ring-inset"
+          className="w-full px-4 py-3 min-h-[44px] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 hover:bg-slate-100 dark:hover:bg-slate-900/40 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 focus-visible:ring-inset"
           aria-expanded={kpisExpanded}
           aria-label={kpisExpanded ? 'Replier les indicateurs KPI' : 'Déplier les indicateurs KPI'}
         >
           <div className="flex items-center gap-3 flex-wrap">
             <Activity className="h-4 w-4 text-sky-400 shrink-0" aria-hidden />
-            <span className="text-sm font-semibold text-slate-100" title="Rafraîchir, Exporter et Gérer les alertes KPI s'appliquent à  l'ensemble du cockpit">
+            <span className="text-sm font-semibold text-slate-100" title="Rafraîchir, Exporter et Gérer les alertes KPI s'appliquent à l'ensemble du cockpit">
               Indicateurs clés de performance (cockpit)
             </span>
             <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[10px] sm:text-[11px]">
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <span className="text-slate-400 cursor-help">Demandes: <span className="text-slate-200 font-semibold">{demandesVal}</span></span>
+                    <span className="text-slate-500 dark:text-slate-400 cursor-help">Demandes: <span className="text-slate-700 dark:text-slate-200 font-semibold">{demandesVal}</span></span>
                   </TooltipTrigger>
                   <TooltipContent side="top" className="max-w-[200px]">
                     <p className="text-xs text-slate-200">Nombre de demandes à traiter (achats, validations, demandes spéciales).</p>
@@ -790,7 +806,7 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <span className="text-slate-400 cursor-help">
-                      Blocages: <span className="text-amber-400 font-semibold">{blocagesVal}</span>
+                      Blocages: <span className="text-amber-600 dark:text-amber-400 font-semibold">{blocagesVal}</span>
                     </span>
                   </TooltipTrigger>
                   <TooltipContent side="top" className="max-w-[200px]">
@@ -819,7 +835,7 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <span className="text-slate-400 cursor-help">Délai paiement: <span className="text-cyan-400 font-semibold">{delaiPaiementVal}</span></span>
+                    <span className="text-slate-500 dark:text-slate-400 cursor-help">Délai paiement: <span className="text-cyan-600 dark:text-cyan-400 font-semibold">{delaiPaiementVal}</span></span>
                   </TooltipTrigger>
                   <TooltipContent side="top" className="max-w-[200px]">
                     <p className="text-xs text-slate-200">Délai moyen de paiement clients. Objectif typique : &lt; 45 jours.</p>
@@ -848,7 +864,7 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
                     </span>
                     <div>
                       <div className="text-[11px] font-medium text-slate-100">
-                        Demandes à  traiter
+                        Demandes à traiter
                       </div>
                       <div className="text-[10px] text-slate-400">
                         Achats, validations, demandes spéciales
@@ -1033,17 +1049,16 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
             ))}
           </div>
           <div className="flex items-center gap-2">
-            <select
-              id="cockpit-view"
-              value={cockpitView}
-              onChange={(e) => setCockpitView(e.target.value as 'finances' | 'operations' | 'risques')}
-              className="rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-1.5 text-xs text-slate-200 focus:border-sky-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 sr-only sm:not-sr-only"
-              aria-label="Changer de vue cockpit (finances, opérations, risques)"
-            >
-              <option value="finances">Vue finances</option>
-              <option value="operations">Vue opérations</option>
-              <option value="risques">Vue risques</option>
-            </select>
+            <Select value={cockpitView} onValueChange={(v) => setCockpitView(v as 'finances' | 'operations' | 'risques')}>
+              <SelectTrigger id="cockpit-view" className="rounded-xl border-slate-700 bg-slate-800/80 px-3 py-2 text-xs text-slate-200 min-h-[44px] w-auto sr-only sm:not-sr-only focus:ring-sky-500/50 focus:ring-offset-slate-950" aria-label="Changer de vue cockpit (finances, opérations, risques)">
+                <SelectValue placeholder="Vue cockpit" />
+              </SelectTrigger>
+              <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+                <SelectItem value="finances">Vue finances</SelectItem>
+                <SelectItem value="operations">Vue opérations</SelectItem>
+                <SelectItem value="risques">Vue risques</SelectItem>
+              </SelectContent>
+            </Select>
             <button
               type="button"
               onClick={() => setShowPersonalizeMessage((v) => !v)}
@@ -1051,13 +1066,14 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
               title="Personnaliser l'affichage (réorganiser les widgets)"
               aria-label="Personnaliser l'affichage du dashboard"
             >
-              âœï¸ Personnaliser
+              <Settings className="h-3.5 w-3.5 shrink-0" aria-hidden />
+              Personnaliser
             </button>
           </div>
         </div>
         {showPersonalizeMessage && (
           <div className="mb-4 rounded-lg border border-sky-500/30 bg-sky-500/10 px-3 py-2 text-[11px] text-sky-200">
-            Mode personnalisation à  venir : réorganisez les widgets par glisser-déposer (comme Procore). Disponible dans une prochaine version.
+            Mode personnalisation à venir : réorganisez les widgets par glisser-déposer (comme Procore). Disponible dans une prochaine version.
           </div>
         )}
         {cockpitView !== 'finances' ? (
@@ -1184,7 +1200,7 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
               <button
                 type="button"
                 onClick={() => setBudgetConsommeModalOpen(true)}
-                className="rounded-lg border border-slate-800 bg-slate-950/60 px-3 py-2 min-h-[44px] flex flex-col gap-0.5 text-left hover:bg-slate-800/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50"
+                className="rounded-lg border border-slate-800 bg-slate-950/60 px-3 py-2 min-h-[44px] flex flex-col gap-0.5 text-left cursor-pointer hover:bg-slate-800/60 hover:border-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 transition-colors"
                 aria-label="Ouvrir le détail Budget consommé par chantier"
               >
                 <span className="text-[10px] text-slate-400">
@@ -1200,7 +1216,7 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
               <button
                 type="button"
                 onClick={() => setValidationsModalOpen(true)}
-                className="rounded-lg border border-slate-800 bg-slate-950/60 px-3 py-2 min-h-[44px] flex flex-col gap-0.5 text-left hover:bg-slate-800/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50"
+                className="rounded-lg border border-slate-800 bg-slate-950/60 px-3 py-2 min-h-[44px] flex flex-col gap-0.5 text-left cursor-pointer hover:bg-slate-800/60 hover:border-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 transition-colors"
                 aria-label="Ouvrir les validations en attente (21 / 45)"
               >
                 <span className="text-[10px] text-slate-400">
@@ -1212,15 +1228,16 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
                 <span className="text-[10px] text-emerald-400">
                   → +3 depuis hier
                 </span>
-                <span className="text-[10px] text-rose-300">
-                  💴 5 impactent le cash sous 7 jours
+                <span className="text-[10px] text-rose-300 inline-flex items-center gap-1">
+                  <Wallet className="h-3 w-3 shrink-0" aria-hidden />
+                  5 impactent le cash sous 7 jours
                 </span>
               </button>
             </div>
             <button
               type="button"
               onClick={() => setDecisionsModalOpen(true)}
-              className="mt-2 w-full rounded-lg border border-slate-800 bg-slate-950/40 px-3 py-2 min-h-[44px] flex items-center justify-between text-left hover:bg-slate-800/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 text-[11px]"
+              className="mt-2 w-full rounded-lg border border-slate-800 bg-slate-950/40 px-3 py-2 min-h-[44px] flex items-center justify-between text-left cursor-pointer hover:bg-slate-800/60 hover:border-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 text-[11px] transition-colors"
               aria-label={`Ouvrir les décisions en attente (${decisionsVal})`}
             >
               <span className="text-slate-400">📋 Décisions en attente</span>
@@ -1363,7 +1380,7 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
                     <div className="text-xs font-medium text-slate-100 mb-1">Décomposition (audit ERP BTP 2026)</div>
                     <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-[11px] text-slate-300">
                       <span>Finitions (photos avant/après)</span><span className="tabular-nums text-right">{scoreQualite.finitions}</span>
-                      <span>Délais (% livrés à  l&apos;heure)</span><span className="tabular-nums text-right">{scoreQualite.delais}</span>
+                      <span>Délais (% livrés à l&apos;heure)</span><span className="tabular-nums text-right">{scoreQualite.delais}</span>
                       <span>Conformité (% réserves levées)</span><span className="tabular-nums text-right">{scoreQualite.conformite}</span>
                       <span>Satisfaction (NPS client)</span><span className="tabular-nums text-right">{scoreQualite.satisfaction}</span>
                     </div>
@@ -1393,59 +1410,37 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
         id="indicateurs-complementaires"
       >
       <DashboardPanel title="" subtitle="" className="mt-0 border-0 shadow-none" padding="md">
-        <p className="text-[11px] text-slate-400 mb-4">Conformité HSE, rentabilité, trésorerie, utilisation, carbone — standards marché 2026</p>
+        <p className={cn(typography.label.md, 'text-slate-400 mb-5')}>Conformité HSE, rentabilité, trésorerie, utilisation, carbone — standards marché 2026</p>
         {(() => {
           const ind = getIndicateursComplementaires(perimetreFilter);
+          const items = [
+            { icon: ShieldAlert, label: "Taux d'accidents (HSE)", value: ind.tauxAccidentsHse, sub: 'Objectif < 10 · Secteur BTP : 12,3', iconClass: 'text-emerald-400' },
+            { icon: TrendingUp, label: 'Productivité horaire', value: ind.productiviteHoraire, sub: 'MO directe · 30 derniers jours', iconClass: 'text-sky-400' },
+            { icon: Clock, label: 'Délai moyen paiement clients', value: `${ind.delaiPaiementMoyenJours} j`, sub: `Objectif < ${ind.delaiPaiementObjectifJours} j`, iconClass: 'text-amber-400' },
+            { icon: Target, label: 'ROI chantiers (moyenne)', value: `${ind.roiChantiersPourcent} %`, sub: 'Retour sur investissement portefeuille', iconClass: 'text-violet-400' },
+            { icon: BarChart3, label: "Taux d'utilisation", value: `${ind.tauxUtilisation} %`, sub: `Objectif > ${ind.tauxUtilisationObjectif} % (ressources)`, iconClass: 'text-blue-400' },
+            { icon: Leaf, label: 'Bilan carbone (tCO₂e)', value: ind.bilanCarboneTeqCO2, sub: `Objectif < ${ind.bilanCarboneObjectifTeqCO2} tCO₂e · portefeuille`, iconClass: 'text-emerald-500' },
+          ];
+          if (items.length === 0) {
+            return (
+              <div className="rounded-xl border border-dashed border-slate-600/50 bg-slate-800/20 dark:bg-slate-900/40 p-8 flex flex-col items-center justify-center gap-2 text-center">
+                <BarChart3 className="h-10 w-10 text-slate-500" aria-hidden />
+                <p className={cn(typography.body.sm, 'text-slate-400')}>Aucune donnée disponible pour ce périmètre</p>
+              </div>
+            );
+          }
           return (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-[11px]">
-              <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-3 flex flex-col gap-1">
-                <div className="flex items-center gap-2">
-                  <ShieldAlert className="h-4 w-4 text-emerald-400" aria-hidden />
-                  <span className="text-[10px] text-slate-400">Taux d&apos;accidents (HSE)</span>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
+              {items.map(({ icon: Icon, label, value, sub, iconClass }) => (
+                <div key={label} className="rounded-xl border border-slate-700/50 dark:border-slate-800 bg-slate-800/20 dark:bg-slate-900/80 p-5 flex flex-col gap-3 backdrop-blur-sm transition-all hover:shadow-md hover:border-slate-600/50">
+                  <div className="flex items-center gap-2">
+                    <Icon className={cn('h-4 w-4 shrink-0', iconClass)} aria-hidden />
+                    <span className={cn(typography.label.md, 'text-slate-400')}>{label}</span>
+                  </div>
+                  <div className="text-2xl font-semibold text-slate-100 tabular-nums tracking-tight">{value}</div>
+                  <p className={cn(typography.label.md, 'text-slate-500 dark:text-slate-400 leading-snug')}>{sub}</p>
                 </div>
-                <div className="text-lg font-semibold text-slate-100">{ind.tauxAccidentsHse}</div>
-                <p className="text-[10px] text-slate-400">Objectif &lt; 10 · Secteur BTP : 12,3</p>
-              </div>
-              <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-3 flex flex-col gap-1">
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-sky-400" aria-hidden />
-                  <span className="text-[10px] text-slate-400">Productivité horaire</span>
-                </div>
-                <div className="text-lg font-semibold text-slate-100">{ind.productiviteHoraire}</div>
-                <p className="text-[10px] text-slate-400">MO directe · 30 derniers jours</p>
-              </div>
-              <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-3 flex flex-col gap-1">
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-amber-400" aria-hidden />
-                  <span className="text-[10px] text-slate-400">Délai moyen paiement clients</span>
-                </div>
-                <div className="text-lg font-semibold text-slate-100">{ind.delaiPaiementMoyenJours} j</div>
-                <p className="text-[10px] text-slate-400">Objectif &lt; {ind.delaiPaiementObjectifJours} j</p>
-              </div>
-              <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-3 flex flex-col gap-1">
-                <div className="flex items-center gap-2">
-                  <Target className="h-4 w-4 text-violet-400" aria-hidden />
-                  <span className="text-[10px] text-slate-400">ROI chantiers (moyenne)</span>
-                </div>
-                <div className="text-lg font-semibold text-slate-100">{ind.roiChantiersPourcent} %</div>
-                <p className="text-[10px] text-slate-400">Retour sur investissement portefeuille</p>
-              </div>
-              <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-3 flex flex-col gap-1">
-                <div className="flex items-center gap-2">
-                  <BarChart3 className="h-4 w-4 text-blue-400" aria-hidden />
-                  <span className="text-[10px] text-slate-400">Taux d&apos;utilisation</span>
-                </div>
-                <div className="text-lg font-semibold text-slate-100">{ind.tauxUtilisation} %</div>
-                <p className="text-[10px] text-slate-400">Objectif &gt; {ind.tauxUtilisationObjectif} % (ressources)</p>
-              </div>
-              <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-3 flex flex-col gap-1">
-                <div className="flex items-center gap-2">
-                  <Leaf className="h-4 w-4 text-emerald-500" aria-hidden />
-                  <span className="text-[10px] text-slate-400">Bilan carbone (tCOâ‚‚e)</span>
-                </div>
-                <div className="text-lg font-semibold text-slate-100">{ind.bilanCarboneTeqCO2}</div>
-                <p className="text-[10px] text-slate-400">Objectif &lt; {ind.bilanCarboneObjectifTeqCO2} tCOâ‚‚e · portefeuille</p>
-              </div>
+              ))}
             </div>
           );
         })()}
@@ -1464,17 +1459,21 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
         id="activite-recente"
       >
       <DashboardPanel title="" subtitle="" className="mt-0 border-0 shadow-none" padding="md">
-        <p className="text-[11px] text-slate-400 mb-4">Dernières actions et événements</p>
-        <ul className="space-y-2 text-[11px]" role="list">
-          {ACTIVITE_RECENTE_MOCK.map((item) => (
-            <li
-              key={item.id}
-              className="flex items-center justify-between gap-3 py-2 px-3 rounded-lg border border-slate-800/60 bg-slate-900/50 hover:bg-slate-800/50 transition-colors"
-            >
-              <span className="text-slate-200 truncate min-w-0">{item.label}</span>
-              <span className="text-slate-400 shrink-0 text-[10px]">{item.timeAgo}</span>
-            </li>
-          ))}
+        <p className={cn(typography.label.md, 'text-slate-400 mb-4')}>Dernières actions et événements</p>
+        <ul className="space-y-2" role="list">
+          {ACTIVITE_RECENTE_MOCK.length === 0 ? (
+            <li className={cn(typography.body.sm, 'text-slate-400 py-6 text-center rounded-xl border border-dashed border-slate-600/50')}>Aucune activité récente</li>
+          ) : (
+            ACTIVITE_RECENTE_MOCK.map((item) => (
+              <li
+                key={item.id}
+                className="flex items-center justify-between gap-3 py-2.5 px-4 rounded-xl border border-slate-800/60 bg-slate-900/50 hover:bg-slate-800/50 transition-colors"
+              >
+                <span className={cn(typography.body.xs, 'text-slate-200 truncate min-w-0')}>{item.label}</span>
+                <span className={cn(typography.label.md, 'text-slate-400 shrink-0')}>{item.timeAgo}</span>
+              </li>
+            ))
+          )}
         </ul>
       </DashboardPanel>
       </CollapsibleSection>
@@ -1495,28 +1494,28 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
           Chantiers en phase d&apos;exécution ({phase4Displayed.length} / {phase4FilteredCount} affichés{phase4FilterSante !== 'all' ? `, filtre: ${phase4FilterSante === 'critique' ? 'Critique' : phase4FilterSante === 'surveiller' ? 'À surveiller' : 'Bon'}` : ''} sur {phase4TotalCount} au total)
         </p>
         <p className="text-[10px] text-slate-400 mb-2">
-          Santé d&apos;avancement : barre = % d&apos;avancement global (Bon ≥ 80 %, À surveiller ≥ 50 %, Critique &lt; 50 %). 🎨 « Peinture 0 % » = lot peinture non démarré. « Bureau 2/3 » = 2 bureaux validés sur 3. Cliquez sur un en-tête de colonne pour trier.
+          Santé d&apos;avancement : barre = % d&apos;avancement global (Bon ≥ 80 %, À surveiller ≥ 50 %, Critique &lt; 50 %). « Peinture 0 % » = lot peinture non démarré. « Bureau 2/3 » = 2 bureaux validés sur 3. Cliquez sur un en-tête de colonne pour trier.
         </p>
-        <div className="mb-3 flex flex-wrap items-center gap-3">
-          <label className="text-[11px] text-slate-400">Filtrer par santé :</label>
-          <select
-            value={phase4FilterSante}
-            onChange={(e) => setPhase4FilterSante(e.target.value as Phase4FilterSante)}
-            className="rounded-lg border border-slate-700 bg-slate-800/80 px-3 py-1.5 text-[11px] text-slate-200 focus:border-sky-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50"
-            aria-label="Filtrer les chantiers par niveau de santé"
-          >
-            <option value="all">Tous</option>
-            <option value="critique">Critique (&lt; 50 %)</option>
-            <option value="surveiller">À surveiller (50—80 %)</option>
-            <option value="bon">Bon (≥ 80 %)</option>
-          </select>
+        <div className="mb-4 flex flex-wrap items-center gap-3">
+          <label className={cn(typography.label.md, 'text-slate-400')}>Filtrer par santé :</label>
+          <Select value={phase4FilterSante} onValueChange={(v) => setPhase4FilterSante(v as Phase4FilterSante)}>
+            <SelectTrigger className={cn('rounded-xl border-slate-700 bg-slate-800/80 px-4 py-2', typography.label.md, 'text-slate-200 min-h-[44px] w-auto focus:ring-sky-500/50')} aria-label="Filtrer les chantiers par niveau de santé">
+              <SelectValue placeholder="Santé" />
+            </SelectTrigger>
+            <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+              <SelectItem value="all">Tous</SelectItem>
+              <SelectItem value="critique">Critique (&lt; 50 %)</SelectItem>
+              <SelectItem value="surveiller">À surveiller (50—80 %)</SelectItem>
+              <SelectItem value="bon">Bon (≥ 80 %)</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-        <div className="rounded-xl border border-slate-800/60 bg-slate-950/40 overflow-hidden">
+        <div className="rounded-2xl border border-slate-700/50 bg-slate-900/30 backdrop-blur-sm overflow-hidden shadow-md">
           <div className="overflow-x-auto overflow-y-visible -mx-1 px-1 md:mx-0 md:px-0" style={{ WebkitOverflowScrolling: 'touch' }}>
-            <table className="w-full min-w-[640px] border-collapse text-[10px] sm:text-[11px]">
-              <thead className="bg-slate-800/60 sticky top-0 z-10">
+            <table className="w-full min-w-[640px] border-collapse text-xs sm:text-sm">
+              <thead className="bg-slate-800/80 dark:bg-slate-800/90 sticky top-0 z-10 border-b border-slate-700/50">
                 <tr>
-                  <th className="p-2 sm:p-3 text-left whitespace-nowrap">
+                  <th className="p-4 text-left whitespace-nowrap">
                     <button
                       type="button"
                       onClick={() => togglePhase4Sort('numero')}
@@ -1546,7 +1545,7 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
                       {phase4SortBy === 'ca' ? (phase4SortDir === 'asc' ? <ArrowUp className="h-3 w-3" aria-hidden /> : <ArrowDown className="h-3 w-3" aria-hidden />) : <ArrowUpDown className="h-3 w-3 opacity-50" aria-hidden />}
                     </button>
                   </th>
-                  <th className="p-3 text-right">
+                  <th className="p-4 text-right">
                     <button
                       type="button"
                       onClick={() => togglePhase4Sort('sante')}
@@ -1579,18 +1578,18 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
                       }
                     }}
                     className={cn(
-                      'border-t border-slate-800/60 transition-colors cursor-pointer',
-                      'hover:bg-slate-800/40 focus-within:bg-slate-800/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-500/50'
+                      'border-t border-slate-700/40 transition-colors duration-150 cursor-pointer',
+                      'hover:bg-slate-800/50 focus-within:bg-slate-800/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-cyan-500/50'
                     )}
                     aria-label={`Voir le détail du chantier ${chantier.numero}`}
                   >
-                    <td className="p-3">
+                    <td className="p-4">
                       <span className="font-medium text-slate-100">
                         {chantier.numero}
                       </span>
                     </td>
-                    <td className="p-3 text-right tabular-nums text-slate-300">{formatCFA(chantier.ca)}</td>
-                    <td className="p-3">
+                    <td className="p-4 text-right tabular-nums text-slate-300">{formatCFA(chantier.ca)}</td>
+                    <td className="p-4">
                       <div className="flex items-center gap-2">
                         <div
                           className="w-16 h-3 rounded-full overflow-hidden bg-slate-700/50 inline-block shrink-0"
@@ -1601,15 +1600,16 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
                             style={{ width: `${Math.round(chantier.sante * 100)}%` }}
                           />
                         </div>
-                        <span className="text-[10px] text-slate-400 shrink-0">
+                        <span className="text-xs text-slate-400 shrink-0">
                           {Math.round(chantier.sante * 100)} % — {getHealthLabel(Math.round(chantier.sante * 100))}
                         </span>
                       </div>
                     </td>
-                    <td className="p-2 sm:p-3 text-right text-red-400 min-w-[140px]">{getProblemePrincipal(chantier)}</td>
-                    <td className="p-2 sm:p-3 text-right whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                    <td className="p-4 text-right text-red-400 min-w-[140px]">{getProblemePrincipal(chantier)}</td>
+                    <td className="p-4 text-right whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                       {(() => {
                         const action = phase4Actions[chantier.numero] ?? { label: "Relancer l'entreprise", variant: 'danger' as const, type: 'call' as Phase4ActionType };
+                        const ActionIcon = PHASE4_ACTION_ICONS[action.type];
                         return (
                           <button
                             type="button"
@@ -1617,13 +1617,14 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
                             onClick={() => openPhase4Action(action.type, chantier)}
                             aria-label={action.label}
                             className={cn(
-                              'px-3 py-2 min-h-[44px] rounded-lg text-[11px] font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
+                              'inline-flex items-center justify-center gap-2 px-4 py-2.5 min-h-[44px] rounded-xl text-xs font-medium transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 active:scale-[0.98]',
                               action.variant === 'danger'
-                                ? 'bg-red-500/80 hover:bg-red-500 text-white'
-                                : 'bg-amber-500/80 hover:bg-amber-500 text-slate-900'
+                                ? 'bg-red-500/90 hover:bg-red-500 text-white shadow-sm hover:shadow'
+                                : 'bg-amber-500/90 hover:bg-amber-500 text-slate-900 shadow-sm hover:shadow'
                             )}
                           >
-                            {action.label}
+                            <ActionIcon className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                            <span>{action.label}</span>
                           </button>
                         );
                       })()}
@@ -1639,7 +1640,7 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
             <button
               type="button"
               onClick={() => setPhase4DisplayLimit(phase4FilteredCount)}
-              className="text-[11px] text-sky-400 hover:text-sky-300 font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 rounded min-h-[44px] px-3 py-2"
+              className="text-xs text-cyan-400 hover:text-cyan-300 font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50 rounded-xl min-h-[44px] px-4 py-2.5"
               aria-label="Afficher tous les chantiers filtrés"
             >
               Voir les {phase4FilteredCount - phase4DisplayLimit} autres chantiers
@@ -1649,7 +1650,7 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
             <button
               type="button"
               onClick={() => setPhase4DisplayLimit(PHASE4_INITIAL_LIMIT)}
-              className="text-[11px] text-slate-400 hover:text-slate-300 font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500/50 rounded min-h-[44px] px-3 py-2"
+              className="text-xs text-slate-400 hover:text-slate-300 font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500/50 rounded-xl min-h-[44px] px-4 py-2.5"
               aria-label="Réduire l'affichage aux 5 premiers chantiers"
             >
               Réduire

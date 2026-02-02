@@ -20,9 +20,9 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 const COMPANY_LOGO_SRC = '/images/log_yessalate.png';
 
 const TONE_CLASSES = {
-  ok: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40',
-  warn: 'bg-amber-500/20 text-amber-400 border-amber-500/40',
-  crit: 'bg-rose-500/20 text-rose-400 border-rose-500/40',
+  ok: 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border-emerald-500/40',
+  warn: 'bg-amber-500/20 text-amber-700 dark:text-amber-400 border-amber-500/40',
+  crit: 'bg-rose-500/20 text-rose-700 dark:text-rose-400 border-rose-500/40',
 };
 
 export interface KpiForStrip {
@@ -93,7 +93,7 @@ export function PilotageHome({ veilleBadges, kpis = [], onKpiClick, onSearchClic
             <span className="flex-1 text-left text-sm sm:text-base" title="Accéder à un module, une action, un chiffre">
               Module, action, chiffre…
             </span>
-            <kbd className="hidden sm:inline-flex px-2 py-1 rounded text-xs font-medium tabular-nums text-slate-500 bg-slate-200 dark:bg-slate-800/80">
+            <kbd className="hidden sm:inline-flex px-2 py-1 rounded text-xs font-medium tabular-nums text-slate-600 dark:text-slate-400 bg-slate-200 dark:bg-slate-800/80">
               Ctrl+K
             </kbd>
           </button>
@@ -104,7 +104,7 @@ export function PilotageHome({ veilleBadges, kpis = [], onKpiClick, onSearchClic
       <div className="w-full max-w-2xl flex flex-col items-center gap-4 sm:gap-5">
         {/* Pastilles veille — la recherche est dans la topbar */}
         <div className="flex flex-wrap items-center justify-center gap-2">
-          <span className="text-[10px] uppercase tracking-wider text-slate-500 basis-full text-center sm:basis-auto sm:mr-2">Veille</span>
+          <span className="veille-label text-[10px] uppercase tracking-wider text-slate-600 dark:text-slate-300 basis-full text-center sm:basis-auto sm:mr-2">Veille</span>
           {VEILLE_SIGNALS.map((signal) => {
           const href = getModuleHref(signal.target);
           const toneClass = TONE_CLASSES[signal.tone ?? 'ok'];
@@ -123,7 +123,7 @@ export function PilotageHome({ veilleBadges, kpis = [], onKpiClick, onSearchClic
               <span className="w-1.5 h-1.5 rounded-full bg-current opacity-80" aria-hidden />
               {signal.label}
               {badge != null && badge > 0 && (
-                <span className="ml-0.5 min-w-[1.25rem] px-1.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-900/60 text-[10px] font-semibold tabular-nums">
+                <span className="ml-0.5 min-w-[1.25rem] px-1.5 py-0.5 rounded-full bg-slate-300 dark:bg-slate-900/60 text-slate-700 dark:text-slate-200 text-[10px] font-semibold tabular-nums">
                   {badge}
                 </span>
               )}
@@ -138,7 +138,7 @@ export function PilotageHome({ veilleBadges, kpis = [], onKpiClick, onSearchClic
             <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[11px]">
             {kpis.map((kpi) => {
               const Icon = kpi.icon;
-              const toneColor = kpi.tone === 'ok' ? 'text-emerald-400' : kpi.tone === 'warn' ? 'text-amber-400' : kpi.tone === 'crit' ? 'text-rose-400' : kpi.tone === 'info' ? 'text-sky-400' : 'text-slate-300';
+              const toneColor = kpi.tone === 'ok' ? 'text-emerald-600 dark:text-emerald-400' : kpi.tone === 'warn' ? 'text-amber-600 dark:text-amber-400' : kpi.tone === 'crit' ? 'text-rose-600 dark:text-rose-400' : kpi.tone === 'info' ? 'text-sky-600 dark:text-sky-400' : 'text-slate-600 dark:text-slate-400';
               const shortLabel = kpi.label.length > 12 ? `${kpi.label.slice(0, 10)}…` : kpi.label;
               return (
                 <Tooltip key={kpi.label}>
@@ -147,20 +147,22 @@ export function PilotageHome({ veilleBadges, kpis = [], onKpiClick, onSearchClic
                       type="button"
                       onClick={() => onKpiClick?.(kpi)}
                       className={cn(
-                        'flex items-center gap-2 py-1.5 px-2 -mx-1 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800/50 transition-colors',
+                        'flex items-center gap-2 py-1.5 px-2 -mx-1 rounded-lg cursor-pointer',
+                        'hover:bg-slate-200 dark:hover:bg-slate-800/50 hover:scale-[1.02] active:scale-[0.98] transition-colors',
                         'focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 focus-visible:ring-offset-1 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950'
                       )}
                       aria-label={`${kpi.label}: ${kpi.value} (${kpi.delta ?? '—'})`}
+                      title={kpi.label}
                     >
-                      <Icon className="h-3.5 w-3.5 text-slate-400 shrink-0" aria-hidden />
-                      <span className="text-slate-500 dark:text-slate-500 text-[10px] shrink-0 max-w-[8rem] truncate" title={kpi.label}>{shortLabel}</span>
-                      <span className="text-slate-700 dark:text-slate-300 font-medium tabular-nums">{String(kpi.value)}</span>
-                      <span className={cn('tabular-nums', kpi.delta && kpi.delta !== '—' ? toneColor : 'text-slate-500')}>{kpi.delta ?? '—'}</span>
+                      <Icon className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400 shrink-0" aria-hidden />
+                      <span className="text-slate-600 dark:text-slate-300 text-[10px] shrink-0 max-w-[8rem] truncate" title={kpi.label}>{shortLabel}</span>
+                      <span className="text-slate-800 dark:text-slate-300 font-medium tabular-nums">{String(kpi.value)}</span>
+                      <span className={cn('tabular-nums', kpi.delta && kpi.delta !== '—' ? toneColor : 'text-slate-600 dark:text-slate-500')}>{kpi.delta ?? '—'}</span>
                     </button>
                   </TooltipTrigger>
-                  <TooltipContent side="bottom" className="text-xs">
+                  <TooltipContent side="bottom" className="text-xs text-white">
                     <div className="font-medium">{kpi.label}</div>
-                    <div className="text-slate-400">Variation : {kpi.delta ?? '—'}</div>
+                    <div className="text-slate-300">Variation : {kpi.delta ?? '—'}</div>
                   </TooltipContent>
                 </Tooltip>
               );

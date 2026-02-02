@@ -9,7 +9,7 @@ import React from 'react';
 import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { IndicateurConformite } from '../../types/gouvernanceTypes';
-import { cn } from '@/lib/utils';
+import { cn, exportDataAsCSV } from '@/lib/utils';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { normalizeToArray } from '../../utils/dataNormalization';
 
@@ -19,11 +19,23 @@ export default function IndicateursConformitePage() {
   const indicateurs = normalizeToArray<IndicateurConformite>(data);
 
   return (
-    <div className="h-full w-full bg-slate-950 text-white p-6">
+    <div className="h-full w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-white p-6">
       <GouvernanceHeader
         title="Indicateurs conformité"
         subtitle="Vue d'ensemble des indicateurs de conformité et performance"
-        onExport={() => { /* TODO: export indicateurs conformité */ }}
+        onExport={() => {
+          const rows = indicateurs.map((i: IndicateurConformite) => ({
+            id: i.id,
+            nom: i.nom,
+            type: i.type,
+            valeur: i.valeur,
+            valeur_cible: i.valeur_cible,
+            pourcent: i.pourcent,
+            statut: i.statut,
+            tendance: i.tendance,
+          }));
+          exportDataAsCSV(rows, 'indicateurs_conformite');
+        }}
       />
 
       {isLoading ? (

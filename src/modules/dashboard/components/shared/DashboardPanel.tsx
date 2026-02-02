@@ -42,13 +42,12 @@ export function DashboardPanel({
   return (
     <div
       className={cn(
-        colors.border.accent,
-        colors.bg.panel,
         borderRadius.lg,
-        'backdrop-blur',
-        'shadow-[0_10px_30px_-20px_rgba(0,0,0,0.8)]',
+        'backdrop-blur-sm',
+        'border border-slate-200 bg-white dark:border-slate-800/70 dark:bg-slate-900/40',
+        'shadow-sm dark:shadow-[0_4px_24px_-8px_rgba(0,0,0,0.4)]',
         transitions.standard,
-        'hover:shadow-[0_12px_36px_-18px_rgba(0,0,0,0.9)]',
+        'hover:shadow-md dark:hover:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.5)]',
         paddingClasses[padding],
         className
       )}
@@ -60,18 +59,18 @@ export function DashboardPanel({
         <div className="mb-4 space-y-1">
           <div className="flex items-center gap-3">
             {Icon && (
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-800/60 bg-slate-900/40" aria-hidden>
-                <Icon className="h-4 w-4 text-slate-300" />
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-100 dark:border-slate-800/60 dark:bg-slate-900/40" aria-hidden>
+                <Icon className="h-4 w-4 text-slate-600 dark:text-slate-300" />
               </div>
             )}
             {title && (
-              <h2 id={titleId} className="text-lg font-bold tracking-tight text-slate-50">
+              <h2 id={titleId} className="text-lg font-bold tracking-tight text-slate-900 dark:text-slate-50">
                 {title}
               </h2>
             )}
           </div>
           {subtitle && (
-            <p className="text-sm text-slate-400 mt-0.5 leading-relaxed">{subtitle}</p>
+            <p className="text-sm text-slate-600 dark:text-slate-400 mt-0.5 leading-relaxed">{subtitle}</p>
           )}
         </div>
       )}

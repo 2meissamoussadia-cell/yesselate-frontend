@@ -5,6 +5,7 @@
 
 import React, { useState } from 'react';
 import { X, AlertTriangle, CheckCircle2, Clock, Calendar, BellOff, Database } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import { zIndexClass } from '../utils/zIndex';
 import { useAckAlert, useCloseAlert, useSnoozeAlert, type AlertEvent } from '../hooks/useAlerts';
@@ -268,19 +269,19 @@ export function AlertDetailModal({ alert, isOpen, onClose }: AlertDetailModalPro
             {/* Snooze selector */}
             <div className="flex items-center gap-3">
               <label className="text-sm text-slate-400 whitespace-nowrap">Reporter de :</label>
-              <select
-                value={snoozeDuration}
-                onChange={(e) => setSnoozeDuration(Number(e.target.value))}
-                disabled={isProcessing}
-                className="px-3 py-1.5 rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 disabled:opacity-50"
-              >
-                <option value={15}>15 minutes</option>
-                <option value={30}>30 minutes</option>
-                <option value={60}>1 heure</option>
-                <option value={120}>2 heures</option>
-                <option value={240}>4 heures</option>
-                <option value={480}>8 heures</option>
-              </select>
+              <Select value={String(snoozeDuration)} onValueChange={(v) => setSnoozeDuration(Number(v))} disabled={isProcessing}>
+                <SelectTrigger className="min-w-[140px] px-3 py-2 rounded-xl bg-slate-800/50 border-slate-700/50 text-slate-200 text-sm focus:ring-sky-500/50 disabled:opacity-50" aria-label="Durée du report">
+                  <SelectValue placeholder="Durée" />
+                </SelectTrigger>
+                <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+                  <SelectItem value="15">15 minutes</SelectItem>
+                  <SelectItem value="30">30 minutes</SelectItem>
+                  <SelectItem value="60">1 heure</SelectItem>
+                  <SelectItem value="120">2 heures</SelectItem>
+                  <SelectItem value="240">4 heures</SelectItem>
+                  <SelectItem value="480">8 heures</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Action buttons */}

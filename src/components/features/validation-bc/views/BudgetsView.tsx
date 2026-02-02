@@ -26,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { exportDataAsCSV } from '@/lib/utils';
 import {
   DollarSign,
   TrendingUp,
@@ -266,8 +267,18 @@ export function BudgetsView() {
   ];
 
   const handleExport = () => {
-    // TODO: Implement export
-    console.log('Export budgets');
+    const rows = projectBudgets.map((p) => ({
+      code: p.code,
+      nom: p.nom,
+      budgetInitial: p.budgetInitial,
+      budgetRevise: p.budgetRevise ?? '',
+      engage: p.montantEngage,
+      facture: p.montantFacture,
+      paye: p.montantPaye,
+      tauxConsommation: p.tauxConsommation,
+      statut: p.statut,
+    }));
+    exportDataAsCSV(rows, 'budgets-validation-bc');
   };
 
   if (loading) {

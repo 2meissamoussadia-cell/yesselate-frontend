@@ -9,7 +9,7 @@ import React from 'react';
 import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { JalonGouvernance } from '../../types/gouvernanceTypes';
-import { cn } from '@/lib/utils';
+import { cn, exportDataAsCSV } from '@/lib/utils';
 import { normalizeToArray } from '../../utils/dataNormalization';
 
 export default function SyntheseJalonsPage() {
@@ -18,11 +18,23 @@ export default function SyntheseJalonsPage() {
   const jalons = normalizeToArray<JalonGouvernance>(data);
 
   return (
-    <div className="h-full w-full bg-slate-950 text-white p-6">
+    <div className="h-full w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-white p-6">
       <GouvernanceHeader
         title="Synthèse jalons"
         subtitle="Vue d'ensemble de tous les jalons avec statuts et retards"
-        onExport={() => { /* TODO: export synthèse jalons */ }}
+        onExport={() => {
+          const rows = jalons.map((j: JalonGouvernance) => ({
+            id: j.id,
+            libelle: j.libelle,
+            projet_nom: j.projet_nom,
+            type: j.type,
+            date_prevue: j.date_prevue,
+            statut: j.statut,
+            retard_jours: j.retard_jours,
+            est_retard: j.est_retard,
+          }));
+          exportDataAsCSV(rows, 'synthese_jalons');
+        }}
       />
 
       {isLoading ? (

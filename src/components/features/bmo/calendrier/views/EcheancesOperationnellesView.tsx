@@ -15,7 +15,7 @@ import { CalendrierInteractif } from '../components/CalendrierInteractif';
 import { FiltresAvances } from '../components/FiltresAvances';
 
 export function EcheancesOperationnellesView() {
-  const { echeances, vueCalendrier, setVueCalendrier, periodeCalendrier, setPeriodeCalendrier } = useCalendrierStore();
+  const { echeances, vueCalendrier, setVueCalendrier, periodeCalendrier, setPeriodeCalendrier, openModal } = useCalendrierStore();
   const [showFiltres, setShowFiltres] = useState(false);
 
   // Données mockées
@@ -104,18 +104,17 @@ export function EcheancesOperationnellesView() {
           periode={periodeCalendrier}
           onPeriodeChange={setPeriodeCalendrier}
           onDateClick={(date) => {
-            // TODO: Gérer le clic sur une date
-            console.log('Date cliquée:', date);
+            openModal('creer-evenement', { date: date.toISOString?.() ?? date });
           }}
           onEventClick={(echeance) => {
-            // TODO: Ouvrir le détail de l'échéance
             if (echeance.lienModule) {
               window.location.href = echeance.lienModule;
+            } else {
+              openModal('jalon-detail', { echeance });
             }
           }}
           onCreateEvent={(date) => {
-            // TODO: Ouvrir modal création événement
-            logger.debug('Créer événement pour', { component: 'EcheancesOperationnellesView', date });
+            openModal('creer-evenement', { date: date?.toISOString?.() ?? new Date().toISOString() });
           }}
         />
       )}

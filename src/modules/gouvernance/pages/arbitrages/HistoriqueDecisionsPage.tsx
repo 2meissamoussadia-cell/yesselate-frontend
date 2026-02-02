@@ -9,7 +9,7 @@ import React from 'react';
 import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { DecisionGouvernance } from '../../types/gouvernanceTypes';
-import { cn } from '@/lib/utils';
+import { cn, exportDataAsCSV } from '@/lib/utils';
 import { normalizeToArray } from '../../utils/dataNormalization';
 
 export default function HistoriqueDecisionsPage() {
@@ -28,11 +28,22 @@ export default function HistoriqueDecisionsPage() {
   }, {});
 
   return (
-    <div className="h-full w-full bg-slate-950 text-white p-6">
+    <div className="h-full w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-white p-6">
       <GouvernanceHeader
         title="Historique des décisions"
         subtitle="Timeline des décisions prises récemment"
-        onExport={() => { /* TODO: export historique */ }}
+        onExport={() => {
+          const rows = decisions.map((d: DecisionGouvernance) => ({
+            reference: d.reference,
+            titre: d.titre,
+            statut: d.statut,
+            type: d.type,
+            date_decision: d.date_decision ?? '',
+            projet: d.projet_nom ?? '',
+            responsable: d.responsable ?? '',
+          }));
+          exportDataAsCSV(rows, 'historique-decisions');
+        }}
       />
 
       {isLoading ? (

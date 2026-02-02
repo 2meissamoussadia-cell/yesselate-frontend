@@ -60,9 +60,12 @@ export const KPICard = memo(function KPICard({ kpi, size = 'md', className }: KP
   const clickable = Boolean(kpi.onClick);
   const ariaLabel = kpi.description ? `${kpi.label} — ${kpi.description}` : kpi.label;
   const surfaceClass = cn(
-    'relative w-full text-left rounded-2xl border bg-slate-950/35 backdrop-blur',
+    'relative w-full text-left rounded-2xl border backdrop-blur',
+    'bg-white dark:bg-slate-950/35 border-slate-200 dark:border-slate-800/60',
     'border-slate-800/70 shadow-[0_10px_30px_-20px_rgba(0,0,0,0.8)] transition-colors overflow-hidden',
-    clickable ? 'hover:border-slate-700/80 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60' : 'cursor-default',
+    clickable
+      ? 'hover:border-slate-300 dark:hover:border-slate-700/80 hover:bg-slate-50 dark:hover:bg-slate-900/50 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60 active:scale-[0.99]'
+      : 'cursor-default',
     tokens.root,
     className
   );
@@ -97,7 +100,7 @@ export const KPICard = memo(function KPICard({ kpi, size = 'md', className }: KP
         </div>
 
         <div className="flex-shrink-0">
-          <div className={cn('inline-flex items-center justify-center rounded-xl border border-slate-800/60 bg-slate-900/40 p-2')}>
+          <div className={cn('inline-flex items-center justify-center rounded-xl border border-slate-200 bg-slate-100 dark:border-slate-800/60 dark:bg-slate-900/40 p-2')}>
             <Icon className={cn(tokens.icon, 'text-slate-200')} style={{ width: '0.875rem', height: '0.875rem', minWidth: '0.875rem', minHeight: '0.875rem', maxWidth: '0.875rem', maxHeight: '0.875rem' }} />
           </div>
         </div>

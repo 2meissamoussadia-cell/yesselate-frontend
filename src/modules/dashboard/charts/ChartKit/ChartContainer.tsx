@@ -38,7 +38,8 @@ export function ChartContainer({
   return (
     <div
       className={cn(
-        'bg-slate-800/30 border border-slate-700/50 rounded-xl p-6',
+        'chart-container rounded-xl p-6',
+        'bg-white dark:bg-slate-800/30 border border-slate-200 dark:border-slate-700/50',
         className
       )}
     >

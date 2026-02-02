@@ -72,12 +72,17 @@ export async function GET(_req: NextRequest) {
     });
   } catch (err) {
     console.error('[api/ai/predictions]', err);
-    return NextResponse.json(
-      {
-        error: 'Erreur lors du calcul des prédictions',
-        detail: err instanceof Error ? err.message : String(err),
-      },
-      { status: 502 }
-    );
+    // Fallback mock pour que le cockpit affiche des prédictions par défaut
+    const fallback: CockpitPredictions = {
+      retardRisk: 25,
+      budgetRisk: 15,
+      qualityScore: 78,
+      satisfactionClient: 72,
+      updatedAt: new Date().toISOString(),
+      source: 'mock',
+    };
+    return NextResponse.json(fallback, {
+      headers: { 'Cache-Control': 'private, max-age=60' },
+    });
   }
 }

@@ -69,7 +69,7 @@ export const HSEConformiteWidget = memo(function HSEConformiteWidget({
   showHeader = true,
 }: HSEConformiteWidgetProps) {
   return (
-    <div className={cn('rounded-xl border border-slate-800/80 bg-slate-950/80 overflow-hidden', className)}>
+    <div className={cn('rounded-xl border overflow-hidden border-slate-200 bg-white dark:border-slate-800/80 dark:bg-slate-950/80', className)}>
       {showHeader && (
         <div className="px-4 py-3 border-b border-slate-800/60 flex items-center gap-2">
           <ShieldAlert className="h-5 w-5 text-emerald-400" aria-hidden />
@@ -82,7 +82,7 @@ export const HSEConformiteWidget = memo(function HSEConformiteWidget({
       <div className="p-4">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-[11px]">
         {/* Accidents & Incidents */}
-        <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-3 flex flex-col gap-3">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900/80 p-3 flex flex-col gap-3">
           <div className="flex items-center gap-2">
             <ShieldAlert className="h-4 w-4 text-emerald-400" aria-hidden />
             <h4 className="font-semibold text-slate-200">Accidents & Incidents</h4>
@@ -114,7 +114,7 @@ export const HSEConformiteWidget = memo(function HSEConformiteWidget({
         </div>
 
         {/* Taux TF / TG */}
-        <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-3 flex flex-col gap-3">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900/80 p-3 flex flex-col gap-3">
           <div className="flex items-center gap-2">
             <FileCheck className="h-4 w-4 text-sky-400" aria-hidden />
             <h4 className="font-semibold text-slate-200">Indicateurs réglementaires</h4>
@@ -151,7 +151,7 @@ export const HSEConformiteWidget = memo(function HSEConformiteWidget({
         </div>
 
         {/* Conformité documentaire */}
-        <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-3 flex flex-col gap-3">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900/80 p-3 flex flex-col gap-3">
           <div className="flex items-center gap-2">
             <AlertTriangle className="h-4 w-4 text-amber-400" aria-hidden />
             <h4 className="font-semibold text-slate-200">Conformité documentaire</h4>

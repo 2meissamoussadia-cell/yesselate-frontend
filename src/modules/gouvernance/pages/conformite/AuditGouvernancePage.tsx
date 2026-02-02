@@ -10,7 +10,7 @@ import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { AuditGouvernance } from '../../types/gouvernanceTypes';
 import { FileCheck } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, exportDataAsCSV } from '@/lib/utils';
 import { normalizeToArray } from '../../utils/dataNormalization';
 
 export default function AuditGouvernancePage() {
@@ -19,11 +19,21 @@ export default function AuditGouvernancePage() {
   const audits = normalizeToArray<AuditGouvernance>(data);
 
   return (
-    <div className="h-full w-full bg-slate-950 text-white p-6">
+    <div className="h-full w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-white p-6">
       <GouvernanceHeader
         title="Audit gouvernance"
         subtitle="Liste des audits de gouvernance programmés et réalisés"
-        onExport={() => { /* TODO: export audits */ }}
+        onExport={() => {
+          const rows = audits.map((a: AuditGouvernance) => ({
+            id: a.id,
+            reference: a.reference,
+            type: a.type,
+            date: a.date,
+            statut: a.statut,
+            non_conformites_count: a.non_conformites_count,
+          }));
+          exportDataAsCSV(rows, 'audits_gouvernance');
+        }}
       />
 
       {isLoading ? (

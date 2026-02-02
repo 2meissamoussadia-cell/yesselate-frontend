@@ -37,6 +37,7 @@ export function EscalationModal() {
   const [selectedRecipient, setSelectedRecipient] = useState<string>('');
   const [urgency, setUrgency] = useState<'normal' | 'high' | 'critical'>('normal');
   const [description, setDescription] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Only render for escalation type
   if (!modal.isOpen || modal.type !== 'escalation') return null;
@@ -77,10 +78,32 @@ export function EscalationModal() {
 
   const currentLevel = levels.find(l => l.level === selectedLevel)!;
 
-  const handleSubmit = () => {
-    // TODO: Call API to submit escalation
-    logger.debug('Escalation submitted', { component: 'EscalationModal', level: selectedLevel, recipient: selectedRecipient, urgency, description, source });
-    closeModal();
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    try {
+      const res = await fetch('/api/gouvernance/escalations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          level: selectedLevel,
+          recipient: selectedRecipient,
+          urgency,
+          description: description.trim(),
+          source: data?.source,
+        }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        logger.debug('Escalation submitted', { component: 'EscalationModal', id: json.id });
+      } else {
+        logger.warn('Escalation API error', { component: 'EscalationModal', error: json.error });
+      }
+    } catch (err) {
+      logger.error('Escalation submit failed', err instanceof Error ? err : undefined, { component: 'EscalationModal' });
+    } finally {
+      setIsSubmitting(false);
+      closeModal();
+    }
   };
 
   return (
@@ -280,8 +303,8 @@ export function EscalationModal() {
             <Button
               size="sm"
               className="bg-amber-600 hover:bg-amber-700"
-              disabled={!selectedRecipient || !description.trim()}
-              onClick={handleSubmit}
+              disabled={!selectedRecipient || !description.trim() || isSubmitting}
+              onClick={() => handleSubmit()}
             >
               <ArrowUpRight className="h-4 w-4 mr-1" />
               Escalader

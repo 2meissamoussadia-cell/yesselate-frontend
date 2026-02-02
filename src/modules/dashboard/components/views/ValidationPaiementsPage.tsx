@@ -8,7 +8,7 @@
 
 'use client';
 
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import {
   DashboardPageLayout,
@@ -139,18 +139,16 @@ function FilterSelect({
   return (
     <div className="flex flex-col text-[11px] space-y-1">
       <span className="text-slate-400">{label}</span>
-      <select
-        className="h-8 min-w-[140px] bg-slate-900 border border-slate-700 rounded-md px-2 text-[11px] text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        aria-label={label}
-      >
-        {options.map((opt) => (
-          <option key={opt} value={opt}>
-            {opt}
-          </option>
-        ))}
-      </select>
+      <Select value={value} onValueChange={onChange}>
+        <SelectTrigger className="h-9 min-w-[140px] bg-slate-900 border-slate-700 rounded-xl px-3 text-[11px] text-slate-200 focus:ring-sky-500/50" aria-label={label}>
+          <SelectValue placeholder={label} />
+        </SelectTrigger>
+        <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+          {options.map((opt) => (
+            <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 }
@@ -250,7 +248,11 @@ export interface ValidationPaiementsPageProps {
 }
 
 export function ValidationPaiementsPage({ data: apiData }: ValidationPaiementsPageProps = {}) {
-  const paiementsSource = apiData?.paiements ?? PAIEMENTS_MOCK;
+  const [paiements, setPaiements] = useState<PaiementRow[]>(apiData?.paiements ?? PAIEMENTS_MOCK);
+  const paiementsSource = paiements;
+  useEffect(() => {
+    if (apiData?.paiements?.length) setPaiements(apiData.paiements);
+  }, [apiData?.paiements]);
 
   const [statutFilter, setStatutFilter] = useState<string>('En attente');
   const [modeFilter, setModeFilter] = useState<string>('Tous');
@@ -280,17 +282,29 @@ export function ValidationPaiementsPage({ data: apiData }: ValidationPaiementsPa
     setSegmentFilter('Tous');
   }, []);
 
-  const handleValider = useCallback((_p: PaiementRow) => {
-    // TODO: appel API validation
+  const handleValider = useCallback(async (p: PaiementRow) => {
+    const res = await fetch(`/api/paiements/${p.id}/validate`, { method: 'POST' });
+    if (res.ok) setPaiements((prev) => prev.map((x) => (x.id === p.id ? { ...x, statut: 'Validé' as const } : x)));
   }, []);
-  const handleRefuser = useCallback((_p: PaiementRow) => {
-    // TODO: appel API refus
+  const handleRefuser = useCallback(async (p: PaiementRow) => {
+    const res = await fetch(`/api/paiements/${p.id}/refuse`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ motif: 'Refusé par validateur' }),
+    });
+    if (res.ok) setPaiements((prev) => prev.map((x) => (x.id === p.id ? { ...x, statut: 'Refusé' as const } : x)));
   }, []);
-  const handleDemanderPieces = useCallback((_p: PaiementRow) => {
-    // TODO: appel API demande pièces
+  const handleDemanderPieces = useCallback(async (p: PaiementRow) => {
+    const res = await fetch(`/api/paiements/${p.id}/demande-pieces`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pieces: p.pieces }),
+    });
+    if (res.ok) return;
   }, []);
-  const handleEnvoyerHuissier = useCallback((_p: PaiementRow) => {
-    // TODO: appel API envoi huissier
+  const handleEnvoyerHuissier = useCallback(async (p: PaiementRow) => {
+    const res = await fetch(`/api/paiements/${p.id}/huissier`, { method: 'POST' });
+    if (res.ok) return;
   }, []);
 
   const formatMontantTotal = (n: number) =>

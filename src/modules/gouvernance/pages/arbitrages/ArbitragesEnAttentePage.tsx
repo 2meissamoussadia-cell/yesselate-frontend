@@ -10,7 +10,7 @@ import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { ArbitrageGouvernance } from '../../types/gouvernanceTypes';
 import { Scale, Clock } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, exportDataAsCSV } from '@/lib/utils';
 import { normalizeToArray } from '../../utils/dataNormalization';
 import { FilterBar } from '@/components/erp';
 import type { ErpFilters } from '@/components/erp';
@@ -34,11 +34,26 @@ export default function ArbitragesEnAttentePage() {
   }, [arbitrages, filters.gravite]);
 
   return (
-    <div className="h-full w-full bg-slate-950 text-white p-6">
+    <div className="h-full w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-white p-6">
       <GouvernanceHeader
         title="Arbitrages en attente"
         subtitle="Arbitrages nécessitant une décision urgente"
-        onExport={() => { /* TODO: export arbitrages */ }}
+        onExport={() => {
+          const rows = filteredArbitrages.map((a: ArbitrageGouvernance) => ({
+            id: a.id,
+            reference: a.reference,
+            titre: a.titre,
+            niveau: a.niveau,
+            statut: a.statut,
+            projet_nom: a.projet_nom,
+            demandeur: a.demandeur,
+            date_echeance: a.date_echeance,
+            impact_financier: a.impact_financier,
+            impact_planning: a.impact_planning,
+            description: a.description ?? '',
+          }));
+          exportDataAsCSV(rows, 'arbitrages_en_attente');
+        }}
       />
 
       {!isLoading && arbitrages.length > 0 && (

@@ -626,9 +626,23 @@ function DiscussionTab({
     },
   ];
 
-  const handleSend = () => {
-    if (comment.trim()) {
-      // TODO: Envoyer le commentaire
+  const handleSend = async () => {
+    if (!comment.trim() || !decision?.id) return;
+    try {
+      const res = await fetch(`/api/arbitrages/${decision.id}/timeline`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'commentaire',
+          title: 'Commentaire',
+          description: comment,
+          actor: decision.auteur?.name ?? 'Utilisateur',
+          actorId: 'current',
+          actorRole: decision.auteur?.role ?? 'Agent',
+        }),
+      });
+      if (res.ok) setComment('');
+    } catch {
       setComment('');
     }
   };

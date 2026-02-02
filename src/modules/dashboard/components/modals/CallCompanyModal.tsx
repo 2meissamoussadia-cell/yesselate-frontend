@@ -9,6 +9,7 @@ import React, { useState } from 'react';
 import { X, Phone, Mail, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import { useToast } from '@/components/ui/toast';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import type { Contact } from '../../types/dashboardDomain';
 
@@ -109,16 +110,16 @@ export function CallCompanyModal({
 
           <div>
             <label htmlFor="call-outcome" className="block text-xs font-medium text-slate-400 mb-1">Résultat de l&apos;appel</label>
-            <select
-              id="call-outcome"
-              value={outcome}
-              onChange={(e) => setOutcome(e.target.value as typeof outcome)}
-              className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-200"
-            >
-              <option value="repondu">Répondu</option>
-              <option value="messagerie">Messagerie</option>
-              <option value="injoignable">Injoignable</option>
-            </select>
+            <Select value={outcome} onValueChange={(v) => setOutcome(v as typeof outcome)}>
+              <SelectTrigger id="call-outcome" className="w-full rounded-xl border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-200">
+                <SelectValue placeholder="Résultat" />
+              </SelectTrigger>
+              <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+                <SelectItem value="repondu">Répondu</SelectItem>
+                <SelectItem value="messagerie">Messagerie</SelectItem>
+                <SelectItem value="injoignable">Injoignable</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <div>

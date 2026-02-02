@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useMemo } from 'react';
 import { Bell, X, Check, AlertTriangle, Info, CheckCircle2, Clock } from 'lucide-react';
 import { useGovernanceCommandCenterStore } from '@/lib/stores/governanceCommandCenterStore';
 import { logger } from '@/lib/utils/logger';
@@ -82,16 +83,17 @@ const getNotificationBgClass = (type: Notification['type'], isRead: boolean) => 
 
 export function NotificationsPanel() {
   const { notificationsPanelOpen, toggleNotificationsPanel } = useGovernanceCommandCenterStore();
+  const [notifications, setNotifications] = useState(mockNotifications);
 
-  const unreadCount = mockNotifications.filter(n => !n.isRead).length;
+  const unreadCount = useMemo(() => notifications.filter((n) => !n.isRead).length, [notifications]);
 
   const markAllAsRead = () => {
-    // TODO: Implémenter la logique réelle
+    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
     logger.debug('Mark all as read', { component: 'NotificationsPanel' });
   };
 
   const markAsRead = (id: string) => {
-    // TODO: Implémenter la logique réelle
+    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, isRead: true } : n)));
     logger.debug('Mark as read', { component: 'NotificationsPanel', id });
   };
 
@@ -144,14 +146,14 @@ export function NotificationsPanel() {
 
         {/* Notifications List */}
         <div className="overflow-y-auto h-[calc(100vh-120px)]">
-          {mockNotifications.length === 0 ? (
+          {notifications.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-slate-400">
               <Bell className="h-12 w-12 mb-3 opacity-50" />
               <p className="text-sm">Aucune notification</p>
             </div>
           ) : (
             <div className="space-y-1 p-2">
-              {mockNotifications.map((notification) => (
+              {notifications.map((notification) => (
                 <div
                   key={notification.id}
                   className={`p-3 rounded-lg ${getNotificationBgClass(notification.type, notification.isRead)} hover:bg-slate-800/50 transition-colors cursor-pointer group`}

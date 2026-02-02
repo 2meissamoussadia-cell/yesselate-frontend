@@ -185,9 +185,8 @@ function DropdownMenuItem({
       disabled={disabled}
       onClick={handleClick}
       className={cn(
-        'relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none',
-        'text-slate-300 transition-colors',
-        'hover:bg-slate-800 focus:bg-slate-800',
+        'relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors',
+        'text-slate-700 hover:bg-slate-100 focus:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 dark:focus:bg-slate-800',
         disabled && 'pointer-events-none opacity-50',
         className
       )}
@@ -206,7 +205,7 @@ function DropdownMenuSeparator({ className }: DropdownMenuSeparatorProps) {
   return (
     <div
       role="separator"
-      className={cn('-mx-1 my-1 h-px bg-slate-700', className)}
+      className={cn('-mx-1 my-1 h-px bg-slate-200 dark:bg-slate-700', className)}
     />
   );
 }
@@ -257,9 +256,8 @@ function DropdownMenuSubTrigger({
       disabled={disabled}
       onClick={handleClick}
       className={cn(
-        'relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none',
-        'text-slate-300 transition-colors',
-        'hover:bg-slate-800 focus:bg-slate-800',
+        'relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors',
+        'text-slate-700 hover:bg-slate-100 focus:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 dark:focus:bg-slate-800',
         disabled && 'pointer-events-none opacity-50',
         className
       )}

@@ -50,22 +50,17 @@ export function CockpitPhotosGpsPanel() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Chantier</span>
-        <select
-          value={chantierFilter}
-          onChange={(e) => setChantierFilter(e.target.value)}
-          className={cn(
-            'rounded-lg border bg-slate-900/60 px-3 py-1.5 text-sm text-slate-200',
-            colors.border.default,
-            'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50'
-          )}
-        >
-          <option value="">Tous</option>
-          {chantierIds.map((id) => (
-            <option key={id} value={id}>
-              {id}
-            </option>
-          ))}
-        </select>
+        <Select value={chantierFilter || '__all__'} onValueChange={(v) => setChantierFilter(v === '__all__' ? '' : v)}>
+          <SelectTrigger className={cn('min-w-[140px] rounded-xl bg-slate-900/60 px-3 py-2 text-sm text-slate-200', colors.border.default, 'focus:ring-sky-500/50')} aria-label="Filtrer par chantier">
+            <SelectValue placeholder="Tous" />
+          </SelectTrigger>
+          <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+            <SelectItem value="__all__">Tous</SelectItem>
+            {chantierIds.map((id) => (
+              <SelectItem key={id} value={id}>{id}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">

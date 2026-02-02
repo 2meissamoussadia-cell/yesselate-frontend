@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Download, Calendar, FileSpreadsheet, Loader2, CheckCircle2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { logger } from '@/lib/utils/logger';
+import { downloadBlob } from '@/lib/utils/export';
 import type { CalendrierDomain, CalendrierSection, CalendrierView } from '@/lib/types/calendrier.types';
 
 interface ExportCalendrierModalProps {
@@ -57,16 +58,30 @@ export function ExportCalendrierModal({
       if (onExport) {
         await onExport(format, { ...config, format });
       } else {
-        // Mock export
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-        
-        // Simuler le téléchargement
-        const filename = `calendrier-export-${new Date().toISOString().split('T')[0]}.${format === 'ical' ? 'ics' : 'xlsx'}`;
+        const dateStr = new Date().toISOString().split('T')[0];
+        const filename = `calendrier-export-${dateStr}.${format === 'ical' ? 'ics' : 'csv'}`;
+        if (format === 'ical') {
+          const ics = [
+            'BEGIN:VCALENDAR',
+            'VERSION:2.0',
+            'PRODID:-//Yesselate BMO//Calendrier//FR',
+            'BEGIN:VEVENT',
+            `DTSTART:${dateStr.replace(/-/g, '')}T090000`,
+            `DTEND:${dateStr.replace(/-/g, '')}T100000`,
+            `SUMMARY:Export calendrier ${config.period}`,
+            `DESCRIPTION:Export ${periodLabel} - ${domain} ${section ?? ''}`,
+            'END:VEVENT',
+            'END:VCALENDAR',
+          ].join('\r\n');
+          const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+          downloadBlob(blob, filename);
+        } else {
+          const csv = 'date;period;domain;section;includeDetails;includeAbsences;includeMeetings;includeMilestones\r\n' +
+            `${dateStr};${config.period};${domain};${section ?? ''};${config.includeDetails};${config.includeAbsences};${config.includeMeetings};${config.includeMilestones}`;
+          const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+          downloadBlob(blob, filename);
+        }
         logger.debug(`Export ${format.toUpperCase()} vers ${filename}`, { component: 'ExportCalendrierModal' });
-        
-        // TODO: Implémenter le vrai export
-        // Pour iCal: générer fichier .ics
-        // Pour Excel: utiliser une librairie comme xlsx
       }
       setSuccess(true);
       setTimeout(() => {

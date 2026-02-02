@@ -43,7 +43,7 @@ export default function RootLayout({
       <body className="antialiased" suppressHydrationWarning>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){var s=localStorage.getItem('nice-renovation-app-storage');var d=true;try{var p=s?JSON.parse(s):null;if(p&&p.state&&typeof p.state.darkMode==='boolean')d=p.state.darkMode;}catch(e){}var r=document.documentElement;if(d){r.classList.add('dark');r.classList.remove('light');}else{r.classList.add('light');r.classList.remove('dark');}})();`,
+            __html: `(function(){var s=localStorage.getItem('nice-renovation-app-storage');var d=null;try{var p=s?JSON.parse(s):null;if(p&&p.state&&typeof p.state.darkMode==='boolean')d=p.state.darkMode;}catch(e){}if(d===null&&typeof window!=='undefined'&&window.matchMedia){d=window.matchMedia('(prefers-color-scheme: dark)').matches;}if(d===null)d=true;var r=document.documentElement;if(d){r.classList.add('dark');r.classList.remove('light');r.setAttribute('data-theme','dark');}else{r.classList.add('light');r.classList.remove('dark');r.setAttribute('data-theme','light');}})();`,
           }}
         />
         <QueryProvider>

@@ -28,3 +28,4 @@ export function formatKeyboardShortcut(shortcut: string): string {
   return shortcut.replace(/⌘/g, 'Ctrl');
 }
 
+export { exportDataAsCSV } from './utils/export';

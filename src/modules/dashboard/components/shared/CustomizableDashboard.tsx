@@ -1,14 +1,25 @@
 /**
- * Dashboard personnalisable — Phase 2 audit ERP BTP 2026.
+ * Dashboard personnalisable — Phase 2 #9 audit ERP BTP 2026.
  * Inspiré Procore : ordre et visibilité des widgets, sauvegarde en localStorage.
- * Sans react-grid-layout : grille CSS + panneau "Personnaliser" (ajouter/retirer/réordonner).
+ * Drag & drop via @dnd-kit pour réordonner les widgets.
  */
 
 'use client';
 
 import React, { useState, useCallback, useEffect } from 'react';
-import { Settings2, Save, ChevronUp, ChevronDown, Plus, X } from 'lucide-react';
+import { Settings2, Save, ChevronUp, ChevronDown, Plus, X, GripVertical } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  KeyboardSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core';
+import { SortableContext, useSortable, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 export interface WidgetDefinition {
   label: string;
@@ -45,6 +56,98 @@ function saveOrder(storageKey: string, order: string[]) {
   } catch {
     /* ignore */
   }
+}
+
+/** Widget sortable (drag handle + transform) — utilisé uniquement en mode édition. */
+function SortableWidgetItem({
+  id,
+  editing,
+  children,
+  onMoveUp,
+  onMoveDown,
+  onRemove,
+  canMoveUp,
+  canMoveDown,
+}: {
+  id: string;
+  editing: boolean;
+  children: React.ReactNode;
+  onMoveUp: () => void;
+  onMoveDown: () => void;
+  onRemove: () => void;
+  canMoveUp: boolean;
+  canMoveDown: boolean;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id, disabled: !editing });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={cn(
+        'relative rounded-xl border overflow-hidden',
+        'bg-white dark:bg-slate-900/60',
+        editing ? 'border-slate-400 dark:border-slate-600 ring-2 ring-sky-500/30' : 'border-slate-200 dark:border-slate-800/60',
+        isDragging && 'opacity-60 shadow-xl z-10'
+      )}
+    >
+      {editing && (
+        <div className="absolute left-2 top-2 z-10 flex items-center gap-1">
+          <span
+            className="cursor-grab active:cursor-grabbing rounded p-1.5 text-slate-400 hover:bg-slate-700 hover:text-slate-200 touch-none"
+            aria-label="Glisser pour réordonner"
+            {...listeners}
+            {...attributes}
+          >
+            <GripVertical className="h-4 w-4" />
+          </span>
+        </div>
+      )}
+      {editing && (
+        <div className="absolute right-2 top-2 z-10 flex items-center gap-1">
+          <button
+            type="button"
+            onClick={onMoveUp}
+            disabled={!canMoveUp}
+            className="rounded p-1.5 text-slate-400 hover:bg-slate-700 hover:text-slate-200 disabled:opacity-30"
+            aria-label="Remonter"
+          >
+            <ChevronUp className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={onMoveDown}
+            disabled={!canMoveDown}
+            className="rounded p-1.5 text-slate-400 hover:bg-slate-700 hover:text-slate-200 disabled:opacity-30"
+            aria-label="Descendre"
+          >
+            <ChevronDown className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={onRemove}
+            className="rounded p-1.5 text-rose-400 hover:bg-rose-900/30 hover:text-rose-300"
+            aria-label="Retirer le widget"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
+      <div className={cn('p-2', editing && 'pl-10')}>{children}</div>
+    </div>
+  );
 }
 
 export function CustomizableDashboard({
@@ -88,6 +191,23 @@ export function CustomizableDashboard({
       return next;
     });
   }, []);
+
+  const handleDragEnd = useCallback((event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    setOrder((prev) => {
+      const ids = prev.filter((i) => widgets[i]);
+      const oldIndex = ids.indexOf(active.id as string);
+      const newIndex = ids.indexOf(over.id as string);
+      if (oldIndex === -1 || newIndex === -1) return prev;
+      return arrayMove(ids, oldIndex, newIndex);
+    });
+  }, [widgets]);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(KeyboardSensor)
+  );
 
   const handleSave = useCallback(() => {
     saveOrder(storageKey, visibleIds);
@@ -137,55 +257,31 @@ export function CustomizableDashboard({
         </div>
       )}
 
-      {/* Grille de widgets */}
+      {/* Grille de widgets (drag & drop en mode édition) */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {visibleIds.length === 0 ? (
           <div className="col-span-2 rounded-xl border border-dashed border-slate-300 bg-slate-50 dark:border-slate-600 dark:bg-slate-900/50 p-8 text-center text-sm text-slate-500 dark:text-slate-400">
             Aucun widget affiché. Cliquez sur « Personnaliser » pour ajouter des widgets.
           </div>
         ) : (
-          visibleIds.map((id, index) => (
-            <div
-              key={id}
-              className={cn(
-                'relative rounded-xl border overflow-hidden',
-                'bg-white dark:bg-slate-900/60',
-                editing ? 'border-slate-400 dark:border-slate-600 ring-2 ring-sky-500/30' : 'border-slate-200 dark:border-slate-800/60'
-              )}
-            >
-              {editing && (
-                <div className="absolute right-2 top-2 z-10 flex items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={() => moveUp(index)}
-                    disabled={index === 0}
-                    className="rounded p-1.5 text-slate-400 hover:bg-slate-700 hover:text-slate-200 disabled:opacity-30"
-                    aria-label="Remonter"
-                  >
-                    <ChevronUp className="h-4 w-4" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => moveDown(index)}
-                    disabled={index === visibleIds.length - 1}
-                    className="rounded p-1.5 text-slate-400 hover:bg-slate-700 hover:text-slate-200 disabled:opacity-30"
-                    aria-label="Descendre"
-                  >
-                    <ChevronDown className="h-4 w-4" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => removeWidget(id)}
-                    className="rounded p-1.5 text-rose-400 hover:bg-rose-900/30 hover:text-rose-300"
-                    aria-label="Retirer le widget"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                </div>
-              )}
-              <div className="p-2">{widgets[id].component}</div>
-            </div>
-          ))
+          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+            <SortableContext items={visibleIds} strategy={verticalListSortingStrategy}>
+              {visibleIds.map((id, index) => (
+                <SortableWidgetItem
+                  key={id}
+                  id={id}
+                  editing={editing}
+                  onMoveUp={() => moveUp(index)}
+                  onMoveDown={() => moveDown(index)}
+                  onRemove={() => removeWidget(id)}
+                  canMoveUp={index > 0}
+                  canMoveDown={index < visibleIds.length - 1}
+                >
+                  {widgets[id].component}
+                </SortableWidgetItem>
+              ))}
+            </SortableContext>
+          </DndContext>
         )}
       </div>
     </div>

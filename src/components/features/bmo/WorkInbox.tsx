@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useBMOStore } from '@/lib/stores';
 import type { ActionLogType } from '@/lib/types/bmo.types';
 import type { WorkItem, WorkKind, WorkAction } from '@/lib/types/work-inbox.types';
@@ -206,18 +207,16 @@ export function WorkInbox({
               placeholder="Rechercher (id, chantier, partenaire, bureau...)"
               className="w-64"
             />
-            <select
-              value={sort}
-              onChange={(e) => setSort(e.target.value as any)}
-              className={cn(
-                'h-9 rounded-md border px-2 text-xs',
-                'bg-transparent border-slate-700/40 text-slate-200'
-              )}
-            >
-              <option value="priority">Tri: Priorité</option>
-              <option value="amount">Tri: Impact</option>
-              <option value="urgency">Tri: Urgence</option>
-            </select>
+            <Select value={sort} onValueChange={(v) => setSort(v as 'priority' | 'amount' | 'urgency')}>
+              <SelectTrigger className={cn('h-9 min-w-[120px] rounded-md border px-2 text-xs', 'bg-transparent border-slate-700/40 text-slate-200')}>
+                <SelectValue placeholder="Tri" />
+              </SelectTrigger>
+              <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+                <SelectItem value="priority">Tri: Priorité</SelectItem>
+                <SelectItem value="amount">Tri: Impact</SelectItem>
+                <SelectItem value="urgency">Tri: Urgence</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 

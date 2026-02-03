@@ -60,9 +60,9 @@ export const KPICard = memo(function KPICard({ kpi, size = 'md', className }: KP
   const clickable = Boolean(kpi.onClick);
   const ariaLabel = kpi.description ? `${kpi.label} — ${kpi.description}` : kpi.label;
   const surfaceClass = cn(
-    'relative w-full text-left rounded-2xl border backdrop-blur',
-    'bg-white dark:bg-slate-950/35 border-slate-200 dark:border-slate-800/60',
-    'border-slate-800/70 shadow-[0_10px_30px_-20px_rgba(0,0,0,0.8)] transition-colors overflow-hidden',
+    'relative w-full text-left rounded-2xl border backdrop-blur transition-colors overflow-hidden',
+    'bg-white dark:bg-slate-950/35 border-slate-200 dark:border-slate-800/70',
+    'shadow-sm dark:shadow-[0_10px_30px_-20px_rgba(0,0,0,0.8)]',
     clickable
       ? 'hover:border-slate-300 dark:hover:border-slate-700/80 hover:bg-slate-50 dark:hover:bg-slate-900/50 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60 active:scale-[0.99]'
       : 'cursor-default',
@@ -77,10 +77,10 @@ export const KPICard = memo(function KPICard({ kpi, size = 'md', className }: KP
 
       <div className="flex items-start justify-between gap-3 relative z-10">
         <div className="min-w-0 flex-1">
-          <div className={cn('text-slate-300/90 font-medium tracking-wide line-clamp-2 leading-tight', tokens.label)}>
+          <div className={cn('text-slate-600 dark:text-slate-300/90 font-medium tracking-wide line-clamp-2 leading-tight', tokens.label)}>
             {kpi.label}
           </div>
-          <div className={cn('mt-1 font-semibold text-slate-50 leading-none', tokens.value)}>
+          <div className={cn('mt-1 font-semibold text-slate-900 dark:text-slate-50 leading-none', tokens.value)}>
             {sanitizeKpiValue(kpi.value)}
           </div>
 
@@ -94,14 +94,14 @@ export const KPICard = memo(function KPICard({ kpi, size = 'md', className }: KP
               <span className="text-xs text-slate-400">—</span>
             )}
             {kpi.description ? (
-              <span className="text-xs text-slate-300 truncate">• {kpi.description}</span>
+              <span className="text-xs text-slate-500 dark:text-slate-300 truncate">• {kpi.description}</span>
             ) : null}
           </div>
         </div>
 
         <div className="flex-shrink-0">
           <div className={cn('inline-flex items-center justify-center rounded-xl border border-slate-200 bg-slate-100 dark:border-slate-800/60 dark:bg-slate-900/40 p-2')}>
-            <Icon className={cn(tokens.icon, 'text-slate-200')} style={{ width: '0.875rem', height: '0.875rem', minWidth: '0.875rem', minHeight: '0.875rem', maxWidth: '0.875rem', maxHeight: '0.875rem' }} />
+            <Icon className={cn(tokens.icon, 'text-slate-600 dark:text-slate-200')} style={{ width: '0.875rem', height: '0.875rem', minWidth: '0.875rem', minHeight: '0.875rem', maxWidth: '0.875rem', maxHeight: '0.875rem' }} />
           </div>
         </div>
       </div>

@@ -46,7 +46,7 @@ export function ContratStatsModal({ open, onClose }: ContratStatsModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden bg-slate-900 border-slate-700">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
         <DialogHeader>
           <div className="flex items-center justify-between">
             <DialogTitle className="text-xl text-slate-200">Statistiques</DialogTitle>

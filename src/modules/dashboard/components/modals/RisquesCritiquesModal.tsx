@@ -73,7 +73,7 @@ export function RisquesCritiquesModal({ open, onClose }: RisquesCritiquesModalPr
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent
-        className="max-w-4xl bg-slate-900 text-slate-100 border-slate-700 max-h-[80vh] overflow-y-auto"
+        className="max-w-4xl bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border-slate-200 dark:border-slate-700 max-h-[80vh] overflow-y-auto"
         onClose={onClose}
       >
         <DialogHeader>
@@ -87,7 +87,7 @@ export function RisquesCritiquesModal({ open, onClose }: RisquesCritiquesModalPr
 
         {/* Statistiques */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-          <Card className="bg-slate-800/50 border-red-500/50">
+          <Card className="bg-slate-100 dark:bg-slate-800/50 border-red-500/50">
             <CardContent className="pt-4">
               <p className="text-sm text-slate-400">Critiques</p>
               <p className="text-2xl font-bold text-red-400">{critique}</p>
@@ -99,7 +99,7 @@ export function RisquesCritiquesModal({ open, onClose }: RisquesCritiquesModalPr
               <p className="text-2xl font-bold text-amber-400">{eleve}</p>
             </CardContent>
           </Card>
-          <Card className="bg-slate-800/50 border-slate-700">
+          <Card className="bg-slate-100 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700">
             <CardContent className="pt-4">
               <p className="text-sm text-slate-400">Moyens</p>
               <p className="text-2xl font-bold text-slate-100">{moyen}</p>

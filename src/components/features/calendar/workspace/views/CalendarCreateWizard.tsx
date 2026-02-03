@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { CalendarTab } from '@/lib/stores/calendarWorkspaceStore';
 import { FluentButton } from '@/components/ui/fluent-button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import {
   Calendar,
@@ -272,36 +273,38 @@ function BasicInfoStep({ formData, onChange }: {
           <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
             Type *
           </label>
-          <select
-            className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-3 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-            value={formData.kind}
-            onChange={(e) => onChange({ kind: e.target.value })}
-          >
-            <option value="meeting">Réunion</option>
-            <option value="site-visit">Visite de site</option>
-            <option value="validation">Validation</option>
-            <option value="payment">Paiement</option>
-            <option value="contract">Contrat</option>
-            <option value="deadline">Échéance</option>
-            <option value="absence">Absence</option>
-            <option value="other">Autre</option>
-          </select>
+          <Select value={formData.kind} onValueChange={(value: string) => onChange({ kind: value })}>
+            <SelectTrigger className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-3 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white">
+              <SelectValue placeholder="Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="meeting">Réunion</SelectItem>
+              <SelectItem value="site-visit">Visite de site</SelectItem>
+              <SelectItem value="validation">Validation</SelectItem>
+              <SelectItem value="payment">Paiement</SelectItem>
+              <SelectItem value="contract">Contrat</SelectItem>
+              <SelectItem value="deadline">Échéance</SelectItem>
+              <SelectItem value="absence">Absence</SelectItem>
+              <SelectItem value="other">Autre</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <div>
           <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
             Bureau
           </label>
-          <select
-            className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-3 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-            value={formData.bureau}
-            onChange={(e) => onChange({ bureau: e.target.value })}
-          >
-            <option value="BMO">BMO</option>
-            <option value="DAF">DAF</option>
-            <option value="DG">DG</option>
-            <option value="RH">RH</option>
-          </select>
+          <Select value={formData.bureau} onValueChange={(value: string) => onChange({ bureau: value })}>
+            <SelectTrigger className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-3 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white">
+              <SelectValue placeholder="Bureau" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="BMO">BMO</SelectItem>
+              <SelectItem value="DAF">DAF</SelectItem>
+              <SelectItem value="DG">DG</SelectItem>
+              <SelectItem value="RH">RH</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 

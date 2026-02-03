@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import { 
   History, Search, Filter, Download, RefreshCw, 
@@ -284,34 +285,36 @@ export function RHActivityHistory() {
             </div>
 
             {/* Type d'action */}
-            <select
-              value={filterType}
-              onChange={e => setFilterType(e.target.value as ActivityType | 'all')}
-              className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 
-                       bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-500/30"
-            >
-              <option value="all">Tous les types</option>
-              <option value="validation">✅ Validations</option>
-              <option value="rejection">❌ Rejets</option>
-              <option value="creation">📄 Créations</option>
-              <option value="comment">💬 Commentaires</option>
-              <option value="document">📎 Documents</option>
-              <option value="modification">✏️ Modifications</option>
-              <option value="assignment">👤 Assignations</option>
-            </select>
+            <Select value={filterType} onValueChange={v => setFilterType(v as ActivityType | 'all')}>
+              <SelectTrigger className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 
+                       bg-white dark:bg-slate-900 focus:ring-2 focus:ring-orange-500/30 h-10">
+                <SelectValue placeholder="Type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tous les types</SelectItem>
+                <SelectItem value="validation">✅ Validations</SelectItem>
+                <SelectItem value="rejection">❌ Rejets</SelectItem>
+                <SelectItem value="creation">📄 Créations</SelectItem>
+                <SelectItem value="comment">💬 Commentaires</SelectItem>
+                <SelectItem value="document">📎 Documents</SelectItem>
+                <SelectItem value="modification">✏️ Modifications</SelectItem>
+                <SelectItem value="assignment">👤 Assignations</SelectItem>
+              </SelectContent>
+            </Select>
 
             {/* Type de demande */}
-            <select
-              value={filterDemandType}
-              onChange={e => setFilterDemandType(e.target.value)}
-              className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 
-                       bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-500/30"
-            >
-              <option value="all">Tous les types de demande</option>
-              {demandTypes.map(type => (
-                <option key={type} value={type}>{type}</option>
-              ))}
-            </select>
+            <Select value={filterDemandType} onValueChange={v => setFilterDemandType(v)}>
+              <SelectTrigger className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 
+                       bg-white dark:bg-slate-900 focus:ring-2 focus:ring-orange-500/30 h-10">
+                <SelectValue placeholder="Type de demande" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tous les types de demande</SelectItem>
+                {demandTypes.map(type => (
+                  <SelectItem key={type} value={type}>{type}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Dates */}

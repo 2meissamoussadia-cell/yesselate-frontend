@@ -6,6 +6,7 @@ import { useAppStore, useBMOStore } from '@/lib/stores';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   X, Layers, CheckCircle, XCircle, Send, FileDown, User,
   AlertTriangle, Loader2, Trash2
@@ -513,22 +514,23 @@ export function BatchActionsModal({
                     <label className={cn('text-xs block mb-2', darkMode ? 'text-slate-300' : 'text-gray-700')}>
                       Validateur (obligatoire)
                     </label>
-                    <select
-                      value={assignee}
-                      onChange={(e) => setAssignee(e.target.value)}
-                      className={cn(
+                    <Select value={assignee || '__none__'} onValueChange={(value: string) => setAssignee(value === '__none__' ? '' : value)}>
+                      <SelectTrigger className={cn(
                         'w-full px-3 py-2 rounded-lg text-sm',
                         darkMode 
                           ? 'bg-slate-800 border-slate-700 text-white'
                           : 'bg-white border-gray-300 text-gray-900'
-                      )}
-                    >
-                      <option value="">Sélectionner un validateur</option>
-                      <option value="BMO-001">A. DIALLO (Directeur Général)</option>
-                      <option value="BMO-002">M. FALL (Président)</option>
-                      <option value="BMO-003">J. NDIAYE (BMO - Responsable Achat)</option>
-                      <option value="BMO-004">S. TOURE (BMO - Responsable Finance)</option>
-                    </select>
+                      )}>
+                        <SelectValue placeholder="Sélectionner un validateur" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="__none__">Sélectionner un validateur</SelectItem>
+                        <SelectItem value="BMO-001">A. DIALLO (Directeur Général)</SelectItem>
+                        <SelectItem value="BMO-002">M. FALL (Président)</SelectItem>
+                        <SelectItem value="BMO-003">J. NDIAYE (BMO - Responsable Achat)</SelectItem>
+                        <SelectItem value="BMO-004">S. TOURE (BMO - Responsable Finance)</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 )}
               </CardContent>

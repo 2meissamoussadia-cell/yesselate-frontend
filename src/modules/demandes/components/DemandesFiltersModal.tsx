@@ -60,7 +60,7 @@ export function DemandesFiltersModal({ isOpen, onClose }: DemandesFiltersModalPr
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-2xl bg-slate-900 border-slate-700">
+      <DialogContent className="max-w-2xl bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
         <DialogHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">

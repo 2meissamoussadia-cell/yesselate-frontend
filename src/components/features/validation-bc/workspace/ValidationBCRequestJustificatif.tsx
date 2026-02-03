@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { FluentModal } from '@/components/ui/fluent-modal';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import {
   FileText,
@@ -402,15 +403,16 @@ export function ValidationBCRequestJustificatif({
 
             <div>
               <label className="block text-sm font-medium mb-2">Type de document demandé *</label>
-              <select
-                value={newCategory}
-                onChange={(e) => setNewCategory(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-3 text-sm outline-none"
-              >
-                {CATEGORY_OPTIONS.map(opt => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
-                ))}
-              </select>
+              <Select value={newCategory} onValueChange={setNewCategory}>
+                <SelectTrigger className="w-full h-10 rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:ring-2 focus:ring-purple-500/30">
+                  <SelectValue placeholder="Type" />
+                </SelectTrigger>
+                <SelectContent className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+                  {CATEGORY_OPTIONS.map(opt => (
+                    <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div>

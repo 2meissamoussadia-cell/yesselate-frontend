@@ -6,6 +6,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -57,16 +58,17 @@ export function Pagination({
         {showPageSize && onPageSizeChange && (
           <div className="flex items-center gap-2 mr-4">
             <span className="text-xs text-slate-400">Par page:</span>
-            <select
-              value={pageSize}
-              onChange={(e) => onPageSizeChange(parseInt(e.target.value))}
-              className="px-2 py-1 text-xs bg-slate-800/50 border border-slate-700/50 rounded text-slate-300"
-            >
-              <option value={10}>10</option>
-              <option value={25}>25</option>
-              <option value={50}>50</option>
-              <option value={100}>100</option>
-            </select>
+            <Select value={String(pageSize)} onValueChange={(v) => onPageSizeChange(parseInt(v, 10))}>
+              <SelectTrigger className="h-8 min-w-[70px] px-2 text-xs bg-slate-800/50 border-slate-700/50 rounded text-slate-300">
+                <SelectValue placeholder="Par page" />
+              </SelectTrigger>
+              <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+                <SelectItem value="10">10</SelectItem>
+                <SelectItem value="25">25</SelectItem>
+                <SelectItem value="50">50</SelectItem>
+                <SelectItem value="100">100</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         )}
 

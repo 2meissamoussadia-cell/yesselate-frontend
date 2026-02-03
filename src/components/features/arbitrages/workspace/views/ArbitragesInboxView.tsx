@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useArbitragesWorkspaceStore, type ArbitragesTab } from '@/lib/stores/arbitragesWorkspaceStore';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import {
   Search, Filter, RefreshCw, ArrowUpDown, Scale, Clock, AlertTriangle,
@@ -178,8 +179,13 @@ export function ArbitragesInboxView({ tab }: { tab: ArbitragesTab }) {
             )}
             {tab.title}
           </h2>
-          <p className="text-sm text-slate-400">
-            {data ? `${filteredItems.length} résultat${filteredItems.length > 1 ? 's' : ''}` : 'Chargement...'}
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            {data ? `${filteredItems.length} résultat${filteredItems.length > 1 ? 's' : ''}` : (
+              <span className="inline-flex items-center gap-2">
+                <span className="h-3 w-16 rounded bg-slate-200 dark:bg-slate-700 animate-pulse" aria-hidden />
+                <span className="sr-only">Chargement...</span>
+              </span>
+            )}
           </p>
         </div>
 
@@ -227,31 +233,39 @@ export function ArbitragesInboxView({ tab }: { tab: ArbitragesTab }) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
                 <label className="text-xs text-slate-400 mb-1 block">Niveau de risque</label>
-                <select
-                  value={filters.riskLevel}
-                  onChange={(e) => setFilters({ ...filters, riskLevel: e.target.value })}
-                  className="w-full rounded-lg border border-slate-200/70 bg-white p-2 text-sm dark:border-slate-700 dark:bg-slate-800"
+                <Select
+                  value={filters.riskLevel || '__all__'}
+                  onValueChange={(v) => setFilters({ ...filters, riskLevel: v === '__all__' ? '' : v })}
                 >
-                  <option value="">Tous</option>
-                  <option value="critique">Critique</option>
-                  <option value="eleve">Élevé</option>
-                  <option value="modere">Modéré</option>
-                  <option value="faible">Faible</option>
-                </select>
+                  <SelectTrigger className="w-full rounded-lg border border-slate-200/70 bg-white p-2 text-sm dark:border-slate-700 dark:bg-slate-800 h-10">
+                    <SelectValue placeholder="Risque" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__all__">Tous</SelectItem>
+                    <SelectItem value="critique">Critique</SelectItem>
+                    <SelectItem value="eleve">Élevé</SelectItem>
+                    <SelectItem value="modere">Modéré</SelectItem>
+                    <SelectItem value="faible">Faible</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div>
                 <label className="text-xs text-slate-400 mb-1 block">Statut</label>
-                <select
-                  value={filters.status}
-                  onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-                  className="w-full rounded-lg border border-slate-200/70 bg-white p-2 text-sm dark:border-slate-700 dark:bg-slate-800"
+                <Select
+                  value={filters.status || '__all__'}
+                  onValueChange={(v) => setFilters({ ...filters, status: v === '__all__' ? '' : v })}
                 >
-                  <option value="">Tous</option>
-                  <option value="ouvert">Ouvert</option>
-                  <option value="en_deliberation">En délibération</option>
-                  <option value="decision_requise">Décision requise</option>
-                  <option value="tranche">Tranché</option>
-                </select>
+                  <SelectTrigger className="w-full rounded-lg border border-slate-200/70 bg-white p-2 text-sm dark:border-slate-700 dark:bg-slate-800 h-10">
+                    <SelectValue placeholder="Statut" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__all__">Tous</SelectItem>
+                    <SelectItem value="ouvert">Ouvert</SelectItem>
+                    <SelectItem value="en_deliberation">En délibération</SelectItem>
+                    <SelectItem value="decision_requise">Décision requise</SelectItem>
+                    <SelectItem value="tranche">Tranché</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           ) : (
@@ -292,9 +306,22 @@ export function ArbitragesInboxView({ tab }: { tab: ArbitragesTab }) {
 
       {/* Loading */}
       {loading && !data && (
-        <div className="flex items-center justify-center py-12">
-          <RefreshCw className="w-6 h-6 animate-spin text-slate-400" />
-          <span className="ml-2 text-slate-400">Chargement...</span>
+        <div className="py-12 space-y-4" role="status" aria-label="Chargement des données">
+          <div className="flex items-center justify-center gap-2">
+            <RefreshCw className="w-6 h-6 animate-spin text-slate-500 dark:text-slate-400" aria-hidden />
+            <span className="sr-only">Chargement en cours</span>
+          </div>
+          <div className="grid gap-3 max-w-2xl mx-auto">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-20 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 p-4 flex items-center gap-3">
+                <div className="h-10 w-10 rounded-lg bg-slate-200 dark:bg-slate-700 animate-pulse" />
+                <div className="flex-1 space-y-2">
+                  <div className="h-4 w-[75%] rounded bg-slate-200 dark:bg-slate-700 animate-pulse" />
+                  <div className="h-3 w-1/2 rounded bg-slate-200 dark:bg-slate-700 animate-pulse" />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 

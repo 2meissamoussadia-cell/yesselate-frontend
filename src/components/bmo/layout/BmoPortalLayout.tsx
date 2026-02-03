@@ -15,8 +15,8 @@ import { ToastProvider } from '@/components/ui/toast';
 import { Toaster } from 'sonner';
 import { NotificationPanel } from '@/components/notifications';
 import { OfflineBanner } from '@/components/shared/OfflineBanner';
-import { ThemeSync } from '@/components/shared/ThemeSync';
 import { useBMOStore } from '@/lib/stores/bmo-store';
+import { useAppStore } from '@/lib/stores/app-store';
 
 export interface BmoPortalLayoutProps {
   children: ReactNode;
@@ -24,6 +24,7 @@ export interface BmoPortalLayoutProps {
 
 export function BmoPortalLayout({ children }: BmoPortalLayoutProps) {
   const showNotifications = useBMOStore((s) => s.showNotifications);
+  const darkMode = useAppStore((s) => s.darkMode);
   const setShowNotifications = useBMOStore((s) => s.setShowNotifications);
 
   useEffect(() => {
@@ -46,7 +47,6 @@ export function BmoPortalLayout({ children }: BmoPortalLayoutProps) {
 
   return (
     <FluentProviderClient>
-      <ThemeSync />
       <OfflineBanner />
       <ToastProvider>
         <BmoLayoutShell>
@@ -56,7 +56,7 @@ export function BmoPortalLayout({ children }: BmoPortalLayoutProps) {
           isOpen={showNotifications}
           onClose={() => setShowNotifications(false)}
         />
-        <Toaster position="top-right" theme="dark" richColors expand closeButton />
+        <Toaster position="top-right" theme={darkMode ? 'dark' : 'light'} richColors expand closeButton />
       </ToastProvider>
     </FluentProviderClient>
   );

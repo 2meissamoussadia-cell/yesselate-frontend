@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useCalendarWorkspaceStore } from '@/lib/stores/calendarWorkspaceStore';
 import { FluentButton } from '@/components/ui/fluent-button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import {
   ChevronLeft,
@@ -532,15 +533,16 @@ export function CalendarWizardView({ tabId, action, eventId, prefillDate }: Cale
                 <Repeat className="w-4 h-4 inline mr-1" />
                 Récurrence
               </label>
-              <select
-                value={formData.recurrence}
-                onChange={e => updateForm({ recurrence: e.target.value })}
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none focus:border-blue-500"
-              >
-                {RECURRENCE_OPTIONS.map(opt => (
-                  <option key={opt.id} value={opt.id}>{opt.label}</option>
-                ))}
-              </select>
+              <Select value={formData.recurrence} onValueChange={(v) => updateForm({ recurrence: v })}>
+                <SelectTrigger className="w-full h-11 rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
+                  <SelectValue placeholder="Récurrence" />
+                </SelectTrigger>
+                <SelectContent className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                  {RECURRENCE_OPTIONS.map(opt => (
+                    <SelectItem key={opt.id} value={opt.id}>{opt.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Conflict warning */}
@@ -584,16 +586,17 @@ export function CalendarWizardView({ tabId, action, eventId, prefillDate }: Cale
                 <Building2 className="w-4 h-4 inline mr-1" />
                 Bureau responsable
               </label>
-              <select
-                value={formData.bureau}
-                onChange={e => updateForm({ bureau: e.target.value })}
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none focus:border-blue-500"
-              >
-                <option value="">Sélectionner un bureau...</option>
-                {BUREAUS.map(b => (
-                  <option key={b} value={b}>{b}</option>
-                ))}
-              </select>
+              <Select value={formData.bureau || '__none__'} onValueChange={(v) => updateForm({ bureau: v === '__none__' ? '' : v })}>
+                <SelectTrigger className="w-full h-11 rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
+                  <SelectValue placeholder="Sélectionner un bureau..." />
+                </SelectTrigger>
+                <SelectContent className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                  <SelectItem value="__none__">Sélectionner un bureau...</SelectItem>
+                  {BUREAUS.map(b => (
+                    <SelectItem key={b} value={b}>{b}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Tags */}
@@ -723,14 +726,18 @@ export function CalendarWizardView({ tabId, action, eventId, prefillDate }: Cale
                 />
               </div>
               <div className="flex items-center gap-3 mt-3">
-                <select
+                <Select
                   value={newAttendee.role}
-                  onChange={e => setNewAttendee(a => ({ ...a, role: e.target.value }))}
-                  className="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none"
+                  onValueChange={(value: string) => setNewAttendee(a => ({ ...a, role: value }))}
                 >
-                  <option value="participant">Participant</option>
-                  <option value="organizer">Organisateur</option>
-                </select>
+                  <SelectTrigger className="w-[180px] px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                    <SelectValue placeholder="Rôle" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="participant">Participant</SelectItem>
+                    <SelectItem value="organizer">Organisateur</SelectItem>
+                  </SelectContent>
+                </Select>
                 <FluentButton size="sm" variant="primary" onClick={addAttendee} disabled={!newAttendee.name.trim()}>
                   <Plus className="w-4 h-4 mr-1" />
                   Ajouter
@@ -784,15 +791,16 @@ export function CalendarWizardView({ tabId, action, eventId, prefillDate }: Cale
                 Lier à un élément
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <select
-                  value={newLink.type}
-                  onChange={e => setNewLink(l => ({ ...l, type: e.target.value }))}
-                  className="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none"
-                >
-                  {LINK_TYPES.map(t => (
-                    <option key={t.id} value={t.id}>{t.icon} {t.label}</option>
-                  ))}
-                </select>
+                <Select value={newLink.type} onValueChange={(v) => setNewLink(l => ({ ...l, type: v }))}>
+                  <SelectTrigger className="min-w-[140px] h-9 rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-blue-500/20">
+                    <SelectValue placeholder="Type" />
+                  </SelectTrigger>
+                  <SelectContent className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                    {LINK_TYPES.map(t => (
+                      <SelectItem key={t.id} value={t.id}>{t.icon} {t.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <input
                   type="text"
                   value={newLink.ref}

@@ -62,9 +62,9 @@ export function EscalateDGModal({
 
   return (
     <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="escalade-title">
-      <div className="w-full max-w-lg rounded-2xl border border-slate-800 bg-slate-900 shadow-2xl overflow-hidden">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-800 bg-slate-950/40">
-          <h2 id="escalade-title" className="text-lg font-semibold text-slate-100 flex items-center gap-2">
+      <div className="w-full max-w-lg rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl overflow-hidden">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40">
+          <h2 id="escalade-title" className="text-lg font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2">
             <AlertTriangle className="h-5 w-5 text-rose-400" />
             Escalade au DG
           </h2>
@@ -82,7 +82,7 @@ export function EscalateDGModal({
               <SelectTrigger id="escalade-priorite" className={cn('w-full rounded-xl border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-200')}>
                 <SelectValue placeholder="Priorité" />
               </SelectTrigger>
-              <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+              <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
                 <SelectItem value="haute">Haute</SelectItem>
                 <SelectItem value="critique">Critique</SelectItem>
               </SelectContent>

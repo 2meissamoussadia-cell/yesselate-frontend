@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { cn } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import {
@@ -1086,15 +1087,16 @@ function TabSimulateur({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="text-sm text-slate-400">Action</label>
-          <select
-            className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-            value={simAction}
-            onChange={(e) => onActionChange(e.target.value as DelegationAction)}
-          >
-            {actions.map(a => (
-              <option key={a} value={a}>{a.replace(/_/g, ' ')}</option>
-            ))}
-          </select>
+          <Select value={simAction} onValueChange={(v) => onActionChange(v as DelegationAction)}>
+            <SelectTrigger className="mt-1 w-full h-10 rounded-xl border-slate-200/70 bg-white/90 dark:border-slate-700 dark:bg-slate-800 dark:text-white">
+              <SelectValue placeholder="Action" />
+            </SelectTrigger>
+            <SelectContent className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+              {actions.map(a => (
+                <SelectItem key={a} value={a}>{a.replace(/_/g, ' ')}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         
         <div>

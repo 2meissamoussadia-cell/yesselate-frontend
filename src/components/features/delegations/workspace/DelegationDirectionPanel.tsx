@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { cn } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { useDelegationWorkspaceStore } from '@/lib/stores/delegationWorkspaceStore';
 import {
@@ -470,31 +471,34 @@ export function DelegationDirectionPanel() {
             {/* Délégation */}
             <div>
               <label className="text-xs text-slate-400">Délégation</label>
-              <select
-                className="mt-1 w-full rounded-lg border border-slate-200/70 bg-white/90 p-2 text-sm outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                value={simDelegationId}
-                onChange={(e) => setSimDelegationId(e.target.value)}
-              >
-                {availableDelegations.map(d => (
-                  <option key={d.id} value={d.id}>{d.id} — {d.title}</option>
-                ))}
-              </select>
+              <Select value={simDelegationId || '__none__'} onValueChange={(v) => setSimDelegationId(v === '__none__' ? '' : v)}>
+                <SelectTrigger className="mt-1 w-full h-9 rounded-lg border-slate-200/70 bg-white/90 dark:border-slate-700 dark:bg-slate-800 text-sm">
+                  <SelectValue placeholder="Choisir une délégation" />
+                </SelectTrigger>
+                <SelectContent className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                  <SelectItem value="__none__">Choisir une délégation</SelectItem>
+                  {availableDelegations.map(d => (
+                    <SelectItem key={d.id} value={d.id}>{d.id} — {d.title}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             
             {/* Action */}
             <div>
               <label className="text-xs text-slate-400">Action</label>
-              <select
-                className="mt-1 w-full rounded-lg border border-slate-200/70 bg-white/90 p-2 text-sm outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                value={simAction}
-                onChange={(e) => setSimAction(e.target.value as DelegationAction)}
-              >
-                <option value="APPROVE_PAYMENT">Valider paiement</option>
-                <option value="SIGN_CONTRACT">Signer contrat</option>
-                <option value="APPROVE_PURCHASE_ORDER">Valider BC</option>
-                <option value="VALIDATE_CHANGE_ORDER">Valider avenant</option>
-                <option value="COMMIT_BUDGET">Engager budget</option>
-              </select>
+              <Select value={simAction} onValueChange={(v) => setSimAction(v as DelegationAction)}>
+                <SelectTrigger className="mt-1 w-full h-9 rounded-lg border-slate-200/70 bg-white/90 dark:border-slate-700 dark:bg-slate-800 text-sm">
+                  <SelectValue placeholder="Action" />
+                </SelectTrigger>
+                <SelectContent className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                  <SelectItem value="APPROVE_PAYMENT">Valider paiement</SelectItem>
+                  <SelectItem value="SIGN_CONTRACT">Signer contrat</SelectItem>
+                  <SelectItem value="APPROVE_PURCHASE_ORDER">Valider BC</SelectItem>
+                  <SelectItem value="VALIDATE_CHANGE_ORDER">Valider avenant</SelectItem>
+                  <SelectItem value="COMMIT_BUDGET">Engager budget</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             
             {/* Bureau + Montant */}

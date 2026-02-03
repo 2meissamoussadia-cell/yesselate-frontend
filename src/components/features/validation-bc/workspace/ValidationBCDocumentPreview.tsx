@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { FluentModal } from '@/components/ui/fluent-modal';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import { 
   FileText, Download, ExternalLink, Eye, ZoomIn, ZoomOut,
@@ -537,15 +538,16 @@ export function ValidationBCDocumentPreview({
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium mb-2">Type de document</label>
-            <select
-              value={requestCategory}
-              onChange={(e) => setRequestCategory(e.target.value)}
-              className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-3 text-sm outline-none"
-            >
-              {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
-                <option key={key} value={key}>{label}</option>
-              ))}
-            </select>
+            <Select value={requestCategory} onValueChange={setRequestCategory}>
+              <SelectTrigger className="w-full h-10 rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:ring-2 focus:ring-purple-500/30">
+                <SelectValue placeholder="Type" />
+              </SelectTrigger>
+              <SelectContent className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+                {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
+                  <SelectItem key={key} value={key}>{label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div>

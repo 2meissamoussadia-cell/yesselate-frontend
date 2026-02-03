@@ -23,8 +23,10 @@ export interface DashboardCleanLayoutProps {
   children: React.ReactNode;
   /** Contenu du header à droite (défaut: alertes + paramètres). Ignoré si hideHeader. */
   headerRight?: React.ReactNode;
-  /** Dernière mise à jour affichée en bas */
+  /** Dernière mise à jour affichée en bas (texte statique, ex. "30s") */
   lastUpdate?: string;
+  /** Phase 2 #8: date de dernière maj → affichage dynamique "il y a X min" */
+  lastUpdateDate?: Date | null;
   /** BMO v1 : masque la barre recherche/alertes/paramètres (évite doublon avec BMOHeader + PageTemplate) */
   hideHeader?: boolean;
 }
@@ -33,6 +35,7 @@ export function DashboardCleanLayout({
   children,
   headerRight,
   lastUpdate = '30s',
+  lastUpdateDate,
   hideHeader = false,
 }: DashboardCleanLayoutProps) {
   const navigate = useDashboardCommandCenterStore((s) => s.navigate);
@@ -190,7 +193,9 @@ export function DashboardCleanLayout({
               <Bell className="h-5 w-5" />
             </button>
             <div className="flex-1 min-w-0" />
-            <span className="text-xs text-slate-400 dark:text-slate-400 truncate">Dernière maj : {lastUpdate}</span>
+            <span className="text-xs text-slate-400 dark:text-slate-400 truncate">
+              {lastUpdateDate ? <LastUpdateDisplay lastUpdate={lastUpdateDate} prefix="Dernière maj" /> : `Dernière maj : ${lastUpdate}`}
+            </span>
           </div>
         </>
       )}

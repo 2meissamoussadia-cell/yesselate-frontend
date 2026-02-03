@@ -15,6 +15,7 @@ import {
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTicketsWorkspaceStore } from '@/lib/stores/ticketsWorkspaceStore';
 import { ticketsApi, type Ticket, type TicketAssignee } from '@/lib/services/ticketsApiService';
 import { useTicketsToast } from './TicketsToast';
@@ -364,16 +365,17 @@ export function TicketsDecisionCenter({ open, onClose }: Props) {
                     <label className="block text-sm font-medium text-slate-300 mb-2">
                       Assigner à
                     </label>
-                    <select
-                      value={selectedAssignee}
-                      onChange={e => setSelectedAssignee(e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
-                    >
-                      <option value="">Sélectionner un agent...</option>
-                      {assignees.map(a => (
-                        <option key={a.id} value={a.id}>{a.name} — {a.department}</option>
-                      ))}
-                    </select>
+                    <Select value={selectedAssignee || '__none__'} onValueChange={v => setSelectedAssignee(v === '__none__' ? '' : v)}>
+                      <SelectTrigger className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 focus:ring-2 focus:ring-purple-500/50">
+                        <SelectValue placeholder="Sélectionner un agent..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="__none__">Sélectionner un agent...</SelectItem>
+                        {assignees.map(a => (
+                          <SelectItem key={a.id} value={a.id}>{a.name} — {a.department}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                   
                   <div className="space-y-2 max-h-[300px] overflow-y-auto">

@@ -283,7 +283,7 @@ export function ValidationModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl bg-slate-900 border-slate-700">
+      <DialogContent className="max-w-2xl bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3">
             <div className={cn(
@@ -401,7 +401,7 @@ export function ValidationModal({
                           value={signaturePin}
                           onChange={(e) => setSignaturePin(e.target.value.replace(/\D/g, ''))}
                           placeholder="****"
-                          className="bg-slate-900 border-slate-700 mt-1"
+                          className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 mt-1"
                         />
                       </div>
                       <p className="text-xs text-slate-400">
@@ -420,10 +420,10 @@ export function ValidationModal({
                     </CardHeader>
                     <CardContent>
                       <Select value={nextValidator} onValueChange={setNextValidator}>
-                        <SelectTrigger className="bg-slate-900 border-slate-700">
+                        <SelectTrigger className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
                           <SelectValue placeholder="Assigner automatiquement" />
                         </SelectTrigger>
-                        <SelectContent className="bg-slate-900 border-slate-700">
+                        <SelectContent className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
                           {VALIDATORS.map((validator) => (
                             <SelectItem key={validator.id} value={validator.id}>
                               {validator.name} - {validator.fonction}
@@ -446,10 +446,10 @@ export function ValidationModal({
                     </CardHeader>
                     <CardContent className="space-y-3">
                       <Select value={reasonCategory} onValueChange={setReasonCategory}>
-                        <SelectTrigger className="bg-slate-900 border-slate-700">
+                        <SelectTrigger className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
                           <SelectValue placeholder="Sélectionner un motif" />
                         </SelectTrigger>
-                        <SelectContent className="bg-slate-900 border-slate-700">
+                        <SelectContent className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
                           {REJECTION_REASONS.map((reason) => (
                             <SelectItem key={reason.value} value={reason.value}>
                               {reason.label}
@@ -479,10 +479,10 @@ export function ValidationModal({
                     </CardHeader>
                     <CardContent>
                       <Select value={reassignTo} onValueChange={setReassignTo}>
-                        <SelectTrigger className="bg-slate-900 border-slate-700">
+                        <SelectTrigger className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
                           <SelectValue placeholder="Retourner au demandeur" />
                         </SelectTrigger>
-                        <SelectContent className="bg-slate-900 border-slate-700">
+                        <SelectContent className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
                           {VALIDATORS.map((validator) => (
                             <SelectItem key={validator.id} value={validator.id}>
                               {validator.name} - {validator.fonction}
@@ -577,10 +577,10 @@ export function ValidationModal({
                     </CardHeader>
                     <CardContent>
                       <Select value={recipientId} onValueChange={setRecipientId}>
-                        <SelectTrigger className="bg-slate-900 border-slate-700">
+                        <SelectTrigger className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
                           <SelectValue placeholder="Sélectionner un destinataire" />
                         </SelectTrigger>
-                        <SelectContent className="bg-slate-900 border-slate-700">
+                        <SelectContent className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
                           <SelectItem value="demandeur">Demandeur initial</SelectItem>
                           {VALIDATORS.map((validator) => (
                             <SelectItem key={validator.id} value={validator.id}>
@@ -602,10 +602,10 @@ export function ValidationModal({
                     </CardHeader>
                     <CardContent>
                       <Select value={deadline} onValueChange={setDeadline}>
-                        <SelectTrigger className="bg-slate-900 border-slate-700">
+                        <SelectTrigger className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent className="bg-slate-900 border-slate-700">
+                        <SelectContent className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
                           {RESPONSE_DELAYS.map((delay) => (
                             <SelectItem key={delay.value} value={delay.value}>
                               {delay.label}

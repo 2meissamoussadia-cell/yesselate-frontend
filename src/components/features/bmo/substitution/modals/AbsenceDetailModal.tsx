@@ -188,7 +188,7 @@ export function AbsenceDetailModal({
   if (loading) {
     return (
       <Dialog open={open} onOpenChange={onClose}>
-        <DialogContent className="max-w-5xl max-h-[90vh] bg-slate-900 border-slate-700">
+        <DialogContent className="max-w-5xl max-h-[90vh] bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
           <div className="flex items-center justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin text-slate-400" />
           </div>
@@ -206,7 +206,7 @@ export function AbsenceDetailModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl max-h-[90vh] overflow-hidden bg-slate-900 border-slate-700">
+      <DialogContent className="max-w-5xl max-h-[90vh] overflow-hidden bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
         <DialogHeader>
           <div className="flex items-start justify-between">
             <div className="space-y-2">
@@ -374,7 +374,7 @@ export function AbsenceDetailModal({
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   placeholder="Ajouter un commentaire..."
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white placeholder:text-slate-400 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
                   rows={3}
                 />
                 <div className="flex justify-end mt-3">

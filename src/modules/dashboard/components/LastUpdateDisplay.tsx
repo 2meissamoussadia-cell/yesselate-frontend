@@ -41,6 +41,9 @@ function formatTimeAgo(date: Date): string {
   return `il y a ${diffInDays}j`;
 }
 
+// Phase 2 #8: tick 15s pour timestamp dynamique (évite "Mise à jour : 22:49:01" statique)
+const TICK_MS = 15_000;
+
 export const LastUpdateDisplay = memo(function LastUpdateDisplay({ 
   lastUpdate,
   prefix = 'Mise à jour',
@@ -49,9 +52,7 @@ export const LastUpdateDisplay = memo(function LastUpdateDisplay({
   const [tick, setTick] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTick((t) => t + 1);
-    }, 60000); // 1 minute
+    const interval = setInterval(() => setTick((t) => t + 1), TICK_MS);
     return () => clearInterval(interval);
   }, []);
 

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar, User, FileText, AlertCircle, CheckCircle, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { logger } from '@/lib/utils/logger';
@@ -201,16 +202,17 @@ export function CreateTaskModal({ open, onClose, data }: CreateTaskModalProps) {
               <label className="block text-sm font-medium text-slate-300 mb-2">
                 Catégorie
               </label>
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-4 py-2 rounded-lg border border-slate-700 bg-slate-800/50 text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="action">Action corrective</option>
-                <option value="review">Révision</option>
-                <option value="investigation">Investigation</option>
-                <option value="improvement">Amélioration</option>
-              </select>
+              <Select value={category} onValueChange={setCategory}>
+                <SelectTrigger className="w-full h-10 rounded-lg border-slate-700 bg-slate-800/50 text-slate-200 focus:ring-2 focus:ring-blue-500">
+                  <SelectValue placeholder="Catégorie" />
+                </SelectTrigger>
+                <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+                  <SelectItem value="action">Action corrective</SelectItem>
+                  <SelectItem value="review">Révision</SelectItem>
+                  <SelectItem value="investigation">Investigation</SelectItem>
+                  <SelectItem value="improvement">Amélioration</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 

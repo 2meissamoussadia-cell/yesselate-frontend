@@ -300,7 +300,7 @@ export function PaiementValidationModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden flex flex-col bg-slate-900 border-slate-700 text-slate-50">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden flex flex-col bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-50">
         <DialogHeader className="flex flex-row items-center justify-between pb-4 border-b border-slate-700/50">
           <DialogTitle className="text-xl font-bold flex items-center gap-3">
             {titleIcon}

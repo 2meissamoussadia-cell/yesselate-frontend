@@ -12,6 +12,7 @@ import { useState, useEffect } from 'react';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   Bell, BellOff, Mail, MessageSquare, Smartphone,
   Plus, Trash2, Save, AlertTriangle, TrendingDown,
@@ -312,27 +313,35 @@ export function AnalyticsAlertConfigModal({ open, onClose }: AnalyticsAlertConfi
                   <div className="grid grid-cols-3 gap-3">
                     <div>
                       <label className="text-xs font-medium text-slate-400 mb-1 block">Métrique</label>
-                      <select
+                      <Select
                         value={editingRule.metric}
-                        onChange={(e) => updateEditingRule({ metric: e.target.value })}
-                        className="w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-800 text-slate-200 text-sm"
+                        onValueChange={(v) => updateEditingRule({ metric: v })}
                       >
-                        {METRIC_OPTIONS.map(m => (
-                          <option key={m.id} value={m.id}>{m.label}</option>
-                        ))}
-                      </select>
+                        <SelectTrigger className="w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-800 text-slate-200 text-sm">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {METRIC_OPTIONS.map(m => (
+                            <SelectItem key={m.id} value={m.id}>{m.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
                     <div>
                       <label className="text-xs font-medium text-slate-400 mb-1 block">Condition</label>
-                      <select
+                      <Select
                         value={editingRule.condition}
-                        onChange={(e) => updateEditingRule({ condition: e.target.value as AlertRule['condition'] })}
-                        className="w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-800 text-slate-200 text-sm"
+                        onValueChange={(v) => updateEditingRule({ condition: v as AlertRule['condition'] })}
                       >
-                        {CONDITION_OPTIONS.map(c => (
-                          <option key={c.id} value={c.id}>{c.label}</option>
-                        ))}
-                      </select>
+                        <SelectTrigger className="w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-800 text-slate-200 text-sm">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {CONDITION_OPTIONS.map(c => (
+                            <SelectItem key={c.id} value={c.id}>{c.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
                     <div>
                       <label className="text-xs font-medium text-slate-400 mb-1 block">Seuil</label>

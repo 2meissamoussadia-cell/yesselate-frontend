@@ -112,7 +112,7 @@ export function PageTemplate({
     >
       {/* En-tête compact : masqué sur dashboard/cockpit pour utiliser toute la page (header propre au dashboard). */}
       {!useFullPage && (
-        <header className="shrink-0 border-b border-slate-200 bg-white/80 dark:border-slate-800/60 dark:bg-slate-950/40">
+          <header className="shrink-0 border-b border-slate-200 dark:border-slate-800/60 bg-white/80 dark:bg-slate-950/40">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 px-4 sm:px-6 py-1.5 min-w-0">
             {breadcrumbs.length > 0 && !pathname?.startsWith('/maitre-ouvrage') && (
               <nav
@@ -130,7 +130,7 @@ export function PageTemplate({
                     {i < breadcrumbs.length - 1 && item.href ? (
                       <Link
                         href={item.href}
-                        className="hover:text-slate-200 transition-colors truncate max-w-[120px] sm:max-w-none"
+                        className="text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-200 transition-colors truncate max-w-[120px] sm:max-w-none"
                       >
                         {item.label}
                       </Link>
@@ -151,7 +151,7 @@ export function PageTemplate({
               </nav>
             )}
             {title && (
-              <h1 className="text-sm font-semibold text-slate-50 truncate shrink-0 border-l border-slate-700/60 pl-3">
+              <h1 className="text-sm font-semibold text-slate-900 dark:text-slate-50 truncate shrink-0 border-l border-slate-200 dark:border-slate-700/60 pl-3">
                 {title}
               </h1>
             )}
@@ -203,7 +203,7 @@ export function PageTemplate({
       </div>
 
       {footerSlot && (
-        <footer className="border-t border-slate-200 bg-white/80 dark:border-slate-800/60 dark:bg-slate-950/60 px-4 sm:px-6 py-3">
+        <footer className="border-t border-slate-200 dark:border-slate-800/60 bg-white/80 dark:bg-slate-950/60 px-4 sm:px-6 py-3">
           {footerSlot}
         </footer>
       )}

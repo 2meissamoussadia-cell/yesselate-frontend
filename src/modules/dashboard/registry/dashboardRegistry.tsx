@@ -10,9 +10,17 @@ import dynamic from 'next/dynamic';
 import { FileText, CheckCircle2, DollarSign, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DashboardAdvancedView } from '../components/DashboardAdvancedView';
-import { DashboardHome } from '../components/views/DashboardHome';
 import { CockpitDGPage } from '../components/views/CockpitDGPage';
 import { CockpitDG_V2Page } from '../components/views/CockpitDG_V2Page';
+
+// Lazy load DashboardHome (1749 lignes — Phase 1 audit #3)
+const DashboardHome = dynamic(
+  () => import('../components/views/DashboardHome').then((m) => ({ default: m.DashboardHome })),
+  {
+    loading: () => <DashboardPageSkeleton />,
+    ssr: false,
+  }
+);
 import { RapportDGPage } from '../components/views/RapportDGPage';
 import { DashboardDGLayout } from '../components/views/DashboardDGLayout';
 import { PortefeuilleChantiersPage } from '../components/views/PortefeuilleChantiersPage';
@@ -163,7 +171,7 @@ export { navToKey } from '../types/dashboard';
 // Dynamic imports pour les composants Achats (Phase P5)
 const AchatsOverviewPage = dynamic(
   () => import('../components/views/AchatsOverviewPage').then(m => ({ default: m.AchatsOverviewPage })),
-  { ssr: false }
+  { loading: () => <DashboardPageSkeleton />, ssr: false }
 );
 
 const AchatsFournisseursPage = dynamic(

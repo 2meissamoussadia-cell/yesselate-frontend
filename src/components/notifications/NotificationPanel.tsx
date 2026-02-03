@@ -140,13 +140,14 @@ export function NotificationPanel({
       <SheetContent
         side="right"
         className={cn(
-          'bg-slate-950 text-slate-100 border-slate-800 w-[450px] sm:max-w-[450px] flex flex-col p-0',
+          'w-[450px] sm:max-w-[450px] flex flex-col p-0',
+          'bg-white text-slate-900 border-slate-200 dark:bg-slate-950 dark:text-slate-100 dark:border-slate-800',
           className
         )}
         aria-label="Notifications"
       >
-        <SheetHeader className="px-4 py-4 border-b border-slate-800/60 text-left">
-          <SheetTitle className="text-slate-100 flex items-center justify-between">
+          <SheetHeader className="px-4 py-4 border-b border-slate-200 dark:border-slate-800/60 text-left">
+            <SheetTitle className="text-slate-900 dark:text-slate-100 flex items-center justify-between">
             <span>Notifications</span>
             {nonLues > 0 && (
               <Badge variant="destructive" className="shrink-0">
@@ -158,7 +159,7 @@ export function NotificationPanel({
 
         <div className="flex-1 overflow-y-auto mt-4 px-4 pb-4 space-y-3">
           {list.length === 0 ? (
-            <div className="text-center py-12 text-slate-400">
+            <div className="text-center py-12 text-slate-500 dark:text-slate-400">
               <Bell className="w-12 h-12 mx-auto mb-3 opacity-50" aria-hidden />
               <p>Aucune notification</p>
             </div>
@@ -183,18 +184,18 @@ export function NotificationPanel({
                   </span>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between mb-1">
-                      <h4 className="font-semibold text-slate-100">{notif.title}</h4>
+                      <h4 className="font-semibold text-slate-900 dark:text-slate-100">{notif.title}</h4>
                       {!notif.read && (
                         <div className="w-2 h-2 bg-sky-500 rounded-full mt-2 shrink-0" aria-hidden />
                       )}
                     </div>
-                    <p className="text-sm text-slate-300 mb-2">{notif.message}</p>
-                    <p className="text-xs text-slate-400">{formatNotificationTime(notif.time)}</p>
+                    <p className="text-sm text-slate-600 dark:text-slate-300 mb-2">{notif.message}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">{formatNotificationTime(notif.time)}</p>
                     {notif.lien && (
                       <Button
                         size="sm"
                         variant="ghost"
-                        className="mt-2 text-sky-400 hover:text-sky-300"
+                        className="mt-2 text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300"
                         asChild
                       >
                         <a href={notif.lien} onClick={(e) => e.stopPropagation()}>
@@ -209,16 +210,16 @@ export function NotificationPanel({
           )}
         </div>
 
-        <div className="mt-auto pt-4 px-4 pb-4 border-t border-slate-800/60 flex gap-2">
+        <div className="mt-auto pt-4 px-4 pb-4 border-t border-slate-200 dark:border-slate-800/60 flex gap-2">
           <Button
             variant="outline"
             size="sm"
             onClick={handleMarkAllRead}
-            className="border-slate-600 text-slate-300"
+            className="border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-300"
           >
             Tout marquer comme lu
           </Button>
-          <Button variant="ghost" size="sm" className="text-slate-400">
+          <Button variant="ghost" size="sm" className="text-slate-500 dark:text-slate-400">
             Paramètres
           </Button>
         </div>

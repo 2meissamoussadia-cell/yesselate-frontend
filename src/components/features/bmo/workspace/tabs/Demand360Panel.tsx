@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { FluentCard } from '@/components/ui/fluent-card';
 import { FluentButton as Button } from '@/components/ui/fluent-button';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { calculateRiskScore } from '@/domain/demandes/service';
 
 type Stakeholder = {
@@ -111,17 +112,18 @@ export function Demand360Panel({ demandId }: { demandId: string }) {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
             <Input value={pId} onChange={(e) => setPId(e.target.value)} placeholder="Person ID" />
             <Input value={pName} onChange={(e) => setPName(e.target.value)} placeholder="Nom" />
-            <select
-              className="rounded-xl border border-[rgb(var(--border)/0.55)] bg-transparent px-3 py-2 text-sm"
-              value={pRole}
-              onChange={(e) => setPRole(e.target.value as Stakeholder['role'])}
-            >
-              <option value="OWNER">OWNER</option>
-              <option value="APPROVER">APPROVER</option>
-              <option value="REVIEWER">REVIEWER</option>
-              <option value="CONTRIBUTOR">CONTRIBUTOR</option>
-              <option value="INFORMED">INFORMED</option>
-            </select>
+            <Select value={pRole} onValueChange={(v: string) => setPRole(v as Stakeholder['role'])}>
+              <SelectTrigger className="rounded-xl border border-[rgb(var(--border)/0.55)] bg-transparent px-3 py-2 text-sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="OWNER">OWNER</SelectItem>
+                <SelectItem value="APPROVER">APPROVER</SelectItem>
+                <SelectItem value="REVIEWER">REVIEWER</SelectItem>
+                <SelectItem value="CONTRIBUTOR">CONTRIBUTOR</SelectItem>
+                <SelectItem value="INFORMED">INFORMED</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <Button

@@ -28,6 +28,7 @@ import {
   Edit,
   BarChart3,
 } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 // ================================
 // Types
@@ -304,16 +305,17 @@ function ContratRejectionModal({ onClose, data }: { onClose: () => void; data?: 
           <label className="block text-sm font-medium text-slate-300 mb-2">
             Motif de rejet <span className="text-red-400">*</span>
           </label>
-          <select
-            value={reason}
-            onChange={(e) => setReason(e.target.value)}
-            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-200 focus:border-red-500 focus:ring-1 focus:ring-red-500"
-          >
-            <option value="">Sélectionner un motif...</option>
-            {rejectionReasons.map((r) => (
-              <option key={r} value={r}>{r}</option>
-            ))}
-          </select>
+          <Select value={reason || '__none__'} onValueChange={(value: string) => setReason(value === '__none__' ? '' : value)}>
+            <SelectTrigger className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-200 focus:border-red-500 focus:ring-1 focus:ring-red-500">
+              <SelectValue placeholder="Sélectionner un motif..." />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="__none__">Sélectionner un motif...</SelectItem>
+              {rejectionReasons.map((r) => (
+                <SelectItem key={r} value={r}>{r}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Notes complémentaires */}

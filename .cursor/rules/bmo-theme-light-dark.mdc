@@ -1,0 +1,75 @@
+---
+description: Support obligatoire mode jour/nuit pour tous les composants BMO
+globs: "src/components/bmo/**/*.tsx, src/components/features/bmo/**/*.tsx, src/modules/**/*.tsx"
+alwaysApply: false
+---
+
+# Thème mode jour/nuit — projet BMO
+
+Le mode jour (clair) et nuit (sombre) doit s'appliquer **partout** dans le projet BMO. Tout composant UI modifié ou créé doit supporter les deux modes.
+
+## Principes
+
+1. **Par défaut mode clair**, puis variante `dark:` pour le mode sombre
+2. Utiliser les **variables CSS** (`--bg`, `--surface`, `--text`, `--muted`, `--border`) quand c'est pertinent
+3. Jamais de fond ou texte figé en sombre uniquement
+
+## Conventions Tailwind
+
+### Fonds et bordures
+
+```tsx
+// ❌ BAD — reste sombre en mode jour
+className="bg-slate-900 border-slate-700 text-slate-100"
+
+// ✅ GOOD
+className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100"
+```
+
+### Texte secondaire / labels
+
+```tsx
+// ❌ BAD
+className="text-slate-400"
+
+// ✅ GOOD — lisible en mode clair
+className="text-slate-500 dark:text-slate-400"
+```
+
+### Icônes et accents
+
+```tsx
+// ❌ BAD
+className="text-sky-400"
+
+// ✅ GOOD
+className="text-sky-600 dark:text-sky-400"
+```
+
+### Hover / focus
+
+```tsx
+// ❌ BAD
+className="hover:bg-slate-800"
+
+// ✅ GOOD
+className="hover:bg-slate-100 dark:hover:bg-slate-800"
+```
+
+## Modals, dropdowns, command palette
+
+- Fond : `bg-white dark:bg-slate-900`
+- Bordure : `border-slate-200 dark:border-slate-700`
+- Items : `text-slate-900 dark:text-slate-100` + hover `hover:bg-slate-100 dark:hover:bg-slate-800`
+
+## Cartes, panels, widgets
+
+- Conteneur : `bg-white dark:bg-slate-900/60` ou `bg-slate-50 dark:bg-slate-950/80`
+- En-tête : `border-slate-200 dark:border-slate-700` + `bg-slate-50 dark:bg-slate-900/80`
+
+## Vérification
+
+Avant de valider un composant, passer en mode jour via le ThemeToggle et vérifier :
+- Contraste suffisant (texte lisible)
+- Fonds adaptés (pas de zones restées noires)
+- Bordures visibles

@@ -9,6 +9,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTicketsWorkspaceStore } from '@/lib/stores/ticketsWorkspaceStore';
 import { ticketsApi, type Ticket, type TicketStats, type ResponseTemplate } from '@/lib/services/ticketsApiService';
 import { TicketsDecisionCenter } from './TicketsDecisionCenter';
@@ -437,16 +438,17 @@ function SettingsModal({ onClose }: { onClose: () => void }) {
           {autoRefresh && (
             <div className="flex items-center gap-3 p-3 rounded-lg border border-slate-700/50 bg-slate-800/30">
               <span className="text-sm text-slate-400">Intervalle:</span>
-              <select
-                value={refreshInterval}
-                onChange={e => setRefreshInterval(Number(e.target.value))}
-                className="flex-1 px-3 py-1 rounded bg-slate-900 border border-slate-700 text-slate-200"
-              >
-                <option value={15}>15 secondes</option>
-                <option value={30}>30 secondes</option>
-                <option value={60}>1 minute</option>
-                <option value={300}>5 minutes</option>
-              </select>
+              <Select value={String(refreshInterval)} onValueChange={(v) => setRefreshInterval(Number(v))}>
+                <SelectTrigger className="flex-1 h-9 rounded bg-slate-900 border-slate-700 text-slate-200 text-sm">
+                  <SelectValue placeholder="Intervalle" />
+                </SelectTrigger>
+                <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+                  <SelectItem value="15">15 secondes</SelectItem>
+                  <SelectItem value="30">30 secondes</SelectItem>
+                  <SelectItem value="60">1 minute</SelectItem>
+                  <SelectItem value="300">5 minutes</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           )}
 
@@ -725,7 +727,7 @@ function TicketDetailModal({ onClose, data }: { onClose: () => void; data: Recor
                     value={newMessage}
                     onChange={e => setNewMessage(e.target.value)}
                     placeholder="Écrire un message..."
-                    className="flex-1 px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                    className="flex-1 px-3 py-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
                     onKeyDown={e => e.key === 'Enter' && handleSendMessage()}
                   />
                   <Button onClick={handleSendMessage} disabled={sending || !newMessage.trim()}>

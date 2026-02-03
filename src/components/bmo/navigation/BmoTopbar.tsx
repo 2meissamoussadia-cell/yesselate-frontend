@@ -148,24 +148,13 @@ export function BmoTopbar({
   const goToCurrentMainHome = useCallback(() => {
     const main = navigation.mainCategory as keyof typeof dashboardNavigationConfig;
     const firstSub = dashboardNavigationConfig[main]?.children?.[0]?.id ?? 'dashboard';
-    const q = new URLSearchParams();
-    q.set('main', navigation.mainCategory);
-    q.set('sub', firstSub);
-    q.set('leaf', 'default');
-    router.push(`${basePath}?${q.toString()}`);
     navigate(navigation.mainCategory, firstSub, 'default');
-  }, [navigation.mainCategory, navigate, router, basePath]);
+  }, [navigation.mainCategory, navigate]);
 
   const handleGoBack = useCallback(() => {
     if (!canGoBack) return;
-    const prev = navigationHistory[navigationHistory.length - 1];
-    const q = new URLSearchParams();
-    q.set('main', prev.mainCategory);
-    if (prev.subCategory) q.set('sub', prev.subCategory);
-    if (prev.subSubCategory) q.set('leaf', prev.subSubCategory);
-    router.push(`${basePath}?${q.toString()}`);
     goBack();
-  }, [canGoBack, navigationHistory, goBack, router, basePath]);
+  }, [canGoBack, goBack]);
 
   const handleGoForward = useCallback(() => {
     if (!canGoForward) return;
@@ -268,17 +257,12 @@ export function BmoTopbar({
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="min-w-[220px]">
-                <DropdownMenuLabel className="text-slate-400 font-normal">
+                <DropdownMenuLabel className="text-slate-500 dark:text-slate-400 font-normal">
                   Choisir une section — {breadcrumb.group}
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {currentMainSections.map((section) => {
                   const goToSection = () => {
-                    const q = new URLSearchParams();
-                    q.set('main', navigation.mainCategory);
-                    q.set('sub', section.id);
-                    q.set('leaf', 'default');
-                    router.push(`${pathname ?? '/maitre-ouvrage/dashboard'}?${q.toString()}`);
                     navigate(navigation.mainCategory, section.id, 'default');
                   };
                   return (
@@ -287,7 +271,7 @@ export function BmoTopbar({
                       onClick={goToSection}
                       className="flex items-center gap-2 cursor-pointer py-1.5 pr-2 pl-2 text-sm"
                     >
-                      <ChevronRight className="h-3 w-3 shrink-0 text-slate-400" aria-hidden />
+                      <ChevronRight className="h-3 w-3 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden />
                       <span className="truncate min-w-0">{section.label}</span>
                     </DropdownMenuItem>
                   );
@@ -377,7 +361,7 @@ export function BmoTopbar({
             <Bell className="h-4 w-4" aria-hidden strokeWidth={1.5} />
             {notificationCount > 0 && (
               <span
-                className="absolute right-0 top-0 flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 bg-rose-500/95 text-[10px] font-semibold text-white shadow-sm ring-2 ring-slate-950"
+                className="absolute right-0 top-0 flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 bg-rose-500/95 text-[10px] font-semibold text-white shadow-sm ring-2 ring-white dark:ring-slate-950"
                 aria-hidden
               >
                 {notificationCount > 99 ? '99+' : notificationCount}
@@ -417,13 +401,13 @@ export function BmoTopbar({
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="min-w-[10rem] text-[11px]">
-            <DropdownMenuLabel className="text-slate-400 font-normal text-[10px]">
+            <DropdownMenuLabel className="text-slate-500 dark:text-slate-400 font-normal text-[10px]">
               {user.name} — {user.role}
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => onLogout?.()}
-              className="text-rose-300 hover:text-rose-200 hover:bg-rose-500/10 focus:bg-rose-500/10"
+              className="text-rose-600 dark:text-rose-300 hover:text-rose-700 dark:hover:text-rose-200 hover:bg-rose-500/10 focus:bg-rose-500/10"
             >
               Déconnexion
             </DropdownMenuItem>

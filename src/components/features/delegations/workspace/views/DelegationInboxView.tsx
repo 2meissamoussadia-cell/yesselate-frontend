@@ -11,6 +11,7 @@ import {
   XCircle, Calendar, DollarSign, Pause, Filter, X, Plus
 } from 'lucide-react';
 import { FluentButton } from '@/components/ui/fluent-button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DelegationListSkeleton } from '../DelegationSkeletons';
 import { cn } from '@/lib/utils';
 
@@ -265,17 +266,20 @@ export function DelegationInboxView({ tab }: { tab: DelegationTab }) {
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
                   <div>
                     <label className="text-xs text-slate-400 mb-1 block">Bureau</label>
-                    <select
-                      value={bureauFilter}
-                      onChange={(e) => setBureauFilter(e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg border border-slate-200/70 bg-white/90 text-sm
-                                 dark:border-slate-800 dark:bg-[#141414]/70 dark:text-white"
+                    <Select
+                      value={bureauFilter ?? '__all__'}
+                      onValueChange={(v) => setBureauFilter(v === '__all__' ? '' : v)}
                     >
-                      <option value="">Tous</option>
-                      {BUREAUX.map(b => (
-                        <option key={b} value={b}>{b}</option>
-                      ))}
-                    </select>
+                      <SelectTrigger className="w-full h-9 rounded-lg border-slate-200/70 bg-white/90 dark:border-slate-800 dark:bg-[#141414]/70 text-sm">
+                        <SelectValue placeholder="Tous" />
+                      </SelectTrigger>
+                      <SelectContent className="border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1f1f1f]">
+                        <SelectItem value="__all__">Tous</SelectItem>
+                        {BUREAUX.map(b => (
+                          <SelectItem key={b} value={b}>{b}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                   
                   <div>

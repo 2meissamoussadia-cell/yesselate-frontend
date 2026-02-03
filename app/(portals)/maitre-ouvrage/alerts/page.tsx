@@ -69,19 +69,6 @@ const alertsKpis: KPIItem[] = [
   { id: "non-assignees", label: "Non assignées", value: "9", color: "amber" },
 ];
 
-function ChartSkeleton({ className }: { className?: string }) {
-  return (
-    <div
-      className={`animate-pulse rounded-xl border border-slate-200 dark:border-slate-800/60 bg-slate-100 dark:bg-slate-900/40 ${className ?? ''}`}
-      aria-hidden
-    >
-      <div className="flex items-center justify-center h-full min-h-[280px] text-slate-400 dark:text-slate-500 text-sm">
-        Chargement du graphique…
-      </div>
-    </div>
-  );
-}
-
 export default function AlertsCenterPage() {
   const [chartsReady, setChartsReady] = useState(false);
   useEffect(() => {

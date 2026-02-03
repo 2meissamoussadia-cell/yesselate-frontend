@@ -18,6 +18,7 @@ import { CreateTaskModal } from '../workspace/CreateTaskModal';
 import { ScheduleMeetingModal } from '../workspace/ScheduleMeetingModal';
 import { AssignResponsibleModal } from '../workspace/AssignResponsibleModal';
 import { AnalyticsFiltersPanel } from './AnalyticsFiltersPanel';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export function AnalyticsModals() {
   const { modal, closeModal } = useAnalyticsCommandCenterStore();
@@ -373,26 +374,28 @@ function SettingsModal({ onClose }: { onClose: () => void }) {
             <div className="space-y-3">
               <div>
                 <label className="block text-slate-400 mb-2">Thème</label>
-                <select
-                  value={settings.theme}
-                  onChange={(e) => setSettings({ ...settings, theme: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-800 text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="dark">Sombre</option>
-                  <option value="light">Clair</option>
-                  <option value="auto">Automatique</option>
-                </select>
+                <Select value={settings.theme} onValueChange={(v) => setSettings({ ...settings, theme: v })}>
+                  <SelectTrigger className="w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-800 text-slate-200 focus:ring-2 focus:ring-blue-500">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="dark">Sombre</SelectItem>
+                    <SelectItem value="light">Clair</SelectItem>
+                    <SelectItem value="auto">Automatique</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div>
                 <label className="block text-slate-400 mb-2">Langue</label>
-                <select
-                  value={settings.language}
-                  onChange={(e) => setSettings({ ...settings, language: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-800 text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="fr">Français</option>
-                  <option value="en">English</option>
-                </select>
+                <Select value={settings.language} onValueChange={(v) => setSettings({ ...settings, language: v })}>
+                  <SelectTrigger className="w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-800 text-slate-200 focus:ring-2 focus:ring-blue-500">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="fr">Français</SelectItem>
+                    <SelectItem value="en">English</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </div>

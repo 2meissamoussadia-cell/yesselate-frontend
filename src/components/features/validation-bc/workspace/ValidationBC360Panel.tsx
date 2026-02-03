@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { cn } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   RefreshCw, Users, ClipboardList, Shield, AlertTriangle,
   TrendingUp, CheckCircle, XCircle, Clock, Target,
@@ -269,15 +270,16 @@ export function ValidationBC360Panel({ documentId, documentType }: Props) {
                 placeholder="Nom de la personne"
                 className="flex-1 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm outline-none focus:ring-2 focus:ring-purple-500/30"
               />
-              <select
-                value={newPersonRole}
-                onChange={(e) => setNewPersonRole(e.target.value as Stakeholder['role'])}
-                className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm outline-none"
-              >
-                {Object.entries(ROLE_LABELS).map(([key, label]) => (
-                  <option key={key} value={key}>{label}</option>
-                ))}
-              </select>
+              <Select value={newPersonRole} onValueChange={(v) => setNewPersonRole(v as Stakeholder['role'])}>
+                <SelectTrigger className="min-w-[140px] h-9 px-3 rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:ring-2 focus:ring-purple-500/30">
+                  <SelectValue placeholder="Rôle" />
+                </SelectTrigger>
+                <SelectContent className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+                  {Object.entries(ROLE_LABELS).map(([key, label]) => (
+                    <SelectItem key={key} value={key}>{label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <button
                 onClick={addStakeholder}
                 disabled={!newPersonName.trim()}

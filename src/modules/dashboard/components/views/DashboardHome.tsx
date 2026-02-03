@@ -49,6 +49,7 @@ import {
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Skeleton } from '@/components/ui/skeleton';
 import { DashboardPanel } from '../shared/DashboardPanel';
 import { CollapsibleSection } from '../shared/CollapsibleSection';
 import { FinancesGlobalesWidget } from '../shared/FinancesGlobalesWidget';
@@ -583,7 +584,7 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
             <SelectTrigger id="preset" className="rounded-xl border-slate-700 bg-slate-800/80 px-3 py-2 text-xs text-slate-200 min-h-[44px] w-auto data-[placeholder]:text-slate-400 focus:ring-sky-500/50 focus:ring-offset-slate-950 [&>span]:line-clamp-1" aria-label="Vue par rôle">
               <SelectValue placeholder="Vue par rôle" />
             </SelectTrigger>
-            <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+            <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
               <SelectItem value="executive">Exécutive (DG)</SelectItem>
               <SelectItem value="financial">Financière</SelectItem>
               <SelectItem value="operational">Opérationnelle</SelectItem>
@@ -604,7 +605,7 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
                 <SelectTrigger id="display-mode" className="rounded-xl border-slate-700 bg-slate-800/80 px-3 py-2 text-xs text-slate-200 min-h-[44px] w-auto focus:ring-sky-500/50 focus:ring-offset-slate-950" aria-label="Mode d'affichage du dashboard">
                   <SelectValue placeholder="Affichage" />
                 </SelectTrigger>
-                <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+                <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
                   <SelectItem value="all">Tout afficher</SelectItem>
                   <SelectItem value="synthetique">Synthétique (sections repliées)</SelectItem>
                   <SelectItem value="critical">Critiques uniquement</SelectItem>
@@ -617,7 +618,7 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
             <SelectTrigger id="density" className="rounded-xl border-slate-700 bg-slate-800/80 px-3 py-2 text-xs text-slate-200 min-h-[44px] w-auto focus:ring-sky-500/50 focus:ring-offset-slate-950" aria-label="Densité d'affichage">
               <SelectValue placeholder="Densité" />
             </SelectTrigger>
-            <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+            <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
               <SelectItem value="compact">Compact</SelectItem>
               <SelectItem value="normal">Normal</SelectItem>
               <SelectItem value="comfortable">Confortable</SelectItem>
@@ -643,7 +644,7 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
                 <SelectTrigger className="rounded-xl border-slate-700 bg-slate-800/80 px-3 py-2 text-xs text-slate-200 min-h-[44px] max-w-[180px] focus:ring-sky-500/50 focus:ring-offset-slate-950" aria-label="Appliquer une vue sauvegardée">
                   <SelectValue placeholder="Vues sauvegardées…" />
                 </SelectTrigger>
-                <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+                <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
                   {savedViews.map((v) => (
                     <SelectItem key={v.id} value={v.id}>{v.name}</SelectItem>
                   ))}
@@ -856,7 +857,7 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
           <div className="px-4 pb-4 border-t border-slate-800/60">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 text-[11px] mt-3">
               {/* Demandes */}
-              <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-3 flex flex-col gap-1.5">
+              <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80 p-3 flex flex-col gap-1.5">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <span className="inline-flex h-6 w-6 items-center justify-center rounded-lg bg-sky-500/10 text-sky-400">
@@ -1053,7 +1054,7 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
               <SelectTrigger id="cockpit-view" className="rounded-xl border-slate-700 bg-slate-800/80 px-3 py-2 text-xs text-slate-200 min-h-[44px] w-auto sr-only sm:not-sr-only focus:ring-sky-500/50 focus:ring-offset-slate-950" aria-label="Changer de vue cockpit (finances, opérations, risques)">
                 <SelectValue placeholder="Vue cockpit" />
               </SelectTrigger>
-              <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+              <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
                 <SelectItem value="finances">Vue finances</SelectItem>
                 <SelectItem value="operations">Vue opérations</SelectItem>
                 <SelectItem value="risques">Vue risques</SelectItem>
@@ -1063,7 +1064,7 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
               type="button"
               onClick={() => setShowPersonalizeMessage((v) => !v)}
               className="rounded-lg border border-slate-700 bg-slate-800/60 px-3 py-2 min-h-[44px] text-[11px] text-slate-300 hover:bg-slate-700/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-              title="Personnaliser l'affichage (réorganiser les widgets)"
+              title="Personnaliser l'affichage (glisser-déposer pour réorganiser)"
               aria-label="Personnaliser l'affichage du dashboard"
             >
               <Settings className="h-3.5 w-3.5 shrink-0" aria-hidden />
@@ -1073,11 +1074,11 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
         </div>
         {showPersonalizeMessage && (
           <div className="mb-4 rounded-lg border border-sky-500/30 bg-sky-500/10 px-3 py-2 text-[11px] text-sky-200">
-            Mode personnalisation à venir : réorganisez les widgets par glisser-déposer (comme Procore). Disponible dans une prochaine version.
+            Cliquez sur « Personnaliser » puis utilisez la poignée (⋮⋮) pour glisser-déposer les widgets, ou les flèches pour les réordonner.
           </div>
         )}
         {cockpitView !== 'finances' ? (
-          <div id="cockpit-view-panel" role="tabpanel" aria-labelledby={`cockpit-tab-${cockpitView}`} className="rounded-xl border border-slate-800/60 bg-slate-950/40 p-8 overflow-hidden">
+          <div id="cockpit-view-panel" role="tabpanel" aria-labelledby={`cockpit-tab-${cockpitView}`} className="rounded-xl border border-slate-200 dark:border-slate-800/60 bg-slate-50 dark:bg-slate-950/40 p-8 overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.div
                 key={cockpitView}
@@ -1095,19 +1096,19 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
                 </h3>
                 <p className="text-slate-400 text-sm">Indicateurs chantiers, avancement par lot et exécution terrain (périmètre NICE RÉNOVATION).</p>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-3 flex flex-col gap-1">
+                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80 p-3 flex flex-col gap-1">
                     <span className="text-[10px] text-slate-400">Chantiers actifs</span>
                     <span className="text-lg font-semibold text-slate-100">{PHASE4_ALL.filter((r) => r.sante >= 0.5).length}</span>
                   </div>
-                  <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-3 flex flex-col gap-1">
+                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80 p-3 flex flex-col gap-1">
                     <span className="text-[10px] text-slate-400">CA cumulé (XOF)</span>
                     <span className="text-lg font-semibold text-slate-100">{formatCFA(PHASE4_ALL.reduce((s, r) => s + r.ca, 0))}</span>
                   </div>
-                  <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-3 flex flex-col gap-1">
+                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80 p-3 flex flex-col gap-1">
                     <span className="text-[10px] text-slate-400">En retard (&lt; 50 %)</span>
                     <span className="text-lg font-semibold text-amber-400">{PHASE4_ALL.filter((r) => r.sante < 0.5).length}</span>
                   </div>
-                  <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-3 flex flex-col gap-1">
+                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80 p-3 flex flex-col gap-1">
                     <span className="text-[10px] text-slate-400">Santé moyenne</span>
                     <span className="text-lg font-semibold text-slate-100">{Math.round((PHASE4_ALL.reduce((s, r) => s + r.sante, 0) / PHASE4_ALL.length) * 100)} %</span>
                   </div>
@@ -1123,17 +1124,17 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
                 </h3>
                 <p className="text-slate-400 text-sm">Risques délais, budget et satisfaction (portefeuille chantiers).</p>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-3 flex flex-col gap-1">
+                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80 p-3 flex flex-col gap-1">
                     <span className="text-[10px] text-slate-400">Risque délais</span>
                     <span className="text-lg font-semibold text-amber-300">29 %</span>
                     <span className="text-[10px] text-slate-400">Chantiers &gt; 5 j retard</span>
                   </div>
-                  <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-3 flex flex-col gap-1">
+                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80 p-3 flex flex-col gap-1">
                     <span className="text-[10px] text-slate-400">Risque budget</span>
                     <span className="text-lg font-semibold text-amber-300">39 %</span>
                     <span className="text-[10px] text-slate-400">Chantiers &gt; 90 % budget</span>
                   </div>
-                  <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-3 flex flex-col gap-1">
+                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80 p-3 flex flex-col gap-1">
                     <span className="text-[10px] text-slate-400">Satisfaction clients</span>
                     <span className="text-lg font-semibold text-emerald-400">92 %</span>
                     <span className="text-[10px] text-slate-400">90 derniers jours</span>
@@ -1160,11 +1161,11 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
             className="space-y-4 text-[11px]"
           >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-3">
+          <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80 p-3">
             <FinancesGlobalesWidget data={financesGlobales} onCreancesClick={() => setCreancesModalOpen(true)} />
           </div>
 
-          <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-3 flex flex-col gap-2">
+          <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80 p-3 flex flex-col gap-2">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-medium text-slate-100">
                 Synthèse portefeuille chantiers (NICE RÉNOVATION)
@@ -1237,10 +1238,13 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
             <button
               type="button"
               onClick={() => setDecisionsModalOpen(true)}
-              className="mt-2 w-full rounded-lg border border-slate-800 bg-slate-950/40 px-3 py-2 min-h-[44px] flex items-center justify-between text-left cursor-pointer hover:bg-slate-800/60 hover:border-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 text-[11px] transition-colors"
+              className="mt-2 w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 px-3 py-2 min-h-[44px] flex items-center justify-between text-left cursor-pointer hover:bg-slate-800/60 hover:border-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 text-[11px] transition-colors"
               aria-label={`Ouvrir les décisions en attente (${decisionsVal})`}
             >
-              <span className="text-slate-400">📋 Décisions en attente</span>
+              <span className="text-slate-400 flex items-center gap-2">
+                <ClipboardList className="h-4 w-4 shrink-0" aria-hidden />
+                Décisions en attente
+              </span>
               <span className="text-slate-100 font-semibold">{decisionsVal}</span>
             </button>
           </div>
@@ -1249,9 +1253,16 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
         {/* Prévisionnel Trésorerie 90j — Phase 2 audit ERP BTP 2026 (données API ou mock) */}
         <div className="mt-4">
           {loadingTresorerie ? (
-            <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-6 flex items-center justify-center gap-3 min-h-[200px]" role="status" aria-label="Chargement du prévisionnel trésorerie">
-              <div className="h-5 w-5 animate-spin rounded-full border-2 border-sky-500 border-t-transparent" aria-hidden />
-              <span className="text-sm text-slate-400">Chargement du prévisionnel trésorerie…</span>
+            <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80 p-6 min-h-[200px] space-y-4" role="status" aria-label="Chargement du prévisionnel trésorerie">
+              <div className="flex items-center justify-between gap-2">
+                <Skeleton variant="text" className="h-5 w-48" />
+                <Skeleton variant="rectangular" className="h-9 w-28 rounded-lg" />
+              </div>
+              <Skeleton variant="rectangular" className="h-[180px] w-full rounded-lg" />
+              <div className="flex gap-2">
+                <Skeleton variant="text" className="h-4 w-24" />
+                <Skeleton variant="text" className="h-4 w-32" />
+              </div>
             </div>
           ) : (
             <TresoreriePrevisionnelleWidget
@@ -1303,7 +1314,7 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
       <DashboardPanel title="" subtitle="" className="mt-0 border-0 shadow-none" padding="md">
         <p className="text-[11px] text-slate-400 mb-4">Santé globale du portefeuille chantiers et des relations clients</p>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 text-[11px]">
-          <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-3 flex flex-col gap-2">
+          <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80 p-3 flex flex-col gap-2">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-medium text-slate-100">
                 Risque délais
@@ -1325,7 +1336,7 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
             </div>
           </div>
 
-          <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-3 flex flex-col gap-2">
+          <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80 p-3 flex flex-col gap-2">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-medium text-slate-100">
                 Risque budget
@@ -1347,7 +1358,7 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
             </div>
           </div>
 
-          <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-3 flex flex-col gap-2">
+          <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80 p-3 flex flex-col gap-2">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-medium text-slate-100">
                 Satisfaction clients
@@ -1423,7 +1434,7 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
           ];
           if (items.length === 0) {
             return (
-              <div className="rounded-xl border border-dashed border-slate-600/50 bg-slate-800/20 dark:bg-slate-900/40 p-8 flex flex-col items-center justify-center gap-2 text-center">
+              <div className="rounded-xl border border-dashed border-slate-600/50 bg-slate-50 dark:bg-slate-900/40 p-8 flex flex-col items-center justify-center gap-2 text-center">
                 <BarChart3 className="h-10 w-10 text-slate-500" aria-hidden />
                 <p className={cn(typography.body.sm, 'text-slate-400')}>Aucune donnée disponible pour ce périmètre</p>
               </div>
@@ -1467,7 +1478,7 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
             ACTIVITE_RECENTE_MOCK.map((item) => (
               <li
                 key={item.id}
-                className="flex items-center justify-between gap-3 py-2.5 px-4 rounded-xl border border-slate-800/60 bg-slate-900/50 hover:bg-slate-800/50 transition-colors"
+                className="flex items-center justify-between gap-3 py-2.5 px-4 rounded-xl border border-slate-200 dark:border-slate-800/60 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-800/50 transition-colors"
               >
                 <span className={cn(typography.body.xs, 'text-slate-200 truncate min-w-0')}>{item.label}</span>
                 <span className={cn(typography.label.md, 'text-slate-400 shrink-0')}>{item.timeAgo}</span>
@@ -1490,19 +1501,19 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
         id="phase-4-execution"
       >
       <DashboardPanel title="" subtitle="" className="mt-0 border-0 shadow-none" padding="md">
-        <p className="text-[11px] text-slate-400 mb-4">
+        <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-4">
           Chantiers en phase d&apos;exécution ({phase4Displayed.length} / {phase4FilteredCount} affichés{phase4FilterSante !== 'all' ? `, filtre: ${phase4FilterSante === 'critique' ? 'Critique' : phase4FilterSante === 'surveiller' ? 'À surveiller' : 'Bon'}` : ''} sur {phase4TotalCount} au total)
         </p>
-        <p className="text-[10px] text-slate-400 mb-2">
+        <p className="text-[10px] text-slate-500 dark:text-slate-400 mb-2">
           Santé d&apos;avancement : barre = % d&apos;avancement global (Bon ≥ 80 %, À surveiller ≥ 50 %, Critique &lt; 50 %). « Peinture 0 % » = lot peinture non démarré. « Bureau 2/3 » = 2 bureaux validés sur 3. Cliquez sur un en-tête de colonne pour trier.
         </p>
         <div className="mb-4 flex flex-wrap items-center gap-3">
-          <label className={cn(typography.label.md, 'text-slate-400')}>Filtrer par santé :</label>
+          <label className={cn(typography.label.md, 'text-slate-500 dark:text-slate-400')}>Filtrer par santé :</label>
           <Select value={phase4FilterSante} onValueChange={(v) => setPhase4FilterSante(v as Phase4FilterSante)}>
-            <SelectTrigger className={cn('rounded-xl border-slate-700 bg-slate-800/80 px-4 py-2', typography.label.md, 'text-slate-200 min-h-[44px] w-auto focus:ring-sky-500/50')} aria-label="Filtrer les chantiers par niveau de santé">
+            <SelectTrigger className={cn('rounded-xl px-4 py-2', typography.label.md, 'min-h-[44px] w-auto focus:ring-sky-500/50 border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800/80 text-slate-800 dark:text-slate-200')} aria-label="Filtrer les chantiers par niveau de santé">
               <SelectValue placeholder="Santé" />
             </SelectTrigger>
-            <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+            <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
               <SelectItem value="all">Tous</SelectItem>
               <SelectItem value="critique">Critique (&lt; 50 %)</SelectItem>
               <SelectItem value="surveiller">À surveiller (50—80 %)</SelectItem>
@@ -1510,18 +1521,18 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
             </SelectContent>
           </Select>
         </div>
-        <div className="rounded-2xl border border-slate-700/50 bg-slate-900/30 backdrop-blur-sm overflow-hidden shadow-md">
+        <div className="rounded-2xl border border-slate-200 dark:border-slate-700/50 bg-white dark:bg-slate-900/30 backdrop-blur-sm overflow-hidden shadow-md">
           <div className="overflow-x-auto overflow-y-visible -mx-1 px-1 md:mx-0 md:px-0" style={{ WebkitOverflowScrolling: 'touch' }}>
             <table className="w-full min-w-[640px] border-collapse text-xs sm:text-sm">
-              <thead className="bg-slate-800/80 dark:bg-slate-800/90 sticky top-0 z-10 border-b border-slate-700/50">
+              <thead className="bg-slate-100 dark:bg-slate-800/90 sticky top-0 z-10 border-b border-slate-200 dark:border-slate-700/50">
                 <tr>
                   <th className="p-4 text-left whitespace-nowrap">
                     <button
                       type="button"
                       onClick={() => togglePhase4Sort('numero')}
                       className={cn(
-                        'flex items-center gap-1 font-semibold text-slate-200 hover:text-sky-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 rounded min-h-[44px] px-2 py-2',
-                        phase4SortBy === 'numero' && 'text-sky-400'
+                        'flex items-center gap-1 font-semibold text-slate-800 dark:text-slate-200 hover:text-sky-600 dark:hover:text-sky-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 rounded min-h-[44px] px-2 py-2',
+                        phase4SortBy === 'numero' && 'text-sky-600 dark:text-sky-400'
                       )}
                       aria-sort={phase4SortBy === 'numero' ? (phase4SortDir === 'asc' ? 'ascending' : 'descending') : undefined}
                       aria-label={phase4SortBy === 'numero' ? `Trier par chantier (${phase4SortDir === 'asc' ? 'croissant' : 'décroissant'})` : 'Trier par chantier'}
@@ -1535,8 +1546,8 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
                       type="button"
                       onClick={() => togglePhase4Sort('ca')}
                       className={cn(
-                        'inline-flex items-center justify-end gap-1 w-full font-semibold text-slate-200 hover:text-sky-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 rounded min-h-[44px] px-2 py-2',
-                        phase4SortBy === 'ca' && 'text-sky-400'
+                        'inline-flex items-center justify-end gap-1 w-full font-semibold text-slate-800 dark:text-slate-200 hover:text-sky-600 dark:hover:text-sky-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 rounded min-h-[44px] px-2 py-2',
+                        phase4SortBy === 'ca' && 'text-sky-600 dark:text-sky-400'
                       )}
                       aria-sort={phase4SortBy === 'ca' ? (phase4SortDir === 'asc' ? 'ascending' : 'descending') : undefined}
                       aria-label={phase4SortBy === 'ca' ? `Trier par CA (${phase4SortDir === 'asc' ? 'croissant' : 'décroissant'})` : 'Trier par CA'}
@@ -1550,8 +1561,8 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
                       type="button"
                       onClick={() => togglePhase4Sort('sante')}
                       className={cn(
-                        'inline-flex items-center justify-end gap-1 w-full font-semibold text-slate-200 hover:text-sky-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 rounded min-h-[44px] px-2 py-2',
-                        phase4SortBy === 'sante' && 'text-sky-400'
+                        'inline-flex items-center justify-end gap-1 w-full font-semibold text-slate-800 dark:text-slate-200 hover:text-sky-600 dark:hover:text-sky-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 rounded min-h-[44px] px-2 py-2',
+                        phase4SortBy === 'sante' && 'text-sky-600 dark:text-sky-400'
                       )}
                       aria-sort={phase4SortBy === 'sante' ? (phase4SortDir === 'asc' ? 'ascending' : 'descending') : undefined}
                       aria-label={phase4SortBy === 'sante' ? `Trier par santé (${phase4SortDir === 'asc' ? 'croissant' : 'décroissant'})` : 'Trier par santé d\'avancement'}
@@ -1560,8 +1571,8 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
                       {phase4SortBy === 'sante' ? (phase4SortDir === 'asc' ? <ArrowUp className="h-3 w-3" aria-hidden /> : <ArrowDown className="h-3 w-3" aria-hidden />) : <ArrowUpDown className="h-3 w-3 opacity-50" aria-hidden />}
                     </button>
                   </th>
-                  <th className="p-2 sm:p-3 text-right font-semibold text-slate-200 whitespace-nowrap">Problème principal</th>
-                  <th className="p-2 sm:p-3 text-right font-semibold text-slate-200 whitespace-nowrap">Action rapide</th>
+                  <th className="p-2 sm:p-3 text-right font-semibold text-slate-800 dark:text-slate-200 whitespace-nowrap">Problème principal</th>
+                  <th className="p-2 sm:p-3 text-right font-semibold text-slate-800 dark:text-slate-200 whitespace-nowrap">Action rapide</th>
                 </tr>
               </thead>
               <tbody>
@@ -1578,17 +1589,17 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
                       }
                     }}
                     className={cn(
-                      'border-t border-slate-700/40 transition-colors duration-150 cursor-pointer',
-                      'hover:bg-slate-800/50 focus-within:bg-slate-800/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-cyan-500/50'
+                      'border-t border-slate-200 dark:border-slate-700/40 transition-colors duration-150 cursor-pointer',
+                      'hover:bg-slate-50 dark:hover:bg-slate-800/50 focus-within:bg-slate-50 dark:focus-within:bg-slate-800/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-cyan-500/50'
                     )}
                     aria-label={`Voir le détail du chantier ${chantier.numero}`}
                   >
                     <td className="p-4">
-                      <span className="font-medium text-slate-100">
+                      <span className="font-medium text-slate-900 dark:text-slate-100">
                         {chantier.numero}
                       </span>
                     </td>
-                    <td className="p-4 text-right tabular-nums text-slate-300">{formatCFA(chantier.ca)}</td>
+                    <td className="p-4 text-right tabular-nums text-slate-700 dark:text-slate-300">{formatCFA(chantier.ca)}</td>
                     <td className="p-4">
                       <div className="flex items-center gap-2">
                         <div
@@ -1600,7 +1611,7 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
                             style={{ width: `${Math.round(chantier.sante * 100)}%` }}
                           />
                         </div>
-                        <span className="text-xs text-slate-400 shrink-0">
+                        <span className="text-xs text-slate-500 dark:text-slate-400 shrink-0">
                           {Math.round(chantier.sante * 100)} % — {getHealthLabel(Math.round(chantier.sante * 100))}
                         </span>
                       </div>
@@ -1617,7 +1628,7 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
                             onClick={() => openPhase4Action(action.type, chantier)}
                             aria-label={action.label}
                             className={cn(
-                              'inline-flex items-center justify-center gap-2 px-4 py-2.5 min-h-[44px] rounded-xl text-xs font-medium transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 active:scale-[0.98]',
+                              'inline-flex items-center justify-center gap-2 px-4 py-2.5 min-h-[44px] rounded-xl text-xs font-medium transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-900 active:scale-[0.98]',
                               action.variant === 'danger'
                                 ? 'bg-red-500/90 hover:bg-red-500 text-white shadow-sm hover:shadow'
                                 : 'bg-amber-500/90 hover:bg-amber-500 text-slate-900 shadow-sm hover:shadow'
@@ -1650,7 +1661,7 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
             <button
               type="button"
               onClick={() => setPhase4DisplayLimit(PHASE4_INITIAL_LIMIT)}
-              className="text-xs text-slate-400 hover:text-slate-300 font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500/50 rounded-xl min-h-[44px] px-4 py-2.5"
+              className="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500/50 rounded-xl min-h-[44px] px-4 py-2.5"
               aria-label="Réduire l'affichage aux 5 premiers chantiers"
             >
               Réduire

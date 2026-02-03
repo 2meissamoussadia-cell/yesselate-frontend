@@ -62,7 +62,7 @@ export function ResoudreConflitModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-slate-900 border-slate-700 max-w-2xl">
+      <DialogContent className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 max-w-2xl">
         <DialogHeader>
           <DialogTitle className="text-slate-200">Résoudre le conflit</DialogTitle>
           <DialogDescription className="text-slate-400">

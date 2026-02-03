@@ -41,7 +41,7 @@ export function ContratHelpModal({ open, onClose }: ContratHelpModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden bg-slate-900 border-slate-700">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
         <DialogHeader>
           <DialogTitle className="text-xl text-slate-200">Aide - Validation Contrats</DialogTitle>
         </DialogHeader>

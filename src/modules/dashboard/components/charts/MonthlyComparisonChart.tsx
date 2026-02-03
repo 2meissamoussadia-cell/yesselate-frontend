@@ -15,12 +15,14 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  Brush,
 } from 'recharts';
 import { ChartContainer, chartStyles, chartColors, chartUI } from '@/modules/dashboard/charts/ChartKit';
 import type { MonthlyComparisonData } from '../DashboardCharts';
 import { useI18n } from '@/lib/i18n';
 
 export function MonthlyComparisonChart({ data }: { data?: MonthlyComparisonData[] }) {
+  const { fmt } = useI18n();
   const chartData = useMemo(() => {
     if (!data || data.length === 0) return [];
     return data;
@@ -37,7 +39,7 @@ export function MonthlyComparisonChart({ data }: { data?: MonthlyComparisonData[
   }
 
   return (
-    <ChartContainer title="Comparaison mensuelle">
+    <ChartContainer title="Comparaison mensuelle" exportFilename="comparaison-mensuelle">
       <ResponsiveContainer width="100%" height="100%" minHeight={200}>
         <BarChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
           <CartesianGrid {...chartStyles.grid} />
@@ -48,6 +50,15 @@ export function MonthlyComparisonChart({ data }: { data?: MonthlyComparisonData[
             formatter={(value: number) => fmt.number(value)}
           />
           <Legend {...chartStyles.legend} />
+          {chartData.length > 8 && (
+            <Brush
+              dataKey="month"
+              height={24}
+              stroke={chartColors.primary.main}
+              fill="rgba(59, 130, 246, 0.08)"
+              tickFormatter={() => ''}
+            />
+          )}
           <Bar
             dataKey="actuel"
             fill={chartColors.primary.main}

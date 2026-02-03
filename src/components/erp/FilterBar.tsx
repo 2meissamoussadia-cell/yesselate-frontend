@@ -9,6 +9,7 @@
 import React, { useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { Filter, X, Save } from 'lucide-react';
+import { Select as SelectRoot, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { ErpFilters, ErpSavedView } from './types';
 
 export interface FilterBarProps {
@@ -94,25 +95,30 @@ export function FilterBar({
     const items: Array<{ value: string; label: string }> = Array.isArray(opts) && opts.length > 0 && typeof opts[0] === 'string'
       ? [{ value: '', label: opts[0] }, ...(opts as string[]).slice(1).map((o) => ({ value: o, label: o }))]
       : (opts as Array<{ value: string; label: string }>);
+    const selectValue = value ?? '';
+    const radixValue = selectValue === '' ? '__empty__' : selectValue;
     return (
       <div className="flex flex-col gap-0.5">
         <label className="text-[11px] text-slate-400 font-medium">{label}</label>
-        <select
-          value={value ?? ''}
-          onChange={(e) => onChange(e.target.value)}
-          className={cn(
-            'h-8 min-w-[120px] rounded-lg border border-slate-700 bg-slate-900 px-2 text-xs text-slate-100',
-            'focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50',
-            'transition-colors hover:border-slate-600'
-          )}
-          aria-label={label}
-        >
-          {items.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
+        <SelectRoot value={radixValue} onValueChange={(v: string) => onChange(v === '__empty__' ? '' : v)}>
+          <SelectTrigger
+            className={cn(
+              'h-8 min-w-[120px] rounded-lg border border-slate-700 bg-slate-900 px-2 text-xs text-slate-100',
+              'focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50',
+              'transition-colors hover:border-slate-600'
+            )}
+            aria-label={label}
+          >
+            <SelectValue placeholder={label} />
+          </SelectTrigger>
+          <SelectContent>
+            {items.map((opt) => (
+              <SelectItem key={opt.value === '' ? '__empty__' : opt.value} value={opt.value === '' ? '__empty__' : opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </SelectRoot>
       </div>
     );
   };
@@ -226,27 +232,32 @@ export function FilterBar({
       {savedViews.length > 0 && !hideSections.includes('savedViews') && (
         <div className="flex flex-col gap-0.5">
           <label className="text-[11px] text-slate-400 font-medium">Vue</label>
-          <select
-            value=""
-            onChange={(e) => {
-              const id = e.target.value;
-              if (!id) return;
+          <SelectRoot
+            value="__custom__"
+            onValueChange={(id: string) => {
+              if (id === '__custom__') return;
               const view = savedViews.find((v) => v.id === id);
               if (view) onLoadView?.(view);
             }}
-            className={cn(
-              'h-8 min-w-[140px] rounded-lg border border-slate-700 bg-slate-900 px-2 text-xs text-slate-100',
-              'focus:outline-none focus:ring-2 focus:ring-blue-500/50'
-            )}
-            aria-label="Vue sauvegardée"
           >
-            <option value="">Personnalisée</option>
-            {savedViews.map((v) => (
-              <option key={v.id} value={v.id}>
-                {v.name}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger
+              className={cn(
+                'h-8 min-w-[140px] rounded-lg border border-slate-700 bg-slate-900 px-2 text-xs text-slate-100',
+                'focus:ring-2 focus:ring-blue-500/50'
+              )}
+              aria-label="Vue sauvegardée"
+            >
+              <SelectValue placeholder="Personnalisée" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="__custom__">Personnalisée</SelectItem>
+              {savedViews.map((v) => (
+                <SelectItem key={v.id} value={v.id}>
+                  {v.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </SelectRoot>
         </div>
       )}
 

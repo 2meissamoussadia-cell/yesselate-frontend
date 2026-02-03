@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { X, Filter, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { bureaux } from '@/lib/data';
@@ -83,25 +84,29 @@ export function SmartFilters({ filters, onFiltersChange }: SmartFiltersProps) {
           {/* Bureau */}
           <div>
             <label className="text-xs text-slate-400 mb-1 block">Bureau</label>
-            <select
-              value={filters.bureau?.[0] || ''}
-              onChange={(e) => {
-                if (e.target.value) {
-                  updateFilter('bureau', [e.target.value]);
+            <Select
+              value={filters.bureau?.[0] || '__all__'}
+              onValueChange={(value: string) => {
+                if (value && value !== '__all__') {
+                  updateFilter('bureau', [value]);
                 } else {
                   removeFilter('bureau');
                 }
               }}
-              className={cn(
-                'w-full px-2 py-1.5 text-xs rounded border',
-                'bg-slate-800 border-slate-700 text-slate-300'
-              )}
             >
-              <option value="">Tous les bureaux</option>
-              {bureaux.map(b => (
-                <option key={b.code} value={b.code}>{b.code} - {b.name}</option>
-              ))}
-            </select>
+              <SelectTrigger className={cn(
+                'w-full px-2 py-1.5 text-xs rounded border h-9',
+                'bg-slate-800 border-slate-700 text-slate-300'
+              )}>
+                <SelectValue placeholder="Bureau" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__all__">Tous les bureaux</SelectItem>
+                {bureaux.map(b => (
+                  <SelectItem key={b.code} value={b.code}>{b.code} - {b.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             {filters.bureau && filters.bureau.length > 0 && (
               <div className="flex items-center gap-1 mt-1">
                 {filters.bureau.map(bureau => (
@@ -122,49 +127,57 @@ export function SmartFilters({ filters, onFiltersChange }: SmartFiltersProps) {
           {/* Priorité */}
           <div>
             <label className="text-xs text-slate-400 mb-1 block">Priorité</label>
-            <select
-              value={filters.priority?.[0] || ''}
-              onChange={(e) => {
-                if (e.target.value) {
-                  updateFilter('priority', [e.target.value]);
+            <Select
+              value={filters.priority?.[0] || '__all__'}
+              onValueChange={(value: string) => {
+                if (value && value !== '__all__') {
+                  updateFilter('priority', [value]);
                 } else {
                   removeFilter('priority');
                 }
               }}
-              className={cn(
-                'w-full px-2 py-1.5 text-xs rounded border',
-                'bg-slate-800 border-slate-700 text-slate-300'
-              )}
             >
-              <option value="">Toutes les priorités</option>
-              {priorityOptions.map(p => (
-                <option key={p} value={p}>{p}</option>
-              ))}
-            </select>
+              <SelectTrigger className={cn(
+                'w-full px-2 py-1.5 text-xs rounded border h-9',
+                'bg-slate-800 border-slate-700 text-slate-300'
+              )}>
+                <SelectValue placeholder="Priorité" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__all__">Toutes les priorités</SelectItem>
+                {priorityOptions.map(p => (
+                  <SelectItem key={p} value={p}>{p}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Statut */}
           <div>
             <label className="text-xs text-slate-400 mb-1 block">Statut</label>
-            <select
-              value={filters.status?.[0] || ''}
-              onChange={(e) => {
-                if (e.target.value) {
-                  updateFilter('status', [e.target.value]);
+            <Select
+              value={filters.status?.[0] || '__all__'}
+              onValueChange={(value: string) => {
+                if (value && value !== '__all__') {
+                  updateFilter('status', [value]);
                 } else {
                   removeFilter('status');
                 }
               }}
-              className={cn(
-                'w-full px-2 py-1.5 text-xs rounded border',
-                'bg-slate-800 border-slate-700 text-slate-300'
-              )}
             >
-              <option value="">Tous les statuts</option>
-              {statusOptions.map(s => (
-                <option key={s} value={s}>{s}</option>
-              ))}
-            </select>
+              <SelectTrigger className={cn(
+                'w-full px-2 py-1.5 text-xs rounded border h-9',
+                'bg-slate-800 border-slate-700 text-slate-300'
+              )}>
+                <SelectValue placeholder="Statut" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__all__">Tous les statuts</SelectItem>
+                {statusOptions.map(s => (
+                  <SelectItem key={s} value={s}>{s}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Fournisseur */}

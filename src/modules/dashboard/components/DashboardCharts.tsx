@@ -7,6 +7,7 @@
 'use client';
 
 import React, { Suspense, lazy } from 'react';
+import { ChartSkeleton } from '@/components/ui/skeleton';
 
 // ============================================
 // TYPES
@@ -59,11 +60,7 @@ const LazyCategoryDistributionChart = lazy(() => import('./charts/CategoryDistri
 // FALLBACK COMPONENT
 // ============================================
 
-const ChartLoadingFallback = () => (
-  <div className="h-64 flex items-center justify-center text-slate-400">
-    <p className="text-sm">Chargement du graphique...</p>
-  </div>
-);
+const ChartLoadingFallback = () => <ChartSkeleton className="h-64 w-full" minHeight={256} />;
 
 // ============================================
 // MAIN COMPONENT

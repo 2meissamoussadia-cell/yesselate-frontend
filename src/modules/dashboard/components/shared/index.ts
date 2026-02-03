@@ -47,6 +47,9 @@ export {
 export { LastUpdateDisplay } from './LastUpdateDisplay';
 export type { LastUpdateDisplayProps } from './LastUpdateDisplay';
 
+export { LiveIndicator } from './LiveIndicator';
+export type { LiveIndicatorProps } from './LiveIndicator';
+
 export { MockDataIndicator, withMockDataIndicator } from './MockDataIndicator';
 export type { MockDataIndicatorProps } from './MockDataIndicator';
 

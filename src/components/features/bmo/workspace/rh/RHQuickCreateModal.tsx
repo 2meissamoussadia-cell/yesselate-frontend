@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   Plus,
   User,
@@ -275,30 +276,32 @@ export function RHQuickCreateModal({ open, onClose, onSuccess }: RHQuickCreateMo
         {/* Bureau */}
         <div>
           <label className="block text-sm font-medium mb-1.5">Bureau</label>
-          <select
-            value={formData.bureau}
-            onChange={(e) => setFormData({ ...formData, bureau: e.target.value })}
-            className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700"
-          >
-            <option value="Alger">Alger</option>
-            <option value="Oran">Oran</option>
-            <option value="Constantine">Constantine</option>
-            <option value="Annaba">Annaba</option>
-          </select>
+          <Select value={formData.bureau} onValueChange={(v) => setFormData({ ...formData, bureau: v })}>
+            <SelectTrigger className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Alger">Alger</SelectItem>
+              <SelectItem value="Oran">Oran</SelectItem>
+              <SelectItem value="Constantine">Constantine</SelectItem>
+              <SelectItem value="Annaba">Annaba</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Priorité */}
         <div>
           <label className="block text-sm font-medium mb-1.5">Priorité</label>
-          <select
-            value={formData.priority}
-            onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-            className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700"
-          >
-            <option value="normal">Normal</option>
-            <option value="high">Élevée</option>
-            <option value="urgent">Urgente</option>
-          </select>
+          <Select value={formData.priority} onValueChange={(v) => setFormData({ ...formData, priority: v })}>
+            <SelectTrigger className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="normal">Normal</SelectItem>
+              <SelectItem value="high">Élevée</SelectItem>
+              <SelectItem value="urgent">Urgente</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Champs spécifiques selon le type */}

@@ -109,7 +109,7 @@ export function ResolutionWizardModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl bg-slate-900 border-slate-700">
+      <DialogContent className="max-w-3xl bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
         <DialogHeader>
           <DialogTitle className="text-xl text-slate-100 flex items-center gap-2">
             <Zap className="w-5 h-5 text-emerald-400" />
@@ -414,7 +414,7 @@ export function DecisionCenterModal({ isOpen, onClose }: DecisionCenterProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl bg-slate-900 border-slate-700 max-h-[90vh] overflow-hidden flex flex-col">
+      <DialogContent className="max-w-5xl bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <DialogTitle className="text-xl text-slate-100 flex items-center gap-2">
             <Scale className="w-5 h-5 text-purple-400" />
@@ -555,7 +555,7 @@ export function GanttViewModal({ isOpen, onClose }: GanttViewProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl bg-slate-900 border-slate-700 max-h-[90vh]">
+      <DialogContent className="max-w-6xl bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 max-h-[90vh]">
         <DialogHeader>
           <DialogTitle className="text-xl text-slate-100 flex items-center gap-2">
             <Calendar className="w-5 h-5 text-orange-400" />

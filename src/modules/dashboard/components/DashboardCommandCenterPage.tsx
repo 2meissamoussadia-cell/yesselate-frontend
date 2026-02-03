@@ -19,9 +19,15 @@ import { useAuthHeaders } from '../utils/getAuthHeaders';
 export function DashboardCommandCenterPage() {
   const nav = useDashboardCommandCenterStore((s) => s.navigation);
   const openModal = useDashboardCommandCenterStore((s) => s.openModal);
+  const liveStats = useDashboardCommandCenterStore((s) => s.liveStats);
+  const displayConfig = useDashboardCommandCenterStore((s) => s.displayConfig);
+  const setDisplayConfig = useDashboardCommandCenterStore((s) => s.setDisplayConfig);
   const { locale, currency } = useI18n();
   const authHeaders = useAuthHeaders();
   const { notifications, dismissNotification, markAsRead } = useDashboardNotifications();
+
+  const lastUpdateDate = liveStats.lastUpdate ? new Date(liveStats.lastUpdate) : new Date();
+  const focusMode = displayConfig.focusMode ?? false;
 
   // ? ouvre l'aide Raccourcis (hors champs de saisie)
   useEffect(() => {
@@ -36,6 +42,22 @@ export function DashboardCommandCenterPage() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [openModal]);
+
+  // Phase 2 #11: Ctrl+Shift+F toggle mode Focus (masque sidebar + header simplifié)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'f' && e.key !== 'F') return;
+      if (!e.ctrlKey && !e.metaKey) return;
+      if (!e.shiftKey) return;
+      const target = e.target as HTMLElement;
+      const tag = target?.tagName?.toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || tag === 'select' || target?.getAttribute?.('contenteditable') === 'true') return;
+      e.preventDefault();
+      setDisplayConfig({ focusMode: !displayConfig.focusMode });
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [displayConfig.focusMode, setDisplayConfig]);
 
   const onExport = useCallback(async (format: 'csv' | 'json' | 'pdf' | 'excel') => {
     // Phase P12.b: Mapper 'excel' vers 'xlsx' pour le format natif
@@ -81,27 +103,39 @@ export function DashboardCommandCenterPage() {
       <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.06] [background-image:linear-gradient(to_right,rgba(255,255,255,.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,.08)_1px,transparent_1px)] [background-size:72px_72px]" />
 
       <div className="relative flex h-full w-full">
-        {/* Sidebar */}
-        <DynamicSidebar />
+        {/* Sidebar — masqué en mode Focus (#11) */}
+        {!focusMode && <DynamicSidebar />}
 
         {/* Main */}
         <main className="flex min-w-0 flex-1 flex-col">
-          {/* Header sticky : z-30 pour rester sous la topbar BMO (z-40) */}
-          <header className="sticky top-0 z-[30] border-b border-slate-800/60 bg-slate-950/70 backdrop-blur-xl min-w-0">
-            <div className="mx-auto w-full min-w-0 max-w-[1600px] px-4 sm:px-6 lg:px-8">
-              <div className="py-4">
-                <DashboardBreadcrumbs />
-                <div className="mt-3">
-                  <DashboardKPIBar onExport={onExport} />
+          {/* Header — masqué ou simplifié en mode Focus (#11) */}
+          {!focusMode ? (
+            <header className="sticky top-0 z-[30] border-b border-slate-800/60 bg-slate-950/70 backdrop-blur-xl min-w-0">
+              <div className="mx-auto w-full min-w-0 max-w-[1600px] px-4 sm:px-6 lg:px-8">
+                <div className="py-4">
+                  <DashboardBreadcrumbs />
+                  <div className="mt-3">
+                    <DashboardKPIBar onExport={onExport} />
+                  </div>
+                </div>
+                <div className="pb-3">
+                  <DynamicSubnav />
                 </div>
               </div>
-
-              {/* Subnav */}
-              <div className="pb-3">
-                <DynamicSubnav />
-              </div>
-            </div>
-          </header>
+            </header>
+          ) : (
+            <header className="sticky top-0 z-[30] border-b border-slate-800/60 bg-slate-950/70 backdrop-blur-xl min-w-0 px-4 py-2 flex items-center justify-between">
+              <span className="text-xs text-slate-400">Mode Focus — contenu uniquement</span>
+              <button
+                type="button"
+                onClick={() => setDisplayConfig({ focusMode: false })}
+                className="text-xs px-3 py-1.5 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800/60 focus:outline-none focus:ring-2 focus:ring-sky-500/50"
+                aria-label="Quitter le mode Focus"
+              >
+                Quitter Focus (Ctrl+Shift+F)
+              </button>
+            </header>
+          )}
 
           {/* Content */}
           <div className="flex-1 min-w-0 overflow-auto">
@@ -110,7 +144,11 @@ export function DashboardCommandCenterPage() {
                 <DashboardViewRouter />
               </ErrorBoundary>
             </div>
-            <DashboardFooter />
+            <DashboardFooter
+              lastUpdate={lastUpdateDate}
+              onToggleFocus={() => setDisplayConfig({ focusMode: !focusMode })}
+              focusMode={focusMode}
+            />
           </div>
         </main>
 

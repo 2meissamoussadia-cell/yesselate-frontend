@@ -86,13 +86,14 @@
   --theme-bg-primary: #ffffff;
   --theme-bg-secondary: #f8fafc;
   --theme-bg-sidebar: #f8fafc;
+  /* Texte quasi noir pour meilleure lisibilité (au lieu de gris) */
   --theme-text-primary: #0f172a;
-  --theme-text-secondary: #475569;
-  --theme-text-tertiary: #64748b;
+  --theme-text-secondary: #1e293b;
+  --theme-text-tertiary: #334155;
   --theme-border-primary: #e2e8f0;
   --theme-border-subtle: #f1f5f9;
-  --theme-label-veille: #475569;
-  --theme-kpi-label: #475569;
+  --theme-label-veille: #334155;
+  --theme-kpi-label: #334155;
   --theme-chart-bg: #ffffff;
   --theme-chart-grid: rgba(148, 163, 184, 0.2);
   --theme-focus-ring: #0f172a;
@@ -101,6 +102,16 @@
   --theme-metric-positive: #15803d; /* green-700 */
   --theme-metric-negative: #b91c1c; /* red-700 */
   --theme-metric-neutral: #ea580c; /* orange-600 */
+}
+
+/* Mode clair : assombrir le texte gris pour meilleure lisibilité (quasi noir) */
+.light [class~="text-slate-400"],
+[data-theme="light"] [class~="text-slate-400"] {
+  color: rgb(71 85 105) !important; /* slate-600 */
+}
+.light [class~="text-slate-500"],
+[data-theme="light"] [class~="text-slate-500"] {
+  color: rgb(51 65 85) !important; /* slate-700 */
 }
 
 /* Variations métriques — contraste WCAG AA en mode clair */

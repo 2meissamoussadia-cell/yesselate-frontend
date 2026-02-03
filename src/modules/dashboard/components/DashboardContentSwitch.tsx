@@ -75,6 +75,7 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
       // si pas de loader, vue statique
       if (!view.loader) {
         setData(null);
+        useDashboardCommandCenterStore.getState().setLastDataUpdate(new Date().toISOString());
         setIsTransitioning(false);
         setLiveStatusMessage(view.title ?? 'Vue chargée');
         return;
@@ -91,6 +92,8 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
 
       if (isFresh) {
         setData(cached.data);
+        const setLastDataUpdate = useDashboardCommandCenterStore.getState().setLastDataUpdate;
+        setLastDataUpdate(new Date(cached.fetchedAt).toISOString());
         setIsTransitioning(false);
         setLiveStatusMessage(view.title ?? 'Vue chargée');
         return;
@@ -122,6 +125,9 @@ export const DashboardContentSwitch = memo(function DashboardContentSwitch() {
         // Utiliser setCache depuis le store directement
         const setCacheFn = useDashboardCommandCenterStore.getState().setCache;
         setCacheFn(key, { data: resUnknown.data, fetchedAt: resUnknown.fetchedAt, ttl });
+        // Phase 2 #8: mettre à jour lastUpdate pour le footer (● LIVE + timestamp)
+        const setLastDataUpdate = useDashboardCommandCenterStore.getState().setLastDataUpdate;
+        setLastDataUpdate(new Date(resUnknown.fetchedAt).toISOString());
         setRetryCount(0);
         setIsTransitioning(false);
         setLoading(false);

@@ -12,6 +12,7 @@ import { useState, useMemo } from 'react';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   Download, FileSpreadsheet, FileText, FileJson, 
   Calendar, Clock, CheckCircle2, AlertCircle,
@@ -271,18 +272,22 @@ export function AnalyticsExportModal({ open, onClose }: AnalyticsExportModalProp
               <span className="text-sm text-slate-300">Programmer un export récurrent</span>
             </label>
             {config.scheduledExport && (
-              <select
+              <Select
                 value={config.scheduleFrequency || 'weekly'}
-                onChange={(e) => setConfig(prev => ({ 
+                onValueChange={(v: string) => setConfig(prev => ({ 
                   ...prev, 
-                  scheduleFrequency: e.target.value as 'daily' | 'weekly' | 'monthly'
+                  scheduleFrequency: v as 'daily' | 'weekly' | 'monthly'
                 }))}
-                className="w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-800 text-slate-200 text-sm"
               >
-                <option value="daily">Quotidien</option>
-                <option value="weekly">Hebdomadaire</option>
-                <option value="monthly">Mensuel</option>
-              </select>
+                <SelectTrigger className="w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-800 text-slate-200 text-sm">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="daily">Quotidien</SelectItem>
+                  <SelectItem value="weekly">Hebdomadaire</SelectItem>
+                  <SelectItem value="monthly">Mensuel</SelectItem>
+                </SelectContent>
+              </Select>
             )}
           </div>
         </div>

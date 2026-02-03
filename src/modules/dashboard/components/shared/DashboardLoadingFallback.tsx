@@ -53,7 +53,7 @@ function IndeterminateProgress() {
   return (
     <div className="w-full max-w-md mx-auto space-y-2">
       <Progress value={progress} className="h-2" />
-      <p className="text-center text-xs text-slate-400">Chargement des données…</p>
+      <p className="text-center text-xs text-slate-500 dark:text-slate-400">Chargement des données…</p>
     </div>
   );
 }
@@ -76,10 +76,10 @@ export function DashboardLoadingFallback({
       <span className="sr-only">Chargement des données en cours</span>
       {/* Barre de progression en tête (Procore-style) */}
       {showProgress && (
-        <div className="rounded-xl border border-slate-800/60 bg-slate-900/40 p-4">
+        <div className="rounded-xl border border-slate-200 dark:border-slate-800/60 bg-slate-50 dark:bg-slate-900/40 p-4">
           <IndeterminateProgress />
           {message && (
-            <p className="text-center text-sm text-slate-400 mt-2">{message}</p>
+            <p className="text-center text-sm text-slate-500 dark:text-slate-400 mt-2">{message}</p>
           )}
         </div>
       )}

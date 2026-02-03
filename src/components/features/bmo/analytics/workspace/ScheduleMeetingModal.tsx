@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { FluentButton } from '@/components/ui/fluent-button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar, Clock, Users, MapPin, FileText, CheckCircle, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { logger } from '@/lib/utils/logger';
@@ -252,16 +253,17 @@ export function ScheduleMeetingModal({ open, onClose, data }: ScheduleMeetingMod
               <label className="block text-sm font-medium text-slate-300 mb-2">
                 Durée (minutes)
               </label>
-              <select
-                value={duration}
-                onChange={(e) => setDuration(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-lg border border-slate-700 bg-slate-800/50 text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="30">30 min</option>
-                <option value="60">1 heure</option>
-                <option value="90">1h30</option>
-                <option value="120">2 heures</option>
-              </select>
+              <Select value={duration} onValueChange={setDuration}>
+                <SelectTrigger className="w-full h-10 rounded-lg border-slate-700 bg-slate-800/50 text-slate-200 focus:ring-2 focus:ring-blue-500">
+                  <SelectValue placeholder="Durée" />
+                </SelectTrigger>
+                <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+                  <SelectItem value="30">30 min</SelectItem>
+                  <SelectItem value="60">1 heure</SelectItem>
+                  <SelectItem value="90">1h30</SelectItem>
+                  <SelectItem value="120">2 heures</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 

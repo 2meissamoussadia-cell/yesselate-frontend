@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   useProjetsCommandCenterStore,
   type ProjetsModalType,
@@ -128,7 +129,7 @@ function ModalWrapper({
       {/* Modal */}
       <div
         className={cn(
-          'relative w-full bg-slate-900 border border-slate-700/50 rounded-2xl shadow-2xl',
+          'relative w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/50 rounded-2xl shadow-2xl',
           'max-h-[90vh] overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-200',
           sizeClasses[size]
         )}
@@ -609,6 +610,10 @@ function ProjectDetailModal() {
 function NewProjectModal() {
   const { modal, closeModal } = useProjetsCommandCenterStore();
   const [step, setStep] = useState(1);
+  const [bureau, setBureau] = useState('');
+  const [projectType, setProjectType] = useState('');
+  const [priority, setPriority] = useState('medium');
+  const [chefProjet, setChefProjet] = useState('');
 
   if (modal.type !== 'new-project') return null;
 
@@ -693,23 +698,33 @@ function NewProjectModal() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="text-sm font-medium text-slate-300 block mb-2">Bureau *</label>
-                <select className="w-full px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700 text-slate-200 text-sm">
-                  <option value="">Sélectionner...</option>
-                  <option value="BF">BF - Burkina Faso</option>
-                  <option value="BM">BM - Mali</option>
-                  <option value="BJ">BJ - Bénin</option>
-                  <option value="BCT">BCT - Côte d'Ivoire</option>
-                </select>
+                <Select value={bureau || '__none__'} onValueChange={(v) => setBureau(v === '__none__' ? '' : v)}>
+                  <SelectTrigger className="w-full h-10 rounded-lg bg-slate-800/50 border-slate-700 text-slate-200 text-sm">
+                    <SelectValue placeholder="Sélectionner..." />
+                  </SelectTrigger>
+                  <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+                    <SelectItem value="__none__">Sélectionner...</SelectItem>
+                    <SelectItem value="BF">BF - Burkina Faso</SelectItem>
+                    <SelectItem value="BM">BM - Mali</SelectItem>
+                    <SelectItem value="BJ">BJ - Bénin</SelectItem>
+                    <SelectItem value="BCT">BCT - Côte d'Ivoire</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div>
                 <label className="text-sm font-medium text-slate-300 block mb-2">Type *</label>
-                <select className="w-full px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700 text-slate-200 text-sm">
-                  <option value="">Sélectionner...</option>
-                  <option value="Infrastructure">Infrastructure</option>
-                  <option value="Bâtiment">Bâtiment</option>
-                  <option value="Ouvrage d'art">Ouvrage d'art</option>
-                  <option value="Aménagement">Aménagement</option>
-                </select>
+                <Select value={projectType || '__none__'} onValueChange={(v) => setProjectType(v === '__none__' ? '' : v)}>
+                  <SelectTrigger className="w-full h-10 rounded-lg bg-slate-800/50 border-slate-700 text-slate-200 text-sm">
+                    <SelectValue placeholder="Sélectionner..." />
+                  </SelectTrigger>
+                  <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+                    <SelectItem value="__none__">Sélectionner...</SelectItem>
+                    <SelectItem value="Infrastructure">Infrastructure</SelectItem>
+                    <SelectItem value="Bâtiment">Bâtiment</SelectItem>
+                    <SelectItem value="Ouvrage d'art">Ouvrage d'art</SelectItem>
+                    <SelectItem value="Aménagement">Aménagement</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
             <div>
@@ -736,11 +751,16 @@ function NewProjectModal() {
               </div>
               <div>
                 <label className="text-sm font-medium text-slate-300 block mb-2">Priorité *</label>
-                <select className="w-full px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700 text-slate-200 text-sm">
-                  <option value="medium">Moyenne</option>
-                  <option value="high">Haute</option>
-                  <option value="low">Basse</option>
-                </select>
+                <Select value={priority} onValueChange={setPriority}>
+                  <SelectTrigger className="w-full h-10 rounded-lg bg-slate-800/50 border-slate-700 text-slate-200 text-sm">
+                    <SelectValue placeholder="Priorité" />
+                  </SelectTrigger>
+                  <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+                    <SelectItem value="medium">Moyenne</SelectItem>
+                    <SelectItem value="high">Haute</SelectItem>
+                    <SelectItem value="low">Basse</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -760,12 +780,17 @@ function NewProjectModal() {
           <div className="space-y-4">
             <div>
               <label className="text-sm font-medium text-slate-300 block mb-2">Chef de projet *</label>
-              <select className="w-full px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700 text-slate-200 text-sm">
-                <option value="">Sélectionner...</option>
-                {mockTeamMembers.filter(m => m.role === 'chef_projet').map(m => (
-                  <option key={m.id} value={m.id}>{m.firstName} {m.lastName} - {m.bureau}</option>
-                ))}
-              </select>
+              <Select value={chefProjet || '__none__'} onValueChange={(v) => setChefProjet(v === '__none__' ? '' : v)}>
+                <SelectTrigger className="w-full h-10 rounded-lg bg-slate-800/50 border-slate-700 text-slate-200 text-sm">
+                  <SelectValue placeholder="Sélectionner..." />
+                </SelectTrigger>
+                <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+                  <SelectItem value="__none__">Sélectionner...</SelectItem>
+                  {mockTeamMembers.filter(m => m.role === 'chef_projet').map(m => (
+                    <SelectItem key={m.id} value={m.id}>{m.firstName} {m.lastName} - {m.bureau}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <label className="text-sm font-medium text-slate-300 block mb-2">Membres de l'équipe</label>
@@ -1317,16 +1342,20 @@ function SettingsModal() {
             <label className="text-sm font-medium text-slate-300 mb-2 block">
               Intervalle de rafraîchissement
             </label>
-            <select
-              value={refreshInterval}
-              onChange={(e) => setRefreshInterval(Number(e.target.value))}
-              className="w-full px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700 text-slate-200 text-sm"
+            <Select
+              value={String(refreshInterval)}
+              onValueChange={(v) => setRefreshInterval(Number(v))}
             >
-              <option value={15000}>15 secondes</option>
-              <option value={30000}>30 secondes</option>
-              <option value={60000}>1 minute</option>
-              <option value={300000}>5 minutes</option>
-            </select>
+              <SelectTrigger className="w-full h-10 rounded-lg bg-slate-800/50 border-slate-700 text-slate-200 text-sm">
+                <SelectValue placeholder="Intervalle" />
+              </SelectTrigger>
+              <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+                <SelectItem value="15000">15 secondes</SelectItem>
+                <SelectItem value="30000">30 secondes</SelectItem>
+                <SelectItem value="60000">1 minute</SelectItem>
+                <SelectItem value="300000">5 minutes</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         )}
       </div>

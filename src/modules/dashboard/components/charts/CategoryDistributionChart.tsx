@@ -41,7 +41,7 @@ export function CategoryDistributionChart({ data }: { data?: CategoryDistributio
   }
 
   return (
-    <ChartContainer title="Répartition par catégorie">
+    <ChartContainer title="Répartition par catégorie" exportFilename="repartition-categories">
       <ResponsiveContainer width="100%" height="100%" minHeight={200}>
         <PieChart>
           <Pie

@@ -102,11 +102,11 @@ export function DecisionsEnAttenteModal({ open, onClose }: DecisionsEnAttenteMod
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent
-        className="max-w-4xl bg-slate-900 text-slate-100 border-slate-700 max-h-[80vh] overflow-y-auto"
+        className="max-w-4xl bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border-slate-200 dark:border-slate-700 max-h-[80vh] overflow-y-auto"
         onClose={onClose}
       >
         <DialogHeader>
-          <DialogTitle className="text-slate-100">📋 Décisions en attente ({decisions.length})</DialogTitle>
+          <DialogTitle className="text-slate-900 dark:text-slate-100">📋 Décisions en attente ({decisions.length})</DialogTitle>
           <DialogDescription>
             Décisions stratégiques nécessitant votre validation
           </DialogDescription>

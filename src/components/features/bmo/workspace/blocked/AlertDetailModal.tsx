@@ -13,6 +13,7 @@ import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   X,
   AlertTriangle,
@@ -185,7 +186,7 @@ export function AlertDetailModal({ open, onClose, alertData }: AlertDetailModalP
       onClick={onClose}
     >
       <div
-        className="w-full max-w-3xl max-h-[90vh] overflow-hidden rounded-2xl border border-slate-700/50 bg-slate-900 flex flex-col"
+        className="w-full max-w-3xl max-h-[90vh] overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700/50 bg-white dark:bg-slate-900 flex flex-col"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
@@ -386,17 +387,18 @@ export function AlertDetailModal({ open, onClose, alertData }: AlertDetailModalP
                 <label className="text-sm font-medium text-slate-300 mb-2 block">
                   Durée du snooze
                 </label>
-                <select
-                  value={snoozeDuration}
-                  onChange={e => setSnoozeDuration(parseInt(e.target.value))}
-                  className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-                >
-                  <option value={1}>1 heure</option>
-                  <option value={4}>4 heures</option>
-                  <option value={24}>24 heures</option>
-                  <option value={48}>48 heures</option>
-                  <option value={72}>3 jours</option>
-                </select>
+                <Select value={String(snoozeDuration)} onValueChange={(v) => setSnoozeDuration(parseInt(v, 10))}>
+                  <SelectTrigger className="w-full h-10 rounded-lg bg-slate-800 border-slate-700 text-slate-200 focus:ring-2 focus:ring-blue-500/50">
+                    <SelectValue placeholder="Durée" />
+                  </SelectTrigger>
+                  <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+                    <SelectItem value="1">1 heure</SelectItem>
+                    <SelectItem value="4">4 heures</SelectItem>
+                    <SelectItem value="24">24 heures</SelectItem>
+                    <SelectItem value="48">48 heures</SelectItem>
+                    <SelectItem value="72">3 jours</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* Add Comment */}

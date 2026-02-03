@@ -99,15 +99,19 @@ export const VEILLE_SIGNALS: Array<{
   { id: 'tresorerie', label: 'Trésorerie', target: { type: 'route', href: ROUTES.engagements }, tone: 'ok' },
 ];
 
+/** Path canonique dashboard (routing moderne #1) */
+const DASHBOARD_PATH_BASE = '/maitre-ouvrage/dashboard/r';
+
 /**
  * Résout la cible d'un lien en href (pour Link ou router.push)
+ * Utilise le format path moderne /r/main/sub/leaf pour SEO et partage.
  */
 export function getModuleHref(target: ModuleLinkTarget): string {
   if (target.type === 'route') return target.href;
   const { main, sub, leaf } = target;
-  const params = new URLSearchParams({ main, sub });
-  if (leaf) params.set('leaf', leaf);
-  return `/maitre-ouvrage/dashboard?${params.toString()}`;
+  const s = sub || 'default';
+  const l = leaf || 'default';
+  return `${DASHBOARD_PATH_BASE}/${main}/${s}/${l}`;
 }
 
 /**

@@ -7,11 +7,12 @@
 'use client';
 
 import { memo, useCallback, useMemo } from 'react';
-import { Info } from 'lucide-react';
+import { Info, Focus } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { safeArea } from '../utils/safeArea';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
+import { LiveIndicator } from './shared/LiveIndicator';
 
 interface DashboardFooterProps {
   version?: string;
@@ -23,6 +24,12 @@ interface DashboardFooterProps {
   autoRefreshEnabled?: boolean;
   refreshInterval?: number;
   onShowShortcuts?: () => void;
+  /** Phase 2 #8: dernière maj données → ● LIVE + timestamp dynamique */
+  lastUpdate?: Date | null;
+  /** Phase 2 #11: toggle mode Focus (masque sidebar/header) */
+  onToggleFocus?: () => void;
+  /** Phase 2 #11: true si mode Focus actif */
+  focusMode?: boolean;
 }
 
 export const DashboardFooter = memo(function DashboardFooter({
@@ -32,6 +39,9 @@ export const DashboardFooter = memo(function DashboardFooter({
   autoRefreshEnabled = false,
   refreshInterval = 60000,
   onShowShortcuts,
+  lastUpdate,
+  onToggleFocus,
+  focusMode = false,
 }: DashboardFooterProps) {
   const openModal = useDashboardCommandCenterStore((state) => state.openModal);
 
@@ -55,18 +65,18 @@ export const DashboardFooter = memo(function DashboardFooter({
 
   const connectionTextClassName = useMemo(() => cn(
     "font-medium text-xs",
-    isOnline ? "text-emerald-400" : "text-amber-400"
+    isOnline ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"
   ), [isOnline]);
 
   return (
     <div className={cn(
-      "border-t border-slate-800/60 bg-slate-950/40 backdrop-blur-xl px-2 sm:px-4 py-2 sm:py-3 text-xs text-slate-300 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-0 min-w-0 overflow-hidden",
+      "border-t border-slate-200 dark:border-slate-800/60 bg-white/80 dark:bg-slate-950/40 backdrop-blur-xl px-2 sm:px-4 py-2 sm:py-3 text-xs text-slate-600 dark:text-slate-300 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-0 min-w-0 overflow-hidden",
       safeArea.pbFallback()
     )}>
       <div className="flex items-center gap-2 sm:gap-3 flex-wrap min-w-0 flex-1">
         <Tooltip>
           <TooltipTrigger asChild>
-            <span className="font-medium text-slate-300 cursor-help whitespace-nowrap">Dashboard v{version}</span>
+            <span className="font-medium text-slate-700 dark:text-slate-300 cursor-help whitespace-nowrap">Dashboard v{version}</span>
           </TooltipTrigger>
           <TooltipContent>
             <div className="text-xs space-y-1">
@@ -75,12 +85,34 @@ export const DashboardFooter = memo(function DashboardFooter({
             </div>
           </TooltipContent>
         </Tooltip>
-        <span className="text-slate-400 hidden sm:inline">•</span>
+        {(lastUpdate != null) && (
+          <LiveIndicator lastUpdate={lastUpdate} showTimestamp isLive={isOnline} className="hidden sm:inline-flex" />
+        )}
+        <span className="text-slate-500 dark:text-slate-400 hidden sm:inline">•</span>
+        {onToggleFocus && (
+          <>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  onClick={onToggleFocus}
+                  className="hidden sm:inline-flex items-center gap-1 min-h-[44px] px-2 py-1 text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded whitespace-nowrap"
+                  aria-label={focusMode ? 'Quitter le mode Focus' : 'Mode Focus (contenu uniquement)'}
+                >
+                  <Focus className="h-3 w-3 flex-shrink-0" />
+                  <span className="text-[10px]">{focusMode ? 'Quitter Focus' : 'Focus'}</span>
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="top">Mode Focus : masquer menu et en-tête (Ctrl+Shift+F)</TooltipContent>
+            </Tooltip>
+            <span className="text-slate-500 dark:text-slate-400 hidden sm:inline">•</span>
+          </>
+        )}
         <Tooltip>
           <TooltipTrigger asChild>
             <button
               type="button"
-              className="hidden sm:inline-flex items-center gap-1 min-h-[44px] px-2 py-1 text-slate-300 hover:text-slate-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded whitespace-nowrap"
+              className="hidden sm:inline-flex items-center gap-1 min-h-[44px] px-2 py-1 text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded whitespace-nowrap"
               aria-label="Raccourcis clavier"
               onClick={handleShortcutsClick}
             >
@@ -108,12 +140,20 @@ export const DashboardFooter = memo(function DashboardFooter({
                 <kbd className="px-1.5 py-0.5 bg-slate-700 rounded text-[10px]">Ctrl+E</kbd>
               </div>
               <div className="flex items-center justify-between gap-4">
+                <span>Mode Focus (contenu uniquement)</span>
+                <kbd className="px-1.5 py-0.5 bg-slate-700 rounded text-[10px]">Ctrl+Shift+F</kbd>
+              </div>
+              <div className="flex items-center justify-between gap-4">
                 <span>Exporter JSON</span>
                 <kbd className="px-1.5 py-0.5 bg-slate-700 rounded text-[10px]">Ctrl+Shift+E</kbd>
               </div>
               <div className="flex items-center justify-between gap-4">
                 <span>Focus recherche</span>
                 <kbd className="px-1.5 py-0.5 bg-slate-700 rounded text-[10px]">Ctrl+F</kbd>
+              </div>
+              <div className="flex items-center justify-between gap-4">
+                <span>Mode Focus (contenu uniquement)</span>
+                <kbd className="px-1.5 py-0.5 bg-slate-700 rounded text-[10px]">Ctrl+Shift+F</kbd>
               </div>
               <div className="flex items-center justify-between gap-4">
                 <span>Toggle auto-refresh</span>

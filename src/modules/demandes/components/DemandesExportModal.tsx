@@ -129,7 +129,7 @@ export function DemandesExportModal({ isOpen, onClose, data }: DemandesExportMod
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-md bg-slate-900 border-slate-700">
+      <DialogContent className="max-w-md bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold text-slate-200">Exporter les demandes</DialogTitle>
         </DialogHeader>

@@ -84,7 +84,7 @@ export const KpiOverviewPage = memo(function KpiOverviewPage() {
       color: 'blue',
       count: 12,
       status: 'active',
-      route: '/maitre-ouvrage/dashboard?main=overview&sub=kpis&leaf=projet',
+      route: '/maitre-ouvrage/dashboard/r/overview/kpis/projet',
       indicators: [
         { label: 'Avancement moyen', value: '78%', trend: '+2%', trendType: 'up' },
         { label: 'Projets en retard', value: '3', trend: '-1', trendType: 'down' },
@@ -98,7 +98,7 @@ export const KpiOverviewPage = memo(function KpiOverviewPage() {
       color: 'purple',
       count: 45,
       status: 'active',
-      route: '/maitre-ouvrage/dashboard?main=overview&sub=kpis&leaf=projets',
+      route: '/maitre-ouvrage/dashboard/r/overview/kpis/projets',
       indicators: [
         { label: 'Budget total', value: '12.5 Mds', trend: '+5%', trendType: 'up' },
         { label: 'Taux de conformité', value: '92%', trend: '+1%', trendType: 'up' },
@@ -112,7 +112,7 @@ export const KpiOverviewPage = memo(function KpiOverviewPage() {
       color: 'emerald',
       count: 8,
       status: 'active',
-      route: '/maitre-ouvrage/dashboard?main=overview&sub=kpis&leaf=budget',
+      route: '/maitre-ouvrage/dashboard/r/overview/kpis/budget',
       indicators: [
         { label: 'Budget consommé', value: '66%', trend: '+2%', trendType: 'up' },
         { label: 'Projets en alerte', value: '5', trend: '+2', trendType: 'up' },

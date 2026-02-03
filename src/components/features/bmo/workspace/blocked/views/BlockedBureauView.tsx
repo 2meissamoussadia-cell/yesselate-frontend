@@ -6,6 +6,7 @@ import {
   ChevronRight, RefreshCw, Filter, Eye, BarChart3, User
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { blockedApi } from '@/lib/services/blockedApiService';
 import { useBlockedWorkspaceStore } from '@/lib/stores/blockedWorkspaceStore';
 import type { BlockedDossier } from '@/lib/types/bmo.types';
@@ -189,15 +190,16 @@ export function BlockedBureauView({ tabId, data }: Props) {
           </p>
         </div>
 
-        <select
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-          className="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500/20"
-        >
-          <option value="critical">Trier par critiques</option>
-          <option value="total">Trier par total</option>
-          <option value="delay">Trier par délai</option>
-        </select>
+        <Select value={sortBy} onValueChange={(v: string) => setSortBy(v as typeof sortBy)}>
+          <SelectTrigger className="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:ring-2 focus:ring-slate-500/20 h-10">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="critical">Trier par critiques</SelectItem>
+            <SelectItem value="total">Trier par total</SelectItem>
+            <SelectItem value="delay">Trier par délai</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Stats globales */}

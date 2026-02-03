@@ -137,7 +137,7 @@ export function ExportModal() {
 
   return (
     <Dialog open={modal.isOpen} onOpenChange={(open) => !open && closeModal()}>
-      <DialogContent className="bg-slate-900 border-slate-700 p-0 gap-0 max-w-lg">
+      <DialogContent className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 p-0 gap-0 max-w-lg">
         {/* Header */}
         <DialogHeader className="p-4 border-b border-slate-700/50">
           <div className="flex items-center justify-between">

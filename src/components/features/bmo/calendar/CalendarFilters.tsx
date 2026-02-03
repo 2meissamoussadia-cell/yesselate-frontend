@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import { useAppStore, useBMOStore } from '@/lib/stores';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { X, Filter } from 'lucide-react';
 import { bureaux } from '@/lib/data';
 
@@ -80,67 +81,79 @@ export function CalendarFilters({ filters, onFiltersChange }: CalendarFiltersPro
         {/* Bureau */}
         <div>
           <label className="block text-xs font-semibold mb-1">Bureau</label>
-          <select
-            value={filters.bureau || ''}
-            onChange={(e) => onFiltersChange({ ...filters, bureau: e.target.value || undefined })}
-            className={cn(
-              'w-full px-2 py-1.5 rounded text-xs border',
+          <Select
+            value={filters.bureau || '__all__'}
+            onValueChange={(v: string) => onFiltersChange({ ...filters, bureau: v === '__all__' ? undefined : v })}
+          >
+            <SelectTrigger className={cn(
+              'w-full px-2 py-1.5 rounded text-xs border h-9',
               darkMode
                 ? 'bg-slate-700 border-slate-600 text-slate-200'
                 : 'bg-white border-gray-300 text-gray-700'
-            )}
-          >
-            <option value="">Tous les bureaux</option>
-            {bureaux.map((b) => (
-              <option key={b.code} value={b.code}>
-                {b.code} - {b.name}
-              </option>
-            ))}
-          </select>
+            )}>
+              <SelectValue placeholder="Bureau" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="__all__">Tous les bureaux</SelectItem>
+              {bureaux.map((b) => (
+                <SelectItem key={b.code} value={b.code}>
+                  {b.code} - {b.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Type d'activité */}
         <div>
           <label className="block text-xs font-semibold mb-1">Type</label>
-          <select
-            value={filters.type || ''}
-            onChange={(e) => onFiltersChange({ ...filters, type: e.target.value || undefined })}
-            className={cn(
-              'w-full px-2 py-1.5 rounded text-xs border',
+          <Select
+            value={filters.type || '__all__'}
+            onValueChange={(v: string) => onFiltersChange({ ...filters, type: v === '__all__' ? undefined : v })}
+          >
+            <SelectTrigger className={cn(
+              'w-full px-2 py-1.5 rounded text-xs border h-9',
               darkMode
                 ? 'bg-slate-700 border-slate-600 text-slate-200'
                 : 'bg-white border-gray-300 text-gray-700'
-            )}
-          >
-            <option value="">Tous les types</option>
-            {eventTypes.map((type) => (
-              <option key={type.value} value={type.value}>
-                {type.label}
-              </option>
-            ))}
-          </select>
+            )}>
+              <SelectValue placeholder="Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="__all__">Tous les types</SelectItem>
+              {eventTypes.map((type) => (
+                <SelectItem key={type.value} value={type.value}>
+                  {type.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Priorité */}
         <div>
           <label className="block text-xs font-semibold mb-1">Priorité</label>
-          <select
-            value={filters.priority || ''}
-            onChange={(e) => onFiltersChange({ ...filters, priority: e.target.value || undefined })}
-            className={cn(
-              'w-full px-2 py-1.5 rounded text-xs border',
+          <Select
+            value={filters.priority || '__all__'}
+            onValueChange={(v: string) => onFiltersChange({ ...filters, priority: v === '__all__' ? undefined : v })}
+          >
+            <SelectTrigger className={cn(
+              'w-full px-2 py-1.5 rounded text-xs border h-9',
               darkMode
                 ? 'bg-slate-700 border-slate-600 text-slate-200'
                 : 'bg-white border-gray-300 text-gray-700'
-            )}
-          >
-            <option value="">Toutes les priorités</option>
-            {priorities.map((p) => (
-              <option key={p.value} value={p.value}>
-                {p.label}
-              </option>
-            ))}
-          </select>
+            )}>
+              <SelectValue placeholder="Priorité" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="__all__">Toutes les priorités</SelectItem>
+              {priorities.map((p) => (
+                <SelectItem key={p.value} value={p.value}>
+                  {p.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Projet */}

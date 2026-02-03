@@ -9,6 +9,7 @@ import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   X,
   Plus,
@@ -194,18 +195,17 @@ export function InvoiceFormModal({
                   </div>
                   <div className="space-y-2">
                     <label className="text-xs text-slate-400">Bureau</label>
-                    <select
-                      value={formData.bureau}
-                      onChange={(e) =>
-                        setFormData({ ...formData, bureau: e.target.value })
-                      }
-                      className="w-full px-3 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/30"
-                    >
-                      <option value="BTP">BTP</option>
-                      <option value="BJ">BJ</option>
-                      <option value="BS">BS</option>
-                      <option value="BME">BME</option>
-                    </select>
+                    <Select value={formData.bureau} onValueChange={(v) => setFormData({ ...formData, bureau: v })}>
+                      <SelectTrigger className="w-full px-3 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-slate-200 text-sm focus:ring-2 focus:ring-cyan-500/30">
+                        <SelectValue placeholder="Bureau" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="BTP">BTP</SelectItem>
+                        <SelectItem value="BJ">BJ</SelectItem>
+                        <SelectItem value="BS">BS</SelectItem>
+                        <SelectItem value="BME">BME</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
               </div>

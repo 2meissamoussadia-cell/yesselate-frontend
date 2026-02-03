@@ -21,6 +21,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   TooltipProvider,
   Tooltip,
@@ -677,53 +678,65 @@ export function AnomalyAnnotationPanel({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="text-xs text-slate-400 mb-1.5 block">Type</label>
-              <select
+              <Select
                 value={annotationType}
-                onChange={(e) => setAnnotationType(e.target.value as AnnotationType)}
-                className="w-full px-3 py-2 rounded-lg text-sm bg-slate-800/50 border border-slate-700/50 text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                onValueChange={(value: string) => setAnnotationType(value as AnnotationType)}
                 disabled={isAdding}
               >
-                <option value="comment">Commentaire</option>
-                <option value="correction">Correction</option>
-                <option value="approval">Approbation</option>
-                <option value="rejection">Rejet</option>
-              </select>
+                <SelectTrigger className="w-full px-3 py-2 rounded-lg text-sm bg-slate-800/50 border border-slate-700/50 text-slate-200 focus:ring-2 focus:ring-blue-500/50">
+                  <SelectValue placeholder="Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="comment">Commentaire</SelectItem>
+                  <SelectItem value="correction">Correction</SelectItem>
+                  <SelectItem value="approval">Approbation</SelectItem>
+                  <SelectItem value="rejection">Rejet</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div>
               <label className="text-xs text-slate-400 mb-1.5 block">Champ (optionnel)</label>
-              <select
-                value={selectedField}
-                onChange={(e) => setSelectedField(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg text-sm bg-slate-800/50 border border-slate-700/50 text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+              <Select
+                value={selectedField || '__all__'}
+                onValueChange={(value: string) => setSelectedField(value === '__all__' ? '' : value)}
                 disabled={isAdding}
               >
-                <option value="">Tous les champs</option>
-                {availableFields.map(field => (
-                  <option key={field} value={field}>
-                    {field.replace(/_/g, ' ')}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger className="w-full px-3 py-2 rounded-lg text-sm bg-slate-800/50 border border-slate-700/50 text-slate-200 focus:ring-2 focus:ring-blue-500/50">
+                  <SelectValue placeholder="Champ" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__all__">Tous les champs</SelectItem>
+                  {availableFields.map(field => (
+                    <SelectItem key={field} value={field}>
+                      {field.replace(/_/g, ' ')}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
           {unresolvedAnomalies.length > 0 && (
             <div>
               <label className="text-xs text-slate-400 mb-1.5 block">Lier à une anomalie (optionnel)</label>
-              <select
-                value={linkedAnomalyId}
-                onChange={(e) => setLinkedAnomalyId(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg text-sm bg-slate-800/50 border border-slate-700/50 text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+              <Select
+                value={linkedAnomalyId || '__none__'}
+                onValueChange={(value: string) => setLinkedAnomalyId(value === '__none__' ? '' : value)}
                 disabled={isAdding}
               >
-                <option value="">Aucune</option>
-                {unresolvedAnomalies.map(anomaly => (
-                  <option key={anomaly.id} value={anomaly.id}>
-                    {anomaly.field} - {anomaly.type.replace(/_/g, ' ')}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger className="w-full px-3 py-2 rounded-lg text-sm bg-slate-800/50 border border-slate-700/50 text-slate-200 focus:ring-2 focus:ring-blue-500/50">
+                  <SelectValue placeholder="Anomalie" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__none__">Aucune</SelectItem>
+                  {unresolvedAnomalies.map(anomaly => (
+                    <SelectItem key={anomaly.id} value={anomaly.id}>
+                      {anomaly.field} - {anomaly.type.replace(/_/g, ' ')}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           )}
 
@@ -847,19 +860,23 @@ export function AnomalyAnnotationPanel({
                       <span className="text-xs text-slate-400">
                         Page {currentPageAnomalies} sur {totalPagesAnomalies}
                       </span>
-                      <select
-                        value={itemsPerPage}
-                        onChange={(e) => {
-                          setItemsPerPage(Number(e.target.value));
+                      <Select
+                        value={String(itemsPerPage)}
+                        onValueChange={(value: string) => {
+                          setItemsPerPage(Number(value));
                           setCurrentPageAnomalies(1);
                         }}
-                        className="text-xs bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-300"
                       >
-                        <option value={10}>10 par page</option>
-                        <option value={25}>25 par page</option>
-                        <option value={50}>50 par page</option>
-                        <option value={100}>100 par page</option>
-                      </select>
+                        <SelectTrigger className="w-auto min-w-[100px] text-xs bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-300 h-8">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="10">10 par page</SelectItem>
+                          <SelectItem value="25">25 par page</SelectItem>
+                          <SelectItem value="50">50 par page</SelectItem>
+                          <SelectItem value="100">100 par page</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                     <div className="flex items-center gap-1">
                       <Button
@@ -997,19 +1014,23 @@ export function AnomalyAnnotationPanel({
                     <span className="text-xs text-slate-400">
                       Page {currentPageAnnotations} sur {totalPagesAnnotations}
                     </span>
-                    <select
-                      value={itemsPerPage}
-                      onChange={(e) => {
-                        setItemsPerPage(Number(e.target.value));
+                    <Select
+                      value={String(itemsPerPage)}
+                      onValueChange={(value: string) => {
+                        setItemsPerPage(Number(value));
                         setCurrentPageAnnotations(1);
                       }}
-                      className="text-xs bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-300"
                     >
-                      <option value={10}>10 par page</option>
-                      <option value={25}>25 par page</option>
-                      <option value={50}>50 par page</option>
-                      <option value={100}>100 par page</option>
-                    </select>
+                      <SelectTrigger className="w-auto min-w-[100px] text-xs bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-300 h-8">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="10">10 par page</SelectItem>
+                        <SelectItem value="25">25 par page</SelectItem>
+                        <SelectItem value="50">50 par page</SelectItem>
+                        <SelectItem value="100">100 par page</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div className="flex items-center gap-1">
                     <Button
@@ -1043,7 +1064,7 @@ export function AnomalyAnnotationPanel({
 
       {/* Modal de confirmation de suppression */}
       <Dialog open={confirmDelete.open} onOpenChange={(open) => !open && setConfirmDelete({ open: false, annotationId: null })}>
-        <DialogContent className="bg-slate-900 border-slate-700 max-w-md">
+        <DialogContent className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 max-w-md">
           <DialogHeader>
             <div className="flex items-start gap-4">
               <div className="w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center flex-shrink-0">

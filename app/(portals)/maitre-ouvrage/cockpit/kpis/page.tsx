@@ -12,7 +12,7 @@ export default function CockpitKpisRedirectPage() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace('/maitre-ouvrage/dashboard?main=finance&sub=budget&leaf=default');
+    router.replace('/maitre-ouvrage/dashboard/r/finance/budget/default');
   }, [router]);
 
   return (

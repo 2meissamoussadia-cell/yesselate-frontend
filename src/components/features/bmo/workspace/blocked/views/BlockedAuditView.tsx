@@ -7,6 +7,7 @@ import {
   AlertCircle, RefreshCw
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { blockedApi, type AuditEntry } from '@/lib/services/blockedApiService';
 import { useBlockedWorkspaceStore } from '@/lib/stores/blockedWorkspaceStore';
 
@@ -177,17 +178,18 @@ export function BlockedAuditView({ tabId, data }: Props) {
           />
         </div>
 
-        <select
-          value={actionFilter}
-          onChange={(e) => setActionFilter(e.target.value)}
-          className="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500/20"
-        >
-          <option value="all">Toutes les actions</option>
-          <option value="escalated">Escalades</option>
-          <option value="substituted">Substitutions</option>
-          <option value="resolved">Résolutions</option>
-          <option value="reassigned">Réassignations</option>
-        </select>
+        <Select value={actionFilter} onValueChange={setActionFilter}>
+          <SelectTrigger className="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:ring-2 focus:ring-slate-500/20 h-10">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Toutes les actions</SelectItem>
+            <SelectItem value="escalated">Escalades</SelectItem>
+            <SelectItem value="substituted">Substitutions</SelectItem>
+            <SelectItem value="resolved">Résolutions</SelectItem>
+            <SelectItem value="reassigned">Réassignations</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Audit entries grouped by date */}

@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { FluentCard, FluentCardContent, FluentCardHeader, FluentCardTitle } from '@/components/ui/fluent-card';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   FileText, Download, Calendar, Filter, CheckCircle2,
   FileSpreadsheet, FileType, FileJson, Printer
@@ -170,20 +171,20 @@ export function AnalyticsReportView() {
               </FluentCardTitle>
             </FluentCardHeader>
             <FluentCardContent>
-              <select
-                value={selectedBureau}
-                onChange={(e) => setSelectedBureau(e.target.value)}
-                className="w-full p-3 rounded-lg border border-slate-200 dark:border-slate-700 
-                         outline-none focus:ring-2 focus:ring-orange-500/30
-                         dark:bg-slate-800 dark:text-white"
-              >
-                <option value="ALL">Tous les bureaux</option>
-                {bureaux.map((b) => (
-                  <option key={b.code} value={b.code}>
-                    {b.code} - {b.name}
-                  </option>
-                ))}
-              </select>
+              <Select value={selectedBureau} onValueChange={(v: string) => setSelectedBureau(v)}>
+                <SelectTrigger className="w-full p-3 rounded-lg border border-slate-200 dark:border-slate-700 
+                         focus:ring-2 focus:ring-orange-500/30 dark:bg-slate-800 dark:text-white">
+                  <SelectValue placeholder="Bureau" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ALL">Tous les bureaux</SelectItem>
+                  {bureaux.map((b) => (
+                    <SelectItem key={b.code} value={b.code}>
+                      {b.code} - {b.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               
               {selectedBureau !== 'ALL' && (
                 <div className="mt-3 p-3 rounded-lg bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800">

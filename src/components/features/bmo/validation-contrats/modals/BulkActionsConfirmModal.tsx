@@ -16,6 +16,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AlertTriangle, CheckCircle, TrendingUp, XCircle } from 'lucide-react';
 
 export type BulkActionType = 'validate' | 'reject' | 'escalate';
@@ -103,7 +104,7 @@ export function BulkActionsConfirmModal({
 
   return (
     <Dialog open={open} onOpenChange={handleCancel}>
-      <DialogContent className="max-w-md bg-slate-900 border-slate-700">
+      <DialogContent className="max-w-md bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
         <DialogHeader>
           <div className="flex items-center gap-3 mb-2">
             <div className={`w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center`}>
@@ -120,16 +121,17 @@ export function BulkActionsConfirmModal({
           {action === 'escalate' && (
             <div className="space-y-2">
               <Label className="text-slate-300">Escalader vers *</Label>
-              <select
-                value={escalateTo}
-                onChange={(e) => setEscalateTo(e.target.value)}
-                className="w-full bg-slate-800 border-slate-700 text-slate-200 rounded-md px-3 py-2"
-              >
-                <option value="">Sélectionner...</option>
-                <option value="direction">Direction</option>
-                <option value="dg">Directeur Général</option>
-                <option value="comite">Comité de Direction</option>
-              </select>
+              <Select value={escalateTo || '__none__'} onValueChange={(value: string) => setEscalateTo(value === '__none__' ? '' : value)}>
+                <SelectTrigger className="w-full bg-slate-800 border-slate-700 text-slate-200 rounded-md px-3 py-2">
+                  <SelectValue placeholder="Sélectionner..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__none__">Sélectionner...</SelectItem>
+                  <SelectItem value="direction">Direction</SelectItem>
+                  <SelectItem value="dg">Directeur Général</SelectItem>
+                  <SelectItem value="comite">Comité de Direction</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           )}
 

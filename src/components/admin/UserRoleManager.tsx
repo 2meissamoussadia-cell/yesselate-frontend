@@ -7,6 +7,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export type RoleId = 'DG' | 'MOA' | 'MOE' | 'OPC' | 'Administrateur' | 'Lecteur';
 
@@ -64,24 +65,28 @@ export function UserRoleManager({
               className="flex justify-between items-center p-2 border-b border-slate-800/60 last:border-b-0"
             >
               <span className="text-sm text-slate-100">{u.name}</span>
-              <select
+              <Select
                 value={u.role}
-                onChange={(e) =>
-                  onRoleChange?.(u.id, e.target.value as RoleId)
-                }
-                className={cn(
-                  'text-xs rounded border border-slate-700 bg-slate-900 text-slate-100',
-                  'px-2 py-1.5 min-w-[140px]',
-                  'focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-1 focus:ring-offset-slate-900'
-                )}
-                aria-label={`Rôle de ${u.name}`}
+                onValueChange={(value: string) => onRoleChange?.(u.id, value as RoleId)}
               >
-                {ROLES.map((r) => (
-                  <option key={r.value} value={r.value}>
-                    {r.label}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger
+                  className={cn(
+                    'text-xs rounded border border-slate-700 bg-slate-900 text-slate-100',
+                    'px-2 py-1.5 min-w-[140px] h-8',
+                    'focus:ring-2 focus:ring-slate-500 focus:ring-offset-1 focus:ring-offset-slate-900'
+                  )}
+                  aria-label={`Rôle de ${u.name}`}
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {ROLES.map((r) => (
+                    <SelectItem key={r.value} value={r.value}>
+                      {r.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           ))}
         </div>

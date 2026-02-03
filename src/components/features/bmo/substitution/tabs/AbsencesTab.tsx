@@ -8,6 +8,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar, User, Clock, Filter, Plus, TrendingUp, AlertCircle, Loader2, Eye } from 'lucide-react';
 import { absencesApiService } from '@/lib/services/absencesApiService';
 import { AbsenceDetailModal } from '@/components/features/bmo/substitution/modals';
@@ -145,28 +146,30 @@ export function AbsencesTab() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Filter className="w-4 h-4 text-slate-400" />
-            <select
-              value={filter.type}
-              onChange={(e) => setFilter({ ...filter, type: e.target.value })}
-              className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">Tous les types</option>
-              <option value="maladie">Maladie</option>
-              <option value="conge">Congés</option>
-              <option value="formation">Formation</option>
-              <option value="autre">Autre</option>
-            </select>
+            <Select value={filter.type || '__all__'} onValueChange={(v) => setFilter({ ...filter, type: v === '__all__' ? '' : v })}>
+              <SelectTrigger className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white text-sm focus:ring-2 focus:ring-blue-500 h-10">
+                <SelectValue placeholder="Type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__all__">Tous les types</SelectItem>
+                <SelectItem value="maladie">Maladie</SelectItem>
+                <SelectItem value="conge">Congés</SelectItem>
+                <SelectItem value="formation">Formation</SelectItem>
+                <SelectItem value="autre">Autre</SelectItem>
+              </SelectContent>
+            </Select>
 
-            <select
-              value={filter.status}
-              onChange={(e) => setFilter({ ...filter, status: e.target.value })}
-              className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">Tous les statuts</option>
-              <option value="pending">En attente</option>
-              <option value="approved">Approuvée</option>
-              <option value="rejected">Rejetée</option>
-            </select>
+            <Select value={filter.status || '__all__'} onValueChange={(v) => setFilter({ ...filter, status: v === '__all__' ? '' : v })}>
+              <SelectTrigger className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white text-sm focus:ring-2 focus:ring-blue-500 h-10">
+                <SelectValue placeholder="Statut" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__all__">Tous les statuts</SelectItem>
+                <SelectItem value="pending">En attente</SelectItem>
+                <SelectItem value="approved">Approuvée</SelectItem>
+                <SelectItem value="rejected">Rejetée</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="flex gap-2">

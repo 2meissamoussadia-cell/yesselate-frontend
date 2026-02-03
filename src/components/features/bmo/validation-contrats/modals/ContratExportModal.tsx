@@ -69,7 +69,7 @@ export function ContratExportModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl bg-slate-900 border-slate-700">
+      <DialogContent className="max-w-2xl bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
         <DialogHeader>
           <DialogTitle className="text-xl text-slate-200">Exporter les contrats</DialogTitle>
           <DialogDescription className="text-slate-400">

@@ -314,7 +314,7 @@ export function SubstitutionCommandPalette({ open, onClose }: CommandPaletteProp
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl p-0 gap-0 bg-slate-900 border-slate-700">
+      <DialogContent className="max-w-2xl p-0 gap-0 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
         {/* Header avec recherche */}
         <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-700">
           <Search className="w-5 h-5 text-slate-400 flex-shrink-0" />

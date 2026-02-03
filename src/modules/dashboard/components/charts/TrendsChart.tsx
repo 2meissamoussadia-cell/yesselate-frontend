@@ -15,6 +15,7 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  Brush,
 } from 'recharts';
 import { ChartContainer, chartStyles, chartColors } from '@/modules/dashboard/charts/ChartKit';
 import type { TrendData } from '../DashboardCharts';
@@ -47,7 +48,7 @@ export function TrendsChart({ trends }: { trends?: TrendData[] }) {
   }
 
   return (
-    <ChartContainer title="Évolution (30 derniers jours)">
+    <ChartContainer title="Évolution (30 derniers jours)" exportFilename="evolution-30j">
       <ResponsiveContainer width="100%" height="100%" minHeight={200}>
         <LineChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
           <CartesianGrid {...chartStyles.grid} />
@@ -65,6 +66,15 @@ export function TrendsChart({ trends }: { trends?: TrendData[] }) {
             labelFormatter={(label) => label}
           />
           <Legend {...chartStyles.legend} />
+          {chartData.length > 12 && (
+            <Brush
+              dataKey="date"
+              height={24}
+              stroke={chartColors.primary.main}
+              fill="rgba(59, 130, 246, 0.08)"
+              tickFormatter={() => ''}
+            />
+          )}
           <Line
             yAxisId="left"
             type="monotone"

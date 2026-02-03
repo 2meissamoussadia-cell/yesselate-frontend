@@ -50,19 +50,19 @@ export function NotificationsPanel({
   const getNotificationIcon = (type?: string) => {
     switch (type) {
       case 'success':
-        return <CheckCircle2 className="w-4 h-4 text-emerald-400" />;
+        return <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />;
       case 'error':
-        return <XCircle className="w-4 h-4 text-red-400" />;
+        return <XCircle className="w-4 h-4 text-red-600 dark:text-red-400" />;
       case 'warning':
-        return <AlertTriangle className="w-4 h-4 text-amber-400" />;
+        return <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400" />;
       case 'info':
       default:
-        return <Info className="w-4 h-4 text-blue-400" />;
+        return <Info className="w-4 h-4 text-blue-600 dark:text-blue-400" />;
     }
   };
 
   const getNotificationBg = (read: boolean, type?: string) => {
-    if (read) return 'bg-slate-800/30';
+    if (read) return 'bg-slate-100 dark:bg-slate-800/30';
     switch (type) {
       case 'error':
         return 'bg-red-500/10 border-red-500/20';
@@ -97,12 +97,12 @@ export function NotificationsPanel({
       <div className="fixed inset-0 bg-black/40 z-40" onClick={onClose} />
 
       {/* Panel */}
-      <div className="fixed right-0 top-0 bottom-0 w-96 bg-slate-900 border-l border-slate-700/50 z-50 flex flex-col shadow-2xl">
+      <div className="fixed right-0 top-0 bottom-0 w-96 z-50 flex flex-col shadow-2xl bg-white border-l border-slate-200 dark:bg-slate-900 dark:border-slate-700/50">
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-800/50">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-slate-800/50">
           <div className="flex items-center gap-2">
-            <Bell className="h-4 w-4 text-purple-400" />
-            <h3 className="text-sm font-medium text-slate-200">Notifications</h3>
+            <Bell className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+            <h3 className="text-sm font-medium text-slate-900 dark:text-slate-200">Notifications</h3>
             {unreadCount > 0 && (
               <Badge className="bg-red-500/20 text-red-400 border-red-500/30 text-xs">
                 {unreadCount}
@@ -115,7 +115,7 @@ export function NotificationsPanel({
               size="sm"
               onClick={refresh}
               disabled={isLoading}
-              className="h-7 w-7 p-0 text-slate-400 hover:text-slate-300"
+              className="h-7 w-7 p-0 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
               title="Actualiser"
             >
               <RefreshCw className={cn('h-3.5 w-3.5', isLoading && 'animate-spin')} />
@@ -124,7 +124,7 @@ export function NotificationsPanel({
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="h-7 w-7 p-0 text-slate-400 hover:text-slate-300"
+              className="h-7 w-7 p-0 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
             >
               <X className="h-3.5 w-3.5" />
             </Button>
@@ -133,12 +133,12 @@ export function NotificationsPanel({
 
         {/* Actions */}
         {unreadCount > 0 && notifications.length > 0 && (
-          <div className="flex items-center justify-between px-4 py-2 border-b border-slate-800/50 bg-slate-800/30">
+          <div className="flex items-center justify-between px-4 py-2 border-b border-slate-200 dark:border-slate-800/50 bg-slate-100 dark:bg-slate-800/30">
             <Button
               variant="ghost"
               size="sm"
               onClick={markAllAsRead}
-              className="h-7 text-xs text-slate-400 hover:text-slate-200"
+              className="h-7 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
             >
               <CheckCheck className="h-3 w-3 mr-1.5" />
               Tout marquer comme lu
@@ -168,8 +168,8 @@ export function NotificationsPanel({
         ) : notifications.length === 0 ? (
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
-              <Bell className="h-12 w-12 text-slate-600 mx-auto mb-2 opacity-50" />
-              <p className="text-sm text-slate-400">Aucune notification</p>
+              <Bell className="h-12 w-12 text-slate-500 dark:text-slate-600 mx-auto mb-2 opacity-50" />
+              <p className="text-sm text-slate-500 dark:text-slate-400">Aucune notification</p>
             </div>
           </div>
         ) : (
@@ -178,7 +178,7 @@ export function NotificationsPanel({
               <div
                 key={notif.id}
                 className={cn(
-                  'px-4 py-3 hover:bg-slate-800/30 transition-colors group relative cursor-pointer',
+                  'px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800/30 transition-colors group relative cursor-pointer',
                   getNotificationBg(notif.read, notif.type),
                   !notif.read && 'border-l-2 border-purple-500'
                 )}
@@ -203,7 +203,7 @@ export function NotificationsPanel({
                       )}
                     </div>
                     {notif.message && (
-                      <p className="text-xs text-slate-400 line-clamp-2 mb-1">
+                      <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 mb-1">
                         {notif.message}
                       </p>
                     )}

@@ -749,7 +749,7 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
                   >
                     <SelectValue placeholder="Intervalle" />
                   </SelectTrigger>
-                  <SelectContent className="border-slate-700 bg-slate-900 text-slate-100" onCloseAutoFocus={(e) => e.preventDefault()}>
+                  <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100" onCloseAutoFocus={(e) => e.preventDefault()}>
                     <SelectItem value="60000">1 minute</SelectItem>
                     <SelectItem value="120000">2 minutes</SelectItem>
                     <SelectItem value="300000">5 minutes</SelectItem>

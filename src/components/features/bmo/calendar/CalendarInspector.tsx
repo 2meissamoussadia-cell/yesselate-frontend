@@ -6,6 +6,7 @@ import { useAppStore, useBMOStore } from '@/lib/stores';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { BureauTag } from '@/components/features/bmo/BureauTag';
 import { X, Edit2, Calendar, Users, FileText, AlertTriangle, CheckCircle2, XCircle, Clock } from 'lucide-react';
 import type { CalendarItem } from '@/lib/utils/calendar-helpers';
@@ -232,20 +233,21 @@ export function CalendarInspector({
           </Button>
 
           <div className="flex gap-2">
-            <select
-              value={selectedBureau}
-              onChange={(e) => setSelectedBureau(e.target.value)}
-              className={cn(
+            <Select value={selectedBureau || '__none__'} onValueChange={(v: string) => setSelectedBureau(v === '__none__' ? '' : v)}>
+              <SelectTrigger className={cn(
                 'flex-1 h-9 rounded-md border px-3 text-sm',
                 darkMode ? 'bg-slate-800 border-slate-700 text-slate-200' : 'bg-white border-gray-300'
-              )}
-            >
-              <option value="">Assigner bureau...</option>
-              <option value="BMO">BMO</option>
-              <option value="TECH">TECH</option>
-              <option value="ADMIN">ADMIN</option>
-              <option value="FINANCE">FINANCE</option>
-            </select>
+              )}>
+                <SelectValue placeholder="Assigner bureau..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__none__">Assigner bureau...</SelectItem>
+                <SelectItem value="BMO">BMO</SelectItem>
+                <SelectItem value="TECH">TECH</SelectItem>
+                <SelectItem value="ADMIN">ADMIN</SelectItem>
+                <SelectItem value="FINANCE">FINANCE</SelectItem>
+              </SelectContent>
+            </Select>
             <Button
               size="sm"
               variant="outline"

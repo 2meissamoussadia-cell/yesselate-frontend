@@ -287,7 +287,7 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
                   <SelectTrigger className="w-full px-3 py-2 bg-slate-900/50 border-slate-700/50 rounded-xl text-sm text-slate-200 focus:ring-sky-500/50" aria-label="Période">
                     <SelectValue placeholder="Période" />
                   </SelectTrigger>
-                  <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+                  <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
                     <SelectItem value="7j">7 derniers jours</SelectItem>
                     <SelectItem value="30j">30 derniers jours</SelectItem>
                     <SelectItem value="90j">90 derniers jours</SelectItem>
@@ -302,7 +302,7 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
                   <SelectTrigger className="w-full px-3 py-2 bg-slate-900/50 border-slate-700/50 rounded-xl text-sm text-slate-200 focus:ring-sky-500/50" aria-label="Catégorie">
                     <SelectValue placeholder="Catégorie" />
                   </SelectTrigger>
-                  <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+                  <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
                     <SelectItem value="all">Toutes</SelectItem>
                     <SelectItem value="rh">Demandes RH</SelectItem>
                     <SelectItem value="bc">Validation BC</SelectItem>
@@ -318,7 +318,7 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
                   <SelectTrigger className="w-full px-3 py-2 bg-slate-900/50 border-slate-700/50 rounded-xl text-sm text-slate-200 focus:ring-sky-500/50" aria-label="Statut">
                     <SelectValue placeholder="Statut" />
                   </SelectTrigger>
-                  <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+                  <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
                     <SelectItem value="all">Tous</SelectItem>
                     <SelectItem value="validé">Validé</SelectItem>
                     <SelectItem value="en attente">En attente</SelectItem>

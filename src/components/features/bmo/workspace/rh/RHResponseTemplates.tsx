@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect, useCallback } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { cn } from '@/lib/utils';
 import { 
@@ -643,17 +644,21 @@ function TemplateEditModal({
         {/* Type */}
         <div>
           <label className="block text-sm font-medium mb-1">Type</label>
-          <select
+          <Select
             value={formData.type}
-            onChange={e => setFormData(prev => prev ? { ...prev, type: e.target.value as TemplateType } : null)}
-            className="w-full px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 
-                     bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-500/30"
+            onValueChange={v => setFormData(prev => prev ? { ...prev, type: v as TemplateType } : null)}
           >
-            <option value="validation">✅ Validation</option>
-            <option value="rejection">❌ Rejet</option>
-            <option value="info_request">⚠️ Demande d&apos;information</option>
-            <option value="generic">📄 Générique</option>
-          </select>
+            <SelectTrigger className="w-full px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 
+                     bg-white dark:bg-slate-900 focus:ring-2 focus:ring-orange-500/30">
+              <SelectValue placeholder="Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="validation">✅ Validation</SelectItem>
+              <SelectItem value="rejection">❌ Rejet</SelectItem>
+              <SelectItem value="info_request">⚠️ Demande d&apos;information</SelectItem>
+              <SelectItem value="generic">📄 Générique</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Contenu */}

@@ -6,6 +6,7 @@ import { useAppStore, useBMOStore } from '@/lib/stores';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { BureauTag } from '@/components/features/bmo/BureauTag';
 import { employees } from '@/lib/data';
 import type { SubstitutionActionType } from '@/lib/types/bmo.types';
@@ -179,23 +180,24 @@ export function SubstitutionModal() {
               <label className="text-sm font-medium mb-2 block">
                 Désigner un traitant <span className="text-red-400">*</span>
               </label>
-              <select
-                value={selectedTraitant}
-                onChange={(e) => setSelectedTraitant(e.target.value)}
-                className={cn(
-                  'w-full p-3 rounded-lg border text-sm',
+              <Select value={selectedTraitant || '__none__'} onValueChange={(v) => setSelectedTraitant(v === '__none__' ? '' : v)}>
+                <SelectTrigger className={cn(
+                  'w-full p-3 rounded-lg border text-sm h-11',
                   darkMode
                     ? 'bg-slate-700 border-slate-600'
                     : 'bg-white border-gray-300'
-                )}
-              >
-                <option value="">Sélectionner un agent...</option>
-                {availableEmployees.map((emp) => (
-                  <option key={emp.id} value={emp.id}>
-                    {emp.name} - {emp.role} ({emp.bureau})
-                  </option>
-                ))}
-              </select>
+                )}>
+                  <SelectValue placeholder="Sélectionner un agent..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__none__">Sélectionner un agent...</SelectItem>
+                  {availableEmployees.map((emp) => (
+                    <SelectItem key={emp.id} value={emp.id}>
+                      {emp.name} - {emp.role} ({emp.bureau})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           )}
 

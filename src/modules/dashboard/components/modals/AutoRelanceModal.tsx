@@ -70,7 +70,7 @@ export function AutoRelanceModal({
               <SelectTrigger id="relance-template" className={cn('w-full rounded-xl border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-200')}>
                 <SelectValue placeholder="Modèle" />
               </SelectTrigger>
-              <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+              <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
                 <SelectItem value="relance_1">Relance 1 — Rappel échéance</SelectItem>
                 <SelectItem value="relance_2">Relance 2 — Relance courtoise</SelectItem>
                 <SelectItem value="relance_3">Relance 3 — Dernière relance</SelectItem>

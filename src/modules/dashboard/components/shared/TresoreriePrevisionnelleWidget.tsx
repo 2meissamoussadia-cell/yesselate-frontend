@@ -5,7 +5,7 @@
 
 'use client';
 
-import React, { useMemo, useState, memo } from 'react';
+import React, { useMemo, useState, memo, useRef, useCallback } from 'react';
 import {
   AreaChart,
   Area,
@@ -15,6 +15,7 @@ import {
   ResponsiveContainer,
   ReferenceLine,
   CartesianGrid,
+  Brush,
 } from 'recharts';
 import { TrendingUp, Mail, FileSpreadsheet, ZoomIn, Download } from 'lucide-react';
 import {
@@ -24,6 +25,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { exportChartAsPng, exportChartAsSvg } from '@/modules/dashboard/charts/ChartKit/chartExportUtils';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { formatMoneyCompact } from '@lib-root/dashboard/kpi';
@@ -95,6 +103,37 @@ export const TresoreriePrevisionnelleWidget = memo(function TresoreriePrevisionn
     [previsions, seuilMinimal]
   );
 
+  const chartRef = useRef<HTMLDivElement>(null);
+  const handleExportCsv = useCallback(() => {
+    const header = 'Date;Solde prévu (XOF);Scénario\n';
+    const rows = chartData.map((p) => `${p.date};${p.displayValue};${scenario}`).join('\n');
+    const csv = header + rows;
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `tresorerie-previsionnelle-90j-${scenario}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success('Export CSV réussi', {
+      description: `Fichier téléchargé : tresorerie-previsionnelle-90j-${scenario}.csv`,
+      duration: 3000,
+    });
+    onExportSuccess?.();
+  }, [chartData, scenario, onExportSuccess]);
+
+  const handleExportPng = useCallback(() => {
+    if (!chartRef.current) return;
+    exportChartAsPng(chartRef.current, `tresorerie-previsionnelle-90j-${scenario}`);
+    toast.success('Export PNG réussi');
+  }, [scenario]);
+
+  const handleExportSvg = useCallback(() => {
+    if (!chartRef.current) return;
+    exportChartAsSvg(chartRef.current, `tresorerie-previsionnelle-90j-${scenario}`);
+    toast.success('Export SVG réussi');
+  }, [scenario]);
+
   const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ payload: typeof chartData[0] }> }) => {
     if (!active || !payload?.length) return null;
     const p = payload[0].payload;
@@ -143,31 +182,29 @@ export const TresoreriePrevisionnelleWidget = memo(function TresoreriePrevisionn
             <ZoomIn className="h-3.5 w-3.5" aria-hidden />
             {chartZoomed ? 'Réduire' : 'Zoom'}
           </button>
-          <button
-            type="button"
-            onClick={() => {
-              const header = 'Date;Solde prévu (XOF);Scénario\n';
-              const rows = chartData.map((p) => `${p.date};${p.displayValue};${scenario}`).join('\n');
-              const csv = header + rows;
-              const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-              const url = URL.createObjectURL(blob);
-              const a = document.createElement('a');
-              a.href = url;
-              a.download = `tresorerie-previsionnelle-90j-${scenario}.csv`;
-              a.click();
-              URL.revokeObjectURL(url);
-              toast.success('Export CSV réussi', {
-                description: `Fichier téléchargé : tresorerie-previsionnelle-90j-${scenario}.csv`,
-                duration: 3000,
-              });
-              onExportSuccess?.();
-            }}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-slate-100 px-2 py-1.5 min-h-[44px] text-[11px] text-slate-700 hover:bg-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 dark:border-slate-600 dark:bg-slate-800/60 dark:text-slate-300 dark:hover:bg-slate-700/60"
-            aria-label="Exporter le graphique en CSV"
-          >
-            <Download className="h-3.5 w-3.5" aria-hidden />
-            Export CSV
-          </button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                type="button"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-slate-100 px-2 py-1.5 min-h-[44px] text-[11px] text-slate-700 hover:bg-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 dark:border-slate-600 dark:bg-slate-800/60 dark:text-slate-300 dark:hover:bg-slate-700/60"
+                aria-label="Exporter le graphique"
+              >
+                <Download className="h-3.5 w-3.5" aria-hidden />
+                Export
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900">
+              <DropdownMenuItem onClick={handleExportCsv} className="text-slate-800 dark:text-slate-200">
+                CSV
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleExportPng} className="text-slate-800 dark:text-slate-200">
+                PNG
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleExportSvg} className="text-slate-800 dark:text-slate-200">
+                SVG
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Select value={scenario} onValueChange={(v) => setScenario(v as ScenarioTresorerie)}>
             <SelectTrigger
               className="w-[180px] rounded-lg border-slate-300 bg-slate-100 px-2 py-1.5 min-h-[44px] text-[11px] text-slate-800 focus:ring-sky-500/50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
@@ -190,7 +227,7 @@ export const TresoreriePrevisionnelleWidget = memo(function TresoreriePrevisionn
         </div>
       </div>
 
-      <div className="p-4">
+      <div className="p-4" ref={chartRef}>
         <div className="h-[200px] w-full min-h-[120px]" role="img" aria-label={`Graphique prévisionnel trésorerie J+${horizon}, solde prévu et seuil minimal`} style={{ minHeight: 120 }}>
           <ResponsiveContainer width="100%" height={200} minHeight={120}>
             <AreaChart data={chartData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }} aria-hidden="true">
@@ -236,6 +273,15 @@ export const TresoreriePrevisionnelleWidget = memo(function TresoreriePrevisionn
                 fill="url(#areaSoldePositif)"
                 name="Solde prévu"
               />
+              {chartData.length > 20 && (
+                <Brush
+                  dataKey="dateLabel"
+                  height={20}
+                  stroke="#10b981"
+                  fill="rgba(16, 185, 129, 0.08)"
+                  tickFormatter={() => ''}
+                />
+              )}
             </AreaChart>
           </ResponsiveContainer>
         </div>

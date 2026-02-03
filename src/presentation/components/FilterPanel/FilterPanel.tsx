@@ -9,6 +9,8 @@ import { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { X, Search, Filter, ChevronDown, ChevronUp } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Checkbox } from '@/components/ui/checkbox';
 import { FormInput, FormSelect } from '../Form';
 import { FadeIn } from '../Animations';
 
@@ -186,23 +188,56 @@ export function FilterPanel({
                       placeholder={filter.placeholder}
                     />
                   )}
-                  {filter.type === 'multiselect' && filter.options && (
-                    <select
-                      multiple
-                      value={Array.isArray(values[filter.key]) ? values[filter.key] : []}
-                      onChange={(e) => {
-                        const selected = Array.from(e.target.selectedOptions, option => option.value);
-                        handleFilterChange(filter.key, selected);
-                      }}
-                      className="w-full px-4 py-2 rounded-lg border border-slate-700/50 bg-slate-800 text-slate-200"
-                    >
-                      {filter.options.map(option => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                  )}
+                  {filter.type === 'multiselect' && filter.options && (() => {
+                    const selected = Array.isArray(values[filter.key]) ? values[filter.key] : [];
+                    const toggle = (value: string) => {
+                      const next = selected.includes(value)
+                        ? selected.filter(v => v !== value)
+                        : [...selected, value];
+                      handleFilterChange(filter.key, next);
+                    };
+                    const label = selected.length === 0
+                      ? (filter.placeholder || 'Sélectionner...')
+                      : selected.length === 1
+                        ? filter.options.find(o => o.value === selected[0])?.label ?? selected[0]
+                        : `${selected.length} sélectionnés`;
+                    return (
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <button
+                            type="button"
+                            className={cn(
+                              'w-full px-4 py-2 rounded-lg border border-slate-700/50 bg-slate-800 text-slate-200',
+                              'text-left text-sm flex items-center justify-between gap-2',
+                              'hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50'
+                            )}
+                          >
+                            <span className="truncate">{label}</span>
+                            <ChevronDown className="w-4 h-4 shrink-0 text-slate-400" />
+                          </button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-2 max-h-[280px] overflow-y-auto" align="start">
+                          <div className="space-y-1">
+                            {filter.options.map(option => (
+                              <label
+                                key={option.value}
+                                className={cn(
+                                  'flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer',
+                                  'hover:bg-slate-800/80 text-sm text-slate-200'
+                                )}
+                              >
+                                <Checkbox
+                                  checked={selected.includes(option.value)}
+                                  onCheckedChange={() => toggle(option.value)}
+                                />
+                                <span>{option.label}</span>
+                              </label>
+                            ))}
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                    );
+                  })()}
                   {filter.type === 'number' && (
                     <FormInput
                       type="number"

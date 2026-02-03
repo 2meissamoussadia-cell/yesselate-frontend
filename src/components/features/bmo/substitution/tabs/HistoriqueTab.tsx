@@ -8,6 +8,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Clock, Filter, Calendar, Search, Loader2 } from 'lucide-react';
 import type { TimelineEvent } from '@/lib/types/substitution.types';
 
@@ -125,19 +126,20 @@ export function HistoriqueTab() {
             />
           </div>
 
-          <select
-            value={filter.type}
-            onChange={(e) => setFilter({ ...filter, type: e.target.value })}
-            className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Tous les types</option>
-            <option value="substitution_created">Substitution créée</option>
-            <option value="substitution_assigned">Assignation</option>
-            <option value="absence_created">Absence créée</option>
-            <option value="delegation_created">Délégation créée</option>
-            <option value="comment_added">Commentaire</option>
-            <option value="document_uploaded">Document ajouté</option>
-          </select>
+          <Select value={filter.type || '__all__'} onValueChange={(v) => setFilter({ ...filter, type: v === '__all__' ? '' : v })}>
+            <SelectTrigger className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white text-sm focus:ring-2 focus:ring-blue-500 h-10">
+              <SelectValue placeholder="Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="__all__">Tous les types</SelectItem>
+              <SelectItem value="substitution_created">Substitution créée</SelectItem>
+              <SelectItem value="substitution_assigned">Assignation</SelectItem>
+              <SelectItem value="absence_created">Absence créée</SelectItem>
+              <SelectItem value="delegation_created">Délégation créée</SelectItem>
+              <SelectItem value="comment_added">Commentaire</SelectItem>
+              <SelectItem value="document_uploaded">Document ajouté</SelectItem>
+            </SelectContent>
+          </Select>
 
           <input
             type="date"

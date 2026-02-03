@@ -140,7 +140,8 @@ function DropdownMenuContent({
       ref={ref}
       style={{ marginTop: `${marginTop}px` }}
       className={cn(
-        'absolute z-50 min-w-[8rem] overflow-hidden rounded-md border border-slate-700 bg-slate-900 p-1 shadow-lg',
+        'absolute z-50 min-w-[8rem] overflow-hidden rounded-md p-1 shadow-lg',
+        'border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900',
         'animate-in fade-in-0 zoom-in-95',
         alignClasses[align],
         className
@@ -220,7 +221,7 @@ function DropdownMenuLabel({ className, children }: DropdownMenuLabelProps) {
   return (
     <div
       className={cn(
-        'px-2 py-1.5 text-xs font-medium text-slate-400',
+        'px-2 py-1.5 text-xs font-medium text-slate-500 dark:text-slate-400',
         className
       )}
     >

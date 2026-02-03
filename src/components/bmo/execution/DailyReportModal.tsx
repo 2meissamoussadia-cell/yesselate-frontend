@@ -81,7 +81,7 @@ export function DailyReportModal({
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-hidden flex flex-col bg-slate-950 border-slate-800 text-slate-100">
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-hidden flex flex-col bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100">
         <DialogHeader>
           <DialogTitle className="text-sm font-semibold text-slate-100">
             {report ? `Rapport journalier — ${report.chantierNom} (${report.date})` : 'Nouveau rapport journalier (DPR)'}

@@ -1,11 +1,32 @@
 // Service Worker PWA Phase 7 — YESSALATE Centrale DG (installable, offline, push)
-const CACHE_NAME = 'yessalate-dg-v1';
+// Phase 2 #2: NetworkFirst API étendu (dashboard, alerts, cockpit, chantiers, gouvernance)
+const CACHE_NAME = 'yessalate-dg-v3';
+const API_CACHE_NAME = 'yessalate-dg-api-v2';
+
+/** Préfixes API à mettre en cache (NetworkFirst : réseau d'abord, cache en fallback offline) */
+const API_CACHE_PREFIXES = [
+  '/api/dashboard/',
+  '/api/alerts/',
+  '/api/cockpit/',
+  '/api/chantiers/',
+  '/api/governance/',
+  '/api/gouvernance/',
+  '/api/bureaux/',
+  '/api/health/',
+];
+
+function shouldCacheApi(pathname) {
+  return API_CACHE_PREFIXES.some(function (p) { return pathname.startsWith(p); });
+}
+
 const urlsToCache = [
   '/',
   '/manifest.json',
   '/images/log_yessalate.png',
   '/maitre-ouvrage/dashboard',
-  '/maitre-ouvrage/dashboard/cockpit',
+  '/maitre-ouvrage/dashboard/r/pilotage/dashboard/default',
+  '/maitre-ouvrage/dashboard/r/pilotage/gouvernance/default',
+  '/maitre-ouvrage/calendrier',
 ];
 
 self.addEventListener('install', function (event) {
@@ -23,7 +44,7 @@ self.addEventListener('activate', function (event) {
   event.waitUntil(
     caches.keys().then(function (names) {
       return Promise.all(
-        names.filter(function (name) { return name !== CACHE_NAME; }).map(function (name) { return caches.delete(name); })
+        names.filter(function (name) { return name !== CACHE_NAME && name !== API_CACHE_NAME; }).map(function (name) { return caches.delete(name); })
       );
     })
   );
@@ -40,7 +61,7 @@ self.addEventListener('push', function (event) {
       icon: '/icon-192.png',
       badge: '/images/log_yessalate.png',
       vibrate: [200, 100, 200],
-      data: { chantierId: data.chantierId, url: data.url || (data.chantierId ? '/maitre-ouvrage/dashboard?chantier=' + data.chantierId : '/maitre-ouvrage/dashboard') },
+      data: { chantierId: data.chantierId, url: data.url || (data.chantierId ? '/maitre-ouvrage/dashboard/r/pilotage/dashboard/default?chantier=' + data.chantierId : '/maitre-ouvrage/dashboard/r/pilotage/dashboard/default') },
       actions: [
         { action: 'VIEW', title: 'Voir Chantier' },
         { action: 'HUISSIER', title: 'Huissier' }
@@ -58,12 +79,12 @@ self.addEventListener('push', function (event) {
 self.addEventListener('notificationclick', function (event) {
   event.notification.close();
   var data = event.notification.data || {};
-  var url = data.url || '/maitre-ouvrage/dashboard';
+  var url = data.url || '/maitre-ouvrage/dashboard/r/pilotage/dashboard/default';
   if (event.action === 'VIEW' && data.chantierId) {
-    url = '/maitre-ouvrage/dashboard?chantier=' + data.chantierId;
+    url = '/maitre-ouvrage/dashboard/r/pilotage/dashboard/default?chantier=' + data.chantierId;
   }
   if (event.action === 'HUISSIER') {
-    url = '/maitre-ouvrage/dashboard?action=huissier&chantier=' + (data.chantierId || '');
+    url = '/maitre-ouvrage/dashboard/r/pilotage/dashboard/default?action=huissier&chantier=' + (data.chantierId || '');
   }
   event.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (clientList) {
@@ -81,7 +102,7 @@ self.addEventListener('notificationclick', function (event) {
   );
 });
 
-// Offline: Network First, fallback cache
+// Offline: Network First, fallback cache. API dashboard: Network First + cache court (Phase 2 #2)
 self.addEventListener('fetch', function (event) {
   if (event.request.method !== 'GET') return;
   var url = new URL(event.request.url);
@@ -90,6 +111,25 @@ self.addEventListener('fetch', function (event) {
       fetch(event.request).catch(function () {
         return caches.match(event.request).then(function (cached) {
           return cached || new Response(JSON.stringify({ error: 'Hors ligne' }), { status: 503, headers: { 'Content-Type': 'application/json' } });
+        });
+      })
+    );
+    return;
+  }
+  if (shouldCacheApi(url.pathname)) {
+    event.respondWith(
+      fetch(event.request).then(function (res) {
+        if (res.ok) {
+          var clone = res.clone();
+          caches.open(API_CACHE_NAME).then(function (cache) { cache.put(event.request, clone); });
+        }
+        return res;
+      }).catch(function () {
+        return caches.match(event.request).then(function (cached) {
+          return cached || new Response(JSON.stringify({ error: 'Hors ligne', offline: true }), {
+            status: 503,
+            headers: { 'Content-Type': 'application/json' }
+          });
         });
       })
     );

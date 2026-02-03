@@ -27,7 +27,7 @@ function DashboardErrorFallback({ error, onRetry, showDetails }: { error: Error;
         <h2 className="mt-4 text-xl font-bold text-red-300">
           Erreur de chargement du dashboard
         </h2>
-        <p className="mt-2 text-sm text-slate-300">
+        <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
           Impossible de récupérer les données. Vérifiez votre connexion et réessayez.
         </p>
         <Button
@@ -48,8 +48,8 @@ function DashboardErrorFallback({ error, onRetry, showDetails }: { error: Error;
         </button>
         {showDetails && error?.stack && (
           <details className="mt-4 text-left">
-            <summary className="text-xs text-slate-400 cursor-pointer">Détails techniques</summary>
-            <pre className="mt-2 p-3 rounded-lg bg-slate-900/60 text-[10px] text-red-300 overflow-auto max-h-32">
+            <summary className="text-xs text-slate-500 dark:text-slate-400 cursor-pointer">Détails techniques</summary>
+            <pre className="mt-2 p-3 rounded-lg bg-slate-100 dark:bg-slate-900/60 text-[10px] text-red-600 dark:text-red-300 overflow-auto max-h-32">
               {error.stack}
             </pre>
           </details>

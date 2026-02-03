@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   Users,
   Search,
@@ -167,27 +168,29 @@ export function RHAgentsManagerModal({ open, onClose }: RHAgentsManagerModalProp
                          focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
-          <select
-            value={filterBureau}
-            onChange={(e) => setFilterBureau(e.target.value)}
-            className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700"
-          >
-            <option value="all">Tous les bureaux</option>
-            <option value="Alger">Alger</option>
-            <option value="Oran">Oran</option>
-            <option value="Constantine">Constantine</option>
-            <option value="Annaba">Annaba</option>
-          </select>
-          <select
-            value={filterStatut}
-            onChange={(e) => setFilterStatut(e.target.value)}
-            className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700"
-          >
-            <option value="all">Tous les statuts</option>
-            <option value="actif">Actif</option>
-            <option value="inactif">Inactif</option>
-            <option value="suspendu">Suspendu</option>
-          </select>
+          <Select value={filterBureau} onValueChange={(v) => setFilterBureau(v)}>
+            <SelectTrigger className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 h-10">
+              <SelectValue placeholder="Bureau" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tous les bureaux</SelectItem>
+              <SelectItem value="Alger">Alger</SelectItem>
+              <SelectItem value="Oran">Oran</SelectItem>
+              <SelectItem value="Constantine">Constantine</SelectItem>
+              <SelectItem value="Annaba">Annaba</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={filterStatut} onValueChange={(v) => setFilterStatut(v)}>
+            <SelectTrigger className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 h-10">
+              <SelectValue placeholder="Statut" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tous les statuts</SelectItem>
+              <SelectItem value="actif">Actif</SelectItem>
+              <SelectItem value="inactif">Inactif</SelectItem>
+              <SelectItem value="suspendu">Suspendu</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Liste des agents */}

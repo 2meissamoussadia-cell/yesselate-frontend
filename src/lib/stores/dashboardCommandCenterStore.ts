@@ -120,6 +120,8 @@ export interface DashboardCommandCenterStore {
   };
   startRefresh: () => void;
   endRefresh: () => void;
+  /** Phase 2 #8: met à jour liveStats.lastUpdate (ex. après chargement vue) */
+  setLastDataUpdate: (isoString: string) => void;
 
   // KPI Config
   kpiConfig: {
@@ -387,6 +389,19 @@ export const useDashboardCommandCenterStore = create<DashboardCommandCenterStore
           }),
           false,
           { type: 'endRefresh' }
+        );
+      },
+
+      setLastDataUpdate: (isoString) => {
+        set(
+          (state) => ({
+            liveStats: {
+              ...state.liveStats,
+              lastUpdate: isoString,
+            },
+          }),
+          false,
+          { type: 'setLastDataUpdate', payload: isoString }
         );
       },
 

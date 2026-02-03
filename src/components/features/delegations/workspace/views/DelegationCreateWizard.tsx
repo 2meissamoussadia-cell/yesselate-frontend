@@ -3,6 +3,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useDelegationWorkspaceStore, DelegationTab } from '@/lib/stores/delegationWorkspaceStore';
 import { FluentButton } from '@/components/ui/fluent-button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import {
   ChevronLeft, ChevronRight, Key, User, Building2, Calendar,
@@ -305,18 +306,20 @@ export function DelegationCreateWizard({ tab }: { tab: DelegationTab }) {
         
         <div>
           <label className="block text-sm font-medium mb-2">Bureau *</label>
-          <select
-            value={form.bureau}
-            onChange={(e) => updateField('bureau', e.target.value)}
-            className="w-full px-4 py-2.5 rounded-xl border border-slate-200/70 bg-white/90
-                       dark:border-slate-800 dark:bg-[#141414]/70 dark:text-white
-                       focus:outline-none focus:ring-2 focus:ring-purple-500/30"
+          <Select
+            value={form.bureau || '__none__'}
+            onValueChange={(v) => updateField('bureau', v === '__none__' ? '' : v)}
           >
-            <option value="">Sélectionner un bureau</option>
-            {BUREAUX.map(b => (
-              <option key={b} value={b}>{b}</option>
-            ))}
-          </select>
+            <SelectTrigger className="w-full h-10 rounded-xl border-slate-200/70 bg-white/90 dark:border-slate-800 dark:bg-[#141414]/70 text-sm focus:ring-2 focus:ring-purple-500/30">
+              <SelectValue placeholder="Sélectionner un bureau" />
+            </SelectTrigger>
+            <SelectContent className="border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1f1f1f]">
+              <SelectItem value="__none__">Sélectionner un bureau</SelectItem>
+              {BUREAUX.map(b => (
+                <SelectItem key={b} value={b}>{b}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         
         <div>

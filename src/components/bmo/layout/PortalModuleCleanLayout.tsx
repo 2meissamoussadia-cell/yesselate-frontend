@@ -68,7 +68,8 @@ export function PortalModuleCleanLayout({
     <TooltipProvider delayDuration={200}>
       <div
         className={cn(
-          'flex flex-1 min-h-0 min-w-0 flex-col overflow-hidden bg-slate-950/30',
+          'flex flex-1 min-h-0 min-w-0 flex-col overflow-hidden',
+          'bg-slate-50 dark:bg-slate-950/30',
           className
         )}
       >
@@ -78,7 +79,8 @@ export function PortalModuleCleanLayout({
           onMouseEnter={() => setExpanded(true)}
           onMouseLeave={() => setExpanded(false)}
           className={cn(
-            'shrink-0 flex flex-col border-r border-slate-800/70 bg-slate-950/60 overflow-y-auto overflow-x-hidden scrollbar-dashboard transition-[width] duration-200 ease-out',
+            'shrink-0 flex flex-col border-r overflow-y-auto overflow-x-hidden scrollbar-dashboard transition-[width] duration-200 ease-out',
+            'border-slate-200 bg-white dark:border-slate-800/70 dark:bg-slate-950/60',
             expanded ? 'w-52' : 'w-14'
           )}
           aria-label={`Sections ${title}`}
@@ -134,7 +136,7 @@ export function PortalModuleCleanLayout({
           aria-label="Contenu"
         >
           {headerRight && (
-            <div className="shrink-0 flex items-center justify-end gap-2 px-4 py-2 border-b border-slate-800/60 bg-slate-950/40">
+            <div className="shrink-0 flex items-center justify-end gap-2 px-4 py-2 border-b border-slate-200 dark:border-slate-800/60 bg-slate-50 dark:bg-slate-950/40">
               {headerRight}
             </div>
           )}
@@ -144,8 +146,8 @@ export function PortalModuleCleanLayout({
             </div>
           )}
           {showModuleTitle && (
-            <div className="shrink-0 px-4 py-2 border-b border-slate-800/50 bg-slate-950/40">
-              <h2 className="text-sm font-semibold text-slate-200 truncate" id="module-title">
+            <div className="shrink-0 px-4 py-2 border-b border-slate-200 dark:border-slate-800/50 bg-slate-50 dark:bg-slate-950/40">
+              <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-200 truncate" id="module-title">
                 {title}
               </h2>
             </div>

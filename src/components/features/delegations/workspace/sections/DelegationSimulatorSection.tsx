@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { cn } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { FluentButton } from '@/components/ui/fluent-button';
 import {
   Zap,
@@ -120,15 +121,16 @@ function TestSimulator({ delegationId, delegation }: { delegationId: string; del
           {/* Action */}
           <div>
             <label className="text-sm text-slate-400">Action à tester *</label>
-            <select
-              className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-              value={action}
-              onChange={(e) => { setAction(e.target.value as DelegationAction); resetForm(); }}
-            >
-              {ACTIONS.map(a => (
-                <option key={a.value} value={a.value}>{a.label}</option>
-              ))}
-            </select>
+            <Select value={action} onValueChange={(v) => { setAction(v as DelegationAction); resetForm(); }}>
+              <SelectTrigger className="mt-1 w-full h-10 rounded-xl border-slate-200/70 bg-white/90 dark:border-slate-700 dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-purple-500/30">
+                <SelectValue placeholder="Action" />
+              </SelectTrigger>
+              <SelectContent className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                {ACTIONS.map(a => (
+                  <SelectItem key={a.value} value={a.value}>{a.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Bureau */}

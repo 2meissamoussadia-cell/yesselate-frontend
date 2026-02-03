@@ -7,6 +7,7 @@ import { CalendarMonthView } from './views/CalendarMonthView';
 import { CalendarWizardView } from './views/CalendarWizardView';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { FluentButton } from '@/components/ui/fluent-button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   CalendarIcon, Inbox, Clock, Plus, Calendar, 
   Edit2, XCircle, UserPlus, FileText, Download,
@@ -842,16 +843,17 @@ function AddParticipantForm({ eventId, onSuccess, onCancel }: ModalFormProps) {
       </div>
       <div>
         <label className="text-sm text-slate-400">Rôle</label>
-        <select
-          className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
-        >
-          <option value="participant">Participant</option>
-          <option value="organizer">Organisateur</option>
-          <option value="required">Requis</option>
-          <option value="optional">Optionnel</option>
-        </select>
+        <Select value={role} onValueChange={(value: string) => setRole(value)}>
+          <SelectTrigger className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white">
+            <SelectValue placeholder="Rôle" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="participant">Participant</SelectItem>
+            <SelectItem value="organizer">Organisateur</SelectItem>
+            <SelectItem value="required">Requis</SelectItem>
+            <SelectItem value="optional">Optionnel</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <div className="flex justify-end gap-2">
         <FluentButton size="sm" variant="secondary" onClick={onCancel}>
@@ -888,15 +890,16 @@ function ExportEventForm({ eventId, onSuccess, onCancel }: ModalFormProps) {
       </p>
       <div>
         <label className="text-sm text-slate-400">Format</label>
-        <select
-          className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-          value={format}
-          onChange={(e) => setFormat(e.target.value as typeof format)}
-        >
-          <option value="ical">iCal (Outlook, Google Calendar)</option>
-          <option value="pdf">PDF (document imprimable)</option>
-          <option value="json">JSON (données structurées)</option>
-        </select>
+        <Select value={format} onValueChange={(value: 'ical' | 'pdf' | 'json') => setFormat(value)}>
+          <SelectTrigger className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white">
+            <SelectValue placeholder="Format" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="ical">iCal (Outlook, Google Calendar)</SelectItem>
+            <SelectItem value="pdf">PDF (document imprimable)</SelectItem>
+            <SelectItem value="json">JSON (données structurées)</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <div className="flex justify-end gap-2">
         <FluentButton size="sm" variant="secondary" onClick={onCancel}>

@@ -7,6 +7,7 @@ import { DashboardCard } from './DashboardCard';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { TrendingUp, TrendingDown, Minus, Calendar, ArrowRight } from 'lucide-react';
 import { ComparisonWidget } from './ComparisonWidget';
 
@@ -88,23 +89,22 @@ export function TemporalComparison({
         <div className="space-y-2">
           <label className="text-xs font-semibold">Période de comparaison</label>
           <div className="flex gap-2">
-            <select
-              value={selectedPeriod}
-              onChange={(e) => setSelectedPeriod(e.target.value)}
-              className={cn(
-                'flex-1 text-xs px-3 py-2 rounded-lg border',
-                darkMode
-                  ? 'bg-slate-800 border-slate-700 text-slate-200'
-                  : 'bg-gray-50 border-gray-200 text-gray-800'
-              )}
-            >
-              <option value="">Sélectionner une période...</option>
-              {availablePeriods.map((period) => (
-                <option key={period} value={period}>
-                  {period}
-                </option>
-              ))}
-            </select>
+            <Select value={selectedPeriod || '__none__'} onValueChange={(v) => setSelectedPeriod(v === '__none__' ? '' : v)}>
+              <SelectTrigger
+                className={cn(
+                  'flex-1 h-9 text-xs rounded-lg',
+                  darkMode ? 'bg-slate-800 border-slate-700 text-slate-200' : 'bg-gray-50 border-gray-200 text-gray-800'
+                )}
+              >
+                <SelectValue placeholder="Sélectionner une période..." />
+              </SelectTrigger>
+              <SelectContent className={darkMode ? 'border-slate-700 bg-slate-900 text-slate-100' : 'border-gray-200 bg-white text-gray-800'}>
+                <SelectItem value="__none__">Sélectionner une période...</SelectItem>
+                {availablePeriods.map((period) => (
+                  <SelectItem key={period} value={period}>{period}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 

@@ -69,9 +69,9 @@ export function CallCompanyModal({
       aria-modal="true"
       aria-labelledby="call-company-title"
     >
-      <div className="w-full max-w-lg rounded-2xl border border-slate-800 bg-slate-900 shadow-2xl overflow-hidden">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-800 bg-slate-950/40">
-          <h2 id="call-company-title" className="text-lg font-semibold text-slate-100 flex items-center gap-2">
+      <div className="w-full max-w-lg rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl overflow-hidden">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40">
+          <h2 id="call-company-title" className="text-lg font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2">
             <Phone className="h-5 w-5 text-sky-400" />
             Appeler l&apos;entreprise
           </h2>
@@ -114,7 +114,7 @@ export function CallCompanyModal({
               <SelectTrigger id="call-outcome" className="w-full rounded-xl border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-200">
                 <SelectValue placeholder="Résultat" />
               </SelectTrigger>
-              <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+              <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
                 <SelectItem value="repondu">Répondu</SelectItem>
                 <SelectItem value="messagerie">Messagerie</SelectItem>
                 <SelectItem value="injoignable">Injoignable</SelectItem>

@@ -6,6 +6,7 @@ import { useAppStore } from '@/lib/stores';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { BureauTag } from '@/components/features/bmo/BureauTag';
 import { TrendingUp, TrendingDown, Target, AlertTriangle, BarChart3 } from 'lucide-react';
 import type { Bureau } from '@/lib/types/bmo.types';
@@ -107,19 +108,20 @@ export function MultiBureauComparator({
             Comparateur multi-bureaux
           </div>
           <div className="flex items-center gap-2">
-            <select
-              value={selectedMetric}
-              onChange={(e) => setSelectedMetric(e.target.value as any)}
-              className={cn(
-                'text-xs px-2 py-1 rounded border',
+            <Select value={selectedMetric} onValueChange={(v: string) => setSelectedMetric(v as any)}>
+              <SelectTrigger className={cn(
+                'text-xs px-2 py-1 rounded border h-8 min-w-[140px]',
                 'bg-slate-700 border-slate-600 text-white'
-              )}
-            >
-              <option value="score">Score global</option>
-              <option value="tauxValidation">Taux validation</option>
-              <option value="efficacite">Efficacité</option>
-              <option value="charge">Charge</option>
-            </select>
+              )}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="score">Score global</SelectItem>
+                <SelectItem value="tauxValidation">Taux validation</SelectItem>
+                <SelectItem value="efficacite">Efficacité</SelectItem>
+                <SelectItem value="charge">Charge</SelectItem>
+              </SelectContent>
+            </Select>
             <Button
               size="xs"
               variant="ghost"

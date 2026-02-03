@@ -46,7 +46,7 @@ export function ReplanifierModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-slate-900 border-slate-700">
+      <DialogContent className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
         <DialogHeader>
           <DialogTitle className="text-slate-200">Replanifier</DialogTitle>
           <DialogDescription className="text-slate-400">

@@ -10,7 +10,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 /** URL du dashboard maître-ouvrage, vue Gouvernance & décisions (PILOTAGE > Gouvernance). */
-const DASHBOARD_GOUVERNANCE_URL = '/maitre-ouvrage/dashboard?main=pilotage&sub=gouvernance&leaf=default';
+const DASHBOARD_GOUVERNANCE_URL = '/maitre-ouvrage/dashboard/r/pilotage/gouvernance/default';
 
 export default function GovernanceDashboardRedirectPage() {
   const router = useRouter();

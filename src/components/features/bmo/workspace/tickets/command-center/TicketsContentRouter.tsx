@@ -10,6 +10,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   AlertCircle,
   LayoutGrid,
@@ -836,15 +837,16 @@ function InboxView({
           </div>
 
           <div className="flex items-center gap-2">
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
-              className="h-7 px-2 text-xs bg-slate-800 border border-slate-700 rounded-md text-slate-300"
-            >
-              <option value="date">Trier par date</option>
-              <option value="priority">Trier par priorité</option>
-              <option value="sla">Trier par SLA</option>
-            </select>
+            <Select value={sortBy} onValueChange={(v: string) => setSortBy(v as any)}>
+              <SelectTrigger className="h-7 px-2 text-xs bg-slate-800 border border-slate-700 rounded-md text-slate-300 min-w-[140px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="date">Trier par date</SelectItem>
+                <SelectItem value="priority">Trier par priorité</SelectItem>
+                <SelectItem value="sla">Trier par SLA</SelectItem>
+              </SelectContent>
+            </Select>
             <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
               <Filter className="w-4 h-4 text-slate-400" />
             </Button>

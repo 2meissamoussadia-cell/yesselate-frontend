@@ -259,7 +259,7 @@ export function BlockedResolutionModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-hidden bg-slate-900 border-slate-700">
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-hidden bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
         <DialogHeader>
           <div className="flex items-start justify-between">
             <div>

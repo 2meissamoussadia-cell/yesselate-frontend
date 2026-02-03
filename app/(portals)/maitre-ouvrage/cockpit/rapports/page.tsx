@@ -12,7 +12,7 @@ export default function CockpitRapportsRedirectPage() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace('/maitre-ouvrage/dashboard?main=pilotage&sub=analytics&leaf=default');
+    router.replace('/maitre-ouvrage/dashboard/r/pilotage/analytics/default');
   }, [router]);
 
   return (

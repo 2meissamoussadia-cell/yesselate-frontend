@@ -9,11 +9,15 @@ import { I18nProviderWrapper } from '@/lib/i18n';
 import { PwaRegistration } from '@/components/pwa/PwaRegistration';
 import { PwaInstallPrompt } from '@/components/pwa/PwaInstallPrompt';
 import { SearchGlobal } from '@/components/SearchGlobal';
+import { ThemeSync } from '@/components/shared/ThemeSync';
+import { CookieConsentBanner } from '@/components/shared/CookieConsentBanner';
+import { SessionTimeoutWarning } from '@/components/shared/SessionTimeoutWarning';
 
 /**
  * Providers - Wrapper centralisé pour tous les providers
  *
  * Ce composant regroupe tous les providers nécessaires à l'application:
+ * - ThemeSync: Applique dark/light sur <html> selon useAppStore.darkMode (source unique du thème)
  * - ErrorBoundary: Capture les erreurs React
  * - I18nProviderWrapper: Phase P12 - Internationalisation (locale, currency, timezone, RTL)
  * - AuthProvider: Gestion authentification
@@ -24,13 +28,16 @@ import { SearchGlobal } from '@/components/SearchGlobal';
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ErrorBoundary>
+      <ThemeSync />
       <I18nProviderWrapper>
         <AuthProvider>
+          <SessionTimeoutWarning />
           <PwaRegistration />
           <PwaInstallPrompt />
           <ToastProvider>
             <ModalManager />
             <SearchGlobal />
+            <CookieConsentBanner privacyPolicyUrl="/privacy" />
             {children}
           </ToastProvider>
         </AuthProvider>

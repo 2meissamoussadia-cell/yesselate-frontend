@@ -79,17 +79,18 @@ export function CalendrierSidebar3Levels({
   return (
     <aside
       className={cn(
-        'flex flex-col border-r border-slate-700/50 bg-slate-900/80 backdrop-blur-xl transition-all duration-300',
+        'flex flex-col border-r backdrop-blur-xl transition-all duration-300',
+        'border-slate-200 bg-white dark:border-slate-700/50 dark:bg-slate-900/80',
         'fixed sm:relative z-40 h-full',
         collapsed ? 'w-16' : 'w-64'
       )}
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-3 border-b border-slate-700/50">
+      <div className="flex items-center justify-between p-3 border-b border-slate-200 dark:border-slate-700/50">
         {!collapsed && (
           <div className="flex items-center gap-2">
-            <CalendarDays className="h-5 w-5 text-blue-400" />
-            <span className="font-semibold text-slate-200 text-sm">Calendrier</span>
+            <CalendarDays className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+            <span className="font-semibold text-slate-900 dark:text-slate-200 text-sm">Calendrier</span>
           </div>
         )}
         {collapsed && <CalendarDays className="h-5 w-5 text-blue-400 mx-auto" />}

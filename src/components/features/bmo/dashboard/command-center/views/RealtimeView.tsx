@@ -9,6 +9,7 @@ import React, { useMemo, useState, useEffect, useRef, useCallback } from 'react'
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   Activity,
   RefreshCw,
@@ -198,16 +199,17 @@ export function RealtimeView() {
           </Button>
 
           {/* Intervalle */}
-          <select
-            value={refreshInterval}
-            onChange={(e) => setRefreshInterval(Number(e.target.value))}
-            className="px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700 text-sm text-slate-300"
-          >
-            <option value={10}>10s</option>
-            <option value={30}>30s</option>
-            <option value={60}>1 min</option>
-            <option value={120}>2 min</option>
-          </select>
+          <Select value={String(refreshInterval)} onValueChange={(v) => setRefreshInterval(Number(v))}>
+            <SelectTrigger className="px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700 text-sm text-slate-300 h-10 min-w-[80px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="10">10s</SelectItem>
+              <SelectItem value="30">30s</SelectItem>
+              <SelectItem value="60">1 min</SelectItem>
+              <SelectItem value="120">2 min</SelectItem>
+            </SelectContent>
+          </Select>
 
           {/* Refresh manuel */}
           <Button

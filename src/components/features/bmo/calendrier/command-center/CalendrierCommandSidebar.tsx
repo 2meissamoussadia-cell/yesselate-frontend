@@ -96,7 +96,8 @@ export const CalendrierCommandSidebar = React.memo(function CalendrierCommandSid
   return (
     <aside
       className={cn(
-        'flex flex-col border-r border-slate-700/50 bg-slate-900/80 backdrop-blur-xl transition-all duration-300',
+        'flex flex-col border-r backdrop-blur-xl transition-all duration-300',
+        'border-slate-200 bg-white dark:border-slate-700/50 dark:bg-slate-900/80',
         'fixed sm:relative z-40 h-full',
         'transform transition-transform',
         collapsed 
@@ -119,7 +120,7 @@ export const CalendrierCommandSidebar = React.memo(function CalendrierCommandSid
           variant="ghost"
           size="sm"
           onClick={onToggleCollapse}
-          className="h-7 w-7 p-0 text-slate-400 hover:text-slate-200 hover:bg-slate-700/50"
+          className="h-7 w-7 p-0 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700/50"
         >
           {collapsed ? (
             <ChevronRight className="h-4 w-4" />
@@ -151,7 +152,7 @@ export const CalendrierCommandSidebar = React.memo(function CalendrierCommandSid
             variant="ghost"
             size="sm"
             onClick={onOpenCommandPalette}
-            className="w-full h-9 p-0 text-slate-400 hover:text-slate-200 hover:bg-slate-700/50"
+            className="w-full h-9 p-0 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700/50"
           >
             <Search className="h-4 w-4" />
           </Button>
@@ -193,7 +194,7 @@ export const CalendrierCommandSidebar = React.memo(function CalendrierCommandSid
                   <DomainIcon
                     className={cn(
                       'h-4 w-4 flex-shrink-0 transition-all duration-200',
-                      isDomainActive ? 'text-blue-400 scale-110' : 'text-slate-400 group-hover:text-slate-200'
+                      isDomainActive ? 'text-blue-600 dark:text-blue-400 scale-110' : 'text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200'
                     )}
                   />
 

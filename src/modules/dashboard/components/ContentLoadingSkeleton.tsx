@@ -53,7 +53,7 @@ interface ContentLoadingSkeletonProps {
  */
 function KPICardSkeleton() {
   return (
-    <div className="rounded-2xl border border-slate-800/60 bg-slate-900/30 p-5 overflow-hidden">
+    <div className="rounded-2xl border border-slate-200 dark:border-slate-800/60 bg-white dark:bg-slate-900/30 p-5 overflow-hidden">
       <div className="flex items-center justify-between mb-3">
         <div className="h-4 w-24 rounded-lg dashboard-skeleton-shimmer" />
         <div className="h-10 w-10 rounded-xl dashboard-skeleton-shimmer" />
@@ -69,7 +69,7 @@ function KPICardSkeleton() {
  */
 function ChartSkeleton() {
   return (
-    <div className="rounded-2xl border border-slate-800/60 bg-slate-950/35 p-6 overflow-hidden">
+    <div className="rounded-2xl border border-slate-200 dark:border-slate-800/60 bg-white dark:bg-slate-950/35 p-6 overflow-hidden">
       <div className="h-6 w-48 rounded-lg dashboard-skeleton-shimmer mb-4" />
       <div className="h-64 rounded-xl dashboard-skeleton-shimmer" />
     </div>
@@ -81,15 +81,15 @@ function ChartSkeleton() {
  */
 function TableSkeleton({ rows = 5 }: { rows?: number }) {
   return (
-    <div className="rounded-2xl border border-slate-800/60 bg-slate-950/35 overflow-hidden">
-      <div className="border-b border-slate-800/60 p-4">
+    <div className="rounded-2xl border border-slate-200 dark:border-slate-800/60 bg-white dark:bg-slate-950/35 overflow-hidden">
+      <div className="border-b border-slate-200 dark:border-slate-800/60 p-4">
         <div className="grid grid-cols-5 gap-4">
           {[...Array(5)].map((_, i) => (
             <div key={i} className="h-4 rounded dashboard-skeleton-shimmer" />
           ))}
         </div>
       </div>
-      <div className="divide-y divide-slate-800/40">
+      <div className="divide-y divide-slate-200 dark:divide-slate-800/40">
         {[...Array(rows)].map((_, i) => (
           <div key={i} className="p-4 grid grid-cols-5 gap-4">
             {[...Array(5)].map((_, j) => (

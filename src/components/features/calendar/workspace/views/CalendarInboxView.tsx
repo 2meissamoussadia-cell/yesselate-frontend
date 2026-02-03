@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react'
 import { useCalendarWorkspaceStore } from '@/lib/stores/calendarWorkspaceStore';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { FluentModal } from '@/components/ui/fluent-modal';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import {
   ChevronLeft,
@@ -656,38 +657,41 @@ export function CalendarInboxView({ tabId, queue }: CalendarInboxViewProps) {
               </div>
 
               {/* Category */}
-              <select
-                value={filters.category}
-                onChange={e => setFilters(f => ({ ...f, category: e.target.value }))}
-                className="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm outline-none"
-              >
-                {CATEGORIES.map(c => (
-                  <option key={c.id} value={c.id}>{c.label}</option>
-                ))}
-              </select>
+              <Select value={filters.category} onValueChange={(v) => setFilters(f => ({ ...f, category: v }))}>
+                <SelectTrigger className="h-9 min-w-[120px] rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm">
+                  <SelectValue placeholder="Catégorie" />
+                </SelectTrigger>
+                <SelectContent className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                  {CATEGORIES.map(c => (
+                    <SelectItem key={c.id} value={c.id}>{c.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
               {/* Priority */}
-              <select
-                value={filters.priority}
-                onChange={e => setFilters(f => ({ ...f, priority: e.target.value }))}
-                className="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm outline-none"
-              >
-                {PRIORITIES.map(p => (
-                  <option key={p.id} value={p.id}>{p.label}</option>
-                ))}
-              </select>
+              <Select value={filters.priority} onValueChange={(v) => setFilters(f => ({ ...f, priority: v }))}>
+                <SelectTrigger className="h-9 min-w-[120px] rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm">
+                  <SelectValue placeholder="Priorité" />
+                </SelectTrigger>
+                <SelectContent className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                  {PRIORITIES.map(p => (
+                    <SelectItem key={p.id} value={p.id}>{p.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
               {/* Bureau */}
-              <select
-                value={filters.bureau}
-                onChange={e => setFilters(f => ({ ...f, bureau: e.target.value }))}
-                className="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm outline-none"
-              >
-                <option value="">Tous les bureaux</option>
-                {bureauOptions.map(b => (
-                  <option key={b} value={b}>{b}</option>
-                ))}
-              </select>
+              <Select value={filters.bureau ?? '__all__'} onValueChange={(v) => setFilters(f => ({ ...f, bureau: v === '__all__' ? '' : v }))}>
+                <SelectTrigger className="h-9 min-w-[120px] rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm">
+                  <SelectValue placeholder="Tous les bureaux" />
+                </SelectTrigger>
+                <SelectContent className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                  <SelectItem value="__all__">Tous les bureaux</SelectItem>
+                  {bureauOptions.map(b => (
+                    <SelectItem key={b} value={b}>{b}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
               {/* Reset */}
               {activeFiltersCount > 0 && (

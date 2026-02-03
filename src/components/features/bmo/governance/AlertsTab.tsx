@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import { useAppStore } from '@/lib/stores';
 import { BureauTag } from '@/components/features/bmo/BureauTag';
@@ -166,20 +167,21 @@ export const AlertsTab = React.memo(function AlertsTab({
           >
             {focusMode ? '🎯' : '👁️'} {focusMode ? 'Focus' : 'Vue normale'}
           </Button>
-          <select
-            value={activeViewId}
-            onChange={(e) => updateViewId(e.target.value)}
-            className={cn(
-              'flex-1 sm:flex-none rounded px-2 py-2 text-xs sm:text-sm border',
+          <Select value={activeViewId} onValueChange={updateViewId}>
+            <SelectTrigger className={cn(
+              'flex-1 sm:flex-none rounded px-2 py-2 text-xs sm:text-sm border h-9 min-w-[120px]',
               darkMode ? 'bg-slate-900 border-slate-700 text-slate-100' : 'bg-white border-slate-200 text-slate-900'
-            )}
-          >
-            {views.map((v) => (
-              <option key={v.id} value={v.id}>
-                {v.name}
-              </option>
-            ))}
-          </select>
+            )}>
+              <SelectValue placeholder="Vue" />
+            </SelectTrigger>
+            <SelectContent>
+              {views.map((v) => (
+                <SelectItem key={v.id} value={v.id}>
+                  {v.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <Button size="sm" variant="secondary" onClick={onSaveView} className="text-xs">
             💾 Sauver
           </Button>

@@ -136,7 +136,7 @@ export default function CalendrierLayout({
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 overflow-hidden">
+    <div className="flex h-screen overflow-hidden bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
       {/* Sidebar Navigation - Level 1 */}
       {!sidebarCollapsed && (
         <div

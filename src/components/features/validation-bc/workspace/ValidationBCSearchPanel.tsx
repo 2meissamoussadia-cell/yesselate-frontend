@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { Search, X, Filter, ArrowUpDown } from 'lucide-react';
 import { FluentButton } from '@/components/ui/fluent-button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 
 interface ValidationBCSearchPanelProps {
@@ -95,48 +96,60 @@ export function ValidationBCSearchPanel({ isOpen, onClose, onSearch }: Validatio
               {/* Bureau */}
               <div>
                 <label className="block text-sm font-medium mb-2">Bureau</label>
-                <select
-                  value={filters.bureau || ''}
-                  onChange={(e) => setFilters({ ...filters, bureau: e.target.value || undefined })}
-                  className="w-full rounded-lg border border-slate-200/70 bg-white/90 p-2.5 text-sm outline-none focus:ring-2 focus:ring-purple-400/30 dark:border-slate-800 dark:bg-[#141414]/70 dark:text-white"
+                <Select
+                  value={filters.bureau ?? '__all__'}
+                  onValueChange={(v) => setFilters({ ...filters, bureau: v === '__all__' ? undefined : v })}
                 >
-                  <option value="">Tous</option>
-                  <option value="DRE">DRE</option>
-                  <option value="DAAF">DAAF</option>
-                  <option value="DSI">DSI</option>
-                  <option value="DG">DG</option>
-                </select>
+                  <SelectTrigger className="w-full h-10 rounded-lg border-slate-200/70 bg-white/90 dark:border-slate-800 dark:bg-[#141414]/70 text-sm focus:ring-2 focus:ring-purple-400/30">
+                    <SelectValue placeholder="Tous" />
+                  </SelectTrigger>
+                  <SelectContent className="border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1f1f1f]">
+                    <SelectItem value="__all__">Tous</SelectItem>
+                    <SelectItem value="DRE">DRE</SelectItem>
+                    <SelectItem value="DAAF">DAAF</SelectItem>
+                    <SelectItem value="DSI">DSI</SelectItem>
+                    <SelectItem value="DG">DG</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* Type */}
               <div>
                 <label className="block text-sm font-medium mb-2">Type</label>
-                <select
-                  value={filters.type || ''}
-                  onChange={(e) => setFilters({ ...filters, type: e.target.value || undefined })}
-                  className="w-full rounded-lg border border-slate-200/70 bg-white/90 p-2.5 text-sm outline-none focus:ring-2 focus:ring-purple-400/30 dark:border-slate-800 dark:bg-[#141414]/70 dark:text-white"
+                <Select
+                  value={filters.type ?? '__all__'}
+                  onValueChange={(v) => setFilters({ ...filters, type: v === '__all__' ? undefined : v })}
                 >
-                  <option value="">Tous</option>
-                  <option value="bc">Bon de commande</option>
-                  <option value="facture">Facture</option>
-                  <option value="avenant">Avenant</option>
-                </select>
+                  <SelectTrigger className="w-full h-10 rounded-lg border-slate-200/70 bg-white/90 dark:border-slate-800 dark:bg-[#141414]/70 text-sm focus:ring-2 focus:ring-purple-400/30">
+                    <SelectValue placeholder="Tous" />
+                  </SelectTrigger>
+                  <SelectContent className="border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1f1f1f]">
+                    <SelectItem value="__all__">Tous</SelectItem>
+                    <SelectItem value="bc">Bon de commande</SelectItem>
+                    <SelectItem value="facture">Facture</SelectItem>
+                    <SelectItem value="avenant">Avenant</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* Statut */}
               <div>
                 <label className="block text-sm font-medium mb-2">Statut</label>
-                <select
-                  value={filters.status || ''}
-                  onChange={(e) => setFilters({ ...filters, status: e.target.value || undefined })}
-                  className="w-full rounded-lg border border-slate-200/70 bg-white/90 p-2.5 text-sm outline-none focus:ring-2 focus:ring-purple-400/30 dark:border-slate-800 dark:bg-[#141414]/70 dark:text-white"
+                <Select
+                  value={filters.status ?? '__all__'}
+                  onValueChange={(v) => setFilters({ ...filters, status: v === '__all__' ? undefined : v })}
                 >
-                  <option value="">Tous</option>
-                  <option value="pending">En attente</option>
-                  <option value="validated">Validé</option>
-                  <option value="rejected">Rejeté</option>
-                  <option value="anomaly">Anomalie</option>
-                </select>
+                  <SelectTrigger className="w-full h-10 rounded-lg border-slate-200/70 bg-white/90 dark:border-slate-800 dark:bg-[#141414]/70 text-sm focus:ring-2 focus:ring-purple-400/30">
+                    <SelectValue placeholder="Tous" />
+                  </SelectTrigger>
+                  <SelectContent className="border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1f1f1f]">
+                    <SelectItem value="__all__">Tous</SelectItem>
+                    <SelectItem value="pending">En attente</SelectItem>
+                    <SelectItem value="validated">Validé</SelectItem>
+                    <SelectItem value="rejected">Rejeté</SelectItem>
+                    <SelectItem value="anomaly">Anomalie</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* Montant min */}

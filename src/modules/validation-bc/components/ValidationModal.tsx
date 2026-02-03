@@ -53,7 +53,7 @@ export function ValidationModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] bg-slate-900 border-slate-700">
+      <DialogContent className="sm:max-w-[500px] bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-slate-200">
             <CheckCircle2 className="h-5 w-5 text-emerald-400" />

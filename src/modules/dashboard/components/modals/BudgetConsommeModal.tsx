@@ -52,11 +52,11 @@ export function BudgetConsommeModal({ open, onClose }: BudgetConsommeModalProps)
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent
-        className="max-w-4xl bg-slate-900 text-slate-100 border-slate-700 max-h-[80vh] overflow-y-auto"
+        className="max-w-4xl bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border-slate-200 dark:border-slate-700 max-h-[80vh] overflow-y-auto"
         onClose={onClose}
       >
         <DialogHeader>
-          <DialogTitle className="text-slate-100">
+          <DialogTitle className="text-slate-900 dark:text-slate-100">
             <span className="flex items-center gap-2">
               <Wallet className="h-5 w-5 text-amber-400 shrink-0" aria-hidden />
               Budget Consommé — Portefeuille

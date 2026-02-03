@@ -9,6 +9,7 @@ import { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import { useAppStore } from '@/lib/stores';
 import { X, GitCompare } from 'lucide-react';
@@ -73,35 +74,37 @@ export function RACIComparator({ activities, bureaux, onClose }: RACIComparatorP
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
             <label className="text-xs text-slate-400 mb-1 block">Activité 1</label>
-            <select
-              value={selected1 || ''}
-              onChange={(e) => setSelected1(e.target.value || null)}
-              className={cn(
-                'w-full px-2 py-2 rounded text-xs border',
+            <Select value={selected1 || '__none__'} onValueChange={(v) => setSelected1(v === '__none__' ? null : v)}>
+              <SelectTrigger className={cn(
+                'w-full px-2 py-2 rounded text-xs border h-9',
                 darkMode ? 'bg-slate-900 border-slate-700 text-slate-100' : 'bg-white border-slate-200'
-              )}
-            >
-              <option value="">Sélectionner...</option>
-              {activities.map(a => (
-                <option key={a.activity} value={a.activity}>{a.activity}</option>
-              ))}
-            </select>
+              )}>
+                <SelectValue placeholder="Sélectionner..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__none__">Sélectionner...</SelectItem>
+                {activities.map(a => (
+                  <SelectItem key={a.activity} value={a.activity}>{a.activity}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div>
             <label className="text-xs text-slate-400 mb-1 block">Activité 2</label>
-            <select
-              value={selected2 || ''}
-              onChange={(e) => setSelected2(e.target.value || null)}
-              className={cn(
-                'w-full px-2 py-2 rounded text-xs border',
+            <Select value={selected2 || '__none__'} onValueChange={(v) => setSelected2(v === '__none__' ? null : v)}>
+              <SelectTrigger className={cn(
+                'w-full px-2 py-2 rounded text-xs border h-9',
                 darkMode ? 'bg-slate-900 border-slate-700 text-slate-100' : 'bg-white border-slate-200'
-              )}
-            >
-              <option value="">Sélectionner...</option>
-              {activities.map(a => (
-                <option key={a.activity} value={a.activity}>{a.activity}</option>
-              ))}
-            </select>
+              )}>
+                <SelectValue placeholder="Sélectionner..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__none__">Sélectionner...</SelectItem>
+                {activities.map(a => (
+                  <SelectItem key={a.activity} value={a.activity}>{a.activity}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 

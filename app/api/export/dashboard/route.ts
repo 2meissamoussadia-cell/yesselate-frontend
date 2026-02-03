@@ -30,8 +30,13 @@ const EXPORT_TIMEOUT_MS = 60_000; // Timeout 60s
 // Phase P16: Back-pressure — conservative = CSV only, plafond lignes réduit
 const CONSERVATIVE_MAX_ROWS = 10_000;
 
+// main/sub/leaf : route dashboard (URL path ou query). Le client envoie depuis le store (useDashboardExport).
+// Phase 2: étendre avec catégories store (pilotage, chantiers, finance, etc.) pour compatibilité routing path.
 const Query = z.object({
-  main: z.enum(['overview','performance','actions','risks','decisions','realtime']),
+  main: z.enum([
+    'overview','performance','actions','risks','decisions','realtime',
+    'pilotage','chantiers','finance','clients','rh','systeme'
+  ]),
   sub: z.string().optional().nullable(),
   leaf: z.string().optional().nullable(),
   format: z.enum(['csv','json','excel','xlsx','pdf']).default('csv'), // Phase P12.b: 'xlsx' pour natif

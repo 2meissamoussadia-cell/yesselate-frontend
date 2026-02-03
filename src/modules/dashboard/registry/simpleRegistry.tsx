@@ -7,6 +7,7 @@
 
 'use client';
 
+import React from 'react';
 import { ViewEntry, NavKey, navToKey } from '../types/dashboard';
 import type {
   OverviewSummaryDashboardData,
@@ -17,6 +18,7 @@ import type {
   OverviewKpisHighlightsData,
 } from '../types/dashboard.readmodels';
 import dynamic from 'next/dynamic';
+import { ContentLoadingSkeleton } from '../components/ContentLoadingSkeleton';
 
 // ============================================================================
 // Composants lazy-loaded
@@ -144,9 +146,8 @@ export const dashboardRegistry: Record<string, ViewEntry<any>> = {
       const SummaryPointsPage = React.lazy(() => 
         import('../components/views/SummaryPointsPage').then(m => ({ default: m.SummaryPointsPage }))
       );
-      const LoadingFallback = () => <div className="p-6 text-slate-400">Chargement...</div>;
       return (
-        <React.Suspense fallback={<LoadingFallback />}>
+        <React.Suspense fallback={<ViewLoadingFallback />}>
           <SummaryPointsPage data={data} />
         </React.Suspense>
       );

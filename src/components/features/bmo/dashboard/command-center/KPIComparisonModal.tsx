@@ -9,6 +9,7 @@ import React, { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   X,
   TrendingUp,
@@ -92,15 +93,16 @@ export function KPIComparisonModal({ kpiIds, onClose }: KPIComparisonModalProps)
             <p className="text-xs text-slate-400">{kpiIds.length} KPIs sélectionnés</p>
           </div>
           <div className="flex items-center gap-2">
-            <select
-              value={selectedPeriod}
-              onChange={(e) => setSelectedPeriod(e.target.value as any)}
-              className="px-3 py-1.5 rounded-md bg-slate-800 border border-slate-700 text-sm text-slate-300"
-            >
-              <option value="month">Mois</option>
-              <option value="quarter">Trimestre</option>
-              <option value="year">Année</option>
-            </select>
+            <Select value={selectedPeriod} onValueChange={(v: string) => setSelectedPeriod(v as any)}>
+              <SelectTrigger className="px-3 py-1.5 rounded-md bg-slate-800 border border-slate-700 text-sm text-slate-300 h-8 min-w-[100px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="month">Mois</SelectItem>
+                <SelectItem value="quarter">Trimestre</SelectItem>
+                <SelectItem value="year">Année</SelectItem>
+              </SelectContent>
+            </Select>
             <Button
               variant="ghost"
               size="sm"

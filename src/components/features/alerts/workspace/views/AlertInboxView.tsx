@@ -10,6 +10,7 @@ import {
   CheckSquare, Square, Trash2
 } from 'lucide-react';
 import { FluentButton } from '@/components/ui/fluent-button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import { filterAlertsByQueue, searchAlerts, type Alert } from '@/lib/data/alerts';
 import { useAlertToast } from '@/components/ui/toast';
@@ -369,68 +370,72 @@ export function AlertInboxView({ tab }: { tab: AlertTab }) {
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
                   <div>
                     <label className="text-xs text-slate-400 mb-1 block">Sévérité</label>
-                    <select
-                      value={severityFilter}
-                      onChange={(e) => setSeverityFilter(e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg border border-slate-200/70 bg-white/90 text-sm
-                                 dark:border-slate-800 dark:bg-[#141414]/70 dark:text-white"
-                    >
-                      <option value="">Toutes</option>
-                      <option value="critical">Critique</option>
-                      <option value="warning">Avertissement</option>
-                      <option value="info">Info</option>
-                      <option value="success">Succès</option>
-                    </select>
+                    <Select value={severityFilter || '__all__'} onValueChange={(v) => setSeverityFilter(v === '__all__' ? '' : v)}>
+                      <SelectTrigger className="w-full px-3 py-2 rounded-lg border border-slate-200/70 bg-white/90 text-sm
+                                 dark:border-slate-800 dark:bg-[#141414]/70 dark:text-white h-10">
+                        <SelectValue placeholder="Gravité" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="__all__">Toutes</SelectItem>
+                        <SelectItem value="critical">Critique</SelectItem>
+                        <SelectItem value="warning">Avertissement</SelectItem>
+                        <SelectItem value="info">Info</SelectItem>
+                        <SelectItem value="success">Succès</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                   
                   <div>
                     <label className="text-xs text-slate-400 mb-1 block">Statut</label>
-                    <select
-                      value={statusFilter}
-                      onChange={(e) => setStatusFilter(e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg border border-slate-200/70 bg-white/90 text-sm
-                                 dark:border-slate-800 dark:bg-[#141414]/70 dark:text-white"
-                    >
-                      <option value="">Tous</option>
-                      <option value="active">Actif</option>
-                      <option value="acknowledged">Acquitté</option>
-                      <option value="resolved">Résolu</option>
-                      <option value="escalated">Escaladé</option>
-                    </select>
+                    <Select value={statusFilter || '__all__'} onValueChange={(v) => setStatusFilter(v === '__all__' ? '' : v)}>
+                      <SelectTrigger className="w-full px-3 py-2 rounded-lg border border-slate-200/70 bg-white/90 text-sm
+                                 dark:border-slate-800 dark:bg-[#141414]/70 dark:text-white h-10">
+                        <SelectValue placeholder="Statut" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="__all__">Tous</SelectItem>
+                        <SelectItem value="active">Actif</SelectItem>
+                        <SelectItem value="acknowledged">Acquitté</SelectItem>
+                        <SelectItem value="resolved">Résolu</SelectItem>
+                        <SelectItem value="escalated">Escaladé</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                   
                   <div>
                     <label className="text-xs text-slate-400 mb-1 block">Type</label>
-                    <select
-                      value={typeFilter}
-                      onChange={(e) => setTypeFilter(e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg border border-slate-200/70 bg-white/90 text-sm
-                                 dark:border-slate-800 dark:bg-[#141414]/70 dark:text-white"
-                    >
-                      <option value="">Tous</option>
-                      <option value="system">Système</option>
-                      <option value="blocked">Bloqué</option>
-                      <option value="payment">Paiement</option>
-                      <option value="contract">Contrat</option>
-                      <option value="sla">SLA</option>
-                      <option value="budget">Budget</option>
-                      <option value="deadline">Deadline</option>
-                    </select>
+                    <Select value={typeFilter || '__all__'} onValueChange={(v) => setTypeFilter(v === '__all__' ? '' : v)}>
+                      <SelectTrigger className="w-full px-3 py-2 rounded-lg border border-slate-200/70 bg-white/90 text-sm
+                                 dark:border-slate-800 dark:bg-[#141414]/70 dark:text-white h-10">
+                        <SelectValue placeholder="Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="__all__">Tous</SelectItem>
+                        <SelectItem value="system">Système</SelectItem>
+                        <SelectItem value="blocked">Bloqué</SelectItem>
+                        <SelectItem value="payment">Paiement</SelectItem>
+                        <SelectItem value="contract">Contrat</SelectItem>
+                        <SelectItem value="sla">SLA</SelectItem>
+                        <SelectItem value="budget">Budget</SelectItem>
+                        <SelectItem value="deadline">Deadline</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                   
                   <div>
                     <label className="text-xs text-slate-400 mb-1 block">Bureau</label>
-                    <select
-                      value={bureauFilter}
-                      onChange={(e) => setBureauFilter(e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg border border-slate-200/70 bg-white/90 text-sm
-                                 dark:border-slate-800 dark:bg-[#141414]/70 dark:text-white"
-                    >
-                      <option value="">Tous</option>
-                      {BUREAUX.map(b => (
-                        <option key={b} value={b}>{b}</option>
-                      ))}
-                    </select>
+                    <Select value={bureauFilter || '__all__'} onValueChange={(v) => setBureauFilter(v === '__all__' ? '' : v)}>
+                      <SelectTrigger className="w-full px-3 py-2 rounded-lg border border-slate-200/70 bg-white/90 text-sm
+                                 dark:border-slate-800 dark:bg-[#141414]/70 dark:text-white h-10">
+                        <SelectValue placeholder="Bureau" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="__all__">Tous</SelectItem>
+                        {BUREAUX.map(b => (
+                          <SelectItem key={b} value={b}>{b}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
                 

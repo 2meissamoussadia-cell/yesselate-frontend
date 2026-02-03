@@ -1701,7 +1701,7 @@ function BureauxPageInner() {
                 <SelectTrigger className="min-w-[120px] min-h-[44px] bg-slate-800/50 border-slate-700/50 rounded-xl text-slate-300 text-sm focus:ring-sky-500/50" aria-label="Filtrer par statut">
                   <SelectValue placeholder="Statut" />
                 </SelectTrigger>
-                <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+                <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
                   <SelectItem value="all">Tous</SelectItem>
                   <SelectItem value="performant">Performant</SelectItem>
                   <SelectItem value="active">Actif</SelectItem>
@@ -1718,7 +1718,7 @@ function BureauxPageInner() {
                 <SelectTrigger className="min-w-[120px] min-h-[44px] bg-slate-800/50 border-slate-700/50 rounded-xl text-slate-300 text-sm focus:ring-sky-500/50" aria-label="Trier par">
                   <SelectValue placeholder="Tri" />
                 </SelectTrigger>
-                <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+                <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
                   <SelectItem value="performance">Performance</SelectItem>
                   <SelectItem value="criticity">Criticité</SelectItem>
                   <SelectItem value="name">Nom</SelectItem>

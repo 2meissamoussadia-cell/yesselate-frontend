@@ -54,7 +54,7 @@ export function CockpitPhotosGpsPanel() {
           <SelectTrigger className={cn('min-w-[140px] rounded-xl bg-slate-900/60 px-3 py-2 text-sm text-slate-200', colors.border.default, 'focus:ring-sky-500/50')} aria-label="Filtrer par chantier">
             <SelectValue placeholder="Tous" />
           </SelectTrigger>
-          <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+          <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
             <SelectItem value="__all__">Tous</SelectItem>
             {chantierIds.map((id) => (
               <SelectItem key={id} value={id}>{id}</SelectItem>

@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import {
   FileText, Download, Calendar, Clock, Play, Pause,
@@ -222,17 +223,18 @@ export function RHReportsModal({ open, onClose }: Props) {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-3">
             {/* Filtre catégorie */}
-            <select
-              value={filterCategory}
-              onChange={e => setFilterCategory(e.target.value as ReportCategory | 'all')}
-              className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 
-                       bg-white dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/30"
-            >
-              <option value="all">Toutes catégories</option>
-              {Object.entries(CATEGORY_CONFIG).map(([key, config]) => (
-                <option key={key} value={key}>{config.label}</option>
-              ))}
-            </select>
+            <Select value={filterCategory} onValueChange={v => setFilterCategory(v as ReportCategory | 'all')}>
+              <SelectTrigger className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 
+                       bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-orange-500/30 h-10">
+                <SelectValue placeholder="Catégorie" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Toutes catégories</SelectItem>
+                {Object.entries(CATEGORY_CONFIG).map(([key, config]) => (
+                  <SelectItem key={key} value={key}>{config.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
             {/* Filtre type */}
             <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 rounded-xl p-1">

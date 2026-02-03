@@ -23,7 +23,7 @@ export function Skeleton({
   height,
   animation = 'pulse',
 }: SkeletonProps) {
-  const baseClasses = 'bg-slate-700/50 rounded';
+  const baseClasses = 'bg-slate-300 dark:bg-slate-700/50 rounded';
   
   const variantClasses = {
     default: 'rounded',
@@ -62,7 +62,7 @@ export function Skeleton({
  */
 export function AlertCardSkeleton() {
   return (
-    <Card className="bg-slate-800/50">
+    <Card className="bg-slate-100 dark:bg-slate-800/50">
       <CardContent className="p-4 space-y-3">
         <div className="flex items-start justify-between">
           <div className="space-y-2 flex-1">
@@ -113,6 +113,42 @@ export function RACITableSkeleton({ rows = 10 }: { rows?: number }) {
 }
 
 /**
+ * Skeleton pour un graphique (barres animées)
+ * Standard 2026 : remplacer "Chargement du graphique..." par skeleton animé.
+ */
+export function ChartSkeleton({ className, minHeight = 256 }: { className?: string; minHeight?: number }) {
+  return (
+    <div
+      className={cn(
+        'rounded-xl border border-slate-200 dark:border-slate-800/60 bg-slate-50 dark:bg-slate-900/40 overflow-hidden',
+        className
+      )}
+      style={{ minHeight }}
+      role="status"
+      aria-label="Chargement du graphique"
+    >
+      <div className="p-4 space-y-4 h-full flex flex-col">
+        <Skeleton variant="text" className="h-5 w-32" />
+        <div className="flex-1 flex items-end gap-1 gap-x-2 pr-2">
+          {[40, 65, 45, 80, 55, 70, 50, 90, 60, 75].map((h, i) => (
+            <Skeleton
+              key={i}
+              variant="rectangular"
+              className="flex-1 min-w-[8px] rounded-t"
+              height={`${h}%`}
+            />
+          ))}
+        </div>
+        <div className="flex gap-4">
+          <Skeleton variant="text" className="h-3 w-16" />
+          <Skeleton variant="text" className="h-3 w-20" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
  * Skeleton pour la page Dashboard (header, cartes KPI, table)
  * Utilisé pendant le chargement des vues cockpit.
  */
@@ -128,7 +164,7 @@ export function DashboardSkeleton() {
         {[1, 2].map((i) => (
           <div
             key={i}
-            className="space-y-4 rounded-xl border border-slate-800 bg-slate-800/50 p-6"
+            className="space-y-4 rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-800/50 p-6"
           >
             <Skeleton variant="text" className="h-6 w-48" />
             <Skeleton variant="text" className="h-4 w-full" />

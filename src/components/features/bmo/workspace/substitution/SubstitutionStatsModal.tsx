@@ -68,7 +68,7 @@ export function SubstitutionStatsModal({ open, onClose }: StatsModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden bg-slate-900 border-slate-700">
+      <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
         <DialogHeader>
           <div className="flex items-center justify-between">
             <DialogTitle className="text-xl text-white flex items-center gap-2">

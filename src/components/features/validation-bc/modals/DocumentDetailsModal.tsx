@@ -301,7 +301,7 @@ export function DocumentDetailsModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden flex flex-col bg-slate-900 border-slate-700">
+      <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden flex flex-col bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
         {/* Header */}
         <DialogHeader className="flex-shrink-0">
           <div className="flex items-start justify-between">

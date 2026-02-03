@@ -5,6 +5,7 @@ import { useArbitragesWorkspaceStore } from '@/lib/stores/arbitragesWorkspaceSto
 import { FluentButton } from '@/components/ui/fluent-button';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import {
   Scale, AlertTriangle, Clock, CheckCircle, Users, FileText, Calendar,
@@ -108,9 +109,23 @@ export function ArbitrageViewer({ arbitrageId, onOpenModal }: {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <RefreshCw className="w-6 h-6 animate-spin text-slate-400" />
-        <span className="ml-2 text-slate-400">Chargement...</span>
+      <div className="py-12 space-y-6" role="status" aria-label="Chargement de l'arbitrage">
+        <div className="flex justify-center">
+          <RefreshCw className="w-8 h-8 animate-spin text-slate-500 dark:text-slate-400" aria-hidden />
+        </div>
+        <div className="max-w-2xl mx-auto space-y-4 p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50">
+          <div className="h-8 w-48 rounded-lg bg-slate-200 dark:bg-slate-700 animate-pulse" />
+          <div className="space-y-2">
+            <div className="h-4 w-full rounded bg-slate-200 dark:bg-slate-700 animate-pulse" />
+            <div className="h-4 w-4/5 rounded bg-slate-200 dark:bg-slate-700 animate-pulse" />
+            <div className="h-4 w-3/4 rounded bg-slate-200 dark:bg-slate-700 animate-pulse" />
+          </div>
+          <div className="grid grid-cols-3 gap-4 pt-4">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-20 rounded-lg bg-slate-200 dark:bg-slate-700 animate-pulse" />
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
@@ -601,18 +616,19 @@ function TrancherModal({ open, onClose, arbitrageId, options, onSuccess }: any) 
         {options && options.length > 0 && (
           <div>
             <label className="text-sm text-slate-400 mb-2 block">Option choisie (optionnel)</label>
-            <select
-              value={selectedOption}
-              onChange={(e) => setSelectedOption(e.target.value)}
-              className="w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-            >
-              <option value="">Décision libre</option>
-              {options.map((opt: any) => (
-                <option key={opt.id} value={opt.id}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+            <Select value={selectedOption || '__none__'} onValueChange={(v) => setSelectedOption(v === '__none__' ? '' : v)}>
+              <SelectTrigger className="w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white">
+                <SelectValue placeholder="Décision libre" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__none__">Décision libre</SelectItem>
+                {options.map((opt: any) => (
+                  <SelectItem key={opt.id} value={opt.id}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         )}
 

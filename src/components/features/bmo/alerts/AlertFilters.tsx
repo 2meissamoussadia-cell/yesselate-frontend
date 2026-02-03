@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import { useAppStore } from '@/lib/stores';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { X, Filter } from 'lucide-react';
 
 interface AlertFiltersProps {
@@ -105,63 +106,75 @@ export function AlertFilters({
         {/* Filtre Type */}
         <div>
           <label className="text-[10px] text-slate-400 mb-1 block">Type</label>
-          <select
-            value={filters.type || ''}
-            onChange={(e) => onFilterChange('type', e.target.value || undefined)}
-            className={cn(
-              'w-full px-2 py-1 rounded text-[9px] border',
+          <Select
+            value={filters.type || '__all__'}
+            onValueChange={(v) => onFilterChange('type', v === '__all__' ? undefined : v)}
+          >
+            <SelectTrigger className={cn(
+              'w-full px-2 py-1 rounded text-[9px] border h-8',
               darkMode
                 ? 'bg-slate-700/50 border-slate-600 text-slate-300'
                 : 'bg-white border-gray-300 text-gray-700'
-            )}
-          >
-            <option value="">Tous</option>
-            <option value="system">Système</option>
-            <option value="blocked">Bloqués</option>
-            <option value="payment">Paiements</option>
-            <option value="contract">Contrats</option>
-          </select>
+            )}>
+              <SelectValue placeholder="Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="__all__">Tous</SelectItem>
+              <SelectItem value="system">Système</SelectItem>
+              <SelectItem value="blocked">Bloqués</SelectItem>
+              <SelectItem value="payment">Paiements</SelectItem>
+              <SelectItem value="contract">Contrats</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Filtre Bureau */}
         <div>
           <label className="text-[10px] text-slate-400 mb-1 block">Bureau</label>
-          <select
-            value={filters.bureau || ''}
-            onChange={(e) => onFilterChange('bureau', e.target.value || undefined)}
-            className={cn(
-              'w-full px-2 py-1 rounded text-[9px] border',
+          <Select
+            value={filters.bureau || '__all__'}
+            onValueChange={(v) => onFilterChange('bureau', v === '__all__' ? undefined : v)}
+          >
+            <SelectTrigger className={cn(
+              'w-full px-2 py-1 rounded text-[9px] border h-8',
               darkMode
                 ? 'bg-slate-700/50 border-slate-600 text-slate-300'
                 : 'bg-white border-gray-300 text-gray-700'
-            )}
-          >
-            <option value="">Tous</option>
-            <option value="BMO">BMO</option>
-            <option value="BF">BF</option>
-            <option value="BM">BM</option>
-            <option value="BCT">BCT</option>
-          </select>
+            )}>
+              <SelectValue placeholder="Bureau" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="__all__">Tous</SelectItem>
+              <SelectItem value="BMO">BMO</SelectItem>
+              <SelectItem value="BF">BF</SelectItem>
+              <SelectItem value="BM">BM</SelectItem>
+              <SelectItem value="BCT">BCT</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Filtre Période */}
         <div>
           <label className="text-[10px] text-slate-400 mb-1 block">Période</label>
-          <select
-            value={filters.period || ''}
-            onChange={(e) => onFilterChange('period', e.target.value || undefined)}
-            className={cn(
-              'w-full px-2 py-1 rounded text-[9px] border',
+          <Select
+            value={filters.period || '__all__'}
+            onValueChange={(v) => onFilterChange('period', v === '__all__' ? undefined : v)}
+          >
+            <SelectTrigger className={cn(
+              'w-full px-2 py-1 rounded text-[9px] border h-8',
               darkMode
                 ? 'bg-slate-700/50 border-slate-600 text-slate-300'
                 : 'bg-white border-gray-300 text-gray-700'
-            )}
-          >
-            <option value="">Toutes</option>
-            <option value="today">Aujourd'hui</option>
-            <option value="week">7 derniers jours</option>
-            <option value="month">30 derniers jours</option>
-          </select>
+            )}>
+              <SelectValue placeholder="Période" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="__all__">Toutes</SelectItem>
+              <SelectItem value="today">Aujourd'hui</SelectItem>
+              <SelectItem value="week">7 derniers jours</SelectItem>
+              <SelectItem value="month">30 derniers jours</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
     </div>

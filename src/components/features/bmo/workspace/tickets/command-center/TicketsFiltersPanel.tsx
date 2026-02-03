@@ -9,6 +9,7 @@ import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTicketsWorkspaceStore } from '@/lib/stores/ticketsWorkspaceStore';
 import { logger } from '@/lib/utils/logger';
 import { ticketsApi, type TicketPriority, type TicketStatus, type TicketCategory } from '@/lib/services/ticketsApiService';
@@ -196,12 +197,12 @@ export function TicketsFiltersPanel() {
       />
 
       {/* Panel */}
-      <div className="fixed right-0 top-0 bottom-0 w-96 bg-slate-900 border-l border-slate-700/50 z-50 flex flex-col shadow-2xl">
+      <div className="fixed right-0 top-0 bottom-0 w-96 z-50 flex flex-col shadow-2xl bg-white border-l border-slate-200 dark:bg-slate-900 dark:border-slate-700/50">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-slate-800">
+        <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-2">
-            <SlidersHorizontal className="w-5 h-5 text-purple-400" />
-            <h2 className="text-lg font-bold text-slate-100">Filtres</h2>
+            <SlidersHorizontal className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+            <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">Filtres</h2>
             {hasActiveFilters() && (
               <Badge variant="default" className="text-xs">
                 {activeFiltersCount()}
@@ -220,7 +221,7 @@ export function TicketsFiltersPanel() {
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {/* Search */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-300 flex items-center gap-2">
+            <label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
               <Search className="w-4 h-4" />
               Recherche
             </label>
@@ -229,7 +230,7 @@ export function TicketsFiltersPanel() {
               value={filters.search}
               onChange={e => setFilters(prev => ({ ...prev, search: e.target.value }))}
               placeholder="Rechercher dans les tickets..."
-              className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+              className="w-full px-3 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
             />
           </div>
 
@@ -303,16 +304,20 @@ export function TicketsFiltersPanel() {
             onToggle={() => toggleSection('assignee')}
             count={filters.assigneeId ? 1 : 0}
           >
-            <select
+            <Select
               value={filters.assigneeId || ''}
-              onChange={e => setFilters(prev => ({ ...prev, assigneeId: e.target.value || null }))}
-              className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+              onValueChange={(v) => setFilters(prev => ({ ...prev, assigneeId: v || null }))}
             >
-              <option value="">Tous les agents</option>
-              {assignees.map(a => (
-                <option key={a.id} value={a.id}>{a.name}</option>
-              ))}
-            </select>
+              <SelectTrigger className="w-full h-10 rounded-lg bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-200 focus:ring-2 focus:ring-purple-500/50">
+                <SelectValue placeholder="Tous les agents" />
+              </SelectTrigger>
+              <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+                <SelectItem value="">Tous les agents</SelectItem>
+                {assignees.map(a => (
+                  <SelectItem key={a.id} value={a.id}>{a.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <FilterCheckbox
               label="Non assignés uniquement"
               checked={filters.unassigned === true}
@@ -332,16 +337,20 @@ export function TicketsFiltersPanel() {
             onToggle={() => toggleSection('client')}
             count={filters.clientId || filters.vipOnly ? 1 : 0}
           >
-            <select
-              value={filters.clientId || ''}
-              onChange={e => setFilters(prev => ({ ...prev, clientId: e.target.value || null }))}
-              className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+            <Select
+              value={filters.clientId ?? '__all__'}
+              onValueChange={(v) => setFilters(prev => ({ ...prev, clientId: v === '__all__' ? null : v }))}
             >
-              <option value="">Tous les clients</option>
-              {clients.map(c => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </select>
+              <SelectTrigger className="w-full h-10 rounded-lg bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-200 focus:ring-2 focus:ring-purple-500/50">
+                <SelectValue placeholder="Tous les clients" />
+              </SelectTrigger>
+              <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+                <SelectItem value="__all__">Tous les clients</SelectItem>
+                {clients.map(c => (
+                  <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <FilterCheckbox
               label="Clients VIP uniquement"
               checked={filters.vipOnly}
@@ -476,14 +485,14 @@ interface FilterSectionProps {
 
 function FilterSection({ title, icon: Icon, expanded, onToggle, count, children }: FilterSectionProps) {
   return (
-    <div className="rounded-lg border border-slate-700/50 bg-slate-800/30 overflow-hidden">
+    <div className="rounded-lg border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800/30 overflow-hidden">
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between p-3 hover:bg-slate-800/50 transition-colors"
+        className="w-full flex items-center justify-between p-3 hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors"
       >
         <div className="flex items-center gap-2">
-          <Icon className="w-4 h-4 text-purple-400" />
-          <span className="text-sm font-medium text-slate-200">{title}</span>
+          <Icon className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+          <span className="text-sm font-medium text-slate-800 dark:text-slate-200">{title}</span>
           {count !== undefined && count > 0 && (
             <Badge variant="default" className="text-xs">
               {count}
@@ -491,9 +500,9 @@ function FilterSection({ title, icon: Icon, expanded, onToggle, count, children 
           )}
         </div>
         {expanded ? (
-          <ChevronDown className="w-4 h-4 text-slate-400" />
+          <ChevronDown className="w-4 h-4 text-slate-500 dark:text-slate-400" />
         ) : (
-          <ChevronRight className="w-4 h-4 text-slate-400" />
+          <ChevronRight className="w-4 h-4 text-slate-500 dark:text-slate-400" />
         )}
       </button>
       {expanded && (
@@ -527,11 +536,11 @@ function FilterCheckbox({ label, checked, onChange, color = 'purple', icon }: Fi
     <label className="flex items-center gap-2 cursor-pointer group">
       <div className={cn(
         'w-4 h-4 rounded border-2 flex items-center justify-center transition-all',
-        checked ? colors[color] : 'border-slate-600 group-hover:border-slate-500'
+        checked ? colors[color] : 'border-slate-400 dark:border-slate-600 group-hover:border-slate-500'
       )}>
         {checked && <CheckCircle2 className="w-3 h-3 text-white" />}
       </div>
-      <span className="text-sm text-slate-300 group-hover:text-slate-200 flex items-center gap-1.5">
+      <span className="text-sm text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-slate-200 flex items-center gap-1.5">
         {icon}
         {label}
       </span>

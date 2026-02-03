@@ -88,11 +88,17 @@ import { RisquesCritiquesModal } from '@/modules/dashboard/components/modals/Ris
 
 function DashboardSkeleton() {
   return (
-    <div className="h-full w-full flex items-center justify-center bg-slate-950">
-      <div className="flex flex-col items-center gap-3 animate-pulse">
-        <Loader2 className="h-7 w-7 animate-spin text-blue-400" />
-        <p className="text-slate-400 text-sm font-medium">Chargement du dashboard…</p>
+    <div className="h-full w-full flex flex-col items-center justify-center gap-6 bg-white dark:bg-slate-950 p-8" role="status" aria-label="Chargement du dashboard">
+      <Loader2 className="h-10 w-10 animate-spin text-blue-500 dark:text-blue-400" aria-hidden />
+      <div className="space-y-3 w-full max-w-md">
+        <div className="h-6 w-48 rounded-lg bg-slate-200 dark:bg-slate-700 animate-pulse mx-auto" />
+        <div className="grid grid-cols-2 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="h-24 rounded-xl bg-slate-100 dark:bg-slate-800/50 animate-pulse" />
+          ))}
+        </div>
       </div>
+      <span className="sr-only">Chargement du dashboard en cours</span>
     </div>
   );
 }

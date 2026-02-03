@@ -14,7 +14,7 @@ export default function LoginPageContent() {
   const { login, isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get('redirect') ?? '/maitre-ouvrage/dashboard';
+  const redirectTo = searchParams.get('redirect') ?? '/maitre-ouvrage/dashboard/r/pilotage/dashboard/default';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

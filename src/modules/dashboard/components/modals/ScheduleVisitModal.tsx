@@ -76,7 +76,7 @@ export function ScheduleVisitModal({ isOpen, onClose, chantierNumero }: Schedule
               <SelectTrigger id="visit-type" className={cn('w-full rounded-xl border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-200')}>
                 <SelectValue placeholder="Type" />
               </SelectTrigger>
-              <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+              <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
                 <SelectItem value="technique">Technique</SelectItem>
                 <SelectItem value="administrative">Administrative</SelectItem>
               </SelectContent>

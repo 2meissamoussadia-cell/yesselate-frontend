@@ -14,6 +14,7 @@ import { useAnalyticsWorkspaceStore } from '@/lib/stores/analyticsWorkspaceStore
 import { FluentCard, FluentCardContent } from '@/components/ui/fluent-card';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   Search, SlidersHorizontal, LayoutGrid, List, ArrowUpDown,
   TrendingUp, TrendingDown, Minus, AlertTriangle, Target, Activity 
@@ -176,35 +177,41 @@ export function AnalyticsInboxView({ tab }: AnalyticsInboxViewProps) {
 
           {/* Filtre par catégorie (KPIs uniquement) */}
           {data.type === 'kpis' && (
-            <select
-              className="px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800 
-                       outline-none focus:ring-2 focus:ring-orange-500/30 
-                       text-white text-sm"
+            <Select
               value={filterCategory}
-              onChange={(e) => { setFilterCategory(e.target.value); updateUI({ filterType: e.target.value }); }}
+              onValueChange={(v) => { setFilterCategory(v); updateUI({ filterType: v }); }}
             >
-              <option value="all">Toutes catégories</option>
-              <option value="performance">Performance</option>
-              <option value="financial">Financier</option>
-              <option value="operations">Opérations</option>
-              <option value="quality">Qualité</option>
-            </select>
+              <SelectTrigger className="px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800 
+                       focus:ring-2 focus:ring-orange-500/30 text-white text-sm h-11">
+                <SelectValue placeholder="Catégorie" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Toutes catégories</SelectItem>
+                <SelectItem value="performance">Performance</SelectItem>
+                <SelectItem value="financial">Financier</SelectItem>
+                <SelectItem value="operations">Opérations</SelectItem>
+                <SelectItem value="quality">Qualité</SelectItem>
+              </SelectContent>
+            </Select>
           )}
 
           {/* Tri */}
           {data.type === 'kpis' && (
-            <select
-              className="px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800 
-                       outline-none focus:ring-2 focus:ring-orange-500/30 
-                       text-white text-sm"
+            <Select
               value={sortBy}
-              onChange={(e) => { setSortBy(e.target.value as SortBy); updateUI({ sortBy: e.target.value }); }}
+              onValueChange={(v) => { setSortBy(v as SortBy); updateUI({ sortBy: v }); }}
             >
-              <option value="status">Par statut</option>
-              <option value="name">Par nom</option>
-              <option value="value">Par valeur</option>
-              <option value="trend">Par tendance</option>
-            </select>
+              <SelectTrigger className="px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800 
+                       focus:ring-2 focus:ring-orange-500/30 text-white text-sm h-11">
+                <SelectValue placeholder="Tri" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="status">Par statut</SelectItem>
+                <SelectItem value="name">Par nom</SelectItem>
+                <SelectItem value="value">Par valeur</SelectItem>
+                <SelectItem value="trend">Par tendance</SelectItem>
+              </SelectContent>
+            </Select>
           )}
         </div>
 

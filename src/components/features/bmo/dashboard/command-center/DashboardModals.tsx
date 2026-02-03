@@ -10,6 +10,7 @@ import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import {
   X,
@@ -183,7 +184,7 @@ function ModalWrapper({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
         className={cn(
-          'w-full bg-slate-900 rounded-xl border border-slate-700/50 shadow-2xl overflow-hidden max-h-[90vh] flex flex-col',
+          'w-full bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700/50 shadow-2xl overflow-hidden max-h-[90vh] flex flex-col',
           maxWidth
         )}
         onClick={(e) => e.stopPropagation()}
@@ -999,15 +1000,16 @@ function ExportModal() {
 
           <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
             <p className="text-xs text-slate-400 mb-2">Période</p>
-            <select
-              value={period}
-              onChange={(e) => setPeriod(e.target.value as any)}
-              className="w-full px-2 py-1.5 rounded-md bg-slate-900 border border-slate-700 text-sm text-slate-300"
-            >
-              <option value="month">Mois</option>
-              <option value="quarter">Trimestre</option>
-              <option value="year">Année</option>
-            </select>
+            <Select value={period} onValueChange={(v) => setPeriod(v as 'month' | 'quarter' | 'year')}>
+              <SelectTrigger className="w-full h-9 rounded-md bg-slate-900 border-slate-700 text-sm text-slate-300">
+                <SelectValue placeholder="Période" />
+              </SelectTrigger>
+              <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+                <SelectItem value="month">Mois</SelectItem>
+                <SelectItem value="quarter">Trimestre</SelectItem>
+                <SelectItem value="year">Année</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
@@ -1211,33 +1213,41 @@ function SettingsModal() {
               className="rounded border-slate-700"
             />
           </label>
-          <label className="flex items-center justify-between">
+          <label className="flex items-center justify-between gap-2">
             <span className="text-sm text-slate-400">Intervalle de rafraîchissement</span>
-            <select
-              value={kpiConfig.refreshInterval}
-              onChange={(e) => setKPIConfig({ refreshInterval: parseInt(e.target.value) })}
-              className="px-2 py-1 rounded bg-slate-800 border border-slate-700 text-sm text-slate-300"
+            <Select
+              value={String(kpiConfig.refreshInterval)}
+              onValueChange={(v) => setKPIConfig({ refreshInterval: parseInt(v, 10) })}
             >
-              <option value={10}>10 secondes</option>
-              <option value={30}>30 secondes</option>
-              <option value={60}>1 minute</option>
-              <option value={300}>5 minutes</option>
-            </select>
+              <SelectTrigger className="w-[140px] h-8 rounded bg-slate-800 border-slate-700 text-sm text-slate-300">
+                <SelectValue placeholder="Intervalle" />
+              </SelectTrigger>
+              <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+                <SelectItem value="10">10 secondes</SelectItem>
+                <SelectItem value="30">30 secondes</SelectItem>
+                <SelectItem value="60">1 minute</SelectItem>
+                <SelectItem value="300">5 minutes</SelectItem>
+              </SelectContent>
+            </Select>
           </label>
         </div>
 
         <div className="space-y-3">
           <h3 className="text-sm font-medium text-slate-200">Affichage</h3>
-          <label className="flex items-center justify-between">
+          <label className="flex items-center justify-between gap-2">
             <span className="text-sm text-slate-400">Mode vue</span>
-            <select
+            <Select
               value={displayConfig.viewMode}
-              onChange={(e) => setDisplayConfig({ viewMode: e.target.value as any })}
-              className="px-2 py-1 rounded bg-slate-800 border border-slate-700 text-sm text-slate-300"
+              onValueChange={(v) => setDisplayConfig({ viewMode: v as 'compact' | 'extended' })}
             >
-              <option value="compact">Compact</option>
-              <option value="extended">Étendu</option>
-            </select>
+              <SelectTrigger className="w-[120px] h-8 rounded bg-slate-800 border-slate-700 text-sm text-slate-300">
+                <SelectValue placeholder="Mode" />
+              </SelectTrigger>
+              <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+                <SelectItem value="compact">Compact</SelectItem>
+                <SelectItem value="extended">Étendu</SelectItem>
+              </SelectContent>
+            </Select>
           </label>
         </div>
 
@@ -1262,6 +1272,7 @@ function ShortcutsModal() {
     { key: '⌘K', description: 'Ouvrir la palette de commandes' },
     { key: '⌘R', description: 'Actualiser les données' },
     { key: '⌘E', description: 'Exporter les données' },
+    { key: '⌘⇧F', description: 'Mode Focus (masquer menu et en-tête)' },
     { key: 'F11', description: 'Mode plein écran' },
     { key: 'Alt+←', description: 'Retour arrière' },
     { key: '/', description: 'Focus recherche' },

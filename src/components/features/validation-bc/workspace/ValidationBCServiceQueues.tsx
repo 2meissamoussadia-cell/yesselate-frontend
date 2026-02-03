@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { cn } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   ShoppingCart,
   Building2,
@@ -568,27 +569,34 @@ export function ValidationBCServiceQueues({
       {/* Filters bar */}
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-2">
-          <select
+          <Select
             value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value as DocumentStatus | 'all')}
-            className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm"
+            onValueChange={(v) => setFilterStatus(v as DocumentStatus | 'all')}
           >
-            <option value="all">Tous statuts</option>
-            <option value="pending_validation">En attente</option>
-            <option value="level1_approved">Niveau 1</option>
-            <option value="level2_approved">Niveau 2</option>
-            <option value="rejected">Rejetés</option>
-          </select>
-          
-          <select
+            <SelectTrigger className="h-9 min-w-[140px] rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm">
+              <SelectValue placeholder="Statut" />
+            </SelectTrigger>
+            <SelectContent className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+              <SelectItem value="all">Tous statuts</SelectItem>
+              <SelectItem value="pending_validation">En attente</SelectItem>
+              <SelectItem value="level1_approved">Niveau 1</SelectItem>
+              <SelectItem value="level2_approved">Niveau 2</SelectItem>
+              <SelectItem value="rejected">Rejetés</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as 'date' | 'amount' | 'priority')}
-            className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm"
+            onValueChange={(v) => setSortBy(v as 'date' | 'amount' | 'priority')}
           >
-            <option value="date">Tri par date</option>
-            <option value="amount">Tri par montant</option>
-            <option value="priority">Tri par priorité</option>
-          </select>
+            <SelectTrigger className="h-9 min-w-[140px] rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm">
+              <SelectValue placeholder="Tri" />
+            </SelectTrigger>
+            <SelectContent className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+              <SelectItem value="date">Tri par date</SelectItem>
+              <SelectItem value="amount">Tri par montant</SelectItem>
+              <SelectItem value="priority">Tri par priorité</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="flex items-center gap-2">

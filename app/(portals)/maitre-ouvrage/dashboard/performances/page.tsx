@@ -6,5 +6,5 @@
 import { redirect } from 'next/navigation';
 
 export default function DashboardPerformancesPage() {
-  redirect('/maitre-ouvrage/dashboard?main=performance&sub=indicators&leaf=synthese');
+  redirect('/maitre-ouvrage/dashboard/r/performance/indicators/synthese');
 }

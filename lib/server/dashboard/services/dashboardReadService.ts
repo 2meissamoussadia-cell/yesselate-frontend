@@ -576,6 +576,36 @@ export class DashboardReadService {
       }
     }
 
+    // ========== Risks (mock) ==========
+    if (main === 'risks') {
+      const rows = [
+        { id: 'r1', type: 'paiement-retard', titre: 'Paiement fournisseur ACME en retard', bureau: 'BCG', severite: 'critical' as const, dateEcheance: '2026-01-20', montant: 128500000, statut: 'ouvert' },
+        { id: 'r2', type: 'contrat-expire', titre: 'Contrat sous-traitance électricité expire J-5', bureau: 'BJA', severite: 'warning' as const, dateEcheance: '2026-02-05', statut: 'ouvert' },
+        { id: 'r3', type: 'blocage', titre: 'BC bloqué SLA dépassé', bureau: 'BF', severite: 'critical' as const, dateCreation: '2026-01-25', statut: 'en_cours' },
+      ];
+      return { rows, stats: { total: 3, critical: 2, warning: 1, ouverts: 2 } };
+    }
+
+    // ========== Decisions (mock, sauf decisions/reporting déjà géré plus haut) ==========
+    if (main === 'decisions') {
+      const rows = [
+        { id: 'd1', type: 'validation', titre: 'Validation BC Phase 3', bureau: 'BF', priorite: 'urgente' as const, dateCreation: '2026-01-28', statut: 'en_attente', demandeur: 'J. Dupont' },
+        { id: 'd2', type: 'arbitrage', titre: 'Conflit ressources Lot 4', bureau: 'BOP', priorite: 'normale' as const, dateCreation: '2026-01-27', statut: 'en_cours', demandeur: 'M. Martin' },
+        { id: 'd3', type: 'substitution', titre: 'Délégation DAF', bureau: 'BMO', priorite: 'planifiee' as const, dateCreation: '2026-01-26', statut: 'validee', validePar: 'DG' },
+      ];
+      return { rows, stats: { total: 3, enAttente: 1, enCours: 1, executees: 1 } };
+    }
+
+    // ========== Realtime (mock) ==========
+    if (main === 'realtime') {
+      const rows = [
+        { id: 'rt1', type: 'alerte', titre: 'Alerte SLA BC', bureau: 'BF', severite: 'critical' as const, timestamp: new Date().toISOString(), statut: 'active' },
+        { id: 'rt2', type: 'notification', titre: 'Validation BC-2024-0847', bureau: 'BMO', severite: 'info' as const, timestamp: new Date(Date.now() - 3600000).toISOString(), statut: 'lue' },
+        { id: 'rt3', type: 'sync', titre: 'Synchronisation chantiers', timestamp: new Date().toISOString(), statut: 'ok' },
+      ];
+      return { rows, stats: { total: 3, actives: 1, nonLues: 0, syncOk: true } };
+    }
+
     // Fallback : retour vide
     return {};
   }

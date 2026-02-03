@@ -48,6 +48,7 @@ export * from './config/navigationMap';
 // Utils
 export * from './utils/loadComponent';
 export * from './utils/routeValidation';
+export { buildDashboardPathUrl, parseDashboardPath, isDashboardPathUrl } from './utils/dashboardPathUrl';
 export * from './utils/navigationLabels';
 export * from './utils/routeAliases';
 export * from './utils/colorMapping';

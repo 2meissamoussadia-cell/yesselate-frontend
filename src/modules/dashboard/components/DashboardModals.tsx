@@ -76,6 +76,7 @@ export function DashboardModals() {
       { key: 'Ctrl + K', description: 'Recherche globale' },
       { key: 'Ctrl + R', description: 'Actualiser les données' },
       { key: 'Ctrl + E', description: 'Exporter les données' },
+      { key: 'Ctrl + Shift + F', description: 'Mode Focus (masquer menu et en-tête)' },
       { key: 'F11', description: 'Mode plein écran' },
       { key: 'Esc', description: 'Fermer le dialogue' },
     ];

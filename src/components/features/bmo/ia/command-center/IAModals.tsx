@@ -27,7 +27,7 @@ export function IAModals() {
   if (modal.type === 'export') {
     return (
       <Dialog open={modal.isOpen} onOpenChange={closeModal}>
-        <DialogContent className="max-w-2xl bg-slate-900 border-slate-700">
+        <DialogContent className="max-w-2xl bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-slate-200">
               <Download className="h-5 w-5 text-blue-400" />
@@ -94,7 +94,7 @@ export function IAModals() {
   if (modal.type === 'settings') {
     return (
       <Dialog open={modal.isOpen} onOpenChange={closeModal}>
-        <DialogContent className="max-w-2xl bg-slate-900 border-slate-700">
+        <DialogContent className="max-w-2xl bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-slate-200">
               <Settings className="h-5 w-5 text-purple-400" />
@@ -123,7 +123,7 @@ export function IAModals() {
   if (modal.type === 'help') {
     return (
       <Dialog open={modal.isOpen} onOpenChange={closeModal}>
-        <DialogContent className="max-w-3xl bg-slate-900 border-slate-700 max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-slate-200">
               <HelpCircle className="h-5 w-5 text-blue-400" />
@@ -201,7 +201,7 @@ export function IAModals() {
 
     return (
       <Dialog open={modal.isOpen} onOpenChange={closeModal}>
-        <DialogContent className="max-w-2xl bg-slate-900 border-slate-700">
+        <DialogContent className="max-w-2xl bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-slate-200">
               <Keyboard className="h-5 w-5 text-amber-400" />
@@ -234,7 +234,7 @@ export function IAModals() {
 
     return (
       <Dialog open={modal.isOpen} onOpenChange={closeModal}>
-        <DialogContent className="max-w-md bg-slate-900 border-slate-700">
+        <DialogContent className="max-w-md bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-slate-200">
               <AlertTriangle className="h-5 w-5 text-red-400" />

@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { CalendarEvent } from '@/lib/types/bmo.types';
 import { bureaux } from '@/lib/data';
 
@@ -151,19 +152,23 @@ export function AdvancedSearch({ activities, onSelectActivity, onFilterChange }:
                   <Building2 className="w-3 h-3" />
                   Bureau
                 </label>
-                <select
-                  value={filters.bureau || ''}
-                  onChange={(e) => updateFilters({ bureau: e.target.value || undefined })}
-                  className={cn(
-                    'w-full text-xs px-2 py-1.5 rounded border',
-                    darkMode ? 'bg-slate-700 border-slate-600' : 'bg-white border-gray-300'
-                  )}
+                <Select
+                  value={filters.bureau || '__all__'}
+                  onValueChange={(v: string) => updateFilters({ bureau: v === '__all__' ? undefined : v })}
                 >
-                  <option value="">Tous</option>
-                  {bureaux.map(b => (
-                    <option key={b.code} value={b.code}>{b.name}</option>
-                  ))}
-                </select>
+                  <SelectTrigger className={cn(
+                    'w-full text-xs px-2 py-1.5 rounded border h-9',
+                    darkMode ? 'bg-slate-700 border-slate-600' : 'bg-white border-gray-300'
+                  )}>
+                    <SelectValue placeholder="Bureau" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__all__">Tous</SelectItem>
+                    {bureaux.map(b => (
+                      <SelectItem key={b.code} value={b.code}>{b.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div>
@@ -171,23 +176,27 @@ export function AdvancedSearch({ activities, onSelectActivity, onFilterChange }:
                   <Tag className="w-3 h-3" />
                   Type
                 </label>
-                <select
-                  value={filters.type || ''}
-                  onChange={(e) => updateFilters({ type: e.target.value || undefined })}
-                  className={cn(
-                    'w-full text-xs px-2 py-1.5 rounded border',
-                    darkMode ? 'bg-slate-700 border-slate-600' : 'bg-white border-gray-300'
-                  )}
+                <Select
+                  value={filters.type || '__all__'}
+                  onValueChange={(v: string) => updateFilters({ type: v === '__all__' ? undefined : v })}
                 >
-                  <option value="">Tous</option>
-                  <option value="meeting">Réunion</option>
-                  <option value="visio">Visio</option>
-                  <option value="deadline">Échéance</option>
-                  <option value="site">Visite terrain</option>
-                  <option value="delivery">Livraison</option>
-                  <option value="legal">Juridique</option>
-                  <option value="training">Formation</option>
-                </select>
+                  <SelectTrigger className={cn(
+                    'w-full text-xs px-2 py-1.5 rounded border h-9',
+                    darkMode ? 'bg-slate-700 border-slate-600' : 'bg-white border-gray-300'
+                  )}>
+                    <SelectValue placeholder="Type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__all__">Tous</SelectItem>
+                    <SelectItem value="meeting">Réunion</SelectItem>
+                    <SelectItem value="visio">Visio</SelectItem>
+                    <SelectItem value="deadline">Échéance</SelectItem>
+                    <SelectItem value="site">Visite terrain</SelectItem>
+                    <SelectItem value="delivery">Livraison</SelectItem>
+                    <SelectItem value="legal">Juridique</SelectItem>
+                    <SelectItem value="training">Formation</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               <div>
@@ -195,21 +204,25 @@ export function AdvancedSearch({ activities, onSelectActivity, onFilterChange }:
                   <Filter className="w-3 h-3" />
                   Priorité
                 </label>
-                <select
-                  value={filters.priority || ''}
-                  onChange={(e) => updateFilters({ priority: e.target.value || undefined })}
-                  className={cn(
-                    'w-full text-xs px-2 py-1.5 rounded border',
-                    darkMode ? 'bg-slate-700 border-slate-600' : 'bg-white border-gray-300'
-                  )}
+                <Select
+                  value={filters.priority || '__all__'}
+                  onValueChange={(v: string) => updateFilters({ priority: v === '__all__' ? undefined : v })}
                 >
-                  <option value="">Toutes</option>
-                  <option value="critical">Critique</option>
-                  <option value="urgent">Urgente</option>
-                  <option value="high">Haute</option>
-                  <option value="normal">Normale</option>
-                  <option value="low">Basse</option>
-                </select>
+                  <SelectTrigger className={cn(
+                    'w-full text-xs px-2 py-1.5 rounded border h-9',
+                    darkMode ? 'bg-slate-700 border-slate-600' : 'bg-white border-gray-300'
+                  )}>
+                    <SelectValue placeholder="Priorité" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__all__">Toutes</SelectItem>
+                    <SelectItem value="critical">Critique</SelectItem>
+                    <SelectItem value="urgent">Urgente</SelectItem>
+                    <SelectItem value="high">Haute</SelectItem>
+                    <SelectItem value="normal">Normale</SelectItem>
+                    <SelectItem value="low">Basse</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 

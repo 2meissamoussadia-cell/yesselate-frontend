@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { FluentButton } from '@/components/ui/fluent-button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Plus, FileText, Receipt, FileEdit, Calendar, DollarSign, User, Building2 } from 'lucide-react';
 import { createDocument } from '@/lib/services/validation-bc-api';
 
@@ -167,17 +168,21 @@ export function ValidationBCQuickCreateModal({ open, onClose, onSuccess }: Valid
                   <User className="w-4 h-4" />
                   Bureau émetteur
                 </label>
-                <select
-                  value={formData.bureau}
-                  onChange={(e) => setFormData({ ...formData, bureau: e.target.value })}
-                  className="w-full rounded-lg border border-slate-200/70 bg-white/90 p-2.5 text-sm outline-none focus:ring-2 focus:ring-purple-400/30 dark:border-slate-800 dark:bg-[#141414]/70 dark:text-white"
+                <Select
+                  value={formData.bureau || '__none__'}
+                  onValueChange={(v) => setFormData({ ...formData, bureau: v === '__none__' ? '' : v })}
                 >
-                  <option value="">Sélectionner...</option>
-                  <option value="DRE">DRE</option>
-                  <option value="DAAF">DAAF</option>
-                  <option value="DSI">DSI</option>
-                  <option value="DG">DG</option>
-                </select>
+                  <SelectTrigger className="w-full h-10 rounded-lg border-slate-200/70 bg-white/90 dark:border-slate-800 dark:bg-[#141414]/70 text-sm focus:ring-2 focus:ring-purple-400/30">
+                    <SelectValue placeholder="Sélectionner..." />
+                  </SelectTrigger>
+                  <SelectContent className="border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1f1f1f]">
+                    <SelectItem value="__none__">Sélectionner...</SelectItem>
+                    <SelectItem value="DRE">DRE</SelectItem>
+                    <SelectItem value="DAAF">DAAF</SelectItem>
+                    <SelectItem value="DSI">DSI</SelectItem>
+                    <SelectItem value="DG">DG</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* Date échéance */}

@@ -273,7 +273,7 @@ export function AlertDetailModal({ alert, isOpen, onClose }: AlertDetailModalPro
                 <SelectTrigger className="min-w-[140px] px-3 py-2 rounded-xl bg-slate-800/50 border-slate-700/50 text-slate-200 text-sm focus:ring-sky-500/50 disabled:opacity-50" aria-label="Durée du report">
                   <SelectValue placeholder="Durée" />
                 </SelectTrigger>
-                <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+                <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
                   <SelectItem value="15">15 minutes</SelectItem>
                   <SelectItem value="30">30 minutes</SelectItem>
                   <SelectItem value="60">1 heure</SelectItem>

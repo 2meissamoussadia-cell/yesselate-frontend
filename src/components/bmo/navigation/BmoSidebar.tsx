@@ -16,7 +16,7 @@ import { cn } from '@/lib/utils';
 import { bmoModules, bmoModuleGroupLabels, getModuleByPath } from '@/lib/navigation/bmoModules';
 
 /** URL du dashboard (PILOTAGE > Dashboard). Force une navigation visible au clic. */
-const DASHBOARD_COCKPIT_HREF = '/maitre-ouvrage/dashboard?main=pilotage&sub=dashboard&leaf=default';
+const DASHBOARD_COCKPIT_HREF = '/maitre-ouvrage/dashboard/r/pilotage/dashboard/default';
 
 const COMPANY_LOGO_SRC = '/images/log_yessalate.png';
 

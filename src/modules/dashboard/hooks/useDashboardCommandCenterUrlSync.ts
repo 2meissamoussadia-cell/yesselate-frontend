@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { isValidRoute, normalizeRoute, DEFAULT_DG_HOME } from '../utils/routeValidation';
 import { getDashboardRedirectPath } from '../utils/dashboardRedirectMap';
+import { parseDashboardPath, buildDashboardPathUrl, isDashboardPathUrl } from '../utils/dashboardPathUrl';
 import { useLogger } from '@/lib/utils/logger';
 
 /** Path canonique Cockpit DG (default DG home). */
@@ -29,9 +30,11 @@ export function useDashboardCommandCenterUrlSync() {
   const pathname = usePathname();
   const params = useSearchParams();
 
-  const urlMain = params.get('main');
-  const urlSub = params.get('sub');
-  const urlLeaf = params.get('leaf');
+  // Préférer les segments de path (routing moderne) aux query params
+  const pathParsed = useMemo(() => parseDashboardPath(pathname), [pathname]);
+  const urlMain = pathParsed ? pathParsed.main : params.get('main');
+  const urlSub = pathParsed ? pathParsed.sub : params.get('sub');
+  const urlLeaf = pathParsed ? pathParsed.leaf : params.get('leaf');
 
   // ✅ Sélecteurs unitaires pour limiter les re-renders
   const main = useDashboardCommandCenterStore((s) => s.navigation.mainCategory);
@@ -53,6 +56,17 @@ export function useDashboardCommandCenterUrlSync() {
     if (!target) return;
     log.debug('Redirection dashboard → module', { from: { urlMain, urlSub, urlLeaf }, to: target });
     router.replace(target);
+  }, [pathname, urlMain, urlSub, urlLeaf, router, log]);
+
+  // 0b) Canoniser URL query → path : /maitre-ouvrage/dashboard?main=... → /maitre-ouvrage/dashboard/r/main/sub/leaf
+  useEffect(() => {
+    if (pathname !== '/maitre-ouvrage/dashboard') return;
+    if (!urlMain || isDashboardPathUrl(pathname)) return;
+    const normalized = normalizeRoute(urlMain, urlSub, urlLeaf);
+    if (!isValidRoute(normalized.main, normalized.sub, normalized.leaf)) return;
+    const pathUrl = buildDashboardPathUrl(normalized.main, normalized.sub, normalized.leaf);
+    log.debug('Canonisation URL query → path', { from: pathname, to: pathUrl });
+    router.replace(pathUrl);
   }, [pathname, urlMain, urlSub, urlLeaf, router, log]);
 
   // 1) URL -> Store (incl. /dg/cockpit et /maitre-ouvrage/cockpit → DEFAULT_DG_HOME)
@@ -119,7 +133,7 @@ export function useDashboardCommandCenterUrlSync() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, urlMain, urlSub, urlLeaf]); // `navigate` est stable (Zustand)
 
-  // 2) Store -> URL (query params sur /maitre-ouvrage/dashboard ; /dg/cockpit est une entrée dédiée qui redirige)
+  // 2) Store -> URL : path moderne (/maitre-ouvrage/dashboard/main/sub/leaf) ou query en fallback
   useEffect(() => {
     if (isApplyingUrlToStoreRef.current) return;
     if (!pathname) return;
@@ -127,24 +141,17 @@ export function useDashboardCommandCenterUrlSync() {
     const normalized = normalizeRoute(main, sub, leaf);
     if (!isValidRoute(normalized.main, normalized.sub, normalized.leaf)) return;
 
-    const next = new URLSearchParams();
-    next.set('main', normalized.main);
-    if (normalized.sub) next.set('sub', normalized.sub);
-    if (normalized.leaf) next.set('leaf', normalized.leaf);
-    const nextQuery = next.toString();
+    const nextPathUrl = buildDashboardPathUrl(normalized.main, normalized.sub, normalized.leaf);
+    const currentPathUrl = isDashboardPathUrl(pathname)
+      ? pathname
+      : `${pathname}?main=${urlMain ?? ''}&sub=${urlSub ?? ''}&leaf=${urlLeaf ?? ''}`;
 
-    const current = new URLSearchParams();
-    if (urlMain) current.set('main', urlMain);
-    if (urlSub) current.set('sub', urlSub);
-    if (urlLeaf) current.set('leaf', urlLeaf);
-    const currentQuery = current.toString();
+    if (nextPathUrl === currentPathUrl) return;
+    if (nextPathUrl === lastPushedQueryRef.current) return;
 
-    if (nextQuery === currentQuery) return;
-    if (nextQuery === lastPushedQueryRef.current) return;
-
-    lastPushedQueryRef.current = nextQuery;
+    lastPushedQueryRef.current = nextPathUrl;
     justPushedRef.current = true;
-    router.push(`${pathname}?${nextQuery}`);
+    router.push(nextPathUrl);
     const t = setTimeout(() => {
       justPushedRef.current = false;
     }, 300);

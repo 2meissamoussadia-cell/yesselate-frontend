@@ -56,7 +56,7 @@ Si l’API tourne ailleurs (Render, Supabase, etc.) :
 ## Checklist avant mise en production
 
 - [ ] Variables d’environnement configurées (API, VAPID si push, Sentry si monitoring).
-- [ ] Build réussi en local : `npm run build`.
+- [ ] Build réussi en local : `pnpm build` ; démarrage prod : `pnpm start` (jamais `pnpm dev` en prod).
 - [ ] Tests E2E passent (optionnel en CI) : `npm run test:e2e`.
 - [ ] Domaine personnalisé configuré dans Vercel si besoin (Settings → Domains).
 

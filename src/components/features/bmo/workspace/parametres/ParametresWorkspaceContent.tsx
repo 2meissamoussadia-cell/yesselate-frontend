@@ -5,6 +5,7 @@ import { useTickerCardsSettingsStore } from '@/lib/stores/tickerCardsSettingsSto
 import { AVAILABLE_TICKER_CRITERIA } from '@/lib/mappings/dashboardKPIMapping';
 import { Settings, Shield, Bell, Plug, Users, Database, Save, Globe, Building2, Moon, Sun, Monitor, ChevronRight, Check, AlertTriangle, RefreshCw, LayoutDashboard, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { UserRoleManager } from '@/components/admin';
 import { BtpSecurityWidget } from '@/components/bmo/security/BtpSecurityWidget';
 
@@ -46,11 +47,16 @@ function GeneralSettings() {
           </div>
         </SettingsSection>
         <SettingsSection title="Langue" icon={<Globe className="w-5 h-5" />}>
-          <select value={language} onChange={e => setLanguage(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm">
-            <option value="fr">Français</option>
-            <option value="en">English</option>
-            <option value="ar">العربية</option>
-          </select>
+          <Select value={language} onValueChange={setLanguage}>
+            <SelectTrigger className="w-full h-11 rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm">
+              <SelectValue placeholder="Langue" />
+            </SelectTrigger>
+            <SelectContent className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+              <SelectItem value="fr">Français</SelectItem>
+              <SelectItem value="en">English</SelectItem>
+              <SelectItem value="ar">العربية</SelectItem>
+            </SelectContent>
+          </Select>
         </SettingsSection>
         <SettingsSection title="Organisation" icon={<Building2 className="w-5 h-5" />}>
           <div className="space-y-3">
@@ -78,7 +84,20 @@ function SecuritySettings() {
       <SettingsSection title="Authentification" icon={<Shield className="w-5 h-5" />}>
         <div className="space-y-4">
           <ToggleItem label="Authentification à deux facteurs" description="Sécurisez votre compte avec 2FA" checked={twoFactor} onChange={setTwoFactor} />
-          <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50"><p className="font-medium mb-2">Expiration de session</p><select value={sessionTimeout} onChange={e => setSessionTimeout(+e.target.value)} className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm"><option value={15}>15 minutes</option><option value={30}>30 minutes</option><option value={60}>1 heure</option><option value={120}>2 heures</option></select></div>
+          <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+            <p className="font-medium mb-2">Expiration de session</p>
+            <Select value={String(sessionTimeout)} onValueChange={(v) => setSessionTimeout(Number(v))}>
+              <SelectTrigger className="w-full h-10 rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm">
+                <SelectValue placeholder="Durée" />
+              </SelectTrigger>
+              <SelectContent className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+                <SelectItem value="15">15 minutes</SelectItem>
+                <SelectItem value="30">30 minutes</SelectItem>
+                <SelectItem value="60">1 heure</SelectItem>
+                <SelectItem value="120">2 heures</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </SettingsSection>
       <SettingsSection title="Sessions actives" icon={<Monitor className="w-5 h-5" />}>

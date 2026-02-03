@@ -99,7 +99,7 @@ export function ConfirmDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-slate-900 border-slate-700 max-w-md">
+      <DialogContent className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 max-w-md">
         <DialogHeader>
           <div className="flex items-start gap-4">
             <div className={cn(

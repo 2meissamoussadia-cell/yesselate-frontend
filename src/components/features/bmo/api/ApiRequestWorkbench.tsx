@@ -6,6 +6,7 @@ import { useAppStore, useBMOStore } from '@/lib/stores';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 type EndpointLike = {
   id: string;
@@ -366,22 +367,25 @@ export function ApiRequestWorkbench({ endpoint }: { endpoint: EndpointLike }) {
           </div>
 
           <div className="flex items-center gap-2">
-            <select
-              className={cn('flex-1 px-2 py-1.5 rounded text-xs border', darkMode ? 'bg-slate-800 border-slate-600' : 'bg-white border-gray-300')}
+            <Select
               value={selectedTemplateId}
-              onChange={(e) => {
-                const id = e.target.value;
+              onValueChange={(id) => {
                 setSelectedTemplateId(id);
                 if (id !== 'NONE') applyTemplate(id);
               }}
             >
-              <option value="NONE">Choisir un modèle…</option>
-              {endpointSaved.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.name}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className={cn('flex-1 px-2 py-1.5 rounded text-xs border min-w-[140px] h-8', darkMode ? 'bg-slate-800 border-slate-600' : 'bg-white border-gray-300')}>
+                <SelectValue placeholder="Choisir un modèle…" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="NONE">Choisir un modèle…</SelectItem>
+                {endpointSaved.map((s) => (
+                  <SelectItem key={s.id} value={s.id}>
+                    {s.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <Button
               size="sm"
               variant="ghost"

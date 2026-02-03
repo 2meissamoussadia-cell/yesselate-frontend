@@ -9,6 +9,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useBlockedCommandCenterStore } from '@/lib/stores/blockedCommandCenterStore';
 import { blockedApi } from '@/lib/services/blockedApiService';
 import { BlockedStatsModal } from '../BlockedStatsModal';
@@ -385,16 +386,20 @@ function SettingsModal({ onClose }: { onClose: () => void }) {
               {autoRefresh && (
                 <div>
                   <label className="text-sm text-slate-400 mb-2 block">Intervalle (secondes)</label>
-                  <select
-                    value={refreshInterval / 1000}
-                    onChange={e => setRefreshInterval(parseInt(e.target.value) * 1000)}
-                    className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  <Select
+                    value={String(refreshInterval / 1000)}
+                    onValueChange={v => setRefreshInterval(parseInt(v, 10) * 1000)}
                   >
-                    <option value="15">15 secondes</option>
-                    <option value="30">30 secondes</option>
-                    <option value="60">1 minute</option>
-                    <option value="300">5 minutes</option>
-                  </select>
+                    <SelectTrigger className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 focus:ring-2 focus:ring-blue-500/50">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="15">15 secondes</SelectItem>
+                      <SelectItem value="30">30 secondes</SelectItem>
+                      <SelectItem value="60">1 minute</SelectItem>
+                      <SelectItem value="300">5 minutes</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               )}
             </div>

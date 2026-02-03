@@ -19,7 +19,7 @@ export function BMOCalendar() {
   }
 
   return (
-    <div className="rounded-xl border border-slate-800/60 bg-slate-950/60 p-3 [&_.fc]:text-slate-200 [&_.fc-button]:bg-slate-800 [&_.fc-button]:border-slate-700 [&_.fc-button:hover]:bg-slate-700 [&_.fc-theme-standard]:border-slate-800 [&_.fc-scrollgrid]:border-slate-800 [&_.fc-daygrid-day]:border-slate-800">
+    <div className="rounded-xl border border-slate-200 dark:border-slate-800/60 bg-white dark:bg-slate-950/60 p-3 [&_.fc]:text-slate-800 dark:[&_.fc]:text-slate-200 [&_.fc-button]:bg-slate-100 dark:[&_.fc-button]:bg-slate-800 [&_.fc-button]:border-slate-200 dark:[&_.fc-button]:border-slate-700 [&_.fc-button:hover]:bg-slate-200 dark:[&_.fc-button:hover]:bg-slate-700 [&_.fc-theme-standard]:border-slate-200 dark:[&_.fc-theme-standard]:border-slate-800 [&_.fc-scrollgrid]:border-slate-200 dark:[&_.fc-scrollgrid]:border-slate-800 [&_.fc-daygrid-day]:border-slate-200 dark:[&_.fc-daygrid-day]:border-slate-800">
       <FullCalendar
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"

@@ -144,7 +144,7 @@ export function DocumentDetailsModal({
   return (
     <>
       <Dialog open={open && !validationModalOpen && !rejectModalOpen && !requestInfoModalOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-4xl max-h-[90vh] bg-slate-900 border-slate-700">
+        <DialogContent className="max-w-4xl max-h-[90vh] bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
           <DialogHeader>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">

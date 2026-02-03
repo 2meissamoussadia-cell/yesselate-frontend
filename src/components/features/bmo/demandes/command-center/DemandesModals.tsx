@@ -5,11 +5,12 @@
 
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useDemandesCommandCenterStore } from '@/lib/stores/demandesCommandCenterStore';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   BarChart3,
   Download,
@@ -24,6 +25,7 @@ import {
 
 export function DemandesModals() {
   const { activeModal, modalData, closeModal, liveStats } = useDemandesCommandCenterStore();
+  const [itemsPerPage, setItemsPerPage] = useState('25');
 
   return (
     <>
@@ -146,11 +148,16 @@ export function DemandesModals() {
             <h3 className="text-sm font-medium text-slate-300">Affichage</h3>
             <div className="flex items-center justify-between">
               <span className="text-sm text-slate-400">Éléments par page</span>
-              <select className="bg-slate-800 border border-slate-700 rounded px-2 py-1 text-sm text-slate-200">
-                <option>25</option>
-                <option>50</option>
-                <option>100</option>
-              </select>
+              <Select value={itemsPerPage} onValueChange={setItemsPerPage}>
+                <SelectTrigger className="w-[100px] bg-slate-800 border border-slate-700 rounded px-2 py-1 text-sm text-slate-200 h-8">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="25">25</SelectItem>
+                  <SelectItem value="50">50</SelectItem>
+                  <SelectItem value="100">100</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm text-slate-400">Auto-refresh</span>

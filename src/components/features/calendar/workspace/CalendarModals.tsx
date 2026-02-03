@@ -9,6 +9,7 @@ import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   X,
   Download,
@@ -188,15 +189,16 @@ function CalendarSettingsModal({ onClose }: { onClose: () => void }) {
         {/* Default View */}
         <div>
           <label className="text-sm font-medium text-slate-300 block mb-2">Vue par défaut</label>
-          <select
-            value={defaultView}
-            onChange={(e) => setDefaultView(e.target.value as 'day' | 'week' | 'month')}
-            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm"
-          >
-            <option value="day">Jour</option>
-            <option value="week">Semaine</option>
-            <option value="month">Mois</option>
-          </select>
+          <Select value={defaultView} onValueChange={(v) => setDefaultView(v as 'day' | 'week' | 'month')}>
+            <SelectTrigger className="w-full h-10 bg-slate-800 border-slate-700 rounded-lg text-sm text-slate-200">
+              <SelectValue placeholder="Vue" />
+            </SelectTrigger>
+            <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+              <SelectItem value="day">Jour</SelectItem>
+              <SelectItem value="week">Semaine</SelectItem>
+              <SelectItem value="month">Mois</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Show Weekends */}

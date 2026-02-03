@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { FluentButton } from '@/components/ui/fluent-button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import {
   History,
@@ -236,19 +237,20 @@ export function DelegationTimeline({ delegationId, open, onClose }: Props) {
         {/* Header controls */}
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <select
-              value={filterType}
-              onChange={(e) => setFilterType(e.target.value as EventType | 'all')}
-              className="rounded-lg border border-slate-200/70 bg-white/90 px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-purple-400/30 dark:border-slate-800 dark:bg-[#141414]/70 dark:text-white"
-            >
-              <option value="all">Tous les événements</option>
-              {eventTypes.map(type => {
-                const config = getEventConfig(type);
-                return (
-                  <option key={type} value={type}>{config.label}</option>
-                );
-              })}
-            </select>
+            <Select value={filterType} onValueChange={(v) => setFilterType(v as EventType | 'all')}>
+              <SelectTrigger className="h-9 min-w-[160px] rounded-lg border-slate-200/70 bg-white/90 dark:border-slate-800 dark:bg-[#141414]/70 text-sm focus:ring-2 focus:ring-purple-400/30">
+                <SelectValue placeholder="Type" />
+              </SelectTrigger>
+              <SelectContent className="border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1f1f1f]">
+                <SelectItem value="all">Tous les événements</SelectItem>
+                {eventTypes.map(type => {
+                  const config = getEventConfig(type);
+                  return (
+                    <SelectItem key={type} value={type}>{config.label}</SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
 
             <span className="text-xs text-slate-400">{filteredEvents.length} événement(s)</span>
           </div>

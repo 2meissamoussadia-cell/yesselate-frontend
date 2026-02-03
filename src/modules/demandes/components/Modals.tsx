@@ -9,6 +9,7 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { X, Keyboard, BarChart3, Settings, HelpCircle, AlertTriangle } from 'lucide-react';
 import { useDemandesCommandCenterStore } from '@/lib/stores/demandesCommandCenterStore';
 import { DemandeDetailModal } from './DemandeDetailModal';
@@ -150,7 +151,7 @@ export function DemandesModals() {
 function StatsModal({ onClose }: { onClose: () => void }) {
   return (
     <Dialog open={true} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto bg-slate-900 border-slate-700">
+      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
         <DialogHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -191,7 +192,7 @@ function ShortcutsModal({ onClose }: { onClose: () => void }) {
 
   return (
     <Dialog open={true} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-lg bg-slate-900 border-slate-700">
+      <DialogContent className="max-w-lg bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
         <DialogHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -231,7 +232,7 @@ function SettingsModal({ onClose }: { onClose: () => void }) {
 
   return (
     <Dialog open={true} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-2xl bg-slate-900 border-slate-700">
+      <DialogContent className="max-w-2xl bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
         <DialogHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -247,16 +248,20 @@ function SettingsModal({ onClose }: { onClose: () => void }) {
           {/* Page Size */}
           <div>
             <label className="text-sm font-medium text-slate-300 mb-2 block">Taille de page</label>
-            <select
-              value={tableConfig.pageSize}
-              onChange={(e) => setTableConfig({ pageSize: parseInt(e.target.value) })}
-              className="w-full px-3 py-2 bg-slate-800/50 border border-slate-700/50 rounded-lg text-sm text-slate-200"
+            <Select
+              value={String(tableConfig.pageSize)}
+              onValueChange={(v) => setTableConfig({ pageSize: parseInt(v, 10) })}
             >
-              <option value={10}>10 par page</option>
-              <option value={25}>25 par page</option>
-              <option value={50}>50 par page</option>
-              <option value={100}>100 par page</option>
-            </select>
+              <SelectTrigger className="w-full h-10 bg-slate-800/50 border-slate-700/50 rounded-lg text-sm text-slate-200">
+                <SelectValue placeholder="Par page" />
+              </SelectTrigger>
+              <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+                <SelectItem value="10">10 par page</SelectItem>
+                <SelectItem value="25">25 par page</SelectItem>
+                <SelectItem value="50">50 par page</SelectItem>
+                <SelectItem value="100">100 par page</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Auto Refresh */}
@@ -271,16 +276,20 @@ function SettingsModal({ onClose }: { onClose: () => void }) {
               />
             </div>
             {autoRefresh && (
-              <select
-                value={refreshInterval}
-                onChange={(e) => useDemandesCommandCenterStore.getState().setAutoRefresh(autoRefresh)}
-                className="w-full mt-2 px-3 py-2 bg-slate-800/50 border border-slate-700/50 rounded-lg text-sm text-slate-200"
+              <Select
+                value={String(refreshInterval)}
+                onValueChange={(v) => useDemandesCommandCenterStore.setState({ refreshInterval: Number(v) })}
               >
-                <option value={30000}>30 secondes</option>
-                <option value={60000}>1 minute</option>
-                <option value={300000}>5 minutes</option>
-                <option value={600000}>10 minutes</option>
-              </select>
+                <SelectTrigger className="w-full h-10 mt-2 bg-slate-800/50 border-slate-700/50 rounded-lg text-sm text-slate-200">
+                  <SelectValue placeholder="Intervalle" />
+                </SelectTrigger>
+                <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+                  <SelectItem value="30000">30 secondes</SelectItem>
+                  <SelectItem value="60000">1 minute</SelectItem>
+                  <SelectItem value="300000">5 minutes</SelectItem>
+                  <SelectItem value="600000">10 minutes</SelectItem>
+                </SelectContent>
+              </Select>
             )}
             <p className="text-xs text-slate-400 mt-2">
               Actualise automatiquement les données toutes les {refreshInterval / 1000} secondes
@@ -306,7 +315,7 @@ function SettingsModal({ onClose }: { onClose: () => void }) {
 function HelpModal({ onClose }: { onClose: () => void }) {
   return (
     <Dialog open={true} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto bg-slate-900 border-slate-700">
+      <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
         <DialogHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -406,7 +415,7 @@ function ConfirmModal({ onClose, data }: { onClose: () => void; data?: Record<st
 
   return (
     <Dialog open={true} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-md bg-slate-900 border-slate-700">
+      <DialogContent className="max-w-md bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
         <DialogHeader>
           <div className="flex items-center gap-3">
             {variant === 'destructive' && <AlertTriangle className="h-5 w-5 text-red-400" />}

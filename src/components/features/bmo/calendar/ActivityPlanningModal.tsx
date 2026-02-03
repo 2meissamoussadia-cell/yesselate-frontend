@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { useAppStore, useBMOStore } from '@/lib/stores';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { X, AlertTriangle, CheckCircle } from 'lucide-react';
 import { BureauTag } from '@/components/features/bmo/BureauTag';
 import type { CalendarEvent } from '@/lib/types/bmo.types';
@@ -180,44 +181,46 @@ export function ActivityPlanningModal({
               {/* Type */}
               <div>
                 <label className="block text-xs font-semibold mb-1">Type *</label>
-                <select
-                  value={formData.type}
-                  onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
-                  className={cn(
-                    'w-full px-3 py-2 rounded-lg border text-sm',
+                <Select value={formData.type} onValueChange={(v: string) => setFormData({ ...formData, type: v as any })}>
+                  <SelectTrigger className={cn(
+                    'w-full px-3 py-2 rounded-lg border text-sm h-10',
                     darkMode
                       ? 'bg-slate-700/50 border-slate-600 text-slate-300'
                       : 'bg-white border-gray-300 text-gray-700'
-                  )}
-                >
-                  {eventTypes.map((type) => (
-                    <option key={type.value} value={type.value}>
-                      {type.label}
-                    </option>
-                  ))}
-                </select>
+                  )}>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {eventTypes.map((type) => (
+                      <SelectItem key={type.value} value={type.value}>
+                        {type.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* Bureau */}
               <div>
                 <label className="block text-xs font-semibold mb-1">Bureau *</label>
-                <select
-                  value={formData.bureau}
-                  onChange={(e) => setFormData({ ...formData, bureau: e.target.value })}
-                  className={cn(
-                    'w-full px-3 py-2 rounded-lg border text-sm',
+                <Select value={formData.bureau || '__none__'} onValueChange={(v: string) => setFormData({ ...formData, bureau: v === '__none__' ? '' : v })}>
+                  <SelectTrigger className={cn(
+                    'w-full px-3 py-2 rounded-lg border text-sm h-10',
                     darkMode
                       ? 'bg-slate-700/50 border-slate-600 text-slate-300'
                       : 'bg-white border-gray-300 text-gray-700'
-                  )}
-                >
-                  <option value="">Sélectionner...</option>
-                  {bureauxList.map((bureau: { code: string; name: string }) => (
-                    <option key={bureau.code} value={bureau.code}>
-                      {bureau.code} - {bureau.name}
-                    </option>
-                  ))}
-                </select>
+                  )}>
+                    <SelectValue placeholder="Sélectionner..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__none__">Sélectionner...</SelectItem>
+                    {bureauxList.map((bureau: { code: string; name: string }) => (
+                      <SelectItem key={bureau.code} value={bureau.code}>
+                        {bureau.code} - {bureau.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 
@@ -257,22 +260,23 @@ export function ActivityPlanningModal({
               {/* Priorité */}
               <div>
                 <label className="block text-xs font-semibold mb-1">Priorité</label>
-                <select
-                  value={formData.priority}
-                  onChange={(e) => setFormData({ ...formData, priority: e.target.value as any })}
-                  className={cn(
-                    'w-full px-3 py-2 rounded-lg border text-sm',
+                <Select value={formData.priority} onValueChange={(v: string) => setFormData({ ...formData, priority: v as any })}>
+                  <SelectTrigger className={cn(
+                    'w-full px-3 py-2 rounded-lg border text-sm h-10',
                     darkMode
                       ? 'bg-slate-700/50 border-slate-600 text-slate-300'
                       : 'bg-white border-gray-300 text-gray-700'
-                  )}
-                >
-                  <option value="low">Faible</option>
-                  <option value="normal">Normale</option>
-                  <option value="high">Haute</option>
-                  <option value="urgent">Urgente</option>
-                  <option value="critical">Critique</option>
-                </select>
+                  )}>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Faible</SelectItem>
+                    <SelectItem value="normal">Normale</SelectItem>
+                    <SelectItem value="high">Haute</SelectItem>
+                    <SelectItem value="urgent">Urgente</SelectItem>
+                    <SelectItem value="critical">Critique</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 

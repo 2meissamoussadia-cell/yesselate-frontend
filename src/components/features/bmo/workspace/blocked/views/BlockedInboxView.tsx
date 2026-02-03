@@ -8,6 +8,7 @@ import {
   MoreHorizontal, Eye
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { blockedDossiers } from '@/lib/data';
 import { useBlockedWorkspaceStore } from '@/lib/stores/blockedWorkspaceStore';
 import { useBlockedToast } from '../BlockedToast';
@@ -220,19 +221,20 @@ export function BlockedInboxView({ tabId, data }: Props) {
         </div>
 
         {/* Tri */}
-        <select
-          value={sort}
-          onChange={(e) => setSort(e.target.value as SortMode)}
-          className="px-3 py-2 rounded-xl border border-slate-200/70 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/50"
-        >
-          <option value="priority_desc">Priorité ↓</option>
-          <option value="priority_asc">Priorité ↑</option>
-          <option value="delay_desc">Délai ↓</option>
-          <option value="delay_asc">Délai ↑</option>
-          <option value="impact">Impact</option>
-          <option value="amount_desc">Montant ↓</option>
-          <option value="amount_asc">Montant ↑</option>
-        </select>
+        <Select value={sort} onValueChange={(v: string) => setSort(v as SortMode)}>
+          <SelectTrigger className="px-3 py-2 rounded-xl border border-slate-200/70 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-orange-500/50 h-10">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="priority_desc">Priorité ↓</SelectItem>
+            <SelectItem value="priority_asc">Priorité ↑</SelectItem>
+            <SelectItem value="delay_desc">Délai ↓</SelectItem>
+            <SelectItem value="delay_asc">Délai ↑</SelectItem>
+            <SelectItem value="impact">Impact</SelectItem>
+            <SelectItem value="amount_desc">Montant ↓</SelectItem>
+            <SelectItem value="amount_asc">Montant ↑</SelectItem>
+          </SelectContent>
+        </Select>
 
         {/* Actions masse */}
         {visibleSelectedCount > 0 && (

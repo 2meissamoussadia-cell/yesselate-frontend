@@ -7,6 +7,7 @@ import { DelegationViewer, type DelegationModalType } from './DelegationViewer';
 import { DelegationCreateWizard } from './views/DelegationCreateWizard';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { FluentButton } from '@/components/ui/fluent-button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Key, Inbox, Shield, Clock, Plus, Calendar, Pause, XCircle, UserPlus, FilePlus, Download } from 'lucide-react';
 
 /**
@@ -586,18 +587,19 @@ function AddActorForm({ delegationId, onSuccess, onCancel }: ModalFormProps) {
       </div>
       <div>
         <label className="text-sm text-slate-400">Rôle *</label>
-        <select
-          className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-          value={roleType}
-          onChange={(e) => setRoleType(e.target.value)}
-        >
-          <option value="CO_APPROVER">Co-validateur</option>
-          <option value="CONTROLLER">Contrôleur</option>
-          <option value="AUDITOR">Auditeur</option>
-          <option value="WITNESS">Témoin</option>
-          <option value="BACKUP">Suppléant</option>
-          <option value="IMPACTED">Impacté</option>
-        </select>
+        <Select value={roleType} onValueChange={(value: string) => setRoleType(value)}>
+          <SelectTrigger className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white">
+            <SelectValue placeholder="Rôle" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="CO_APPROVER">Co-validateur</SelectItem>
+            <SelectItem value="CONTROLLER">Contrôleur</SelectItem>
+            <SelectItem value="AUDITOR">Auditeur</SelectItem>
+            <SelectItem value="WITNESS">Témoin</SelectItem>
+            <SelectItem value="BACKUP">Suppléant</SelectItem>
+            <SelectItem value="IMPACTED">Impacté</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <div className="flex justify-end gap-2">
         <FluentButton size="sm" variant="secondary" onClick={onCancel}>
@@ -636,18 +638,19 @@ function AddPolicyForm({ delegationId, onSuccess, onCancel }: ModalFormProps) {
     <div className="space-y-4">
       <div>
         <label className="text-sm text-slate-400">Type d&apos;action *</label>
-        <select
-          className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-          value={action}
-          onChange={(e) => setAction(e.target.value)}
-        >
-          <option value="APPROVE_PAYMENT">Valider paiement</option>
-          <option value="SIGN_CONTRACT">Signer contrat</option>
-          <option value="APPROVE_PURCHASE_ORDER">Valider BC</option>
-          <option value="VALIDATE_CHANGE_ORDER">Valider avenant</option>
-          <option value="COMMIT_BUDGET">Engager budget</option>
-          <option value="APPROVE_EXPENSE">Approuver dépense</option>
-        </select>
+        <Select value={action} onValueChange={setAction}>
+          <SelectTrigger className="mt-1 w-full h-10 rounded-xl border-slate-200/70 bg-white/90 dark:border-slate-700 dark:bg-slate-800 dark:text-white">
+            <SelectValue placeholder="Action" />
+          </SelectTrigger>
+          <SelectContent className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+            <SelectItem value="APPROVE_PAYMENT">Valider paiement</SelectItem>
+            <SelectItem value="SIGN_CONTRACT">Signer contrat</SelectItem>
+            <SelectItem value="APPROVE_PURCHASE_ORDER">Valider BC</SelectItem>
+            <SelectItem value="VALIDATE_CHANGE_ORDER">Valider avenant</SelectItem>
+            <SelectItem value="COMMIT_BUDGET">Engager budget</SelectItem>
+            <SelectItem value="APPROVE_EXPENSE">Approuver dépense</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <div>
         <label className="text-sm text-slate-400">Plafond (XOF)</label>
@@ -708,18 +711,19 @@ function AddEngagementForm({ delegationId, onSuccess, onCancel }: ModalFormProps
     <div className="space-y-4">
       <div>
         <label className="text-sm text-slate-400">Type *</label>
-        <select
-          className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-          value={engagementType}
-          onChange={(e) => setEngagementType(e.target.value)}
-        >
-          <option value="OBLIGATION">Obligation</option>
-          <option value="PROHIBITION">Interdiction</option>
-          <option value="REPORTING">Reporting</option>
-          <option value="DOCUMENTATION">Documentation requise</option>
-          <option value="ALERT">Alerte</option>
-          <option value="COMPLIANCE">Conformité</option>
-        </select>
+        <Select value={engagementType} onValueChange={(value: string) => setEngagementType(value)}>
+          <SelectTrigger className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white">
+            <SelectValue placeholder="Type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="OBLIGATION">Obligation</SelectItem>
+            <SelectItem value="PROHIBITION">Interdiction</SelectItem>
+            <SelectItem value="REPORTING">Reporting</SelectItem>
+            <SelectItem value="DOCUMENTATION">Documentation requise</SelectItem>
+            <SelectItem value="ALERT">Alerte</SelectItem>
+            <SelectItem value="COMPLIANCE">Conformité</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <div>
         <label className="text-sm text-slate-400">Titre *</label>
@@ -776,15 +780,16 @@ function ExportAuditForm({ delegationId, onSuccess, onCancel }: ModalFormProps) 
       </p>
       <div>
         <label className="text-sm text-slate-400">Format</label>
-        <select
-          className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-          value={format}
-          onChange={(e) => setFormat(e.target.value as typeof format)}
-        >
-          <option value="pdf">PDF (document imprimable)</option>
-          <option value="csv">CSV (tableur)</option>
-          <option value="json">JSON (données structurées)</option>
-        </select>
+        <Select value={format} onValueChange={(v) => setFormat(v as typeof format)}>
+          <SelectTrigger className="mt-1 w-full h-10 rounded-xl border-slate-200/70 bg-white/90 dark:border-slate-700 dark:bg-slate-800 dark:text-white">
+            <SelectValue placeholder="Format" />
+          </SelectTrigger>
+          <SelectContent className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+            <SelectItem value="pdf">PDF (document imprimable)</SelectItem>
+            <SelectItem value="csv">CSV (tableur)</SelectItem>
+            <SelectItem value="json">JSON (données structurées)</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <div className="flex justify-end gap-2">
         <FluentButton size="sm" variant="secondary" onClick={onCancel}>

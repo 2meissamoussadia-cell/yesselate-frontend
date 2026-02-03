@@ -11,6 +11,7 @@ import { FluentModal } from '@/components/ui/fluent-modal';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   Calendar,
   Clock,
@@ -342,16 +343,17 @@ export function CreateEventModal({
             <label className="text-sm font-medium text-slate-300 mb-2 block">
               Récurrence
             </label>
-            <select
-              value={recurrence}
-              onChange={(e) => setRecurrence(e.target.value as RecurrenceType)}
-              className="w-full px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
-            >
-              <option value="none">Aucune</option>
-              <option value="daily">Quotidien</option>
-              <option value="weekly">Hebdomadaire</option>
-              <option value="monthly">Mensuel</option>
-            </select>
+            <Select value={recurrence} onValueChange={(v: string) => setRecurrence(v as RecurrenceType)}>
+              <SelectTrigger className="w-full px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700 text-sm text-slate-200 focus:ring-2 focus:ring-blue-500/30">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">Aucune</SelectItem>
+                <SelectItem value="daily">Quotidien</SelectItem>
+                <SelectItem value="weekly">Hebdomadaire</SelectItem>
+                <SelectItem value="monthly">Mensuel</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div>
             <label className="text-sm font-medium text-slate-300 mb-2 block">

@@ -50,28 +50,28 @@ export function EmptyState({
   const displayMessage = description || message || 'Aucun contenu disponible pour cette section.';
   const variantStyles: Record<NonNullable<EmptyStateProps['variant']>, { container: string; icon: string; title: string; message: string }> = {
     default: {
-      container: 'bg-slate-800/40 border-slate-700/40',
-      icon: 'text-slate-400',
-      title: 'text-slate-200',
-      message: 'text-slate-400',
+      container: 'bg-slate-100 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700/40',
+      icon: 'text-slate-500 dark:text-slate-400',
+      title: 'text-slate-800 dark:text-slate-200',
+      message: 'text-slate-600 dark:text-slate-400',
     },
     warning: {
       container: 'bg-amber-500/10 border-amber-500/30',
-      icon: 'text-amber-400',
-      title: 'text-amber-300',
-      message: 'text-amber-400/80',
+      icon: 'text-amber-600 dark:text-amber-400',
+      title: 'text-amber-700 dark:text-amber-300',
+      message: 'text-amber-600/90 dark:text-amber-400/80',
     },
     error: {
       container: 'bg-red-500/10 border-red-500/30',
-      icon: 'text-red-400',
-      title: 'text-red-300',
-      message: 'text-red-400/80',
+      icon: 'text-red-600 dark:text-red-400',
+      title: 'text-red-700 dark:text-red-300',
+      message: 'text-red-600/90 dark:text-red-400/80',
     },
     info: {
       container: 'bg-blue-500/10 border-blue-500/30',
-      icon: 'text-blue-400',
-      title: 'text-blue-300',
-      message: 'text-blue-400/80',
+      icon: 'text-blue-600 dark:text-blue-400',
+      title: 'text-blue-700 dark:text-blue-300',
+      message: 'text-blue-600/90 dark:text-blue-400/80',
     },
     comingSoon: {
       container: 'bg-slate-800/40 border-slate-600/50 border-dashed',
@@ -139,8 +139,8 @@ export function EmptyState({
               onClick={onAction}
               className={cn(
                 'px-4 py-2 rounded-lg border transition-colors',
-                'border-slate-700/50 bg-slate-800/50 text-slate-200',
-                'hover:bg-slate-800/70 hover:border-slate-600/50',
+                'border-slate-200 dark:border-slate-700/50 bg-slate-100 dark:bg-slate-800/50 text-slate-800 dark:text-slate-200',
+                'hover:bg-slate-200 dark:hover:bg-slate-800/70 hover:border-slate-300 dark:hover:border-slate-600/50',
                 'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40',
                 'min-h-[44px]'
               )}

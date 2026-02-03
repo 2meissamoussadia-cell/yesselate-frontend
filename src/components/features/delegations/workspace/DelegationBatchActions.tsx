@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { FluentButton } from '@/components/ui/fluent-button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import {
   Clock,
@@ -242,19 +243,20 @@ export function DelegationBatchActions({ open, action, delegations, onClose, onC
         {action === 'extend' && (
           <div>
             <label className="text-sm text-slate-600 dark:text-slate-400">Durée de prolongation</label>
-            <select
-              value={extensionDays}
-              onChange={(e) => setExtensionDays(Number(e.target.value))}
-              className="mt-1 w-full rounded-xl border border-slate-200/70 bg-white/90 p-2.5 outline-none focus:ring-2 focus:ring-blue-400/30 dark:border-slate-800 dark:bg-[#141414]/70 dark:text-white"
-            >
-              <option value={7}>7 jours</option>
-              <option value={14}>14 jours</option>
-              <option value={30}>30 jours</option>
-              <option value={60}>60 jours</option>
-              <option value={90}>90 jours</option>
-              <option value={180}>6 mois</option>
-              <option value={365}>1 an</option>
-            </select>
+            <Select value={String(extensionDays)} onValueChange={(v) => setExtensionDays(Number(v))}>
+              <SelectTrigger className="mt-1 w-full h-10 rounded-xl border-slate-200/70 bg-white/90 dark:border-slate-800 dark:bg-[#141414]/70 text-sm focus:ring-2 focus:ring-blue-400/30">
+                <SelectValue placeholder="Durée" />
+              </SelectTrigger>
+              <SelectContent className="border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1f1f1f]">
+                <SelectItem value="7">7 jours</SelectItem>
+                <SelectItem value="14">14 jours</SelectItem>
+                <SelectItem value="30">30 jours</SelectItem>
+                <SelectItem value="60">60 jours</SelectItem>
+                <SelectItem value="90">90 jours</SelectItem>
+                <SelectItem value="180">6 mois</SelectItem>
+                <SelectItem value="365">1 an</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         )}
 

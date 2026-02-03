@@ -143,7 +143,7 @@ function FilterSelect({
         <SelectTrigger className="h-9 min-w-[140px] bg-slate-900 border-slate-700 rounded-xl px-3 text-[11px] text-slate-200 focus:ring-sky-500/50" aria-label={label}>
           <SelectValue placeholder={label} />
         </SelectTrigger>
-        <SelectContent className="border-slate-700 bg-slate-900 text-slate-100">
+        <SelectContent className="border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
           {options.map((opt) => (
             <SelectItem key={opt} value={opt}>{opt}</SelectItem>
           ))}

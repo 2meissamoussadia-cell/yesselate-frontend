@@ -13,6 +13,7 @@ import React, { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   X,
   Download,
@@ -258,30 +259,32 @@ export function KPIAdvancedModal({ kpiId, onClose }: KPIAdvancedModalProps) {
           <div className="px-6 py-3 border-b border-slate-800/50 bg-slate-800/30 flex items-center gap-4 flex-wrap">
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-slate-400" />
-              <select
-                value={period}
-                onChange={(e) => setPeriod(e.target.value as any)}
-                className="px-3 py-1.5 rounded-md bg-slate-800 border border-slate-700 text-sm text-slate-300"
-              >
-                <option value="month">Mois</option>
-                <option value="quarter">Trimestre</option>
-                <option value="year">Année</option>
-              </select>
+              <Select value={period} onValueChange={(v: string) => setPeriod(v as any)}>
+                <SelectTrigger className="px-3 py-1.5 rounded-md bg-slate-800 border border-slate-700 text-sm text-slate-300 h-8 min-w-[100px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="month">Mois</SelectItem>
+                  <SelectItem value="quarter">Trimestre</SelectItem>
+                  <SelectItem value="year">Année</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="flex items-center gap-2">
               <Building2 className="w-4 h-4 text-slate-400" />
-              <select
-                value={selectedBureau || ''}
-                onChange={(e) => setSelectedBureau(e.target.value || null)}
-                className="px-3 py-1.5 rounded-md bg-slate-800 border border-slate-700 text-sm text-slate-300"
-              >
-                <option value="">Tous les bureaux</option>
-                {bureauxData?.bureaux?.map((bureau: any) => (
-                  <option key={bureau.code} value={bureau.code}>
-                    {bureau.name || bureau.code}
-                  </option>
-                ))}
-              </select>
+              <Select value={selectedBureau || '__all__'} onValueChange={(v) => setSelectedBureau(v === '__all__' ? null : v)}>
+                <SelectTrigger className="px-3 py-1.5 rounded-md bg-slate-800 border border-slate-700 text-sm text-slate-300 h-8 min-w-[120px]">
+                  <SelectValue placeholder="Bureau" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__all__">Tous les bureaux</SelectItem>
+                  {bureauxData?.bureaux?.map((bureau: any) => (
+                    <SelectItem key={bureau.code} value={bureau.code}>
+                      {bureau.name || bureau.code}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
         )}

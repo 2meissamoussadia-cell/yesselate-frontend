@@ -7,12 +7,13 @@
 'use client';
 
 import { memo, useCallback, useMemo } from 'react';
-import { Info, Focus } from 'lucide-react';
+import { Info, Focus, Mic, MicOff } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { safeArea } from '../utils/safeArea';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { LiveIndicator } from './shared/LiveIndicator';
+import { PresenceIndicator } from './shared/PresenceIndicator';
 
 interface DashboardFooterProps {
   version?: string;
@@ -30,6 +31,14 @@ interface DashboardFooterProps {
   onToggleFocus?: () => void;
   /** Phase 2 #11: true si mode Focus actif */
   focusMode?: boolean;
+  /** Phase 3 #22: afficher indicateur présence (collaboration temps réel) */
+  showPresence?: boolean;
+  /** Phase 3 #23: commandes vocales — support navigateur */
+  voiceSupported?: boolean;
+  /** Phase 3 #23: micro en écoute */
+  voiceListening?: boolean;
+  /** Phase 3 #23: toggle écoute vocale */
+  onVoiceToggle?: () => void;
 }
 
 export const DashboardFooter = memo(function DashboardFooter({
@@ -42,6 +51,10 @@ export const DashboardFooter = memo(function DashboardFooter({
   lastUpdate,
   onToggleFocus,
   focusMode = false,
+  showPresence = false,
+  voiceSupported = false,
+  voiceListening = false,
+  onVoiceToggle,
 }: DashboardFooterProps) {
   const openModal = useDashboardCommandCenterStore((state) => state.openModal);
 
@@ -87,6 +100,34 @@ export const DashboardFooter = memo(function DashboardFooter({
         </Tooltip>
         {(lastUpdate != null) && (
           <LiveIndicator lastUpdate={lastUpdate} showTimestamp isLive={isOnline} className="hidden sm:inline-flex" />
+        )}
+        {showPresence && (
+          <>
+            <span className="text-slate-500 dark:text-slate-400 hidden sm:inline">•</span>
+            <PresenceIndicator className="hidden sm:inline-flex" showCount />
+          </>
+        )}
+        {voiceSupported && onVoiceToggle && (
+          <>
+            <span className="text-slate-500 dark:text-slate-400 hidden sm:inline">•</span>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  onClick={onVoiceToggle}
+                  className={cn(
+                    'hidden sm:inline-flex items-center gap-1 min-h-[44px] px-2 py-1 rounded transition-colors',
+                    voiceListening ? 'bg-rose-500/20 text-rose-400' : 'text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-100'
+                  )}
+                  aria-label={voiceListening ? 'Arrêter l\'écoute vocale' : 'Activer les commandes vocales'}
+                >
+                  {voiceListening ? <MicOff className="h-3 w-3" /> : <Mic className="h-3 w-3" />}
+                  <span className="text-[10px]">{voiceListening ? 'Micro ON' : 'Micro'}</span>
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="top">Commandes vocales : « actualiser », « exporter », « mode focus », « palette », « raccourcis »</TooltipContent>
+            </Tooltip>
+          </>
         )}
         <span className="text-slate-500 dark:text-slate-400 hidden sm:inline">•</span>
         {onToggleFocus && (

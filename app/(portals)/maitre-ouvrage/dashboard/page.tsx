@@ -77,6 +77,8 @@ import {
   type DateFilterId,
 } from '@/modules/dashboard/data/dashboardCockpitMock';
 import { useDashboardExport } from '@/modules/dashboard/hooks/useDashboardExport';
+import { useDashboardLive } from '@/modules/dashboard/hooks/useDashboardLive';
+import { LiveStatusBadge } from '@/modules/dashboard/components/cockpit/LiveStatusBadge';
 import { KPIAlertsSystem } from '@/components/features/bmo/dashboard/command-center/KPIAlertsSystem';
 import { useLogger } from '@/lib/utils/logger';
 import { clearCache } from '@/modules/dashboard/api/client';
@@ -238,6 +240,7 @@ function DashboardContent() {
     lastUpdate: apiLastUpdate,
     refetch: refetchKPIsFromAPI,
   } = useDashboardKPIs('year');
+  const { isConnected: wsConnected } = useDashboardLive({ enabled: true });
 
   const allKpis = useMemo<KPIData[]>(() => {
     if (apiKpis && apiKpis.length > 0) {
@@ -945,7 +948,8 @@ function DashboardContent() {
                   )}
                 </div>
 
-                <div className="text-[11px] text-slate-400 flex items-center gap-2">
+                <div className="text-[11px] text-slate-400 flex items-center gap-2 flex-wrap">
+                  <LiveStatusBadge isLive={wsConnected} lastUpdatedAt={lastUpdate.getTime()} compact />
                   <span>Mise à jour : {formatTimeAgo(lastUpdate)}</span>
                   {isRefreshing && (
                     <span className="inline-flex items-center gap-1 text-blue-400">

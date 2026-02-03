@@ -56,7 +56,7 @@ import { FinancesGlobalesWidget } from '../shared/FinancesGlobalesWidget';
 import { TresoreriePrevisionnelleWidget } from '../shared/TresoreriePrevisionnelleWidget';
 import { AlertesIntelligentesWidget } from '../shared/AlertesIntelligentesWidget';
 import { HSEConformiteWidget } from '../shared/HSEConformiteWidget';
-import { CustomizableDashboard } from '../shared/CustomizableDashboard';
+import { GridCustomizableDashboard } from '../shared/GridCustomizableDashboard';
 import { SparklineChart } from '../shared/SparklineChart';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { useTresoreriePrevisionnelle } from '../../hooks/useTresoreriePrevisionnelle';
@@ -757,8 +757,8 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
       </>
 
       {showCustomizable ? (
-        <CustomizableDashboard
-          storageKey="cockpit-dg-widgets"
+        <GridCustomizableDashboard
+          storageKey="cockpit-dg-grid-layout"
           defaultOrder={['finances_recap', 'tresorerie_prevision', 'alertes', 'hse']}
           widgets={widgetCatalog}
         />

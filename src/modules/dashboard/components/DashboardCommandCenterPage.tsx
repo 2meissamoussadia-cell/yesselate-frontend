@@ -11,12 +11,15 @@ import { DashboardModals } from './DashboardModals';
 import { DashboardNotifications, useDashboardNotifications } from './DashboardNotifications';
 import { AlertNotifications } from './AlertNotifications';
 import { DashboardAISuggestionsPanel } from './shared/DashboardAISuggestionsPanel';
+import { AchievementsPanel } from './shared/AchievementsPanel';
+import { TenantSwitcher } from './shared/TenantSwitcher';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { useI18n } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { useAuthHeaders } from '../utils/getAuthHeaders';
 import { useVoiceCommands } from '../hooks/useVoiceCommands';
+import { useDashboardLive } from '../hooks/useDashboardLive';
 
 export function DashboardCommandCenterPage() {
   const nav = useDashboardCommandCenterStore((s) => s.navigation);
@@ -32,12 +35,19 @@ export function DashboardCommandCenterPage() {
   const focusMode = displayConfig.focusMode ?? false;
   const [voiceEnabled, setVoiceEnabled] = useState(false);
   const { supported: voiceSupported, listening: voiceListening, startListening, stopListening } = useVoiceCommands(voiceEnabled);
+  const { isConnected: wsConnected } = useDashboardLive({ enabled: true });
   const onVoiceToggle = useCallback(() => {
     const next = !voiceEnabled;
     setVoiceEnabled(next);
     if (next) startListening();
     else stopListening();
   }, [voiceEnabled, startListening, stopListening]);
+
+  // Phase 4 : débloquer badge "Première connexion" au premier chargement
+  const unlockAchievement = useAchievementsStore((s) => s.unlock);
+  useEffect(() => {
+    unlockAchievement('first_login');
+  }, [unlockAchievement]);
 
   // ? ouvre l'aide Raccourcis (hors champs de saisie)
   useEffect(() => {
@@ -123,7 +133,10 @@ export function DashboardCommandCenterPage() {
             <header className="sticky top-0 z-[30] border-b border-slate-800/60 bg-slate-950/70 backdrop-blur-xl min-w-0">
               <div className="mx-auto w-full min-w-0 max-w-[1600px] px-4 sm:px-6 lg:px-8">
                 <div className="py-4">
-                  <DashboardBreadcrumbs />
+                  <div className="flex items-center justify-between gap-2">
+                    <DashboardBreadcrumbs />
+                    <TenantSwitcher className="hidden sm:flex shrink-0" />
+                  </div>
                   <div className="mt-3">
                     <DashboardKPIBar onExport={onExport} />
                   </div>
@@ -154,12 +167,18 @@ export function DashboardCommandCenterPage() {
                 <DashboardViewRouter />
               </ErrorBoundary>
             </div>
-            {/* Phase 3 #10 : Suggestions IA (prédictions, anomalies) */}
-            <div className="mx-auto w-full min-w-0 max-w-[1600px] px-4 sm:px-6 lg:px-8 pb-2">
-              <DashboardAISuggestionsPanel />
+            {/* Phase 3 #10 : Suggestions IA — Phase 4 : Succès (gamification) */}
+            <div className="mx-auto w-full min-w-0 max-w-[1600px] px-4 sm:px-6 lg:px-8 pb-2 flex flex-col sm:flex-row gap-4">
+              <div className="flex-1 min-w-0">
+                <DashboardAISuggestionsPanel />
+              </div>
+              <div className="w-full sm:w-80 flex-shrink-0">
+                <AchievementsPanel />
+              </div>
             </div>
             <DashboardFooter
               lastUpdate={lastUpdateDate}
+              wsConnected={wsConnected}
               onToggleFocus={() => setDisplayConfig({ focusMode: !focusMode })}
               focusMode={focusMode}
               showPresence

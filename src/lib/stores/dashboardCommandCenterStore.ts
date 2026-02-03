@@ -122,6 +122,8 @@ export interface DashboardCommandCenterStore {
   endRefresh: () => void;
   /** Phase 2 #8: met à jour liveStats.lastUpdate (ex. après chargement vue) */
   setLastDataUpdate: (isoString: string) => void;
+  /** Phase 2 #8: met à jour liveStats (WebSocket cockpit_stats) */
+  setLiveStats: (stats: Partial<DashboardCommandCenterStore['liveStats']> | ((prev: DashboardCommandCenterStore['liveStats']) => Partial<DashboardCommandCenterStore['liveStats']>)) => void;
 
   // KPI Config
   kpiConfig: {
@@ -402,6 +404,19 @@ export const useDashboardCommandCenterStore = create<DashboardCommandCenterStore
           }),
           false,
           { type: 'setLastDataUpdate', payload: isoString }
+        );
+      },
+
+      setLiveStats: (stats) => {
+        set(
+          (state) => ({
+            liveStats: {
+              ...state.liveStats,
+              ...(typeof stats === 'function' ? stats(state.liveStats) : stats),
+            },
+          }),
+          false,
+          { type: 'setLiveStats' }
         );
       },
 

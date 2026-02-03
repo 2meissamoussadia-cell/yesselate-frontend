@@ -27,6 +27,8 @@ interface DashboardFooterProps {
   onShowShortcuts?: () => void;
   /** Phase 2 #8: dernière maj données → ● LIVE + timestamp dynamique */
   lastUpdate?: Date | null;
+  /** Phase 2 #8: WebSocket connecté = badge LIVE, sinon fallback réseau */
+  wsConnected?: boolean;
   /** Phase 2 #11: toggle mode Focus (masque sidebar/header) */
   onToggleFocus?: () => void;
   /** Phase 2 #11: true si mode Focus actif */
@@ -99,7 +101,7 @@ export const DashboardFooter = memo(function DashboardFooter({
           </TooltipContent>
         </Tooltip>
         {(lastUpdate != null) && (
-          <LiveIndicator lastUpdate={lastUpdate} showTimestamp isLive={isOnline} className="hidden sm:inline-flex" />
+          <LiveIndicator lastUpdate={lastUpdate} showTimestamp isLive={wsConnected ?? isOnline} className="hidden sm:inline-flex" />
         )}
         {showPresence && (
           <>

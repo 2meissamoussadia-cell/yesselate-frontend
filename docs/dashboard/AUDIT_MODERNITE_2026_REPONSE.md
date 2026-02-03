@@ -85,10 +85,10 @@
 
 | # | Item | Effort | Statut |
 |---|------|--------|--------|
-| 2 | PWA — améliorer cache (NetworkFirst API) | 2 j | ⬜ |
-| 8 | WebSocket temps réel + badge LIVE | 15 j | ⬜ |
-| 7 | Graphiques interactifs (tooltip, zoom, export) | 5 j | ⬜ |
-| 9 | Dashboard drag & drop (react-grid-layout) | 10 j | ⬜ |
+| 2 | PWA — améliorer cache (NetworkFirst API) | 2 j | ✅ API étendu (dashboard, alerts, cockpit, chantiers, gouvernance, bureaux, health) |
+| 8 | WebSocket temps réel + badge LIVE | 15 j | ✅ useDashboardLive, LiveStatusBadge dans page + footer, setLiveStats store |
+| 7 | Graphiques interactifs (tooltip, zoom, export) | 5 j | ✅ Brush zoom, export PNG/SVG (TrendsChart, MonthlyComparisonChart, TresoreriePrevisionnelleWidget), ChartContainer thème light |
+| 9 | Dashboard drag & drop (react-grid-layout) | 10 j | ✅ CustomizableDashboard @dnd-kit (glisser-déposer + flèches) |
 | 13 | Mobile-first refonte | 20 j | ⬜ |
 
 **Effort** : ~35 jours | **Impact** : 55 → 75/100
@@ -97,13 +97,13 @@
 
 ## PHASE 3 — DIFFÉRENCIANTES (4–6 mois)
 
-| # | Item | Effort |
-|---|------|--------|
-| 10 | IA : prédictions, anomalies | 15 j |
-| 22 | Collaboration temps réel | 20 j |
-| 11 | Mode Focus / Zen | 2 j |
-| 23 | Commandes vocales | 10 j |
-| 24 | API publique + webhooks | 15 j |
+| # | Item | Effort | Statut |
+|---|------|--------|--------|
+| 10 | IA : prédictions, anomalies | 15 j | ✅ GET /api/ai/suggestions + DashboardAISuggestionsPanel |
+| 22 | Collaboration temps réel | 20 j | ✅ presenceStore + PresenceIndicator (mock, extensible WebSocket) |
+| 11 | Mode Focus / Zen | 2 j | ✅ (déjà fait Phase 2) |
+| 23 | Commandes vocales | 10 j | ✅ useVoiceCommands (Web Speech API) + bouton Micro footer |
+| 24 | API publique + webhooks | 15 j | ✅ Page Paramètres > API & Webhooks + POST /api/webhooks/register |
 
 **Effort** : ~45 jours | **Impact** : 75 → 90/100
 

@@ -81,6 +81,8 @@ export type { HSEConformiteWidgetProps, DocConformite } from './HSEConformiteWid
 
 export { CustomizableDashboard } from './CustomizableDashboard';
 export type { CustomizableDashboardProps, WidgetDefinition } from './CustomizableDashboard';
+export { GridCustomizableDashboard } from './GridCustomizableDashboard';
+export type { GridCustomizableDashboardProps, GridWidgetDefinition } from './GridCustomizableDashboard';
 
 export { CollapsibleSection } from './CollapsibleSection';
 export type { CollapsibleSectionProps, CollapsibleSectionPriority } from './CollapsibleSection';

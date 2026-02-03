@@ -9,6 +9,7 @@ import React, { useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
+import { useAchievementsStore } from '@/lib/stores/achievementsStore';
 import { KPIDrillDownModal } from './KPIDrillDownModal';
 import { Button } from '@/components/ui/button';
 import { zIndexClass } from '../utils/zIndex';
@@ -22,6 +23,80 @@ function inferKpiType(label: string): KpiType {
   if (l.includes('validation')) return 'validations';
   if (l.includes('budget')) return 'budget';
   return 'other';
+}
+
+type ExportFormat = 'csv' | 'json' | 'pdf' | 'excel';
+
+function ExportModalDialog({ onClose }: { onClose: () => void }) {
+  const nav = useDashboardCommandCenterStore((s) => s.navigation);
+  const authHeaders = useAuthHeaders();
+  const { locale, currency } = useI18n();
+  const incrementExportCount = useAchievementsStore((s) => s.incrementExportCount);
+  const [loading, setLoading] = useState<ExportFormat | null>(null);
+
+  const handleExport = useCallback(
+    async (format: ExportFormat) => {
+      const apiFormat = format === 'excel' ? 'xlsx' : format;
+      const params = new URLSearchParams({
+        main: nav.mainCategory || 'pilotage',
+        format: apiFormat,
+      });
+      if (nav.subCategory) params.set('sub', nav.subCategory);
+      if (nav.subSubCategory) params.set('leaf', nav.subSubCategory);
+      if (apiFormat === 'xlsx' || apiFormat === 'pdf') {
+        params.set('locale', locale);
+        params.set('currency', currency);
+      }
+      setLoading(format);
+      try {
+        const res = await fetch(`/api/export/dashboard?${params.toString()}`, { headers: authHeaders });
+        if (!res.ok) throw new Error('Export failed');
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const cd = res.headers.get('Content-Disposition') ?? '';
+        const match = /filename="([^"]+)"/.exec(cd);
+        a.href = url;
+        a.download = match?.[1] ?? `export.${format === 'excel' ? 'xlsx' : format}`;
+        a.click();
+        URL.revokeObjectURL(url);
+        onClose();
+      } catch {
+        setLoading(null);
+      } finally {
+        setLoading(null);
+      }
+    },
+    [nav, authHeaders, locale, currency, onClose]
+  );
+
+  if (typeof document === 'undefined') return null;
+  return createPortal(
+    <div className={cn('fixed inset-0 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm', zIndexClass('modal'))} role="dialog" aria-modal="true" aria-labelledby="dashboard-export-title">
+      <div className="bg-slate-900 rounded-xl border border-slate-700/50 shadow-2xl w-full max-w-sm">
+        <div className="flex items-center justify-between p-4 border-b border-slate-700/50">
+          <h2 id="dashboard-export-title" className="text-lg font-semibold text-white flex items-center gap-2">
+            <Download className="h-5 w-5 text-sky-400" />
+            Exporter les données
+          </h2>
+          <button type="button" onClick={onClose} className="p-2 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-200" aria-label="Fermer">
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+        <div className="p-4 grid grid-cols-2 gap-2">
+          {(['csv', 'json', 'pdf', 'excel'] as const).map((f) => (
+            <Button key={f} variant="outline" size="sm" className="border-slate-700" disabled={loading !== null} onClick={() => handleExport(f)}>
+              {loading === f ? '…' : f.toUpperCase()}
+            </Button>
+          ))}
+        </div>
+        <div className="p-4 border-t border-slate-700/50">
+          <Button size="sm" variant="outline" onClick={onClose} className="w-full border-slate-700">Fermer</Button>
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
 }
 
 export function DashboardModals() {
@@ -67,6 +142,11 @@ export function DashboardModals() {
       );
     }
     return null;
+  }
+
+  // export : choix du format (Phase 3 #23 — commandes vocales)
+  if (modal.type === 'export') {
+    return <ExportModalDialog onClose={closeModal} />;
   }
 
   // shortcuts : raccourcis clavier

@@ -1,110 +1,79 @@
 /**
- * Page Risques Moyens
- * Liste des risques de niveau moyen avec KPIs et export
+ * Page RisksWarningsMoyens
+ * TODO: Ajouter description
  */
 
 'use client';
 
-import React, { memo, useMemo, useState, useCallback } from 'react';
-import { AlertTriangle, FileText } from 'lucide-react';
-import {
-  DashboardPageLayout,
-  DashboardSection,
+import React, { memo } from 'react';
+import { FileText, AlertCircle } from 'lucide-react';
+import { 
+  DashboardPageLayout, 
+  DashboardSection, 
   DashboardPanel,
   KPICard,
   type KPICardData,
-  DashboardDataTable,
-  type DashboardDataTableProps,
-  DashboardPageSkeleton,
+  MockDataIndicator,
 } from '../shared';
-import { EmptyState } from '../shared/EmptyState';
+import { EmptyState } from './EmptyState';
 import { ExportButton } from '../shared/ExportButton';
 import { SearchFilter } from '../shared/SearchFilter';
-import { useDashboardData } from '../../hooks/useDashboardData';
-import { exportToCSV, exportToJSON } from '../../utils/exportUtils';
-import type { RisksViewData } from '../../types/dashboardDataTypes';
-
-type RiskRow = RisksViewData['rows'][number];
 
 export const RisksWarningsMoyensPage = memo(function RisksWarningsMoyensPage() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const { data, isLoading, error } = useDashboardData<RisksViewData>();
+  const [searchQuery, setSearchQuery] = React.useState('');
+  
+  // TODO: Charger les données depuis l'API
+  const data = [];
+  const stats = {
+    total: 0,
+  };
 
-  const stats = useMemo(() => ({ total: data?.stats?.total ?? 0, ...data?.stats }), [data]);
-  const rows = useMemo(() => data?.rows ?? [], [data]);
-  const filteredRows = useMemo(() => {
-    if (!searchQuery.trim()) return rows;
-    const q = searchQuery.toLowerCase();
-    return rows.filter((row) =>
-      Object.values(row).some((v) => v != null && String(v).toLowerCase().includes(q))
-    );
-  }, [rows, searchQuery]);
-
-  const handleExportCSV = useCallback(() => {
-    if (filteredRows.length === 0) return;
-    const allKeys = Array.from(new Set(filteredRows.flatMap((r) => Object.keys(r as object))));
-    const headers = allKeys.length ? allKeys : ['id'];
-    const rowsCsv = filteredRows.map((row) =>
-      headers.map((key) => String((row as Record<string, unknown>)[key] ?? ''))
-    );
-    exportToCSV(rowsCsv, headers, `risques-moyens-${new Date().toISOString().split('T')[0]}.csv`);
-  }, [filteredRows]);
-
-  const handleExportJSON = useCallback(() => {
-    exportToJSON(filteredRows, `risques-moyens-${new Date().toISOString().split('T')[0]}.json`);
-  }, [filteredRows]);
-
-  const kpis: KPICardData[] = useMemo(
-    () => [{ id: 'total', label: 'Total', value: stats.total, color: 'amber', trend: '+0%' }],
-    [stats.total]
-  );
-
-  const columns: DashboardDataTableProps<RiskRow>['columns'] = useMemo(() => {
-    const keys = rows.length ? Object.keys(rows[0] as object) : ['id'];
-    return keys.slice(0, 8).map((key) => ({
-      key,
-      label: key.charAt(0).toUpperCase() + key.slice(1),
-      sortable: true,
-      render: (v: unknown) => <span className="text-slate-200">{v != null ? String(v) : '—'}</span>,
-    }));
-  }, [rows]);
-
-  if (isLoading) return <DashboardPageSkeleton />;
-  if (error)
-    return (
-      <DashboardPageLayout>
-        <EmptyState
-          title="Erreur de chargement"
-          description={error.message || 'Impossible de charger les risques moyens'}
-          icon={AlertTriangle}
-          variant="error"
-        />
-      </DashboardPageLayout>
-    );
+  const kpis: KPICardData[] = [
+    {
+      id: 'total',
+      label: 'Total',
+      value: stats.total,
+      color: 'blue',
+      trend: '+0%',
+    },
+  ];
 
   return (
     <DashboardPageLayout>
-      <DashboardSection title="Risques Moyens" description="Risques de niveau moyen à traiter">
+      <MockDataIndicator />
+      
+      <DashboardSection title="RisksWarningsMoyens" description="TODO: Ajouter description">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          {kpis.map((kpi) => <KPICard key={kpi.id} kpi={kpi} size="md" />)}
+          {kpis.map((kpi) => (
+            <KPICard key={kpi.id} kpi={kpi} size="md" />
+          ))}
         </div>
+
         <DashboardPanel>
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-slate-200">Liste</h3>
             <div className="flex items-center gap-3">
-              <SearchFilter value={searchQuery} onChange={setSearchQuery} placeholder="Rechercher..." />
-              <ExportButton onExportCSV={handleExportCSV} onExportJSON={handleExportJSON} />
+              <SearchFilter
+                value={searchQuery}
+                onChange={setSearchQuery}
+                placeholder="Rechercher..."
+              />
+              <ExportButton onExportCSV={() => {}} onExportJSON={() => {}} />
             </div>
           </div>
-          {filteredRows.length === 0 ? (
+
+          {data.length === 0 ? (
             <EmptyState
-              title="Aucun risque moyen"
-              description="Il n'y a actuellement aucun risque de niveau moyen."
+              title="Aucun élément"
+              description="Il n'y a actuellement aucun élément disponible."
               icon={FileText}
               variant="info"
             />
           ) : (
-            <DashboardDataTable data={filteredRows} columns={columns} pagination pageSize={20} searchable />
+            <div className="space-y-3">
+              {/* TODO: Implémenter la liste */}
+              <p className="text-slate-400 text-sm">Liste à implémenter</p>
+            </div>
           )}
         </DashboardPanel>
       </DashboardSection>

@@ -50,6 +50,16 @@
             { "id": "opportunities-list", "label": "Pipeline", "path": "/maitre-ouvrage/opportunities" },
             { "id": "opportunity-detail", "label": "Fiche opportunité", "path": "/maitre-ouvrage/opportunities/[id]" }
           ]
+        },
+        {
+          "id": "pre-projet",
+          "label": "Pré-projet",
+          "path": "/maitre-ouvrage/pre-projet",
+          "phaseRange": [0, 1],
+          "description": "Pré-projet, opportunités, GO/NOGO",
+          "children": [
+            { "id": "pre-projet-outlook", "label": "Vue Outlook", "path": "/maitre-ouvrage/pre-projet/outlook" }
+          ]
         }
       ]
     },
@@ -83,6 +93,16 @@
           ]
         },
         {
+          "id": "programmation",
+          "label": "Programmation",
+          "path": "/maitre-ouvrage/programmation",
+          "phaseRange": [2, 2],
+          "description": "Programme fonctionnel et technique",
+          "children": [
+            { "id": "programmation-outlook", "label": "Vue Outlook", "path": "/maitre-ouvrage/programmation/outlook" }
+          ]
+        },
+        {
           "id": "planning",
           "label": "Planning & Ordonnancement",
           "path": "/maitre-ouvrage/planning",
@@ -102,10 +122,11 @@
         {
           "id": "quality",
           "label": "Qualité & Réserves",
-          "path": "/maitre-ouvrage/quality",
-          "phaseRange": [8, 9],
-          "description": "Phases 8–9 : punch list, réserves réception",
+          "path": "/maitre-ouvrage/qualite",
+          "phaseRange": [6, 10],
+          "description": "Contrôles qualité, non-conformités, réserves",
           "children": [
+            { "id": "qualite-outlook", "label": "Vue contrôles", "path": "/maitre-ouvrage/qualite/outlook" },
             { "id": "quality-global", "label": "Réserves globales", "path": "/maitre-ouvrage/quality" },
             { "id": "quality-site", "label": "Réserves chantier", "path": "/maitre-ouvrage/quality/[chantierId]" }
           ]
@@ -172,6 +193,16 @@
           ]
         },
         {
+          "id": "autorisations",
+          "label": "Autorisations",
+          "path": "/maitre-ouvrage/autorisations",
+          "phaseRange": [4, 4],
+          "description": "Permis, DEEC, DROC, assurances",
+          "children": [
+            { "id": "autorisations-outlook", "label": "Vue Outlook", "path": "/maitre-ouvrage/autorisations/outlook" }
+          ]
+        },
+        {
           "id": "maintenance",
           "label": "Maintenance & Garanties",
           "path": "/maitre-ouvrage/maintenance",
@@ -179,6 +210,16 @@
           "children": [
             { "id": "maintenance-assets", "label": "Bâtiments livrés", "path": "/maitre-ouvrage/maintenance" },
             { "id": "maintenance-detail", "label": "Fiche bâtiment / garanties", "path": "/maitre-ouvrage/maintenance/[batimentId]" }
+          ]
+        },
+        {
+          "id": "exploitation-maintenance",
+          "label": "Exploitation & Maintenance",
+          "path": "/maitre-ouvrage/exploitation-maintenance",
+          "phaseRange": [10, 10],
+          "description": "Suivi exploitation, garanties, maintenance",
+          "children": [
+            { "id": "exploitation-maintenance-outlook", "label": "Vue Outlook", "path": "/maitre-ouvrage/exploitation-maintenance/outlook" }
           ]
         },
         {

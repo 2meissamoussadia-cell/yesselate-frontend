@@ -31,6 +31,7 @@ export const governanceNavigationConfig: Record<GovernanceMainCategory, NavNode>
         label: 'Tableau de bord',
         children: [
           { id: 'dashboard', label: 'Dashboard exécutif' },
+          { id: 'widgets', label: 'Vue widgets' },
           { id: 'summary', label: 'Synthèse' },
           { id: 'highlights', label: 'Points clés', badge: 0, badgeType: 'warning' },
         ],

@@ -66,7 +66,7 @@ export function getNavigationConfig(): NavigationConfig {
     Object.keys(NAVIGATION_CONFIG).length === 0
   ) {
     if (process.env.NODE_ENV === 'development') {
-      console.warn('[routeValidation] Config invalide, utilisation du fallback');
+      log.warn('Config invalide, utilisation du fallback');
     }
     return {
       overview: {

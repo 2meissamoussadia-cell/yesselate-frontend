@@ -16,6 +16,18 @@ export { OutlookLikeLayout } from './OutlookLikeLayout';
 export type { OutlookLikeLayoutProps, LayoutState } from './OutlookLikeLayout';
 export { DashboardLayout } from './DashboardLayout';
 export type { DashboardLayoutProps } from './DashboardLayout';
+export { DashboardViewLayout } from './DashboardViewLayout';
+export type {
+  DashboardViewLayoutProps,
+  DashboardWidget,
+  DashboardSection,
+} from './DashboardViewLayout';
 export { CalendarLayout } from './CalendarLayout';
 export type { CalendarLayoutProps } from './CalendarLayout';
+export { CalendarViewLayout } from './CalendarViewLayout';
+export type {
+  CalendarViewLayoutProps,
+  CalendarView,
+  CalendarEvent,
+} from './CalendarViewLayout';
 export type { BmoMessage, BmoFolder, BmoMessageAddress } from '../messages';

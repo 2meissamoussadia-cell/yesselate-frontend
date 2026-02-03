@@ -1,0 +1,10 @@
+export { KPICard } from './KPICard';
+export { AlertesWidget } from './AlertesWidget';
+export { PlanningWidget } from './PlanningWidget';
+export { BudgetChart } from './BudgetChart';
+export { ChantiersMap } from './ChantiersMap';
+export { ActivitesRecentes } from './ActivitesRecentes';
+export { TachesEnCours } from './TachesEnCours';
+export { PerformanceGauge } from './PerformanceGauge';
+export { NCQualiteWidget } from './NCQualiteWidget';
+export { ValidationEnAttente } from './ValidationEnAttente';

@@ -24,6 +24,9 @@ const ROUTES = {
   alerts: '/maitre-ouvrage/alerts',
   governance: '/maitre-ouvrage/governance',
   calendrier: '/maitre-ouvrage/calendrier',
+  preProjet: '/maitre-ouvrage/pre-projet',
+  programmation: '/maitre-ouvrage/programmation',
+  autorisations: '/maitre-ouvrage/autorisations',
   chantiers: '/maitre-ouvrage/chantiers',
   engagements: '/maitre-ouvrage/engagements',
   finances: '/maitre-ouvrage/finances',
@@ -37,6 +40,8 @@ const ROUTES = {
   decisions: '/maitre-ouvrage/decisions',
   execution: '/maitre-ouvrage/execution',
   performance: '/maitre-ouvrage/performance',
+  qualite: '/maitre-ouvrage/qualite',
+  exploitationMaintenance: '/maitre-ouvrage/exploitation-maintenance',
 } as const;
 
 /**
@@ -122,6 +127,9 @@ export function getModulePath(moduleId: string): string | undefined {
     cockpit: ROUTES.dashboard,
     alerts: ROUTES.alerts,
     governance: ROUTES.governance,
+    'pre-projet': ROUTES.preProjet,
+    programmation: ROUTES.programmation,
+    autorisations: ROUTES.autorisations,
     chantiers: ROUTES.chantiers,
     engagements: ROUTES.engagements,
     finances: ROUTES.finances,
@@ -134,6 +142,9 @@ export function getModulePath(moduleId: string): string | undefined {
     'validation-paiements': ROUTES.validationPaiements,
     execution: ROUTES.execution,
     performance: ROUTES.performance,
+    qualite: ROUTES.qualite,
+    quality: ROUTES.qualite,
+    'exploitation-maintenance': ROUTES.exploitationMaintenance,
   };
   return routeMap[moduleId];
 }

@@ -11,7 +11,7 @@
 
 import { createContext, useContext, ReactNode, useMemo, useRef, useEffect, useCallback } from 'react';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
-import { useLogger } from '@/lib/utils/logger';
+import { logger, useLogger } from '@/lib/utils/logger';
 import { isValidRoute, normalizeRoute } from '../utils/routeValidation';
 
 type DashboardNavigationStore = {
@@ -32,17 +32,26 @@ const DEFAULT_CONTEXT_VALUE: DashboardNavigationStore = {
   leaf: null,
   setMain: () => {
     if (process.env.NODE_ENV === 'development') {
-      console.warn('[DashboardNavigationContext] setMain appelé en dehors du provider');
+      logger.warn('setMain appelé en dehors du provider', {
+        component: 'DashboardNavigationContext',
+        action: 'setMain',
+      });
     }
   },
   setSub: () => {
     if (process.env.NODE_ENV === 'development') {
-      console.warn('[DashboardNavigationContext] setSub appelé en dehors du provider');
+      logger.warn('setSub appelé en dehors du provider', {
+        component: 'DashboardNavigationContext',
+        action: 'setSub',
+      });
     }
   },
   setLeaf: () => {
     if (process.env.NODE_ENV === 'development') {
-      console.warn('[DashboardNavigationContext] setLeaf appelé en dehors du provider');
+      logger.warn('setLeaf appelé en dehors du provider', {
+        component: 'DashboardNavigationContext',
+        action: 'setLeaf',
+      });
     }
   },
 } as const;

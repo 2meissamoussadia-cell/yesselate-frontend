@@ -1,15 +1,45 @@
-/** Configuration du module Foncier */
+/**
+ * Configuration du module Foncier
+ */
 import type { ModuleConfig } from '@/lib/types/module.types';
 
 export const foncierModuleConfig: ModuleConfig = {
   id: 'foncier',
   name: 'Foncier',
   layout: 'triple-pane',
+
   subSidebar: {
     sections: [
-      { title: 'VUES', items: [
-        { id: 'toutes', label: 'Toutes', icon: 'MapPin' },
-      ]},
+      {
+        title: 'DOSSIERS',
+        items: [
+          { id: 'tous', label: 'Tous les Fonciers', icon: 'Inbox', badge: 0 },
+          { id: 'actifs', label: 'Actifs', icon: 'Circle', badge: 0 },
+          { id: 'archives', label: 'Archivés', icon: 'Archive' },
+        ],
+      },
+    ],
+  },
+
+  quickActions: {
+    primary: { label: 'Nouveau Foncier', icon: 'Plus' },
+    secondary: [
+      { id: 'edit', label: 'Modifier', icon: 'Edit', disabledWithoutSelection: true },
+      { id: 'delete', label: 'Supprimer', icon: 'Trash2', disabledWithoutSelection: true },
+    ],
+  },
+
+  filterBar: {
+    views: [
+      { id: 'tous', label: 'Tous', badge: 0 },
+      { id: 'actifs', label: 'Actifs', badge: 0, color: 'blue' },
+    ],
+    quickFilters: [
+      { id: 'recent', icon: 'Clock', label: 'Récents' },
+    ],
+    sort: [
+      { id: 'date', label: 'Date', defaultOrder: 'desc' },
+      { id: 'titre', label: 'Titre' },
     ],
   },
 };

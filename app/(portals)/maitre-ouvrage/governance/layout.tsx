@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useState, useCallback, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { GovernanceSidebar } from '@/modules/gouvernance/navigation/GovernanceSidebar';
 import { GovernanceSubNavigation } from '@/modules/gouvernance/navigation/GouvernanceSubNavigation';
 import { GovernanceContentRouter } from '@/modules/gouvernance/components/GovernanceContentRouter';
@@ -19,6 +19,7 @@ export default function GouvernanceLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [activeCategory, setActiveCategory] = useState<GovernanceMainCategory>('strategic');
   const [activeSubCategory, setActiveSubCategory] = useState<string | undefined>('overview');
@@ -31,9 +32,12 @@ export default function GouvernanceLayout({
     if (!pathname) return;
 
     // Mapping des routes vers les catégories
-    if (pathname.includes('/governance/dashboard') || pathname.includes('/governance/tendances')) {
+    if (pathname.includes('/governance/dashboard') || pathname.includes('/governance/tendances') || pathname.includes('/governance/widgets')) {
       setActiveCategory('strategic');
-      if (pathname.includes('/dashboard')) {
+      if (pathname.includes('/widgets')) {
+        setActiveSubCategory('overview');
+        setActiveSubSubCategory('widgets');
+      } else if (pathname.includes('/dashboard')) {
         setActiveSubCategory('overview');
         setActiveSubSubCategory('dashboard');
       } else if (pathname.includes('/tendances')) {
@@ -84,9 +88,15 @@ export default function GouvernanceLayout({
     setActiveSubSubCategory(undefined); // Reset level 3
   }, []);
 
-  const handleSubSubCategoryChange = useCallback((subSubCategory: string) => {
-    setActiveSubSubCategory(subSubCategory);
-  }, []);
+  const handleSubSubCategoryChange = useCallback(
+    (subSubCategory: string) => {
+      setActiveSubSubCategory(subSubCategory);
+      if (subSubCategory === 'widgets') {
+        router.push('/maitre-ouvrage/governance/widgets');
+      }
+    },
+    [router]
+  );
 
   // Stats pour les badges
   const statsForBadges = {

@@ -1,0 +1,33 @@
+'use client';
+
+import React from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
+
+export default function DemandesLoading() {
+  return (
+    <div className="flex h-full gap-0 animate-pulse">
+      <div className="hidden lg:block w-64 border-r border-slate-200 dark:border-slate-800 p-4 space-y-4">
+        <Skeleton className="h-6 w-3/4" />
+        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-10 w-full" />
+      </div>
+      <div className="flex-1 flex flex-col">
+        <div className="h-14 border-b border-slate-200 dark:border-slate-800 flex items-center gap-4 px-4">
+          <Skeleton className="h-9 w-32" />
+          <Skeleton className="h-9 w-24" />
+        </div>
+        <div className="flex-1 grid grid-cols-1 md:grid-cols-[380px_1fr]">
+          <div className="border-r border-slate-200 dark:border-slate-800 p-4 space-y-3">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <Skeleton key={i} className="h-20 w-full" />
+            ))}
+          </div>
+          <div className="hidden md:flex items-center justify-center p-8">
+            <Skeleton className="h-32 w-64" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -1,46 +1,48 @@
 /**
- * Page Admin — Logs d'activité
- * Logs d'activité des utilisateurs du tableau de bord.
+ * Page AdminLogsActivite
+ * TODO: Ajouter description
  */
 
 'use client';
 
 import React, { memo } from 'react';
-import { FileText } from 'lucide-react';
+import { FileText, AlertCircle } from 'lucide-react';
 import { 
   DashboardPageLayout, 
   DashboardSection, 
   DashboardPanel,
   KPICard,
   type KPICardData,
+  MockDataIndicator,
 } from '../shared';
-import { EmptyState } from '../shared/EmptyState';
+import { EmptyState } from './EmptyState';
 import { ExportButton } from '../shared/ExportButton';
 import { SearchFilter } from '../shared/SearchFilter';
 
-interface AdminLogsActiviteData {
-  items?: { id: string; userId: string; action: string; at: string; details?: Record<string, unknown> }[];
-  total?: number;
-}
-
-export const AdminLogsActivitePage = memo(function AdminLogsActivitePage(props: { data?: AdminLogsActiviteData | null }) {
+export const AdminLogsActivitePage = memo(function AdminLogsActivitePage() {
   const [searchQuery, setSearchQuery] = React.useState('');
-  const raw = props.data as AdminLogsActiviteData | undefined;
-  const items = Array.isArray(raw?.items) ? raw.items : [];
-  const total = typeof raw?.total === 'number' ? raw.total : items.length;
-  const filtered = searchQuery.trim()
-    ? items.filter(
-        (l) =>
-          l.action?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          l.userId?.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : items;
+  
+  // TODO: Charger les données depuis l'API
+  const data = [];
+  const stats = {
+    total: 0,
+  };
 
-  const kpis: KPICardData[] = [{ id: 'total', label: 'Total', value: total, color: 'blue', trend: '+0%' }];
+  const kpis: KPICardData[] = [
+    {
+      id: 'total',
+      label: 'Total',
+      value: stats.total,
+      color: 'blue',
+      trend: '+0%',
+    },
+  ];
 
   return (
     <DashboardPageLayout>
-      <DashboardSection title="Logs d'activité" description="Logs d'activité des utilisateurs.">
+      <MockDataIndicator />
+      
+      <DashboardSection title="AdminLogsActivite" description="TODO: Ajouter description">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {kpis.map((kpi) => (
             <KPICard key={kpi.id} kpi={kpi} size="md" />
@@ -51,40 +53,26 @@ export const AdminLogsActivitePage = memo(function AdminLogsActivitePage(props: 
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-slate-200">Liste</h3>
             <div className="flex items-center gap-3">
-              <SearchFilter value={searchQuery} onChange={setSearchQuery} placeholder="Rechercher..." />
+              <SearchFilter
+                value={searchQuery}
+                onChange={setSearchQuery}
+                placeholder="Rechercher..."
+              />
               <ExportButton onExportCSV={() => {}} onExportJSON={() => {}} />
             </div>
           </div>
 
-          {filtered.length === 0 ? (
+          {data.length === 0 ? (
             <EmptyState
-              title="Aucun log"
-              description={items.length === 0 ? "Aucun log d'activité." : "Aucun résultat pour cette recherche."}
+              title="Aucun élément"
+              description="Il n'y a actuellement aucun élément disponible."
               icon={FileText}
               variant="info"
             />
           ) : (
-            <div className="overflow-x-auto rounded-lg border border-slate-700/50">
-              <table className="w-full text-sm text-left text-slate-300">
-                <thead className="bg-slate-800/50 text-slate-200">
-                  <tr>
-                    <th className="px-4 py-3">ID</th>
-                    <th className="px-4 py-3">Utilisateur</th>
-                    <th className="px-4 py-3">Action</th>
-                    <th className="px-4 py-3">Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filtered.map((l) => (
-                    <tr key={l.id} className="border-t border-slate-700/50 hover:bg-slate-800/30">
-                      <td className="px-4 py-3 font-mono text-xs">{l.id}</td>
-                      <td className="px-4 py-3">{l.userId}</td>
-                      <td className="px-4 py-3">{l.action}</td>
-                      <td className="px-4 py-3">{l.at ? new Date(l.at).toLocaleString() : '—'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="space-y-3">
+              {/* TODO: Implémenter la liste */}
+              <p className="text-slate-400 text-sm">Liste à implémenter</p>
             </div>
           )}
         </DashboardPanel>

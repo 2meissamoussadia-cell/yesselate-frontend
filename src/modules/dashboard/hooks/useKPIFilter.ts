@@ -8,6 +8,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
+import { logger } from '@/lib/utils/logger';
 
 interface UseKPIFilterOptions<T = any> {
   initialFilter?: string;
@@ -46,7 +47,11 @@ export function useKPIFilter<T = any>({
       } catch (error) {
         // localStorage peut être désactivé ou plein
         if (process.env.NODE_ENV === 'development') {
-          console.warn('[useKPIFilter] Erreur lors de la lecture de localStorage:', error);
+          logger.warn('Erreur lors de la lecture de localStorage', {
+            component: 'useKPIFilter',
+            action: 'read-localStorage',
+            error: error instanceof Error ? error.message : String(error),
+          });
         }
         return initialFilter;
       }
@@ -69,7 +74,11 @@ export function useKPIFilter<T = any>({
       } catch (error) {
         // localStorage peut être désactivé ou plein
         if (process.env.NODE_ENV === 'development') {
-          console.warn('[useKPIFilter] Erreur lors de l\'écriture dans localStorage:', error);
+          logger.warn('Erreur lors de l\'écriture dans localStorage', {
+            component: 'useKPIFilter',
+            action: 'write-localStorage',
+            error: error instanceof Error ? error.message : String(error),
+          });
         }
       }
     }

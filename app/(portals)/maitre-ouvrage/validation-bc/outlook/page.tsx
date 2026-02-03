@@ -14,19 +14,23 @@ import type { ValidationFiltres } from '@/modules/validation-bc/types/validation
 import { cn } from '@/lib/utils';
 
 const FOLDER_TO_FILTRES: Record<string, ValidationFiltres> = {
-  'en-attente': { statuts: ['EN_ATTENTE'] },
-  urgents: { statuts: ['URGENT'] },
+  'a-valider': { statuts: ['EN_ATTENTE'] },
+  'ma-validation': { statuts: ['EN_ATTENTE'] },
+  'en-cours': { statuts: ['EN_ATTENTE'] },
   valides: { statuts: ['VALIDE'] },
   rejetes: { statuts: ['REJETE'] },
-  bc: { types: ['BC'] },
-  factures: { types: ['FACTURE'] },
-  avenants: { types: ['AVENANT'] },
+  tous: {},
+  'montant-faible': { montantMax: 1_000_000 },
+  'montant-moyen': { montantMin: 1_000_000, montantMax: 5_000_000 },
+  'montant-eleve': { montantMin: 5_000_000 },
+  'chantier-vdp2': { projets: ['vdp2'] },
+  'chantier-imd': { projets: ['imd'] },
 };
 
 export default function ValidationBCOutlookPage() {
-  const [selectedFolderId, setSelectedFolderId] = useState('en-attente');
+  const [selectedFolderId, setSelectedFolderId] = useState('a-valider');
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [activeView, setActiveView] = useState('toutes');
+  const [activeView, setActiveView] = useState('tous');
 
   const filtres = useMemo(
     () => FOLDER_TO_FILTRES[selectedFolderId] ?? {},

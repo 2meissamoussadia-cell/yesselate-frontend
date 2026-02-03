@@ -48,13 +48,16 @@ export interface QuickActionsConfig {
 }
 
 export interface QuickActionPrimaryConfig {
+  id?: string;
   label: string;
   icon: string;
+  variant?: 'default' | 'outline' | 'ghost' | 'destructive';
   /** Options du menu déroulant si présent */
   dropdown?: Array<{
     id: string;
     label: string;
     icon: string;
+    description?: string;
   }>;
 }
 
@@ -63,7 +66,11 @@ export interface QuickActionSecondaryConfig {
   label: string;
   icon: string;
   shortcut?: string;
+  variant?: 'default' | 'outline' | 'ghost' | 'destructive';
   disabledWithoutSelection?: boolean;
+  confirmDialog?: boolean;
+  /** Sous-options (ex: Export PDF/Excel/CSV) */
+  dropdown?: Array<{ id: string; label: string; icon: string }>;
 }
 
 export interface QuickActionOverflowItem {
@@ -96,5 +103,6 @@ export interface FilterQuickFilter {
 export interface FilterSortOption {
   id: string;
   label: string;
+  icon?: string;
   defaultOrder?: 'asc' | 'desc';
 }

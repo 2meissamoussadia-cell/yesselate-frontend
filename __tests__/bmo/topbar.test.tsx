@@ -15,8 +15,9 @@ const mockSetFontSizeScale = jest.fn();
 const mockSetLocaleOverride = jest.fn();
 const mockSetDarkMode = jest.fn();
 
+const mockUsePathname = jest.fn(() => '/maitre-ouvrage/dashboard');
 jest.mock('next/navigation', () => ({
-  usePathname: () => '/maitre-ouvrage/dashboard',
+  usePathname: () => mockUsePathname(),
   useRouter: () => ({ push: mockPush }),
 }));
 
@@ -62,6 +63,7 @@ jest.mock('@/modules/dashboard/navigation/dashboardNavigationConfig', () => ({
 describe('BMO Topbar', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockUsePathname.mockReturnValue('/maitre-ouvrage/dashboard');
   });
 
   it('affiche la topbar avec data-testid bmo-topbar', () => {
@@ -98,6 +100,7 @@ describe('BMO Topbar', () => {
       />
     );
     await user.click(screen.getByTestId('topbar-menu-more'));
+    await user.click(screen.getByText('Fichier'));
     await waitFor(() => expect(screen.getByText('Nouvelle demande')).toBeInTheDocument());
     const menu = screen.getByRole('menu');
     expect(within(menu).getByText('Nouvelle demande')).toBeInTheDocument();
@@ -114,6 +117,7 @@ describe('BMO Topbar', () => {
       />
     );
     await user.click(screen.getByTestId('topbar-menu-more'));
+    await user.click(screen.getByText('Paramétrage'));
     await waitFor(() => expect(screen.getByText('Français')).toBeInTheDocument());
     const menu = screen.getByRole('menu');
     expect(within(menu).getByText(/Langue/)).toBeInTheDocument();
@@ -130,6 +134,7 @@ describe('BMO Topbar', () => {
       />
     );
     await user.click(screen.getByTestId('topbar-menu-more'));
+    await user.click(screen.getByText('Réglage'));
     await waitFor(() => expect(screen.getByText(/Taille du texte/)).toBeInTheDocument());
     const menu = screen.getByRole('menu');
     expect(within(menu).getByText('Réduire')).toBeInTheDocument();
@@ -147,6 +152,7 @@ describe('BMO Topbar', () => {
       />
     );
     await user.click(screen.getByTestId('topbar-menu-more'));
+    await user.click(screen.getByText('Réglage'));
     await waitFor(() => expect(screen.getByText('Augmenter')).toBeInTheDocument());
     const augmenter = screen.getByRole('menuitem', { name: 'Augmenter' });
     await user.click(augmenter);
@@ -154,6 +160,7 @@ describe('BMO Topbar', () => {
   });
 
   it('bouton recherche appelle onSearchClick au clic', async () => {
+    mockUsePathname.mockReturnValue('/maitre-ouvrage/demandes');
     const user = userEvent.setup();
     render(
       <BmoTopbar

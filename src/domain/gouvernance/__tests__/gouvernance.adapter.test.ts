@@ -221,22 +221,25 @@ describe('Gouvernance Adapters', () => {
   describe('adaptGouvernanceOverview', () => {
     it('should adapt overview response', () => {
       const apiOverview: GouvernanceOverviewResponse = {
-        projets_actifs: 2,
-        projets_total: 2,
-        budget_total: 300000,
-        budget_consomme: 150000,
-        budget_consomme_pourcent: 50,
-        jalons_total: 15,
-        jalons_valides: 10,
-        jalons_retard: 5,
-        risques_total: 8,
-        risques_critiques: 2,
-        validations_total: 5,
-        validations_en_attente: 3,
-        exposition_financiere: 10000,
-        escalades_actives: 1,
-        decisions_en_attente: 2,
-        taux_conformite: 80,
+        stats: {
+          projets_actifs: 2,
+          budget_consomme_pourcent: 50,
+          jalons_respectes_pourcent: 80,
+          risques_critiques: 2,
+          validations_en_attente: 3,
+          budget_total: 300000,
+          budget_consomme: 150000,
+          jalons_total: 15,
+          jalons_valides: 10,
+          jalons_retard: 5,
+          exposition_financiere: 10000,
+          escalades_actives: 1,
+          decisions_en_attente: 2,
+          taux_conformite: 80,
+        },
+        projets: [],
+        tendances: [],
+        points_attention: [],
       };
 
       const domainOverview = adaptGouvernanceOverview(apiOverview);

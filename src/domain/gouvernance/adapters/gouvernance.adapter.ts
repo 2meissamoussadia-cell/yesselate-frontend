@@ -269,7 +269,7 @@ export function adaptGouvernanceData(
 export function adaptGouvernanceOverview(
   apiOverview: GouvernanceOverviewResponse
 ): GouvernanceOverview {
-  const s = apiOverview.stats;
+  const s = apiOverview.stats ?? (apiOverview as unknown as ApiGouvernanceStats);
   return {
     projets_actifs: s.projets_actifs ?? 0,
     budget_consomme_pourcent: s.budget_consomme_pourcent ?? 0,

@@ -6,7 +6,14 @@
 'use client';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { validateDemande, rejectDemande, requestComplementDemande, batchValidateDemandes, batchRejectDemandes } from '../api/demandesApi';
+import {
+  createDemande,
+  validateDemande,
+  rejectDemande,
+  requestComplementDemande,
+  batchValidateDemandes,
+  batchRejectDemandes,
+} from '../api/demandesApi';
 import type { Demande } from '../types/demandesTypes';
 import { useToast } from '@/components/features/bmo/ToastProvider';
 
@@ -34,6 +41,34 @@ interface BatchActionParams {
 interface UseDemandeMutationOptions {
   onSuccess?: () => void;
   onError?: (error: Error) => void;
+}
+
+interface CreateDemandeParams {
+  title: string;
+  description?: string;
+  service: Demande['service'];
+  montant?: number;
+}
+
+/**
+ * Hook pour créer une demande
+ */
+export function useCreateDemande(options?: UseDemandeMutationOptions) {
+  const queryClient = useQueryClient();
+  const toast = useToast();
+
+  return useMutation({
+    mutationFn: (data: CreateDemandeParams) => createDemande(data),
+    onSuccess: (newDemande) => {
+      queryClient.invalidateQueries({ queryKey: ['demandes'] });
+      toast.success('Demande créée', { title: newDemande.reference });
+      options?.onSuccess?.();
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Erreur création');
+      options?.onError?.(error);
+    },
+  });
 }
 
 /**

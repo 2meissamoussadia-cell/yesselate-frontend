@@ -124,7 +124,7 @@ export const bmoFilConducteurPhases: BMOPhaseEntry[] = [
     gateLabel: 'Gate #7 : Structure OK',
     routes: [
       { path: `${base}/chantiers`, label: 'Chantiers' },
-      { path: `${base}/quality`, label: 'Qualité & Réserves' },
+      { path: `${base}/qualite`, label: 'Qualité & Réserves' },
       { path: `${base}/alerts`, label: 'Alertes & Incidents' },
     ],
     modules: ['chantiers', 'quality', 'alerts'],
@@ -136,7 +136,7 @@ export const bmoFilConducteurPhases: BMOPhaseEntry[] = [
     gateLabel: 'Gate #8 : Bâtiment opérationnel',
     routes: [
       { path: `${base}/chantiers`, label: 'Chantiers' },
-      { path: `${base}/quality`, label: 'Qualité & Réserves' },
+      { path: `${base}/qualite`, label: 'Qualité & Réserves' },
       { path: `${base}/documents`, label: 'Documents' },
     ],
     modules: ['projects', 'quality', 'documents'],
@@ -147,7 +147,7 @@ export const bmoFilConducteurPhases: BMOPhaseEntry[] = [
     shortLabel: 'Réceptions',
     gateLabel: 'Gate #9 : Réception prononcée',
     routes: [
-      { path: `${base}/quality`, label: 'Qualité & Réserves' },
+      { path: `${base}/qualite`, label: 'Qualité & Réserves' },
       { path: `${base}/documents`, label: 'Documents (DOE)' },
       { path: `${base}/governance`, label: 'Gouvernance' },
     ],

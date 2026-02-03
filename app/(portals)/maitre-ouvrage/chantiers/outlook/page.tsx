@@ -26,7 +26,7 @@ const MOCK_CHANTIERS: ChantierItem[] = [
 ];
 
 export default function ChantiersOutlookPage() {
-  const [selectedFolderId, setSelectedFolderId] = useState('liste');
+  const [selectedFolderId, setSelectedFolderId] = useState('tous');
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [activeView, setActiveView] = useState('toutes');
 

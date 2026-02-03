@@ -53,6 +53,7 @@ export {
   useServiceStats,
 } from './hooks/useDemandesData';
 export {
+  useCreateDemande,
   useValidateDemande,
   useRejectDemande,
   useRequestComplement,

@@ -27,6 +27,7 @@ import ReunionsTransversesPage from '../pages/instances/ReunionsTransversesPage'
 import IndicateursConformitePage from '../pages/conformite/IndicateursConformitePage';
 import AuditGouvernancePage from '../pages/conformite/AuditGouvernancePage';
 import SuiviEngagementsPage from '../pages/conformite/SuiviEngagementsPage';
+import GovernanceWidgetsDashboardPage from '../pages/dashboard/GovernanceWidgetsDashboardPage';
 
 interface GovernanceContentRouterProps {
   mainCategory: GovernanceMainCategory;
@@ -44,6 +45,9 @@ export function GovernanceContentRouter({
     if (subCategory === 'overview') {
       if (subSubCategory === 'dashboard' || !subSubCategory) {
         return <TableauBordPage />;
+      }
+      if (subSubCategory === 'widgets') {
+        return <GovernanceWidgetsDashboardPage />;
       }
       if (subSubCategory === 'summary') {
         return <TableauBordPage />;

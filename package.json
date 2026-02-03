@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "audit:bmo": "node scripts/audit-bmo.js",
+    "generate:module": "node scripts/generate-module.js",
     "migration:wizard": "node scripts/migration-wizard.js",
     "dev": "next dev -p 4001 --webpack",
     "dev:clean": "node scripts/clean-next.js && next dev -p 4001 --webpack",

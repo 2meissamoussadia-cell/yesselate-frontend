@@ -12,6 +12,8 @@ const customJestConfig = {
   testPathIgnorePatterns: [
     '/node_modules/',
     '/e2e/',
+    'mocks/handlers',
+    'mocks/server',
     '\\.e2e\\.',
     // demandes: modules manquants (priority.service, approval.rules, validation.rules, risk.service, budget.service)
     'priority\\.service\\.test',
@@ -34,6 +36,7 @@ const customJestConfig = {
   ],
   moduleNameMapper: {
     '^@/lib/server/(.*)$': '<rootDir>/lib/server/$1',
+    '^@/app/(.*)$': '<rootDir>/app/$1',
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@lib-root/(.*)$': '<rootDir>/lib/$1',
   },

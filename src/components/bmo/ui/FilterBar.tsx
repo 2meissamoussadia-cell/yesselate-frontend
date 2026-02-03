@@ -94,6 +94,7 @@ const colorClasses: Record<string, string> = {
   gray: 'bg-slate-50 dark:bg-slate-900/30 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700',
 };
 
+/** Filtres par défaut (affichés si quickFilters non fourni et module mail-like) */
 const defaultQuickFilters: QuickFilterConfig[] = [
   { id: 'unread', icon: 'Mail', label: 'Non lus' },
   { id: 'flagged', icon: 'Flag', label: 'Avec indicateur' },
@@ -120,7 +121,7 @@ export function FilterBar({
   onSortChange,
   searchPlaceholder = 'Rechercher...',
   onSearch,
-  quickFilters = defaultQuickFilters,
+  quickFilters,
   onAdvancedFilterClick,
   className,
 }: FilterBarProps) {
@@ -146,7 +147,7 @@ export function FilterBar({
     ? activeFilters.length
     : Object.values(activeFilters).filter(Boolean).length;
 
-  const effectiveQuickFilters = quickFilters.length > 0 ? quickFilters : defaultQuickFilters;
+  const effectiveQuickFilters = (quickFilters && quickFilters.length > 0) ? quickFilters : [];
 
   return (
     <div className={cn('bg-white dark:bg-slate-950/40 border-b border-slate-200 dark:border-slate-800', className)}>

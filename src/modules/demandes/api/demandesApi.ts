@@ -149,6 +149,47 @@ export async function getDemandesByService(service: string): Promise<Demande[]> 
 }
 
 /**
+ * Crée une nouvelle demande
+ */
+export async function createDemande(data: {
+  title: string;
+  description?: string;
+  service: Demande['service'];
+  montant?: number;
+}): Promise<Demande> {
+  try {
+    const response = await axios.post<Demande>(API_BASE_URL, {
+      ...data,
+      status: 'pending',
+      priority: 'normal',
+      createdBy: 'current-user',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+    return response.data;
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development' || !process.env.NEXT_PUBLIC_API_URL) {
+      const { mockDemandes } = await import('../data/demandesMock');
+      const newDemande: Demande = {
+        id: `d-${Date.now()}`,
+        reference: `DEM-${String(mockDemandes.length + 1).padStart(4, '0')}`,
+        title: data.title,
+        description: data.description,
+        status: 'pending',
+        priority: 'normal',
+        service: data.service,
+        montant: data.montant,
+        createdBy: 'current-user',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      return newDemande;
+    }
+    throw error;
+  }
+}
+
+/**
  * Valide une demande
  */
 export async function validateDemande(id: string, note?: string): Promise<Demande> {

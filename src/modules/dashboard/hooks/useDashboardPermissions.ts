@@ -6,6 +6,7 @@
 
 import { useMemo, useEffect, useRef } from 'react';
 import { useDashboardPermissionsStore, type UserPermissions } from '@/lib/stores/dashboardPermissionsStore';
+import { logger } from '@/lib/utils/logger';
 import { useAuthHeaders } from '../utils/getAuthHeaders';
 
 /**
@@ -51,7 +52,10 @@ export function useDashboardPermissions() {
         loadingRef.current = false;
       })
       .catch((err) => {
-        console.warn('[Permissions] Failed to load permissions', err);
+        logger.warn('Failed to load permissions', {
+          component: 'useDashboardPermissions',
+          error: err instanceof Error ? err.message : String(err),
+        });
         setPermissions({
           roles: [],
           permissions: [],

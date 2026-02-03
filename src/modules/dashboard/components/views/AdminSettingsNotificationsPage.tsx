@@ -1,6 +1,6 @@
 /**
- * Page Admin — Paramètres notifications
- * Configuration des notifications du tableau de bord.
+ * Page AdminSettingsNotifications
+ * TODO: Ajouter description
  */
 
 'use client';
@@ -15,15 +15,15 @@ import {
   type KPICardData,
   MockDataIndicator,
 } from '../shared';
-import { EmptyState } from '../shared/EmptyState';
+import { EmptyState } from './EmptyState';
 import { ExportButton } from '../shared/ExportButton';
 import { SearchFilter } from '../shared/SearchFilter';
 
 export const AdminSettingsNotificationsPage = memo(function AdminSettingsNotificationsPage() {
   const [searchQuery, setSearchQuery] = React.useState('');
   
-  // Données à connecter via API
-  const data: unknown[] = [];
+  // TODO: Charger les données depuis l'API
+  const data = [];
   const stats = {
     total: 0,
   };
@@ -42,7 +42,7 @@ export const AdminSettingsNotificationsPage = memo(function AdminSettingsNotific
     <DashboardPageLayout>
       <MockDataIndicator />
       
-      <DashboardSection title="Paramètres notifications" description="Configuration des notifications.">
+      <DashboardSection title="AdminSettingsNotifications" description="TODO: Ajouter description">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {kpis.map((kpi) => (
             <KPICard key={kpi.id} kpi={kpi} size="md" />
@@ -64,18 +64,16 @@ export const AdminSettingsNotificationsPage = memo(function AdminSettingsNotific
 
           {data.length === 0 ? (
             <EmptyState
-              title="Vue en construction"
-              description="Connectez l'API pour afficher la configuration des notifications."
-              icon={FileText}
-              variant="comingSoon"
-            />
-          ) : (
-            <EmptyState
               title="Aucun élément"
               description="Il n'y a actuellement aucun élément disponible."
               icon={FileText}
               variant="info"
             />
+          ) : (
+            <div className="space-y-3">
+              {/* TODO: Implémenter la liste */}
+              <p className="text-slate-400 text-sm">Liste à implémenter</p>
+            </div>
           )}
         </DashboardPanel>
       </DashboardSection>

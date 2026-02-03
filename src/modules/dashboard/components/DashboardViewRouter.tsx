@@ -10,7 +10,7 @@
 'use client';
 
 import { Suspense, useEffect, useState, useMemo, memo, useCallback, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, type Transition } from 'framer-motion';
 import { BarChart3 } from 'lucide-react';
 import { ErrorBoundary } from '@/components/shared/ErrorBoundary';
 import { EmptyState } from './shared/EmptyState';
@@ -32,6 +32,8 @@ import { useTouchGestures } from '../hooks/useTouchGestures';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { dashboardRegistry } from '../registry';
 import { navToKey, type NavKey } from '../types/dashboard';
+import { getRegistryKey } from '../utils/registryKeyResolver';
+import type { DashboardMainCategory } from '../types/dashboardNavigationTypes';
 import { hasViewAccess } from '../utils/securityGuards';
 import { useAuthOptional } from '../hooks/useAuthOptional';
 import { useDashboardPermissions } from '../hooks/useDashboardPermissions';
@@ -96,8 +98,8 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
   const routeKey = `${main}::${sub || ''}::${leaf || ''}`;
   useTrackView(routeKey);
   
-  // ✅ Vérifier l'accès via le registry (vérification locale)
-  const registryKey = navToKey(navKey);
+  // ✅ Résoudre la clé registry (store pilotage/dashboard → registry overview/summary si alias)
+  const registryKey = useMemo(() => getRegistryKey(navKey), [navKey]);
   const registryEntry = useMemo(() => dashboardRegistry[registryKey], [registryKey]);
   
   // Note: Le User de lib/contexts/AuthContext utilise déjà le type User de lib/types
@@ -126,7 +128,7 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
       try {
         const authHeaders = getAuthHeaders(user);
         const res = await fetch('/api/me/policy', {
-          headers: authHeaders,
+          headers: authHeaders as unknown as HeadersInit,
         });
         if (cancelled) return;
         
@@ -243,7 +245,7 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
 
   useEffect(() => {
     const accessDenied =
-      DISABLE_ACCESS_CHECK === false &&
+      !DISABLE_ACCESS_CHECK &&
       (hasAccessPolicy === false ||
         (!hasAccessLocal &&
           registryEntry &&
@@ -343,7 +345,7 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
               actionAriaLabel={leaves.length > 0 ? t('dashboard.empty.sectionNotConfigured.seeSections') : undefined}
               onAction={leaves.length > 0 ? () => {
                 const nav = useDashboardCommandCenterStore.getState().navigate;
-                nav(routeMain, routeSub || null, leaves[0]);
+                nav(routeMain as DashboardMainCategory, routeSub || null, leaves[0]);
               } : undefined}
             />
           );
@@ -499,7 +501,7 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
     type: 'tween',
     ease: [0.4, 0, 0.2, 1],
     duration: 0.3,
-  };
+  } satisfies Transition;
 
   // Composant fallback pour Suspense (squelette animé Procore-style)
   const LoadingFallback = () => (
@@ -510,7 +512,7 @@ export const DashboardViewRouter = memo(function DashboardViewRouter({
 
   return (
     <Suspense fallback={<LoadingFallback />}>
-      <div ref={containerRef} className={cn('min-w-0', className)}>
+      <div ref={containerRef as any} className={cn('min-w-0', className)}>
         {debug ? (
           <div className="mb-3 rounded-xl border border-slate-800/60 bg-slate-950/30 px-3 py-2 text-xs text-slate-300">
             <div className="font-medium text-slate-200">DashboardViewRouter</div>

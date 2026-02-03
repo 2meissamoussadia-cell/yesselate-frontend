@@ -47,25 +47,25 @@ export default function LoginPageContent() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950">
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-slate-950">
         <div className="animate-spin rounded-full h-10 w-10 border-2 border-blue-500 border-t-transparent" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-950 px-4">
-      <div className="w-full max-w-sm rounded-2xl border border-slate-700 bg-slate-900/80 p-6 shadow-xl">
+    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-slate-950 px-4">
+      <div className="w-full max-w-sm rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/80 p-6 shadow-xl">
         <div className="mb-6 text-center">
-          <h1 className="text-xl font-semibold text-white">Connexion</h1>
-          <p className="mt-1 text-sm text-slate-400">
+          <h1 className="text-xl font-semibold text-slate-900 dark:text-white">Connexion</h1>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
             Plateforme BMO — accès réservé aux utilisateurs autorisés
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-1">
+            <label htmlFor="email" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
               Email
             </label>
             <input
@@ -74,13 +74,13 @@ export default function LoginPageContent() {
               autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               placeholder="vous@exemple.com"
               required
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-slate-300 mb-1">
+            <label htmlFor="password" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
               Mot de passe
             </label>
             <input
@@ -89,13 +89,13 @@ export default function LoginPageContent() {
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               placeholder="••••••••"
               required
             />
           </div>
           {error && (
-            <p className="text-sm text-red-400" role="alert">
+            <p className="text-sm text-red-600 dark:text-red-400" role="alert">
               {error}
             </p>
           )}
@@ -108,14 +108,14 @@ export default function LoginPageContent() {
           </button>
         </form>
 
-        <p className="mt-4 text-center text-xs text-slate-500">
-          Démo : utilisez un email employé mock et le mot de passe <code className="rounded bg-slate-700 px-1">password</code>.
+        <p className="mt-4 text-center text-xs text-slate-500 dark:text-slate-400">
+          Démo : utilisez un email employé mock et le mot de passe <code className="rounded bg-slate-200 dark:bg-slate-700 px-1 text-slate-700 dark:text-slate-300">password</code>.
         </p>
 
         <div className="mt-4 text-center">
           <Link
             href="/"
-            className="text-sm text-slate-400 hover:text-white transition-colors"
+            className="text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
           >
             ← Retour à l&apos;accueil
           </Link>

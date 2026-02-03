@@ -14,6 +14,7 @@ import type { DashboardViewData } from '../types/dashboardDataTypes';
 import type { LoaderResult } from '../types/dashboard';
 import { createLogger } from '../utils/logger';
 import { storeNavToNavKey } from '../utils/navAdapter';
+import { getRegistryKey } from '../utils/registryKeyResolver';
 
 const logger = createLogger('DashboardContentSwitch');
 
@@ -25,14 +26,9 @@ function isLoaderResult(value: unknown): value is LoaderResultType {
   return 'data' in v && 'fetchedAt' in v && typeof v.fetchedAt === 'number';
 }
 
-function resolveViewKey(nav: NavKey) {
-  // fallback intelligent si un niveau manque (aligné sur le registry et DEFAULT_DG_HOME)
-  const main = nav.main;
-  const sub = nav.sub ?? 'summary';
-  const leaf =
-    nav.leaf ??
-    (main === 'pilotage' && sub === 'dashboard' ? 'default' : 'dashboard');
-  return `${main}::${sub}::${leaf}`;
+/** Clé de vue pour le registry : utilise l’alias store → registry pour éviter contenu vide. */
+function resolveViewKey(nav: NavKey): string {
+  return getRegistryKey(nav);
 }
 
 export const DashboardContentSwitch = memo(function DashboardContentSwitch() {

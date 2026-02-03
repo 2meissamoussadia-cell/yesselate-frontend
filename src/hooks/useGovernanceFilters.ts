@@ -8,7 +8,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { usePageNavigation } from './usePageNavigation';
 import type { Severity } from '@/lib/types/alerts.types';
 
-type TabValue = 'raci' | 'alerts';
+export type TabValue = 'raci' | 'alerts';
 
 type AlertType = 'system' | 'blocked' | 'payment' | 'contract';
 

@@ -37,22 +37,37 @@ export function AuthProvider({ children, initialUser = null }: AuthProviderProps
 
   // Initialiser l'utilisateur au chargement (depuis localStorage ou session)
   useEffect(() => {
+    let cancelled = false;
+
     const initializeAuth = async () => {
       try {
+        if (typeof window === 'undefined') {
+          setIsLoading(false);
+          return;
+        }
         // En production: vérifier session/token
         const storedUser = localStorage.getItem('yesselate_user');
-        if (storedUser) {
+        if (storedUser && !cancelled) {
           setUser(JSON.parse(storedUser));
         }
-        // Sinon: pas d'utilisateur par défaut — connexion requise (login page)
       } catch (error) {
         console.error('Erreur initialisation auth:', error);
       } finally {
-        setIsLoading(false);
+        if (!cancelled) setIsLoading(false);
       }
     };
 
     void initializeAuth();
+
+    // Sécurité : ne jamais rester bloqué sur "Vérification de la session..."
+    const fallback = setTimeout(() => {
+      setIsLoading((prev) => (prev ? false : prev));
+    }, 2500);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(fallback);
+    };
   }, []);
 
   /**

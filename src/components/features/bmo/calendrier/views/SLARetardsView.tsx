@@ -274,7 +274,7 @@ export function SLARetardsView({ filterType, view }: SLARetardsViewProps = {}) {
                 await fetch('/api/calendar/sla-alerts', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ action: 'traiter', slaId: selectedSLA?.id, ...data }),
+                  body: JSON.stringify({ ...data, action: 'traiter', slaId: selectedSLA?.id }),
                 });
               } catch {
                 console.log('Traitement SLA:', data);

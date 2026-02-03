@@ -18,7 +18,7 @@ import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCen
 import { useLogger } from '@/lib/utils/logger';
 import { getDefaultLeafForSub, isValidRoute } from '../utils/routeValidation';
 import { zIndexClass } from '../utils/zIndex';
-import type { DashboardMainCategory } from '../types/dashboardNavigationTypes';
+import type { DashboardMainCategory, DashboardNavMainCategory } from '../types/dashboardNavigationTypes';
 import { SegmentedTabs } from '../components/shared/SegmentedTabs';
 import { useDashboardPermissions } from '../hooks/useDashboardPermissions';
 import { nodeAllowed } from './permissions';
@@ -86,7 +86,9 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
   );
 
   // Labels pour le breadcrumb (utiliser la catégorie normalisée pour la config)
-  const mainConfig = dashboardNavigationConfig[currentMainCategory];
+  const mainConfig = currentMainCategory in dashboardNavigationConfig
+    ? dashboardNavigationConfig[currentMainCategory as DashboardNavMainCategory]
+    : undefined;
   const mainLabel = mainConfig?.label || main || 'Dashboard';
   
   const subConfig = mainConfig?.children?.find((c) => c.id === sub);
@@ -199,7 +201,7 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
 
   const mainTabs = MAIN_DG_CATEGORIES
     .map((key) => {
-      const node = dashboardNavigationConfig[key];
+      const node = dashboardNavigationConfig[key as DashboardNavMainCategory];
       if (!node || !nodeAllowed(userContext, node.requires)) return null;
       return {
         id: key,

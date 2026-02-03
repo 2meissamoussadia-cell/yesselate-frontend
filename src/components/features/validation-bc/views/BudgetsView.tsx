@@ -267,7 +267,7 @@ export function BudgetsView() {
   ];
 
   const handleExport = () => {
-    const rows = projectBudgets.map((p) => ({
+    const rows = projects.map((p: ProjectBudget) => ({
       code: p.code,
       nom: p.nom,
       budgetInitial: p.budgetInitial,

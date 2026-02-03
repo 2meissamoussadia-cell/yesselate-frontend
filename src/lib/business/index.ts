@@ -3,46 +3,36 @@
  * Centralise tous les systèmes intelligents
  */
 
-export { businessAlertEngine, BusinessAlert, AlertAction, AlertRule, BusinessAlertEngine } from './alert-engine';
-export {
-  approvalWorkflowEngine,
+import { businessAlertEngine } from './alert-engine';
+import { approvalWorkflowEngine } from './approval-workflow';
+import { replacementManager } from './replacement-manager';
+import { delegationAnalytics } from './analytics';
+import { conflictDetector } from './conflict-detector';
+import { timelineManager } from './timeline-manager';
+
+export type { BusinessAlert, AlertAction, AlertRule } from './alert-engine';
+export { BusinessAlertEngine, businessAlertEngine } from './alert-engine';
+export type {
   ApprovalWorkflow,
   ApprovalRequest,
   Approval,
   ApprovalStatus,
   ApprovalLevel,
-  ApprovalWorkflowEngine,
 } from './approval-workflow';
-export {
-  replacementManager,
-  Replacement,
-  Successor,
-  AbsenceNotification,
-  ReplacementManager,
-} from './replacement-manager';
-export {
-  delegationAnalytics,
+export { ApprovalWorkflowEngine, approvalWorkflowEngine } from './approval-workflow';
+export type { Replacement, Successor, AbsenceNotification } from './replacement-manager';
+export { ReplacementManager, replacementManager } from './replacement-manager';
+export type {
   DelegationMetrics,
   AgentPerformance,
   BusinessReport,
   ReportInsight,
-  DelegationAnalytics,
 } from './analytics';
-export {
-  conflictDetector,
-  Conflict,
-  ConflictResolution,
-  ConflictType,
-  ConflictDetector,
-} from './conflict-detector';
-export {
-  timelineManager,
-  TimelineEvent,
-  AuditTrail,
-  ChangeSnapshot,
-  EventType,
-  TimelineManager,
-} from './timeline-manager';
+export { DelegationAnalytics, delegationAnalytics } from './analytics';
+export type { Conflict, ConflictResolution, ConflictType } from './conflict-detector';
+export { ConflictDetector, conflictDetector } from './conflict-detector';
+export type { TimelineEvent, AuditTrail, ChangeSnapshot, EventType } from './timeline-manager';
+export { TimelineManager, timelineManager } from './timeline-manager';
 
 /**
  * Classe principale orchestrant tous les systèmes métier
@@ -105,13 +95,13 @@ export class DelegationBusinessEngine {
     let score = 100;
 
     // Pénalités pour alertes
-    score -= alerts.filter(a => a.severity === 'critical').length * 20;
-    score -= alerts.filter(a => a.severity === 'high').length * 10;
-    score -= alerts.filter(a => a.severity === 'medium').length * 5;
+    score -= alerts.filter((a: { severity?: string }) => a.severity === 'critical').length * 20;
+    score -= alerts.filter((a: { severity?: string }) => a.severity === 'high').length * 10;
+    score -= alerts.filter((a: { severity?: string }) => a.severity === 'medium').length * 5;
 
     // Pénalités pour conflits
-    score -= conflicts.filter(c => c.severity === 'critical').length * 15;
-    score -= conflicts.filter(c => c.severity === 'high').length * 10;
+    score -= conflicts.filter((c: { severity?: string }) => c.severity === 'critical').length * 15;
+    score -= conflicts.filter((c: { severity?: string }) => c.severity === 'high').length * 10;
 
     // Pénalité pour absence de backup
     if (!hasBackup) score -= 15;
@@ -171,19 +161,19 @@ export class DelegationBusinessEngine {
       alerts: {
         total: allAlerts.length,
         bySeverity: {
-          critical: allAlerts.filter(a => a.severity === 'critical').length,
-          high: allAlerts.filter(a => a.severity === 'high').length,
-          medium: allAlerts.filter(a => a.severity === 'medium').length,
-          low: allAlerts.filter(a => a.severity === 'low').length,
+          critical: allAlerts.filter((a: { severity?: string }) => a.severity === 'critical').length,
+          high: allAlerts.filter((a: { severity?: string }) => a.severity === 'high').length,
+          medium: allAlerts.filter((a: { severity?: string }) => a.severity === 'medium').length,
+          low: allAlerts.filter((a: { severity?: string }) => a.severity === 'low').length,
         },
       },
       conflicts: {
         total: allConflicts.length,
         bySeverity: {
-          critical: allConflicts.filter(c => c.severity === 'critical').length,
-          high: allConflicts.filter(c => c.severity === 'high').length,
-          medium: allConflicts.filter(c => c.severity === 'medium').length,
-          low: allConflicts.filter(c => c.severity === 'low').length,
+          critical: allConflicts.filter((c: { severity?: string }) => c.severity === 'critical').length,
+          high: allConflicts.filter((c: { severity?: string }) => c.severity === 'high').length,
+          medium: allConflicts.filter((c: { severity?: string }) => c.severity === 'medium').length,
+          low: allConflicts.filter((c: { severity?: string }) => c.severity === 'low').length,
         },
       },
       compliance: {

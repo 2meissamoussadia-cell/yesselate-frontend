@@ -9,6 +9,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Settings2, Save, ChevronUp, ChevronDown, Plus, X, GripVertical } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAchievementsStore } from '@/lib/stores/achievementsStore';
 import {
   DndContext,
   closestCenter,
@@ -209,10 +210,12 @@ export function CustomizableDashboard({
     useSensor(KeyboardSensor)
   );
 
+  const unlockAchievement = useAchievementsStore((s) => s.unlock);
   const handleSave = useCallback(() => {
     saveOrder(storageKey, visibleIds);
     setEditing(false);
-  }, [storageKey, visibleIds]);
+    unlockAchievement('dashboard_custom');
+  }, [storageKey, visibleIds, unlockAchievement]);
 
   // Persister au changement d'ordre (optionnel : on peut ne sauver qu'au clic "Sauvegarder")
   useEffect(() => {

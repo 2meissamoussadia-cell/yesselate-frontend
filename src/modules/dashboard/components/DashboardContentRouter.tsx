@@ -51,6 +51,13 @@ const ROUTE_MAPPING: Record<DashboardMainCategory, ViewComponent> = {
   clients: OverviewView,
   rh: OverviewView,
   systeme: OverviewView,
+  overview: OverviewView,
+  performance: PerformanceView,
+  actions: ActionsView,
+  risks: RisksView,
+  decisions: DecisionsView,
+  realtime: RealtimeView,
+  administration: OverviewView,
 };
 
 // ============================================

@@ -3,6 +3,7 @@
  */
 
 import type { Projet, ProjetStatut } from './gouvernance.types';
+export type { Projet, ProjetStatut } from './gouvernance.types';
 
 export interface ProjetMetrics {
   budget_consomme_pourcent: number;
@@ -44,7 +45,7 @@ export function isProjetAtRisk(projet: Projet): boolean {
 }
 
 export function isProjetLate(projet: Projet): boolean {
-  return projet.statut === 'late' || (projet.retard_jours && projet.retard_jours > 0);
+  return !!(projet.statut === 'late' || (projet.retard_jours != null && projet.retard_jours > 0));
 }
 
 export function calculateProjetHealthScore(projet: Projet): number {

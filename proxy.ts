@@ -69,34 +69,49 @@ export function proxy(request: NextRequest) {
     maxAge: 60, // 60 secondes (même durée que la requête)
   });
 
-  // CSP stricte (ajuste tes domaines si besoin : fonts, charts lazy, etc.)
-  // Note: 'unsafe-inline' pour style-src peut être remplacé par nonce si tous les styles sont injectés avec nonce
-  // Phase P15: Ajout report-uri pour violations CSP
-  const cspReportUri = '/api/security/csp-report';
-  const csp = [
-    `default-src 'self'`,
-    `script-src 'self' 'nonce-${cspNonce}' 'strict-dynamic'`, // strict-dynamic permet les scripts chargés dynamiquement
-    `style-src 'self' 'unsafe-inline'`, // TODO: idéalement remplacer par 'nonce-${cspNonce}' pour styles inline critiques
-    `img-src 'self' data: blob: https:`, // https: pour images externes (charts, etc.)
-    `font-src 'self' data:`,
-    `connect-src 'self' https:`, // https: pour API externes si nécessaire
-    `frame-ancestors 'none'`,
-    `base-uri 'self'`,
-    `object-src 'none'`,
-    `upgrade-insecure-requests`,
-    `form-action 'self'`,
-    `frame-src 'none'`,
-    `report-uri ${cspReportUri}`, // Phase P15: Rapport violations CSP
-  ].join('; ');
-  response.headers.set('Content-Security-Policy', csp);
+  // CSP : désactivée en dev (localhost) pour éviter blocage script inline / eval (Next.js, react-refresh).
+  // En prod uniquement : CSP stricte avec nonce.
+  const hostname = request.nextUrl.hostname ?? '';
+  const urlString = request.url ?? '';
+  const isLocalhost =
+    hostname === 'localhost' ||
+    hostname === '127.0.0.1' ||
+    hostname === '[::1]' ||
+    urlString.includes('localhost:') ||
+    urlString.includes('127.0.0.1:');
+  const isDev =
+    process.env.NODE_ENV === 'development' || process.env.NODE_ENV !== 'production' || isLocalhost;
 
-  // Headers sécurité complémentaires
+  if (!isDev) {
+    const cspReportUri = '/api/security/csp-report';
+    const csp = [
+      `default-src 'self'`,
+      `script-src 'self' 'nonce-${cspNonce}' 'strict-dynamic'`,
+      `style-src 'self' 'unsafe-inline'`,
+      `img-src 'self' data: blob: https:`,
+      `font-src 'self' data:`,
+      `connect-src 'self' https:`,
+      `frame-ancestors 'none'`,
+      `base-uri 'self'`,
+      `object-src 'none'`,
+      `upgrade-insecure-requests`,
+      `form-action 'self'`,
+      `frame-src 'none'`,
+      `report-uri ${cspReportUri}`,
+    ].join('; ');
+    response.headers.set('Content-Security-Policy', csp);
+  }
+  // En dev : on n'envoie pas de CSP pour que le navigateur n'applique aucune restriction (script inline, eval, etc.)
+
+  // Headers sécurité : COEP assoupli en dev (require-corp bloque le Hot Reload / chunks)
   response.headers.set('X-Frame-Options', 'DENY');
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   response.headers.set('Permissions-Policy', 'geolocation=(), microphone=(), camera=(), payment=(), usb=(), bluetooth=(), magnetometer=(), gyroscope=(), accelerometer=()');
   response.headers.set('Cross-Origin-Opener-Policy', 'same-origin');
-  response.headers.set('Cross-Origin-Embedder-Policy', 'require-corp');
+  if (!isDev) {
+    response.headers.set('Cross-Origin-Embedder-Policy', 'require-corp');
+  }
   response.headers.set('X-DNS-Prefetch-Control', 'off');
   response.headers.set('X-Download-Options', 'noopen');
   response.headers.set('X-Permitted-Cross-Domain-Policies', 'none');

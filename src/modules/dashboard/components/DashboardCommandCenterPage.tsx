@@ -15,6 +15,7 @@ import { AchievementsPanel } from './shared/AchievementsPanel';
 import { TenantSwitcher } from './shared/TenantSwitcher';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
+import { useAchievementsStore } from '@/lib/stores/achievementsStore';
 import { useI18n } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { useAuthHeaders } from '../utils/getAuthHeaders';
@@ -39,9 +40,11 @@ export function DashboardCommandCenterPage() {
   const onVoiceToggle = useCallback(() => {
     const next = !voiceEnabled;
     setVoiceEnabled(next);
-    if (next) startListening();
-    else stopListening();
-  }, [voiceEnabled, startListening, stopListening]);
+    if (next) {
+      startListening();
+      unlockAchievement('voice_command');
+    } else stopListening();
+  }, [voiceEnabled, startListening, stopListening, unlockAchievement]);
 
   // Phase 4 : débloquer badge "Première connexion" au premier chargement
   const unlockAchievement = useAchievementsStore((s) => s.unlock);
@@ -73,11 +76,15 @@ export function DashboardCommandCenterPage() {
       const tag = target?.tagName?.toLowerCase();
       if (tag === 'input' || tag === 'textarea' || tag === 'select' || target?.getAttribute?.('contenteditable') === 'true') return;
       e.preventDefault();
-      setDisplayConfig({ focusMode: !displayConfig.focusMode });
+      const nextFocus = !displayConfig.focusMode;
+      setDisplayConfig({ focusMode: nextFocus });
+      if (nextFocus) unlockAchievement('focus_mode');
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [displayConfig.focusMode, setDisplayConfig]);
+  }, [displayConfig.focusMode, setDisplayConfig, unlockAchievement]);
+
+  const incrementExportCount = useAchievementsStore((s) => s.incrementExportCount);
 
   const onExport = useCallback(async (format: 'csv' | 'json' | 'pdf' | 'excel') => {
     // Phase P12.b: Mapper 'excel' vers 'xlsx' pour le format natif
@@ -109,7 +116,8 @@ export function DashboardCommandCenterPage() {
     a.download = match?.[1] ?? `export.${format === 'excel' ? 'xlsx' : format}`;
     a.click();
     URL.revokeObjectURL(url);
-  }, [nav, locale, currency, authHeaders]);
+    incrementExportCount();
+  }, [nav, locale, currency, authHeaders, incrementExportCount]);
 
   return (
     <div
@@ -127,7 +135,7 @@ export function DashboardCommandCenterPage() {
         {!focusMode && <DynamicSidebar />}
 
         {/* Main */}
-        <main className="flex min-w-0 flex-1 flex-col">
+        <main className="flex min-w-0 flex-1 flex-col" role="main" aria-label="Contenu principal du tableau de bord">
           {/* Header — masqué ou simplifié en mode Focus (#11) */}
           {!focusMode ? (
             <header className="sticky top-0 z-[30] border-b border-slate-800/60 bg-slate-950/70 backdrop-blur-xl min-w-0">
@@ -160,9 +168,9 @@ export function DashboardCommandCenterPage() {
             </header>
           )}
 
-          {/* Content */}
-          <div className="flex-1 min-w-0 overflow-auto">
-            <div className="mx-auto w-full min-w-0 max-w-[1600px] px-4 sm:px-6 lg:px-8 py-6">
+          {/* Content — overflow-x-hidden pour éviter scroll horizontal (manquement #3) */}
+          <div className="flex-1 min-w-0 overflow-x-hidden overflow-y-auto">
+            <div className="mx-auto w-full min-w-0 max-w-[1600px] px-4 sm:px-6 lg:px-8 py-6 overflow-x-hidden">
               <ErrorBoundary>
                 <DashboardViewRouter />
               </ErrorBoundary>

@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import { useKPIFilter } from '@/modules/dashboard/hooks/useKPIFilter';
 import { useDashboardRefresh } from '@/modules/dashboard/hooks/useDashboardRefresh';
@@ -782,6 +783,7 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
                   'min-h-[32px]'
                 )}
                 style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}
+                aria-label={t('kpi.refresh.label')}
               >
                 <RefreshCw 
                   className={cn((refreshStatus === "loading" || refreshStatus === "retrying") && 'animate-spin')} 
@@ -837,6 +839,7 @@ export const DashboardKPIBar = memo(function DashboardKPIBar({
                 style={{ fontSize: 'clamp(0.75rem, 1vw, 0.875rem)' }}
                 aria-expanded={showExportMenu}
                 aria-haspopup="true"
+                aria-label={t('actions.export')}
               >
                 <Download className="h-4 w-4" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />
                 <span>{t('actions.export')}</span>

@@ -3,6 +3,7 @@
  */
 
 import type { Validation, ValidationStatut } from './gouvernance.types';
+export type { Validation, ValidationStatut } from './gouvernance.types';
 
 export interface ValidationMetrics {
   is_overdue: boolean;

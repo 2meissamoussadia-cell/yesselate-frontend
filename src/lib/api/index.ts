@@ -14,5 +14,16 @@ export * from './demands-api';
 export * from './pilotage/dashboardClient';
 export * from './pilotage/alertsClient';
 export * from './pilotage/calendarClient';
-export * from './pilotage/analyticsClient';
+export {
+  analyticsAPI,
+  type AnalyticsKpi,
+  type AnalyticsReport,
+  type AnalyticsAlert,
+  type AnalyticsTrend,
+  type BureauPerformance,
+  type AnalyticsStats,
+  type AnalyticsFilters,
+  type ExportFormat,
+  type ExportRequest as AnalyticsExportRequest,
+} from './pilotage/analyticsClient';
 

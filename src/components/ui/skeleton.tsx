@@ -146,9 +146,7 @@ export function ChartSkeleton({ className, minHeight = 256 }: { className?: stri
       </div>
     </div>
   );
-}
-
-/**
+}/**
  * Skeleton pour la page Dashboard (header, cartes KPI, table)
  * Utilisé pendant le chargement des vues cockpit.
  */

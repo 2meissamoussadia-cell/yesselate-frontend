@@ -61,7 +61,7 @@ interface ValidationKPI {
   trend: string;
   trendType: 'up' | 'down' | 'neutral';
   icon: LucideIcon;
-  color: 'blue' | 'orange' | 'red' | 'emerald' | 'purple' | 'cyan';
+  color: 'blue' | 'amber' | 'orange' | 'red' | 'emerald' | 'purple' | 'cyan';
   description: string;
   onClick?: () => void;
 }
@@ -92,7 +92,7 @@ interface ValidationRecent {
 
 export const ValidationsGlobalPage = memo(function ValidationsGlobalPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const appMeta = useMemo(() => getAppForCategory('performance'), []);
+  const appMeta = useMemo(() => getAppForCategory('finance'), []);
 
   // Statistiques par bureau (déclaré avant kpiCalculations qui en dépend)
   const bureauStats: BureauValidation[] = useMemo(() => [
@@ -288,7 +288,7 @@ export const ValidationsGlobalPage = memo(function ValidationsGlobalPage() {
       trend: parseTrendPercent(k.trend),
       trendType: k.trendType,
       icon: k.icon,
-      color: normalizeKPIColor(k.color),
+      color: normalizeKPIColor(k.color) as KPICardData['color'],
       description: k.description,
       onClick: k.onClick,
     }));
@@ -529,7 +529,7 @@ export const ValidationsGlobalPage = memo(function ValidationsGlobalPage() {
       <DashboardSection>
         <DashboardPanel 
           title="Charge consolidée par bureau" 
-          description="Délais, conformité, volumétrie — Vue Achats/Bureau des Marchés"
+          subtitle="Délais, conformité, volumétrie — Vue Achats/Bureau des Marchés"
           className="bg-slate-900/40"
         >
           <div className="mb-4 p-3 rounded-lg bg-slate-950/35 border border-slate-800/60">

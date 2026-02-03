@@ -5,7 +5,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { isValidRoute, normalizeRoute, DEFAULT_DG_HOME } from '../utils/routeValidation';
 import { getDashboardRedirectPath } from '../utils/dashboardRedirectMap';
-import { parseDashboardPath, buildDashboardPathUrl, isDashboardPathUrl } from '../utils/dashboardPathUrl';
+import { parseDashboardPath, isDashboardPathUrl } from '../utils/dashboardPathUrl';
 import { useLogger } from '@/lib/utils/logger';
 
 /** Path canonique Cockpit DG (default DG home). */
@@ -58,16 +58,9 @@ export function useDashboardCommandCenterUrlSync() {
     router.replace(target);
   }, [pathname, urlMain, urlSub, urlLeaf, router, log]);
 
-  // 0b) Canoniser URL query → path : /maitre-ouvrage/dashboard?main=... → /maitre-ouvrage/dashboard/r/main/sub/leaf
-  useEffect(() => {
-    if (pathname !== '/maitre-ouvrage/dashboard') return;
-    if (!urlMain || isDashboardPathUrl(pathname)) return;
-    const normalized = normalizeRoute(urlMain, urlSub, urlLeaf);
-    if (!isValidRoute(normalized.main, normalized.sub, normalized.leaf)) return;
-    const pathUrl = buildDashboardPathUrl(normalized.main, normalized.sub, normalized.leaf);
-    log.debug('Canonisation URL query → path', { from: pathname, to: pathUrl });
-    router.replace(pathUrl);
-  }, [pathname, urlMain, urlSub, urlLeaf, router, log]);
+  // 0b) Canonisation query → path désactivée : /r/main/sub/leaf provoque 404 sur requêtes RSC (_rsc) en dev.
+  // Réactiver quand la route r/[[...path]] sera correctement servie (Next/Turbopack).
+  // useEffect(() => { ... router.replace(pathUrl); }, [...]);
 
   // 1) URL -> Store (incl. /dg/cockpit et /maitre-ouvrage/cockpit → DEFAULT_DG_HOME)
   useEffect(() => {
@@ -133,7 +126,13 @@ export function useDashboardCommandCenterUrlSync() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, urlMain, urlSub, urlLeaf]); // `navigate` est stable (Zustand)
 
-  // 2) Store -> URL : path moderne (/maitre-ouvrage/dashboard/main/sub/leaf) ou query en fallback
+  // 2) Store -> URL : query params pour éviter 404 sur /r/main/sub/leaf (requêtes RSC en dev)
+  const buildQueryUrl = (m: string, s: string | null, l: string | null) => {
+    const base = pathname?.startsWith('/maitre-ouvrage/dashboard') ? '/maitre-ouvrage/dashboard' : (pathname ?? '/maitre-ouvrage/dashboard');
+    const search = new URLSearchParams({ main: m, sub: s ?? '', leaf: l ?? '' });
+    return `${base}?${search.toString()}`;
+  };
+
   useEffect(() => {
     if (isApplyingUrlToStoreRef.current) return;
     if (!pathname) return;
@@ -141,17 +140,21 @@ export function useDashboardCommandCenterUrlSync() {
     const normalized = normalizeRoute(main, sub, leaf);
     if (!isValidRoute(normalized.main, normalized.sub, normalized.leaf)) return;
 
-    const nextPathUrl = buildDashboardPathUrl(normalized.main, normalized.sub, normalized.leaf);
-    const currentPathUrl = isDashboardPathUrl(pathname)
-      ? pathname
+    const nextUrl = buildQueryUrl(normalized.main, normalized.sub, normalized.leaf);
+    const currentUrl = isDashboardPathUrl(pathname)
+      ? buildQueryUrl(
+          pathParsed?.main ?? urlMain ?? '',
+          pathParsed?.sub ?? urlSub ?? null,
+          pathParsed?.leaf ?? urlLeaf ?? null
+        )
       : `${pathname}?main=${urlMain ?? ''}&sub=${urlSub ?? ''}&leaf=${urlLeaf ?? ''}`;
 
-    if (nextPathUrl === currentPathUrl) return;
-    if (nextPathUrl === lastPushedQueryRef.current) return;
+    if (nextUrl === currentUrl) return;
+    if (nextUrl === lastPushedQueryRef.current) return;
 
-    lastPushedQueryRef.current = nextPathUrl;
+    lastPushedQueryRef.current = nextUrl;
     justPushedRef.current = true;
-    router.push(nextPathUrl);
+    router.replace(nextUrl);
     const t = setTimeout(() => {
       justPushedRef.current = false;
     }, 300);

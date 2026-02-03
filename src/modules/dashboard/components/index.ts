@@ -52,3 +52,5 @@ export * from './views';
 // Export des boutons de navigation
 export * from './buttons';
 
+// Mobile
+export { DashboardBottomNav } from './mobile';

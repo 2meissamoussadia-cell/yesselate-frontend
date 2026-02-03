@@ -37,16 +37,16 @@ interface NotificationOptions {
 // Hook principal
 // ================================
 
-export function useAlertsWebSocket(options: NotificationOptions = {}) {
+export function useAlertsWebSocket(options?: NotificationOptions) {
   const {
     enableBrowserNotifications = true,
     enableSound = true,
     soundVolume = 0.7,
     criticalOnly = false,
-  } = options;
+  } = options ?? {};
 
   const wsRef = useRef<WebSocket | null>(null);
-  const reconnectTimeoutRef = useRef<NodeJS.Timeout>();
+  const reconnectTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const reconnectAttempts = useRef(0);
   const queryClient = useQueryClient();
 
@@ -92,10 +92,12 @@ export function useAlertsWebSocket(options: NotificationOptions = {}) {
           body: `${alert.severity.toUpperCase()} - ${alert.type}${alert.bureau ? ` (${alert.bureau})` : ''}`,
           icon,
           badge: icon,
-          tag: `alert-${alert.id}`, // Empêche les doublons
-          requireInteraction: alert.severity === 'critical', // Reste visible pour les critiques
-          vibrate: alert.severity === 'critical' ? [200, 100, 200] : undefined,
+          tag: `alert-${alert.id}`,
+          requireInteraction: alert.severity === 'critical',
         });
+      if (alert.severity === 'critical' && typeof navigator !== 'undefined' && navigator.vibrate) {
+        navigator.vibrate([200, 100, 200]);
+      }
 
         browserNotif.onclick = () => {
           window.focus();

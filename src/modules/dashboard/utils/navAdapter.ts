@@ -13,7 +13,7 @@ import type { DashboardNavigation } from '@/lib/stores/dashboardCommandCenterSto
  */
 export function storeNavToNavKey(storeNav: DashboardNavigation): NavKey {
   return {
-    main: storeNav.mainCategory,
+    main: storeNav.mainCategory as NavKey['main'],
     sub: storeNav.subCategory,
     leaf: storeNav.subSubCategory, // subSubCategory → leaf
   };
@@ -24,7 +24,7 @@ export function storeNavToNavKey(storeNav: DashboardNavigation): NavKey {
  */
 export function navKeyToStoreNav(navKey: NavKey): DashboardNavigation {
   return {
-    mainCategory: navKey.main,
+    mainCategory: navKey.main as DashboardNavigation['mainCategory'],
     subCategory: navKey.sub,
     subSubCategory: navKey.leaf, // leaf → subSubCategory
   };

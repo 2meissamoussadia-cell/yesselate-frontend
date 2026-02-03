@@ -65,17 +65,18 @@ export const centreAlertesAPI = {
    * Récupérer les KPIs
    */
   getKPIs: async (filters?: CentreAlertesFilters): Promise<CentreAlertesKPIs> => {
-    const stats = await alertsAPI.getStats(filters);
-    
+    const response = await alertsAPI.getStats(filters);
+    const stats = response?.stats ?? ({} as AlertStats);
+
     return {
-      critical: stats.critical,
-      warnings: stats.warning,
-      slaExceeded: stats.blocked || 0,
-      blocked: stats.blocked || 0,
-      acknowledged: stats.acknowledged,
-      resolved: stats.resolved,
-      avgResponseTime: stats.avgResponseTime / 60, // convertir minutes en heures
-      avgResolutionTime: stats.avgResolutionTime,
+      critical: stats.critical ?? 0,
+      warnings: stats.warning ?? 0,
+      slaExceeded: stats.blocked ?? 0,
+      blocked: stats.blocked ?? 0,
+      acknowledged: stats.acknowledged ?? 0,
+      resolved: stats.resolved ?? 0,
+      avgResponseTime: (stats.avgResponseTime ?? 0) / 60, // convertir minutes en heures
+      avgResolutionTime: stats.avgResolutionTime ?? 0,
     };
   },
 

@@ -5,7 +5,7 @@
  * Mapping : Menu → App → Model → View
  */
 
-import type { DashboardMainCategory } from '../types/dashboardNavigationTypes';
+import type { DashboardMainCategory, DashboardNavMainCategory } from '../types/dashboardNavigationTypes';
 
 /** Modèles métier exposés par le dashboard */
 export type DashboardModel =
@@ -30,7 +30,7 @@ export interface DashboardAction {
 }
 
 export interface DashboardApp {
-  id: DashboardMainCategory;
+  id: DashboardNavMainCategory;
   name: string;
   i18nKey?: string;
   models: DashboardModel[];
@@ -40,7 +40,7 @@ export interface DashboardApp {
 /**
  * Registre des 6 blocs métier du dashboard.
  */
-export const dashboardApps: Record<DashboardMainCategory, DashboardApp> = {
+export const dashboardApps: Record<DashboardNavMainCategory, DashboardApp> = {
   pilotage: {
     id: 'pilotage',
     name: 'Pilotage',
@@ -85,10 +85,12 @@ export const dashboardApps: Record<DashboardMainCategory, DashboardApp> = {
   },
 };
 
-export function getAppForCategory(mainCategory: DashboardMainCategory): DashboardApp {
-  return dashboardApps[mainCategory];
+export function getAppForCategory(mainCategory: DashboardNavMainCategory): DashboardApp;
+export function getAppForCategory(mainCategory: DashboardMainCategory): DashboardApp | undefined;
+export function getAppForCategory(mainCategory: DashboardMainCategory): DashboardApp | undefined {
+  return mainCategory in dashboardApps ? dashboardApps[mainCategory as DashboardNavMainCategory] : undefined;
 }
 
 export function appHasModel(mainCategory: DashboardMainCategory, model: DashboardModel): boolean {
-  return dashboardApps[mainCategory]?.models.includes(model) ?? false;
+  return mainCategory in dashboardApps && (dashboardApps[mainCategory as DashboardNavMainCategory]?.models.includes(model) ?? false);
 }

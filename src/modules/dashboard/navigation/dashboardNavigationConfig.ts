@@ -3,7 +3,7 @@
  * Types NavNode / NavRequires : voir types/dashboardNavigationTypes.ts
  */
 
-import type { DashboardMainCategory, NavNode, NavRequires } from '../types/dashboardNavigationTypes';
+import type { DashboardMainCategory, DashboardNavMainCategory, NavNode, NavRequires } from '../types/dashboardNavigationTypes';
 import {
   LayoutDashboard,
   Gauge,
@@ -51,7 +51,7 @@ const base = '/maitre-ouvrage';
  * Navigation dashboard : 6 blocs métier.
  * Chaque entrée = un écran métier précis (ERP-BTP).
  */
-export const dashboardNavigationConfig: Record<DashboardMainCategory, NavNode> = {
+export const dashboardNavigationConfig: Record<DashboardNavMainCategory, NavNode> = {
   pilotage: {
     id: 'pilotage',
     label: 'PILOTAGE',
@@ -142,7 +142,9 @@ export function findNavNodeById(
   subCategory?: string,
   subSubCategory?: string
 ): NavNode | undefined {
-  const mainNode = dashboardNavigationConfig[mainCategory];
+  const mainNode = mainCategory in dashboardNavigationConfig
+    ? dashboardNavigationConfig[mainCategory as DashboardNavMainCategory]
+    : undefined;
   if (!mainNode) return undefined;
 
   if (!subCategory) return mainNode;
@@ -158,8 +160,8 @@ export function findNavNodeById(
 export function getSubCategories(
   mainCategory: DashboardMainCategory
 ): NavNode[] {
-  const key = (mainCategory && typeof mainCategory === 'string' ? mainCategory.toLowerCase() : 'pilotage') as DashboardMainCategory;
-  const mainNode = dashboardNavigationConfig[key];
+  const key = (mainCategory && typeof mainCategory === 'string' ? mainCategory.toLowerCase() : 'pilotage') as DashboardNavMainCategory;
+  const mainNode = key in dashboardNavigationConfig ? dashboardNavigationConfig[key] : undefined;
   return mainNode?.children ?? [];
 }
 
@@ -167,8 +169,8 @@ export function getSubSubCategories(
   mainCategory: DashboardMainCategory,
   subCategory: string
 ): NavNode[] {
-  const key = (mainCategory && typeof mainCategory === 'string' ? mainCategory.toLowerCase() : 'pilotage') as DashboardMainCategory;
-  const mainNode = dashboardNavigationConfig[key];
+  const key = (mainCategory && typeof mainCategory === 'string' ? mainCategory.toLowerCase() : 'pilotage') as DashboardNavMainCategory;
+  const mainNode = key in dashboardNavigationConfig ? dashboardNavigationConfig[key] : undefined;
   const subNode = mainNode?.children?.find((child) => child.id === subCategory);
   return subNode?.children ?? [];
 }

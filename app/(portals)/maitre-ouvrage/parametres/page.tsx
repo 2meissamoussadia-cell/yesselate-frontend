@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { useParametresWorkspaceStore } from '@/lib/stores/parametresWorkspaceStore';
 import { useBMOStore } from '@/lib/stores';
 import { ParametresWorkspaceTabs, ParametresWorkspaceContent, ParametresCommandPalette } from '@/components/features/bmo/workspace/parametres';
-import { Settings, Search, Save, Maximize, Minimize, Shield, Bell, Plug, Users, Database, LayoutDashboard, Key } from 'lucide-react';
+import { Settings, Search, Save, Maximize, Minimize, Shield, Bell, Plug, Users, Database, LayoutDashboard, Key, Link2, Box, Activity } from 'lucide-react';
 import Link from 'next/link';
 
 export default function ParametresPage() {
@@ -27,6 +27,7 @@ export default function ParametresPage() {
     { type: 'api-webhooks' as const, icon: Key, label: 'API & Webhooks', color: 'violet', href: '/maitre-ouvrage/parametres/api-webhooks' },
     { type: 'innovation-3d' as const, icon: Box, label: 'Vue 3D chantier', color: 'violet', href: '/maitre-ouvrage/innovation/vue-3d' },
     { type: 'innovation-iot' as const, icon: Activity, label: 'IoT & capteurs', color: 'emerald', href: '/maitre-ouvrage/innovation/iot' },
+    { type: 'blockchain' as const, icon: Link2, label: 'Traçabilité blockchain', color: 'emerald', href: '/maitre-ouvrage/parametres/blockchain' },
   ];
 
   return (
@@ -50,7 +51,7 @@ export default function ParametresPage() {
       <main className="flex-1 overflow-x-hidden overflow-y-auto min-w-0 max-w-full">
         <div className="flex">
           <aside className="w-64 flex-none p-4 border-r border-slate-700/50 hidden lg:block">
-            <nav className="space-y-1">{quickNav.map(item => { const Icon = item.icon; const colorClass = item.color === 'teal' ? 'text-teal-400' : item.color === 'sky' ? 'text-sky-400' : item.color === 'red' ? 'text-rose-400' : item.color === 'amber' ? 'text-amber-400' : item.color === 'blue' ? 'text-blue-400' : item.color === 'indigo' ? 'text-indigo-400' : item.color === 'violet' ? 'text-violet-400' : 'text-emerald-400'; if ('href' in item && item.href) return <Link key={item.type} href={item.href} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-slate-300 hover:bg-slate-800/50 transition-colors"><Icon className={cn("w-5 h-5", colorClass)} /><span className="font-medium">{item.label}</span></Link>; return <button key={item.type} onClick={() => openTab({ type: item.type, id: item.type, title: item.label, icon: '⚙️', data: {}, closable: item.type !== 'general' })} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-slate-300 hover:bg-slate-800/50 transition-colors"><Icon className={cn("w-5 h-5", colorClass)} /><span className="font-medium">{item.label}</span></button>; })}</nav>
+            <nav className="space-y-1">{quickNav.map(item => { const Icon = item.icon; const colorClass = item.color === 'teal' ? 'text-teal-400' : item.color === 'sky' ? 'text-sky-400' : item.color === 'red' ? 'text-rose-400' : item.color === 'amber' ? 'text-amber-400' : item.color === 'blue' ? 'text-blue-400' : item.color === 'indigo' ? 'text-indigo-400' : item.color === 'violet' ? 'text-violet-400' : item.color === 'emerald' ? 'text-emerald-400' : 'text-emerald-400'; if ('href' in item && item.href) return <Link key={item.type} href={item.href} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-slate-300 hover:bg-slate-800/50 transition-colors"><Icon className={cn("w-5 h-5", colorClass)} /><span className="font-medium">{item.label}</span></Link>; return <button key={item.type} onClick={() => openTab({ type: item.type, id: item.type, title: item.label, icon: '⚙️', data: {}, closable: item.type !== 'general' })} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-slate-300 hover:bg-slate-800/50 transition-colors"><Icon className={cn("w-5 h-5", colorClass)} /><span className="font-medium">{item.label}</span></button>; })}</nav>
           </aside>
           <div className="flex-1 p-6"><ParametresWorkspaceContent /></div>
         </div>

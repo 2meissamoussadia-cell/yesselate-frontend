@@ -89,6 +89,8 @@ const nextConfig: NextConfig = {
   devIndicators: process.env.NODE_ENV === 'production' ? false : undefined,
 
   // ✅ Optimisations Fast Refresh
+  // Note : en dev, le navigateur peut afficher « The resource .../app/layout.css was preloaded but not used ».
+  // C'est un comportement connu de Next.js (preloads CSS injectés par le framework). À ignorer en dev.
   experimental: {
     // Optimiser la compilation des packages lourds
     optimizePackageImports: [
@@ -96,6 +98,8 @@ const nextConfig: NextConfig = {
       '@radix-ui/react-tooltip',
       '@radix-ui/react-popover',
       '@radix-ui/react-select',
+      '@radix-ui/react-dropdown-menu',
+      '@radix-ui/react-slot',
       'lucide-react',
       '@tanstack/react-query',
       '@tanstack/react-virtual',

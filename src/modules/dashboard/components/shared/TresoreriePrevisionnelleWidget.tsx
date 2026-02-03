@@ -68,6 +68,7 @@ export const TresoreriePrevisionnelleWidget = memo(function TresoreriePrevisionn
   seuilMinimal = SEUIL_TRESORERIE_MIN,
   className,
   onRelancerCreances,
+  onExportSuccess,
 }: TresoreriePrevisionnelleWidgetProps) {
   const [scenario, setScenario] = useState<ScenarioTresorerie>('realiste');
   const [horizon, setHorizon] = useState<HorizonTresorerie>(90);

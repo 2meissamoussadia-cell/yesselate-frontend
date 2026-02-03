@@ -138,7 +138,7 @@ export function ConflitsView() {
               await fetch('/api/calendar/conflicts', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'resoudre', conflitId: selectedConflit?.id, ...data }),
+                body: JSON.stringify({ ...data, action: 'resoudre', conflitId: selectedConflit?.id }),
               });
             } catch {
               logger.debug('Résolution conflit', { component: 'ConflitsView', data });

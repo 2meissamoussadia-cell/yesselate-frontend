@@ -57,7 +57,7 @@ export function DashboardBottomNav() {
             <button
               key={tab.label}
               type="button"
-              onClick={() => navigate(route.main, route.sub, route.leaf)}
+              onClick={() => navigate(route.main as DashboardMainCategory, route.sub, route.leaf)}
               className={cn(
                 touchTarget.tap,
                 'flex flex-col gap-0.5 text-xs font-medium transition-colors',

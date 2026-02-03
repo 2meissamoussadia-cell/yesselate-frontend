@@ -29,6 +29,7 @@ import {
   FileSpreadsheet,
   MoreVertical,
   ArrowLeft,
+  Wallet,
 } from 'lucide-react';
 
 import { toast } from 'sonner';
@@ -60,6 +61,7 @@ import {
   DashboardHome,
   PilotageHome,
   TickerBar,
+  DashboardBottomNav,
   type KpiForStrip,
 } from '@/modules/dashboard';
 import { getSectionFocusForLeaf } from '@/modules/dashboard/navigation/leafToSectionMap';
@@ -83,6 +85,17 @@ import { KPIAlertsSystem } from '@/components/features/bmo/dashboard/command-cen
 import { useLogger } from '@/lib/utils/logger';
 import { clearCache } from '@/modules/dashboard/api/client';
 import { RisquesCritiquesModal } from '@/modules/dashboard/components/modals/RisquesCritiquesModal';
+
+/** Section sidebar (bleu) → actions (rouge). La bande rouge n’apparaît que si une section bleue avec actions est sélectionnée. */
+const ACTIONS_BY_SECTION: Record<
+  string,
+  Array<{ id: string; label: string; href: string; icon: React.ComponentType<{ className?: string }>; tone: string }>
+> = {
+  'tresorerie-synthese': [
+    { id: 'budget', label: 'Budget', href: '/maitre-ouvrage/dashboard/r/finance/budget/default', icon: Wallet, tone: 'emerald' },
+    { id: 'previsionnel', label: 'Prévisionnel', href: '/maitre-ouvrage/engagements', icon: TrendingUp, tone: 'sky' },
+  ],
+};
 
 /* =========================
    Loading
@@ -480,6 +493,10 @@ function DashboardContent() {
   );
   const hasSectionSelected = Boolean(dashboardSectionFocus);
   const usePilotageHome = isCockpitHome && !hasSectionSelected && subSubCategory !== 'cockpit-detail';
+  /** Section sélectionnée dans la sidebar (bleu) → détermine si et quoi afficher dans la bande d’actions (rouge). */
+  const selectedSection: string | null = usePilotageHome ? 'tresorerie-synthese' : null;
+  const sectionActions = selectedSection != null ? ACTIONS_BY_SECTION[selectedSection] ?? [] : [];
+  const showActionsStrip = sectionActions.length > 0;
   const useCleanLayout = true; // Refonte UX — layout Procore / SAP Fiori
 
   if (useCleanLayout) {
@@ -641,16 +658,54 @@ function DashboardContent() {
               <div className="flex-1 min-h-0 overflow-auto animate-fadeIn pb-24" data-testid="dashboard-content">
               {isCockpitHome ? (
                 usePilotageHome ? (
-                  <PilotageHome
-                    veilleBadges={veilleBadges}
-                    kpis={
-                      topKpis
-                        .filter((k) => k.label !== 'Blocages' && k.label !== 'Décisions en attente')
-                        .slice(0, 6) as KpiForStrip[]
-                    }
-                    onKpiClick={(kpi) => handleKPIClick(kpi as KPIData)}
-                    onSearchClick={toggleCommandPalette}
-                  />
+                  <div className="flex h-full min-h-0 w-full">
+                    {/* Bande rouge : visible uniquement si une section bleue (sidebar) avec actions est sélectionnée ; contenu dynamique selon la section. */}
+                    {showActionsStrip && (
+                      <aside
+                        className={cn(
+                          'shrink-0 flex flex-col gap-3 py-4 px-3 border-r border-slate-200 dark:border-slate-800/60',
+                          'bg-slate-50/80 dark:bg-slate-950/40 w-[72px] sm:w-20'
+                        )}
+                        aria-label="Actions selon la section sélectionnée"
+                      >
+                        {sectionActions.map((action) => {
+                          const Icon = action.icon;
+                          const toneClasses =
+                            action.tone === 'emerald'
+                              ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-800 dark:text-emerald-200 hover:bg-emerald-500/20 hover:border-emerald-500/60 focus-visible:ring-emerald-500/50'
+                              : 'border-sky-500/40 bg-sky-500/10 text-sky-800 dark:text-sky-200 hover:bg-sky-500/20 hover:border-sky-500/60 focus-visible:ring-sky-500/50';
+                          return (
+                            <Link
+                              key={action.id}
+                              href={action.href}
+                              className={cn(
+                                'flex flex-col items-center gap-1.5 p-2.5 rounded-xl border transition-all duration-200',
+                                'focus:outline-none focus-visible:ring-2',
+                                toneClasses
+                              )}
+                              aria-label={action.label}
+                              title={action.label}
+                            >
+                              <Icon className="h-5 w-5 shrink-0" aria-hidden />
+                              <span className="text-[10px] font-semibold leading-tight">{action.label}</span>
+                            </Link>
+                          );
+                        })}
+                      </aside>
+                    )}
+                    <div className="flex-1 min-h-0 overflow-auto animate-fadeIn">
+                      <PilotageHome
+                        veilleBadges={veilleBadges}
+                        kpis={
+                          topKpis
+                            .filter((k) => k.label !== 'Blocages' && k.label !== 'Décisions en attente')
+                            .slice(0, 6) as KpiForStrip[]
+                        }
+                        onKpiClick={(kpi) => handleKPIClick(kpi as KPIData)}
+                        onSearchClick={toggleCommandPalette}
+                      />
+                    </div>
+                  </div>
                 ) : (
                   <DashboardHome kpis={allKpis} perimetreFilter={perimetreFilter} sectionFocus={dashboardSectionFocus} />
                 )
@@ -702,6 +757,7 @@ function DashboardContent() {
         {/* MAIN — embedded pour éviter doublon main#main-content (déjà dans BmoLayoutShell) */}
         <DashboardShell
           embedded
+          hasMobileBottomNav
           header={
             <div className="flex items-center justify-between gap-4">
               <div className="min-w-0 flex-1 flex items-center gap-3">
@@ -1015,6 +1071,7 @@ function DashboardContent() {
       </div>
 
       <DashboardModals />
+      <DashboardBottomNav />
       <RisquesCritiquesModal open={risquesModalOpen} onClose={() => setRisquesModalOpen(false)} />
     </DashboardErrorBoundary>
   );

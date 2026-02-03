@@ -17,6 +17,10 @@ import type {
   DashboardViewData,
 } from '../types/dashboardDataTypes';
 
+// Ré-export pour que les modules API consomment une source unique
+export type { NavKey } from '../types/dashboard';
+export type { DashboardViewData } from '../types/dashboardDataTypes';
+
 // ============================================================================
 // Types de base pour la sécurité et le multi-tenant
 // ============================================================================

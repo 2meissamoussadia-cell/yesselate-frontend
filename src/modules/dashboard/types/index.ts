@@ -19,6 +19,7 @@ export { navToKey } from './dashboard';
 // Types de navigation existants (pour compatibilité)
 export type {
   DashboardMainCategory,
+  DashboardNavMainCategory,
   DashboardSubCategory,
   DashboardSubSubCategory,
   DashboardNavItem,

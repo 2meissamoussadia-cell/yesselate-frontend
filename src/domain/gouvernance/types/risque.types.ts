@@ -3,6 +3,7 @@
  */
 
 import type { Risque, RisqueSeverite } from './gouvernance.types';
+export type { Risque, RisqueSeverite } from './gouvernance.types';
 
 export interface RisqueMetrics {
   score: number; // 0-100

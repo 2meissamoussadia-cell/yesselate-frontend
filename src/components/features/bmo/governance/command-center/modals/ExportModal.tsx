@@ -93,7 +93,7 @@ export function ExportModal() {
     setIsExporting(true);
     try {
       // Construire les données à exporter selon le périmètre
-      let items = Array.isArray(selectedItems) ? [...selectedItems] : [];
+      let items: Record<string, unknown>[] = Array.isArray(selectedItems) ? [...(selectedItems as unknown as Record<string, unknown>[])] : [];
       if (scope === 'all') {
         // Pour "toutes les données", on exporte la sélection ou un placeholder
         if (items.length === 0) items = [{ message: 'Export complet', vue: navigation?.subCategory ?? 'gouvernance', date: new Date().toISOString().slice(0, 10) }];

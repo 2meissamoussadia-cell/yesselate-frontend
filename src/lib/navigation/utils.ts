@@ -134,7 +134,7 @@ export function buildBreadcrumbs(
 export function resolveBadgeCountFromTree(
   items: NavigationItem[],
   itemId: string,
-  badgeCounts?: Record<string, number>
+  badgeCounts?: Record<string, number | undefined>
 ): number | undefined {
   if (badgeCounts && itemId in badgeCounts) return badgeCounts[itemId];
   for (const item of items) {

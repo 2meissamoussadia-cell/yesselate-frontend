@@ -21,9 +21,11 @@ type DashboardShellProps = {
   className?: string;
   /** À true quand le shell est déjà dans un main (ex. BmoLayoutShell) pour éviter doublon main / id main-content */
   embedded?: boolean;
+  /** À true pour ajouter padding-bottom sur mobile (réservé pour la barre de navigation fixe) */
+  hasMobileBottomNav?: boolean;
 };
 
-export function DashboardShell({ header, subnav, children, className, embedded }: DashboardShellProps) {
+export function DashboardShell({ header, subnav, children, className, embedded, hasMobileBottomNav }: DashboardShellProps) {
   return (
     <div
       className={cn(
@@ -60,11 +62,33 @@ export function DashboardShell({ header, subnav, children, className, embedded }
             aria-label="Contenu dashboard"
             className="flex-1 min-h-0 min-w-0 overflow-x-hidden overflow-y-auto scroll-smooth scroll-touch scrollbar-dashboard"
           >
-            <div className={cn('min-w-0 max-w-full', spacing.paddingX.md, 'sm:px-6', spacing.paddingY.md, 'sm:py-6')}>{children}</div>
+            <div
+              className={cn(
+                'min-w-0 max-w-full',
+                spacing.paddingX.md,
+                'sm:px-6',
+                spacing.paddingY.md,
+                'sm:py-6',
+                hasMobileBottomNav && 'pb-20 md:pb-6'
+              )}
+            >
+              {children}
+            </div>
           </div>
         ) : (
           <main id="main-content" className="flex-1 min-h-0 min-w-0 overflow-x-hidden overflow-y-auto scroll-smooth scroll-touch scrollbar-dashboard" role="main">
-            <div className={cn('min-w-0 max-w-full', spacing.paddingX.md, 'sm:px-6', spacing.paddingY.md, 'sm:py-6')}>{children}</div>
+            <div
+              className={cn(
+                'min-w-0 max-w-full',
+                spacing.paddingX.md,
+                'sm:px-6',
+                spacing.paddingY.md,
+                'sm:py-6',
+                hasMobileBottomNav && 'pb-20 md:pb-6'
+              )}
+            >
+              {children}
+            </div>
           </main>
         )}
       </div>

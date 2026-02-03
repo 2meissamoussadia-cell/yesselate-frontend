@@ -3,7 +3,7 @@
  * Traçabilité complète de toutes les actions
  */
 
-import { apiClient } from '../client';
+import { fetchJson, buildApiUrl } from './http';
 
 // ================================
 // Types
@@ -83,7 +83,7 @@ export const auditTrailAPI = {
     page: number;
     limit: number;
   }> {
-    return apiClient.get(`/api/alerts/${alertId}/audit`, filters);
+    return fetchJson(`/api/alerts/${alertId}/audit`, { method: 'GET', params: filters as Record<string, string | number | undefined> });
   },
 
   /**
@@ -95,7 +95,7 @@ export const auditTrailAPI = {
     page: number;
     limit: number;
   }> {
-    return apiClient.get('/api/alerts/audit', filters);
+    return fetchJson('/api/alerts/audit', { method: 'GET', params: filters as Record<string, string | number | undefined> });
   },
 
   /**
@@ -104,7 +104,7 @@ export const auditTrailAPI = {
   async addAuditEntry(entry: Omit<AuditEntry, 'id' | 'timestamp'>): Promise<{
     entry: AuditEntry;
   }> {
-    return apiClient.post('/api/alerts/audit', entry);
+    return fetchJson('/api/alerts/audit', { method: 'POST', body: JSON.stringify(entry) });
   },
 
   /**
@@ -117,15 +117,18 @@ export const auditTrailAPI = {
   }): Promise<{
     stats: AuditStats;
   }> {
-    return apiClient.get('/api/alerts/audit/stats', filters);
+    return fetchJson('/api/alerts/audit/stats', { method: 'GET', params: filters });
   },
 
   /**
    * Exporter l'audit trail
    */
   async exportAudit(filters?: AuditFilters, format: 'csv' | 'json' | 'pdf' = 'csv'): Promise<Blob> {
-    const params = { ...filters, format };
-    return apiClient.download('/api/alerts/audit/export', params);
+    const params = { ...filters, format } as unknown as Record<string, string | number | undefined>;
+    const url = buildApiUrl('/api/alerts/audit/export', params);
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Export failed: ${res.status}`);
+    return res.blob();
   },
 
   /**
@@ -142,7 +145,7 @@ export const auditTrailAPI = {
       metadata?: any;
     }>;
   }> {
-    return apiClient.get(`/api/alerts/${alertId}/timeline`);
+    return fetchJson(`/api/alerts/${alertId}/timeline`);
   },
 
   /**
@@ -152,7 +155,7 @@ export const auditTrailAPI = {
     results: AuditEntry[];
     total: number;
   }> {
-    return apiClient.get('/api/alerts/audit/search', { q: query, ...filters });
+    return fetchJson('/api/alerts/audit/search', { method: 'GET', params: { q: query, ...filters } as unknown as Record<string, string | number | undefined> });
   },
 };
 

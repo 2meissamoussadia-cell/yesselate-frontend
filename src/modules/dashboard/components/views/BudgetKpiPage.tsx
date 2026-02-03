@@ -106,7 +106,7 @@ export function BudgetKpiPage({ data: apiData }: BudgetKpiPageProps = {}) {
     return { statut, alertes, raw };
   }, [apiData?.budget]);
 
-  const appMeta = useMemo(() => getAppForCategory('performance'), []);
+  const appMeta = useMemo(() => getAppForCategory('finance'), []);
 
   // Helpers centralisés importés depuis colorMapping.ts
 

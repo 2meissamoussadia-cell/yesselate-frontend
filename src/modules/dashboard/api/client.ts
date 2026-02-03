@@ -12,7 +12,7 @@
 'use client';
 
 import { navToKey, type NavKey } from '../types/dashboard';
-import type {
+import {
   DashboardApiResponse,
   DashboardApiOptions,
   DashboardApiError,
@@ -165,7 +165,7 @@ export async function fetchDashboardView<TNav extends NavKey>(
       DashboardApiErrorCode.VALIDATION_ERROR,
       'Invalid route parameters',
       400,
-      validation.error.errors
+      validation.error.issues
     );
   }
   

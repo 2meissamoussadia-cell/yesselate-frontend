@@ -100,10 +100,7 @@ export const PILOTAGE_HIERARCHY: PilotageHierarchyNode[] = [
         level: '2.1',
         label: 'Synthèse',
         target: { type: 'route', href: '/maitre-ouvrage/engagements' },
-        children: [
-          { id: 'tresorerie-budget', level: '2.1.1', label: 'Budget', target: { type: 'route', href: '/maitre-ouvrage/engagements' } },
-          { id: 'tresorerie-previsionnel', level: '2.1.2', label: 'Prévisionnel', target: { type: 'route', href: '/maitre-ouvrage/engagements' } },
-        ],
+        /* Budget et Prévisionnel : visibles uniquement en boutons sur la page Synthèse (PilotageHome), plus dans la sidebar */
       },
       {
         id: 'tresorerie-details',

@@ -68,7 +68,7 @@ export function adaptBudget(apiBudget: BudgetGouvernance): Budget {
 /**
  * Calcule le statut d'un budget depuis les données API
  */
-function calculateBudgetStatut(apiBudget: BudgetGouvernance): 'ok' | 'warning' | 'critical' | 'exceeded' {
+function calculateBudgetStatut(apiBudget: BudgetGouvernance): 'on-track' | 'warning' | 'critical' | 'exceeded' {
   if (apiBudget.depassement && apiBudget.depassement > 0) {
     return 'exceeded';
   }
@@ -78,7 +78,7 @@ function calculateBudgetStatut(apiBudget: BudgetGouvernance): 'ok' | 'warning' |
   if (apiBudget.pourcent_consomme >= 75) {
     return 'warning';
   }
-  return 'ok';
+  return 'on-track';
 }
 
 /**
@@ -103,16 +103,16 @@ export function adaptJalon(apiJalon: JalonGouvernance): Jalon {
 /**
  * Adapte le statut du jalon
  */
-function adaptJalonStatut(statut: 'À venir' | 'En cours' | 'Terminé'): 'pending' | 'in-progress' | 'completed' {
+function adaptJalonStatut(statut: 'À venir' | 'En cours' | 'Terminé'): 'planned' | 'in-progress' | 'completed' {
   switch (statut) {
     case 'À venir':
-      return 'pending';
+      return 'planned';
     case 'En cours':
       return 'in-progress';
     case 'Terminé':
       return 'completed';
     default:
-      return 'pending';
+      return 'planned';
   }
 }
 
@@ -269,23 +269,21 @@ export function adaptGouvernanceData(
 export function adaptGouvernanceOverview(
   apiOverview: GouvernanceOverviewResponse
 ): GouvernanceOverview {
+  const s = apiOverview.stats;
   return {
-    projets_actifs: apiOverview.projets_actifs || 0,
-    projets_total: apiOverview.projets_total || 0,
-    budget_total: apiOverview.budget_total || 0,
-    budget_consomme: apiOverview.budget_consomme || 0,
-    budget_consomme_pourcent: apiOverview.budget_consomme_pourcent || 0,
-    jalons_total: apiOverview.jalons_total || 0,
-    jalons_valides: apiOverview.jalons_valides || 0,
-    jalons_retard: apiOverview.jalons_retard || 0,
-    risques_total: apiOverview.risques_total || 0,
-    risques_critiques: apiOverview.risques_critiques || 0,
-    validations_total: apiOverview.validations_total || 0,
-    validations_en_attente: apiOverview.validations_en_attente || 0,
-    exposition_financiere: apiOverview.exposition_financiere || 0,
-    escalades_actives: apiOverview.escalades_actives || 0,
-    decisions_en_attente: apiOverview.decisions_en_attente || 0,
-    taux_conformite: apiOverview.taux_conformite || 0,
+    projets_actifs: s.projets_actifs ?? 0,
+    budget_consomme_pourcent: s.budget_consomme_pourcent ?? 0,
+    jalons_retard: s.jalons_retard ?? 0,
+    risques_critiques: s.risques_critiques ?? 0,
+    validations_en_attente: s.validations_en_attente ?? 0,
+    budget_total: s.budget_total ?? 0,
+    budget_consomme: s.budget_consomme ?? 0,
+    jalons_total: s.jalons_total ?? 0,
+    jalons_valides: s.jalons_valides ?? 0,
+    exposition_financiere: s.exposition_financiere ?? 0,
+    escalades_actives: s.escalades_actives ?? 0,
+    decisions_en_attente: s.decisions_en_attente ?? 0,
+    taux_conformite: s.taux_conformite ?? 0,
   };
 }
 
@@ -297,6 +295,8 @@ export function adaptGouvernanceStats(
 ): GouvernanceStats {
   return {
     projets_actifs: apiStats.projets_actifs,
+    projets_en_retard: (apiStats as ApiGouvernanceStats & { projets_en_retard?: number }).projets_en_retard ?? 0,
+    projets_at_risk: (apiStats as ApiGouvernanceStats & { projets_at_risk?: number }).projets_at_risk ?? 0,
     budget_consomme_pourcent: apiStats.budget_consomme_pourcent,
     jalons_respectes_pourcent: apiStats.jalons_respectes_pourcent,
     risques_critiques: apiStats.risques_critiques,
@@ -306,6 +306,7 @@ export function adaptGouvernanceStats(
     jalons_total: apiStats.jalons_total,
     jalons_valides: apiStats.jalons_valides,
     jalons_retard: apiStats.jalons_retard,
+    risques_total: (apiStats as ApiGouvernanceStats & { risques_total?: number }).risques_total ?? 0,
     exposition_financiere: apiStats.exposition_financiere,
     escalades_actives: apiStats.escalades_actives,
     decisions_en_attente: apiStats.decisions_en_attente,
@@ -321,12 +322,12 @@ export function adaptTendanceMensuelle(
 ): TendanceMensuelle {
   return {
     mois: apiTendance.mois,
-    projets: apiTendance.projets_actifs || 0,
-    budget: apiTendance.budget_consomme_pourcent || 0,
-    jalons: apiTendance.jalons_respectes_pourcent || 0,
-    risques: apiTendance.risques_critiques || 0,
-    validations: apiTendance.validations_en_attente || 0,
-    direction: apiTendance.direction,
-    variation_pourcent: apiTendance.variation_pourcent,
+    projets: apiTendance.projets_actifs ?? 0,
+    budget: apiTendance.budget_consomme ?? 0,
+    jalons: apiTendance.jalons_valides ?? 0,
+    risques: apiTendance.risques_critiques ?? 0,
+    validations: apiTendance.validations_en_attente ?? 0,
+    direction: (apiTendance as ApiTendanceMensuelle & { direction?: 'up' | 'down' | 'stable' }).direction,
+    variation_pourcent: (apiTendance as ApiTendanceMensuelle & { variation_pourcent?: number }).variation_pourcent,
   };
 }

@@ -8,6 +8,7 @@
 import React, { useEffect, useState } from 'react';
 import { Brain, TrendingUp, AlertTriangle, Lightbulb, ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAchievementsStore } from '@/lib/stores/achievementsStore';
 
 export type SuggestionType = 'prediction' | 'anomaly' | 'recommendation';
 export interface AISuggestion {
@@ -33,12 +34,17 @@ export function DashboardAISuggestionsPanel() {
   const [loading, setLoading] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
 
+  const unlockAchievement = useAchievementsStore((s) => s.unlock);
+
   useEffect(() => {
     let cancelled = false;
     fetch('/api/ai/suggestions')
       .then((res) => res.ok ? res.json() : Promise.reject(new Error('Failed')))
       .then((data) => {
-        if (!cancelled) setSuggestions(data.suggestions ?? []);
+        if (!cancelled) {
+          setSuggestions(data.suggestions ?? []);
+          unlockAchievement('ia_suggestions');
+        }
       })
       .catch(() => {
         if (!cancelled) setSuggestions([]);
@@ -47,7 +53,7 @@ export function DashboardAISuggestionsPanel() {
         if (!cancelled) setLoading(false);
       });
     return () => { cancelled = true; };
-  }, []);
+  }, [unlockAchievement]);
 
   if (loading || suggestions.length === 0) return null;
 

@@ -9,6 +9,7 @@ import { useNavigationStore } from '@/lib/stores';
 import { useBMOStore } from '@/lib/stores';
 import { createCrossPageLink, routeMapping } from '@/lib/services/navigation.service';
 import type { PurchaseOrder, Invoice, Amendment, Demand } from '@/lib/types/bmo.types';
+import { usePageNavigation } from '@/hooks/usePageNavigation';
 
 /**
  * Hook principal pour automatiser toutes les interactions d'une page

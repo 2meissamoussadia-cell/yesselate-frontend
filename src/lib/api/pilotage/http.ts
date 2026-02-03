@@ -23,18 +23,45 @@ export type ApiEnvelope<T> = {
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
+export type FetchJsonOptions = RequestInit & {
+  signal?: AbortSignal;
+  /** Query params (serialisés en query string). Les tableaux sont envoyés en répétant la clé. */
+  params?: Record<string, string | number | boolean | undefined | string[]>;
+};
+
+export function buildApiUrl(endpoint: string, params?: FetchJsonOptions['params']): string {
+  const base = endpoint.startsWith('http') ? endpoint : `${API_BASE_URL}${endpoint}`;
+  if (!params || Object.keys(params).length === 0) return base;
+  const sp = new URLSearchParams();
+  for (const [k, v] of Object.entries(params)) {
+    if (v === undefined) continue;
+    if (Array.isArray(v)) {
+      v.forEach((item) => sp.append(k, String(item)));
+    } else {
+      sp.set(k, String(v));
+    }
+  }
+  const qs = sp.toString();
+  return qs ? `${base}${base.includes('?') ? '&' : '?'}${qs}` : base;
+}
+
+function buildUrl(endpoint: string, params?: FetchJsonOptions['params']): string {
+  return buildApiUrl(endpoint, params);
+}
+
 export async function fetchJson<T>(
   endpoint: string,
-  options: RequestInit & { signal?: AbortSignal } = {}
+  options: FetchJsonOptions = {}
 ): Promise<T> {
-  const url = endpoint.startsWith('http') ? endpoint : `${API_BASE_URL}${endpoint}`;
+  const { params, ...init } = options;
+  const url = buildUrl(endpoint, params);
 
   const res = await fetch(url, {
-    ...options,
+    ...init,
     headers: {
       Accept: 'application/json',
-      ...(options.body ? { 'Content-Type': 'application/json' } : {}),
-      ...options.headers,
+      ...(init.body ? { 'Content-Type': 'application/json' } : {}),
+      ...init.headers,
     },
   });
 

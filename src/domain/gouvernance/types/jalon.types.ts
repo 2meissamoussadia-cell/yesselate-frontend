@@ -3,6 +3,7 @@
  */
 
 import type { Jalon, JalonStatut } from './gouvernance.types';
+export type { Jalon, JalonStatut } from './gouvernance.types';
 
 export interface JalonMetrics {
   is_overdue: boolean;

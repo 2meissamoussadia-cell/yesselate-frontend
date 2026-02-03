@@ -737,6 +737,7 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
                     type="button"
                     onClick={() => applySavedView(v)}
                     className="text-sky-400 hover:text-sky-300 text-[10px] focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 rounded px-1.5"
+                    aria-label={`Appliquer la vue ${v.name}`}
                   >
                     Appliquer
                   </button>

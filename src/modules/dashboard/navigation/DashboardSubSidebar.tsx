@@ -18,7 +18,7 @@ import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCen
 import { nodeAllowed } from './permissions';
 import { useDashboardPermissions } from '../hooks/useDashboardPermissions';
 import { useDashboardPermissionsStore } from '@/lib/stores/dashboardPermissionsStore';
-import type { DashboardMainCategory } from '../types/dashboardNavigationTypes';
+import type { DashboardMainCategory, DashboardNavMainCategory } from '../types/dashboardNavigationTypes';
 import { PILOTAGE_HIERARCHY, type PilotageHierarchyNode } from './pilotageHierarchyConfig';
 import { getModuleHref } from '@/lib/navigation/moduleLinks';
 
@@ -117,7 +117,7 @@ export const DashboardSubSidebar = memo(function DashboardSubSidebar() {
       <div className="py-3 px-2">
         <nav
           className="space-y-0.5"
-          aria-label={dashboardNavigationConfig[currentMain] ? `Sections ${dashboardNavigationConfig[currentMain].label}` : 'Sections'}
+          aria-label={currentMain in dashboardNavigationConfig ? `Sections ${dashboardNavigationConfig[currentMain as DashboardNavMainCategory].label}` : 'Sections'}
         >
           {subCategories.map((subCat) => {
             const active = subCat.id === sub;

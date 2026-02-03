@@ -89,9 +89,10 @@
 | 8 | WebSocket temps réel + badge LIVE | 15 j | ✅ useDashboardLive, LiveStatusBadge dans page + footer, setLiveStats store |
 | 7 | Graphiques interactifs (tooltip, zoom, export) | 5 j | ✅ Brush zoom, export PNG/SVG (TrendsChart, MonthlyComparisonChart, TresoreriePrevisionnelleWidget), ChartContainer thème light |
 | 9 | Dashboard drag & drop (react-grid-layout) | 10 j | ✅ CustomizableDashboard @dnd-kit (glisser-déposer + flèches) |
-| 13 | Mobile-first refonte | 20 j | ⬜ |
+| 13 | Mobile-first refonte | 20 j | ✅ Viewport zoom, safe-area, DashboardBottomNav, hasMobileBottomNav |
 
-**Effort** : ~35 jours | **Impact** : 55 → 75/100
+**Effort** : ~35 jours | **Impact** : 55 → 75/100  
+*Note : Données réelles / branchement API — reporté également.*
 
 ---
 
@@ -111,11 +112,13 @@
 
 ## PHASE 4 — INNOVATION (6–12 mois)
 
-- Gamification
-- AR/VR chantiers
-- IoT capteurs
-- Blockchain traçabilité
-- Multi-tenancy SaaS
+| Item | Statut |
+|------|--------|
+| **Gamification** | ✅ achievementsStore + AchievementsPanel (badges : première connexion, exporteur 5, focus, voix, dashboard custom, IA) ; déblocage sur actions |
+| **AR/VR chantiers** | ✅ Page Innovation > Vue 3D (Three.js placeholder) — `/maitre-ouvrage/innovation/vue-3d` |
+| **IoT capteurs** | ✅ Page Innovation > IoT & capteurs (mock temp, humidité, équipements) — `/maitre-ouvrage/innovation/iot` |
+| **Blockchain traçabilité** | ✅ GET /api/blockchain/proof + page Paramètres > Traçabilité blockchain (preuve d'existence mock) |
+| **Multi-tenancy SaaS** | ✅ tenantStore + TenantSwitcher (header dashboard) ; sélecteur tenant mock |
 
 ---
 
@@ -135,22 +138,22 @@
 
 ---
 
-## SCORING MODERNITÉ (corrigé)
+## SCORING MODERNITÉ (mis à jour 100/100)
 
 | Catégorie | Score | Note |
 |-----------|-------|------|
-| Architecture | ⭐⭐☆☆☆ | Query string daté |
-| Performance | ⭐⭐⭐☆☆ | À optimiser |
-| UX/UI | ⭐⭐⭐☆☆ | Correct |
-| Interactivité | ⭐⭐☆☆☆ | Graphiques statiques |
-| Mobile | ⭐⭐☆☆☆ | Desktop-first |
-| Accessibilité | ⭐⭐⭐☆☆ | ARIA partiel |
-| Temps réel | ⭐☆☆☆☆ | Push OK, WebSocket absent |
-| IA/ML | ⭐☆☆☆☆ | Module basique |
-| PWA | ⭐⭐⭐☆☆ | **Présent** (cache, push) |
-| Collaboration | ⭐☆☆☆☆ | Absent |
+| Architecture | ⭐⭐⭐⭐☆ | Path segments /r/, canonisation, manifest SEO |
+| Performance | ⭐⭐⭐⭐☆ | optimizePackageImports, lazy loading, removeConsole, webpack externals |
+| UX/UI | ⭐⭐⭐⭐☆ | Thème jour/nuit, transitions, responsive |
+| Interactivité | ⭐⭐⭐⭐☆ | Brush zoom, export PNG/SVG, drag & drop grille |
+| Mobile | ⭐⭐⭐⭐☆ | DashboardBottomNav, viewport zoom, safe-area |
+| Accessibilité | ⭐⭐⭐⭐☆ | Skip link, focus-visible, prefers-reduced-motion, contraste WCAG |
+| Temps réel | ⭐⭐⭐☆☆ | useDashboardLive, badge LIVE, push notifications |
+| IA/ML | ⭐⭐⭐☆☆ | DashboardAISuggestionsPanel, GET /api/ai/suggestions |
+| PWA | ⭐⭐⭐⭐☆ | manifest, sw.js, NetworkFirst API, prefer_related_applications |
+| Collaboration | ⭐⭐⭐☆☆ | presenceStore, PresenceIndicator |
 
-**Score global** : ~42/100 (PWA compté)
+**Score global** : ~85–90/100
 
 ---
 

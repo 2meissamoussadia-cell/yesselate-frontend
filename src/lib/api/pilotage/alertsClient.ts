@@ -100,7 +100,7 @@ export const alertsAPI = {
   getAlerts: (filters?: AlertFilters) =>
     fetchJson<AlertsResponse>('/api/alerts', {
       method: 'GET',
-      params: filters as Record<string, string>,
+      params: filters as Record<string, string | string[] | undefined>,
     }),
 
   /**
@@ -115,7 +115,7 @@ export const alertsAPI = {
   getStats: (filters?: Omit<AlertFilters, 'page' | 'limit'>) =>
     fetchJson<{ stats: AlertStats }>('/api/alerts/stats', {
       method: 'GET',
-      params: filters as Record<string, string>,
+      params: filters as Record<string, string | string[] | undefined>,
     }),
 
   /**
@@ -124,7 +124,7 @@ export const alertsAPI = {
   getAlertsByQueue: (queue: AlertQueue, filters?: AlertFilters) =>
     fetchJson<AlertsResponse>(`/api/alerts/queue/${queue}`, {
       method: 'GET',
-      params: filters as Record<string, string>,
+      params: filters as Record<string, string | string[] | undefined>,
     }),
 
   /**
@@ -133,7 +133,7 @@ export const alertsAPI = {
   searchAlerts: (query: string, filters?: AlertFilters) =>
     fetchJson<AlertsResponse>('/api/alerts/search', {
       method: 'GET',
-      params: { q: query, ...filters } as Record<string, string>,
+      params: { q: query, ...filters } as unknown as Record<string, string | string[] | undefined>,
     }),
 
   /**

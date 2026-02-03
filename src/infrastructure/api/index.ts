@@ -2,9 +2,6 @@
  * Infrastructure API Exports
  */
 
-export {
-  AnalyticsRepository,
-  AnalyticsApiRepository,
-  analyticsRepository,
-} from './AnalyticsRepository';
+export type { AnalyticsRepository, AnalyticsApiRepository } from './AnalyticsRepository';
+export { analyticsRepository } from './AnalyticsRepository';
 

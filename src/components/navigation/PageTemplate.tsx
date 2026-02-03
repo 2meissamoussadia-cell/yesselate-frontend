@@ -100,7 +100,8 @@ export function PageTemplate({
     pathname?.startsWith('/maitre-ouvrage/alerts') ||
     pathname?.startsWith('/maitre-ouvrage/documents') ||
     pathname?.startsWith('/maitre-ouvrage/performance') ||
-    pathname?.startsWith('/maitre-ouvrage/opportunities');
+    pathname?.startsWith('/maitre-ouvrage/opportunities') ||
+    pathname?.startsWith('/maitre-ouvrage/messages');
   const effectiveMaxWidth = useFullPage ? 'none' : contentMaxWidth;
 
   return (

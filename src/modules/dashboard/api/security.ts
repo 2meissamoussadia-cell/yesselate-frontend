@@ -350,7 +350,7 @@ export function applyTenantFilter<T extends Record<string, unknown>>(
   
   if (Array.isArray(data)) {
     // Si c'est un tableau, filtrer chaque élément
-    return data.filter(matchesContext) as T;
+    return data.filter(matchesContext) as unknown as T;
   }
   
   // Si c'est un objet, vérifier le tenantId et autres filtres
@@ -442,11 +442,11 @@ export async function logAccess(
       } catch (dbError) {
         // Si l'insertion DB échoue, logger quand même
         logger.warn('Failed to insert audit log to DB, using logger fallback', { action: 'auditAccess' });
-        logger.info('Access audit', { action: 'auditAccess', ...auditEntry });
+        logger.info('Access audit', { ...auditEntry, auditAction: 'auditAccess' });
       }
     } else {
       // Pas de DB, utiliser le logger uniquement
-      logger.info('Access audit', { action: 'auditAccess', ...auditEntry });
+      logger.info('Access audit', { ...auditEntry, auditAction: 'auditAccess' });
     }
   } catch (error) {
     const err = error instanceof Error ? error : new Error(String(error));

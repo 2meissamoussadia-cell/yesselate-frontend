@@ -41,8 +41,8 @@ export * from './types/dashboardDomain';
 // Registry hooks (nouveau)
 export * from './hooks/useDashboardRegistry';
 
-// Config
-export * from './config/dashboardNavigationConfig';
+// Config (navigation/dashboardNavigationConfig est exporté via ./navigation ; éviter doublon avec config/dashboardNavigationConfig)
+export * from './config/dashboardApps';
 export * from './config/navigationMap';
 
 // Utils

@@ -1,5 +1,45 @@
 export * from './useApiQuery';
 export * from './useAlerts';
-export * from './useAnalytics';
-export * from './useBlocked';
+export {
+  analyticsKeys,
+  useKpis,
+  useKpi,
+  useUpdateKpi,
+  useReports,
+  useReport,
+  useCreateReport,
+  useUpdateReport,
+  useDeleteReport,
+  useAlerts as useAnalyticsAlerts,
+  useAlertDetail,
+  useAcknowledgeAlert as useAnalyticsAcknowledgeAlert,
+  useResolveAlert as useAnalyticsResolveAlert,
+  useTrends,
+  useBureauxPerformance,
+  useBureau,
+  useAnalyticsStats,
+  useAnalyticsDashboard,
+  useExportData,
+  useComparePerformance,
+  useComparison,
+  usePrefetchAnalytics,
+} from './useAnalytics';
+export {
+  blockedKeys,
+  useBlockedDossiers,
+  useBlockedDossier,
+  useBlockedStats,
+  useBlockedMatrix,
+  useBlockedBureaux,
+  useBlockedTimeline,
+  useBlockedComments,
+  useCreateBlocked,
+  useUpdateBlocked,
+  useResolveBlocked,
+  useEscalateBlocked,
+  useAddComment as useBlockedAddComment,
+  useDeleteBlocked,
+  useExportBlocked,
+  usePrefetchBlocked,
+} from './useBlocked';
 export * from './useValidationBCAnomalies';

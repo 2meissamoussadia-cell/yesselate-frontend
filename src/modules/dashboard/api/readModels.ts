@@ -169,10 +169,10 @@ async function fetchOverviewKpisHighlights(
   await new Promise((resolve) => setTimeout(resolve, 100));
   
   return {
-    highlights: [
-      { id: 'H1', text: '3 risques critiques', type: 'critical' },
-      { id: 'H2', text: '5 blocages', type: 'warning' },
-      { id: 'H3', text: '8 décisions en attente', type: 'info' },
+    topKPIs: [
+      { id: 'H1', label: 'Risques critiques', value: 3, trend: 0, tone: 'crit' as const, trendDirection: 'neutral' as const },
+      { id: 'H2', label: 'Blocages', value: 5, trend: 0, tone: 'warn' as const, trendDirection: 'neutral' as const },
+      { id: 'H3', label: 'Décisions en attente', value: 8, trend: 0, tone: 'info' as const, trendDirection: 'neutral' as const },
     ],
   };
 }
@@ -305,24 +305,12 @@ async function fetchKpisBudget(
   await new Promise((resolve) => setTimeout(resolve, 150));
   
   return {
-    kpis: [
-      {
-        id: 'budget-consomme',
-        label: 'Budget consommé',
-        value: '4.2 Mds',
-        trend: '+5%',
-        trendType: 'up',
-        color: 'amber',
-      },
-      {
-        id: 'taux-consommation',
-        label: 'Taux de consommation',
-        value: '67%',
-        trend: '+2%',
-        trendType: 'up',
-        color: 'emerald',
-      },
-    ],
+    budget: {
+      total: 4_200_000_000,
+      consomme: 2_814_000_000,
+      reste: 1_386_000_000,
+      pourcentage: 67,
+    },
   };
 }
 

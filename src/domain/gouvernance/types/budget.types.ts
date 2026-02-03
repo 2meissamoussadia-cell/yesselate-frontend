@@ -3,6 +3,7 @@
  */
 
 import type { Budget, BudgetStatut } from './gouvernance.types';
+export type { Budget, BudgetStatut } from './gouvernance.types';
 
 export interface BudgetMetrics {
   consommation_pourcent: number;

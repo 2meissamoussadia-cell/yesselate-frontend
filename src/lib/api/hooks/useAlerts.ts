@@ -92,7 +92,7 @@ export function useAlert(id: string, options?: Omit<UseQueryOptions<{ alert: Ale
  * Récupérer les statistiques des alertes
  */
 export function useAlertStats(filters?: Omit<AlertFilters, 'page' | 'limit'>, options?: any) {
-  return useQuery({
+  return useQuery<{ stats: AlertStats }>({
     queryKey: alertsKeys.statsFiltered(filters),
     queryFn: () => alertsAPI.getStats(filters),
     staleTime: 30_000,
@@ -170,7 +170,7 @@ export function useWatchlist(userId: string, options?: any) {
  * Récupérer les tendances des alertes
  */
 export function useAlertTrends(period: 'day' | 'week' | 'month' = 'week', options?: any) {
-  return useQuery({
+  return useQuery<{ trends: Record<string, { critical: number; warning: number; info: number; resolved: number }> }>({
     queryKey: alertsKeys.trends(period),
     queryFn: () => alertsAPI.getTrends(period),
     staleTime: 300_000, // 5 minutes
@@ -182,7 +182,7 @@ export function useAlertTrends(period: 'day' | 'week' | 'month' = 'week', option
  * Récupérer les alertes critiques
  */
 export function useCriticalAlerts(options?: any) {
-  return useQuery({
+  return useQuery<{ alerts: AlertItem[] }>({
     queryKey: alertsKeys.critical(),
     queryFn: () => alertsAPI.getCriticalAlerts(),
     staleTime: 15_000, // 15 secondes pour les critiques
@@ -195,7 +195,7 @@ export function useCriticalAlerts(options?: any) {
  * Récupérer les alertes avec SLA dépassé
  */
 export function useSLAViolations(options?: any) {
-  return useQuery({
+  return useQuery<{ alerts: AlertItem[]; violations?: number }>({
     queryKey: alertsKeys.sla(),
     queryFn: () => alertsAPI.getSLAViolations(),
     staleTime: 30_000,

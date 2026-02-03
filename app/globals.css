@@ -193,11 +193,28 @@
   box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.2);
 }
 
+/* Réduction des mouvements — Accessibilité WCAG 2.3.3 (Animations from Interactions) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* Cadre viewport + transition douce au changement de thème */
 html {
   overflow-x: hidden;
   max-width: 100vw;
   transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+/* Taille de texte minimum pour lisibilité (WCAG 1.4.4) */
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
 }
 /* Application des couleurs au body */
 body {
@@ -207,6 +224,18 @@ body {
   overflow-x: hidden;
   max-width: 100vw;
   transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+/* Focus visible amélioré — contraste élevé pour accessibilité */
+:focus-visible {
+  outline: 2px solid var(--theme-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Contenu principal — cible du skip link (focus discret) */
+#main-content:focus {
+  outline: 2px solid var(--theme-focus-ring);
+  outline-offset: -2px;
 }
 /* Utilitaire : tout conteneur de page doit rester dans la largeur écran */
 .viewport-contained {

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { DynamicSidebar } from './DynamicSidebar';
 import { DynamicSubnav } from './DynamicSubnav';
 import { DashboardBreadcrumbs } from './DashboardBreadcrumbs';
@@ -10,11 +10,13 @@ import { DashboardFooter } from './DashboardFooter';
 import { DashboardModals } from './DashboardModals';
 import { DashboardNotifications, useDashboardNotifications } from './DashboardNotifications';
 import { AlertNotifications } from './AlertNotifications';
+import { DashboardAISuggestionsPanel } from './shared/DashboardAISuggestionsPanel';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { useI18n } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { useAuthHeaders } from '../utils/getAuthHeaders';
+import { useVoiceCommands } from '../hooks/useVoiceCommands';
 
 export function DashboardCommandCenterPage() {
   const nav = useDashboardCommandCenterStore((s) => s.navigation);
@@ -28,6 +30,14 @@ export function DashboardCommandCenterPage() {
 
   const lastUpdateDate = liveStats.lastUpdate ? new Date(liveStats.lastUpdate) : new Date();
   const focusMode = displayConfig.focusMode ?? false;
+  const [voiceEnabled, setVoiceEnabled] = useState(false);
+  const { supported: voiceSupported, listening: voiceListening, startListening, stopListening } = useVoiceCommands(voiceEnabled);
+  const onVoiceToggle = useCallback(() => {
+    const next = !voiceEnabled;
+    setVoiceEnabled(next);
+    if (next) startListening();
+    else stopListening();
+  }, [voiceEnabled, startListening, stopListening]);
 
   // ? ouvre l'aide Raccourcis (hors champs de saisie)
   useEffect(() => {
@@ -144,10 +154,18 @@ export function DashboardCommandCenterPage() {
                 <DashboardViewRouter />
               </ErrorBoundary>
             </div>
+            {/* Phase 3 #10 : Suggestions IA (prédictions, anomalies) */}
+            <div className="mx-auto w-full min-w-0 max-w-[1600px] px-4 sm:px-6 lg:px-8 pb-2">
+              <DashboardAISuggestionsPanel />
+            </div>
             <DashboardFooter
               lastUpdate={lastUpdateDate}
               onToggleFocus={() => setDisplayConfig({ focusMode: !focusMode })}
               focusMode={focusMode}
+              showPresence
+              voiceSupported={voiceSupported}
+              voiceListening={voiceListening}
+              onVoiceToggle={onVoiceToggle}
             />
           </div>
         </main>

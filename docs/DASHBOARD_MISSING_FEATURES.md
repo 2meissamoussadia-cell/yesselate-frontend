@@ -1,5 +1,14 @@
 # Fonctionnalités Manquantes et Améliorations - Dashboard
 
+## ✅ Réalisé récemment
+
+- **ErrorBoundary** : Intégré dans `DashboardViewRouter` (chemins registry + composant dynamique) et dans `DashboardShell` autour du contenu principal. Tests unitaires dans `__tests__/components/ErrorBoundary.test.tsx`.
+- **Route `/api/export/reporting`** : Alias implémenté (`app/api/export/reporting/route.ts`) qui réexporte `GET` depuis `/api/export/dashboard`.
+- **Registry** : Alias ajoutés dans `registryKeyResolver.ts` pour les routes pilotage sans leaf (gouvernance, calendrier, alertes, hse) → vue default. Tests dans `src/modules/dashboard/utils/__tests__/registryKeyResolver.test.ts`.
+- **Accessibilité** : Lien d’évitement « Aller au contenu principal » (composant `SkipLink`), `id="dashboard-main-content"` sur la zone de contenu, `aria-label` sur `<main>`.
+
+---
+
 ## 🔍 Analyse Complète
 
 Après analyse approfondie, voici les fonctionnalités manquantes et aspects à améliorer :
@@ -36,19 +45,20 @@ const urlObj = window.URL.createObjectURL(blob);
 
 ### 1. Gestion d'Erreurs Incomplète
 
-#### ErrorBoundary manquant
-- `DashboardContentSwitch` n'a pas d'ErrorBoundary
-- `DashboardViewRouter` a une gestion basique mais pas d'ErrorBoundary React
-- Les composants de vues (BudgetKpiPage, DemandesKpiPage, etc.) n'ont pas d'ErrorBoundary
-
-**Solution** : Ajouter ErrorBoundary autour de chaque composant de vue
+#### ErrorBoundary (✅ réalisé)
+- ~~`DashboardContentSwitch` n'a pas d'ErrorBoundary~~ → ErrorBoundary autour de `DashboardContentSwitch` dans `DashboardViewRouter` et autour du rendu dynamique (Component).
+- ~~`DashboardViewRouter` a une gestion basique mais pas d'ErrorBoundary React~~ → ErrorBoundary React intégré ; ErrorBoundary global dans `DashboardShell` autour du contenu.
+- Tests : `__tests__/components/ErrorBoundary.test.tsx`.
 
 #### Gestion d'erreurs API
 - Pas de retry automatique dans certains hooks
 - Pas de fallback UI pour les erreurs réseau
 - Pas de gestion d'erreurs 429 (rate limit) avec retry-after
 
-### 2. Registry Incomplet
+### 2. Registry
+
+#### Alias (✅ réalisé)
+- Alias dans `registryKeyResolver.ts` pour pilotage sans leaf (gouvernance, calendrier, alertes, hse) → vue default. Tests : `src/modules/dashboard/utils/__tests__/registryKeyResolver.test.ts`.
 
 #### `simpleRegistry.tsx`
 - Commentaire "… autres entrées à convertir au fil de l'eau" (ligne 182)
@@ -58,18 +68,20 @@ const urlObj = window.URL.createObjectURL(blob);
 
 ### 3. Exports Incomplets
 
-#### Route API manquante
-- Documentation mentionne `/api/export/reporting` (PR_P7_REPORTING_DIRECTION.md ligne 218)
-- Route `/api/export/dashboard` existe mais pas de route dédiée pour reporting
+#### Route API (✅ réalisé)
+- Route `/api/export/reporting` : alias implémenté (`app/api/export/reporting/route.ts`) réexportant `GET` depuis `/api/export/dashboard`.
+- Route `/api/export/dashboard` existe et reste la source.
 
 #### Formats d'export
 - Export CSV/JSON fonctionnel
 - Export PDF/Excel mentionné mais à vérifier côté serveur
 - Pas de streaming pour gros exports
 
-### 4. Tests Manquants
+### 4. Tests
 
-#### Tests unitaires
+#### Tests unitaires (partiel ✅)
+- ✅ ErrorBoundary : `__tests__/components/ErrorBoundary.test.tsx`
+- ✅ registryKeyResolver : `src/modules/dashboard/utils/__tests__/registryKeyResolver.test.ts`
 - Pas de tests pour les nouveaux composants (modals, SummaryPointsPage)
 - Pas de tests pour les hooks (useDashboardExport, useDashboardPermissions)
 - Pas de tests pour les utilitaires (routeNavigation, getAuthHeaders)
@@ -108,13 +120,16 @@ const urlObj = window.URL.createObjectURL(blob);
 
 ### 7. Accessibilité (A11y)
 
-#### Problèmes identifiés
+#### Réalisé
+- Lien d’évitement « Aller au contenu principal » (SkipLink) dans `DashboardShell`, cible `#dashboard-main-content`.
+- `aria-label` sur `<main>` et sur la zone de contenu ; KPIBar (export, refresh) a déjà des aria-labels.
+
+#### À faire
 - Pas d'ARIA labels sur les modals
 - Pas de navigation clavier documentée
 - Pas de gestion du focus dans les modals
-- Pas de support screen reader
 
-**Action** : Audit d'accessibilité complet
+**Action** : Audit d'accessibilité complet (modals, focus, screen reader)
 
 ### 8. Documentation
 
@@ -139,18 +154,18 @@ const urlObj = window.URL.createObjectURL(blob);
 #### Refactoring
 - [ ] Extraire la logique d'export dans un service dédié
 - [ ] Centraliser la gestion d'erreurs
-- [ ] Créer un composant ErrorBoundary réutilisable
+- [x] Créer un composant ErrorBoundary réutilisable (existant : `@/components/shared/ErrorBoundary`, intégré dans ViewRouter + Shell)
 
 ### 2. Fonctionnalités
 
 #### Exports
-- [ ] Implémenter `/api/export/reporting`
+- [x] Implémenter `/api/export/reporting` (alias vers `/api/export/dashboard`)
 - [ ] Ajouter streaming pour gros exports
 - [ ] Ajouter preview avant export
 - [ ] Ajouter historique des exports
 
 #### Gestion d'erreurs
-- [ ] Ajouter ErrorBoundary partout
+- [x] Ajouter ErrorBoundary partout (ViewRouter + Shell ; tests ErrorBoundary.test.tsx)
 - [ ] Implémenter retry avec exponential backoff partout
 - [ ] Ajouter fallback UI pour chaque type d'erreur
 - [ ] Ajouter gestion 429 avec retry-after
@@ -239,10 +254,10 @@ const urlObj = window.URL.createObjectURL(blob);
 - [ ] Remplacer `console.warn` dans `useKPIFilter.ts`
 
 ### Fonctionnalités
-- [ ] Ajouter ErrorBoundary dans `DashboardContentSwitch`
-- [ ] Ajouter ErrorBoundary dans chaque composant de vue
+- [x] Ajouter ErrorBoundary dans `DashboardContentSwitch` (via DashboardViewRouter)
+- [ ] Ajouter ErrorBoundary dans chaque composant de vue (optionnel, couvert par Shell)
 - [ ] Compléter `simpleRegistry.tsx`
-- [ ] Implémenter `/api/export/reporting`
+- [x] Implémenter `/api/export/reporting` (alias vers `/api/export/dashboard`)
 - [ ] Ajouter retry automatique partout
 - [ ] Ajouter fallback UI pour erreurs
 

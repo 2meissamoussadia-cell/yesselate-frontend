@@ -133,7 +133,7 @@ export function KpiStatCard({
 
         <div className="min-w-0 flex-1 flex flex-col justify-between">
           <div className="flex items-center gap-2 mb-2">
-            <div className="truncate text-sm font-medium text-slate-200">{title}</div>
+            <div className="text-sm font-medium text-slate-200" title={title}>{title}</div>
             {tooltip ? (
               <Tooltip>
                 <TooltipTrigger asChild>

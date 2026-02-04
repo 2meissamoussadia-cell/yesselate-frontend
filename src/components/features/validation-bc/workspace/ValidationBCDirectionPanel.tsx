@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { ListChecks, TrendingUp, Calculator, AlertTriangle, ArrowRight, Loader2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { getValidationStats } from '@/lib/services/validation-bc-api';
 import type { ValidationStats } from '@/lib/services/validation-bc-api';
 

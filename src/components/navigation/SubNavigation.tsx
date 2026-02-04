@@ -11,7 +11,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { SubNavigationProps } from '../../types/navigation';
 
 /** Retourne un href statique pour <Link> : enlève les segments dynamiques [id], [chantierId], etc. */

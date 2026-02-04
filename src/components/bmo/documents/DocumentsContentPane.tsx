@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { FolderPlus, Upload, Search } from 'lucide-react';
 
 export function DocumentsContentPane() {
@@ -45,7 +45,7 @@ export function DocumentsContentPane() {
             placeholder="Rechercher…"
             className={cn(
               'w-48 pl-8 pr-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-900 text-xs text-slate-100 placeholder:text-slate-400',
-              'focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-1 focus:ring-offset-slate-950'
+              'focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-1 focus-visible:ring-offset-slate-950'
             )}
             aria-label="Rechercher dans les documents"
           />

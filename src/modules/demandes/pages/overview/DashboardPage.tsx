@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { FileCheck, Clock, AlertCircle, CheckCircle2, TrendingDown, TrendingUp } from 'lucide-react';
 import { useDemandesStats } from '../../hooks/useDemandesStats';
 import { useDemandesData } from '../../hooks/useDemandesData';

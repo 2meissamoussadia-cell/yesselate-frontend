@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useAlertWorkspaceStore } from '@/lib/stores/alertWorkspaceStore';
 import { FluentModal } from '@/components/ui/fluent-modal';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { 
   Search, 
   AlertCircle, 

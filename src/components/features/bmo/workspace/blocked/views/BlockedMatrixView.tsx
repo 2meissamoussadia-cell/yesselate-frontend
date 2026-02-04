@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { AlertCircle, Clock, TrendingUp, Eye } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { blockedDossiers } from '@/lib/data';
 import { useBlockedWorkspaceStore } from '@/lib/stores/blockedWorkspaceStore';
 import type { BlockedDossier } from '@/lib/types/bmo.types';

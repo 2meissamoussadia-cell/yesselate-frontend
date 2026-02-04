@@ -5,7 +5,7 @@
  * S'ouvre/ferme via le bouton hamburger (trois traits) dans le header.
  */
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { PageCounts } from '@/lib/services/navigation.service';
 import { NavigationSidebar } from './Sidebar/NavigationSidebar';
 import type { SidebarHeaderUser } from './Sidebar/SidebarHeader';

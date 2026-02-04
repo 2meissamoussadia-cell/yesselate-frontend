@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { Search, X, Filter, ArrowUpDown } from 'lucide-react';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface ValidationBCSearchPanelProps {
   isOpen: boolean;

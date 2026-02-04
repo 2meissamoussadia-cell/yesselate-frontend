@@ -14,7 +14,7 @@ import { Pagination } from '../../components/Pagination';
 import { TableSortHeader, type SortOrder } from '../../components/TableSortHeader';
 import { EmptyError } from '@/components/features/bmo/EmptyStates';
 import { SkeletonCard } from '@/components/features/bmo/LoadingStates';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Clock, FileCheck, User, Calendar } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import type { Demande } from '../../types/demandesTypes';

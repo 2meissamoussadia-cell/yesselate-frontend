@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { Search, Command } from 'lucide-react';
 import { useHotkeys } from '@/hooks/useHotkeys';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface CommandItem {
   id: string;

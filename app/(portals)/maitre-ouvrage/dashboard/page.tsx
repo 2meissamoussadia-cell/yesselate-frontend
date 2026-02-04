@@ -746,7 +746,13 @@ function DashboardContent() {
       </Suspense>
       <DashboardCommandPalette kpis={allKpis} />
 
-      <div className="h-full w-full max-w-full min-w-0 flex min-h-0 overflow-x-hidden bg-slate-950">
+      {/* Layout type Outlook : [Dossiers | Liste | Détail] — 3 panneaux fixes */}
+      <div
+        className="h-full w-full max-w-full min-w-0 flex min-h-0 overflow-x-hidden bg-slate-950"
+        role="application"
+        aria-label="Dashboard Maître d'ouvrage (layout Outlook)"
+      >
+        {/* Panneau 1 — Dossiers (catégories principales, style Outlook) */}
         <DashboardSidebar
           collapsed={sidebarCollapsed}
           stats={stats}
@@ -754,8 +760,18 @@ function DashboardContent() {
           onOpenCommandPalette={toggleCommandPalette}
         />
 
-        {/* MAIN — embedded pour éviter doublon main#main-content (déjà dans BmoLayoutShell) */}
-        <DashboardShell
+        {/* Panneau 2 — Liste (sous-catégories / vues, style Outlook) */}
+        <div
+          className="shrink-0 flex flex-col border-r border-slate-800/70 bg-slate-900/80 min-h-0 min-w-0 overflow-hidden"
+          role="navigation"
+          aria-label="Liste des vues"
+        >
+          <DashboardSubSidebar alwaysExpanded />
+        </div>
+
+        {/* Panneau 3 — Détail (contenu principal / reading pane) */}
+        <div className="flex-1 min-w-0 flex flex-col min-h-0">
+          <DashboardShell
           embedded
           hasMobileBottomNav
           header={
@@ -1068,6 +1084,7 @@ function DashboardContent() {
             </div>
           </ErrorBoundary>
         </DashboardShell>
+        </div>
       </div>
 
       <DashboardModals />

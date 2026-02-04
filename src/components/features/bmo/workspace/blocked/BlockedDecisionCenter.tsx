@@ -6,7 +6,7 @@ import {
   CheckCircle2, FileText, Building2, TrendingUp, ChevronRight, Filter,
   Users, MessageSquare, Calendar, Loader2
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useBlockedCommandCenterStore } from '@/lib/stores/blockedCommandCenterStore';
 import { blockedApi } from '@/lib/services/blockedApiService';
 import { useBlockedToast } from './BlockedToast';

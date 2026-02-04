@@ -1,6 +1,7 @@
 'use client';
 
-import { cn } from '@/lib/utils';
+import React from 'react';
+import { cn } from '@/lib/cn';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import * as Icons from 'lucide-react';
 
@@ -33,7 +34,7 @@ const progressBarClasses = {
   purple: 'bg-purple-500',
 } as const;
 
-export function KPICard({
+export const KPICard = React.memo(function KPICard({
   value,
   label,
   subtitle,
@@ -96,4 +97,4 @@ export function KPICard({
       )}
     </div>
   );
-}
+});

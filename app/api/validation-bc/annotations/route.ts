@@ -1,4 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import {
+  withErrorHandler,
+  createSuccessResponse,
+  validateRequired,
+  badRequest,
+  HttpStatus,
+} from '@/lib/api/error-handler';
 import type { DocumentAnnotation } from '@/lib/types/document-validation.types';
 import type { CreateAnnotationDto } from '@/lib/services/validation-bc-anomalies.service';
 
@@ -7,11 +14,20 @@ import type { CreateAnnotationDto } from '@/lib/services/validation-bc-anomalies
  * Crée une nouvelle annotation
  */
 export async function POST(req: NextRequest) {
-  try {
-    const body: CreateAnnotationDto = await req.json();
+  return withErrorHandler(async () => {
+    let body: CreateAnnotationDto;
+    try {
+      body = await req.json();
+    } catch {
+      throw badRequest('Corps JSON invalide');
+    }
+
+    validateRequired(
+      body as unknown as Record<string, unknown>,
+      ['documentId', 'documentType', 'createdBy']
+    );
 
     // TODO: Remplacer par une vraie création en base de données
-    // Mock data pour développement
     const newAnnotation: DocumentAnnotation = {
       id: `ANN-${Date.now()}`,
       documentId: body.documentId,
@@ -24,13 +40,7 @@ export async function POST(req: NextRequest) {
       type: body.type || 'comment',
     };
 
-    return NextResponse.json(newAnnotation, { status: 201 });
-  } catch (error) {
-    console.error('Error creating annotation:', error);
-    return NextResponse.json(
-      { error: 'Failed to create annotation' },
-      { status: 500 }
-    );
-  }
+    return createSuccessResponse(newAnnotation, HttpStatus.CREATED);
+  });
 }
 

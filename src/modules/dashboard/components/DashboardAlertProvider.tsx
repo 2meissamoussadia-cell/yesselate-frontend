@@ -24,7 +24,7 @@ function buildCriticalPayload(detail: CockpitUrgentDetail): CriticalAlertPayload
   const chantier = d.chantier as string | undefined;
   const reason = d.reason as string | undefined;
   const impact = d.impact as string | undefined;
-  const id = (d.id as string) || `critical-${detail.timestamp ?? Date.now()}`;
+  const id = (d.id as string) || `critical-${(detail.timestamp ?? Date.now())}`;
   const actions = (d.actions as Array<{ label: string; primary?: boolean }>) ?? [
     { label: 'Appeler fournisseur', primary: true },
     { label: 'Voir alternative', primary: false },

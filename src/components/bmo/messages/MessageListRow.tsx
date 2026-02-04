@@ -10,9 +10,10 @@
  */
 
 import React from 'react';
-import { Paperclip, MoreHorizontal } from 'lucide-react';
+import { Paperclip, MoreHorizontal, Flag, Archive, Trash2 } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/cn';
 import type { BmoMessage } from './types';
 
 export interface MessageListRowContextMenuEvent {
@@ -55,7 +56,7 @@ function formatDate(date: Date): string {
   return d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
-export function MessageListRow({
+export const MessageListRow = React.memo(function MessageListRow({
   item,
   isSelected,
   onClick,
@@ -86,7 +87,7 @@ export function MessageListRow({
       aria-label={`${senderLabel}, ${item.subject}`}
       onContextMenu={handleContextMenu}
       className={cn(
-        'w-full flex items-start gap-2 px-2 py-2 border-b border-slate-100 dark:border-slate-800/50 text-left transition-colors group',
+        'relative w-full flex items-start gap-2 px-2 py-2 pr-28 border-b border-slate-100 dark:border-slate-800/50 text-left transition-colors group',
         isSelected
           ? 'bg-sky-50 dark:bg-sky-900/30 border-l-2 border-l-sky-500'
           : 'hover:bg-slate-50 dark:hover:bg-slate-800/40',
@@ -126,28 +127,62 @@ export function MessageListRow({
           </div>
           <div className="text-xs text-slate-600 dark:text-slate-400 truncate flex items-center gap-1">
             {item.hasAttachments && (
-              <Paperclip className="h-3.5 w-3.5 shrink-0 text-slate-400" aria-hidden />
+              <Paperclip className="h-3.5 w-3.5 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden />
             )}
             <span className="truncate">{item.snippet}</span>
           </div>
         </div>
       </button>
 
-      {onContextMenuRequest && (
-        <button
-          type="button"
-          onClick={handleMoreClick}
-          className={cn(
-            'shrink-0 p-1.5 rounded-md text-slate-400 hover:text-slate-600 dark:hover:text-slate-300',
-            'hover:bg-slate-200/60 dark:hover:bg-slate-700/60 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500'
-          )}
-          aria-label="Actions"
-          aria-haspopup="true"
+      {/* Quick Actions au survol style Outlook */}
+      <div 
+        className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity bg-white dark:bg-slate-900 rounded-md shadow-sm border border-slate-200 dark:border-slate-700 p-0.5"
+        role="group"
+        aria-label="Actions rapides"
+      >
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-6 w-6 text-slate-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/30"
+          onClick={(e) => { e.stopPropagation(); }}
+          aria-label="Marquer important"
+          title="Marquer important"
         >
-          <MoreHorizontal className="h-4 w-4" />
-        </button>
-      )}
+          <Flag className="w-3.5 h-3.5" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-6 w-6 text-slate-500 hover:text-sky-600 hover:bg-sky-50 dark:hover:bg-sky-900/30"
+          onClick={(e) => { e.stopPropagation(); }}
+          aria-label="Archiver"
+          title="Archiver"
+        >
+          <Archive className="w-3.5 h-3.5" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-6 w-6 text-slate-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30"
+          onClick={(e) => { e.stopPropagation(); }}
+          aria-label="Supprimer"
+          title="Supprimer"
+        >
+          <Trash2 className="w-3.5 h-3.5" />
+        </Button>
+        {onContextMenuRequest && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+            onClick={handleMoreClick}
+            aria-label="Plus d'actions"
+            aria-haspopup="true"
+          >
+            <MoreHorizontal className="w-3.5 h-3.5" />
+          </Button>
+        )}
+      </div>
     </div>
   );
-}
+});

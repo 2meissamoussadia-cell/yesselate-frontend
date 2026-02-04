@@ -89,6 +89,7 @@ const moduleIcons: Record<string, LucideIcon> = {
   governance: Scale,
   performance: Activity,
   opportunities: Lightbulb,
+  'pre-projet': Lightbulb,
   chantiers: FolderKanban,
   conception: Layout,
   planning: CalendarRange,
@@ -97,10 +98,13 @@ const moduleIcons: Record<string, LucideIcon> = {
   receptions: PackageCheck,
   engagements: Wallet,
   foncier: MapPin,
+  programmation: ClipboardList,
   achats: ShoppingCart,
   fournisseurs: Building2,
   conformite: ShieldCheck,
+  autorisations: ShieldCheck,
   maintenance: Wrench,
+  'exploitation-maintenance': Wrench,
   documents: FileText,
   support: HelpCircle,
   admin: Settings,
@@ -137,6 +141,7 @@ export type BMOModuleId =
   | 'governance'
   | 'performance'
   | 'opportunities'
+  | 'pre-projet'
   | 'chantiers'
   | 'conception'
   | 'planning'
@@ -145,10 +150,13 @@ export type BMOModuleId =
   | 'receptions'
   | 'engagements'
   | 'foncier'
+  | 'programmation'
   | 'achats'
   | 'fournisseurs'
   | 'conformite'
+  | 'autorisations'
   | 'maintenance'
+  | 'exploitation-maintenance'
   | 'documents'
   | 'support'
   | 'admin'

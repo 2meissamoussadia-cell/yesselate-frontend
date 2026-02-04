@@ -4,21 +4,21 @@
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || '/api';
 
-export const pre-projetApi = {
-  async getPreProjets(params) {
-    const qs = new URLSearchParams(params);
+export const preProjetApi = {
+  async getPreProjets(params?: Record<string, unknown>) {
+    const qs = new URLSearchParams(params as Record<string, string>);
     const res = await fetch(`${API_BASE}/Pre projets?${qs}`);
     if (!res.ok) throw new Error('Erreur récupération');
     return res.json();
   },
 
-  async getPreProjet(id) {
+  async getPreProjet(id: string) {
     const res = await fetch(`${API_BASE}/Pre projets/${id}`);
     if (!res.ok) throw new Error('Non trouvé');
     return res.json();
   },
 
-  async createPreProjet(data) {
+  async createPreProjet(data: Record<string, unknown>) {
     const res = await fetch(`${API_BASE}/Pre projets`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -28,7 +28,7 @@ export const pre-projetApi = {
     return res.json();
   },
 
-  async updatePreProjet(id, data) {
+  async updatePreProjet(id: string, data: Record<string, unknown>) {
     const res = await fetch(`${API_BASE}/Pre projets/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
@@ -38,7 +38,7 @@ export const pre-projetApi = {
     return res.json();
   },
 
-  async deletePreProjet(id) {
+  async deletePreProjet(id: string) {
     const res = await fetch(`${API_BASE}/Pre projets/${id}`, { method: 'DELETE' });
     if (!res.ok) throw new Error('Erreur suppression');
   },

@@ -328,7 +328,7 @@ export const DashboardHome = memo(function DashboardHome({ kpis, perimetreFilter
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
-      const inInput = /^(INPUT|TEXTAREA|SELECT)$/.test(target?.tagName ?? '') || target?.isContentEditable;
+      const inInput = (/^(INPUT|TEXTAREA|SELECT)$/.test(target?.tagName ?? '') || target?.isContentEditable);
       if (e.key === 'Escape') {
         setKpisExpanded(false);
         return;

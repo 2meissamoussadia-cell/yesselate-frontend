@@ -14,6 +14,11 @@ const NAV_TO_REGISTRY_ALIAS: Record<string, string> = {
   'pilotage::analytics::projets': 'overview::kpis::projets',
   'pilotage::analytics::demandes': 'overview::kpis::demandes',
   'pilotage::analytics::': 'overview::kpis::projets',
+  // Routes sans leaf : pointer vers la vue default du même bloc
+  'pilotage::gouvernance::': 'pilotage::gouvernance::default',
+  'pilotage::calendrier::': 'pilotage::calendrier::default',
+  'pilotage::alertes::': 'pilotage::alertes::default',
+  'pilotage::hse::': 'pilotage::hse::default',
 };
 
 /**

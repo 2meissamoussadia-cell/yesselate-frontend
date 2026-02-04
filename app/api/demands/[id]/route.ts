@@ -1,53 +1,68 @@
 export const runtime = 'nodejs';
 
-import { NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import {
+  withErrorHandler,
+  validateId,
+  notFound,
+  createSuccessResponse,
+} from '@/lib/api/error-handler';
 
 const delayDays = (createdAt: Date) => {
   const diff = Date.now() - createdAt.getTime();
   return Math.ceil(diff / (1000 * 60 * 60 * 24));
 };
 
-export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id: rawId } = await params;
-  const id = decodeURIComponent(rawId);
+/**
+ * GET /api/demands/[id]
+ * Récupérer une demande par ID (legacy - utiliser /api/demandes à la place)
+ */
+export async function GET(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  return withErrorHandler(async () => {
+    const { id: rawId } = await params;
+    const id = decodeURIComponent(rawId);
+    validateId(id, 'demande');
 
-  const demand = await prisma.demand.findUnique({
-    where: { id },
-    include: { 
-      events: { 
-        orderBy: { at: 'desc' }, 
-        take: 50 
+    const demand = await prisma.demand.findUnique({
+      where: { id },
+      include: {
+        events: {
+          orderBy: { at: 'desc' },
+          take: 50,
+        },
+        stakeholders: {
+          orderBy: [{ required: 'desc' }, { role: 'asc' }],
+        },
+        risks: {
+          orderBy: { probability: 'desc' },
+        },
+        tasks: {
+          orderBy: [{ status: 'asc' }, { dueAt: 'asc' }],
+        },
       },
-      stakeholders: {
-        orderBy: [{ required: 'desc' }, { role: 'asc' }],
-      },
-      risks: {
-        orderBy: { probability: 'desc' },
-      },
-      tasks: {
-        orderBy: [{ status: 'asc' }, { dueAt: 'asc' }],
-      },
-    },
-  });
+    });
 
-  if (!demand) {
-    return NextResponse.json({ item: null }, { status: 404 });
-  }
+    if (!demand) {
+      throw notFound('Demande', id);
+    }
 
-  const dd = delayDays(demand.requestedAt);
-  const isOverdue = dd > 7 && demand.status !== 'validated';
+    const dd = delayDays(demand.requestedAt);
+    const isOverdue = dd > 7 && demand.status !== 'validated';
 
-  // Parser les documents JSON
-  let documents = [];
-  try {
-    documents = demand.documents ? JSON.parse(demand.documents) : [];
-  } catch {
-    documents = [];
-  }
+    // Parser les documents JSON
+    let documents = [];
+    try {
+      documents = demand.documents ? JSON.parse(demand.documents) : [];
+    } catch {
+      documents = [];
+    }
 
-  return NextResponse.json({
-    item: {
+    return createSuccessResponse({
+      item: {
       id: demand.id,
       subject: demand.subject,
       bureau: demand.bureau,
@@ -132,45 +147,61 @@ export async function GET(_: Request, { params }: { params: Promise<{ id: string
         completedAt: t.completedAt?.toISOString() ?? null,
       })),
       
-      // Audit
-      audit: demand.events.map(e => ({
-        id: e.id,
-        type: e.action,
-        actorName: e.actorName,
-        message: e.details,
-        createdAt: e.at.toISOString(),
-      })),
-    }
+        // Audit
+        audit: demand.events.map(e => ({
+          id: e.id,
+          type: e.action,
+          actorName: e.actorName,
+          message: e.details,
+          createdAt: e.at.toISOString(),
+        })),
+      },
+    });
   });
 }
 
-export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id: rawId } = await params;
-  const id = decodeURIComponent(rawId);
-  const body = await req.json().catch(() => null);
+/**
+ * PATCH /api/demands/[id]
+ * Mettre à jour une demande (legacy - utiliser /api/demandes à la place)
+ */
 
-  const data: Record<string, unknown> = {};
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  return withErrorHandler(async () => {
+    const { id: rawId } = await params;
+    const id = decodeURIComponent(rawId);
+    validateId(id, 'demande');
 
-  // Champs basiques
-  if (body?.subject) data.subject = String(body.subject).trim();
-  if (body?.bureau) data.bureau = String(body.bureau).trim();
-  if (body?.type) data.type = String(body.type).trim();
-  if (body?.priority) data.priority = String(body.priority).trim();
-  if (body?.status) data.status = String(body.status).trim();
-  if ('amount' in body) data.amount = body.amount ?? null;
-  if ('assignedToId' in body) data.assignedToId = body.assignedToId ?? null;
-  if ('assignedToName' in body) data.assignedToName = body.assignedToName ?? null;
-  
-  // Champs contextuels
-  if ('description' in body) data.description = body.description ?? null;
-  if ('justification' in body) data.justification = body.justification ?? null;
-  if ('recommendation' in body) data.recommendation = body.recommendation ?? null;
-  if ('internalNotes' in body) data.internalNotes = body.internalNotes ?? null;
+    const body = await request.json();
 
-  const demand = await prisma.demand.update({
-    where: { id },
-    data,
+    const data: Record<string, unknown> = {};
+
+    // Champs basiques
+    if (body?.subject) data.subject = String(body.subject).trim();
+    if (body?.bureau) data.bureau = String(body.bureau).trim();
+    if (body?.type) data.type = String(body.type).trim();
+    if (body?.priority) data.priority = String(body.priority).trim();
+    if (body?.status) data.status = String(body.status).trim();
+    if ('amount' in body) data.amount = body.amount ?? null;
+    if ('assignedToId' in body) data.assignedToId = body.assignedToId ?? null;
+    if ('assignedToName' in body) data.assignedToName = body.assignedToName ?? null;
+
+    // Champs contextuels
+    if ('description' in body) data.description = body.description ?? null;
+    if ('justification' in body) data.justification = body.justification ?? null;
+    if ('recommendation' in body) data.recommendation = body.recommendation ?? null;
+    if ('internalNotes' in body) data.internalNotes = body.internalNotes ?? null;
+
+    const demand = await prisma.demand.update({
+      where: { id },
+      data,
+    });
+
+    return createSuccessResponse({
+      item: demand,
+      message: 'Demande mise à jour avec succès',
+    });
   });
-
-  return NextResponse.json({ item: demand });
 }

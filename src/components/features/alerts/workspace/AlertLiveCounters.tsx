@@ -13,7 +13,7 @@ import {
   TrendingDown,
   Minus,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { calculateAlertStats, type AlertStats } from '@/lib/data/alerts';
 
 interface AlertLiveCountersProps {

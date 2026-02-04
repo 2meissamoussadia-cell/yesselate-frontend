@@ -17,6 +17,8 @@ import {
   Info,
   TrendingUp,
 } from 'lucide-react';
+// Nouveaux composants BMO
+import { EmptyState, ActionButton } from '@/components/bmo/ui';
 
 /**
  * AlertWorkspaceContent

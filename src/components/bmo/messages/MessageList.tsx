@@ -11,7 +11,7 @@
 
 import React from 'react';
 import { MessageListRow } from './MessageListRow';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { BmoMessage } from './types';
 import type { MessageListRowContextMenuEvent } from './MessageListRow';
 

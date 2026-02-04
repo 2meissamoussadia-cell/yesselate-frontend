@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { Activity, CheckCircle2, XCircle, Clock, User, FileText, RefreshCw } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { getTimeline } from '@/lib/services/validation-bc-api';
 import type { TimelineEvent } from '@/lib/services/validation-bc-api';
 

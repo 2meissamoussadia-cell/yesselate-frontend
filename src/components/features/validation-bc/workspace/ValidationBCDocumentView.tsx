@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useValidationBCWorkspaceStore } from '@/lib/stores/validationBCWorkspaceStore';
 import { FluentModal } from '@/components/ui/fluent-modal';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { ValidationBCDocumentPreview, type DocumentPiece } from './ValidationBCDocumentPreview';
 import { 
   TooltipProvider,

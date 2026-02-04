@@ -5,7 +5,7 @@ import { Clock, DollarSign, AlertCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { Demande, DemandeStatus } from '@/modules/demandes/types/demandesTypes';
 
 export interface DemandeListRowProps {
@@ -25,7 +25,7 @@ const statusConfig: Record<
   overdue: { label: 'En retard', color: 'bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-300', variant: 'secondary' },
 };
 
-export function DemandeListRow({ demande, selected, onClick }: DemandeListRowProps) {
+export const DemandeListRow = React.memo(function DemandeListRow({ demande, selected, onClick }: DemandeListRowProps) {
   const statusConf = statusConfig[demande.status] ?? statusConfig.pending;
   const dateCreation =
     demande.createdAt instanceof Date ? demande.createdAt : new Date(demande.createdAt);
@@ -35,9 +35,17 @@ export function DemandeListRow({ demande, selected, onClick }: DemandeListRowPro
       role="button"
       tabIndex={0}
       onClick={onClick}
-      onKeyDown={(e) => e.key === 'Enter' && onClick?.()}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick?.();
+        }
+      }}
+      aria-selected={selected}
       className={cn(
-        'flex flex-col gap-1.5 px-4 py-3 border-b border-slate-100 dark:border-slate-800/40 cursor-pointer transition-colors',
+        'flex flex-col gap-1.5 px-4 py-3 border-b border-slate-100 dark:border-slate-800/40 cursor-pointer transition-all duration-150',
+        'hover:bg-slate-50 dark:hover:bg-slate-800/30',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-inset',
         selected && 'bg-sky-50 dark:bg-sky-900/20'
       )}
     >
@@ -76,4 +84,4 @@ export function DemandeListRow({ demande, selected, onClick }: DemandeListRowPro
       </div>
     </div>
   );
-}
+});

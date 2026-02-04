@@ -66,7 +66,7 @@ export function FluentModal({ open, title, onClose, children, className, maxWidt
           className={cn(
             "w-full rounded-2xl backdrop-blur-xl shadow-xl",
             "max-h-[85vh] overflow-hidden",
-            maxWidthClasses[maxWidth ?? '3xl'] || 'max-w-3xl',
+            (maxWidthClasses[maxWidth ?? '3xl'] || 'max-w-3xl'),
             dark 
               ? "bg-slate-900/95 text-slate-100 border border-slate-800/60"
               : "border border-slate-200/70 bg-white/90 dark:border-slate-800 dark:bg-[#1f1f1f]/85",

@@ -19,7 +19,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { Jalon, EvenementCalendrier, Chantier } from '../types/calendrierTypes';
 

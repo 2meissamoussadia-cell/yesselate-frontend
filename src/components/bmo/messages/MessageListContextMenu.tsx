@@ -12,7 +12,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { BmoMessage } from './types';
 
 export interface MessageListContextMenuAction {

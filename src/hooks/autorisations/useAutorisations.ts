@@ -14,10 +14,10 @@ export function useAutorisations(params?: Record<string, unknown>) {
   });
 }
 
-export function useAutorisations(id: string | null) {
+export function useAutorisation(id: string | null) {
   return useQuery({
     queryKey: [...QUERY_KEY, id],
-    queryFn: () => autorisationsApi.getAutorisations(id!),
+    queryFn: () => autorisationsApi.getAutorisation(id!),
     enabled: !!id,
   });
 }

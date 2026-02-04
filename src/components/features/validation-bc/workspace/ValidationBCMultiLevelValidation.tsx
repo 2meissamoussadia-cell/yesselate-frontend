@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { FluentModal } from '@/components/ui/fluent-modal';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import {
   Shield,
   CheckCircle,

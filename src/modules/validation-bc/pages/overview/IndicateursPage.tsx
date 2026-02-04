@@ -7,7 +7,7 @@
 import React from 'react';
 import { useValidationStats } from '../../hooks';
 import { FileCheck, Clock, CheckCircle2, XCircle, AlertTriangle, TrendingUp, Activity } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export function IndicateursPage() {
   const { data: stats, isLoading, error, isError } = useValidationStats();

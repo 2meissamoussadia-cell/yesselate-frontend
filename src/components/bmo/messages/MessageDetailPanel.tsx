@@ -16,7 +16,7 @@ import DOMPurify from 'isomorphic-dompurify';
 import { Reply, ReplyAll, Forward, MoreHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { BmoMessage } from './types';
 
 const ALLOWED_BODY_TAGS = ['p', 'br', 'strong', 'em', 'u', 'a', 'ul', 'ol', 'li', 'blockquote', 'h1', 'h2', 'h3'];

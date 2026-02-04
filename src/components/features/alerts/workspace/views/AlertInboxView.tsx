@@ -11,11 +11,21 @@ import {
 } from 'lucide-react';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { filterAlertsByQueue, searchAlerts, type Alert } from '@/lib/data/alerts';
 import { useAlertToast } from '@/components/ui/toast';
 import { AlertInboxSkeleton } from '@/components/ui/alert-skeletons';
 import { useAlertQueue } from '@/lib/api/hooks';
+// Nouveaux composants BMO
+import { 
+  AlertItem,
+  AlertItemSkeleton,
+  EmptyState,
+  NoSearchResults,
+  TabBar,
+  ActionButton,
+} from '@/components/bmo/ui';
+import { stringToPriority } from '@/components/bmo/ui/PriorityIndicator';
 
 const QUEUE_CONFIG: Record<string, { label: string; icon: typeof AlertCircle; color: string }> = {
   all: { label: 'Toutes', icon: AlertCircle, color: 'text-slate-400' },
@@ -525,120 +535,114 @@ export function AlertInboxView({ tab }: { tab: AlertTab }) {
           </div>
         )}
         
-        {/* Liste des alertes */}
-        <div className="divide-y divide-slate-200/70 dark:divide-slate-800">
+        {/* Liste des alertes — Nouveaux composants BMO */}
+        <div className="divide-y divide-slate-100 dark:divide-slate-800/40">
           {loading ? (
-            <AlertInboxSkeleton count={5} />
-          ) : filteredItems.length === 0 ? (
-            <div className="p-8 text-center text-slate-400">
-              <AlertCircle className="w-12 h-12 mx-auto mb-3 opacity-50" />
-              <p className="text-sm">Aucune alerte trouvée</p>
+            // Skeleton avec nouveaux composants
+            <div>
+              {Array.from({ length: 5 }).map((_, i) => (
+                <AlertItemSkeleton key={i} />
+              ))}
             </div>
+          ) : filteredItems.length === 0 ? (
+            // État vide amélioré
+            search ? (
+              <NoSearchResults 
+                query={search} 
+                onClearSearch={() => setSearch('')}
+              />
+            ) : (
+              <EmptyState
+                type="no-data"
+                title="Aucune alerte"
+                description="Il n'y a pas d'alertes dans cette file pour le moment."
+                size="md"
+              />
+            )
           ) : (
+            // Liste avec nouveaux composants AlertItem
             filteredItems.map((alert: any) => {
-              const SeverityIcon = SEVERITY_COLORS[alert.severity] ? AlertCircle : Info;
               const isSelected = selectedIds.has(alert.id);
+              
+              // Mapper severity vers priority
+              const priorityMap: Record<string, 'critical' | 'high' | 'medium' | 'low'> = {
+                critical: 'critical',
+                warning: 'high',
+                info: 'medium',
+                success: 'low',
+              };
+              
+              // Mapper status
+              const statusMap: Record<string, 'urgent' | 'pending' | 'in_progress' | 'resolved' | 'closed'> = {
+                active: 'urgent',
+                acknowledged: 'pending',
+                escalated: 'in_progress',
+                resolved: 'resolved',
+                ignored: 'closed',
+              };
               
               return (
                 <div
                   key={alert.id}
                   className={cn(
-                    "group relative",
-                    isSelected && "bg-purple-500/5"
+                    "relative",
+                    isSelected && "bg-sky-50/50 dark:bg-sky-900/10"
                   )}
                 >
-                  <div className="flex items-start gap-3 p-4 hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
-                    {/* Checkbox (si mode sélection actif ou item sélectionné) */}
-                    {(showBulkActions || selectedIds.size > 0) && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleSelection(alert.id);
-                        }}
-                        className="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800"
-                      >
-                        {isSelected ? (
-                          <CheckSquare className="w-5 h-5 text-purple-500" />
-                        ) : (
-                          <Square className="w-5 h-5 text-slate-400" />
-                        )}
-                      </button>
-                    )}
-                    
+                  {/* Checkbox pour sélection multiple */}
+                  {(showBulkActions || selectedIds.size > 0) && (
                     <button
-                      onClick={() => {
-                        if (showBulkActions || selectedIds.size > 0) {
-                          toggleSelection(alert.id);
-                        } else {
-                          openTab({
-                            id: `alert:${alert.id}`,
-                            type: 'alert',
-                            title: alert.title,
-                            icon: alert.severity === 'critical' ? '🔴' : alert.severity === 'warning' ? '⚠️' : 'ℹ️',
-                            data: { alertId: alert.id },
-                          });
-                        }
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleSelection(alert.id);
                       }}
-                      className="flex-1 flex items-start gap-3 text-left"
+                      className="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800"
                     >
-                      {/* Icon */}
-                      <div className={cn("p-2 rounded-lg shrink-0", SEVERITY_COLORS[alert.severity])}>
-                        <SeverityIcon className="w-4 h-4" />
-                      </div>
-                      
-                      {/* Content */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between gap-2 mb-1">
-                          <h3 className="font-medium text-slate-700 dark:text-slate-200 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors line-clamp-1">
-                            {alert.title}
-                          </h3>
-                          <ChevronRight className="w-4 h-4 text-slate-400 shrink-0 group-hover:text-purple-500" />
-                        </div>
-                        
-                        <p className="text-sm text-slate-400 dark:text-slate-400 line-clamp-2 mb-2">
-                          {alert.description}
-                        </p>
-                        
-                        {/* Badges */}
-                        <div className="flex flex-wrap items-center gap-2 text-xs">
-                          <span className="font-mono text-slate-400">{alert.id}</span>
-                          
-                          <span className={cn("px-2 py-0.5 rounded-full border", STATUS_COLORS[alert.status])}>
-                            {alert.status}
-                          </span>
-                          
-                          <span className={cn("px-2 py-0.5 rounded-full border", IMPACT_COLORS[alert.impact])}>
-                            Impact: {alert.impact}
-                          </span>
-                          
-                          {alert.bureau && (
-                            <span className="px-2 py-0.5 rounded-full bg-slate-500/10 text-slate-600 dark:text-slate-400 border border-slate-500/20 flex items-center gap-1">
-                              <Building2 className="w-3 h-3" />
-                              {alert.bureau}
-                            </span>
-                          )}
-                          
-                          {alert.responsible && (
-                            <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 flex items-center gap-1">
-                              <User className="w-3 h-3" />
-                              {alert.responsible}
-                            </span>
-                          )}
-                          
-                          {alert.daysBlocked && alert.daysBlocked > 0 && (
-                            <span className="px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 flex items-center gap-1">
-                              <Clock className="w-3 h-3" />
-                              {`${alert.daysBlocked}j bloqué`}
-                            </span>
-                          )}
-                          
-                          <span className="text-slate-400 ml-auto">
-                            {formatRelativeTime(alert.createdAt)}
-                          </span>
-                        </div>
-                      </div>
+                      {isSelected ? (
+                        <CheckSquare className="w-5 h-5 text-sky-500" />
+                      ) : (
+                        <Square className="w-5 h-5 text-slate-400" />
+                      )}
                     </button>
-                  </div>
+                  )}
+                  
+                  <AlertItem
+                    id={alert.id}
+                    title={alert.title}
+                    description={alert.description}
+                    priority={priorityMap[alert.severity] || 'medium'}
+                    category={alert.type || 'système'}
+                    createdAt={alert.createdAt}
+                    assignee={alert.responsible ? { name: alert.responsible } : undefined}
+                    status={statusMap[alert.status] || 'pending'}
+                    unread={alert.status === 'active'}
+                    selected={isSelected}
+                    onSelect={(id) => {
+                      if (showBulkActions || selectedIds.size > 0) {
+                        toggleSelection(id);
+                      } else {
+                        openTab({
+                          id: `alert:${id}`,
+                          type: 'alert',
+                          title: alert.title,
+                          icon: alert.severity === 'critical' ? '🔴' : alert.severity === 'warning' ? '⚠️' : 'ℹ️',
+                          data: { alertId: id },
+                        });
+                      }
+                    }}
+                    onDoubleClick={(id) => {
+                      openTab({
+                        id: `alert:${id}`,
+                        type: 'alert',
+                        title: alert.title,
+                        icon: alert.severity === 'critical' ? '🔴' : alert.severity === 'warning' ? '⚠️' : 'ℹ️',
+                        data: { alertId: id },
+                      });
+                    }}
+                    className={cn(
+                      (showBulkActions || selectedIds.size > 0) && "pl-10"
+                    )}
+                  />
                 </div>
               );
             })

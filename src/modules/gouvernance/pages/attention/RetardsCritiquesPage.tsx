@@ -10,7 +10,7 @@ import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { JalonGouvernance } from '../../types/gouvernanceTypes';
 import { Clock } from 'lucide-react';
-import { exportDataAsCSV } from '@/lib/utils';
+import { exportDataAsCSV } from '@/lib/utils/export';
 import { normalizeToArray } from '../../utils/dataNormalization';
 
 export default function RetardsCritiquesPage() {

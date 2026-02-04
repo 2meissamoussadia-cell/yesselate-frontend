@@ -295,9 +295,22 @@ export function useErrorHandler() {
  * Pour éviter les re-renders, utilisez directement <ErrorBoundary> autour de vos composants.
  */
 export function withErrorBoundary<P extends object>(
-  Component: React.ComponentType<P>,
+  Component: React.ComponentType<P> | undefined | null,
   errorBoundaryProps?: Omit<Props, 'children'>
 ) {
+  // Protection contre les composants undefined
+  if (!Component) {
+    console.error('[withErrorBoundary] Component is undefined or null');
+    // Retourner un composant placeholder qui affiche une erreur
+    const FallbackComponent = () => (
+      <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">
+        Composant non trouvé
+      </div>
+    );
+    FallbackComponent.displayName = 'withErrorBoundary(MissingComponent)';
+    return FallbackComponent;
+  }
+
   // Créer le composant enveloppé une seule fois
   const WrappedComponent = (props: P) => (
     <ErrorBoundary {...errorBoundaryProps}>

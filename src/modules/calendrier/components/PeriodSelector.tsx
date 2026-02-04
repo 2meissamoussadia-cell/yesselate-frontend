@@ -5,7 +5,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Calendar, CalendarDays, CalendarRange } from 'lucide-react';
 import { useCalendrierFilters } from '../hooks/useCalendrierFilters';

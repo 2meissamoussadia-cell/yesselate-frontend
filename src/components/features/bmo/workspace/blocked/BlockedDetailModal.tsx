@@ -28,7 +28,7 @@ import {
   XCircle,
   ArrowRight,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { BlockedDossier } from '@/lib/types/bmo.types';
 
 interface BlockedDetailModalProps {

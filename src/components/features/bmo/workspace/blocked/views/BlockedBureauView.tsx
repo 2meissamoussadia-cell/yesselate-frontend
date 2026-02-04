@@ -5,7 +5,7 @@ import {
   Building2, Users, AlertCircle, Clock, TrendingUp, Phone, Mail,
   ChevronRight, RefreshCw, Filter, Eye, BarChart3, User
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { blockedApi } from '@/lib/services/blockedApiService';
 import { useBlockedWorkspaceStore } from '@/lib/stores/blockedWorkspaceStore';

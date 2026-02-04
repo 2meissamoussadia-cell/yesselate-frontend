@@ -10,7 +10,7 @@ import { useGouvernanceStats } from '../../hooks/useGouvernanceStats';
 import { DashboardViewLayout } from '@/components/bmo/layout/DashboardViewLayout';
 import { ModuleSubSidebar } from '@/components/bmo/ModuleSubSidebar';
 import { governanceModuleConfig } from '@/lib/config/modules/governance.config';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import {
   TrendingUp,
   DollarSign,

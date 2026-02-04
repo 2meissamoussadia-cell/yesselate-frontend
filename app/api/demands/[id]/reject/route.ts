@@ -1,30 +1,63 @@
 export const runtime = 'nodejs';
 
-import { NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import {
+  withErrorHandler,
+  validateId,
+  validateRequired,
+  notFound,
+  badRequest,
+  createSuccessResponse,
+} from '@/lib/api/error-handler';
 
-export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const body = await req.json().catch(() => null);
+/**
+ * POST /api/demands/[id]/reject
+ * Rejeter une demande (legacy - utiliser /api/demandes à la place)
+ */
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  return withErrorHandler(async () => {
+    const { id } = await params;
+    validateId(id, 'demande');
 
-  if (!body?.reason?.trim()) {
-    return NextResponse.json({ error: 'Motif requis' }, { status: 400 });
-  }
+    const body = await request.json();
+    validateRequired(body, ['reason']);
 
-  const updated = await prisma.demand.update({
-    where: { id },
-    data: { status: 'rejected' },
+    if (!body.reason?.trim()) {
+      throw badRequest('Le motif de rejet ne peut pas être vide');
+    }
+
+    // Vérifier que la demande existe
+    const exists = await prisma.demand.findUnique({
+      where: { id },
+      select: { id: true },
+    });
+
+    if (!exists) {
+      throw notFound('Demande', id);
+    }
+
+    const updated = await prisma.demand.update({
+      where: { id },
+      data: { status: 'rejected' },
+    });
+
+    await prisma.demandEvent.create({
+      data: {
+        demandId: id,
+        actorId: body.actorId ?? 'USR-001',
+        actorName: body.actorName ?? 'A. DIALLO',
+        action: 'rejection',
+        details: body.reason,
+      },
+    });
+
+    return createSuccessResponse({
+      demand: updated,
+      message: 'Demande rejetée avec succès',
+    });
   });
-
-  await prisma.demandEvent.create({
-    data: {
-      demandId: id,
-      actorId: body.actorId ?? 'USR-001',
-      actorName: body.actorName ?? 'A. DIALLO',
-      action: 'rejection',
-      details: body.reason,
-    },
-  });
-
-  return NextResponse.json({ demand: updated });
 }

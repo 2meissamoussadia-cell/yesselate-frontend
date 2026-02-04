@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Filter, X, Calendar } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useValidationFilters } from '../hooks';
 import type { TypeDocument, StatutDocument, Service } from '../types/validationTypes';
 

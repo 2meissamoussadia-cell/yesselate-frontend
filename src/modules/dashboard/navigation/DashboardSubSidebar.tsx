@@ -22,8 +22,12 @@ import type { DashboardMainCategory, DashboardNavMainCategory } from '../types/d
 import { PILOTAGE_HIERARCHY, type PilotageHierarchyNode } from './pilotageHierarchyConfig';
 import { getModuleHref } from '@/lib/navigation/moduleLinks';
 
-export const DashboardSubSidebar = memo(function DashboardSubSidebar() {
+/** En mode Outlook (alwaysExpanded), la liste reste dépliée et occupe une largeur fixe (panneau central). */
+export const DashboardSubSidebar = memo(function DashboardSubSidebar({
+  alwaysExpanded = false,
+}: { alwaysExpanded?: boolean } = {}) {
   const [expanded, setExpanded] = useState(true);
+  const expandedOutlook = alwaysExpanded || expanded;
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(
     new Set(['vue-dg', 'vue-dg-kpis', 'tresorerie', 'tresorerie-synthese'])
   );
@@ -92,27 +96,28 @@ export const DashboardSubSidebar = memo(function DashboardSubSidebar() {
   if (usePilotageHierarchy) {
     return (
       <PilotageHierarchySidebar
-        expanded={expanded}
-        setExpanded={setExpanded}
+        expanded={alwaysExpanded ? true : expanded}
+        setExpanded={alwaysExpanded ? () => {} : setExpanded}
         expandedNodes={expandedNodes}
         toggleNode={toggleNode}
         handleHierarchyClick={handleHierarchyClick}
         hierarchy={PILOTAGE_HIERARCHY}
         useSidePanelForChildren
+        alwaysExpanded={alwaysExpanded}
       />
     );
   }
 
   return (
     <aside
-      onMouseEnter={() => setExpanded(true)}
-      onMouseLeave={() => setExpanded(false)}
+      onMouseEnter={alwaysExpanded ? undefined : () => setExpanded(true)}
+      onMouseLeave={alwaysExpanded ? undefined : () => setExpanded(false)}
       className={cn(
         'shrink-0 flex flex-col border-r border-slate-200 bg-gray-50 dark:border-slate-800/70 dark:bg-slate-950/60 overflow-y-auto overflow-x-hidden scrollbar-dashboard transition-[width] duration-200 ease-out',
-        expanded ? 'w-52' : 'w-14'
+        expandedOutlook ? 'w-52' : 'w-14'
       )}
       aria-label="Sub-navigation"
-      aria-expanded={expanded}
+      aria-expanded={expandedOutlook}
     >
       <div className="py-3 px-2">
         <nav
@@ -130,7 +135,7 @@ export const DashboardSubSidebar = memo(function DashboardSubSidebar() {
                 className={cn(
                   'w-full flex items-center gap-2 rounded-lg py-2 text-left text-sm transition-colors min-h-[36px]',
                   'focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950',
-                  expanded ? 'px-3 justify-start' : 'px-2 justify-center',
+                  expandedOutlook ? 'px-3 justify-start' : 'px-2 justify-center',
                   active
                     ? 'bg-sky-500/15 text-sky-700 dark:text-sky-100 border-l-2 border-sky-500'
                     : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200 hover:text-slate-800 dark:hover:bg-slate-800/80 dark:hover:text-slate-200 border-l-2 border-transparent'
@@ -143,10 +148,10 @@ export const DashboardSubSidebar = memo(function DashboardSubSidebar() {
                     <Icon className="h-3 w-3 min-h-0 min-w-0 max-h-full max-w-full" aria-hidden />
                   </span>
                 )}
-                {expanded && <span className="truncate">{subCat.label}</span>}
+                {expandedOutlook && <span className="truncate">{subCat.label}</span>}
               </button>
             );
-            return expanded ? (
+            return expandedOutlook ? (
               btn
             ) : (
               <Tooltip key={subCat.id} delayDuration={300}>
@@ -172,6 +177,8 @@ interface PilotageHierarchySidebarProps {
   hierarchy: PilotageHierarchyNode[];
   /** Si true, les nœuds avec enfants ouvrent un volet latéral au lieu de déplier vers le bas */
   useSidePanelForChildren?: boolean;
+  /** Mode Outlook : largeur fixe, toujours déplié */
+  alwaysExpanded?: boolean;
 }
 
 function PilotageHierarchySidebar({
@@ -182,6 +189,7 @@ function PilotageHierarchySidebar({
   handleHierarchyClick,
   hierarchy,
   useSidePanelForChildren = false,
+  alwaysExpanded = false,
 }: PilotageHierarchySidebarProps) {
   /** Pile de nœuds : le volet affiche les enfants du dernier nœud (sous-niveaux successifs). */
   const [panelStack, setPanelStack] = useState<PilotageHierarchyNode[]>([]);
@@ -210,8 +218,8 @@ function PilotageHierarchySidebar({
   return (
     <div className="flex shrink-0 overflow-hidden">
       <aside
-        onMouseEnter={() => setExpanded(true)}
-        onMouseLeave={() => setExpanded(false)}
+        onMouseEnter={alwaysExpanded ? undefined : () => setExpanded(true)}
+        onMouseLeave={alwaysExpanded ? undefined : () => setExpanded(false)}
         className={cn(
           'flex flex-col border-r border-slate-200 bg-gray-50 dark:border-slate-800/70 dark:bg-slate-950/60 overflow-y-auto overflow-x-hidden scrollbar-dashboard transition-[width] duration-200 ease-out',
           expanded ? 'w-64 min-w-[200px]' : 'w-14'

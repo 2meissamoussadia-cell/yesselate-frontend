@@ -99,7 +99,7 @@ export function AuthProvider({ children, initialUser = null }: AuthProviderProps
           prenom: emp.prenom || (emp.name?.split(' ')[0] || ''),
           email: employe.email || '',
           telephone: emp.telephone || emp.phone || '',
-          role: emp.fonction?.includes('Directeur') ? 'admin' : emp.fonction?.includes('Chef') ? 'manager' : (emp.poste?.includes('Directeur') ? 'admin' : emp.poste?.includes('Chef') ? 'manager' : 'employee'),
+          role: emp.fonction?.includes('Directeur') ? 'admin' : emp.fonction?.includes('Chef') ? 'manager' : (emp.poste === 'direction' || emp.poste?.includes?.('Directeur') ? 'admin' : emp.poste?.includes?.('Chef') || emp.poste === 'chef_projet' || emp.poste === 'chef_service' ? 'manager' : 'employee'),
           avatar: emp.avatar,
           bureauId: emp.bureauId || emp.bureau,
           isActive: (emp.status || emp.statut) === 'actif',

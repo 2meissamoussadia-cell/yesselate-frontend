@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useEffect } from 'react';
 import { X, TrendingUp, TrendingDown, AlertCircle, Building2, Clock, Wallet, BarChart3, Target, Loader2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { blockedApi } from '@/lib/services/blockedApiService';
 import type { BlockedDossier } from '@/lib/types/bmo.types';
 

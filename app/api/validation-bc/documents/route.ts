@@ -1,7 +1,8 @@
 // API Route: GET /api/validation-bc/documents
 // Liste des documents avec filtres avancés
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import { withErrorHandler, createSuccessResponse } from '@/lib/api/error-handler';
 
 // Mock data enrichie
 const mockDocuments = [
@@ -141,10 +142,8 @@ const mockDocuments = [
 ];
 
 export async function GET(request: NextRequest) {
-  try {
+  return withErrorHandler(async () => {
     const { searchParams } = new URL(request.url);
-
-    // Paramètres de filtrage
     const queue = searchParams.get('queue') || 'all';
     const bureau = searchParams.get('bureau');
     const type = searchParams.get('type');
@@ -159,7 +158,6 @@ export async function GET(request: NextRequest) {
 
     let filtered = [...mockDocuments];
 
-    // Filtre par queue
     if (queue !== 'all') {
       switch (queue) {
         case 'pending':
@@ -179,41 +177,13 @@ export async function GET(request: NextRequest) {
           break;
       }
     }
-
-    // Filtre par bureau
-    if (bureau) {
-      filtered = filtered.filter((d) => d.bureau === bureau);
-    }
-
-    // Filtre par type
-    if (type) {
-      filtered = filtered.filter((d) => d.type === type);
-    }
-
-    // Filtre par status
-    if (status) {
-      filtered = filtered.filter((d) => d.status === status);
-    }
-
-    // Filtre par montant
-    if (minAmount !== undefined) {
-      filtered = filtered.filter((d) => d.montantTTC >= minAmount);
-    }
-    if (maxAmount !== undefined) {
-      filtered = filtered.filter((d) => d.montantTTC <= maxAmount);
-    }
-
-    // Filtre par date
-    if (dateFrom) {
-      const from = new Date(dateFrom);
-      filtered = filtered.filter((d) => new Date(d.dateEmission) >= from);
-    }
-    if (dateTo) {
-      const to = new Date(dateTo);
-      filtered = filtered.filter((d) => new Date(d.dateEmission) <= to);
-    }
-
-    // Recherche textuelle
+    if (bureau) filtered = filtered.filter((d) => d.bureau === bureau);
+    if (type) filtered = filtered.filter((d) => d.type === type);
+    if (status) filtered = filtered.filter((d) => d.status === status);
+    if (minAmount !== undefined) filtered = filtered.filter((d) => d.montantTTC >= minAmount);
+    if (maxAmount !== undefined) filtered = filtered.filter((d) => d.montantTTC <= maxAmount);
+    if (dateFrom) filtered = filtered.filter((d) => new Date(d.dateEmission) >= new Date(dateFrom));
+    if (dateTo) filtered = filtered.filter((d) => new Date(d.dateEmission) <= new Date(dateTo));
     if (query) {
       const q = query.toLowerCase();
       filtered = filtered.filter(
@@ -225,26 +195,12 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Tri par date décroissante
     filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-
-    // Pagination
     const total = filtered.length;
     const items = filtered.slice(offset, offset + limit);
     const hasMore = offset + limit < total;
 
-    console.log(`[validation-bc/documents] Loaded ${items.length}/${total} documents (queue: ${queue})`);
-
-    return NextResponse.json({
-      items,
-      total,
-      hasMore,
-      offset,
-      limit,
-    });
-  } catch (error) {
-    console.error('[validation-bc/documents] Error:', error);
-    return NextResponse.json({ error: 'Failed to load documents' }, { status: 500 });
-  }
+    return createSuccessResponse({ items, total, hasMore, offset, limit });
+  });
 }
 

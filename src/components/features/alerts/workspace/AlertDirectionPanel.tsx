@@ -12,7 +12,7 @@ import {
   Bell,
   X
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { calculateAlertStats } from '@/lib/data/alerts';
 
 interface AlertDirectionPanelProps {

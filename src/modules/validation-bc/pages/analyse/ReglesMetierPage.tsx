@@ -9,7 +9,7 @@ import { getReglesMetier } from '../../api/validationApi';
 import { useQuery } from '@tanstack/react-query';
 import { Shield, CheckCircle2, XCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export function ReglesMetierPage() {
   const { data: regles, isLoading, error } = useQuery({

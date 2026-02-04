@@ -5,6 +5,10 @@
  */
 
 import axios from 'axios';
+import { createLogger } from '@/modules/dashboard/utils/logger';
+import { isNotFoundError as checkNotFound, type ApiError } from '@/lib/types/api-error.types';
+
+const logger = createLogger('GouvernanceApi');
 import {
   mockStats,
   mockProjets,
@@ -54,10 +58,8 @@ const apiClient = axios.create({
   timeout: 30000, // 30 secondes
 });
 
-// Helper pour vérifier si une erreur est un 404
-function isNotFoundError(error: any): boolean {
-  return error?.isNotFound || error?.response?.status === 404;
-}
+// Alias local pour le helper de vérification 404
+const isNotFoundError = checkNotFound;
 
 // Helper pour créer une réponse paginée vide
 function emptyPaginatedResponse<T>(): PaginatedResponse<T> {
@@ -77,7 +79,7 @@ apiClient.interceptors.response.use(
     if (axios.isAxiosError(error)) {
       // Gérer les erreurs 404 de manière gracieuse
       if (error.response?.status === 404) {
-        console.warn(`Endpoint non trouvé: ${error.config?.url}`);
+        logger.warn(`Endpoint non trouvé: ${error.config?.url}`);
         // Retourner une structure vide plutôt que de throw
         return Promise.reject({
           ...error,
@@ -88,7 +90,7 @@ apiClient.interceptors.response.use(
       
       // Gérer les erreurs réseau
       if (!error.response) {
-        console.error('Erreur réseau:', error.message);
+        logger.error('Erreur réseau', { action: 'network' }, error);
         return Promise.reject({
           ...error,
           isNetworkError: true,
@@ -112,18 +114,18 @@ export async function getGouvernanceOverview(
       params,
     });
     return response.data;
-  } catch (error: any) {
+  } catch (error) {
     // Retourner des données mockées si 404 (sans logger en production)
     if (error?.isNotFound || error?.response?.status === 404) {
       if (process.env.NODE_ENV === 'development') {
-        console.warn('[getGouvernanceOverview] Endpoint non disponible, utilisation de données mockées');
+        logger.warn('Endpoint non disponible, fallback données mockées', { action: 'getGouvernanceOverview' });
       }
       return mockOverview;
     }
     
     // Logger uniquement les vraies erreurs en développement
     if (process.env.NODE_ENV === 'development') {
-      console.error('[getGouvernanceOverview] Erreur lors de la récupération de la vue d\'ensemble:', error);
+      logger.error('Erreur récupération vue d\'ensemble', { action: 'getGouvernanceOverview' });
     }
     
     // En production, retourner les données mockées pour éviter un écran blanc
@@ -139,12 +141,12 @@ export async function getGouvernanceStats(
       params,
     });
     return response.data;
-  } catch (error: any) {
+  } catch (error) {
     if (process.env.NODE_ENV === 'development') {
       if (error?.isNotFound || error?.response?.status === 404) {
-        console.warn('[getGouvernanceStats] Endpoint non disponible, utilisation de données mockées');
+        logger.warn('Endpoint non disponible, fallback données mockées', { action: 'getGouvernanceStats' });
       } else {
-        console.warn('[getGouvernanceStats] Erreur, fallback données mockées:', error?.message);
+        logger.warn('Erreur, fallback données mockées', { action: 'getGouvernanceStats' });
       }
     }
     // Toujours retourner des données mockées en cas d'erreur (évite indicateurs à 0)
@@ -160,18 +162,18 @@ export async function getTendancesMensuelles(
       params,
     });
     return response.data;
-  } catch (error: any) {
+  } catch (error) {
     // Retourner des tendances mockées si 404 (sans logger en production)
     if (error?.isNotFound || error?.response?.status === 404) {
       if (process.env.NODE_ENV === 'development') {
-        console.warn('[getTendancesMensuelles] Endpoint non disponible, utilisation de données mockées');
+        logger.warn('Endpoint non disponible, fallback données mockées', { action: 'getTendancesMensuelles' });
       }
       return mockTendances;
     }
     
     // Logger uniquement les vraies erreurs en développement
     if (process.env.NODE_ENV === 'development') {
-      console.error('[getTendancesMensuelles] Erreur lors de la récupération des tendances:', error);
+      logger.error('Erreur récupération des tendances', { action: 'getTendancesMensuelles' });
     }
     
     // En production, retourner les données mockées pour éviter un écran blanc
@@ -191,10 +193,10 @@ export async function getSyntheseProjets(
       params,
     });
     return response.data;
-  } catch (error: any) {
-    console.error('Erreur lors de la récupération de la synthèse projets:', error);
+  } catch (error) {
+    logger.error('Erreur récupération synthèse projets', { action: 'getSyntheseProjets' });
     if (isNotFoundError(error)) {
-      console.warn('Endpoint non disponible, utilisation de données mockées');
+      logger.warn('Endpoint non disponible, fallback données mockées');
       return createPaginatedResponse(mockProjets);
     }
     throw error;
@@ -209,10 +211,10 @@ export async function getSyntheseBudget(
       params,
     });
     return response.data;
-  } catch (error: any) {
-    console.error('Erreur lors de la récupération de la synthèse budget:', error);
+  } catch (error) {
+    logger.error('Erreur récupération synthèse budget', { action: 'getSyntheseBudget' });
     if (isNotFoundError(error)) {
-      console.warn('Endpoint non disponible, utilisation de données mockées');
+      logger.warn('Endpoint non disponible, fallback données mockées');
       return createPaginatedResponse(mockBudgets);
     }
     throw error;
@@ -227,10 +229,10 @@ export async function getSyntheseJalons(
       params,
     });
     return response.data;
-  } catch (error: any) {
-    console.error('Erreur lors de la récupération de la synthèse jalons:', error);
+  } catch (error) {
+    logger.error('Erreur récupération synthèse jalons', { action: 'getSyntheseJalons' });
     if (isNotFoundError(error)) {
-      console.warn('Endpoint non disponible, utilisation de données mockées');
+      logger.warn('Endpoint non disponible, fallback données mockées');
       return createPaginatedResponse(mockJalons);
     }
     throw error;
@@ -245,10 +247,10 @@ export async function getSyntheseRisques(
       params,
     });
     return response.data;
-  } catch (error: any) {
-    console.error('Erreur lors de la récupération de la synthèse risques:', error);
+  } catch (error) {
+    logger.error('Erreur récupération synthèse risques', { action: 'getSyntheseRisques' });
     if (isNotFoundError(error)) {
-      console.warn('Endpoint non disponible, utilisation de données mockées');
+      logger.warn('Endpoint non disponible, fallback données mockées');
       return createPaginatedResponse(mockRisques);
     }
     throw error;
@@ -263,10 +265,10 @@ export async function getSyntheseValidations(
       params,
     });
     return response.data;
-  } catch (error: any) {
-    console.error('Erreur lors de la récupération de la synthèse validations:', error);
+  } catch (error) {
+    logger.error('Erreur récupération synthèse validations', { action: 'getSyntheseValidations' });
     if (isNotFoundError(error)) {
-      console.warn('Endpoint non disponible, utilisation de données mockées');
+      logger.warn('Endpoint non disponible, fallback données mockées');
       return createPaginatedResponse(mockValidations);
     }
     throw error;
@@ -285,10 +287,10 @@ export async function getPointsAttention(
       params,
     });
     return response.data;
-  } catch (error: any) {
-    console.error('Erreur lors de la récupération des points d\'attention:', error);
+  } catch (error) {
+    logger.error('Erreur récupération points d\'attention', { action: 'getPointsAttention' });
     if (isNotFoundError(error)) {
-      console.warn('Endpoint non disponible, utilisation de données mockées');
+      logger.warn('Endpoint non disponible, fallback données mockées');
       return createPaginatedResponse(mockPointsAttention);
     }
     throw error;
@@ -303,10 +305,10 @@ export async function getDepassementsBudget(
       params,
     });
     return response.data;
-  } catch (error: any) {
-    console.error('Erreur lors de la récupération des dépassements budget:', error);
+  } catch (error) {
+    logger.error('Erreur récupération dépassements budget', { action: 'getDepassementsBudget' });
     if (isNotFoundError(error)) {
-      console.warn('Endpoint non disponible, utilisation de données mockées');
+      logger.warn('Endpoint non disponible, fallback données mockées');
       return createPaginatedResponse(mockBudgets);
     }
     throw error;
@@ -321,10 +323,10 @@ export async function getRetardsCritiques(
       params,
     });
     return response.data;
-  } catch (error: any) {
-    console.error('Erreur lors de la récupération des retards critiques:', error);
+  } catch (error) {
+    logger.error('Erreur récupération retards critiques', { action: 'getRetardsCritiques' });
     if (isNotFoundError(error)) {
-      console.warn('Endpoint non disponible, utilisation de données mockées');
+      logger.warn('Endpoint non disponible, fallback données mockées');
       return createPaginatedResponse(mockJalons);
     }
     throw error;
@@ -339,10 +341,10 @@ export async function getRessourcesIndispo(
       params,
     });
     return response.data;
-  } catch (error: any) {
-    console.error('Erreur lors de la récupération des ressources indisponibles:', error);
+  } catch (error) {
+    logger.error('Erreur récupération ressources indisponibles', { action: 'getRessourcesIndispo' });
     if (isNotFoundError(error)) {
-      console.warn('Endpoint non disponible, utilisation de données mockées');
+      logger.warn('Endpoint non disponible, fallback données mockées');
       return createPaginatedResponse(mockPointsAttention);
     }
     throw error;
@@ -357,10 +359,10 @@ export async function getEscalades(
       params,
     });
     return response.data;
-  } catch (error: any) {
-    console.error('Erreur lors de la récupération des escalades:', error);
+  } catch (error) {
+    logger.error('Erreur récupération escalades', { action: 'getEscalades' });
     if (isNotFoundError(error)) {
-      console.warn('Endpoint non disponible, utilisation de données mockées');
+      logger.warn('Endpoint non disponible, fallback données mockées');
       return createPaginatedResponse(mockPointsAttention);
     }
     throw error;
@@ -379,10 +381,10 @@ export async function getDecisionsValidees(
       params,
     });
     return response.data;
-  } catch (error: any) {
-    console.error('Erreur lors de la récupération des décisions validées:', error);
+  } catch (error) {
+    logger.error('Erreur récupération décisions validées', { action: 'getDecisionsValidees' });
     if (isNotFoundError(error)) {
-      console.warn('Endpoint non disponible, utilisation de données mockées');
+      logger.warn('Endpoint non disponible, fallback données mockées');
       return createPaginatedResponse(mockDecisions);
     }
     throw error;
@@ -397,10 +399,10 @@ export async function getArbitragesEnAttente(
       params,
     });
     return response.data;
-  } catch (error: any) {
-    console.error('Erreur lors de la récupération des arbitrages en attente:', error);
+  } catch (error) {
+    logger.error('Erreur récupération arbitrages en attente', { action: 'getArbitragesEnAttente' });
     if (isNotFoundError(error)) {
-      console.warn('Endpoint non disponible, utilisation de données mockées');
+      logger.warn('Endpoint non disponible, fallback données mockées');
       return createPaginatedResponse(mockArbitrages);
     }
     throw error;
@@ -415,10 +417,10 @@ export async function getHistoriqueDecisions(
       params,
     });
     return response.data;
-  } catch (error: any) {
-    console.error('Erreur lors de la récupération de l\'historique des décisions:', error);
+  } catch (error) {
+    logger.error('Erreur récupération historique décisions', { action: 'getHistoriqueDecisions' });
     if (isNotFoundError(error)) {
-      console.warn('Endpoint non disponible, utilisation de données mockées');
+      logger.warn('Endpoint non disponible, fallback données mockées');
       return createPaginatedResponse(mockDecisions);
     }
     throw error;
@@ -437,10 +439,10 @@ export async function getReunionsDG(
       params,
     });
     return response.data;
-  } catch (error: any) {
-    console.error('Erreur lors de la récupération des réunions DG:', error);
+  } catch (error) {
+    logger.error('Erreur récupération réunions DG', { action: 'getReunionsDG' });
     if (isNotFoundError(error)) {
-      console.warn('Endpoint non disponible, utilisation de données mockées');
+      logger.warn('Endpoint non disponible, fallback données mockées');
       return createPaginatedResponse(mockInstances);
     }
     throw error;
@@ -455,10 +457,10 @@ export async function getReunionsMOAMOE(
       params,
     });
     return response.data;
-  } catch (error: any) {
-    console.error('Erreur lors de la récupération des réunions MOA/MOE:', error);
+  } catch (error) {
+    logger.error('Erreur récupération réunions MOA/MOE', { action: 'getReunionsMOAMOE' });
     if (isNotFoundError(error)) {
-      console.warn('Endpoint non disponible, utilisation de données mockées');
+      logger.warn('Endpoint non disponible, fallback données mockées');
       return createPaginatedResponse(mockInstances);
     }
     throw error;
@@ -473,10 +475,10 @@ export async function getReunionsTransverses(
       params,
     });
     return response.data;
-  } catch (error: any) {
-    console.error('Erreur lors de la récupération des réunions transverses:', error);
+  } catch (error) {
+    logger.error('Erreur récupération réunions transverses', { action: 'getReunionsTransverses' });
     if (isNotFoundError(error)) {
-      console.warn('Endpoint non disponible, utilisation de données mockées');
+      logger.warn('Endpoint non disponible, fallback données mockées');
       return createPaginatedResponse(mockInstances);
     }
     throw error;
@@ -495,10 +497,10 @@ export async function getIndicateursConformite(
       params,
     });
     return response.data;
-  } catch (error: any) {
-    console.error('Erreur lors de la récupération des indicateurs de conformité:', error);
+  } catch (error) {
+    logger.error('Erreur récupération indicateurs conformité', { action: 'getIndicateursConformite' });
     if (isNotFoundError(error)) {
-      console.warn('Endpoint non disponible, utilisation de données mockées');
+      logger.warn('Endpoint non disponible, fallback données mockées');
       return createPaginatedResponse(mockIndicateursConformite);
     }
     throw error;
@@ -513,10 +515,10 @@ export async function getAuditGouvernance(
       params,
     });
     return response.data;
-  } catch (error: any) {
-    console.error('Erreur lors de la récupération des audits:', error);
+  } catch (error) {
+    logger.error('Erreur récupération audits', { action: 'getAuditGouvernance' });
     if (isNotFoundError(error)) {
-      console.warn('Endpoint non disponible, utilisation de données mockées');
+      logger.warn('Endpoint non disponible, fallback données mockées');
       return createPaginatedResponse(mockAudits);
     }
     throw error;
@@ -531,10 +533,10 @@ export async function getSuiviEngagements(
       params,
     });
     return response.data;
-  } catch (error: any) {
-    console.error('Erreur lors de la récupération du suivi des engagements:', error);
+  } catch (error) {
+    logger.error('Erreur récupération suivi engagements', { action: 'getSuiviEngagements' });
     if (isNotFoundError(error)) {
-      console.warn('Endpoint non disponible, utilisation de données mockées');
+      logger.warn('Endpoint non disponible, fallback données mockées');
       return createPaginatedResponse(mockEngagements);
     }
     throw error;

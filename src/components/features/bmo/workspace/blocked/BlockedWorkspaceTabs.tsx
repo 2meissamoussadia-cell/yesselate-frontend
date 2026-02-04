@@ -2,7 +2,7 @@
 
 import { useEffect, useCallback } from 'react';
 import { X, MoreHorizontal, ChevronLeft, ChevronRight, AlertTriangle, Zap } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useBlockedWorkspaceStore } from '@/lib/stores/blockedWorkspaceStore';
 
 const TAB_TYPE_COLORS: Record<string, string> = {

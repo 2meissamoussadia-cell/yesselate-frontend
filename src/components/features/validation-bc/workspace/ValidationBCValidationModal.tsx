@@ -3,7 +3,7 @@
 import React, { useState, useCallback } from 'react';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { FluentButton } from '@/components/ui/fluent-button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import {
   CheckCircle2,
   XCircle,

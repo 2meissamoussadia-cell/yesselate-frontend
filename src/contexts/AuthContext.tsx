@@ -265,9 +265,9 @@ async function mockValidateToken(token: string): Promise<User> {
   // Mock user basé sur le token
   return {
     id: 'user-1',
-    email: 'admin@yesselate.com',
-    firstName: 'Moussa',
-    lastName: 'Diallo',
+    email: 'meissamoussadia@yesselate.com',
+    firstName: 'Meissa',
+    lastName: 'Moussa Dia',
     role: 'admin',
     permissions: ['*'],
     avatar: undefined,
@@ -287,10 +287,23 @@ async function mockLogin(email: string, password: string): Promise<{ user: User;
 
   // Mock credentials
   const mockUsers: Record<string, { password: string; user: User }> = {
+    'meissamoussadia@yesselate.com': {
+      password: 'password',
+      user: {
+        id: 'user-1',
+        email: 'meissamoussadia@yesselate.com',
+        firstName: 'Meissa',
+        lastName: 'Moussa Dia',
+        role: 'admin',
+        permissions: ['*'],
+        department: 'Direction',
+        position: 'Directeur Général',
+      },
+    },
     'admin@yesselate.com': {
       password: 'admin123',
       user: {
-        id: 'user-1',
+        id: 'user-admin',
         email: 'admin@yesselate.com',
         firstName: 'Moussa',
         lastName: 'Diallo',
@@ -353,9 +366,9 @@ async function mockUpdateProfile(userId: string, data: Partial<User>): Promise<U
   // Mock update
   return {
     id: userId,
-    email: data.email || 'admin@yesselate.com',
-    firstName: data.firstName || 'Moussa',
-    lastName: data.lastName || 'Diallo',
+    email: data.email || 'meissamoussadia@yesselate.com',
+    firstName: data.firstName || 'Meissa',
+    lastName: data.lastName || 'Moussa Dia',
     role: data.role || 'admin',
     permissions: data.permissions || ['*'],
     avatar: data.avatar,

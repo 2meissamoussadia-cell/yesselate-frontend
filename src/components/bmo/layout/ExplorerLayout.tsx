@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export interface ExplorerLayoutProps {
   /** Volet de navigation gauche (arborescence, dossiers, filtres) */

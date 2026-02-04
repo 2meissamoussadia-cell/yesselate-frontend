@@ -240,6 +240,91 @@ export const touchTarget = {
 } as const;
 
 // ============================================
+// ACCESSIBILITÉ WCAG 2.1 - Contraste 4.5:1 minimum
+// ============================================
+
+export const a11y = {
+  // Contraste texte sur fond sombre (ratio 7:1+ pour AAA)
+  textHighContrast: 'text-white dark:text-slate-50',
+  textMediumContrast: 'text-slate-900 dark:text-slate-100',
+  textLowContrast: 'text-slate-700 dark:text-slate-300',
+  // Focus visible (WCAG 2.4.7)
+  focusVisible: 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-900',
+  // Skip link (navigation clavier)
+  skipLink: 'sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-sky-600 focus:text-white focus:rounded-md',
+  // Announcement pour lecteurs d'écran
+  srOnly: 'sr-only',
+  // Reduction de mouvement
+  reducedMotion: 'motion-reduce:transition-none motion-reduce:animate-none',
+} as const;
+
+// ============================================
+// SÉMANTIQUE DE STATUT - Couleurs conventionnelles
+// ============================================
+
+export const statusColors = {
+  success: {
+    bg: 'bg-emerald-50 dark:bg-emerald-950/30',
+    border: 'border-emerald-200 dark:border-emerald-800/50',
+    text: 'text-emerald-700 dark:text-emerald-300',
+    icon: 'text-emerald-600 dark:text-emerald-400',
+  },
+  warning: {
+    bg: 'bg-amber-50 dark:bg-amber-950/30',
+    border: 'border-amber-200 dark:border-amber-800/50',
+    text: 'text-amber-700 dark:text-amber-300',
+    icon: 'text-amber-600 dark:text-amber-400',
+  },
+  error: {
+    bg: 'bg-red-50 dark:bg-red-950/30',
+    border: 'border-red-200 dark:border-red-800/50',
+    text: 'text-red-700 dark:text-red-300',
+    icon: 'text-red-600 dark:text-red-400',
+  },
+  info: {
+    bg: 'bg-sky-50 dark:bg-sky-950/30',
+    border: 'border-sky-200 dark:border-sky-800/50',
+    text: 'text-sky-700 dark:text-sky-300',
+    icon: 'text-sky-600 dark:text-sky-400',
+  },
+  neutral: {
+    bg: 'bg-slate-50 dark:bg-slate-900/50',
+    border: 'border-slate-200 dark:border-slate-800/50',
+    text: 'text-slate-700 dark:text-slate-300',
+    icon: 'text-slate-600 dark:text-slate-400',
+  },
+} as const;
+
+// ============================================
+// LAYOUT OUTLOOK - Largeurs et panneaux
+// ============================================
+
+export const outlookLayout = {
+  // Largeurs des panneaux
+  sidebar: {
+    collapsed: 'w-14',
+    expanded: 'w-56',
+    transition: 'transition-[width] duration-200 ease-out',
+  },
+  subSidebar: {
+    min: 'min-w-[200px]',
+    default: 'w-64',
+    max: 'max-w-xs',
+  },
+  listPane: {
+    min: 'min-w-[280px]',
+    default: 'w-80',
+    max: 'max-w-md',
+  },
+  detailPane: {
+    min: 'min-w-[400px]',
+    default: 'flex-1',
+  },
+  // Séparateurs redimensionnables
+  resizeHandle: 'w-1 hover:w-2 bg-transparent hover:bg-sky-500/30 cursor-col-resize transition-all',
+} as const;
+
+// ============================================
 // ÉTATS INTERACTIFS - Hover/Focus/Active
 // ============================================
 

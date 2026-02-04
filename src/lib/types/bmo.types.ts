@@ -367,6 +367,12 @@ export interface BlockedDossier {
   reason: string;
   project: string;
   impact: 'critical' | 'high' | 'medium' | 'low';
+  /** Statut (optionnel, utilisé par API et mocks) */
+  status?: string;
+  /** SLA (optionnel) */
+  sla?: string | { ok?: boolean; atRisk?: boolean; breached?: boolean };
+  /** Description détaillée (optionnel) */
+  description?: string;
 }
 
 // --- Demande RH (enrichi avec traçabilité audit) ---

@@ -306,3 +306,95 @@ export async function exportDemandes(filters?: DemandeFilters, format: 'xlsx' | 
   }
 }
 
+// ============================================
+// WRAPPER DE COMPATIBILITÉ /api/demands
+// ============================================
+
+/**
+ * @deprecated Utiliser getDemandes() à la place
+ * Wrapper de compatibilité pour l'ancien système /api/demands
+ */
+export async function listDemands(queue?: string, search?: string): Promise<Demande[]> {
+  const filters: DemandeFilters = {};
+  
+  if (queue && queue !== 'all') {
+    // Mapper les anciens noms de queue vers les nouveaux statuts
+    const queueToStatus: Record<string, Demande['status']> = {
+      'pending': 'pending',
+      'urgent': 'pending', // filtrer par priorité ensuite
+      'overdue': 'pending', // filtrer par date ensuite
+      'validated': 'validated',
+      'rejected': 'rejected',
+    };
+    
+    if (queueToStatus[queue]) {
+      filters.status = [queueToStatus[queue]];
+    }
+  }
+  
+  if (search) {
+    filters.search = search;
+  }
+  
+  return getDemandes(filters);
+}
+
+/**
+ * @deprecated Utiliser getDemandeById() à la place
+ */
+export async function getDemand(id: string): Promise<{ demand: Demande; item?: Demande }> {
+  const demande = await getDemandeById(id);
+  return { demand: demande, item: demande };
+}
+
+/**
+ * @deprecated Utiliser validateDemande(), rejectDemande() à la place
+ */
+export async function transitionDemand(
+  id: string,
+  payload: { action: string; details?: string; message?: string }
+): Promise<Demande> {
+  switch (payload.action) {
+    case 'validate':
+      return validateDemande(id, payload.details);
+    case 'reject':
+      return rejectDemande(id, payload.message || payload.details || 'Rejeté');
+    case 'request_complement':
+      return requestComplementDemande(id, payload.message || 'Complément requis');
+    default:
+      throw new Error(`Action inconnue: ${payload.action}`);
+  }
+}
+
+/**
+ * @deprecated Utiliser batchValidateDemandes(), batchRejectDemandes() à la place
+ */
+export async function batchTransition(
+  ids: string[],
+  payload: { action: string; details?: string; message?: string }
+): Promise<{ updated: string[]; skipped: Array<{ id: string; reason: string }> }> {
+  try {
+    let result: Demande[];
+    
+    switch (payload.action) {
+      case 'validate':
+        result = await batchValidateDemandes(ids, payload.details);
+        break;
+      case 'reject':
+        result = await batchRejectDemandes(ids, payload.message || payload.details);
+        break;
+      default:
+        throw new Error(`Action inconnue: ${payload.action}`);
+    }
+    
+    return {
+      updated: result.map(d => d.id),
+      skipped: [],
+    };
+  } catch (error) {
+    return {
+      updated: [],
+      skipped: ids.map(id => ({ id, reason: 'Erreur lors du traitement' })),
+    };
+  }
+}

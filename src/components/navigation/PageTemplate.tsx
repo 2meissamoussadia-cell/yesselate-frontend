@@ -9,7 +9,7 @@ import React, { useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ChevronRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { SubNavigation } from './SubNavigation';
 import type { SubNavContext } from '../../types/navigation';
 import { useNavigation } from '@/hooks/navigation';

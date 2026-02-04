@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Bell, AlertCircle, AlertTriangle, X } from 'lucide-react';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { FluentButton } from '@/components/ui/fluent-button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface Notification {
   id: string;

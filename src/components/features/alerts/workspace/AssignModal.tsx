@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { Badge } from '@/components/ui/badge';
@@ -28,6 +28,7 @@ import {
 interface UserWithLoad {
   id: string;
   name: string;
+  displayName?: string;
   email: string;
   role: 'admin' | 'manager' | 'operator';
   bureau?: string;
@@ -50,6 +51,22 @@ interface AssignModalProps {
     bureau?: string;
   } | null;
   onConfirm: (userId: string, note?: string) => void;
+}
+
+// Helper pour éviter "undefined" en UI (displayName / name)
+function displayName(u: { name?: string; displayName?: string } | null | undefined): string {
+  if (!u) return 'Utilisateur';
+  return ((u.name ?? (u as { displayName?: string }).displayName ?? 'Utilisateur').trim()) || 'Utilisateur';
+}
+
+function initials(u: { name?: string; displayName?: string } | null | undefined): string {
+  const n = displayName(u);
+  return n
+    .split(/\s+/)
+    .map((s) => s.charAt(0))
+    .join('')
+    .toUpperCase()
+    .slice(0, 2) || '?';
 }
 
 // ================================
@@ -230,10 +247,10 @@ export function AssignModal({ open, onClose, alert, onConfirm }: AssignModalProp
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-medium">
-                      {topSuggestion.name.split(' ').map((n) => n[0]).join('')}
+                      {initials(topSuggestion)}
                     </div>
                     <div className="flex-1">
-                      <p className="font-medium text-slate-200">{topSuggestion.name}</p>
+                      <p className="font-medium text-slate-200">{displayName(topSuggestion)}</p>
                       <p className="text-xs text-slate-400">{topSuggestion.email}</p>
                     </div>
                     <div className="text-right">
@@ -305,7 +322,7 @@ export function AssignModal({ open, onClose, alert, onConfirm }: AssignModalProp
                       user.availability === 'busy' ? 'bg-amber-500/20 text-amber-400' :
                       'bg-slate-500/20 text-slate-400'
                     )}>
-                      {user.name.split(' ').map((n) => n[0]).join('')}
+                      {initials(user)}
                     </div>
 
                     {/* Info */}
@@ -315,7 +332,7 @@ export function AssignModal({ open, onClose, alert, onConfirm }: AssignModalProp
                           'font-medium truncate',
                           isSelected ? 'text-blue-300' : 'text-slate-200'
                         )}>
-                          {user.name}
+                          {displayName(user)}
                         </p>
                         {isTopSuggestion && (
                           <Award className="w-4 h-4 text-emerald-400 flex-shrink-0" />
@@ -382,7 +399,7 @@ export function AssignModal({ open, onClose, alert, onConfirm }: AssignModalProp
         {selectedUser && (
           <div>
             <label className="text-sm font-medium text-slate-300 mb-2 block">
-              Note pour {selectedUser.name} (optionnel)
+              Note pour {displayName(selectedUser)} (optionnel)
             </label>
             <textarea
               value={note}

@@ -2,7 +2,7 @@
 // Composant Skeleton pour les loaders
 // ============================================
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Card, CardContent } from '@/components/ui/card';
 
 interface SkeletonProps {

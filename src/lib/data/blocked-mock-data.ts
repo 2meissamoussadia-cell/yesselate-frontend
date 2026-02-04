@@ -28,6 +28,7 @@ export interface MockBlockedDossier extends BlockedDossier {
   slaTarget: number; // en heures
   priority: number;
   reference: string;
+  status?: 'pending' | 'in_progress' | 'resolved' | 'escalated';
   tags?: string[];
   documents?: { id: string; name: string; type: string; uploadedAt: string }[];
   comments?: { id: string; author: string; content: string; createdAt: string }[];

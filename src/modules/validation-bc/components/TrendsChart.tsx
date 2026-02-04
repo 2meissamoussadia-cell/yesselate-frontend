@@ -20,7 +20,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { ValidationStats } from '../types/validationTypes';
 
 interface TrendsChartProps {

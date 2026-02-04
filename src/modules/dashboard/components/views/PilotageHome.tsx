@@ -158,7 +158,7 @@ export function PilotageHome({ veilleBadges, kpis = [], onKpiClick, onSearchClic
                           title={kpi.label}
                         >
                           <Icon className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400 shrink-0" aria-hidden />
-                          <span className="text-slate-600 dark:text-slate-300 text-[10px] shrink-0 max-w-[8rem] truncate" title={kpi.label}>{shortLabel}</span>
+                          <span className="text-slate-600 dark:text-slate-300 text-[10px] shrink-0 max-w-[12rem] truncate" title={kpi.label}>{shortLabel}</span>
                           <span className="text-slate-800 dark:text-slate-300 font-medium tabular-nums">{String(kpi.value)}</span>
                           <span className={cn('tabular-nums', kpi.delta && kpi.delta !== '—' ? toneColor : 'text-slate-600 dark:text-slate-500')}>{kpi.delta ?? '—'}</span>
                         </button>

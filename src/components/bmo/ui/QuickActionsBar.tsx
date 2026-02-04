@@ -12,7 +12,8 @@
 import React from 'react';
 import { Mail, Trash2, Archive, Flag, ChevronDown, MoreHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { cn } from '@/lib/cn';
 
 export interface QuickActionItem {
   id: string;
@@ -64,7 +65,7 @@ const defaultActions: QuickActionItem[] = [
   },
 ];
 
-export function QuickActionsBar({
+export const QuickActionsBar = React.memo(function QuickActionsBar({
   primaryLabel = 'Nouveau message',
   primaryIcon = <Mail className="h-5 w-5" />,
   onPrimaryClick,
@@ -96,21 +97,40 @@ export function QuickActionsBar({
 
       <div className="w-px h-6 bg-slate-200 dark:bg-slate-700" aria-hidden />
 
-      {actions.map((action) => (
-        <Button
-          key={action.id}
-          variant={action.variant ?? 'ghost'}
-          size="sm"
-          className="gap-1.5 text-slate-700 dark:text-slate-300"
-          disabled={action.disabled ?? (hasSelection ? false : ['delete', 'archive', 'mark'].includes(action.id))}
-          onClick={action.onClick}
-          aria-label={action.label}
-        >
-          {action.icon}
-          <span className="hidden sm:inline">{action.label}</span>
-          {action.hasDropdown && <ChevronDown className="h-3.5 w-3.5 opacity-70" />}
-        </Button>
-      ))}
+      <TooltipProvider>
+        {actions.map((action) => {
+          const isDisabledBySelection = !hasSelection && ['delete', 'archive', 'mark'].includes(action.id);
+          const isDisabled = action.disabled ?? isDisabledBySelection;
+
+          return (
+            <Tooltip key={action.id}>
+              <TooltipTrigger asChild>
+                <span className="inline-flex">
+                  <Button
+                    variant={action.variant === 'primary' ? 'default' : (action.variant ?? 'ghost')}
+                    size="sm"
+                    className="gap-1.5 text-slate-700 dark:text-slate-300"
+                    disabled={isDisabled}
+                    onClick={action.onClick}
+                    aria-label={action.label}
+                  >
+                    {action.icon}
+                    <span className="hidden sm:inline">{action.label}</span>
+                    {action.hasDropdown && <ChevronDown className="h-3.5 w-3.5 opacity-70" />}
+                  </Button>
+                </span>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                {isDisabledBySelection ? (
+                  <span>Sélectionnez un élément pour utiliser cette action</span>
+                ) : (
+                  <span>{action.label}</span>
+                )}
+              </TooltipContent>
+            </Tooltip>
+          );
+        })}
+      </TooltipProvider>
 
       {onMoreClick && (
         <>
@@ -134,4 +154,4 @@ export function QuickActionsBar({
       )}
     </div>
   );
-}
+});

@@ -41,8 +41,8 @@ export const useAppStore = create<AppState>()(
       toggleDarkMode: () => set((state) => ({ darkMode: !state.darkMode })),
       setDarkMode: (value) => set({ darkMode: value }),
       
-      // Sidebar - Fermé par défaut, ouvert via bouton hamburger
-      sidebarOpen: false,
+      // Sidebar - Ouverte par défaut (expanded), collapsed via bouton
+      sidebarOpen: true,
       toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
       setSidebarOpen: (value) => set({ sidebarOpen: value }),
       

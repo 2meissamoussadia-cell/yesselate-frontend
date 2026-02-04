@@ -7,7 +7,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ChevronLeft } from 'lucide-react';

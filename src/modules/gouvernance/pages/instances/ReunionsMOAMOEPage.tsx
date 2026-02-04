@@ -11,6 +11,7 @@ import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { InstanceGouvernance } from '../../types/gouvernanceTypes';
 import { Users, Calendar } from 'lucide-react';
 import { normalizeToArray } from '../../utils/dataNormalization';
+import { exportDataAsCSV } from '@/lib/utils/export';
 
 export default function ReunionsMOAMOEPage() {
   const { data, isLoading } = useGouvernanceData('reunions-moa-moe');

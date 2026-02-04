@@ -1,59 +1,57 @@
+export const runtime = 'nodejs';
+
+import { NextRequest } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import {
+  withErrorHandler,
+  createSuccessResponse,
+} from '@/lib/api/error-handler';
+
+const daysBetween = (a: Date, b: Date) =>
+  Math.ceil((a.getTime() - b.getTime()) / 86400000);
+
 /**
- * Route proxy pour /api/demandes/stats
- * Redirige vers /api/demands/stats pour maintenir la compatibilité
+ * GET /api/demandes/stats
+ * Statistiques sur les demandes
  */
-
-import { NextRequest, NextResponse } from 'next/server';
-
-export async function GET(request: NextRequest) {
-  try {
-    // Rediriger vers la route réelle
-    const url = new URL('/api/demands/stats', request.url);
-    url.search = request.nextUrl.search;
-    
-    // Faire un fetch interne vers la vraie route
-    const response = await fetch(url.toString(), {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+export async function GET(_request: NextRequest) {
+  return withErrorHandler(async () => {
+    const rows = await prisma.demand.findMany({
+      select: { status: true, priority: true, requestedAt: true },
     });
 
-    if (!response.ok) {
-      // Si la route n'existe pas, retourner des données mockées
-      return NextResponse.json(
-        {
-          total: 0,
-          pending: 0,
-          validated: 0,
-          rejected: 0,
-          urgent: 0,
-          high: 0,
-          overdue: 0,
-          avgDelay: 0,
-          ts: new Date().toISOString(),
-        },
-        { status: 200 }
-      );
-    }
+    const now = new Date();
+    const total = rows.length;
+    const pending = rows.filter(r => r.status === 'pending').length;
+    const validated = rows.filter(r => r.status === 'validated').length;
+    const rejected = rows.filter(r => r.status === 'rejected').length;
 
-    const data = await response.json();
-    return NextResponse.json(data, { status: 200 });
-  } catch (error) {
-    // En cas d'erreur, retourner des données mockées
-    return NextResponse.json(
-      {
-        total: 0,
-        pending: 0,
-        validated: 0,
-        rejected: 0,
-        urgent: 0,
-        high: 0,
-        overdue: 0,
-        avgDelay: 0,
-        ts: new Date().toISOString(),
-      },
-      { status: 200 }
-    );
-  }
+    const urgent = rows.filter(
+      r => r.priority === 'urgent' && r.status === 'pending'
+    ).length;
+    const high = rows.filter(
+      r => r.priority === 'high' && r.status === 'pending'
+    ).length;
+
+    const delays = rows.map(r => Math.max(0, daysBetween(now, r.requestedAt)));
+    const avgDelay = total
+      ? Math.round(delays.reduce((a, b) => a + b, 0) / total)
+      : 0;
+
+    const overdue = rows.filter(
+      r => daysBetween(now, r.requestedAt) > 7 && r.status !== 'validated'
+    ).length;
+
+    return createSuccessResponse({
+      total,
+      pending,
+      validated,
+      rejected,
+      urgent,
+      high,
+      overdue,
+      avgDelay,
+      ts: now.toISOString(),
+    });
+  });
 }

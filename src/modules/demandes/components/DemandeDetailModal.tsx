@@ -26,7 +26,7 @@ import {
   Send,
   Loader2,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { Demande } from '../types/demandesTypes';
 import { useToast } from '@/components/features/bmo/ToastProvider';
 

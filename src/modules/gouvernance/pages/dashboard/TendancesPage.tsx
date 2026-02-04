@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { exportDataAsCSV } from '@/lib/utils';
+import { exportDataAsCSV } from '@/lib/utils/export';
 import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { TendancesChart } from '../../components/TendancesChart';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';

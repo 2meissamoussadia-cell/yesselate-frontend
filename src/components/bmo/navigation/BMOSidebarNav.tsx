@@ -14,7 +14,7 @@ import {
   Settings,
   type LucideIcon,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export interface BMOSidebarNavItem {
   id: string;

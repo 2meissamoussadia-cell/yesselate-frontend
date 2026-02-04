@@ -5,7 +5,7 @@ import {
   Clock, AlertCircle, AlertTriangle, CheckCircle2, ArrowUpRight, 
   Building2, ChevronLeft, ChevronRight, Calendar, RefreshCw
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { blockedApi } from '@/lib/services/blockedApiService';
 import { useBlockedWorkspaceStore } from '@/lib/stores/blockedWorkspaceStore';
 import type { BlockedDossier } from '@/lib/types/bmo.types';

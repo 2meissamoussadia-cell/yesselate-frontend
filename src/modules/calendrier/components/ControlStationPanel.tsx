@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { CheckCircle2, AlertTriangle, XCircle, RefreshCw } from 'lucide-react';
 import { useCalendrierSyncStatus } from '../hooks/useCalendrierSyncStatus';
 import type { SyncStatus } from '../types/calendrierTypes';

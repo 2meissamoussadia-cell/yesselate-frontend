@@ -5,8 +5,8 @@
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || '/api';
 
 export const foncierApi = {
-  async getFonciers(params) {
-    const qs = new URLSearchParams(params);
+  async getFonciers(params?: Record<string, unknown>) {
+    const qs = new URLSearchParams((params ?? {}) as Record<string, string>);
     const res = await fetch(`${API_BASE}/Fonciers?${qs}`);
     if (!res.ok) throw new Error('Erreur récupération');
     return res.json();
@@ -18,7 +18,7 @@ export const foncierApi = {
     return res.json();
   },
 
-  async createFoncier(data) {
+  async createFoncier(data: Record<string, unknown>) {
     const res = await fetch(`${API_BASE}/Fonciers`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -28,7 +28,7 @@ export const foncierApi = {
     return res.json();
   },
 
-  async updateFoncier(id, data) {
+  async updateFoncier(id: string, data: Record<string, unknown>) {
     const res = await fetch(`${API_BASE}/Fonciers/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
@@ -38,7 +38,7 @@ export const foncierApi = {
     return res.json();
   },
 
-  async deleteFoncier(id) {
+  async deleteFoncier(id: string) {
     const res = await fetch(`${API_BASE}/Fonciers/${id}`, { method: 'DELETE' });
     if (!res.ok) throw new Error('Erreur suppression');
   },

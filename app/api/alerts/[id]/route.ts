@@ -1,36 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateMockAlerts } from '@/lib/data/alerts';
+import {
+  withErrorHandler,
+  validateId,
+  notFound,
+  createSuccessResponse,
+} from '@/lib/api/error-handler';
 
 /**
  * GET /api/alerts/[id]
- * Récupérer une alerte par ID
+ * Récupérer une alerte par son ID
  */
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
+  return withErrorHandler(async () => {
     const { id } = await params;
+    validateId(id, 'alerte');
 
-    // Générer les alertes mockées
+    // Chercher l'alerte dans les données mockées
     const alerts = generateMockAlerts(100);
     const alert = alerts.find(a => a.id === id);
 
     if (!alert) {
-      return NextResponse.json(
-        { error: 'Alert not found' },
-        { status: 404 }
-      );
+      throw notFound('Alerte', id);
     }
 
-    return NextResponse.json({ alert });
-  } catch (error) {
-    console.error('Error fetching alert:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch alert', message: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
-    );
-  }
+    return createSuccessResponse({ alert });
+  });
 }
 
 /**
@@ -41,29 +39,32 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
+  return withErrorHandler(async () => {
     const { id } = await params;
+    validateId(id, 'alerte');
+    
     const body = await request.json();
 
     // Simuler la mise à jour
+    const alerts = generateMockAlerts(100);
+    const alert = alerts.find(a => a.id === id);
+
+    if (!alert) {
+      throw notFound('Alerte', id);
+    }
+
+    // Fusionner les données
     const updatedAlert = {
-      id,
+      ...alert,
       ...body,
       updatedAt: new Date().toISOString(),
     };
 
-    return NextResponse.json({
-      success: true,
+    return createSuccessResponse({
       alert: updatedAlert,
-      message: 'Alert updated successfully',
+      message: 'Alerte mise à jour avec succès',
     });
-  } catch (error) {
-    console.error('Error updating alert:', error);
-    return NextResponse.json(
-      { error: 'Failed to update alert', message: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
-    );
-  }
+  });
 }
 
 /**
@@ -74,19 +75,20 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
+  return withErrorHandler(async () => {
     const { id } = await params;
+    validateId(id, 'alerte');
 
-    // Simuler la suppression
-    return NextResponse.json({
-      success: true,
-      message: `Alert ${id} deleted successfully`,
+    // Vérifier que l'alerte existe
+    const alerts = generateMockAlerts(100);
+    const alert = alerts.find(a => a.id === id);
+
+    if (!alert) {
+      throw notFound('Alerte', id);
+    }
+
+    return createSuccessResponse({
+      message: 'Alerte supprimée avec succès',
     });
-  } catch (error) {
-    console.error('Error deleting alert:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete alert', message: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
-    );
-  }
+  });
 }

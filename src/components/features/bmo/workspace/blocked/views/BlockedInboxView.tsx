@@ -7,7 +7,7 @@ import {
   Building2, CheckCircle2, Zap, ArrowUpRight, FileText, ChevronRight,
   MoreHorizontal, Eye
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { blockedDossiers } from '@/lib/data';
 import { useBlockedWorkspaceStore } from '@/lib/stores/blockedWorkspaceStore';

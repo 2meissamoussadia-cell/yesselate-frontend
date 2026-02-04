@@ -12,7 +12,7 @@
 import React, { useMemo } from 'react';
 import { GenericDetailModal, type TabConfig, type ActionButton } from '@/components/ui/GenericDetailModal';
 import { logger } from '@/lib/utils/logger';
-import { exportDataAsCSV } from '@/lib/utils';
+import { exportDataAsCSV } from '@/lib/utils/export';
 import {
   Brain,
   BarChart3,

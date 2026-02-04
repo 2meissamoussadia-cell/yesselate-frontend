@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 import { useAppStore } from "@/lib/stores";
 import { Badge } from "@/components/ui/badge";
 import { navSections } from "@/lib/data";
@@ -12,7 +12,11 @@ import { useNavigationStore } from "@/lib/stores";
 import { routeMapping, getActivePageId, updateNavBadges } from "@/lib/services/navigation.service";
 import { useMemo, useEffect } from "react";
 
-export function BMOSidebar() {
+interface BMOSidebarProps {
+  user?: { name: string; role: string; initials: string };
+}
+
+export function BMOSidebar({ user }: BMOSidebarProps = {}) {
   const pathname = usePathname();
   const { darkMode, sidebarOpen, toggleSidebar } = useAppStore();
   const { pageCounts, addToHistory } = useNavigationStore();
@@ -78,14 +82,14 @@ export function BMOSidebar() {
         <div className="flex items-center gap-2">
           <div className="relative">
             <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center font-bold text-white text-[10px]">
-              AD
+              {user?.initials ?? 'MM'}
             </div>
             <span className="absolute -top-1 -right-1 text-[8px]">👑</span>
           </div>
           {sidebarOpen && (
             <div className="flex-1 min-w-0">
-              <p className="font-bold text-[11px] truncate">A. DIALLO</p>
-              <p className="text-[9px] text-amber-500">Directeur Général</p>
+              <p className="font-bold text-[11px] truncate">{user?.name ?? 'M. MOUSSA DIA'}</p>
+              <p className="text-[9px] text-amber-500">{user?.role ?? 'Directeur Général'}</p>
             </div>
           )}
           <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />

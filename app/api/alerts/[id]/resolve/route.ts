@@ -1,4 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { generateMockAlerts } from '@/lib/data/alerts';
+import {
+  withErrorHandler,
+  validateId,
+  notFound,
+  createSuccessResponse,
+} from '@/lib/api/error-handler';
 
 /**
  * POST /api/alerts/[id]/resolve
@@ -8,51 +15,34 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
+  return withErrorHandler(async () => {
     const { id } = await params;
-    const body = await request.json();
-    const { resolutionType, note, proof, userId } = body;
+    validateId(id, 'alerte');
+    
+    const body = await request.json().catch(() => ({}));
 
-    if (!resolutionType || !note) {
-      return NextResponse.json(
-        { error: 'Missing required fields: resolutionType, note' },
-        { status: 400 }
-      );
+    // Chercher l'alerte
+    const alerts = generateMockAlerts(100);
+    const alert = alerts.find(a => a.id === id);
+
+    if (!alert) {
+      throw notFound('Alerte', id);
     }
 
     // Simuler la résolution
-    const alert = {
-      id,
+    const resolvedAlert = {
+      ...alert,
       status: 'resolved',
       resolvedAt: new Date().toISOString(),
-      resolvedBy: userId,
-      resolutionType,
-      resolutionNote: note,
-      resolutionProof: proof,
+      resolvedBy: body.userId || 'system',
+      resolutionType: body.resolutionType || 'manual',
+      resolutionNote: body.note || '',
       updatedAt: new Date().toISOString(),
     };
 
-    // Créer une entrée timeline
-    const timelineEntry = {
-      id: `timeline-${Date.now()}`,
-      alertId: id,
-      type: 'resolved',
-      userId,
-      timestamp: new Date().toISOString(),
-      data: { resolutionType, note, proof },
-    };
-
-    return NextResponse.json({
-      success: true,
-      alert,
-      timeline: timelineEntry,
-      message: 'Alert resolved successfully',
+    return createSuccessResponse({
+      alert: resolvedAlert,
+      message: 'Alerte résolue avec succès',
     });
-  } catch (error) {
-    console.error('Error resolving alert:', error);
-    return NextResponse.json(
-      { error: 'Failed to resolve alert', message: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
-    );
-  }
+  });
 }

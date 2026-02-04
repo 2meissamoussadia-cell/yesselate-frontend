@@ -44,21 +44,23 @@ export function AuthProvider({ children, initialUser = null }: AuthProviderProps
         if (storedUser) {
           setUser(JSON.parse(storedUser));
         } else {
-          // Pour dev: utiliser un utilisateur mock par défaut
-          const defaultUser = mockEmployes.find((e) => e.id === 'USR-001');
+          // Pour dev: utiliser un utilisateur mock par défaut (mock employes: nom, prenom, poste, status)
+          const defaultUser = mockEmployes.find((e) => e.id === 'USR-001') as (typeof mockEmployes)[number] & { nom?: string; prenom?: string; poste?: string; status?: string; createdAt?: string; updatedAt?: string };
           if (defaultUser) {
+            const nom = 'nom' in defaultUser ? defaultUser.nom : (defaultUser as { name?: string }).name?.split(' ')[0] ?? '';
+            const prenom = 'prenom' in defaultUser ? defaultUser.prenom : (defaultUser as { name?: string }).name?.split(' ').slice(1).join(' ') ?? '';
             const user: User = {
               id: defaultUser.id,
-              nom: defaultUser.nom,
-              prenom: defaultUser.prenom,
-              email: defaultUser.email,
-              telephone: defaultUser.telephone,
-              role: 'manager',
-              avatar: defaultUser.avatar,
-              bureauId: defaultUser.bureauId,
-              isActive: defaultUser.statut === 'actif',
-              createdAt: defaultUser.createdAt,
-              updatedAt: defaultUser.updatedAt,
+              nom: nom || 'User',
+              prenom: prenom || 'Default',
+              email: defaultUser.email ?? '',
+              telephone: 'telephone' in defaultUser ? defaultUser.telephone : (defaultUser as { phone?: string }).phone,
+              role: 'poste' in defaultUser ? (defaultUser.poste ?? 'manager') : (defaultUser as { poste?: string }).poste ?? 'manager',
+              avatar: undefined,
+              bureauId: undefined,
+              isActive: (defaultUser.status ?? (defaultUser as { statut?: string }).statut) === 'actif',
+              createdAt: 'createdAt' in defaultUser ? defaultUser.createdAt : new Date().toISOString(),
+              updatedAt: 'updatedAt' in defaultUser ? defaultUser.updatedAt : new Date().toISOString(),
             };
             setUser(user);
             localStorage.setItem('yesselate_user', JSON.stringify(user));
@@ -91,23 +93,27 @@ export function AuthProvider({ children, initialUser = null }: AuthProviderProps
       // Mock: simuler délai réseau
       await new Promise((resolve) => setTimeout(resolve, 800));
 
-      // Mock: trouver utilisateur par email
-      const employe = mockEmployes.find((e) => e.email === email);
+      // Mock: trouver utilisateur par email (mock peut avoir nom/prenom ou name, poste, status)
+      const employe = mockEmployes.find((e) => (e as { email?: string }).email === email) as (typeof mockEmployes)[number] & { nom?: string; prenom?: string; poste?: string; fonction?: string; statut?: string; status?: string; telephone?: string; createdAt?: string; updatedAt?: string };
 
       if (employe && password === 'password') {
-        // Mock: mot de passe accepté si "password"
+        const nom = employe.nom ?? (employe as { name?: string }).name?.split(' ')[0] ?? 'User';
+        const prenom = employe.prenom ?? (employe as { name?: string }).name?.split(' ').slice(1).join(' ') ?? '';
+        const posteOrFonction = employe.poste ?? employe.fonction ?? (employe as { poste?: string }).poste ?? 'employee';
+        const role = posteOrFonction.includes('Directeur') ? 'admin' : posteOrFonction.includes('Chef') ? 'manager' : 'employee';
+        const status = employe.status ?? employe.statut ?? 'actif';
         const user: User = {
           id: employe.id,
-          nom: employe.nom,
-          prenom: employe.prenom,
-          email: employe.email,
-          telephone: employe.telephone,
-          role: employe.fonction.includes('Directeur') ? 'admin' : employe.fonction.includes('Chef') ? 'manager' : 'employee',
-          avatar: employe.avatar,
-          bureauId: employe.bureauId,
-          isActive: employe.statut === 'actif',
-          createdAt: employe.createdAt,
-          updatedAt: employe.updatedAt,
+          nom,
+          prenom,
+          email: (employe as { email?: string }).email ?? email,
+          telephone: employe.telephone ?? (employe as { phone?: string }).phone,
+          role,
+          avatar: undefined,
+          bureauId: undefined,
+          isActive: status === 'actif',
+          createdAt: employe.createdAt ?? new Date().toISOString(),
+          updatedAt: employe.updatedAt ?? new Date().toISOString(),
         };
 
         setUser(user);

@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { FluentModal } from '@/components/ui/fluent-modal';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import {
   Shield,
   CheckCircle2,

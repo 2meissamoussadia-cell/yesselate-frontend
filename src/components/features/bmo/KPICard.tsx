@@ -1,9 +1,19 @@
 'use client';
 
-import { cn } from '@/lib/utils';
-import { useAppStore } from '@/lib/stores';
+/**
+ * KPICard — Ré-export du composant KPICard principal pour compatibilité.
+ * @deprecated Utiliser directement '@/modules/dashboard/components/shared/KPICard'
+ */
 
-interface KPICardProps {
+import { memo } from 'react';
+import { KPICard as DashboardKPICard, type KPICardData, type KPICardProps as DashboardKPICardProps, sanitizeKpiValue } from '@/modules/dashboard/components/shared/KPICard';
+
+// Ré-exports pour compatibilité
+export { DashboardKPICard as KPICardShared, sanitizeKpiValue };
+export type { KPICardData, DashboardKPICardProps };
+
+// Interface legacy pour compatibilité avec les anciens usages
+interface LegacyKPICardProps {
   icon: string;
   label: string;
   value: string | number;
@@ -15,7 +25,19 @@ interface KPICardProps {
   className?: string;
 }
 
-export function KPICard({
+const colorMap: Record<string, KPICardData['color']> = {
+  '#10b981': 'emerald',
+  '#3b82f6': 'blue',
+  '#f59e0b': 'amber',
+  '#ef4444': 'rose',
+  '#8b5cf6': 'purple',
+  '#06b6d4': 'cyan',
+};
+
+/**
+ * @deprecated Utiliser KPICardShared avec l'interface KPICardData
+ */
+export const KPICard = memo(function KPICard({
   icon,
   label,
   value,
@@ -25,61 +47,18 @@ export function KPICard({
   sub,
   onClick,
   className,
-}: KPICardProps) {
-  const { darkMode } = useAppStore();
+}: LegacyKPICardProps) {
+  // Convertir en format KPICardData
+  const kpi: KPICardData = {
+    id: label.replace(/\s+/g, '-').toLowerCase(),
+    label,
+    value,
+    trend: trend ? (up ? 5 : -5) : undefined,
+    trendType: up === true ? 'up' : up === false ? 'down' : 'neutral',
+    color: colorMap[color] ?? 'blue',
+    description: sub ?? trend,
+    onClick,
+  };
 
-  return (
-    <div
-      onClick={onClick}
-      className={cn(
-        'relative overflow-hidden rounded-xl p-3 cursor-pointer transition-all duration-300 hover:scale-[1.02] border',
-        darkMode
-          ? 'bg-slate-800/60 hover:bg-slate-800 border-slate-700/50'
-          : 'bg-white border-gray-200',
-        className
-      )}
-      style={{ borderTopColor: color, borderTopWidth: '3px' }}
-    >
-      <div className="flex items-start gap-2">
-        <div
-          className="w-9 h-9 rounded-lg flex items-center justify-center text-lg"
-          style={{ background: `${color}20` }}
-        >
-          {icon}
-        </div>
-        <div className="flex-1 min-w-0">
-          <p
-            className={cn(
-              'text-[10px] uppercase tracking-wide',
-              darkMode ? 'text-slate-400' : 'text-gray-500'
-            )}
-          >
-            {label}
-          </p>
-          <p className="text-xl font-extrabold">
-            {value}
-            {sub && (
-              <span className="text-xs font-normal text-slate-400 ml-1">
-                {sub}
-              </span>
-            )}
-          </p>
-          {trend && (
-            <p
-              className={cn(
-                'text-[10px]',
-                up === true
-                  ? 'text-emerald-400'
-                  : up === false
-                  ? 'text-red-400'
-                  : 'text-slate-400'
-              )}
-            >
-              {up !== undefined && (up ? '↗' : '↘')} {trend}
-            </p>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
+  return <DashboardKPICard kpi={kpi} size="md" className={className} />;
+});

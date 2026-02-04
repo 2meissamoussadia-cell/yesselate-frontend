@@ -7,7 +7,7 @@
 import React, { useMemo } from 'react';
 import { useDemandesStats } from '../../hooks/useDemandesStats';
 import { useServiceStats } from '../../hooks/useDemandesData';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Clock, AlertCircle, CheckCircle2, XCircle, TrendingUp, TrendingDown } from 'lucide-react';
 import {
   PieChart,

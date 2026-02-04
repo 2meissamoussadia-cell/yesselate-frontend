@@ -3,7 +3,7 @@
 import React, { memo } from 'react';
 import Link from 'next/link';
 import { AlertTriangle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { NonConformite } from '@/lib/hooks/dashboard/useDashboardData';
 
 export interface NCQualiteWidgetProps {

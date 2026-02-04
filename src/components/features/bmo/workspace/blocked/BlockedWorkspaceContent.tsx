@@ -8,7 +8,7 @@ import { BlockedAuditView } from './views/BlockedAuditView';
 import { BlockedTimelineView } from './views/BlockedTimelineView';
 import { BlockedResolutionWizard } from './views/BlockedResolutionWizard';
 import { BlockedBureauView } from './views/BlockedBureauView';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { AlertCircle, LayoutGrid, Clock, Building2, FileText, Zap, Shield, Eye, BarChart3 } from 'lucide-react';
 
 export function BlockedWorkspaceContent() {

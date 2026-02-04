@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { BreadcrumbItem as BreadcrumbItemType } from '@/lib/navigation/types';
 
 export interface BreadcrumbItemProps {

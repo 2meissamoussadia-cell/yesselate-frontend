@@ -25,7 +25,7 @@ import {
   RefreshCw,
   Filter,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { validationNavigation, type ValidationNavItem } from '../navigation/validationNavigationConfig';
 import { useValidationBCCommandCenterStore } from '@/lib/stores/validationBCCommandCenterStore';
 

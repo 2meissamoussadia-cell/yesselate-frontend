@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo, useCallback } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useNavigation } from '@/hooks/navigation';
 import { isNavigationLink, isNavigationSection } from '@/lib/navigation/types';
 import type { NavigationItem, NavigationLink, NavigationSection } from '@/lib/navigation/types';

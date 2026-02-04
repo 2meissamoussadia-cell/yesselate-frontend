@@ -7,7 +7,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export type SortOrder = 'asc' | 'desc' | null;
 

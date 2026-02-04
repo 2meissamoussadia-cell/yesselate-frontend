@@ -9,7 +9,8 @@ import React from 'react';
 import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { EngagementGouvernance } from '../../types/gouvernanceTypes';
-import { cn, exportDataAsCSV } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { exportDataAsCSV } from '@/lib/utils/export';
 import { CheckCircle2, XCircle, Clock } from 'lucide-react';
 import { normalizeToArray } from '../../utils/dataNormalization';
 

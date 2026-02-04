@@ -48,10 +48,10 @@ export default function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning>
       <body className="antialiased" suppressHydrationWarning>
-        {/* Utilise immédiatement les preloads CSS pour éviter le warning "preloaded but not used" (Next.js en dev) */}
+        {/* Convertit les preloads CSS en stylesheets pour éviter "preloaded but not used" (Next.js en dev) */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function usePreloadedCss(retry){retry=retry||0;var q=document.querySelectorAll('link[rel="preload"][href*="layout.css"]');if(q.length===0&&retry<3){setTimeout(function(){usePreloadedCss(retry+1);},0);return;}for(var i=0;i<q.length;i++){var h=q[i].getAttribute('href');if(!h)continue;var used=document.querySelectorAll('link[rel="stylesheet"]');var found=false;for(var j=0;j<used.length;j++)if(used[j].getAttribute('href')===h){found=true;break;}if(found)continue;var l=document.createElement('link');l.rel='stylesheet';l.href=h;document.head.appendChild(l);}})();`,
+            __html: `(function usePreloadedCss(retry){retry=retry||0;var q=document.querySelectorAll('link[rel="preload"]');if(q.length===0&&retry<3){setTimeout(function(){usePreloadedCss(retry+1);},0);return;}var used=document.querySelectorAll('link[rel="stylesheet"]');for(var i=0;i<q.length;i++){var el=q[i];var h=el.getAttribute('href');var as=el.getAttribute('as');if(!h||(as&&as!=='style'))continue;var isCss=as==='style'||h.indexOf('.css')!==-1;if(!isCss)continue;var found=false;for(var j=0;j<used.length;j++)if(used[j].getAttribute('href')===h){found=true;break;}if(found)continue;var l=document.createElement('link');l.rel='stylesheet';l.href=h;document.head.appendChild(l);}})();`,
           }}
         />
         <script

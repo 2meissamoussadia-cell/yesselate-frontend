@@ -36,7 +36,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { formatDistanceToNow, format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { AlerteBTP } from '@/lib/types/alerts-btp.types';
 
 export interface AlertDetailPanelProps {

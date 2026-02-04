@@ -11,7 +11,7 @@
 
 import React from 'react';
 import { Inbox, Send, FileEdit, Trash2, Archive, Plus } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { BmoFolder } from '@/components/bmo/messages/types';
 
 export interface SidebarFoldersProps {

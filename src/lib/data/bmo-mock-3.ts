@@ -732,9 +732,9 @@ export const clientsGlobalStats: ClientsGlobalStats = {
 export const defaultUserSettings: UserSettings = {
   userId: 'USR-001',
   profile: {
-    firstName: 'Abdoulaye',
-    lastName: 'DIALLO',
-    email: 'a.diallo@yessalate.sn',
+    firstName: 'Meissa',
+    lastName: 'MOUSSADIA',
+    email: 'meissamoussadia@yessalate.sn',
     phone: '+221 77 123 45 67',
     role: 'Directeur Général',
     bureau: 'BMO',

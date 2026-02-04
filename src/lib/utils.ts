@@ -1,9 +1,5 @@
-import { type ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+// Re-export cn from dedicated module to avoid HMR issues
+export { cn } from './cn';
 
 /**
  * Detect if the platform is Mac
@@ -27,5 +23,3 @@ export function formatKeyboardShortcut(shortcut: string): string {
   // Replace ⌘ with Ctrl on Windows/Linux
   return shortcut.replace(/⌘/g, 'Ctrl');
 }
-
-export { exportDataAsCSV } from './utils/export';

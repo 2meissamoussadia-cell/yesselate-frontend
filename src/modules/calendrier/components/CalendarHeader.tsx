@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { usePathname } from 'next/navigation';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { CalendarDays, ChevronRight } from 'lucide-react';
 import { CalendarViewSwitcher } from './CalendarViewSwitcher';
 import { PeriodSelector } from './PeriodSelector';

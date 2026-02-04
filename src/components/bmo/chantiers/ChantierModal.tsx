@@ -188,7 +188,7 @@ export function ChantierModal({
                   <Label className={labelClass}>Écart budget</Label>
                   <Input
                     type="number"
-                    value={((formData.realise ?? 0) - (formData.budgetLot ?? 0)) || ''}
+                    value={(((formData.realise ?? 0) - (formData.budgetLot ?? 0)) || '')}
                     readOnly
                     className={inputClass}
                   />

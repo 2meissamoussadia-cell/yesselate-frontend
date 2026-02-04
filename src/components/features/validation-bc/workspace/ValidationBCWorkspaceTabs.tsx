@@ -3,7 +3,7 @@
 import React, { useEffect, useCallback } from 'react';
 import { useValidationBCWorkspaceStore } from '@/lib/stores/validationBCWorkspaceStore';
 import { X, FileText, FileCheck, Receipt, FileEdit, GitCompare, Search, ChevronLeft, ChevronRight, ArrowLeft, LayoutDashboard } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface ValidationBCWorkspaceTabsProps {
   onBackToDashboard?: () => void;

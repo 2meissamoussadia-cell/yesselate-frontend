@@ -75,7 +75,7 @@ export default function LoginPageContent() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-              placeholder="vous@exemple.com"
+              placeholder="meissamoussadia@yesselate.com"
               required
             />
           </div>
@@ -109,7 +109,7 @@ export default function LoginPageContent() {
         </form>
 
         <p className="mt-4 text-center text-xs text-slate-500 dark:text-slate-400">
-          Démo : utilisez un email employé mock et le mot de passe <code className="rounded bg-slate-200 dark:bg-slate-700 px-1 text-slate-700 dark:text-slate-300">password</code>.
+          Démo : utilisez <code className="rounded bg-slate-200 dark:bg-slate-700 px-1 text-slate-700 dark:text-slate-300">meissamoussadia@yesselate.com</code> et le mot de passe <code className="rounded bg-slate-200 dark:bg-slate-700 px-1 text-slate-700 dark:text-slate-300">password</code>.
         </p>
 
         <div className="mt-4 text-center">

@@ -18,7 +18,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import type { AlerteBTP } from '@/lib/types/alerts-btp.types';
 
 export interface AlertListRowProps {
@@ -70,7 +76,7 @@ const categorieConfig: Record<
   juridique: { icon: '⚖️', color: 'text-pink-600 bg-pink-50 dark:bg-pink-950/50' },
 };
 
-export function AlertListRow({ alerte, selected, onClick }: AlertListRowProps) {
+export const AlertListRow = React.memo(function AlertListRow({ alerte, selected, onClick }: AlertListRowProps) {
   const config = niveauConfig[alerte.niveau];
   const catConfig = categorieConfig[alerte.categorie] ?? categorieConfig.technique;
 
@@ -87,15 +93,31 @@ export function AlertListRow({ alerte, selected, onClick }: AlertListRowProps) {
   const commentaires = alerte.commentaires ?? [];
 
   return (
+    <TooltipProvider delayDuration={300}>
     <div
       role="button"
       tabIndex={0}
       onClick={onClick}
-      onKeyDown={(e) => e.key === 'Enter' && onClick?.()}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick?.();
+        }
+      }}
+      aria-selected={selected}
       className={cn(
-        'group relative flex items-start gap-3 px-4 py-3 border-b border-slate-100 dark:border-slate-800/40',
-        'cursor-pointer transition-all duration-150 hover:bg-slate-50 dark:hover:bg-slate-800/30',
-        selected && 'bg-sky-50 dark:bg-sky-900/20 border-l-4 border-l-sky-500',
+        'group relative flex items-start gap-3 px-4 py-3',
+        'border-b border-slate-100 dark:border-slate-800/40',
+        'cursor-pointer transition-all duration-150',
+        // Effet hover Outlook : fond + bordure gauche
+        'hover:bg-slate-50 dark:hover:bg-slate-800/30',
+        'before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[3px]',
+        'before:bg-transparent before:transition-colors before:duration-150',
+        'hover:before:bg-sky-400',
+        // État sélectionné
+        selected && 'bg-sky-50 dark:bg-sky-900/20 before:bg-sky-500',
+        // Focus visible
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-inset',
         isUnread && 'font-medium'
       )}
     >
@@ -113,7 +135,7 @@ export function AlertListRow({ alerte, selected, onClick }: AlertListRowProps) {
             <span className="font-medium truncate">{alerte.chantier?.nom ?? '—'}</span>
             {alerte.chantier?.code && (
               <>
-                <span className="text-slate-400">•</span>
+                <span className="text-slate-500 dark:text-slate-400" aria-hidden>•</span>
                 <span>{alerte.chantier.code}</span>
               </>
             )}
@@ -138,14 +160,21 @@ export function AlertListRow({ alerte, selected, onClick }: AlertListRowProps) {
         </div>
 
         <div className="flex items-start gap-2">
-          <Badge variant="secondary" className="shrink-0 text-xs">
+          <Badge variant="secondary" className="shrink-0 text-xs font-semibold">
             {alerte.numero}
           </Badge>
-          <h4 className="font-semibold text-sm line-clamp-1 flex-1 min-w-0">
-            {alerte.titre}
-          </h4>
-          <Badge variant="outline" className={cn('shrink-0 text-xs', catConfig.color)}>
-            <span className="mr-1">{catConfig.icon}</span>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <h4 className="font-semibold text-sm line-clamp-1 flex-1 min-w-0 cursor-default">
+                {alerte.titre}
+              </h4>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="max-w-xs">
+              <p className="text-sm">{alerte.titre}</p>
+            </TooltipContent>
+          </Tooltip>
+          <Badge variant="outline" className={cn('shrink-0 text-xs font-medium', catConfig.color)}>
+            <span className="mr-1" aria-hidden>{catConfig.icon}</span>
             {alerte.categorie}
           </Badge>
         </div>
@@ -164,7 +193,7 @@ export function AlertListRow({ alerte, selected, onClick }: AlertListRowProps) {
           </div>
           {alerte.assigneA && (
             <>
-              <span className="text-slate-400">→</span>
+              <span className="text-slate-500 dark:text-slate-400" aria-hidden>→</span>
               <div className="flex items-center gap-1">
                 <User className="w-3 h-3" />
                 <span className="text-slate-600 dark:text-slate-400">{alerte.assigneA.nom}</span>
@@ -210,18 +239,72 @@ export function AlertListRow({ alerte, selected, onClick }: AlertListRowProps) {
         )}
       </div>
 
-      <div className="flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="h-7 px-2"
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
-        >
-          Traiter
-        </Button>
+      {/* Quick Actions au survol style Outlook */}
+      <div 
+        className={cn(
+          'absolute right-2 top-1/2 -translate-y-1/2',
+          'flex items-center gap-1',
+          'opacity-0 group-hover:opacity-100 group-focus-within:opacity-100',
+          'transition-opacity duration-150',
+          'bg-white dark:bg-slate-900 rounded-lg shadow-lg',
+          'border border-slate-200 dark:border-slate-700 p-1'
+        )}
+        role="group"
+        aria-label="Actions rapides"
+      >
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-slate-600 dark:text-slate-300 hover:text-sky-600 hover:bg-sky-50 dark:hover:bg-sky-900/30 transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                // Action: Marquer comme traité
+              }}
+              aria-label="Marquer comme traité"
+            >
+              <Circle className="w-4 h-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Marquer comme traité</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-slate-600 dark:text-slate-300 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/30 transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                // Action: Marquer important
+              }}
+              aria-label="Marquer comme important"
+            >
+              <Flag className="w-4 h-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Marquer important</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-slate-600 dark:text-slate-300 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                // Action: Supprimer
+              }}
+              aria-label="Supprimer"
+            >
+              <AlertCircle className="w-4 h-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Supprimer</TooltipContent>
+        </Tooltip>
       </div>
     </div>
+    </TooltipProvider>
   );
-}
+});

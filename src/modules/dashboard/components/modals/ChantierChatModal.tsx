@@ -59,7 +59,7 @@ export function ChantierChatModal({
   }, [messages]);
 
   const handleSend = (role: ChatRole = 'dg') => {
-    const subject = activeThread?.subject ?? (newSubject.trim() || 'Sujet');
+    const subject = activeThread?.subject ?? ((newSubject.trim() || 'Sujet'));
     if (!input.trim()) return;
     const thread = getOrCreateThread(chantier.id, subject);
     sendMessageToStore(chantier.id, subject, role, input.trim());

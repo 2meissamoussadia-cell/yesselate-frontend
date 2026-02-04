@@ -199,16 +199,28 @@ export function useErrorHandler() {
  * HOC pour wrapper un composant avec Error Boundary
  */
 export function withErrorBoundary<P extends object>(
-  Component: React.ComponentType<P>,
+  Component: React.ComponentType<P> | undefined | null,
   errorBoundaryProps?: Omit<Props, 'children'>
 ) {
+  // Protection contre les composants undefined
+  if (!Component) {
+    console.error('[withErrorBoundary] Component is undefined or null');
+    const FallbackComponent = () => (
+      <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">
+        Composant non trouvé
+      </div>
+    );
+    FallbackComponent.displayName = 'withErrorBoundary(MissingComponent)';
+    return FallbackComponent;
+  }
+
   const WrappedComponent = (props: P) => (
     <ErrorBoundary {...errorBoundaryProps}>
       <Component {...props} />
     </ErrorBoundary>
   );
 
-  WrappedComponent.displayName = `withErrorBoundary(${Component.displayName || Component.name})`;
+  WrappedComponent.displayName = `withErrorBoundary(${Component.displayName || Component.name || 'Component'})`;
 
   return WrappedComponent;
 }

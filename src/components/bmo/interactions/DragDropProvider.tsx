@@ -13,7 +13,7 @@ import {
   useDraggable,
   useDroppable,
 } from '@dnd-kit/core';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export interface DragDropProviderProps {
   children: React.ReactNode;

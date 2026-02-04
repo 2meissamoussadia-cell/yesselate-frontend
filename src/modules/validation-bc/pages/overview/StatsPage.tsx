@@ -7,7 +7,7 @@
 import React from 'react';
 import { useValidationStats } from '../../hooks';
 import { FileCheck, ShoppingCart, Receipt, FileText } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export function StatsPage() {
   const { data: stats, isLoading, error } = useValidationStats();

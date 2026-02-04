@@ -15,7 +15,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PhaseChecklist } from './PhaseChecklist';
 import { GateValidationButton } from './GateValidationButton';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 const PHASE_LABELS: Record<number, string> = {
   0: 'Pré‑projet',

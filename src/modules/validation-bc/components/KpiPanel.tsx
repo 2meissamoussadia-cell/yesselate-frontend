@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { FileCheck, Clock, CheckCircle2, XCircle, AlertTriangle, TrendingUp, Activity } from 'lucide-react';
 import { useValidationStats } from '../hooks';
 

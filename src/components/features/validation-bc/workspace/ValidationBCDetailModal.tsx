@@ -36,7 +36,7 @@ import {
   Edit,
   Shield,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { ValidationDocument } from '@/lib/services/validation-bc-api';
 
 interface ValidationBCDetailModalProps {

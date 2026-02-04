@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useGouvernanceStatsWithDomain } from '../hooks/useGouvernanceStatsWithDomain';
 import type { GouvernanceStats } from '../types/gouvernanceTypes';
 

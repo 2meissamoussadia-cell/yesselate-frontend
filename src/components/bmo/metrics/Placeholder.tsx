@@ -6,7 +6,7 @@
  */
 
 import React, { memo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { LineChart } from 'lucide-react';
 
 export interface PlaceholderProps {

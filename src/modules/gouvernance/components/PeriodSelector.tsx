@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { Calendar, ChevronDown } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useGouvernanceFilters } from '../hooks/useGouvernanceFilters';
 import type { PeriodeGouvernance } from '../types/gouvernanceTypes';
 

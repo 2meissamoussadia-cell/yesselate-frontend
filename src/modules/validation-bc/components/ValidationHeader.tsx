@@ -17,7 +17,7 @@ import {
   Maximize2,
   Minimize2,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useValidationBCCommandCenterStore } from '@/lib/stores/validationBCCommandCenterStore';
 import { useValidationStats } from '../hooks';
 

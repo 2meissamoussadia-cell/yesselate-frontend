@@ -8,7 +8,7 @@ import React from 'react';
 import { getValidateurs } from '../../api/validationApi';
 import { useQuery } from '@tanstack/react-query';
 import { Users, Mail, Phone } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export function ValidateursPage() {
   const { data: validateurs, isLoading, error } = useQuery({

@@ -1,5 +1,8 @@
 import type { Demand } from '@/lib/types/bmo.types';
 
+/** Utiliser la nouvelle API /api/demandes (format { success, data }) */
+const API_BASE = '/api/demandes';
+
 export type Queue = 'pending' | 'urgent' | 'overdue' | 'validated' | 'rejected' | 'all';
 
 export type TransitionPayload = {
@@ -17,65 +20,82 @@ export type BatchTransitionResult = {
   skipped: Array<{ id: string; reason: string }>;
 };
 
+function unwrapError(res: Response, json: { error?: string }): never {
+  throw new Error(json?.error ?? `Erreur ${res.status}`);
+}
+
 export async function listDemands(queue: Queue, q = ''): Promise<Demand[]> {
   const params = new URLSearchParams();
   if (queue !== 'all') params.set('queue', queue);
   if (q.trim()) params.set('q', q.trim());
 
-  const res = await fetch(`/api/demands?${params.toString()}`, { cache: 'no-store' });
-  if (!res.ok) throw new Error('Impossible de charger la liste');
-  const json = await res.json();
-  return (json.items ?? json.rows ?? []) as Demand[];
+  const res = await fetch(`${API_BASE}?${params.toString()}`, { cache: 'no-store' });
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) unwrapError(res, json);
+  const data = json.success && json.data ? json.data : json;
+  return (data.items ?? data.rows ?? data ?? []) as Demand[];
 }
 
 export async function getDemand(id: string): Promise<{ demand: Demand; item?: Demand }> {
-  const res = await fetch(`/api/demands/${encodeURIComponent(id)}`, { cache: 'no-store' });
-  if (!res.ok) throw new Error('Demande introuvable');
-  const json = await res.json();
-  // Compatibilité : l'API retourne soit .demand soit .item
-  return { demand: json.demand ?? json.item, item: json.item ?? json.demand };
+  const res = await fetch(`${API_BASE}/${encodeURIComponent(id)}`, { cache: 'no-store' });
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) unwrapError(res, json);
+  const raw = json.success && json.data ? json.data : (json.demand ?? json.item ?? json);
+  return { demand: raw, item: raw };
 }
 
 export async function transitionDemand(id: string, payload: TransitionPayload): Promise<Demand> {
-  const res = await fetch(`/api/demands/${encodeURIComponent(id)}/actions`, {
+  const endpoint =
+    payload.action === 'validate'
+      ? `${API_BASE}/${encodeURIComponent(id)}/validate`
+      : payload.action === 'reject'
+        ? `${API_BASE}/${encodeURIComponent(id)}/reject`
+        : `/api/demands/${encodeURIComponent(id)}/actions`;
+  const res = await fetch(endpoint, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err?.error ?? 'Transition impossible');
-  }
-  const json = await res.json();
-  return json.demand as Demand;
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) unwrapError(res, json);
+  const data = json.success && json.data ? json.data : (json.demand ?? json);
+  return data as Demand;
 }
 
 export async function batchTransition(ids: string[], payload: TransitionPayload): Promise<BatchTransitionResult> {
-  const res = await fetch(`/api/demands/bulk`, {
+  const base =
+    payload.action === 'validate'
+      ? `${API_BASE}/batch/validate`
+      : payload.action === 'reject'
+        ? `${API_BASE}/batch/reject`
+        : '/api/demands/bulk';
+  const res = await fetch(base, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ ids, ...payload }),
   });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err?.error ?? 'Batch impossible');
-  }
-  return res.json();
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) unwrapError(res, json);
+  return json.success && json.data ? json.data : json;
 }
 
 export async function getStats() {
-  const res = await fetch(`/api/demands/stats`, { cache: 'no-store' });
-  if (!res.ok) throw new Error('Stats indisponibles');
-  return res.json();
+  const res = await fetch(`${API_BASE}/stats`, { cache: 'no-store' });
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) unwrapError(res, json);
+  return json.success && json.data ? json.data : json;
 }
 
-export async function exportDemands(queue: Queue, format: 'csv'|'json'): Promise<Blob> {
+export async function exportDemands(queue: Queue, format: 'csv' | 'json'): Promise<Blob> {
   const params = new URLSearchParams();
   if (queue !== 'all') params.set('queue', queue);
   params.set('format', format);
 
-  const res = await fetch(`/api/demands/export?${params.toString()}`);
-  if (!res.ok) throw new Error('Export impossible');
+  const res = await fetch(`${API_BASE}/export?${params.toString()}`);
+  if (!res.ok) {
+    const json = await res.json().catch(() => ({}));
+    unwrapError(res, json);
+  }
   return res.blob();
 }
 

@@ -112,7 +112,7 @@ export const TickerBar = memo(function TickerBar({
             <Icon className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" aria-hidden />
           </div>
           <div className="flex-1 min-w-0 text-left">
-            <div className="text-[10px] uppercase tracking-wider text-slate-600 dark:text-slate-300 truncate" title={item.label}>
+            <div className="text-[10px] uppercase tracking-wider text-slate-600 dark:text-slate-300" title={item.label}>
               {SHORT_LABELS[item.label] ?? item.label}
             </div>
             <div className="font-semibold text-slate-900 dark:text-slate-100 tabular-nums text-sm leading-tight">{String(item.value)}</div>

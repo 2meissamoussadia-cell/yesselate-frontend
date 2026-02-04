@@ -2,7 +2,7 @@
 
 import React, { memo, useMemo } from 'react';
 import { BarChart2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { getTrendIcon, getTrendColor } from './getTrendIcon';
 
@@ -77,9 +77,19 @@ export const KPICard = memo(function KPICard({ kpi, size = 'md', className }: KP
 
       <div className="flex items-start justify-between gap-3 relative z-10">
         <div className="min-w-0 flex-1">
-          <div className={cn('text-slate-600 dark:text-slate-300/90 font-medium tracking-wide line-clamp-2 leading-tight', tokens.label)}>
-            {kpi.label}
-          </div>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className={cn('text-slate-600 dark:text-slate-300/90 font-medium tracking-wide leading-tight', tokens.label)}>
+                  {kpi.label}
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="top" className="max-w-xs">
+                <p className="font-medium">{kpi.label}</p>
+                {kpi.description && <p className="text-xs text-slate-400 mt-1">{kpi.description}</p>}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           <div className={cn('mt-1 font-semibold text-slate-900 dark:text-slate-50 leading-none', tokens.value)}>
             {sanitizeKpiValue(kpi.value)}
           </div>

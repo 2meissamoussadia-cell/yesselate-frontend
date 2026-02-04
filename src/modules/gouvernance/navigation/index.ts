@@ -2,8 +2,7 @@
  * Export de la navigation du module Gouvernance
  */
 
-// Old exports (for backwards compatibility)
-export { GouvernanceSidebar as GouvernanceSidebarOld } from './GouvernanceSidebar';
+// Navigation config (legacy)
 export { gouvernanceNavigation, getDomainById, getSectionById, getBadgeCount } from './gouvernanceNavigationConfig';
 export type { GouvernanceNavItem, GouvernanceNavDomain } from './gouvernanceNavigationConfig';
 

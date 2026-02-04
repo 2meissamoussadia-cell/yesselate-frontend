@@ -23,19 +23,23 @@ function useDropdownContext() {
 // DropdownMenu Root
 interface DropdownMenuProps {
   children: React.ReactNode;
+  /** Contrôle ouvert/fermé (mode contrôlé). */
+  open?: boolean;
   /** Appelé quand le menu s'ouvre ou se ferme (utile pour réinitialiser un sous-menu). */
   onOpenChange?: (open: boolean) => void;
 }
 
-function DropdownMenu({ children, onOpenChange }: DropdownMenuProps) {
-  const [open, setOpen] = React.useState(false);
+function DropdownMenu({ children, open: controlledOpen, onOpenChange }: DropdownMenuProps) {
+  const [internalOpen, setInternalOpen] = React.useState(false);
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : internalOpen;
 
   const setOpenWithCallback = React.useCallback(
     (next: boolean) => {
-      setOpen(next);
-      if (!next) onOpenChange?.(false);
+      if (!isControlled) setInternalOpen(next);
+      onOpenChange?.(next);
     },
-    [onOpenChange]
+    [onOpenChange, isControlled]
   );
 
   return (

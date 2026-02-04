@@ -11,7 +11,7 @@ import {
   Printer,
   CheckCircle
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { filterAlertsByQueue, calculateAlertStats, type Alert } from '@/lib/data/alerts';
 
 interface AlertExportModalProps {

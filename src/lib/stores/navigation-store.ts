@@ -1,6 +1,6 @@
 // ============================================
-// Store Zustand pour la navigation automatique
-// Gère l'état global de navigation et les interdépendances
+// Store Zustand pour les métadonnées de navigation
+// Gère les comptages de pages, filtres persistants et historique
 // ============================================
 
 import { create } from 'zustand';
@@ -42,7 +42,7 @@ const initialState = {
   pageFilters: {},
 };
 
-export const useNavigationStore = create<NavigationState>()(
+export const usePageMetaStore = create<NavigationState>()(
   (set, get) => ({
       ...initialState,
       

@@ -52,7 +52,7 @@ export default function AlertsCenterPage() {
     return f;
   }, [selectedFolderId]);
 
-  const { data, isLoading } = useAlertes({
+  const { data, isLoading, error, refetch } = useAlertes({
     filters,
     sort: { field: 'date', order: 'desc' },
     limit: 100,
@@ -61,6 +61,11 @@ export default function AlertsCenterPage() {
   const alertes = data?.data ?? [];
   const found = selectedId ? alertes.find((a) => a.id === selectedId) : undefined;
   const selectedItem = found ?? null;
+
+  // Gestion de l'erreur
+  if (error) {
+    console.error('[AlertsCenterPage] Erreur:', error);
+  }
 
   const handleSelectFolder = useCallback((id: string) => setSelectedFolderId(id), []);
   const handleSelectItem = useCallback((id: string) => setSelectedId(id), []);
@@ -127,9 +132,20 @@ export default function AlertsCenterPage() {
   const list = (
     <ItemList<AlerteBTP>
       items={alertes}
+      isLoading={isLoading}
+      error={error ? new Error(error instanceof Error ? error.message : 'Erreur chargement alertes') : null}
       selectedId={selectedId}
       onSelect={handleSelectItem}
-      emptyMessage={isLoading ? 'Chargement...' : 'Aucune alerte'}
+      onRetry={() => refetch()}
+      emptyMessage="Aucune alerte"
+      emptyState={{
+        title: 'Aucune alerte',
+        description: 'Il n\'y a pas d\'alertes dans cette catégorie pour le moment.',
+        action: {
+          label: 'Créer une alerte',
+          onClick: handlePrimaryClick,
+        },
+      }}
       renderItem={(item, { isSelected }) => (
         <AlertListRow
           alerte={item}

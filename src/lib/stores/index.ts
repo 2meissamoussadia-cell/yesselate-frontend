@@ -2,9 +2,31 @@
 // Export centralisé des stores Zustand
 // ============================================
 
+// === Stores génériques (factories) ===
+export { createGenericWorkspaceStore } from './createGenericWorkspaceStore';
+export type {
+  GenericTab,
+  GenericFilter,
+  WorkspaceStoreConfig,
+  GenericWorkspaceState,
+} from './createGenericWorkspaceStore';
+
+export { createGenericCommandCenterStore } from './createGenericCommandCenterStore';
+export type {
+  NavigationState,
+  ModalState,
+  KPIConfig,
+  SavedFilter,
+  CommandCenterStoreConfig,
+  GenericCommandCenterState,
+} from './createGenericCommandCenterStore';
+
+// === Stores applicatifs ===
 export { useAppStore } from './app-store';
 export { useBMOStore } from './bmo-store';
-export { useNavigationStore } from './navigation-store';
+export { usePageMetaStore } from './navigation-store';
+// Alias pour compatibilité avec les anciens imports
+export { usePageMetaStore as useNavigationStore } from './navigation-store';
 export { useWorkspaceStore } from './workspaceStore';
 export type { WorkspaceTab, WorkspaceTabType } from './workspaceStore';
 export { useValidationBCWorkspaceStore } from './validationBCWorkspaceStore';

@@ -6,7 +6,7 @@ import {
   Building2, Clock, Shield, ArrowUpRight, Paperclip, Send,
   Sparkles, RefreshCw
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { blockedApi, RESOLUTION_TEMPLATES, type ResolutionTemplate } from '@/lib/services/blockedApiService';
 import { useBlockedWorkspaceStore } from '@/lib/stores/blockedWorkspaceStore';
 import { useBlockedToast } from '../BlockedToast';

@@ -3,7 +3,7 @@
 import React from 'react';
 import { useBreadcrumbs } from '@/hooks/navigation';
 import { BreadcrumbItem } from './BreadcrumbItem';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export interface BreadcrumbsProps {
   className?: string;

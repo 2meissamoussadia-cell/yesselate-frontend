@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { Jalon, EvenementCalendrier, Chantier } from '../types/calendrierTypes';
 import { GanttVisualization } from './GanttVisualization';
 import { GanttStatsCharts } from './GanttStatsCharts';

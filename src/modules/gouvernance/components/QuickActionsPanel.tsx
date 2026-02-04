@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { Plus, Bell, Link2, Download, FileText, Calendar } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface QuickActionsPanelProps {
   className?: string;

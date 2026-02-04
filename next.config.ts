@@ -85,8 +85,8 @@ const nextConfig: NextConfig = {
   // Activation du mode React strict
   reactStrictMode: true,
 
-  // Masquer l'indicateur "Compiling..." en production (évite confusion utilisateur)
-  devIndicators: process.env.NODE_ENV === 'production' ? false : undefined,
+  // Masquer l'indicateur "Compiling..." (dev + prod) pour éviter confusion et captures d'écran propres
+  devIndicators: false,
 
   // ✅ Optimisations Fast Refresh
   // Note : en dev, le navigateur peut afficher « The resource .../app/layout.css was preloaded but not used ».

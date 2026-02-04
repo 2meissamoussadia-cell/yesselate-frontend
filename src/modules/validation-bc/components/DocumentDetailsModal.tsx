@@ -28,7 +28,7 @@ import {
   ShoppingCart,
   Receipt,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { DocumentValidation } from '../types/validationTypes';
 import { getValidationDocumentById } from '../api/validationApi';
 import { ValidationModal } from './ValidationModal';

@@ -12,7 +12,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { bmoModules, bmoModuleGroupLabels, getModuleByPath } from '@/lib/navigation/bmoModules';
 
 /** URL du dashboard (PILOTAGE > Dashboard). Force une navigation visible au clic. */
@@ -45,39 +45,31 @@ export function BmoSidebar({
   return (
     <aside
       className={cn(
-        'flex flex-col h-full bg-white border-r border-slate-200 text-slate-900 dark:border-slate-800/70 dark:text-slate-100 shrink-0 overflow-hidden sidebar-dashboard',
-        'dark:bg-[var(--theme-bg-sidebar)]',
-        collapsed ? 'w-14' : 'w-56',
+        'flex flex-col h-full min-w-0 w-full bg-white border-r border-slate-200 text-slate-900',
+        'dark:bg-slate-950 dark:border-slate-800/70 dark:text-slate-100',
+        'overflow-hidden sidebar-dashboard',
         className
       )}
       data-sidebar="dashboard"
+      data-collapsed={collapsed ? 'true' : 'false'}
       aria-label="Navigation BMO"
     >
       {/* Logo entreprise (un seul emplacement — pas de doublon avec la topbar) */}
-      <div className="flex items-center justify-between gap-2 h-14 px-2 border-b border-slate-200 dark:border-slate-800/70 shrink-0 min-w-0">
+      <div className={cn(
+        'flex items-center h-14 px-2 border-b border-slate-200 dark:border-slate-800/70 shrink-0 min-w-0',
+        collapsed ? 'justify-center' : 'justify-between gap-2'
+      )}>
         {collapsed ? (
-          <>
-            <div className="relative w-7 h-7 flex-shrink-0">
-              <Image
-                src={COMPANY_LOGO_SRC}
-                alt="YESSALATE BMO"
-                fill
-                className="object-contain"
-                sizes="28px"
-                priority
-              />
-            </div>
-            {onCollapse && (
-              <button
-                type="button"
-                onClick={onCollapse}
-                className="p-1 rounded-lg hover:bg-slate-200 text-slate-500 hover:text-slate-800 dark:hover:bg-slate-800/80 dark:text-slate-400 dark:hover:text-slate-200 transition-colors shrink-0"
-                aria-label="Ouvrir le menu"
-              >
-                <ChevronLeft className="h-4 w-4 rotate-180" aria-hidden />
-              </button>
-            )}
-          </>
+          <div className="relative w-7 h-7 flex-shrink-0">
+            <Image
+              src={COMPANY_LOGO_SRC}
+              alt="YESSALATE BMO"
+              fill
+              className="object-contain"
+              sizes="28px"
+              priority
+            />
+          </div>
         ) : (
           <>
             <Link
@@ -166,8 +158,23 @@ export function BmoSidebar({
         ))}
       </nav>
 
-      {!collapsed && (
-        <div className="border-t border-slate-800/70 p-2">
+      {/* Pied : Paramètres (étendu) ou bouton Ouvrir (replié, style Outlook) */}
+      <div className={cn(
+        'border-t border-slate-200 dark:border-slate-800/70 shrink-0',
+        collapsed ? 'p-2 flex justify-center' : 'p-2'
+      )}>
+        {collapsed ? (
+          onCollapse && (
+            <button
+              type="button"
+              onClick={onCollapse}
+              className="p-2 rounded-lg hover:bg-slate-200 text-slate-500 hover:text-slate-800 dark:hover:bg-slate-800/80 dark:text-slate-400 dark:hover:text-slate-200 transition-colors"
+              aria-label="Ouvrir le menu"
+            >
+              <ChevronLeft className="h-4 w-4 rotate-180" aria-hidden />
+            </button>
+          )
+        ) : (
           <Link
             href={`${pathname?.startsWith('/maitre-ouvrage') ? '/maitre-ouvrage' : ''}/parametres`}
             onClick={() => onCollapse?.()}
@@ -175,8 +182,8 @@ export function BmoSidebar({
           >
             Paramètres
           </Link>
-        </div>
-      )}
+        )}
+      </div>
     </aside>
   );
 }

@@ -195,8 +195,8 @@ const LegacyKPICard = memo(function LegacyKPICard({
                   <Icon className="text-slate-200" style={{ width: 'clamp(0.875rem, 1vw, 1rem)', height: 'clamp(0.875rem, 1vw, 1rem)', minWidth: '0.875rem', minHeight: '0.875rem' }} />
                 </span>
 
-                <div className="min-w-0">
-                  <div className="text-[11px] font-medium text-slate-300/80 truncate">
+                <div className="min-w-0 flex-1">
+                  <div className="text-[11px] font-medium text-slate-300/80 whitespace-nowrap" title={kpi.label}>
                     {kpi.label}
                   </div>
                 </div>

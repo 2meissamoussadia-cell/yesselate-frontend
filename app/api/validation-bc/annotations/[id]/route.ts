@@ -1,4 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import {
+  withErrorHandler,
+  createSuccessResponse,
+  validateId,
+} from '@/lib/api/error-handler';
 import type { DocumentAnnotation } from '@/lib/types/document-validation.types';
 import type { UpdateAnnotationDto } from '@/lib/services/validation-bc-anomalies.service';
 
@@ -10,30 +15,30 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
+  return withErrorHandler(async () => {
     const { id } = await params;
-    const body: UpdateAnnotationDto = await req.json();
+    validateId(id, 'annotation');
+
+    let body: UpdateAnnotationDto;
+    try {
+      body = await req.json();
+    } catch {
+      body = {} as UpdateAnnotationDto;
+    }
 
     // TODO: Remplacer par une vraie mise à jour en base de données
-    // Mock data pour développement
     const updatedAnnotation: DocumentAnnotation = {
       id,
-      documentId: 'BC-123', // TODO: Récupérer depuis la base
+      documentId: 'BC-123',
       documentType: 'bc',
       comment: body.comment,
-      createdBy: 'Jean Dupont', // TODO: Récupérer depuis la base
+      createdBy: 'Jean Dupont',
       createdAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
       type: 'comment',
     };
 
-    return NextResponse.json(updatedAnnotation);
-  } catch (error) {
-    console.error('Error updating annotation:', error);
-    return NextResponse.json(
-      { error: 'Failed to update annotation' },
-      { status: 500 }
-    );
-  }
+    return createSuccessResponse(updatedAnnotation);
+  });
 }
 
 /**
@@ -41,22 +46,15 @@ export async function PATCH(
  * Supprime une annotation
  */
 export async function DELETE(
-  req: NextRequest,
+  _req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
+  return withErrorHandler(async () => {
     const { id } = await params;
+    validateId(id, 'annotation');
 
     // TODO: Remplacer par une vraie suppression en base de données
-    // Pour l'instant, on retourne juste un succès
-
-    return NextResponse.json({ success: true }, { status: 200 });
-  } catch (error) {
-    console.error('Error deleting annotation:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete annotation' },
-      { status: 500 }
-    );
-  }
+    return createSuccessResponse({ deleted: true, id });
+  });
 }
 

@@ -14,12 +14,12 @@ import { hasPermission } from '@/lib/navigation/permissions';
 import type { NavigationItem, BreadcrumbItem } from '@/lib/navigation/types';
 import { isNavigationLink, isNavigationSection } from '@/lib/navigation/types';
 import { useNavigationState } from './useNavigationState';
-import { useNavigationStore } from '@/lib/stores/navigation-store';
+import { usePageMetaStore } from '@/lib/stores/navigation-store';
 
 export function useNavigation() {
   const pathname = usePathname();
   const router = useRouter();
-  const { pageCounts } = useNavigationStore();
+  const { pageCounts } = usePageMetaStore();
   const {
     isCollapsed,
     setIsCollapsed,

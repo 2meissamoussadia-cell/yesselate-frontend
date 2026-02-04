@@ -21,7 +21,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { PanelLeft, List, PanelRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useLocalStorage } from '@/application/hooks/useLocalStorage';
 import { useLayoutShortcuts } from '@/hooks/useLayoutShortcuts';
 
@@ -149,9 +149,11 @@ export function OutlookLikeLayout({
         {showSidebar && (
           <aside
             className={cn(
-              'hidden lg:flex lg:shrink-0 lg:w-64 lg:min-w-[14rem] lg:max-w-xs',
+              'hidden lg:flex lg:shrink-0',
+              'lg:w-[220px] lg:min-w-[200px] lg:max-w-[280px]',
               'border-r border-slate-200 dark:border-slate-800/60',
-              'bg-white dark:bg-slate-950/50 overflow-y-auto'
+              'bg-white dark:bg-slate-950/50 overflow-y-auto',
+              'transition-[width] duration-200 ease-out'
             )}
             aria-label="Dossiers"
           >
@@ -163,7 +165,8 @@ export function OutlookLikeLayout({
         {showList && (
           <section
             className={cn(
-              'flex flex-col flex-1 min-w-0 md:shrink-0 md:w-80 lg:min-w-[18rem] lg:max-w-md',
+              'flex flex-col flex-1 min-w-0',
+              'md:shrink-0 md:w-[400px] md:min-w-[320px] md:max-w-[500px]',
               'border-r border-slate-200 dark:border-slate-800/60',
               'bg-slate-50/80 dark:bg-slate-900/50 overflow-hidden'
             )}
@@ -185,7 +188,7 @@ export function OutlookLikeLayout({
         {showDetail && (
           <section
             className={cn(
-              'hidden md:flex flex-1 min-w-0 overflow-hidden flex-col',
+              'hidden md:flex flex-1 min-w-[400px] overflow-hidden flex-col',
               'bg-white dark:bg-slate-950/40'
             )}
             aria-label="Détail"

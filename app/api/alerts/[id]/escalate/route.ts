@@ -1,4 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { generateMockAlerts } from '@/lib/data/alerts';
+import {
+  withErrorHandler,
+  validateId,
+  notFound,
+  createSuccessResponse,
+} from '@/lib/api/error-handler';
 
 /**
  * POST /api/alerts/[id]/escalate
@@ -8,63 +15,39 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
+  return withErrorHandler(async () => {
     const { id } = await params;
-    const body = await request.json();
-    const { escalateTo, reason, priority, userId } = body;
+    validateId(id, 'alerte');
+    
+    const body = await request.json().catch(() => ({}));
 
-    if (!escalateTo || !reason) {
-      return NextResponse.json(
-        { error: 'Missing required fields: escalateTo, reason' },
-        { status: 400 }
-      );
+    // Chercher l'alerte
+    const alerts = generateMockAlerts(100);
+    const alert = alerts.find(a => a.id === id);
+
+    if (!alert) {
+      throw notFound('Alerte', id);
     }
 
     // Simuler l'escalade
-    const alert = {
-      id,
+    const escalatedAlert = {
+      ...alert,
       status: 'escalated',
       escalatedAt: new Date().toISOString(),
-      escalatedBy: userId,
-      escalateTo,
-      escalationReason: reason,
-      priority: priority || 10,
+      escalatedTo: body.escalateTo || 'manager',
+      escalationReason: body.reason || '',
+      priority: body.priority || alert.priority,
       updatedAt: new Date().toISOString(),
     };
 
-    // Créer une notification
-    const notification = {
-      id: `notif-${Date.now()}`,
-      type: 'escalation',
-      recipientId: escalateTo,
-      alertId: id,
-      message: `Alert escalated by ${userId}: ${reason}`,
-      createdAt: new Date().toISOString(),
-      read: false,
-    };
-
-    // Créer une entrée timeline
-    const timelineEntry = {
-      id: `timeline-${Date.now()}`,
-      alertId: id,
-      type: 'escalated',
-      userId,
-      timestamp: new Date().toISOString(),
-      data: { escalateTo, reason, priority },
-    };
-
-    return NextResponse.json({
-      success: true,
-      alert,
-      notification,
-      timeline: timelineEntry,
-      message: 'Alert escalated successfully',
+    return createSuccessResponse({
+      alert: escalatedAlert,
+      notification: {
+        sent: true,
+        to: body.escalateTo,
+        type: 'email',
+      },
+      message: 'Alerte escaladée avec succès',
     });
-  } catch (error) {
-    console.error('Error escalating alert:', error);
-    return NextResponse.json(
-      { error: 'Failed to escalate alert', message: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
-    );
-  }
+  });
 }

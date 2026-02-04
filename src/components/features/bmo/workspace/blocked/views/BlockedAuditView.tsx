@@ -6,7 +6,7 @@ import {
   Building2, User, Hash, Search, Filter, Download, ChevronRight,
   AlertCircle, RefreshCw
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { blockedApi, type AuditEntry } from '@/lib/services/blockedApiService';
 import { useBlockedWorkspaceStore } from '@/lib/stores/blockedWorkspaceStore';

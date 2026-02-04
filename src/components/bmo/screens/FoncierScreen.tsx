@@ -12,7 +12,7 @@ import { ExplorerLayout } from '@/components/bmo/layout/ExplorerLayout';
 import { KpiCard } from '@/components/bmo/metrics/KpiCard';
 import { PhaseModal } from '@/components/bmo/workflow/PhaseModal';
 import { Plus, Filter, FileText, MapPin, AlertCircle, Workflow } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 const kpis = [
   { label: 'Dossiers actifs', value: '8', trend: '+2', variant: 'default' as const },

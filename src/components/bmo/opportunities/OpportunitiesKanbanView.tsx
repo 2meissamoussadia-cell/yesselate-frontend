@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { GitCommit, MapPin, DollarSign } from 'lucide-react';
 import type { OpportunityRow } from './types';
 
@@ -71,7 +71,7 @@ export function OpportunitiesKanbanView({
                 className={cn(
                   'w-full text-left rounded-lg border border-slate-700/60 bg-slate-950/60 p-3',
                   'hover:border-slate-600 hover:bg-slate-900/50 transition-colors',
-                  'focus:outline-none focus:ring-2 focus:ring-amber-500/50'
+                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950'
                 )}
               >
                 <div className="font-medium text-slate-100 text-xs truncate">{row.projet}</div>

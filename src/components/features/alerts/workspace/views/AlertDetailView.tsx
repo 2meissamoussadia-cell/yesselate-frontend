@@ -8,8 +8,20 @@ import {
   Eye, UserPlus, MessageSquare, XCircle, CheckCircle2,
   FileText, ExternalLink, Calendar, Hash, Activity
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { getAlertById, type Alert } from '@/lib/data/alerts';
+// Nouveaux composants BMO
+import {
+  ReadingPane,
+  ReadingPaneSection,
+  StatusBadge,
+  PriorityBadge,
+  ReferenceNumber,
+  TimeAgo,
+  ActionButton,
+  EmptyState,
+} from '@/components/bmo/ui';
+import type { PriorityLevel } from '@/components/bmo/ui/PriorityIndicator';
 
 interface AlertDetailViewProps {
   alertId: string;
@@ -36,12 +48,33 @@ export function AlertDetailView({ alertId }: AlertDetailViewProps) {
 
   if (!alert) {
     return (
-      <div className="rounded-2xl border border-slate-200/70 bg-white/80 dark:border-slate-800 dark:bg-[#1f1f1f]/70 p-8 flex flex-col items-center justify-center">
-        <AlertCircle className="w-12 h-12 text-slate-400 mb-3" />
-        <p className="text-slate-400">Alerte introuvable</p>
+      <div className="rounded-2xl border border-slate-200/70 bg-white/80 dark:border-slate-800 dark:bg-[#1f1f1f]/70 overflow-hidden">
+        <EmptyState
+          type="error"
+          title="Alerte introuvable"
+          description={`L'alerte ${alertId} n'existe pas ou a été supprimée.`}
+          size="md"
+        />
       </div>
     );
   }
+  
+  // Mapper severity vers priority pour les nouveaux composants
+  const priorityMap: Record<string, PriorityLevel> = {
+    critical: 'critical',
+    warning: 'high',
+    info: 'medium',
+    success: 'low',
+  };
+  
+  // Mapper status vers variant
+  const statusVariantMap: Record<string, 'success' | 'warning' | 'error' | 'info' | 'neutral'> = {
+    active: 'error',
+    acknowledged: 'warning',
+    resolved: 'success',
+    escalated: 'info',
+    ignored: 'neutral',
+  };
 
   const severityConfig = SEVERITY_CONFIG[alert.severity];
   const SeverityIcon = severityConfig.icon;
@@ -81,7 +114,7 @@ export function AlertDetailView({ alertId }: AlertDetailViewProps) {
     <div className="grid grid-cols-1 xl:grid-cols-[1fr_350px] gap-4">
       {/* Contenu principal */}
       <div className="space-y-4">
-        {/* Header */}
+        {/* Header — Amélioré avec nouveaux composants */}
         <div className={cn("rounded-2xl border p-6 dark:border-slate-800", severityConfig.bgColor, severityConfig.borderColor)}>
           <div className="flex items-start gap-4">
             <div className={cn("p-3 rounded-xl", severityConfig.bgColor)}>
@@ -89,22 +122,35 @@ export function AlertDetailView({ alertId }: AlertDetailViewProps) {
             </div>
             
             <div className="flex-1">
-              <div className="flex items-start justify-between gap-4 mb-2">
+              <div className="flex items-start justify-between gap-4 mb-3">
                 <div>
-                  <h1 className="text-2xl font-bold text-slate-700 dark:text-slate-200 mb-1">
+                  <div className="flex items-center gap-3 mb-2">
+                    <ReferenceNumber value={alert.id} prefix="ALT" variant="badge" />
+                    <PriorityBadge priority={priorityMap[alert.severity] || 'medium'} size="sm" />
+                  </div>
+                  <h1 className="text-2xl font-bold text-slate-700 dark:text-slate-200">
                     {alert.title}
                   </h1>
-                  <p className="text-sm font-mono text-slate-400">{alert.id}</p>
                 </div>
                 
-                <div className={cn("px-3 py-1.5 rounded-lg text-sm font-medium", statusConfig.bgColor, statusConfig.color)}>
+                <StatusBadge 
+                  variant={statusVariantMap[alert.status] || 'neutral'} 
+                  size="md"
+                >
                   {statusConfig.label}
-                </div>
+                </StatusBadge>
               </div>
               
-              <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-3">
                 {alert.description}
               </p>
+              
+              {/* Timestamp avec nouveau composant */}
+              <div className="flex items-center gap-2 text-sm">
+                <Clock className="w-4 h-4 text-slate-400" />
+                <span className="text-slate-500">Créée</span>
+                <TimeAgo date={alert.createdAt} />
+              </div>
             </div>
           </div>
         </div>

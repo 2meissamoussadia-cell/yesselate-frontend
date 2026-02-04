@@ -15,7 +15,7 @@ import React from 'react';
 import { VirtualizedList } from '@/components/shared/VirtualizedList';
 import { Button } from '@/components/ui/button';
 import { Loader2, AlertTriangle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export interface EmptyStateConfig {
   title: string;
@@ -40,7 +40,7 @@ export interface ItemListProps<T extends { id: string }> {
   emptyMessage?: string;
   /** État vide enrichi (titre, description, action) */
   emptyState?: EmptyStateConfig;
-  /** Seuil pour activer la virtualisation (défaut 50) */
+  /** Seuil pour activer la virtualisation (défaut 30) */
   virtualizeThreshold?: number;
   /** Hauteur estimée par item pour virtualisation (défaut 64) */
   itemHeight?: number;
@@ -60,7 +60,7 @@ export function ItemList<T extends { id: string }>({
   renderItem,
   emptyMessage = 'Aucun élément',
   emptyState,
-  virtualizeThreshold = 50,
+  virtualizeThreshold = 30,
   itemHeight = 64,
   onRetry,
   className,

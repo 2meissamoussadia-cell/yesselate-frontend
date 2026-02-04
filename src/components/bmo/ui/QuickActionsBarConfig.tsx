@@ -15,7 +15,7 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import * as Icons from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 

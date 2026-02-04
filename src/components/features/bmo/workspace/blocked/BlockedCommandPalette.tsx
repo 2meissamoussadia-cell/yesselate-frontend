@@ -8,7 +8,7 @@ import {
   Sun, Moon, Keyboard, RefreshCw, Building2, Users, Calendar, 
   LayoutGrid, TrendingUp, History, Eye, GitBranch, ArrowUpRight, Filter
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useBlockedWorkspaceStore } from '@/lib/stores/blockedWorkspaceStore';
 import { useAppStore } from '@/lib/stores';
 

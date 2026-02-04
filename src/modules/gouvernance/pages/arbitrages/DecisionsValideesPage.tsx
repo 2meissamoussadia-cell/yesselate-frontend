@@ -10,7 +10,8 @@ import { GouvernanceHeader } from '../../components/GouvernanceHeader';
 import { useGouvernanceData } from '../../hooks/useGouvernanceData';
 import type { DecisionGouvernance } from '../../types/gouvernanceTypes';
 import { CheckCircle2 } from 'lucide-react';
-import { cn, exportDataAsCSV } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { exportDataAsCSV } from '@/lib/utils/export';
 import { normalizeToArray } from '../../utils/dataNormalization';
 
 export default function DecisionsValideesPage() {

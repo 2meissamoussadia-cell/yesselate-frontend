@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { FileText, Clock, CheckCircle, XCircle, AlertTriangle, TrendingUp, Loader2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { getValidationStats } from '@/lib/services/validation-bc-api';
 
 interface CounterData {

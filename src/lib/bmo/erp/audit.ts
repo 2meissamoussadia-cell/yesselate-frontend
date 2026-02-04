@@ -15,8 +15,9 @@ const safeNow = () => Date.now();
 const safeUUID = () => {
   // crypto.randomUUID() n'existe pas partout
   try {
-    // @ts-expect-error - runtime check
-    if (globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID();
+    if (typeof (globalThis as { crypto?: { randomUUID?: () => string } }).crypto?.randomUUID === 'function') {
+      return (globalThis as { crypto: { randomUUID: () => string } }).crypto.randomUUID();
+    }
   } catch {}
   return `evt_${Math.random().toString(16).slice(2)}_${safeNow()}`;
 };
@@ -62,8 +63,7 @@ export const logUiEvent = (scope: string, type: string, payload?: Record<string,
     if (typeof navigator !== 'undefined' && 'sendBeacon' in navigator) {
       // endpoint optionnel, non bloquant (si inexistant → silencieux)
       const blob = new Blob([JSON.stringify(evt)], { type: 'application/json' });
-      // @ts-expect-error - runtime feature
-      navigator.sendBeacon?.('/api/audit', blob);
+      (navigator as Navigator & { sendBeacon?(url: string, body: Blob): boolean }).sendBeacon?.('/api/audit', blob);
     }
   } catch {
     // ignore

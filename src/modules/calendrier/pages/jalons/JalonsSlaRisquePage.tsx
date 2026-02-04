@@ -8,7 +8,7 @@ import React from 'react';
 import { CalendarHeader } from '../../components/CalendarHeader';
 import { useJalons } from '../../hooks/useCalendrierData';
 import { Flag, AlertTriangle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export function JalonsSlaRisquePage() {
   const { jalons, loading, error } = useJalons({ est_sla_risque: true });

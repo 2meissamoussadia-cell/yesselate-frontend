@@ -224,9 +224,9 @@ export function useGovernanceAlerts(
     });
 
     // Sort by severity then date
-    const severityRank = { critical: 4, warning: 3, info: 2, success: 1 } as const;
+    const severityRank: Record<string, number> = { critical: 4, warning: 3, info: 2, success: 1 };
     result = result.sort((a, b) => {
-      const sevDiff = (severityRank[b.severity] || 0) - (severityRank[a.severity] || 0);
+      const sevDiff = (severityRank[String(b.severity)] ?? 0) - (severityRank[String(a.severity)] ?? 0);
       if (sevDiff !== 0) return sevDiff;
       return (b.createdAt || '').localeCompare(a.createdAt || '');
     });

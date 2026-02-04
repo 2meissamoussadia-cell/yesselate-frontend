@@ -8,7 +8,7 @@ import React from 'react';
 import { useOfflineStore, useNetworkStatus } from '@/lib/offline/offline-manager';
 import { WifiOff, Wifi, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export function OfflineIndicator() {
   useNetworkStatus();

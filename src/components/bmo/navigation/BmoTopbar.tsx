@@ -9,7 +9,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { Menu, Search, Bell, ChevronRight, ChevronLeft, ChevronDown, MoreVertical, Sun, Moon } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { getModuleByPath, bmoModuleGroupLabels } from '@/lib/navigation/bmoModules';
 import {
   DropdownMenu,
@@ -88,7 +88,7 @@ function getBreadcrumbFromDashboardNavigation(
 }
 
 export function BmoTopbar({
-  user = { name: 'A. DIALLO', role: 'DG', initials: 'AD' },
+  user = { name: 'Meissa MOUSSA DIA', role: 'DG', initials: 'MM' },
   onMenuClick,
   onSearchClick,
   onNotificationsClick,
@@ -386,7 +386,7 @@ export function BmoTopbar({
                 className="w-6 h-6 rounded bg-amber-500/20 flex items-center justify-center text-amber-400 text-[10px] font-semibold shrink-0"
                 aria-hidden
               >
-                {user.initials ?? user.name.slice(0, 2).toUpperCase()}
+                {(user.initials ?? (user.name || '').slice(0, 2).toUpperCase()) || 'U'}
               </div>
               <div className="hidden sm:block text-left min-w-0">
                 <div className="text-[11px] font-medium leading-tight truncate text-slate-800 dark:text-slate-200">
@@ -402,7 +402,7 @@ export function BmoTopbar({
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="min-w-[10rem] text-[11px]">
             <DropdownMenuLabel className="text-slate-500 dark:text-slate-400 font-normal text-[10px]">
-              {user.name} — {user.role}
+              {user.name || 'Utilisateur'} — {user.role || '—'}
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem

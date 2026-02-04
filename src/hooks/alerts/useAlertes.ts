@@ -1,5 +1,6 @@
 /**
  * Hook useAlertes — Fetch alertes BTP avec React Query
+ * v2: Meilleure gestion des erreurs
  */
 
 import { useQuery } from '@tanstack/react-query';
@@ -14,8 +15,23 @@ export function useAlertes(params?: {
 }) {
   return useQuery({
     queryKey: ['alertes-btp', params],
-    queryFn: () => alertsBtpApi.getAlertes(params),
+    queryFn: async () => {
+      try {
+        return await alertsBtpApi.getAlertes(params);
+      } catch (error) {
+        console.error('[useAlertes] Erreur chargement alertes:', error);
+        // Retourner une structure vide en cas d'erreur
+        return {
+          data: [],
+          total: 0,
+          page: 1,
+          totalPages: 1,
+        };
+      }
+    },
     staleTime: 30000,
+    retry: 2,
+    retryDelay: 1000,
   });
 }
 

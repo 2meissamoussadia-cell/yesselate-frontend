@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import {
   Plus,

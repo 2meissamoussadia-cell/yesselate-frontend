@@ -8,7 +8,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { SidebarBadge, type SidebarBadgeProps } from './SidebarBadge';

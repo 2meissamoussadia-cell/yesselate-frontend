@@ -45,9 +45,14 @@ function mapApiToAlerteBTP(raw: Record<string, unknown>): AlerteBTP {
     role: 'Système',
   };
 
+  // Générer numéro professionnel au lieu d'utiliser l'ID technique
+  const idStr = String(raw.id);
+  const numericPart = idStr.replace(/\D/g, '') || '0';
+  const numeroProf = `ALT-${new Date().getFullYear()}-${numericPart.padStart(4, '0')}`;
+
   return {
     id: String(raw.id),
-    numero: String(raw.id),
+    numero: numeroProf,
     titre: String(raw.title ?? ''),
     description: String(raw.description ?? ''),
 

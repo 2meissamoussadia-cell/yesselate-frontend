@@ -1,4 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import {
+  withErrorHandler,
+  createSuccessResponse,
+  validateId,
+} from '@/lib/api/error-handler';
 import type { DocumentAnomaly } from '@/lib/types/document-validation.types';
 
 /**
@@ -9,13 +14,18 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ anomalyId: string }> }
 ) {
-  try {
+  return withErrorHandler(async () => {
     const { anomalyId } = await params;
-    const body = await req.json();
-    const { comment } = body || {};
+    validateId(anomalyId, 'anomalie');
+
+    let body: { comment?: string } = {};
+    try {
+      body = await req.json();
+    } catch {
+      // body optionnel
+    }
 
     // TODO: Remplacer par une vraie mise à jour en base de données
-    // Mock data pour développement
     const resolvedAnomaly: DocumentAnomaly = {
       id: anomalyId,
       field: 'montant_ttc',
@@ -26,16 +36,10 @@ export async function POST(
       detectedBy: 'BMO-AUDIT-SYSTEM',
       resolved: true,
       resolvedAt: new Date().toISOString(),
-      resolvedBy: 'Current User', // TODO: Récupérer depuis la session
+      resolvedBy: 'Current User',
     };
 
-    return NextResponse.json(resolvedAnomaly);
-  } catch (error) {
-    console.error('Error resolving anomaly:', error);
-    return NextResponse.json(
-      { error: 'Failed to resolve anomaly' },
-      { status: 500 }
-    );
-  }
+    return createSuccessResponse(resolvedAnomaly);
+  });
 }
 

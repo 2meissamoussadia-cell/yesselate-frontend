@@ -8,7 +8,7 @@
 import React from 'react';
 import { usePathname } from 'next/navigation';
 import { Download, Settings, RefreshCw } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useGouvernanceFilters } from '../hooks/useGouvernanceFilters';
 import { PeriodSelector } from './PeriodSelector';
 import { ViewSelector } from './ViewSelector';

@@ -11,7 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useAppStore } from '@/lib/stores';
 import { BureauTag } from '@/components/features/bmo/BureauTag';
 import {
@@ -97,12 +97,12 @@ export const AlertsTab = React.memo(function AlertsTab({
       {showPredictions && (
         <Suspense fallback={<div className="h-48 bg-slate-800/50 rounded animate-pulse" />}>
           <AlertPredictions
-            alerts={alertsHook.alerts}
+            alerts={alertsHook.alerts.map(a => ({ ...a, type: a.type ?? '', createdAt: a.createdAt ?? '' }))}
             payments={paymentsN1}
             contracts={contractsToSign.filter(c => c.status === 'pending')}
           />
           <Suspense fallback={<div className="h-32 bg-slate-800/50 rounded animate-pulse mt-2" />}>
-            <AlertTimeline alerts={alertsHook.alerts} monthsAhead={3} />
+            <AlertTimeline alerts={alertsHook.alerts.map(a => ({ ...a, type: a.type ?? '', createdAt: a.createdAt ?? '' }))} monthsAhead={3} />
           </Suspense>
         </Suspense>
       )}
@@ -392,7 +392,10 @@ export const AlertsTab = React.memo(function AlertsTab({
         <AlertDetailsPanel
           isOpen={selectedAlert !== null}
           onClose={() => setSelectedAlert(null)}
-          alert={selectedAlertData as AlertDetailsPanelAlert}
+          alert={{
+            ...selectedAlertData,
+            description: selectedAlertData.description ?? '',
+          }}
           onAction={onAlertAction}
         />
       )}

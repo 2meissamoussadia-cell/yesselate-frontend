@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { demandesRH } from '@/lib/data/bmo-mock-2';
 import {
   BarChart3, TrendingUp, TrendingDown, Users, Calendar,

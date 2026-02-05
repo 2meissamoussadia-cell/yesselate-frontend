@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { useFinancesWorkspaceStore } from '@/lib/stores/financesWorkspaceStore';
 import { financesApiService, type CompteBancaire, type FinancesStats } from '@/lib/services/financesApiService';
 import { Wallet, CreditCard, TrendingUp, TrendingDown, ArrowUpRight, ArrowDownRight, Building2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 export function FinancesDashboardView() {
   const { openTab } = useFinancesWorkspaceStore();
@@ -22,7 +23,7 @@ export function FinancesDashboardView() {
         ]);
         setComptes(comptesData);
         setStats(statsData);
-      } catch (error) { console.error('Failed:', error); }
+      } catch (error) { logger.error('Finances dashboard load failed', error as Error, { context: 'FinancesDashboardView' }); }
       finally { setLoading(false); }
     };
     load();

@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { useProjetsWorkspaceStore } from '@/lib/stores/projetsWorkspaceStore';
 import { projetsApiService, type Projet } from '@/lib/services/projetsApiService';
 import { Search, ChevronRight, Clock, CheckCircle, AlertTriangle, Pause, Building2, Users, DollarSign, Eye, Star, StarOff } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 interface Props {
   tabId: string;
@@ -39,7 +40,7 @@ export function ProjetsInboxView({ tabId, data }: Props) {
         const result = await projetsApiService.getAll(filter, 'status', 1, 50);
         setProjets(result.data);
       } catch (error) {
-        console.error('Failed:', error);
+        logger.error('Projets inbox load failed', error as Error, { context: 'ProjetsInboxView' });
       } finally {
         setLoading(false);
       }

@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -29,8 +29,20 @@ import {
 // TYPES
 // ================================
 
+export type MissionsMainCategory =
+  | 'overview'
+  | 'planned'
+  | 'in-progress'
+  | 'on-site'
+  | 'delayed'
+  | 'completed'
+  | 'canceled'
+  | 'by-region'
+  | 'analytics'
+  | 'archive';
+
 export interface MissionsCategory {
-  id: string;
+  id: MissionsMainCategory;
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   badge?: number | string;
@@ -124,8 +136,8 @@ export const missionsCategories: MissionsCategory[] = [
 // ================================
 
 interface MissionsCommandSidebarProps {
-  activeCategory: string;
-  onCategoryChange: (categoryId: string) => void;
+  activeCategory: MissionsMainCategory;
+  onCategoryChange: (categoryId: MissionsMainCategory) => void;
   collapsed?: boolean;
   onToggleCollapse?: () => void;
   onOpenCommandPalette?: () => void;

@@ -17,6 +17,7 @@ import {
   subscribeToNotifications,
   type Notification,
 } from '@/lib/services/notificationsApiService';
+import { logger } from '@/lib/utils/logger';
 
 export function useNotifications() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -38,7 +39,7 @@ export function useNotifications() {
       setUnreadCount(count);
     } catch (err) {
       setError('Erreur lors du chargement des notifications');
-      console.error('Error fetching notifications:', err);
+      logger.error('Error fetching notifications', err instanceof Error ? err : undefined, { component: 'useNotifications' });
     } finally {
       setIsLoading(false);
     }
@@ -57,7 +58,7 @@ export function useNotifications() {
       );
       setUnreadCount((prev) => Math.max(0, prev - 1));
     } catch (err) {
-      console.error('Error marking notification as read:', err);
+      logger.error('Error marking notification as read', err instanceof Error ? err : undefined, { component: 'useNotifications' });
     }
   }, []);
 
@@ -72,7 +73,7 @@ export function useNotifications() {
       setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
       setUnreadCount(0);
     } catch (err) {
-      console.error('Error marking all as read:', err);
+      logger.error('Error marking all as read', err instanceof Error ? err : undefined, { component: 'useNotifications' });
     }
   }, []);
 
@@ -92,7 +93,7 @@ export function useNotifications() {
         return prev.filter((n) => n.id !== notificationId);
       });
     } catch (err) {
-      console.error('Error deleting notification:', err);
+      logger.error('Error deleting notification', err instanceof Error ? err : undefined, { component: 'useNotifications' });
     }
   }, []);
 
@@ -106,7 +107,7 @@ export function useNotifications() {
       // Update local state
       setNotifications((prev) => prev.filter((n) => !n.read));
     } catch (err) {
-      console.error('Error deleting read notifications:', err);
+      logger.error('Error deleting read notifications', err instanceof Error ? err : undefined, { component: 'useNotifications' });
     }
   }, []);
 

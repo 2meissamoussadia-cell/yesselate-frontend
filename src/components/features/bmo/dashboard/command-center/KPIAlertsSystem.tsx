@@ -7,7 +7,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { AlertCircle, Bell, BellOff, Settings, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
 import type { KPIDisplayData } from '@/lib/mappings/dashboardKPIMapping';

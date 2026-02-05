@@ -1,7 +1,7 @@
 'use client';
 import { useEmployesWorkspaceStore } from '@/lib/stores/employesWorkspaceStore';
 import { X, Users, FileText, Shield, Calendar, Star, BarChart3 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 const tabIcons: Record<string, React.ReactNode> = { inbox: <Users className="w-4 h-4" />, detail: <FileText className="w-4 h-4" />, spof: <Shield className="w-4 h-4" />, absences: <Calendar className="w-4 h-4" />, evaluations: <Star className="w-4 h-4" />, analytics: <BarChart3 className="w-4 h-4" /> };
 export function EmployesWorkspaceTabs() {
   const { tabs, activeTabId, setActiveTab, closeTab } = useEmployesWorkspaceStore();

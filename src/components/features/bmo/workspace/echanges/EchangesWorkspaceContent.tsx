@@ -3,14 +3,15 @@ import { useState, useEffect } from 'react';
 import { useEchangesWorkspaceStore } from '@/lib/stores/echangesWorkspaceStore';
 import { echangesApiService, type Echange } from '@/lib/services/echangesApiService';
 import { FileText, ArrowUp, Zap, Briefcase, BarChart3, Search, ChevronRight, Eye, Star, StarOff, MessageSquare, Building2, Paperclip, ArrowRightLeft, User, Clock } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 const STATUS_STYLES = { pending: { border: 'border-l-amber-500', badge: 'bg-amber-500/20 text-amber-600' }, resolved: { border: 'border-l-emerald-500', badge: 'bg-emerald-500/20 text-emerald-600' }, escalated: { border: 'border-l-red-500', badge: 'bg-red-500/20 text-red-600' } };
 const PRIORITY_STYLES = { urgent: { badge: 'bg-red-500/20 text-red-600', icon: Zap }, high: { badge: 'bg-amber-500/20 text-amber-600', icon: ArrowUp }, normal: { badge: 'bg-slate-500/20 text-slate-600', icon: Clock } };
 export function EchangesWorkspaceContent() {
   const { tabs, activeTabId, openTab, currentFilter, watchlist, addToWatchlist, removeFromWatchlist } = useEchangesWorkspaceStore();
   const activeTab = tabs.find(t => t.id === activeTabId); const [echanges, setEchanges] = useState<Echange[]>([]); const [loading, setLoading] = useState(true); const [searchQuery, setSearchQuery] = useState(''); const [expandedId, setExpandedId] = useState<string | null>(null);
   const queue = activeTab?.data?.queue as string | undefined;
-  useEffect(() => { const load = async () => { setLoading(true); try { const filter = { ...currentFilter }; if (queue && queue !== 'all') { if (['pending', 'resolved', 'escalated'].includes(queue)) filter.status = queue; else if (['urgent', 'high', 'normal'].includes(queue)) filter.priority = queue; } if (searchQuery) filter.search = searchQuery; const r = await echangesApiService.getAll(filter, 'priority', 1, 50); setEchanges(r.data); } catch (e) { console.error(e); } finally { setLoading(false); } }; load(); }, [currentFilter, queue, searchQuery]);
+  useEffect(() => { const load = async () => { setLoading(true); try { const filter = { ...currentFilter }; if (queue && queue !== 'all') { if (['pending', 'resolved', 'escalated'].includes(queue)) filter.status = queue; else if (['urgent', 'high', 'normal'].includes(queue)) filter.priority = queue; } if (searchQuery) filter.search = searchQuery; const r = await echangesApiService.getAll(filter, 'priority', 1, 50); setEchanges(r.data); } catch (e) { logger.error('Echanges load failed', e as Error, { context: 'EchangesWorkspaceContent' }); } finally { setLoading(false); } }; load(); }, [currentFilter, queue, searchQuery]);
   const handleOpenDetail = (ech: Echange) => openTab({ type: 'detail', id: `detail:${ech.id}`, title: ech.ref, icon: '📨', data: { echangeId: ech.id } });
   if (!activeTab) return <div className="flex items-center justify-center h-64 text-slate-400"><MessageSquare className="w-12 h-12 opacity-30" /></div>;
   if (activeTab.type === 'escaladed') return <PlaceholderView icon={<ArrowUp className="w-12 h-12" />} title="Échanges escaladés" />;

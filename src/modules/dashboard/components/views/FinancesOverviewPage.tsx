@@ -6,7 +6,7 @@
 
 import React, { useMemo } from 'react';
 import { Wallet, Building2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { formatMoneyCompact } from '@lib-root/dashboard/kpi';
 import {
   financesGlobales,

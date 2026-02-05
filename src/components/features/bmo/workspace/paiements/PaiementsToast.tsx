@@ -7,7 +7,7 @@
 
 import React, { useEffect } from 'react';
 import { AlertTriangle, CheckCircle, XCircle, Info, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface PaiementsToastProps {
   open: boolean;

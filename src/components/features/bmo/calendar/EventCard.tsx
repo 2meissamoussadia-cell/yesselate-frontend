@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useAppStore } from '@/lib/stores';
 import { Badge } from '@/components/ui/badge';
 import { BureauTag } from '@/components/features/bmo/BureauTag';

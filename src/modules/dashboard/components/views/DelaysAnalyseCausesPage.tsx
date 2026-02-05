@@ -23,7 +23,7 @@ import { ExportButton } from '../shared/ExportButton';
 import { useDashboardData } from '../../hooks/useDashboardData';
 import { exportToCSV, exportToJSON } from '../../utils/exportUtils';
 import type { DelaysAnalyseCausesData } from '../../types/dashboardDataTypes';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export const DelaysAnalyseCausesPage = memo(function DelaysAnalyseCausesPage() {
   // ✅ Charger les données depuis l'API

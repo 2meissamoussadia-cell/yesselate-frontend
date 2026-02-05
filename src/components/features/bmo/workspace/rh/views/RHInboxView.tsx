@@ -12,7 +12,8 @@ import { demandesRH } from '@/lib/data/bmo-mock-2';
 import type { HRRequest } from '@/lib/types/bmo.types';
 import { BureauTag } from '@/components/features/bmo/BureauTag';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 const QUEUE_CONFIG: Record<string, { label: string; icon: typeof Inbox; color: string }> = {
   pending: { label: 'À traiter', icon: Inbox, color: 'text-amber-500' },
@@ -90,7 +91,7 @@ export function RHInboxView({ tab }: { tab: RHTab }) {
         title: `${queueConfig.label} (${filteredItems.length})` 
       });
     } catch (e) {
-      console.error('Erreur chargement inbox RH:', e);
+      logger.error('Erreur chargement inbox RH', e as Error, { context: 'RHInboxView' });
       setItems([]);
     } finally {
       setLoading(false);
@@ -173,7 +174,7 @@ export function RHInboxView({ tab }: { tab: RHTab }) {
       setBatchAction(null);
       setBatchReason('');
     } catch (e) {
-      console.error('Erreur batch:', e);
+      logger.error('Erreur batch', e as Error, { context: 'RHInboxView' });
     } finally {
       setBatchLoading(false);
     }

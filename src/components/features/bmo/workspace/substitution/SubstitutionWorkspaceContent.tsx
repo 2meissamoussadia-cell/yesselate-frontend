@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { useSubstitutionWorkspaceStore } from '@/lib/stores/substitutionWorkspaceStore';
 import { substitutionApiService, type Substitution } from '@/lib/services/substitutionApiService';
 import { FileText, Calendar, Users, History, BarChart3, Search, ChevronRight, Eye, Star, StarOff, RefreshCw, Zap, Clock, Building2, User, AlertTriangle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { SubstitutionDetailModal } from '@/components/features/bmo/substitution/modals';
 
 const STATUS_STYLES = {
@@ -43,7 +44,7 @@ export function SubstitutionWorkspaceContent() {
         if (searchQuery) filter.search = searchQuery;
         const result = await substitutionApiService.getAll(filter, 'urgency', 1, 50);
         setSubstitutions(result.data);
-      } catch (error) { console.error('Failed:', error); }
+      } catch (error) { logger.error('Failed to load substitution data', error instanceof Error ? error : undefined, { component: 'SubstitutionWorkspaceContent' }); }
       finally { setLoading(false); }
     };
     load();

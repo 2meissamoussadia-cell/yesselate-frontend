@@ -281,6 +281,7 @@ export const mockOverview: CalendrierOverviewResponse = {
     jalons_retard_count: 2,
     jalons_total_count: 5,
     retards_detectes_count: 2,
+    sur_allocation_ressources_count: 0,
   },
 };
 
@@ -290,6 +291,7 @@ export const mockOverview: CalendrierOverviewResponse = {
 
 export const mockJalonsResponse: JalonsResponse = {
   jalons: mockJalons,
+  total: mockJalons.length,
 };
 
 export const mockSyncStatus: SyncStatusResponse = {

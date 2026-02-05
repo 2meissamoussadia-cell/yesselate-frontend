@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useState } from "react";
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useAppStore } from '@/lib/stores';
 import { Download, Printer, Maximize2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';

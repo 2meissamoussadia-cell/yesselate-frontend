@@ -8,7 +8,7 @@
 import React, { lazy, Suspense } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useAppStore } from '@/lib/stores';
 import {
   RACIComparator,
@@ -94,7 +94,7 @@ export const RACITab = React.memo(function RACITab({ raciHook, alerts, onApplySu
         <Suspense fallback={<div className="h-32 bg-slate-800/50 rounded animate-pulse" />}>
           <AISuggestions
             raciData={raciData}
-            alerts={alerts}
+            alerts={alerts.map(a => ({ ...a, type: a.type ?? '' }))}
             onApplySuggestion={onApplySuggestion}
           />
           <Suspense fallback={<div className="h-24 bg-slate-800/50 rounded animate-pulse mt-2" />}>

@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { BureauTag } from '@/components/features/bmo/BureauTag';
 import { FluentModal } from '@/components/ui/fluent-modal';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { logger } from '@/lib/utils/logger';
 import { 
   FileText, Calendar, DollarSign, MapPin, Paperclip, 
@@ -94,7 +94,7 @@ export function DemandeRHView({ tab }: { tab: RHTab }) {
       setRejectReason('');
       setInfoRequest('');
     } catch (e) {
-      console.error('Erreur action:', e);
+      logger.error('Erreur action', e instanceof Error ? e : undefined, { component: 'DemandeRHView' });
     } finally {
       setLoading(false);
     }

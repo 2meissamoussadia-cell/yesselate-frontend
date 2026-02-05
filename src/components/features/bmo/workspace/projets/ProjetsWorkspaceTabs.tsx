@@ -2,7 +2,7 @@
 
 import { useProjetsWorkspaceStore } from '@/lib/stores/projetsWorkspaceStore';
 import { X, FileText, ClipboardList, Kanban, Calendar, DollarSign, Users, AlertTriangle, Shield } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 const tabIcons: Record<string, React.ReactNode> = {
   inbox: <ClipboardList className="w-4 h-4" />,

@@ -6,7 +6,7 @@
 'use client';
 
 import { ButtonHTMLAttributes, forwardRef } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface AccessibleButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;

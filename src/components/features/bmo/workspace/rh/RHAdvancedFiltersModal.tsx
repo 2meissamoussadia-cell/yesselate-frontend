@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Filter, X, Save, RotateCcw } from 'lucide-react';
 
 export type RHFilters = {

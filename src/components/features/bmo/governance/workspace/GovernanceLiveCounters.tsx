@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useGovernanceWorkspaceStore } from '@/lib/stores/governanceWorkspaceStore';
 import { 
   Users, 

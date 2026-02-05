@@ -10,7 +10,7 @@
 
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import { CheckCircle2, AlertCircle, AlertTriangle, Info, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 // ============================================
 // TYPES

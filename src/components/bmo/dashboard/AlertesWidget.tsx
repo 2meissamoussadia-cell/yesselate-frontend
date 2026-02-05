@@ -36,7 +36,8 @@ export function AlertesWidget({ alertes }: { alertes: Alerte[] }) {
   return (
     <div className="space-y-3">
       {alertes.slice(0, 5).map((alerte) => {
-        const niveau = (alerte.niveau === 'alerte' || alerte.niveau === 'majeur'
+        const niveauRaw = alerte.niveau as string;
+        const niveau = (niveauRaw === 'alerte' || niveauRaw === 'majeur'
           ? 'important'
           : alerte.niveau) as keyof typeof niveauColors;
         const chantierNom = typeof alerte.chantier === 'string' ? alerte.chantier : alerte.chantier?.nom ?? '—';

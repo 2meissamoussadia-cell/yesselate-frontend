@@ -9,7 +9,7 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useIACommandCenterStore } from '@/lib/stores/iaCommandCenterStore';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {

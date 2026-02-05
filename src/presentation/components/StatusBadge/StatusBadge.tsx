@@ -5,7 +5,7 @@
 
 'use client';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Badge } from '@/components/ui/badge';
 import {
   CheckCircle2,

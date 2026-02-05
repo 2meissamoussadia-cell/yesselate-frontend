@@ -4,7 +4,7 @@
  */
 
 export { RecouvrementsCommandSidebar, recouvrementsCategories } from './RecouvrementsCommandSidebar';
-export type { SidebarCategory } from './RecouvrementsCommandSidebar';
+export type { RecouvrementsSidebarCategory, RecouvrementsMainCategory, SidebarCategory } from './RecouvrementsCommandSidebar';
 export { RecouvrementsSubNavigation } from './RecouvrementsSubNavigation';
 export { RecouvrementsKPIBar } from './RecouvrementsKPIBar';
 export { RecouvrementsContentRouter } from './RecouvrementsContentRouter';

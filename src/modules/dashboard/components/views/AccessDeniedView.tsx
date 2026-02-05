@@ -9,7 +9,7 @@
 import React, { useEffect, useRef } from 'react';
 import { ShieldX, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useI18n } from '@/lib/i18n';
 
 export interface AccessDeniedViewProps {

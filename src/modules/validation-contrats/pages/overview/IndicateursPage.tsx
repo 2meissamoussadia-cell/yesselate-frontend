@@ -7,7 +7,7 @@
 import React from 'react';
 import { useContratsStats } from '../../hooks';
 import { AlertTriangle, Clock, CheckCircle2, TrendingUp, DollarSign, Activity } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { KpiPanel } from '../../components/KpiPanel';
 
 export function IndicateursPage() {

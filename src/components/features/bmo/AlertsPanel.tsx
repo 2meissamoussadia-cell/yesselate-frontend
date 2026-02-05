@@ -2,7 +2,8 @@
 import { useState, useEffect } from 'react';
 import { alertingService, type Alert, type AlertStats } from '../../../../lib/services/alertingService';
 import { AlertTriangle, Bell, CheckCircle, XCircle, Eye, EyeOff, TrendingUp } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 interface Props {
   module?: string;
@@ -68,7 +69,7 @@ export function AlertsPanel({ module, showStats = true, maxItems, className }: P
       setAlerts(maxItems ? alertsData.slice(0, maxItems) : alertsData);
       setStats(statsData);
     } catch (e) {
-      console.error('Erreur chargement alertes:', e);
+      logger.error('Erreur chargement alertes', e instanceof Error ? e : undefined, { component: 'AlertsPanel' });
     } finally {
       setLoading(false);
     }
@@ -79,7 +80,7 @@ export function AlertsPanel({ module, showStats = true, maxItems, className }: P
       await alertingService.acknowledgeAlert(alertId, 'current-user-id');
       await loadAlerts();
     } catch (e) {
-      console.error('Erreur acknowledge:', e);
+      logger.error('Erreur acknowledge', e instanceof Error ? e : undefined, { component: 'AlertsPanel' });
     }
   };
 
@@ -88,7 +89,7 @@ export function AlertsPanel({ module, showStats = true, maxItems, className }: P
       await alertingService.resolveAlert(alertId, 'current-user-id');
       await loadAlerts();
     } catch (e) {
-      console.error('Erreur resolve:', e);
+      logger.error('Erreur resolve', e instanceof Error ? e : undefined, { component: 'AlertsPanel' });
     }
   };
 
@@ -97,7 +98,7 @@ export function AlertsPanel({ module, showStats = true, maxItems, className }: P
       await alertingService.ignoreAlert(alertId);
       await loadAlerts();
     } catch (e) {
-      console.error('Erreur ignore:', e);
+      logger.error('Erreur ignore', e instanceof Error ? e : undefined, { component: 'AlertsPanel' });
     }
   };
 

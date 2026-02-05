@@ -7,7 +7,7 @@
 
 import { ReactNode } from 'react';
 import { X, AlertCircle, CheckCircle, AlertTriangle, Info } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { FadeIn } from '../Animations';
 
 export type AlertVariant = 'success' | 'error' | 'warning' | 'info';

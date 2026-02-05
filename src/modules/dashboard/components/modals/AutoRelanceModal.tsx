@@ -10,7 +10,7 @@ import { X, Mail } from 'lucide-react';
 import { toast } from 'sonner';
 import { useToast } from '@/components/ui/toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export interface AutoRelanceModalProps {
   isOpen: boolean;

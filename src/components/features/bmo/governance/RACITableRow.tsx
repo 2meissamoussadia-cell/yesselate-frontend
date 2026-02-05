@@ -8,7 +8,7 @@
 import { memo } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { ScreenReaderOnly } from '@/components/ui/screen-reader-only';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 const RACI_COLORS: Record<string, string> = {
   'R': 'bg-emerald-400/80 text-white',

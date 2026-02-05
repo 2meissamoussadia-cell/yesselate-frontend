@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { blockedApi } from '@/lib/services/blockedApiService';
+import { logger } from '@/lib/utils/logger';
 import { useBlockedWorkspaceStore } from '@/lib/stores/blockedWorkspaceStore';
 import type { BlockedDossier } from '@/lib/types/bmo.types';
 
@@ -37,7 +38,7 @@ export function BlockedTimelineView({ tabId, data }: Props) {
         const result = await blockedApi.getAll(undefined, { field: 'delay', direction: 'desc' });
         setDossiers(result.data);
       } catch (error) {
-        console.error('Failed to load dossiers:', error);
+        logger.error('Failed to load dossiers', error as Error, { context: 'BlockedTimelineView' });
       } finally {
         setLoading(false);
       }

@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useBlockedCommandCenterStore } from '@/lib/stores/blockedCommandCenterStore';
 import { blockedApi, type BlockedFilter } from '@/lib/services/blockedApiService';
+import { logger } from '@/lib/utils/logger';
 import {
   AlertCircle,
   LayoutGrid,
@@ -119,7 +120,7 @@ function useBlockedData() {
       const result = await blockedApi.getAll(apiFilter, undefined, 1, 100);
       setData(result.data);
     } catch (error) {
-      console.error('Failed to load blocked data:', error);
+      logger.error('Failed to load blocked data', error as Error, { context: 'BlockedContentRouter' });
     } finally {
       setLoading(false);
     }
@@ -1297,7 +1298,7 @@ function DecisionsView() {
           ['escalation', 'escalated', 'substitution', 'substituted', 'resolution', 'resolved'].includes(l.action)
         ));
       } catch (error) {
-        console.error('Failed to load decisions:', error);
+        logger.error('Failed to load decisions', error as Error, { context: 'BlockedContentRouter' });
       } finally {
         setLoading(false);
       }
@@ -1553,7 +1554,7 @@ function AuditView() {
         const logs = await blockedApi.getAuditLog(undefined, 50);
         setAuditLogs(logs);
       } catch (error) {
-        console.error('Failed to load audit logs:', error);
+        logger.error('Failed to load audit logs', error as Error, { context: 'BlockedContentRouter' });
       } finally {
         setLoading(false);
       }

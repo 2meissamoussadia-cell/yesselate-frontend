@@ -8,7 +8,7 @@ import {
   Command, Search, Scale, Building2, Plus, BarChart3, Download, 
   HelpCircle, FileText, AlertTriangle, CheckCircle, Clock 
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 type CommandItem = {
   id: string;

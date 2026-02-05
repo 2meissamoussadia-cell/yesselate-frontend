@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { useDelegationWorkspaceStore } from '@/lib/stores/delegationWorkspaceStore';
@@ -142,7 +143,7 @@ export function DelegationDirectionPanel() {
         setSimDelegationId(activeData.items[0].id);
       }
     } catch (e) {
-      console.error('Erreur chargement insights:', e);
+      logger.error('Erreur chargement insights', e instanceof Error ? e : undefined, { component: 'DelegationDirectionPanel' });
     } finally {
       setLoading(false);
     }

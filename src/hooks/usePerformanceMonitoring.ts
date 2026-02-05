@@ -4,6 +4,7 @@
 // ============================================
 
 import { useEffect } from 'react';
+import { logger } from '@/lib/utils/logger';
 
 interface WebVitalMetric {
   name: string;
@@ -24,9 +25,8 @@ export function usePerformanceMonitoring(pageName: string) {
 
     // Fonction pour envoyer les métriques
     const sendToAnalytics = (metric: WebVitalMetric) => {
-      // Log en développement uniquement
       if (process.env.NODE_ENV === 'development') {
-        console.log(`[Perf] ${pageName} - ${metric.name}:`, Math.round(metric.value), metric.rating || '');
+        logger.info(`[Perf] ${pageName} - ${metric.name}`, { component: 'usePerformanceMonitoring', pageName, metric: metric.name, value: Math.round(metric.value), rating: metric.rating || '' });
       }
 
       // Envoyer à Google Analytics si disponible

@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { HRRequest } from '@/lib/types/bmo.types';
 import {
   Calendar, CheckCircle2, XCircle, Clock, FileText,

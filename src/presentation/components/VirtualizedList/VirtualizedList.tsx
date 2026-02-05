@@ -8,7 +8,7 @@
 
 import { useRef, useMemo } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface VirtualizedListProps<T> {
   items: T[];

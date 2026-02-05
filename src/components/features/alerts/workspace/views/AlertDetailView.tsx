@@ -9,6 +9,7 @@ import {
   FileText, ExternalLink, Calendar, Hash, Activity
 } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { getAlertById, type Alert } from '@/lib/data/alerts';
 // Nouveaux composants BMO
 import {
@@ -97,7 +98,7 @@ export function AlertDetailView({ alertId }: AlertDetailViewProps) {
 
   const handleAction = async (actionId: string) => {
     setLoading(true);
-    console.log(`Action ${actionId} sur alerte ${alertId}`);
+    logger.info(`Action ${actionId} sur alerte ${alertId}`, { component: 'AlertDetailView', alertId, actionId });
     
     // Simuler une action
     await new Promise(resolve => setTimeout(resolve, 1000));

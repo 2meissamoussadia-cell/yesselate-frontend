@@ -8,7 +8,7 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { FileText, CheckCircle2, DollarSign, AlertTriangle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { DashboardAdvancedView } from '../components/DashboardAdvancedView';
 import { CockpitDGPage } from '../components/views/CockpitDGPage';
 import { CockpitDG_V2Page } from '../components/views/CockpitDG_V2Page';

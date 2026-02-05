@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ChevronRight } from 'lucide-react';
@@ -109,7 +109,7 @@ export function AlertsSubNavigation({
                 {subCat.label}
                 {badge !== undefined && (
                   <Badge
-                    variant={badgeType}
+                    variant={badgeType === 'critical' ? 'destructive' : badgeType}
                     className={cn(
                       'ml-2 text-[10px] px-1.5 py-0',
                       badgeType === 'critical' &&

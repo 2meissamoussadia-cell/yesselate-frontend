@@ -62,7 +62,7 @@ export function useRealtimeAnalytics(options: UseRealtimeAnalyticsOptions = {}) 
       analyticsRealtimeService.connect(serviceUrl);
     } catch (error) {
       if (process.env.NODE_ENV === 'development') {
-        console.error('Failed to connect to realtime service:', error);
+        logger.error('Failed to connect to realtime service', error instanceof Error ? error : undefined, { component: 'useRealtimeAnalytics' });
       }
       return;
     }

@@ -6,7 +6,7 @@
 'use client';
 
 import { TooltipProps } from 'recharts';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { formatNumber, formatCurrency, formatPercent, formatDate } from '@/application/utils';
 
 interface CustomTooltipProps extends TooltipProps<any, any> {

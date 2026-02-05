@@ -24,7 +24,7 @@ import {
 import type { LucideIcon } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useKPIFilter } from '@/modules/dashboard/hooks/useKPIFilter';
 import { useDashboardRefresh } from '@/modules/dashboard/hooks/useDashboardRefresh';
 import { useDashboardPermissions } from '@/modules/dashboard/hooks/useDashboardPermissions';

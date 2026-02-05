@@ -7,7 +7,7 @@
 import React from 'react';
 import { useAlertesStats } from '../../hooks';
 import { AlertTriangle, Clock, CheckCircle2, TrendingUp, AlertCircle, Activity } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export function IndicateursPage() {
   // #region agent log

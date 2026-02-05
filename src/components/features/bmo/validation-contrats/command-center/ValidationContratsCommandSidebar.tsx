@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -26,15 +26,26 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
-interface SidebarCategory {
-  id: string;
+export type ValidationContratsMainCategory =
+  | 'overview'
+  | 'pending'
+  | 'urgent'
+  | 'validated'
+  | 'rejected'
+  | 'negotiation'
+  | 'analytics'
+  | 'financial'
+  | 'documents';
+
+interface ValidationContratsSidebarCategory {
+  id: ValidationContratsMainCategory;
   label: string;
   icon: LucideIcon;
   badge?: number | string;
   badgeType?: 'default' | 'warning' | 'critical';
 }
 
-const validationContratsCategories: SidebarCategory[] = [
+const validationContratsCategories: ValidationContratsSidebarCategory[] = [
   { id: 'overview', label: "Vue d'ensemble", icon: Inbox },
   { id: 'pending', label: 'En attente', icon: Clock, badge: 12, badgeType: 'warning' },
   { id: 'urgent', label: 'Urgents', icon: AlertTriangle, badge: 3, badgeType: 'critical' },
@@ -47,9 +58,9 @@ const validationContratsCategories: SidebarCategory[] = [
 ];
 
 interface ValidationContratsCommandSidebarProps {
-  activeCategory: string;
+  activeCategory: ValidationContratsMainCategory;
   collapsed: boolean;
-  onCategoryChange: (category: string) => void;
+  onCategoryChange: (category: ValidationContratsMainCategory) => void;
   onToggleCollapse: () => void;
   onOpenCommandPalette: () => void;
 }

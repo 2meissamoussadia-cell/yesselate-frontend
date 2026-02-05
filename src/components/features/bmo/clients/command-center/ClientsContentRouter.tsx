@@ -7,7 +7,7 @@
 'use client';
 
 import React, { useState, useMemo, useCallback } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import {
   Users,
   UserPlus,

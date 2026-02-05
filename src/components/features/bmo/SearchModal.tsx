@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useAppStore, useBMOStore } from '@/lib/stores';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent } from '@/components/ui/dialog';

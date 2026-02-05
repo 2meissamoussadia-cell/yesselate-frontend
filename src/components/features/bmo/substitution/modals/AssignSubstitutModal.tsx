@@ -64,7 +64,7 @@ export function AssignSubstitutModal({
         setError('Aucun substitut disponible trouvé.');
       }
     } catch (err) {
-      console.error('Error loading candidates:', err);
+      logger.error('Error loading candidates', err instanceof Error ? err : undefined, { component: 'AssignSubstitutModal' });
       setError('Erreur lors du chargement des candidats.');
     } finally {
       setLoading(false);

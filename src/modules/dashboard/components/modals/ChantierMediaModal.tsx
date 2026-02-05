@@ -8,7 +8,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { X, Image as ImageIcon, FileText, MapPin, Calendar, FolderOpen, FileCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { ChantierMock } from '../../data/chantiersMock';
 import { photosGps, getPhaseLabel, plansAR, type PhotoGpsMock } from '../../data/photoGpsMock';
 import { getDocumentsByChantier, documentTypeLabels } from '../../data/chantierDocumentsMock';

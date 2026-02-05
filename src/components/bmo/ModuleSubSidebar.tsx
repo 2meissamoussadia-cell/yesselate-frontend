@@ -314,7 +314,7 @@ export function ModuleSubSidebar({
         )}
 
         {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto px-2 py-3" aria-label="Navigation par dossiers">
+        <nav className="flex-1 overflow-y-auto overflow-x-hidden px-2 py-3 scrollbar-dashboard" aria-label="Navigation par dossiers">
           {sections.map((section, sectionIndex) => (
             <div key={section.title} className={cn(sectionIndex > 0 && 'mt-4')}>
               {/* Section header - plus subtil */}

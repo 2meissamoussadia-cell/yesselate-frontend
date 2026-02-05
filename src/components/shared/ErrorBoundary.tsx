@@ -3,6 +3,7 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { logger } from '@/lib/utils/logger';
 
 interface Props {
   children: ReactNode;
@@ -30,10 +31,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // P6: En production, utiliser onError pour envoyer au monitoring (Sentry/LogRocket/API)
-    if (process.env.NODE_ENV === 'development') {
-      console.error('ErrorBoundary caught an error:', error, errorInfo);
-    }
+    logger.error('ErrorBoundary caught an error', error, { component: 'ErrorBoundary', componentStack: errorInfo?.componentStack });
     this.props.onError?.(error, errorInfo);
   }
 

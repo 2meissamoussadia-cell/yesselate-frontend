@@ -6,6 +6,9 @@
 import { useState, useEffect } from 'react';
 import { Settings, Users, Flag, Shield } from 'lucide-react';
 import { DashboardPageLayout, DashboardSection, DashboardPanel } from '../shared';
+import { createLogger } from '../../utils/logger';
+
+const log = createLogger('RbacAdminPanel');
 
 export function RbacAdminPanel() {
   const [activeTab, setActiveTab] = useState<'roles' | 'permissions' | 'flags'>('roles');
@@ -25,7 +28,7 @@ export function RbacAdminPanel() {
       })
         .then((res) => res.json())
         .then(setRoles)
-        .catch(console.error);
+        .catch((e) => log.error('Failed to load roles', { action: 'loadRoles' }, e instanceof Error ? e : undefined));
     } else if (activeTab === 'permissions') {
       fetch('/api/rbac/admin/permissions', {
         headers: {
@@ -36,7 +39,7 @@ export function RbacAdminPanel() {
       })
         .then((res) => res.json())
         .then(setPermissions)
-        .catch(console.error);
+        .catch((e) => log.error('Failed to load permissions', { action: 'loadPermissions' }, e instanceof Error ? e : undefined));
     } else if (activeTab === 'flags') {
       fetch('/api/rbac/admin/feature-flags', {
         headers: {
@@ -47,7 +50,7 @@ export function RbacAdminPanel() {
       })
         .then((res) => res.json())
         .then(setFeatureFlags)
-        .catch(console.error);
+        .catch((e) => log.error('Failed to load feature flags', { action: 'loadFlags' }, e instanceof Error ? e : undefined));
     }
   }, [activeTab]);
 
@@ -137,8 +140,8 @@ export function RbacAdminPanel() {
                             )
                           );
                         })
-                        .catch(console.error);
-                    }}
+.catch((e) => log.error('Failed to toggle feature flag', { action: 'toggleFlag', key: f.feature_key }, e instanceof Error ? e : undefined));
+    }}
                     className={`px-3 py-1 rounded ${f.enabled ? 'bg-green-600' : 'bg-slate-700'}`}
                   >
                     {f.enabled ? 'Désactiver' : 'Activer'}

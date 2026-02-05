@@ -5,8 +5,9 @@ import {
   Clock, CheckCircle, XCircle, MessageSquare, AlertTriangle, 
   FileText, TrendingUp, DollarSign, RefreshCw
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { contratsApiService, type ContratsStats } from '@/lib/services/contratsApiService';
+import { logger } from '@/lib/utils/logger';
 import { useContratsWorkspaceStore } from '@/lib/stores/contratsWorkspaceStore';
 
 interface Props {
@@ -25,7 +26,7 @@ export function ContratsLiveCounters({ onOpenQueue, compact = false }: Props) {
         const data = await contratsApiService.getStats();
         setStats(data);
       } catch (error) {
-        console.error('Failed to load stats:', error);
+        logger.error('Failed to load stats', error as Error, { context: 'ContratsLiveCounters' });
       } finally {
         setLoading(false);
       }

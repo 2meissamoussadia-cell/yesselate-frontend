@@ -43,20 +43,21 @@ export function BmoSidebar({
   }, []);
 
   return (
-    <aside
+    <div
+      role="navigation"
+      aria-label="Navigation BMO"
       className={cn(
-        'flex flex-col h-full min-w-0 w-full bg-white border-r border-slate-200 text-slate-900',
-        'dark:bg-slate-950 dark:border-slate-800/70 dark:text-slate-100',
+        'flex flex-col h-full min-w-0 w-full max-w-full bg-white text-slate-900',
+        'dark:bg-slate-950 dark:text-slate-100',
         'overflow-hidden sidebar-dashboard',
         className
       )}
       data-sidebar="dashboard"
       data-collapsed={collapsed ? 'true' : 'false'}
-      aria-label="Navigation BMO"
     >
-      {/* Logo entreprise (un seul emplacement — pas de doublon avec la topbar) */}
+      {/* Bandeau logo : strictement contenu dans la largeur du parent (sidebar w-14 ou w-56). */}
       <div className={cn(
-        'flex items-center h-14 px-2 border-b border-slate-200 dark:border-slate-800/70 shrink-0 min-w-0',
+        'flex items-center w-full min-w-0 max-w-full h-14 px-2 border-b border-slate-200 dark:border-slate-800/70 shrink-0 overflow-hidden',
         collapsed ? 'justify-center' : 'justify-between gap-2'
       )}>
         {collapsed ? (
@@ -184,6 +185,6 @@ export function BmoSidebar({
           </Link>
         )}
       </div>
-    </aside>
+    </div>
   );
 }

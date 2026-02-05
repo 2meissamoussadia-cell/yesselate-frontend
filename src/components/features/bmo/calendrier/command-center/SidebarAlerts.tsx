@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { CalendrierAlertsBanner, type CalendrierAlert } from './CalendrierAlertsBanner';
 import { Bell } from 'lucide-react';
 import type { AlertItem, AlertSeverity, AlertStatus, AlertCategory } from '@/lib/types/alert.types';

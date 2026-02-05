@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import {
   Clock,
   Trash2,

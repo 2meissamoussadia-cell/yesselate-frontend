@@ -4,6 +4,7 @@
 
 import { useEffect, useCallback } from 'react';
 import { useNavigationStore } from '@/lib/stores';
+import { logger } from '@/lib/utils/logger';
 import type { PageCounts } from '@/lib/services/navigation.service';
 
 /**
@@ -26,7 +27,7 @@ export function useAutoSyncCounts(
       const count = await getCount();
       updatePageCount(pageId, count);
     } catch (error) {
-      console.error(`Erreur lors de la synchronisation du comptage pour ${pageId}:`, error);
+      logger.error(`Erreur lors de la synchronisation du comptage pour ${pageId}`, error instanceof Error ? error : undefined, { component: 'useAutoSyncCounts', pageId });
     }
   }, [pageId, getCount, updatePageCount]);
 
@@ -67,14 +68,14 @@ export function useAutoSyncMultipleCounts(
           const count = await getCount();
           counts[pageId] = count;
         } catch (error) {
-          console.error(`Erreur lors de la synchronisation pour ${pageId}:`, error);
+          logger.error(`Erreur lors de la synchronisation pour ${pageId}`, error instanceof Error ? error : undefined, { component: 'useAutoSyncMultipleCounts', pageId });
         }
       });
       
       await Promise.all(promises);
       updatePageCounts(counts);
     } catch (error) {
-      console.error('Erreur lors de la synchronisation des comptages:', error);
+      logger.error('Erreur lors de la synchronisation des comptages', error instanceof Error ? error : undefined, { component: 'useAutoSyncMultipleCounts' });
     }
   }, [countsMap, updatePageCounts]);
 

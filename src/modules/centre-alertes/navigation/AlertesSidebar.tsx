@@ -7,7 +7,7 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ChevronDown, ChevronRight } from 'lucide-react';

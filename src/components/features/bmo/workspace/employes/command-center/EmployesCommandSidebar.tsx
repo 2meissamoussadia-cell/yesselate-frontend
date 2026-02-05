@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -25,15 +25,26 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
-interface SidebarCategory {
-  id: string;
+export type WorkspaceEmployesMainCategory =
+  | 'overview'
+  | 'all'
+  | 'departments'
+  | 'skills'
+  | 'performance'
+  | 'evaluations'
+  | 'contracts'
+  | 'absences'
+  | 'spof';
+
+interface WorkspaceEmployesSidebarCategory {
+  id: WorkspaceEmployesMainCategory;
   label: string;
   icon: LucideIcon;
   badge?: number | string;
   badgeType?: 'default' | 'warning' | 'critical';
 }
 
-export const employesCategories: SidebarCategory[] = [
+export const employesCategories: WorkspaceEmployesSidebarCategory[] = [
   { id: 'overview', label: "Vue d'ensemble", icon: LayoutDashboard },
   { id: 'all', label: 'Tous les employés', icon: Users, badge: 124 },
   { id: 'departments', label: 'Départements', icon: Building2, badge: 8 },
@@ -46,9 +57,9 @@ export const employesCategories: SidebarCategory[] = [
 ];
 
 interface EmployesCommandSidebarProps {
-  activeCategory: string;
+  activeCategory: WorkspaceEmployesMainCategory;
   collapsed: boolean;
-  onCategoryChange: (category: string) => void;
+  onCategoryChange: (category: WorkspaceEmployesMainCategory) => void;
   onToggleCollapse: () => void;
   onOpenCommandPalette: () => void;
 }
@@ -221,5 +232,5 @@ export const EmployesCommandSidebar = React.memo(function EmployesCommandSidebar
   );
 });
 
-export type { SidebarCategory };
+export type SidebarCategory = WorkspaceEmployesSidebarCategory;
 

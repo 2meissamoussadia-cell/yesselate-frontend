@@ -7,7 +7,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Box, Activity, Shield, ArrowRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 const LINKS = [
   { href: '/maitre-ouvrage/innovation/vue-3d', label: 'Vue 3D / Visite virtuelle', icon: Box, desc: 'Scène 3D chantier (Three.js), fondation AR/VR' },

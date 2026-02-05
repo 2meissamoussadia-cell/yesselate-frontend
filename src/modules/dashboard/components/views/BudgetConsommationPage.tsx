@@ -24,7 +24,7 @@ import { useDashboardData } from '../../hooks/useDashboardData';
 import { exportToCSV, exportToJSON } from '../../utils/exportUtils';
 import type { BudgetConsommationData } from '../../types/dashboardDataTypes';
 import { formatMoneyEUR } from '../../utils/colorMapping';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export const BudgetConsommationPage = memo(function BudgetConsommationPage() {
   const [searchQuery, setSearchQuery] = useState('');

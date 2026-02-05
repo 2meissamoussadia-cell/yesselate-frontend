@@ -8,7 +8,8 @@ import {
   XCircle, MessageSquare, Building2, Calendar, FileText, MoreVertical,
   Star, StarOff, Eye, CheckSquare, Square
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 interface Props {
   tabId: string;
@@ -66,7 +67,7 @@ export function ContratsInboxView({ tabId, data }: Props) {
         setContrats(result.data);
         setTotalPages(result.totalPages);
       } catch (error) {
-        console.error('Failed to load contrats:', error);
+        logger.error('Failed to load contrats', error as Error, { context: 'ContratsInboxView' });
       } finally {
         setLoading(false);
       }

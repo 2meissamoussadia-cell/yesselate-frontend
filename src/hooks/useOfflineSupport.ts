@@ -3,6 +3,7 @@
 // ============================================
 
 import { useState, useEffect, useCallback } from 'react';
+import { logger } from '@/lib/utils/logger';
 
 interface OfflineSupportOptions {
   onOnline?: () => void;
@@ -64,7 +65,7 @@ export function useOfflineSupport(options: OfflineSupportOptions = {}) {
         actions.push(newAction);
         localStorage.setItem('governance_pending_actions', JSON.stringify(actions));
       } catch (error) {
-        console.error('Erreur lors de la sauvegarde des actions:', error);
+        logger.error('Erreur lors de la sauvegarde des actions', error instanceof Error ? error : undefined, { component: 'useOfflineSupport' });
       }
     }
 
@@ -82,7 +83,7 @@ export function useOfflineSupport(options: OfflineSupportOptions = {}) {
     for (const action of actionsToSync) {
       try {
         // await syncAction(action);
-        console.log('Action synchronisée:', action);
+        logger.info('Action synchronisée', { component: 'useOfflineSupport', action: action.action });
       } catch (error) {
         // Remettre dans la queue en cas d'erreur
         setPendingActions((prev) => [...prev, action]);
@@ -105,7 +106,7 @@ export function useOfflineSupport(options: OfflineSupportOptions = {}) {
           setPendingActions(actions);
         }
       } catch (error) {
-        console.error('Erreur lors du chargement des actions:', error);
+        logger.error('Erreur lors du chargement des actions', error instanceof Error ? error : undefined, { component: 'useOfflineSupport' });
       }
     }
   }, [enableCache]);

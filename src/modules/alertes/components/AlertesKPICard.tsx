@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Card, CardContent } from '@/components/ui/card';
 import { LucideIcon, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 

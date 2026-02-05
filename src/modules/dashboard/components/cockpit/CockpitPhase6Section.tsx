@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react';
 import { ImageIcon, Layers, QrCode, Video } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { colors } from '../../utils/dashboardDesignTokens';
 import { CockpitPhotosGpsPanel } from './CockpitPhotosGpsPanel';
 import { CockpitPlanARPanel } from './CockpitPlanARPanel';

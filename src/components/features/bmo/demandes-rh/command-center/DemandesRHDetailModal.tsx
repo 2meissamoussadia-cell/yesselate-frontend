@@ -10,7 +10,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { logger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -113,7 +113,7 @@ export function DemandesRHDetailModal({
         setLoading(false);
       })
       .catch((error) => {
-        console.error('Error fetching demande:', error);
+        logger.error('Error fetching demande', error instanceof Error ? error : undefined, { component: 'DemandesRHDetailModal' });
         setLoading(false);
       });
   }, [demandeId]);

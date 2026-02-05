@@ -174,10 +174,10 @@ export function useRealtimeTickets(options: UseRealtimeTicketsOptions = {}) {
     if (showToasts && toast) {
       switch (event.type) {
         case 'ticket:created':
-          toast.ticketCreated(String(event.payload.ticketId || ''), String(event.payload.title || 'Nouveau ticket'));
+          toast.ticketCreated(String(event.payload.ticketId || event.payload.title || 'Nouveau ticket'));
           break;
         case 'ticket:resolved':
-          toast.ticketResolved(String(event.payload.ticketId || ''), String(event.payload.title || 'Ticket résolu'));
+          toast.ticketResolved(String(event.payload.ticketId || event.payload.title || 'Ticket résolu'));
           break;
         case 'ticket:escalated':
           toast.warning(

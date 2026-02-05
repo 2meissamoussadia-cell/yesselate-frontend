@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import type { Task, AddTaskPayload, UpdateTaskPayload } from '@/lib/api/tasksClient';
 import { listTasks, addTask, updateTask, removeTask } from '@/lib/api/tasksClient';
+import { logger } from '@/lib/utils/logger';
 
 export function useTasks(demandId: string) {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -16,7 +17,7 @@ export function useTasks(demandId: string) {
       setTasks(data);
     } catch (e: unknown) {
       setError(e as Error);
-      console.error(`Failed to fetch tasks for demand ${demandId}:`, e);
+      logger.error(`Failed to fetch tasks for demand ${demandId}`, e instanceof Error ? e : undefined, { component: 'useTasks', demandId });
     } finally {
       setLoading(false);
     }
@@ -32,7 +33,7 @@ export function useTasks(demandId: string) {
         return newTask;
       } catch (e: unknown) {
         setError(e as Error);
-        console.error(`Failed to add task to demand ${demandId}:`, e);
+        logger.error(`Failed to add task to demand ${demandId}`, e instanceof Error ? e : undefined, { component: 'useTasks', demandId });
         return null;
       } finally {
         setLoading(false);
@@ -51,7 +52,7 @@ export function useTasks(demandId: string) {
         return updatedTask;
       } catch (e: unknown) {
         setError(e as Error);
-        console.error(`Failed to update task ${taskId} in demand ${demandId}:`, e);
+        logger.error(`Failed to update task ${taskId} in demand ${demandId}`, e instanceof Error ? e : undefined, { component: 'useTasks', demandId, taskId });
         return null;
       } finally {
         setLoading(false);
@@ -70,7 +71,7 @@ export function useTasks(demandId: string) {
         return true;
       } catch (e: unknown) {
         setError(e as Error);
-        console.error(`Failed to remove task ${taskId} from demand ${demandId}:`, e);
+        logger.error(`Failed to remove task ${taskId} from demand ${demandId}`, e instanceof Error ? e : undefined, { component: 'useTasks', demandId, taskId });
         return false;
       } finally {
         setLoading(false);

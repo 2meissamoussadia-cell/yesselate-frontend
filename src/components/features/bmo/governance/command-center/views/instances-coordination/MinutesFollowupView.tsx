@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Badge } from '@/components/ui/badge';
 import { FileText, CheckCircle2, Clock, Calendar } from 'lucide-react';
 

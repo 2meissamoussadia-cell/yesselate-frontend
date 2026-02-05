@@ -6,7 +6,7 @@
 
 import React, { useRef, useState, useEffect } from 'react';
 import { X, Bell, AlertCircle, CheckCircle2, Info, AlertTriangle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { zIndexClass } from '../utils/zIndex';
 
 export type NotificationType = 'success' | 'warning' | 'error' | 'info';

@@ -23,7 +23,7 @@ import {
   Zap, PlayCircle, Clock, MessageSquare, FileText, Settings,
   ArrowRight, CheckCircle, X, Plus, Send, UserPlus, Flag
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { InteractiveChart } from '../charts/InteractiveChart';
 import { useKpi } from '@/lib/api/hooks/useAnalytics';
 import { ErpModalLayout } from '@/lib/bmo/erp/modalLayout';

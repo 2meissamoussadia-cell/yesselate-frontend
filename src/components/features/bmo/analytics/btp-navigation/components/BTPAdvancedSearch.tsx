@@ -9,7 +9,7 @@ import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Search, X, Command, TrendingUp, Building2, DollarSign, Users } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useDebounce } from '@/application/hooks/useDebounce';
 import { highlightMatch } from '@/application/utils/searchUtils';
 import { searchAnalytics, type SearchResult as ServiceSearchResult } from '@/lib/services/analyticsSearchService';

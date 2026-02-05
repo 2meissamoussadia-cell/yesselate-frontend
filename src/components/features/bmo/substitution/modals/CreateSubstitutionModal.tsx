@@ -57,7 +57,7 @@ export function CreateSubstitutionModal({
         const results = await employeesApiService.searchEmployees(searchQuery);
         setSearchResults(results.slice(0, 5));
       } catch (error) {
-        console.error('Search error:', error);
+        logger.error('Search error', error instanceof Error ? error : undefined, { component: 'CreateSubstitutionModal' });
       } finally {
         setSearching(false);
       }

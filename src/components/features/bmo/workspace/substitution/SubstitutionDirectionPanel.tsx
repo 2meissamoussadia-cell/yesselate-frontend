@@ -9,7 +9,7 @@
 
 import { useState } from 'react';
 import { X, Users, Calendar, TrendingUp, AlertTriangle, CheckCircle, Clock, FileText } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useSubstitutionWorkspaceStore } from '@/lib/stores/substitutionWorkspaceStore';
 
 interface DirectionPanelProps {

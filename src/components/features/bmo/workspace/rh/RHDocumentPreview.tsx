@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { logger } from '@/lib/utils/logger';
 import { 
   FileText, Download, ExternalLink, Eye, ZoomIn, ZoomOut,

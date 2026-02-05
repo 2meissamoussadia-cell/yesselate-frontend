@@ -87,11 +87,16 @@ export const MessageListRow = React.memo(function MessageListRow({
       aria-label={`${senderLabel}, ${item.subject}`}
       onContextMenu={handleContextMenu}
       className={cn(
-        'relative w-full flex items-start gap-2 px-2 py-2 pr-28 border-b border-slate-100 dark:border-slate-800/50 text-left transition-colors group',
+        'group relative w-full min-w-0 overflow-hidden shrink-0',
+        'grid grid-cols-[auto_minmax(0,1fr)] gap-x-2 gap-y-0',
+        'px-2 py-2 border-b border-slate-100 dark:border-slate-800/50 text-left transition-colors',
         isSelected
           ? 'bg-sky-50 dark:bg-sky-900/30 border-l-2 border-l-sky-500'
           : 'hover:bg-slate-50 dark:hover:bg-slate-800/40',
         !item.isRead && 'font-medium',
+        'before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[3px] before:bg-transparent before:transition-colors',
+        'hover:before:bg-sky-400',
+        isSelected && 'before:bg-sky-500',
         className
       )}
     >
@@ -99,44 +104,50 @@ export const MessageListRow = React.memo(function MessageListRow({
         type="button"
         onClick={onClick}
         className={cn(
-          'flex-1 flex items-start gap-3 px-2 py-1 min-w-0 rounded-md transition-colors',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-500 text-left'
+          'col-span-2 flex items-start gap-2 px-2 py-1 min-w-0 rounded-md transition-colors text-left',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-500'
         )}
         aria-current={isSelected ? 'true' : undefined}
       >
-        <Avatar className="h-9 w-9 shrink-0 rounded-full bg-slate-600 dark:bg-slate-500 text-white text-xs font-semibold">
+        <Avatar className="h-9 w-9 shrink-0 rounded-full bg-slate-600 dark:bg-slate-500 text-white text-xs font-semibold row-span-3 self-start">
           <AvatarFallback>{getInitials(item.from)}</AvatarFallback>
         </Avatar>
 
-        <div className="flex-1 min-w-0">
-          <div className="flex items-baseline justify-between gap-2 mb-0.5">
+        <div className="flex-1 min-w-0 overflow-hidden pr-16 grid grid-cols-1 gap-y-0.5">
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-2 min-w-0">
             <span
               className={cn(
-                'text-sm truncate',
+                'text-sm truncate min-w-0',
                 !item.isRead ? 'font-semibold text-slate-900 dark:text-slate-100' : 'text-slate-700 dark:text-slate-300'
               )}
             >
               {senderLabel}
             </span>
-            <span className="text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap shrink-0">
+            <span className="text-xs text-slate-500 dark:text-slate-400 shrink-0 truncate max-w-[80px]">
               {formatDate(item.date)}
             </span>
           </div>
-          <div className="text-sm text-slate-900 dark:text-slate-100 truncate mb-0.5">
+          <div className="text-sm text-slate-900 dark:text-slate-100 truncate min-w-0">
             {item.subject || '(Sans objet)'}
           </div>
-          <div className="text-xs text-slate-600 dark:text-slate-400 truncate flex items-center gap-1">
+          <div className="text-xs text-slate-600 dark:text-slate-400 truncate min-w-0 flex items-center gap-1 flex-nowrap">
             {item.hasAttachments && (
               <Paperclip className="h-3.5 w-3.5 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden />
             )}
-            <span className="truncate">{item.snippet}</span>
+            <span className="truncate min-w-0">{item.snippet}</span>
           </div>
         </div>
       </button>
 
-      {/* Quick Actions au survol style Outlook */}
-      <div 
-        className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity bg-white dark:bg-slate-900 rounded-md shadow-sm border border-slate-200 dark:border-slate-700 p-0.5"
+      {/* Quick Actions au survol — position fixe, ne participe pas au flux */}
+      <div
+        className={cn(
+          'absolute right-2 top-1/2 -translate-y-1/2 z-10',
+          'flex items-center gap-0.5',
+          'opacity-0 group-hover:opacity-100 group-focus-within:opacity-100',
+          'transition-opacity duration-150',
+          'bg-white dark:bg-slate-900 rounded-md shadow-sm border border-slate-200 dark:border-slate-700 p-0.5'
+        )}
         role="group"
         aria-label="Actions rapides"
       >

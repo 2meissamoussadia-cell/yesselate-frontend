@@ -28,7 +28,7 @@ import {
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { Evaluation, EvaluationStatus } from '@/lib/types/bmo.types';
 import { BureauTag } from '@/components/features/bmo/BureauTag';
 

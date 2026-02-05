@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useAppStore } from '@/lib/stores';
 import { Button } from '@/components/ui/button';
 import { Maximize2, Minimize2, X, ChevronLeft, ChevronRight } from 'lucide-react';

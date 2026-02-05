@@ -22,7 +22,7 @@ import {
   Building2,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { dashboardAPI } from '@/lib/api/pilotage/dashboardClient';

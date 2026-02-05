@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { useMissionsWorkspaceStore } from '@/lib/stores/missionsWorkspaceStore';
 import { missionsApiService, type Mission } from '@/lib/services/missionsApiService';
 import { FileText, Calendar, Receipt, CheckSquare, Search, Clock, CheckCircle, PlayCircle, XCircle, Plane, MapPin, User, Building2, ChevronRight, Eye, DollarSign } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 const STATUS_STYLES = {
   pending: { border: 'border-l-amber-500', badge: 'bg-amber-500/20 text-amber-600' },
@@ -35,7 +36,7 @@ export function MissionsWorkspaceContent() {
         if (searchQuery) filter.search = searchQuery;
         const result = await missionsApiService.getAll(filter, 'date', 1, 50);
         setMissions(result.data);
-      } catch (error) { console.error('Failed:', error); }
+      } catch (error) { logger.error('Missions load failed', error as Error, { context: 'MissionsWorkspaceContent' }); }
       finally { setLoading(false); }
     };
     load();

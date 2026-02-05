@@ -2,7 +2,7 @@
 
 import { useSubstitutionWorkspaceStore } from '@/lib/stores/substitutionWorkspaceStore';
 import { X, RefreshCw, FileText, ClipboardList, Calendar, Users, History, BarChart3 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 const tabIcons: Record<string, React.ReactNode> = {
   inbox: <ClipboardList className="w-4 h-4" />,

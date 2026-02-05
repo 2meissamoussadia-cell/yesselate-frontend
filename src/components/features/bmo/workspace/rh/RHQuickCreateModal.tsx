@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { logger } from '@/lib/utils/logger';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -15,7 +16,7 @@ import {
   Check,
   Upload,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface RHQuickCreateModalProps {
   open: boolean;
@@ -138,7 +139,7 @@ export function RHQuickCreateModal({ open, onClose, onSuccess }: RHQuickCreateMo
         }, 2000);
       }
     } catch (error) {
-      console.error('Erreur lors de la création:', error);
+      logger.error('Erreur lors de la création', error instanceof Error ? error : undefined, { component: 'RHQuickCreateModal' });
       setErrors({ submit: 'Une erreur est survenue' });
     } finally {
       setIsSubmitting(false);

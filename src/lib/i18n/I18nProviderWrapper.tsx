@@ -79,7 +79,7 @@ export function I18nProviderWrapper({ children }: { children: React.ReactNode })
     async function loadMessages() {
       try {
         // Normaliser la locale (ex: 'fr-FR' -> 'fr-FR', 'fr' -> 'fr-FR')
-        const localeCode = bundle.locale || 'fr-FR';
+        const localeCode = bundle?.locale || 'fr-FR';
         const normalizedLocale = localeCode.includes('-') 
           ? localeCode 
           : `${localeCode}-${localeCode.toUpperCase()}`;

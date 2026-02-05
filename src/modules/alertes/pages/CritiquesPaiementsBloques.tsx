@@ -9,7 +9,7 @@ import { useAlertesByTypologie } from '../hooks';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { AlertTriangle, DollarSign, Clock, User } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { Alerte } from '../types/alertesTypes';
 
 export function CritiquesPaiementsBloques() {

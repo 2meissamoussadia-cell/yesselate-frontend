@@ -27,7 +27,11 @@ export type WSEventType =
   | 'ticket:commented'
   | 'ticket:closed'
   | 'ticket:reopened'
+  | 'ticket:message_added'
+  | 'ticket:deleted'
   | 'ticket:sla_breached'
+  | 'sla:breached'
+  | 'sla:warning'
   | 'stats:updated';
 
 export type WSEvent = {
@@ -103,8 +107,8 @@ export class TicketsWebSocketService {
         // Log the event type and WebSocket state for debugging
         const errorInfo = {
           type: event.type,
-          readyState: this.ws.readyState,
-          url: this.ws.url,
+          readyState: this.ws?.readyState,
+          url: this.ws?.url,
           timestamp: new Date().toISOString(),
         };
         console.error('[TicketsWS] Erreur:', errorInfo);

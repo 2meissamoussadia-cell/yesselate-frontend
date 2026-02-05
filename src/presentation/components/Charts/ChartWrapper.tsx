@@ -7,7 +7,7 @@
 
 import { ReactNode } from 'react';
 import { ResponsiveContainer } from 'recharts';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { LoadingSpinner } from '../Loading';
 
 interface ChartWrapperProps {

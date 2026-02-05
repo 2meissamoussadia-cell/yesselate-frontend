@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { demandesRH } from '@/lib/data/bmo-mock-2';
 import { 
   TrendingUp, TrendingDown, Minus, Clock, Users, FileText,

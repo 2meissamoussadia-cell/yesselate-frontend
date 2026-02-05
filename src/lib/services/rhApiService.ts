@@ -1236,32 +1236,8 @@ export const reportsAPI = {
   },
 };
 
-// Export par défaut de tous les services
-export default {
-  demandes: demandesAPI,
-  workflows: workflowsAPI,
-  delegations: delegationsAPI,
-  reminders: remindersAPI,
-  multiLevel: multiLevelAPI,
-  predictions: predictionsAPI,
-  stats: statsAPI,
-  documents: documentsAPI,
-  templates: templatesAPI,
-  notifications: notificationsAPI,
-  search: searchAPI,
-  audit: auditAPI,
-  agents: agentsAPI,
-  budgets: budgetsAPI,
-  comments: commentsAPI,
-  absences: absencesAPI,
-  activity: activityAPI,
-  favorites: favoritesAPI,
-  reports: reportsAPI,
-  settings: settingsAPI,
-};
-
 // ============================================
-// PARAMÈTRES UTILISATEUR
+// PARAMÈTRES UTILISATEUR (déclaré avant export default)
 // ============================================
 
 export const settingsAPI = {
@@ -1295,27 +1271,26 @@ export const settingsAPI = {
   },
 };
 
-// Export nommé pour import sélectif
-export {
-  demandesAPI,
-  workflowsAPI,
-  delegationsAPI,
-  remindersAPI,
-  multiLevelAPI,
-  predictionsAPI,
-  statsAPI,
-  documentsAPI,
-  templatesAPI,
-  notificationsAPI,
-  searchAPI,
-  auditAPI,
-  agentsAPI,
-  budgetsAPI,
-  commentsAPI,
-  absencesAPI,
-  activityAPI,
-  favoritesAPI,
-  reportsAPI,
-  settingsAPI,
+// Export par défaut de tous les services
+export default {
+  demandes: demandesAPI,
+  workflows: workflowsAPI,
+  delegations: delegationsAPI,
+  reminders: remindersAPI,
+  multiLevel: multiLevelAPI,
+  predictions: predictionsAPI,
+  stats: statsAPI,
+  documents: documentsAPI,
+  templates: templatesAPI,
+  notifications: notificationsAPI,
+  search: searchAPI,
+  audit: auditAPI,
+  agents: agentsAPI,
+  budgets: budgetsAPI,
+  comments: commentsAPI,
+  absences: absencesAPI,
+  activity: activityAPI,
+  favorites: favoritesAPI,
+  reports: reportsAPI,
+  settings: settingsAPI,
 };
-

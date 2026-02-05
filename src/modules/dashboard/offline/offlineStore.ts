@@ -3,6 +3,8 @@
  * Données lues en mode hors ligne, synchronisées au retour en ligne.
  */
 
+import { createLogger } from '../utils/logger';
+
 export interface StoredEntry<T> {
   data: T;
   timestamp: number;
@@ -88,7 +90,7 @@ export async function setBriefingOffline(data: unknown): Promise<void> {
     await setEntry(COCKPIT_OFFLINE_KEYS.briefing, data);
   } catch (e) {
     if (process.env.NODE_ENV === 'development') {
-      console.warn('[Offline] setBriefingOffline failed', e);
+      createLogger('OfflineStore').warn('setBriefingOffline failed', { action: 'setBriefingOffline', error: e });
     }
   }
 }
@@ -110,7 +112,7 @@ export async function setPredictionsOffline(data: unknown): Promise<void> {
     await setEntry(COCKPIT_OFFLINE_KEYS.predictions, data);
   } catch (e) {
     if (process.env.NODE_ENV === 'development') {
-      console.warn('[Offline] setPredictionsOffline failed', e);
+      createLogger('OfflineStore').warn('setPredictionsOffline failed', { action: 'setPredictionsOffline', error: e });
     }
   }
 }

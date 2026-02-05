@@ -288,6 +288,43 @@ export const DEFAULT_MESSAGES = {
 } as const;
 
 // ============================================
+// ERROR BOUNDARIES — titres et libellés a11y (LAYOUT_UI_GAPS)
+// ============================================
+
+export const ERROR_BOUNDARY = {
+  /** Titre erreur globale (app/error.tsx) */
+  GLOBAL_TITLE: 'Une erreur est survenue',
+  /** Message par défaut erreur globale */
+  GLOBAL_FALLBACK: 'Erreur inattendue. Veuillez réessayer.',
+  /** Titre erreur segment (dashboard, portail, etc.) */
+  SEGMENT_TITLE: 'Erreur de chargement',
+  /** Message par défaut erreur segment */
+  SEGMENT_FALLBACK: 'Cette vue n’a pas pu être chargée. Veuillez réessayer.',
+  /** Titre erreur portail maître-ouvrage */
+  PORTAL_TITLE: 'Erreur du portail',
+  /** Message par défaut erreur portail */
+  PORTAL_FALLBACK: 'Une erreur est survenue. Veuillez réessayer.',
+} as const;
+
+/** Libellés accessibilité pour les boutons des error boundaries */
+export const ARIA_LABELS = {
+  RETRY: 'Réessayer le chargement',
+} as const;
+
+/** Libellés accessibilité pour les états de chargement (loading) */
+export const LOADING_LABELS = {
+  ROOT: "Chargement de l'application",
+} as const;
+
+/** Messages et libellés pour les pages 404 (not-found) */
+export const NOT_FOUND = {
+  TITLE: 'Page introuvable',
+  DESCRIPTION: 'La page demandée n’existe pas ou a été déplacée.',
+  BACK_LABEL: 'Retour à l’accueil',
+  BACK_ARIA: 'Retour à la page d’accueil',
+} as const;
+
+// ============================================
 // REGEX PATTERNS
 // ============================================
 

@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import type { Risk, AddRiskPayload, UpdateRiskPayload } from '@/lib/api/risksClient';
 import { listRisks, addRisk, updateRisk, removeRisk } from '@/lib/api/risksClient';
+import { logger } from '@/lib/utils/logger';
 
 export function useRisks(demandId: string) {
   const [risks, setRisks] = useState<Risk[]>([]);
@@ -16,7 +17,7 @@ export function useRisks(demandId: string) {
       setRisks(data);
     } catch (e: unknown) {
       setError(e as Error);
-      console.error(`Failed to fetch risks for demand ${demandId}:`, e);
+      logger.error(`Failed to fetch risks for demand ${demandId}`, e instanceof Error ? e : undefined, { component: 'useRisks', demandId });
     } finally {
       setLoading(false);
     }
@@ -32,7 +33,7 @@ export function useRisks(demandId: string) {
         return newRisk;
       } catch (e: unknown) {
         setError(e as Error);
-        console.error(`Failed to add risk to demand ${demandId}:`, e);
+        logger.error(`Failed to add risk to demand ${demandId}`, e instanceof Error ? e : undefined, { component: 'useRisks', demandId });
         return null;
       } finally {
         setLoading(false);
@@ -51,7 +52,7 @@ export function useRisks(demandId: string) {
         return updatedRisk;
       } catch (e: unknown) {
         setError(e as Error);
-        console.error(`Failed to update risk ${riskId} in demand ${demandId}:`, e);
+        logger.error(`Failed to update risk ${riskId} in demand ${demandId}`, e instanceof Error ? e : undefined, { component: 'useRisks', demandId, riskId });
         return null;
       } finally {
         setLoading(false);
@@ -70,7 +71,7 @@ export function useRisks(demandId: string) {
         return true;
       } catch (e: unknown) {
         setError(e as Error);
-        console.error(`Failed to remove risk ${riskId} from demand ${demandId}:`, e);
+        logger.error(`Failed to remove risk ${riskId} from demand ${demandId}`, e instanceof Error ? e : undefined, { component: 'useRisks', demandId, riskId });
         return false;
       } finally {
         setLoading(false);

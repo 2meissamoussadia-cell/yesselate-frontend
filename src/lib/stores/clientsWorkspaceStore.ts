@@ -236,6 +236,3 @@ export const useClientsWorkspaceStore = create<ClientsWorkspaceState>()(
   )
 );
 
-// Export subcategories map for external use
-export { subCategoriesMap };
-

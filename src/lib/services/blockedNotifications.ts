@@ -75,7 +75,8 @@ class BlockedNotificationsService {
     }
 
     try {
-      const notification = new Notification(options.title, {
+      const opts: NotificationOptions & { vibrate?: number[] } = {
+        title: options.title,
         body: options.body,
         icon: options.icon || '/icons/alert.png',
         badge: options.badge || '/icons/badge.png',
@@ -84,7 +85,9 @@ class BlockedNotificationsService {
         silent: options.silent ?? false,
         data: options.data,
         vibrate: this.getVibrationPattern(options.priority),
-      });
+        ...(options.priority && { priority: options.priority as NotificationPriority }),
+      };
+      const notification = new Notification(options.title, opts);
 
       // Click handler
       notification.onclick = () => {

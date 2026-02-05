@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { BarChart3 } from 'lucide-react';
 
 export interface IntegratedAnalyticsProps {

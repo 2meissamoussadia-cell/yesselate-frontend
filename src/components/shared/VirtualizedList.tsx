@@ -8,7 +8,7 @@
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useRef } from 'react';
 import type { ReactNode } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface VirtualizedListProps<T> {
   items: T[];
@@ -41,14 +41,15 @@ export function VirtualizedList<T>({
   return (
     <div
       ref={parentRef}
-      className={cn('overflow-auto', containerClassName)}
+      className={cn('overflow-auto min-w-0 overflow-x-hidden', containerClassName)}
       style={{ height: containerHeight }}
     >
       <div
-        className={className}
+        className={cn('min-w-0', className)}
         style={{
           height: `${virtualizer.getTotalSize()}px`,
           width: '100%',
+          minWidth: 0,
           position: 'relative'
         }}
       >
@@ -56,6 +57,7 @@ export function VirtualizedList<T>({
           <div
             key={virtualItem.key}
             data-index={virtualItem.index}
+            className="overflow-hidden min-w-0 w-full"
             style={{
               position: 'absolute',
               top: 0,

@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useAppStore } from '@/lib/stores';
 import { Card, CardContent } from '@/components/ui/card';
 import { TrendingDown, Clock, CheckCircle, AlertCircle } from 'lucide-react';

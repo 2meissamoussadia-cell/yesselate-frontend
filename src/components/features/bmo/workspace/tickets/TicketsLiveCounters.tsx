@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { Ticket, AlertTriangle, Clock, CheckCircle, XCircle, Zap, Timer, BarChart3 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { ticketsApi, type TicketStats } from '@/lib/services/ticketsApiService';
 
 interface Props { onOpenQueue: (queue: string, title: string, icon: string) => void; }
@@ -14,7 +15,7 @@ export function TicketsLiveCounters({ onOpenQueue }: Props) {
   useEffect(() => {
     const loadStats = async () => {
       try { const data = await ticketsApi.getStats(); setStats(data); }
-      catch (error) { console.error('Failed:', error); }
+      catch (error) { logger.error('Failed to load stats', error instanceof Error ? error : undefined, { component: 'TicketsLiveCounters' }); }
       finally { setLoading(false); }
     };
     loadStats();

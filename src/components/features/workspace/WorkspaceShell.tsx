@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { FluentResponsiveContainer } from '@/components/ui/fluent-responsive-container';
 import { FluentButton as Button } from '@/components/ui/fluent-button';
 import { ThemeToggle } from '@/components/features/bmo/ThemeToggle';

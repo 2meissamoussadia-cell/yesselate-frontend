@@ -8,7 +8,7 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle2, Calendar, DollarSign, TrendingUp } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export function CommitmentsView() {
   const commitments = [

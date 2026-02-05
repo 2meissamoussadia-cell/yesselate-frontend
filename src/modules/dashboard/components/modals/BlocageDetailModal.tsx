@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { X, AlertTriangle, Building2, Clock } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { zIndexClass } from '../../utils/zIndex';
 
 interface Blocage {

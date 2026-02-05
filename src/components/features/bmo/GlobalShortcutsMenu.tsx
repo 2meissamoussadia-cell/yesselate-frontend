@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Keyboard, X as XIcon, Command, Zap, Maximize2, PanelRightOpen } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface Shortcut {
   keys: string[];

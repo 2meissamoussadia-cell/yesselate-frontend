@@ -10,7 +10,7 @@ import { FluentModal } from '@/components/ui/fluent-modal';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Download, Calendar, FileSpreadsheet, Loader2, CheckCircle2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { logger } from '@/lib/utils/logger';
 import { downloadBlob } from '@/lib/utils/export';
 import type { CalendrierDomain, CalendrierSection, CalendrierView } from '@/lib/types/calendrier.types';
@@ -89,7 +89,7 @@ export function ExportCalendrierModal({
         onClose();
       }, 1500);
     } catch (error) {
-      console.error('Erreur lors de l\'export:', error);
+      logger.error('Erreur lors de l\'export', error instanceof Error ? error : undefined, { component: 'ExportCalendrierModal' });
     } finally {
       setExporting(false);
     }

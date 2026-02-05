@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useCalendarWorkspaceStore } from '@/lib/stores/calendarWorkspaceStore';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { 
   CalendarDays, Clock, AlertTriangle, CheckCircle2, RefreshCw, Activity 
 } from 'lucide-react';

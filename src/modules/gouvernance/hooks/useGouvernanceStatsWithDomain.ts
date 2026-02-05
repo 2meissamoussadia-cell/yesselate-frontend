@@ -12,6 +12,7 @@ import {
   adaptGouvernanceOverview,
 } from '@/domain/gouvernance/adapters';
 import { useGouvernanceService } from '@/hooks/useGouvernanceService';
+import { logger } from '@/lib/utils/logger';
 import type { GouvernanceStats as ApiGouvernanceStats } from '../types/gouvernanceTypes';
 import type { GouvernanceStats as DomainGouvernanceStats } from '@/domain/gouvernance/types';
 
@@ -47,7 +48,7 @@ export function useGouvernanceStatsWithDomain() {
         overviewData.validations || []
       );
     } catch (err) {
-      console.error('[useGouvernanceStatsWithDomain] Erreur adaptation:', err);
+      logger.error('Erreur adaptation gouvernance', err instanceof Error ? err : undefined, { component: 'useGouvernanceStatsWithDomain' });
       return null;
     }
   }, [overviewData]);

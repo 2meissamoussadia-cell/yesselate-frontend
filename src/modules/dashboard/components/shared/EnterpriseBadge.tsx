@@ -6,7 +6,7 @@
 'use client';
 
 import React, { memo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export type EnterpriseBadgeVariant = 'critique' | 'haute' | 'moyenne' | 'faible' | 'success' | 'warning' | 'info';
 

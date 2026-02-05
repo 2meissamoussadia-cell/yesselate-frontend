@@ -7,6 +7,7 @@
  */
 
 import { useState, useCallback } from 'react';
+import { logger } from '@/lib/utils/logger';
 
 // ============================================
 // TYPES
@@ -99,7 +100,7 @@ export function useCreateDelegation(options?: {
         options.onSuccess(result);
       }
     } catch (err: any) {
-      console.error('Erreur création délégation:', err);
+      logger.error('Erreur création délégation', err instanceof Error ? err : undefined, { component: 'useDelegationMutations' });
       const errorMessage = err.message || 'Erreur inconnue';
       setError(errorMessage);
       
@@ -170,7 +171,7 @@ export function useUpdateDelegation(options?: {
         options.onSuccess(result);
       }
     } catch (err: any) {
-      console.error('Erreur mise à jour délégation:', err);
+      logger.error('Erreur mise à jour délégation', err instanceof Error ? err : undefined, { component: 'useDelegationMutations' });
       const errorMessage = err.message || 'Erreur inconnue';
       setError(errorMessage);
       
@@ -237,7 +238,7 @@ export function useRevokeDelegation(options?: {
         options.onSuccess();
       }
     } catch (err: any) {
-      console.error('Erreur révocation délégation:', err);
+      logger.error('Erreur révocation délégation', err instanceof Error ? err : undefined, { component: 'useDelegationMutations' });
       const errorMessage = err.message || 'Erreur inconnue';
       setError(errorMessage);
       
@@ -304,7 +305,7 @@ export function useSuspendDelegation(options?: {
         options.onSuccess();
       }
     } catch (err: any) {
-      console.error('Erreur suspension délégation:', err);
+      logger.error('Erreur suspension délégation', err instanceof Error ? err : undefined, { component: 'useDelegationMutations' });
       const errorMessage = err.message || 'Erreur inconnue';
       setError(errorMessage);
       
@@ -371,7 +372,7 @@ export function useExtendDelegation(options?: {
         options.onSuccess();
       }
     } catch (err: any) {
-      console.error('Erreur prolongation délégation:', err);
+      logger.error('Erreur prolongation délégation', err instanceof Error ? err : undefined, { component: 'useDelegationMutations' });
       const errorMessage = err.message || 'Erreur inconnue';
       setError(errorMessage);
       
@@ -443,7 +444,7 @@ export function useBulkDelegationAction(options?: {
         options.onSuccess(result);
       }
     } catch (err: any) {
-      console.error('Erreur action bulk:', err);
+      logger.error('Erreur action bulk', err instanceof Error ? err : undefined, { component: 'useDelegationMutations' });
       const errorMessage = err.message || 'Erreur inconnue';
       setError(errorMessage);
       

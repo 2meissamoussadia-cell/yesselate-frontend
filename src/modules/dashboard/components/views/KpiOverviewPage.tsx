@@ -8,7 +8,7 @@
 
 import React, { memo, useMemo } from 'react';
 import { BarChart3, TrendingUp, Target, Activity, DollarSign, Users, ArrowRight, CheckCircle, AlertTriangle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Badge } from '@/components/ui/badge';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import type { LucideIcon } from 'lucide-react';

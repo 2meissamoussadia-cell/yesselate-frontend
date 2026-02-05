@@ -9,7 +9,7 @@ import { useRef, useCallback } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { RACITableRow } from './RACITableRow';
 
 interface VirtualizedRACITableProps {

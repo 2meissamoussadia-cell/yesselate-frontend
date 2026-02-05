@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -26,15 +26,26 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
-interface SidebarCategory {
-  id: string;
+export type EvaluationsMainCategory =
+  | 'overview'
+  | 'scheduled'
+  | 'in_progress'
+  | 'completed'
+  | 'recommendations'
+  | 'scores'
+  | 'bureaux'
+  | 'analytics'
+  | 'archive';
+
+interface EvaluationsSidebarCategory {
+  id: EvaluationsMainCategory;
   label: string;
   icon: LucideIcon;
   badge?: number | string;
   badgeType?: 'default' | 'warning' | 'critical';
 }
 
-const evaluationsCategories: SidebarCategory[] = [
+const evaluationsCategories: EvaluationsSidebarCategory[] = [
   { id: 'overview', label: "Vue d'ensemble", icon: LayoutDashboard },
   { id: 'scheduled', label: 'Planifiées', icon: Clock, badge: 0, badgeType: 'warning' },
   { id: 'in_progress', label: 'En cours', icon: PlayCircle, badge: 0 },
@@ -47,9 +58,9 @@ const evaluationsCategories: SidebarCategory[] = [
 ];
 
 interface EvaluationsCommandSidebarProps {
-  activeCategory: string;
+  activeCategory: EvaluationsMainCategory;
   collapsed: boolean;
-  onCategoryChange: (category: string) => void;
+  onCategoryChange: (category: EvaluationsMainCategory) => void;
   onToggleCollapse: () => void;
   onOpenCommandPalette: () => void;
   stats?: {
@@ -247,5 +258,5 @@ export const EvaluationsCommandSidebar = React.memo(function EvaluationsCommandS
 });
 
 export { evaluationsCategories };
-export type { SidebarCategory };
+export type SidebarCategory = EvaluationsSidebarCategory;
 

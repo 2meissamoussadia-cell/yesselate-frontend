@@ -8,7 +8,7 @@
 import React from 'react';
 import { Bell, X } from 'lucide-react';
 import { usePushConsent } from '../../hooks/usePushConsent';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export function PushConsentBanner() {
   const {

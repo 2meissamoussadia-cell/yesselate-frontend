@@ -7,7 +7,7 @@
 
 import { ReactNode, useState, useRef } from 'react';
 import { ChevronDown } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useClickOutside } from '@/application/hooks/useClickOutside';
 import { FadeIn } from '../Animations';
 

@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { Scale, AlertTriangle, Clock, CheckCircle, ArrowUp, GitBranch, Users, Zap, BarChart3 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { arbitragesApiService, type ArbitragesStats } from '@/lib/services/arbitragesApiService';
+import { logger } from '@/lib/utils/logger';
 
 interface Props { onOpenQueue: (queue: string, title: string, icon: string) => void; }
 
@@ -14,7 +15,7 @@ export function ArbitragesLiveCounters({ onOpenQueue }: Props) {
   useEffect(() => {
     const loadStats = async () => {
       try { const data = await arbitragesApiService.getStats(); setStats(data); }
-      catch (error) { console.error('Failed:', error); }
+      catch (error) { logger.error('Arbitrages stats failed', error as Error, { context: 'ArbitragesLiveCounters' }); }
       finally { setLoading(false); }
     };
     loadStats();

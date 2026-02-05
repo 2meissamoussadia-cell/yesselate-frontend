@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { recouvrementsApiService, type Creance } from '@/lib/services/recouvrementsApiService';
 import { DollarSign, Building2, Calendar, Clock, AlertTriangle, FileText, History, Bell, Phone, Mail } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 interface Props { tabId: string; data: Record<string, unknown>; }
 
@@ -27,7 +28,7 @@ export function RecouvrementsDetailView({ tabId, data }: Props) {
       if (!creanceId) return;
       setLoading(true);
       try { const result = await recouvrementsApiService.getById(creanceId); setCreance(result || null); }
-      catch (error) { console.error('Failed:', error); }
+      catch (error) { logger.error('Recouvrements detail load failed', error as Error, { context: 'RecouvrementsDetailView' }); }
       finally { setLoading(false); }
     };
     load();

@@ -10,7 +10,7 @@ import { X, Phone, Mail, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import { useToast } from '@/components/ui/toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { Contact } from '../../types/dashboardDomain';
 
 export interface CallCompanyModalProps {

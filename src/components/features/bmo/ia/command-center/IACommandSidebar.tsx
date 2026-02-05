@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -29,15 +29,29 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
-interface SidebarCategory {
-  id: string;
+export type IAMainCategory =
+  | 'modules'
+  | 'active'
+  | 'training'
+  | 'disabled'
+  | 'error'
+  | 'history'
+  | 'analysis'
+  | 'prediction'
+  | 'anomaly'
+  | 'reports'
+  | 'recommendations'
+  | 'settings';
+
+interface IASidebarCategory {
+  id: IAMainCategory;
   label: string;
   icon: LucideIcon;
   badge?: number | string;
   badgeType?: 'default' | 'warning' | 'critical';
 }
 
-const iaCategories: SidebarCategory[] = [
+const iaCategories: IASidebarCategory[] = [
   { id: 'modules', label: 'Modules', icon: LayoutDashboard },
   { id: 'active', label: 'Actifs', icon: PlayCircle },
   { id: 'training', label: 'Formation', icon: RefreshCw, badgeType: 'warning' },
@@ -53,9 +67,9 @@ const iaCategories: SidebarCategory[] = [
 ];
 
 interface IACommandSidebarProps {
-  activeCategory: string;
+  activeCategory: IAMainCategory;
   collapsed: boolean;
-  onCategoryChange: (category: string) => void;
+  onCategoryChange: (category: IAMainCategory) => void;
   onToggleCollapse: () => void;
   onOpenCommandPalette: () => void;
   stats?: {
@@ -256,5 +270,5 @@ export const IACommandSidebar = React.memo(function IACommandSidebar({
 });
 
 export { iaCategories };
-export type { SidebarCategory };
+export type SidebarCategory = IASidebarCategory;
 

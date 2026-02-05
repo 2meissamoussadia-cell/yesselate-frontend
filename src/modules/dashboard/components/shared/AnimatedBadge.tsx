@@ -5,7 +5,7 @@
 'use client';
 
 import React, { memo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface AnimatedBadgeProps {
   children: React.ReactNode;

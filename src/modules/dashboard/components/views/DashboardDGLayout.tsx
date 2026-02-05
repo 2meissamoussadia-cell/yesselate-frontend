@@ -12,7 +12,7 @@
 
 import React, { useCallback } from 'react';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { EnterpriseBadge } from '../shared/EnterpriseBadge';
 
 // ---------------------------------------------------------------------------

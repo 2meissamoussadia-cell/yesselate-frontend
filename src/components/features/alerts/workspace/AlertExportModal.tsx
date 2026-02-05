@@ -12,6 +12,7 @@ import {
   CheckCircle
 } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { filterAlertsByQueue, calculateAlertStats, type Alert } from '@/lib/data/alerts';
 
 interface AlertExportModalProps {
@@ -88,10 +89,10 @@ export function AlertExportModal({ open, onClose }: AlertExportModalProps) {
         exportToJSON(alerts);
       } else if (selectedFormat === 'excel') {
         // En production: appeler API pour générer Excel
-        console.log('Export Excel:', alerts);
+        logger.info('Export Excel', { component: 'AlertExportModal', count: alerts.length });
       } else if (selectedFormat === 'pdf') {
         // En production: appeler API pour générer PDF
-        console.log('Export PDF:', alerts);
+        logger.info('Export PDF', { component: 'AlertExportModal', count: alerts.length });
       }
 
       setExportSuccess(true);
@@ -100,7 +101,7 @@ export function AlertExportModal({ open, onClose }: AlertExportModalProps) {
         setExportSuccess(false);
       }, 2000);
     } catch (error) {
-      console.error('Erreur export:', error);
+      logger.error('Erreur export', error instanceof Error ? error : undefined, { component: 'AlertExportModal' });
     } finally {
       setExporting(false);
     }

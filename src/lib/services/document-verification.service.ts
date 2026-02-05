@@ -256,7 +256,7 @@ export function verifyBC(bc: EnrichedBC): DocumentVerificationResult {
     id: 'check_administrative',
     name: 'Complétude administrative',
     category: 'administrative',
-    passed: bc.fournisseur && bc.projet && bc.objet,
+    passed: !!(bc.fournisseur && bc.projet && bc.objet),
     message: bc.fournisseur && bc.projet && bc.objet ? 'Complet' : 'Champs manquants',
   });
   
@@ -461,7 +461,7 @@ export function verifyAvenant(avenant: EnrichedAvenant): DocumentVerificationRes
     id: 'check_administrative',
     name: 'Complétude administrative',
     category: 'administrative',
-    passed: avenant.projet && avenant.objet,
+    passed: !!(avenant.projet && avenant.objet),
     message: avenant.projet && avenant.objet ? 'Complet' : 'Champs manquants',
   });
   

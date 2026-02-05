@@ -63,8 +63,8 @@ export class GovernanceBackupService {
       const timestamp = new Date();
       const backupId = `backup-${timestamp.getTime()}`;
 
-      // Récupérer toutes les données RACI
-      const raciMatrices = await prisma.rACIMatrix.findMany({
+      // Récupérer toutes les données RACI (modèles optionnels / extension Prisma)
+      const raciMatrices = await (prisma as unknown as { rACIMatrix: { findMany: (args: unknown) => Promise<unknown[]> } }).rACIMatrix.findMany({
         include: {
           assignments: true,
           approvals: true,
@@ -132,7 +132,7 @@ export class GovernanceBackupService {
       const backupId = `backup-incr-${timestamp.getTime()}`;
 
       // Récupérer seulement les données modifiées
-      const raciMatrices = await prisma.rACIMatrix.findMany({
+      const raciMatrices = await (prisma as unknown as { rACIMatrix: { findMany: (args: unknown) => Promise<unknown[]> } }).rACIMatrix.findMany({
         where: {
           updatedAt: { gte: sinceDate },
         },
@@ -147,7 +147,7 @@ export class GovernanceBackupService {
         },
       });
 
-      const alerts = await prisma.governanceAlert.findMany({
+      const alerts = await (prisma as unknown as { governanceAlert: { findMany: (args: unknown) => Promise<unknown[]> } }).governanceAlert.findMany({
         where: {
           updatedAt: { gte: sinceDate },
         },

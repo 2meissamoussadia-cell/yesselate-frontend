@@ -7,7 +7,7 @@
 
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { X, CheckCircle2, AlertTriangle, Info, AlertCircle, FileText } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 type ToastType = 'success' | 'error' | 'warning' | 'info';
 

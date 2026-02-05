@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useAppStore, useBMOStore } from '@/lib/stores';
 import { Badge } from '@/components/ui/badge';
 import { SearchIcon, X, Menu } from 'lucide-react';

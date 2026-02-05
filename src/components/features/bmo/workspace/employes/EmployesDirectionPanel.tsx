@@ -2,7 +2,8 @@
 import { useEffect, useState } from 'react';
 import { employesApiService, type EmployesStats } from '@/lib/services/employesApiService';
 import { X, Shield, AlertTriangle, DollarSign, Users, Star, ArrowRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 interface Props {
   open: boolean;
@@ -19,8 +20,7 @@ export function EmployesDirectionPanel({ open, onClose }: Props) {
       try {
         setStats(await employesApiService.getStats());
       } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e);
+        logger.error('Employes stats load failed', e as Error, { context: 'EmployesDirectionPanel' });
       }
     };
 

@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export interface SpinnerVariantsProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';

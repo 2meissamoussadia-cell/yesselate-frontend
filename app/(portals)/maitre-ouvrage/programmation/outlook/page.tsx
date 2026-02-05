@@ -9,7 +9,7 @@ import { Plus } from 'lucide-react';
 import { BmoModulePage } from '@/components/bmo/BmoModulePage';
 import { QuickActionsBar } from '@/components/bmo/ui/QuickActionsBar';
 import { programmationModuleConfig } from '@/lib/config/modules/programmation.config';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface ProgrammationItem {
   id: string;

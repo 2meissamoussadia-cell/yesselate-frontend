@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { TrendingUp, TrendingDown, AlertTriangle, Clock, Ban, DollarSign, CheckCircle } from 'lucide-react';
 import type { PurchaseOrder } from '@/lib/types/bmo.types';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface PilotageBannerProps {
   bcs: PurchaseOrder[];

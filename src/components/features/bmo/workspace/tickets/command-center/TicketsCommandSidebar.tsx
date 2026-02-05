@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -26,15 +26,26 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
-interface SidebarCategory {
-  id: string;
+export type WorkspaceTicketsMainCategory =
+  | 'overview'
+  | 'inbox'
+  | 'critical'
+  | 'pending'
+  | 'resolved'
+  | 'conversations'
+  | 'analytics'
+  | 'clients'
+  | 'settings';
+
+interface WorkspaceTicketsSidebarCategory {
+  id: WorkspaceTicketsMainCategory;
   label: string;
   icon: LucideIcon;
   badge?: number | string;
   badgeType?: 'default' | 'warning' | 'critical';
 }
 
-export const ticketsCategories: SidebarCategory[] = [
+export const ticketsCategories: WorkspaceTicketsSidebarCategory[] = [
   { id: 'overview', label: "Vue d'ensemble", icon: LayoutDashboard },
   { id: 'inbox', label: 'Boîte de réception', icon: Inbox, badge: 42 },
   { id: 'critical', label: 'Critiques', icon: AlertTriangle, badge: 5, badgeType: 'critical' },
@@ -47,9 +58,9 @@ export const ticketsCategories: SidebarCategory[] = [
 ];
 
 interface TicketsCommandSidebarProps {
-  activeCategory: string;
+  activeCategory: WorkspaceTicketsMainCategory;
   collapsed: boolean;
-  onCategoryChange: (category: string) => void;
+  onCategoryChange: (category: WorkspaceTicketsMainCategory) => void;
   onToggleCollapse: () => void;
   onOpenCommandPalette: () => void;
 }
@@ -222,5 +233,5 @@ export const TicketsCommandSidebar = React.memo(function TicketsCommandSidebar({
   );
 });
 
-export type { SidebarCategory };
+export type SidebarCategory = WorkspaceTicketsSidebarCategory;
 

@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { X, DollarSign, TrendingUp, TrendingDown, PieChart } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { zIndexClass } from '../../utils/zIndex';
 
 interface BudgetKPI {

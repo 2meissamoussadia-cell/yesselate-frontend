@@ -158,36 +158,36 @@ export function useRealtimeBlocked(options: UseRealtimeBlockedOptions = {}) {
           queryClient.invalidateQueries({ queryKey: ['blocked', 'list'] });
           queryClient.invalidateQueries({ queryKey: ['blocked', 'stats'] });
           if (showToasts && toast) {
-            toast.info('Nouveau blocage', event.payload.subject || 'Un nouveau dossier a été créé');
+            toast.info('Nouveau blocage', String(event.payload?.subject ?? 'Un nouveau dossier a été créé'));
           }
           break;
 
         case 'blocked:updated':
-          queryClient.invalidateQueries({ queryKey: ['blocked', 'detail', event.payload.id] });
+          queryClient.invalidateQueries({ queryKey: ['blocked', 'detail', String(event.payload?.id ?? '')] });
           queryClient.invalidateQueries({ queryKey: ['blocked', 'list'] });
           break;
 
         case 'blocked:resolved':
-          queryClient.invalidateQueries({ queryKey: ['blocked', 'detail', event.payload.id] });
+          queryClient.invalidateQueries({ queryKey: ['blocked', 'detail', String(event.payload?.id ?? '')] });
           queryClient.invalidateQueries({ queryKey: ['blocked', 'list'] });
           queryClient.invalidateQueries({ queryKey: ['blocked', 'stats'] });
           if (showToasts && toast) {
-            toast.success('Blocage résolu', event.payload.subject || 'Un dossier a été résolu');
+            toast.success('Blocage résolu', String(event.payload?.subject ?? 'Un dossier a été résolu'));
           }
           break;
 
         case 'blocked:escalated':
-          queryClient.invalidateQueries({ queryKey: ['blocked', 'detail', event.payload.id] });
+          queryClient.invalidateQueries({ queryKey: ['blocked', 'detail', String(event.payload?.id ?? '')] });
           queryClient.invalidateQueries({ queryKey: ['blocked', 'list'] });
           queryClient.invalidateQueries({ queryKey: ['blocked', 'stats'] });
           if (showToasts && toast) {
-            toast.warning('Blocage escaladé', event.payload.subject || 'Un dossier a été escaladé');
+            toast.warning('Blocage escaladé', String(event.payload?.subject ?? 'Un dossier a été escaladé'));
           }
           break;
 
         case 'blocked:commented':
-          queryClient.invalidateQueries({ queryKey: ['blocked', 'comments', event.payload.dossierId] });
-          queryClient.invalidateQueries({ queryKey: ['blocked', 'detail', event.payload.dossierId] });
+          queryClient.invalidateQueries({ queryKey: ['blocked', 'comments', String(event.payload?.dossierId ?? '')] });
+          queryClient.invalidateQueries({ queryKey: ['blocked', 'detail', String(event.payload?.dossierId ?? '')] });
           break;
 
         case 'blocked:deleted':

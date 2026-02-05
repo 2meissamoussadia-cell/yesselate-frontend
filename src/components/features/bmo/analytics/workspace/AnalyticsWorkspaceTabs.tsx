@@ -9,7 +9,7 @@
 'use client';
 
 import { useAnalyticsWorkspaceStore } from '@/lib/stores/analyticsWorkspaceStore';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { X, Maximize2, Minimize2 } from 'lucide-react';
 import { FluentButton } from '@/components/ui/fluent-button';
 

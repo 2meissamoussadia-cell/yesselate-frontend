@@ -57,7 +57,9 @@ describe('DetailPanel', () => {
         />
       );
 
-      expect(screen.getByText(/42 éléments? disponibles?/)).toBeInTheDocument();
+      // Le composant affiche "42" et "éléments disponibles" dans des spans séparés
+      expect(screen.getByText('42')).toBeInTheDocument();
+      expect(document.body.textContent).toMatch(/éléments?\s*disponibles?/);
     });
 
     it('affiche les raccourcis clavier', () => {
@@ -125,8 +127,7 @@ describe('DetailPanel', () => {
         />
       );
 
-      // Les skeletons devraient être présents
-      const skeletons = document.querySelectorAll('[class*="skeleton"]');
+      const skeletons = document.querySelectorAll('[role="status"][aria-label="Chargement..."]');
       expect(skeletons.length).toBeGreaterThan(0);
     });
   });
@@ -140,8 +141,8 @@ describe('DetailPanel', () => {
         />
       );
 
-      const emptyState = screen.getByRole('generic', { hidden: true });
-      // Le conteneur devrait avoir aria-live
+      const liveRegion = document.querySelector('[aria-live="polite"]');
+      expect(liveRegion).toBeInTheDocument();
     });
 
     it('a un aria-label sur le conteneur avec item', () => {

@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { useParametresWorkspaceStore } from '@/lib/stores/parametresWorkspaceStore';
 import { Search, ArrowRight, Settings, Shield, Bell, Plug, Users, Database, RefreshCw, Save, LayoutDashboard } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 interface Command { id: string; label: string; description?: string; icon: React.ComponentType<{ className?: string }>; category: 'navigation' | 'action'; shortcut?: string; action: () => void; }
 interface Props { open: boolean; onClose: () => void; onSave: () => void; }
 export function ParametresCommandPalette({ open, onClose, onSave }: Props) {

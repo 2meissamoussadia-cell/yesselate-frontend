@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { useArbitragesWorkspaceStore } from '@/lib/stores/arbitragesWorkspaceStore';
 import { arbitragesApiService, type Arbitrage } from '@/lib/services/arbitragesApiService';
 import { FileText, GitBranch, Users, Clock, BarChart3, Search, ChevronRight, Eye, Star, StarOff, Scale, Zap, Building2, User, AlertTriangle, ArrowUp, Gavel, DollarSign } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 const STATUS_STYLES = {
   pending: { border: 'border-l-amber-500', badge: 'bg-amber-500/20 text-amber-600' },
@@ -50,7 +51,7 @@ export function ArbitragesWorkspaceContent() {
         if (searchQuery) filter.search = searchQuery;
         const result = await arbitragesApiService.getAll(filter, 'priority', 1, 50);
         setArbitrages(result.data);
-      } catch (error) { console.error('Failed:', error); }
+      } catch (error) { logger.error('Arbitrages load failed', error as Error, { context: 'ArbitragesWorkspaceContent' }); }
       finally { setLoading(false); }
     };
     load();

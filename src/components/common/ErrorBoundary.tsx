@@ -1,7 +1,8 @@
 'use client';
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw, Home, Mail } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 interface Props {
   children: ReactNode;
@@ -41,8 +42,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    // Log l'erreur
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
+    logger.error('ErrorBoundary caught an error', error, { component: 'ErrorBoundary', componentStack: errorInfo?.componentStack });
 
     // Met à jour l'état
     this.setState({
@@ -185,8 +185,7 @@ export class ErrorBoundary extends Component<Props, State> {
  */
 export function useErrorHandler() {
   return (error: Error, errorInfo?: ErrorInfo) => {
-    // En production: envoyer à Sentry
-    console.error('Error caught by useErrorHandler:', error, errorInfo);
+    logger.error('Error caught by useErrorHandler', error, { component: 'useErrorHandler', componentStack: errorInfo?.componentStack });
     
     // Peut être utilisé avec react-error-boundary ou Sentry
     if (process.env.NODE_ENV === 'production') {
@@ -204,7 +203,7 @@ export function withErrorBoundary<P extends object>(
 ) {
   // Protection contre les composants undefined
   if (!Component) {
-    console.error('[withErrorBoundary] Component is undefined or null');
+    logger.error('[withErrorBoundary] Component is undefined or null', undefined, { component: 'withErrorBoundary' });
     const FallbackComponent = () => (
       <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">
         Composant non trouvé

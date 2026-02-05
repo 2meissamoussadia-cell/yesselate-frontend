@@ -13,6 +13,7 @@ import {
   Loader2
 } from 'lucide-react';
 import { blockedApi } from '@/lib/services/blockedApiService';
+import { logger } from '@/lib/utils/logger';
 import type { BlockedDossier } from '@/lib/types/bmo.types';
 
 type Props = {
@@ -47,7 +48,7 @@ export function BlockedLiveCounters({ onOpenQueue, compact = false }: Props) {
         const result = await blockedApi.getAll();
         setData(result.data);
       } catch (error) {
-        console.error('Failed to load blocked data:', error);
+        logger.error('Failed to load blocked data', error as Error, { context: 'BlockedLiveCounters' });
       } finally {
         setLoading(false);
       }

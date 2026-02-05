@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { Search, X, Clock, TrendingUp, FileText, User } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { demandesRH } from '@/lib/data/bmo-mock-2';
 import { employees } from '@/lib/data/bmo-mock';
 import type { HRRequest } from '@/lib/types/bmo.types';
@@ -44,7 +45,7 @@ export function RHSmartSearch({
       try {
         setRecentSearches(JSON.parse(stored));
       } catch (e) {
-        console.error('Error loading recent searches:', e);
+        logger.error('Error loading recent searches', e as Error, { context: 'RHSmartSearch' });
       }
     }
   }, []);

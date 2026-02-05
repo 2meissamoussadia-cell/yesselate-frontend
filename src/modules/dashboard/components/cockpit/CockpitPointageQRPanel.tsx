@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react';
 import { QrCode, UserCheck, Building2, Clock } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { colors } from '../../utils/dashboardDesignTokens';
 
 const MOCK_POINTAGE = {

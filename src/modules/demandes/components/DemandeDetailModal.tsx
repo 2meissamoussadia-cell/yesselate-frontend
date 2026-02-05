@@ -27,6 +27,7 @@ import {
   Loader2,
 } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import type { Demande } from '../types/demandesTypes';
 import { useToast } from '@/components/features/bmo/ToastProvider';
 
@@ -145,8 +146,7 @@ export function DemandeDetailModal({
       toast.error('Erreur', errorMessage);
       // Log uniquement en développement
       if (process.env.NODE_ENV === 'development') {
-        // eslint-disable-next-line no-console
-        console.error('Action error:', error);
+        logger.error('Action error', error instanceof Error ? error : undefined, { component: 'DemandeDetailModal' });
       }
     } finally {
       setIsLoading(false);

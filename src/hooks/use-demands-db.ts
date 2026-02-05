@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import type { Demand } from '@/lib/types/bmo.types';
+import { logger } from '@/lib/utils/logger';
 
 interface DemandsFilters {
   queue?: 'pending' | 'urgent' | 'validated' | 'rejected' | 'all';
@@ -114,7 +115,7 @@ export function useDemandsDB() {
     } catch (err) {
       const error = err instanceof Error ? err : new Error('Unknown error');
       setError(error);
-      console.error('Error validating demand:', error);
+      logger.error('Error validating demand', error, { component: 'useDemandsDB' });
       return false;
     } finally {
       setLoading(false);
@@ -146,7 +147,7 @@ export function useDemandsDB() {
     } catch (err) {
       const error = err instanceof Error ? err : new Error('Unknown error');
       setError(error);
-      console.error('Error rejecting demand:', error);
+      logger.error('Error rejecting demand', error, { component: 'useDemandsDB' });
       return false;
     } finally {
       setLoading(false);
@@ -179,7 +180,7 @@ export function useDemandsDB() {
     } catch (err) {
       const error = err instanceof Error ? err : new Error('Unknown error');
       setError(error);
-      console.error('Error updating demand:', error);
+      logger.error('Error updating demand', error, { component: 'useDemandsDB' });
       return null;
     } finally {
       setLoading(false);
@@ -203,7 +204,7 @@ export function useDemandsDB() {
     } catch (err) {
       const error = err instanceof Error ? err : new Error('Unknown error');
       setError(error);
-      console.error('Error deleting demand:', error);
+      logger.error('Error deleting demand', error, { component: 'useDemandsDB' });
       return false;
     } finally {
       setLoading(false);

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { Demand, DemandStatus, Priority } from '@/lib/types/bmo.types';
 import { useWorkspaceStore } from '@/lib/stores/workspaceStore';
 import { listDemands, batchTransition, type Queue } from '@/lib/api/demandesClient';

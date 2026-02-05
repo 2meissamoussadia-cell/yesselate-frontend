@@ -22,7 +22,7 @@ import { EnhancedTooltip } from '@/presentation/components/Tooltip';
 import { calculateBureauPerformance, calculateFinancialPerformance } from '@/lib/data/analytics';
 import { formatFCFA } from '@/lib/utils/format-currency';
 import { bureaux } from '@/lib/data';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { AnalyticsMainCategory } from '@/lib/stores/analyticsCommandCenterStore';
 import { useAlerts } from '@/lib/api/hooks/useAnalytics';
 import { useTrendAnalysis, useRecommendations, usePeriodActions } from '@/application/hooks';

@@ -2,7 +2,7 @@
 
 import { useDepensesWorkspaceStore } from '@/lib/stores/depensesWorkspaceStore';
 import { X, FileText, ClipboardList, PiggyBank, FolderTree, CheckSquare } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 const tabIcons: Record<string, React.ReactNode> = {
   inbox: <ClipboardList className="w-4 h-4" />,

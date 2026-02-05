@@ -1,7 +1,7 @@
 'use client';
 import { useAuditWorkspaceStore } from '@/lib/stores/auditWorkspaceStore';
 import { X, Shield, FileText, Lock, DollarSign, ClipboardCheck, BarChart3 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 const tabIcons: Record<string, React.ReactNode> = { inbox: <Shield className="w-4 h-4" />, detail: <FileText className="w-4 h-4" />, security: <Lock className="w-4 h-4" />, financial: <DollarSign className="w-4 h-4" />, compliance: <ClipboardCheck className="w-4 h-4" />, analytics: <BarChart3 className="w-4 h-4" /> };
 export function AuditWorkspaceTabs() {
   const { tabs, activeTabId, setActiveTab, closeTab } = useAuditWorkspaceStore();

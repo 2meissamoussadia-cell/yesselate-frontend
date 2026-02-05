@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 type FluentButtonVariant = 'primary' | 'secondary' | 'success' | 'warning' | 'destructive' | 'ghost';
 

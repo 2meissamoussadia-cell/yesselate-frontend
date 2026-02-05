@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export type RoleId = 'DG' | 'MOA' | 'MOE' | 'OPC' | 'Administrateur' | 'Lecteur';

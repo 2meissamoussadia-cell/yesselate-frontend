@@ -13,7 +13,7 @@ import {
 import { FluentButton } from '@/components/ui/fluent-button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DelegationListSkeleton } from '../DelegationSkeletons';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 type DelegationRow = {
   id: string;

@@ -67,14 +67,14 @@ export const useSearchGlobalStore = create<SearchGlobalStore>()(
     }),
     {
       name: 'search-global-recent',
-      getStorage: () =>
+      storage:
         typeof window !== 'undefined'
           ? localStorage
-          : ({
+          : {
               getItem: () => null,
               setItem: () => {},
               removeItem: () => {},
-            } as Storage),
+            },
     }
   )
 );

@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { mockEmployes } from '@/lib/mocks';
 import type { User } from '@/lib/types/index';
+import { logger } from '@/lib/utils/logger';
 
 // ============================================
 // TYPES
@@ -67,7 +68,7 @@ export function AuthProvider({ children, initialUser = null }: AuthProviderProps
           }
         }
       } catch (error) {
-        console.error('Erreur initialisation auth:', error);
+        logger.error('Erreur initialisation auth', error instanceof Error ? error : undefined, { component: 'AuthContext' });
       } finally {
         setIsLoading(false);
       }
@@ -93,7 +94,13 @@ export function AuthProvider({ children, initialUser = null }: AuthProviderProps
       // Mock: simuler délai réseau
       await new Promise((resolve) => setTimeout(resolve, 800));
 
-      // Mock: trouver utilisateur par email (mock peut avoir nom/prenom ou name, poste, status)
+      // En production : pas de mock — exiger un vrai auth (API). Évite toute connexion par mot de passe factice.
+      if (typeof process !== 'undefined' && process.env.NODE_ENV === 'production') {
+        setIsLoading(false);
+        return false;
+      }
+
+      // Mock DEV uniquement : trouver utilisateur par email (mock peut avoir nom/prenom ou name, poste, status)
       const employe = mockEmployes.find((e) => (e as { email?: string }).email === email) as (typeof mockEmployes)[number] & { nom?: string; prenom?: string; poste?: string; fonction?: string; statut?: string; status?: string; telephone?: string; createdAt?: string; updatedAt?: string };
 
       if (employe && password === 'password') {
@@ -125,7 +132,7 @@ export function AuthProvider({ children, initialUser = null }: AuthProviderProps
       setIsLoading(false);
       return false;
     } catch (error) {
-      console.error('Erreur login:', error);
+      logger.error('Erreur login', error instanceof Error ? error : undefined, { component: 'AuthContext' });
       setIsLoading(false);
       return false;
     }

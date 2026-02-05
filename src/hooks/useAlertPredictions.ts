@@ -22,9 +22,11 @@ export function useAlertPredictions(alerts: Alert[]) {
     const typeDates: Record<string, string[]> = {};
 
     alerts.forEach((alert) => {
-      typeCounts[alert.type] = (typeCounts[alert.type] || 0) + 1;
-      if (!typeDates[alert.type]) typeDates[alert.type] = [];
-      typeDates[alert.type].push(alert.createdAt);
+      const typeKey = alert.type ?? 'unknown';
+      const createdAtVal = alert.createdAt ?? '';
+      typeCounts[typeKey] = (typeCounts[typeKey] || 0) + 1;
+      if (!typeDates[typeKey]) typeDates[typeKey] = [];
+      typeDates[typeKey].push(createdAtVal);
     });
 
     // Détecter les tendances (simplifié - en prod, utiliser une vraie analyse de séries temporelles)

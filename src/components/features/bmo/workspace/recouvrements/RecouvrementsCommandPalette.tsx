@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { useRecouvrementsWorkspaceStore } from '@/lib/stores/recouvrementsWorkspaceStore';
 import { Search, ArrowRight, ClipboardList, Clock, CheckCircle, AlertTriangle, CalendarClock, Bell, RefreshCw, Download, Filter } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface Command { id: string; label: string; icon: React.ComponentType<{ className?: string }>; category: 'navigation' | 'action' | 'filter'; shortcut?: string; action: () => void; }
 

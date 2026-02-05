@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { BTPKPIWidget } from './BTPKPIWidget';
 import { BTPVisualization } from './BTPVisualization';
 import { BTPIntelligentModal } from './BTPIntelligentModal';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { KPIDefinition, VisualizationDefinition } from '@/lib/config/analyticsDisplayLogic';
 
 interface DashboardWidget {

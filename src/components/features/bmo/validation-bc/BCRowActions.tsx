@@ -3,7 +3,7 @@
 
 import { Search, Eye, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useBcAudit } from '@/ui/hooks/useBcAudit';
 import { convertEnrichedBCToBonCommande } from '@/lib/utils/bc-converter';
 import type { EnrichedBC } from '@/lib/types/document-validation.types';

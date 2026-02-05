@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { blockedApi, RESOLUTION_TEMPLATES, type ResolutionTemplate } from '@/lib/services/blockedApiService';
+import { logger } from '@/lib/utils/logger';
 import { useBlockedWorkspaceStore } from '@/lib/stores/blockedWorkspaceStore';
 import { useBlockedToast } from '../BlockedToast';
 import type { BlockedDossier } from '@/lib/types/bmo.types';
@@ -48,7 +49,7 @@ export function BlockedResolutionWizard({ tabId, data }: Props) {
         const result = await blockedApi.getAll({ impact: 'critical' });
         setDossiers(result.data);
       } catch (error) {
-        console.error('Failed to load dossiers:', error);
+        logger.error('Failed to load dossiers', error as Error, { context: 'BlockedResolutionWizard' });
       } finally {
         setLoading(false);
       }

@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -29,8 +29,20 @@ import {
 // TYPES
 // ================================
 
+export type CalendarMainCategory =
+  | 'overview'
+  | 'today'
+  | 'week'
+  | 'month'
+  | 'conflicts'
+  | 'deadlines'
+  | 'meetings'
+  | 'milestones'
+  | 'favorites'
+  | 'archive';
+
 export interface CalendarCategory {
-  id: string;
+  id: CalendarMainCategory;
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   badge?: number | string;
@@ -126,8 +138,8 @@ export const calendarCategories: CalendarCategory[] = [
 // ================================
 
 interface CalendarCommandSidebarProps {
-  activeCategory: string;
-  onCategoryChange: (categoryId: string) => void;
+  activeCategory: CalendarMainCategory;
+  onCategoryChange: (categoryId: CalendarMainCategory) => void;
   collapsed?: boolean;
   onToggleCollapse?: () => void;
   stats?: {
@@ -253,9 +265,9 @@ export function CalendarCommandSidebar({
       <nav className="flex-1 overflow-y-auto py-2 px-2">
         <div className="space-y-1">
           {categoriesWithStats.map((category) => {
-            const Icon = category.icon;
             const isActive = activeCategory === category.id;
             const hasBadge = category.badge !== undefined && category.badge !== null;
+            const Icon = category.icon;
 
             return (
               <button

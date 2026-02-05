@@ -19,7 +19,7 @@
 import React, { useMemo } from 'react';
 import { GenericDetailModal, type TabConfig, type ActionButton } from '@/components/ui/GenericDetailModal';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { CalendarItem } from '@/lib/types/calendar.types';
 import {
   CalendarDays,

@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { useProjetsWorkspaceStore } from '@/lib/stores/projetsWorkspaceStore';
 import { Search, ArrowRight, ClipboardList, Kanban, Calendar, DollarSign, Users, AlertTriangle, CheckCircle, Clock, RefreshCw, Download, Filter } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface Command {
   id: string;

@@ -18,7 +18,7 @@ import {
   Plus, Trash2, Save, AlertTriangle, TrendingDown,
   Target, DollarSign, Clock, Users, CheckCircle2, Loader2
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface AnalyticsAlertConfigModalProps {
   open: boolean;

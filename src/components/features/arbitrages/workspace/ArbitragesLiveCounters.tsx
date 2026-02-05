@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useArbitragesWorkspaceStore } from '@/lib/stores/arbitragesWorkspaceStore';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { 
   Scale, Clock, AlertTriangle, CheckCircle, RefreshCw, Building2 
 } from 'lucide-react';

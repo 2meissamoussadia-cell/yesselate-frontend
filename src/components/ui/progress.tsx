@@ -2,7 +2,7 @@
 // Composant Progress pour les barres de progression
 // ============================================
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface ProgressProps {
   value: number; // 0-100

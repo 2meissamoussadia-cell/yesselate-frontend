@@ -7,7 +7,7 @@
 
 import React, { useEffect, useRef, useMemo } from 'react';
 import { Phone, MessageCircle, Image, AlertTriangle, Archive, X, MessageSquare, Wallet } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { ChantierMock } from '../../data/chantiersMock';
 import { useDashboardPermissions } from '../../hooks/useDashboardPermissions';
 

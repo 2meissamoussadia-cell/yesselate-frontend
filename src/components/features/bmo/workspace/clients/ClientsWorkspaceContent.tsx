@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { useClientsWorkspaceStore } from '@/lib/stores/clientsWorkspaceStore';
 import { clientsApiService, type Client } from '@/lib/services/clientsApiService';
 import { FileText, UserPlus, AlertTriangle, History, BarChart3, Search, ChevronRight, Eye, Star, StarOff, Users, Building2, Crown, Phone, Mail, DollarSign, Briefcase } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 const STATUS_STYLES = {
   active: { border: 'border-l-emerald-500', badge: 'bg-emerald-500/20 text-emerald-600' },
@@ -47,7 +48,7 @@ export function ClientsWorkspaceContent() {
         if (searchQuery) filter.search = searchQuery;
         const result = await clientsApiService.getAll(filter, 'ca', 1, 50);
         setClients(result.data);
-      } catch (error) { console.error('Failed:', error); }
+      } catch (error) { logger.error('Clients load failed', error as Error, { context: 'ClientsWorkspaceContent' }); }
       finally { setLoading(false); }
     };
     load();

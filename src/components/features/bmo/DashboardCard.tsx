@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useAppStore } from '@/lib/stores';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight } from 'lucide-react';

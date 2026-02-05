@@ -10,7 +10,7 @@ import React, { memo, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BarChart3, TrendingUp, Download, FileText } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 type PeriodeKey = '7j' | '30j' | '90j' | '12m';
 

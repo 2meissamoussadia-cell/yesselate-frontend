@@ -26,6 +26,8 @@ export interface QuickActionItem {
 }
 
 export interface QuickActionsBarProps {
+  /** Contenu optionnel à gauche (ex. case « tout sélectionner » + menu déroulant) */
+  leading?: React.ReactNode;
   /** Bouton primaire (ex. "Nouveau message") */
   primaryLabel?: string;
   primaryIcon?: React.ReactNode;
@@ -39,10 +41,12 @@ export interface QuickActionsBarProps {
   className?: string;
 }
 
+/** Échelle visuelle barre : icônes 16px fixes (référence pour checkboxes et icônes liste) */
+const iconSize = 'h-[16px] w-[16px] shrink-0';
 const defaultActions: QuickActionItem[] = [
   {
     id: 'delete',
-    icon: <Trash2 className="h-5 w-5" />,
+    icon: <Trash2 className={iconSize} />,
     label: 'Supprimer',
     variant: 'ghost',
     hasDropdown: false,
@@ -50,14 +54,14 @@ const defaultActions: QuickActionItem[] = [
   },
   {
     id: 'archive',
-    icon: <Archive className="h-5 w-5" />,
+    icon: <Archive className={iconSize} />,
     label: 'Archiver',
     variant: 'ghost',
     onClick: () => {},
   },
   {
     id: 'mark',
-    icon: <Flag className="h-5 w-5" />,
+    icon: <Flag className={iconSize} />,
     label: 'Marquer / démarquer',
     variant: 'ghost',
     hasDropdown: true,
@@ -66,8 +70,9 @@ const defaultActions: QuickActionItem[] = [
 ];
 
 export const QuickActionsBar = React.memo(function QuickActionsBar({
+  leading,
   primaryLabel = 'Nouveau message',
-  primaryIcon = <Mail className="h-5 w-5" />,
+  primaryIcon = <Mail className={iconSize} />,
   onPrimaryClick,
   actions = defaultActions,
   selectedCount = 0,
@@ -79,23 +84,29 @@ export const QuickActionsBar = React.memo(function QuickActionsBar({
   return (
     <div
       className={cn(
-        'flex items-center gap-2 px-4 py-3',
+        'flex items-center gap-1.5 px-3 py-2.5 text-sm',
         className
       )}
     >
+      {leading != null && (
+        <>
+          {leading}
+          <div className="w-px h-5 bg-slate-200 dark:bg-slate-700 self-center" aria-hidden />
+        </>
+      )}
       <Button
         variant="info"
-        size="default"
-        className="gap-2"
+        size="sm"
+        className="gap-1.5 text-sm h-8 min-w-[9rem] px-3 shrink-0"
         onClick={onPrimaryClick}
         aria-label={primaryLabel}
       >
         {primaryIcon}
         {primaryLabel}
-        <ChevronDown className="h-4 w-4 opacity-80" />
+        <ChevronDown className={iconSize + ' opacity-80'} />
       </Button>
 
-      <div className="w-px h-6 bg-slate-200 dark:bg-slate-700" aria-hidden />
+      <div className="w-px h-5 bg-slate-200 dark:bg-slate-700 self-center" aria-hidden />
 
       <TooltipProvider>
         {actions.map((action) => {
@@ -109,14 +120,14 @@ export const QuickActionsBar = React.memo(function QuickActionsBar({
                   <Button
                     variant={action.variant === 'primary' ? 'default' : (action.variant ?? 'ghost')}
                     size="sm"
-                    className="gap-1.5 text-slate-700 dark:text-slate-300"
+                    className="gap-1.5 text-sm h-8 text-slate-700 dark:text-slate-300"
                     disabled={isDisabled}
                     onClick={action.onClick}
                     aria-label={action.label}
                   >
                     {action.icon}
                     <span className="hidden sm:inline">{action.label}</span>
-                    {action.hasDropdown && <ChevronDown className="h-3.5 w-3.5 opacity-70" />}
+                    {action.hasDropdown && <ChevronDown className="h-[14px] w-[14px] opacity-70 shrink-0" />}
                   </Button>
                 </span>
               </TooltipTrigger>
@@ -134,21 +145,21 @@ export const QuickActionsBar = React.memo(function QuickActionsBar({
 
       {onMoreClick && (
         <>
-          <div className="w-px h-6 bg-slate-200 dark:bg-slate-700" aria-hidden />
+          <div className="w-px h-5 bg-slate-200 dark:bg-slate-700 self-center" aria-hidden />
           <Button
             variant="ghost"
             size="icon"
-            className="text-slate-600 dark:text-slate-400"
+            className="h-8 w-8 text-slate-600 dark:text-slate-400"
             onClick={onMoreClick}
             aria-label="Plus d'actions"
           >
-            <MoreHorizontal className="h-5 w-5" />
+            <MoreHorizontal className={iconSize + ' shrink-0'} />
           </Button>
         </>
       )}
 
       {hasSelection && (
-        <span className="ml-auto text-sm text-slate-600 dark:text-slate-400">
+        <span className="ml-auto text-xs text-slate-600 dark:text-slate-400">
           {selectedCount} élément{selectedCount > 1 ? 's' : ''} sélectionné{selectedCount > 1 ? 's' : ''}
         </span>
       )}

@@ -3,13 +3,14 @@ import { useState, useEffect } from 'react';
 import { useEmployesWorkspaceStore } from '@/lib/stores/employesWorkspaceStore';
 import { employesApiService, type Employe } from '@/lib/services/employesApiService';
 import { FileText, Shield, Calendar, Star, BarChart3, Search, ChevronRight, Eye, Users, Building2, Mail, Phone, AlertTriangle, DollarSign, Briefcase } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 const STATUS_STYLES = { actif: { border: 'border-l-emerald-500', badge: 'bg-emerald-500/20 text-emerald-600' }, conges: { border: 'border-l-blue-500', badge: 'bg-blue-500/20 text-blue-600' }, mission: { border: 'border-l-indigo-500', badge: 'bg-indigo-500/20 text-indigo-600' }, absent: { border: 'border-l-amber-500', badge: 'bg-amber-500/20 text-amber-600' }, inactif: { border: 'border-l-slate-500', badge: 'bg-slate-500/20 text-slate-600' } };
 export function EmployesWorkspaceContent() {
   const { tabs, activeTabId, openTab, currentFilter, watchlist, addToWatchlist, removeFromWatchlist } = useEmployesWorkspaceStore();
   const activeTab = tabs.find(t => t.id === activeTabId); const [employes, setEmployes] = useState<Employe[]>([]); const [loading, setLoading] = useState(true); const [searchQuery, setSearchQuery] = useState(''); const [expandedId, setExpandedId] = useState<string | null>(null);
   const queue = activeTab?.data?.queue as string | undefined;
-  useEffect(() => { const load = async () => { setLoading(true); try { const filter = { ...currentFilter }; if (queue && queue !== 'all') { if (queue === 'spof') filter.spof = true; else if (queue === 'risk') filter.status = 'risk'; else filter.status = queue; } if (searchQuery) filter.search = searchQuery; const r = await employesApiService.getAll(filter, 'risk', 1, 50); setEmployes(r.data); } catch (e) { console.error(e); } finally { setLoading(false); } }; load(); }, [currentFilter, queue, searchQuery]);
+  useEffect(() => { const load = async () => { setLoading(true); try { const filter = { ...currentFilter }; if (queue && queue !== 'all') { if (queue === 'spof') filter.spof = true; else if (queue === 'risk') filter.status = 'risk'; else filter.status = queue; } if (searchQuery) filter.search = searchQuery; const r = await employesApiService.getAll(filter, 'risk', 1, 50); setEmployes(r.data); } catch (e) { logger.error('Employes load failed', e as Error, { context: 'EmployesWorkspaceContent' }); } finally { setLoading(false); } }; load(); }, [currentFilter, queue, searchQuery]);
   const handleOpenDetail = (emp: Employe) => openTab({ type: 'detail', id: `detail:${emp.id}`, title: emp.name, icon: '👤', data: { employeId: emp.id } });
   if (!activeTab) return <div className="flex items-center justify-center h-64 text-slate-400"><Users className="w-12 h-12 opacity-30" /></div>;
   if (activeTab.type === 'spof') return <PlaceholderView icon={<Shield className="w-12 h-12" />} title="Employés SPOF" />;

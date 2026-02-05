@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Download, FileSpreadsheet, FileText, FileJson } from 'lucide-react';
+import { logger } from '@/lib/utils/logger';
 import type { Demande } from '../types/demandesTypes';
 
 interface DemandesExportModalProps {
@@ -118,8 +119,7 @@ export function DemandesExportModal({ isOpen, onClose, data }: DemandesExportMod
       // L'erreur sera gérée par le composant parent si nécessaire
       // Ne pas logger en production
       if (process.env.NODE_ENV === 'development' && error instanceof Error) {
-        // eslint-disable-next-line no-console
-        console.error('Export error:', error.message);
+        logger.error('Export error', error, { component: 'DemandesExportModal' });
       }
       throw error;
     } finally {

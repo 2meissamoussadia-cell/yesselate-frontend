@@ -8,7 +8,7 @@
 import React, { useState } from 'react';
 import { X, MessageCircle, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { ChantierMock } from '../../data/chantiersMock';
 
 const WHATSAPP_TEMPLATES = [

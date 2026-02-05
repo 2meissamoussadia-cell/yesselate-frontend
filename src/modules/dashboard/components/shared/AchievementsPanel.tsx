@@ -7,7 +7,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { Trophy, ChevronDown, ChevronUp } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useAchievementsStore } from '@/lib/stores/achievementsStore';
 
 export function AchievementsPanel() {

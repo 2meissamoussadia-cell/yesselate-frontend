@@ -5,6 +5,7 @@
 'use client';
 
 import { useEffect, useRef, useCallback, useState } from 'react';
+import { logger } from '@/lib/utils/logger';
 
 export interface WebSocketMessage {
   type: 'new_document' | 'document_validated' | 'document_rejected' | 'urgent_alert' | 'stats_update';
@@ -44,7 +45,7 @@ export function useWebSocket({
       const ws = new WebSocket(url);
 
       ws.onopen = () => {
-        console.log('WebSocket connected');
+        logger.info('WebSocket connected', { component: 'useWebSocket', url });
         setIsConnected(true);
         onOpen?.();
       };
@@ -55,7 +56,7 @@ export function useWebSocket({
           setLastMessage(message);
           onMessage?.(message);
         } catch (error) {
-          console.error('Error parsing WebSocket message:', error);
+          logger.error('Error parsing WebSocket message', error instanceof Error ? error : undefined, { component: 'useWebSocket' });
         }
       };
 
@@ -77,26 +78,21 @@ export function useWebSocket({
           timestamp: new Date().toISOString(),
         };
         
-        // Vérifier que l'objet n'est pas vide avant de logger
-        if (Object.keys(errorInfo).length > 0) {
-          console.error('WebSocket error:', errorInfo);
-        } else {
-          console.error('WebSocket error occurred (no details available)');
-        }
+        logger.error('WebSocket error', undefined, { component: 'useWebSocket', ...errorInfo });
         
         setIsConnected(false);
         onError?.(event);
       };
 
       ws.onclose = () => {
-        console.log('WebSocket disconnected');
+        logger.info('WebSocket disconnected', { component: 'useWebSocket', url });
         setIsConnected(false);
         onClose?.();
 
         // Reconnexion automatique
         if (reconnect) {
           reconnectTimeoutRef.current = setTimeout(() => {
-            console.log('Attempting to reconnect...');
+            logger.info('Attempting to reconnect', { component: 'useWebSocket', url });
             connect();
           }, reconnectInterval);
         }
@@ -104,7 +100,7 @@ export function useWebSocket({
 
       wsRef.current = ws;
     } catch (error) {
-      console.error('Error creating WebSocket:', error);
+      logger.error('Error creating WebSocket', error instanceof Error ? error : undefined, { component: 'useWebSocket', url });
     }
   }, [url, onMessage, onError, onOpen, onClose, reconnect, reconnectInterval]);
 
@@ -126,7 +122,7 @@ export function useWebSocket({
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
       wsRef.current.send(JSON.stringify(data));
     } else {
-      console.warn('WebSocket is not connected');
+      logger.warn('WebSocket is not connected', { component: 'useWebSocket' });
     }
   }, []);
 
@@ -154,11 +150,11 @@ export function useValidationBCNotifications(onNotification: (message: WebSocket
   return useWebSocket({
     url: process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:3000/api/validation-bc/ws',
     onMessage: (message) => {
-      console.log('Received notification:', message);
+      logger.info('Received notification', { component: 'useValidationBCNotifications', type: message?.type });
       onNotification(message);
     },
-    onError: (error) => {
-      console.error('WebSocket error:', error);
+    onError: () => {
+      logger.error('WebSocket error', undefined, { component: 'useValidationBCNotifications' });
     },
     reconnect: true,
     reconnectInterval: 5000,

@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { FluentModal } from '@/components/ui/fluent-modal';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { 
   FileText, Plus, Edit2, Trash2, Copy, CheckCircle2, 
   XCircle, AlertTriangle, Star, Search, Tag, RefreshCw, Loader2
@@ -218,7 +219,7 @@ export function RHResponseTemplates({ onSelect, selectedType }: Props) {
         setIsSynced(true);
       }
     } catch (error) {
-      console.error('Erreur chargement templates:', error);
+      logger.error('Erreur chargement templates', error instanceof Error ? error : undefined, { component: 'RHResponseTemplates' });
     } finally {
       setIsLoading(false);
     }
@@ -263,9 +264,9 @@ export function RHResponseTemplates({ onSelect, selectedType }: Props) {
       ));
       
       // Notifier l'API
-      templatesAPI.use(template.id).catch(console.error);
+      templatesAPI.use(template.id).catch((e) => logger.error('Template use API', e instanceof Error ? e : undefined, { component: 'RHResponseTemplates', templateId: template.id }));
     } catch (e) {
-      console.error('Erreur copie:', e);
+      logger.error('Erreur copie', e instanceof Error ? e : undefined, { component: 'RHResponseTemplates' });
     }
   };
 
@@ -278,7 +279,7 @@ export function RHResponseTemplates({ onSelect, selectedType }: Props) {
     ));
     
     // Notifier l'API
-    templatesAPI.use(template.id).catch(console.error);
+    templatesAPI.use(template.id).catch((e) => logger.error('Template use API', e instanceof Error ? e : undefined, { component: 'RHResponseTemplates', templateId: template.id }));
   };
 
   const handleToggleFavorite = (id: string) => {
@@ -296,7 +297,7 @@ export function RHResponseTemplates({ onSelect, selectedType }: Props) {
         try {
           await templatesAPI.delete(id);
         } catch (e) {
-          console.error('Erreur suppression API:', e);
+          logger.error('Erreur suppression API', e instanceof Error ? e : undefined, { component: 'RHResponseTemplates' });
         }
       }
     }
@@ -325,7 +326,7 @@ export function RHResponseTemplates({ onSelect, selectedType }: Props) {
           tags: template.tags,
         });
       } catch (e) {
-        console.error('Erreur création API:', e);
+        logger.error('Erreur création API', e instanceof Error ? e : undefined, { component: 'RHResponseTemplates' });
       }
     } else {
       setTemplates(prev => prev.map(t => t.id === template.id ? template : t));
@@ -338,7 +339,7 @@ export function RHResponseTemplates({ onSelect, selectedType }: Props) {
           tags: template.tags,
         });
       } catch (e) {
-        console.error('Erreur mise à jour API:', e);
+        logger.error('Erreur mise à jour API', e instanceof Error ? e : undefined, { component: 'RHResponseTemplates' });
       }
     }
     setEditingTemplate(null);

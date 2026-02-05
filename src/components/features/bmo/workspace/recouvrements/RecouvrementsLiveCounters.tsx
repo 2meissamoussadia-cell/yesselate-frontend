@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { DollarSign, Clock, CheckCircle, AlertTriangle, XCircle, TrendingUp, CalendarClock, Percent } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { recouvrementsApiService, type RecouvrementsStats } from '@/lib/services/recouvrementsApiService';
+import { logger } from '@/lib/utils/logger';
 
 interface Props {
   onOpenQueue: (queue: string, title: string, icon: string) => void;
@@ -16,7 +17,7 @@ export function RecouvrementsLiveCounters({ onOpenQueue }: Props) {
   useEffect(() => {
     const loadStats = async () => {
       try { const data = await recouvrementsApiService.getStats(); setStats(data); }
-      catch (error) { console.error('Failed:', error); }
+      catch (error) { logger.error('Recouvrements stats failed', error as Error, { context: 'RecouvrementsLiveCounters' }); }
       finally { setLoading(false); }
     };
     loadStats();

@@ -6,7 +6,15 @@
  */
 export const dynamic = 'force-dynamic';
 
+import type { Metadata } from 'next';
 import React, { Suspense } from 'react';
+
+export const metadata: Metadata = {
+  title: 'Dashboard | Maître d\'Ouvrage | YESSALATE',
+  description:
+    'Tableau de bord - KPIs temps réel, pilotage chantiers, indicateurs performance. Cockpit rénovation digitale BTP.',
+};
+
 import { headers } from 'next/headers';
 import { ErrorBoundary } from '@/components/shared/ErrorBoundary';
 import { DashboardI18nGate } from '@/modules/dashboard/components/DashboardI18nGate';
@@ -21,6 +29,9 @@ import {
 } from './DashboardLayoutClient';
 import { DashboardAlertProvider } from '@/modules/dashboard/components/DashboardAlertProvider';
 import { DashboardAuthGuard } from '@/modules/dashboard/components/DashboardAuthGuard';
+import { createLogger } from '@/modules/dashboard/utils/logger.server';
+
+const log = createLogger('DashboardLayout');
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   try {
@@ -31,7 +42,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     try {
       baseCtx = extractContextFromHeaders(headersList);
     } catch (error) {
-      console.error('[DashboardLayout] Error extracting context from headers:', error);
+      log.error('Error extracting context from headers', { action: 'extractContext' }, error instanceof Error ? error : undefined);
       throw new Error(`Failed to extract context: ${error instanceof Error ? error.message : String(error)}`);
     }
     
@@ -47,7 +58,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         baseCtx.userId
       );
     } catch (error) {
-      console.error('[DashboardLayout] Error resolving locale context:', error);
+      log.error('Error resolving locale context', { action: 'resolveLocale' }, error instanceof Error ? error : undefined);
       throw new Error(`Failed to resolve locale context: ${error instanceof Error ? error.message : String(error)}`);
     }
     
@@ -60,7 +71,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     try {
       messages = loadMessages(localeBundle.locale);
     } catch (error) {
-      console.error('[DashboardLayout] Error loading messages:', error);
+      log.error('Error loading messages', { action: 'loadMessages' }, error instanceof Error ? error : undefined);
       // Fallback sur messages vides plutôt que de faire échouer
       messages = {};
     }
@@ -96,11 +107,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
       ? error.errors?.map(e => e instanceof Error ? e.message : String(e)).join(', ') || 'Unknown aggregate error'
       : String(error);
     
-    console.error('[DashboardLayout] Server error:', {
+    log.error('Server error', {
       message: errorMessage,
       stack: error instanceof Error ? error.stack : undefined,
-      error
-    });
+    }, error instanceof Error ? error : undefined);
     
     return (
       <ErrorBoundary fallback={<DashboardErrorFallback error={new Error('')} />}>

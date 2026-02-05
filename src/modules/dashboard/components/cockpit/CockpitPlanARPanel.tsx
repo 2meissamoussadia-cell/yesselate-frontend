@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react';
 import { Layers, Camera, AlertTriangle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { colors } from '../../utils/dashboardDesignTokens';
 import { plansAR } from '../../data/photoGpsMock';
 

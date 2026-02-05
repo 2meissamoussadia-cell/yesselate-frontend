@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -26,8 +26,19 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
+export type ClientsMainCategory =
+  | 'overview'
+  | 'prospects'
+  | 'premium'
+  | 'litiges'
+  | 'historique'
+  | 'contrats'
+  | 'performance'
+  | 'entreprises'
+  | 'interactions';
+
 interface SidebarCategory {
-  id: string;
+  id: ClientsMainCategory;
   label: string;
   icon: LucideIcon;
   badge?: number | string;
@@ -47,9 +58,9 @@ const clientsCategories: SidebarCategory[] = [
 ];
 
 interface ClientsCommandSidebarProps {
-  activeCategory: string;
+  activeCategory: ClientsMainCategory;
   collapsed: boolean;
-  onCategoryChange: (category: string) => void;
+  onCategoryChange: (category: ClientsMainCategory) => void;
   onToggleCollapse: () => void;
   onOpenCommandPalette: () => void;
 }

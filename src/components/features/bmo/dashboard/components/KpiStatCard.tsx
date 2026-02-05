@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { ChevronRight } from 'lucide-react';
 import { colors, borderRadius, transitions, interactive } from '@/modules/dashboard/utils/dashboardDesignTokens';

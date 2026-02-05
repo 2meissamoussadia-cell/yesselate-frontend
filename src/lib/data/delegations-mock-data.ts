@@ -277,6 +277,26 @@ export function filterDelegations(filters: {
   return result;
 }
 
+// Règles de délégation (stub pour le service)
+export interface MockDelegationRule {
+  id: string;
+  name: string;
+  description: string;
+  fromRole: string;
+  toRole: string;
+  permissions: string[];
+  conditions: Record<string, unknown>;
+  autoApprove: boolean;
+  active: boolean;
+  createdAt: Date;
+}
+
+export const mockDelegationRules: MockDelegationRule[] = [];
+
+export function findApplicableRules(_fromRole: string, _toRole: string, _bureau: string): MockDelegationRule[] {
+  return [];
+}
+
 // Export par défaut
 export default {
   delegations: mockDelegations,
@@ -284,4 +304,6 @@ export default {
   getByQueue: getDelegationsByQueue,
   getById: getDelegationById,
   filter: filterDelegations,
+  mockDelegationRules,
+  findApplicableRules,
 };

@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useState, useCallback } from 'react';
 import { useWorkspaceStore, WorkspaceTab } from '@/lib/stores/workspaceStore';
 import { FluentModal } from '@/components/ui/fluent-modal';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { adaptLocalDemandToDomain } from '@/domain/demandes/adapters/demande.adapter';
 import { useDemandesService } from '@/hooks/useDemandesService';
 import { VirtualizedList } from '@/presentation/components/VirtualizedList/VirtualizedList';
@@ -209,7 +210,7 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
         });
       }
     } catch (e) {
-      console.error('Erreur chargement demande:', e);
+      logger.error('Erreur chargement demande', e instanceof Error ? e : undefined, { component: 'DemandView' });
       setData(null);
     } finally {
       setLoading(false);
@@ -238,7 +239,7 @@ export function DemandView({ tab }: { tab: WorkspaceTab }) {
       }
       await load();
     } catch (e) {
-      console.error('Erreur action:', e);
+      logger.error('Erreur action', e instanceof Error ? e : undefined, { component: 'DemandView' });
     } finally {
       setActionLoading(false);
     }

@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useCalendarWorkspaceStore } from '@/lib/stores/calendarWorkspaceStore';
 import { FluentButton } from '@/components/ui/fluent-button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import {
   Clock,
   Calendar,

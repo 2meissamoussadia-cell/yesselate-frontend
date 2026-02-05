@@ -6,6 +6,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { usePageNavigation } from './usePageNavigation';
+import { logger } from '@/lib/utils/logger';
 import type { Severity } from '@/lib/types/alerts.types';
 
 export type TabValue = 'raci' | 'alerts';
@@ -173,7 +174,7 @@ export function useGovernanceFilters() {
         }
       }
     } catch (error) {
-      console.error('Erreur lors de la lecture des filtres:', error);
+      logger.error('Erreur lors de la lecture des filtres', error instanceof Error ? error : undefined, { component: 'useGovernanceFilters' });
       // En cas d'erreur, utiliser les valeurs par défaut
       setActiveTab('raci');
       setSearch('');
@@ -227,13 +228,13 @@ export function useGovernanceFilters() {
             activeViewId,
           });
         } catch (err) {
-          console.error('Erreur lors de la sauvegarde localStorage:', err);
+          logger.error('Erreur lors de la sauvegarde localStorage', err instanceof Error ? err : undefined, { component: 'useGovernanceFilters' });
         }
       }, 100);
 
       return () => clearTimeout(timeoutId);
     } catch (error) {
-      console.error('Erreur lors de la sauvegarde des filtres:', error);
+      logger.error('Erreur lors de la sauvegarde des filtres', error instanceof Error ? error : undefined, { component: 'useGovernanceFilters' });
     }
   }, [activeTab, search, filters, activeViewId, router, updateFilters]);
 

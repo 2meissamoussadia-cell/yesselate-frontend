@@ -9,7 +9,7 @@
 
 import React, { useCallback, useMemo, memo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { ChevronRight, ChevronDown, ArrowLeft } from 'lucide-react';
 import { getSubCategories, dashboardNavigationConfig } from './dashboardNavigationConfig';
@@ -22,7 +22,7 @@ import type { DashboardMainCategory, DashboardNavMainCategory } from '../types/d
 import { PILOTAGE_HIERARCHY, type PilotageHierarchyNode } from './pilotageHierarchyConfig';
 import { getModuleHref } from '@/lib/navigation/moduleLinks';
 
-/** En mode Outlook (alwaysExpanded), la liste reste dépliée et occupe une largeur fixe (panneau central). */
+/** En mode Outlook (alwaysExpanded), la liste reste dépliée et occupe une largeur fixe (panneau central). Les 6 blocs (Pilotage, Chantiers…) sont déjà dans la sidebar BMO principale. */
 export const DashboardSubSidebar = memo(function DashboardSubSidebar({
   alwaysExpanded = false,
 }: { alwaysExpanded?: boolean } = {}) {
@@ -108,19 +108,25 @@ export const DashboardSubSidebar = memo(function DashboardSubSidebar({
     );
   }
 
+  const toggleExpanded = useCallback(() => setExpanded((e) => !e), []);
+
   return (
-    <aside
-      onMouseEnter={alwaysExpanded ? undefined : () => setExpanded(true)}
-      onMouseLeave={alwaysExpanded ? undefined : () => setExpanded(false)}
-      className={cn(
-        'shrink-0 flex flex-col border-r border-slate-200 bg-gray-50 dark:border-slate-800/70 dark:bg-slate-950/60 overflow-y-auto overflow-x-hidden scrollbar-dashboard transition-[width] duration-200 ease-out',
-        expandedOutlook ? 'w-52' : 'w-14'
-      )}
-      aria-label="Sub-navigation"
-      aria-expanded={expandedOutlook}
-    >
-      <div className="py-3 px-2">
-        <nav
+    <div className="flex shrink-0 items-stretch">
+      <aside
+        onMouseEnter={alwaysExpanded ? undefined : () => setExpanded(true)}
+        onMouseLeave={alwaysExpanded ? undefined : () => setExpanded(false)}
+        className={cn(
+          'flex flex-col border-r border-slate-200 bg-gray-50 dark:border-slate-800/70 dark:bg-slate-950/60 overflow-hidden scrollbar-dashboard transition-[width] duration-200 ease-out',
+          expandedOutlook ? 'w-52' : 'w-0 min-w-0'
+        )}
+        aria-label="Sub-navigation"
+        aria-expanded={expandedOutlook}
+      >
+        <div className={cn(
+          'min-h-0 overflow-y-auto overflow-x-hidden py-3 px-2 transition-opacity duration-200',
+          expandedOutlook ? 'flex-1 opacity-100' : 'opacity-0 pointer-events-none overflow-hidden'
+        )}>
+          <nav
           className="space-y-0.5"
           aria-label={currentMain in dashboardNavigationConfig ? `Sections ${dashboardNavigationConfig[currentMain as DashboardNavMainCategory].label}` : 'Sections'}
         >
@@ -159,12 +165,41 @@ export const DashboardSubSidebar = memo(function DashboardSubSidebar({
                 <TooltipContent side="right" sideOffset={8}>
                   {subCat.label}
                 </TooltipContent>
-              </Tooltip>
-            );
-          })}
+            </Tooltip>
+          );
+        })}
         </nav>
       </div>
-    </aside>
+        {!alwaysExpanded && (
+          <div className="shrink-0 border-t border-slate-200 dark:border-slate-800/60 p-2">
+            <button
+              type="button"
+              onClick={toggleExpanded}
+              className={cn(
+                'w-full flex items-center gap-2 rounded-lg py-2 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800/60 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/60',
+                expandedOutlook ? 'px-3 justify-start' : 'px-2 justify-center'
+              )}
+              aria-label="Replier la barre latérale"
+              title="Replier"
+            >
+              <ChevronRight className="h-4 w-4 shrink-0 rotate-180" aria-hidden />
+              <span className="text-xs font-medium">Replier</span>
+            </button>
+          </div>
+        )}
+      </aside>
+      {!alwaysExpanded && !expandedOutlook && (
+        <button
+          type="button"
+          onClick={toggleExpanded}
+          className="shrink-0 w-8 flex items-center justify-center border-r border-slate-200 dark:border-slate-800/70 bg-gray-50 dark:bg-slate-950/60 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800/60 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/60"
+          aria-label="Déplier la barre latérale"
+          title="Déplier"
+        >
+          <ChevronRight className="h-4 w-4" aria-hidden />
+        </button>
+      )}
+    </div>
   );
 });
 
@@ -216,18 +251,21 @@ function PilotageHierarchySidebar({
   );
 
   return (
-    <div className="flex shrink-0 overflow-hidden">
+    <div className="flex shrink-0 overflow-hidden items-stretch">
       <aside
         onMouseEnter={alwaysExpanded ? undefined : () => setExpanded(true)}
         onMouseLeave={alwaysExpanded ? undefined : () => setExpanded(false)}
         className={cn(
-          'flex flex-col border-r border-slate-200 bg-gray-50 dark:border-slate-800/70 dark:bg-slate-950/60 overflow-y-auto overflow-x-hidden scrollbar-dashboard transition-[width] duration-200 ease-out',
-          expanded ? 'w-64 min-w-[200px]' : 'w-14'
+          'flex flex-col border-r border-slate-200 bg-gray-50 dark:border-slate-800/70 dark:bg-slate-950/60 overflow-hidden scrollbar-dashboard transition-[width] duration-200 ease-out',
+          expanded ? 'w-64 min-w-[200px]' : 'w-0 min-w-0'
         )}
         aria-label="Navigation Pilotage hiérarchique"
         aria-expanded={expanded}
       >
-        <div className="py-3 px-2">
+        <div className={cn(
+          'min-h-0 overflow-y-auto overflow-x-hidden py-3 px-2 transition-opacity duration-200',
+          expanded ? 'flex-1 opacity-100' : 'opacity-0 pointer-events-none overflow-hidden'
+        )}>
           <nav className="space-y-0.5" aria-label="Sections Pilotage">
             {hierarchy.map((node) => (
               <HierarchyNode
@@ -243,7 +281,32 @@ function PilotageHierarchySidebar({
             ))}
           </nav>
         </div>
+        {!alwaysExpanded && (
+          <div className="shrink-0 border-t border-slate-200 dark:border-slate-800/60 p-2">
+            <button
+              type="button"
+              onClick={() => setExpanded(false)}
+              className="w-full flex items-center gap-2 rounded-lg py-2 px-2 justify-start text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800/60 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/60"
+              aria-label="Replier la barre latérale"
+              title="Replier"
+            >
+              <ChevronRight className="h-4 w-4 shrink-0 rotate-180" aria-hidden />
+              <span className="text-xs font-medium">Replier</span>
+            </button>
+          </div>
+        )}
       </aside>
+      {!alwaysExpanded && !expanded && (
+        <button
+          type="button"
+          onClick={() => setExpanded(true)}
+          className="shrink-0 w-8 flex items-center justify-center border-r border-slate-200 dark:border-slate-800/70 bg-gray-50 dark:bg-slate-950/60 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800/60 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/60"
+          aria-label="Déplier la barre latérale"
+          title="Déplier"
+        >
+          <ChevronRight className="h-4 w-4" aria-hidden />
+        </button>
+      )}
       {useSidePanelForChildren && panelParent && panelParent.children && panelParent.children.length > 0 && (
         <aside
           role="dialog"

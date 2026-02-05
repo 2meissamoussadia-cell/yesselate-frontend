@@ -15,6 +15,53 @@ import type {
   PaginatedResponse,
   Employee,
 } from '@/lib/types/substitution.types';
+import type { MockDelegation } from '@/lib/data/delegations-mock-data';
+
+function mockToDelegation(m: MockDelegation): Delegation {
+  const fromUser: Employee = {
+    id: m.fromUserId,
+    name: m.delegatorName,
+    email: '',
+    phone: '',
+    bureau: m.bureau,
+    role: 'User',
+    competences: [],
+    disponibilite: 'available',
+    chargeActuelle: 0,
+    score: 0,
+  };
+  const toUser: Employee = {
+    id: m.toUserId,
+    name: m.agentName,
+    email: '',
+    phone: '',
+    bureau: m.bureau,
+    role: m.agentRole ?? 'User',
+    competences: [],
+    disponibilite: 'available',
+    chargeActuelle: 0,
+    score: 0,
+  };
+  const statusMap = { active: 'active' as const, expired: 'inactive' as const, revoked: 'revoked' as const, suspended: 'inactive' as const };
+  return {
+    id: m.id,
+    fromUserId: m.fromUserId,
+    fromUser,
+    toUserId: m.toUserId,
+    toUser,
+    type: 'temporary',
+    permissions: m.permissions,
+    startDate: new Date(m.startDate),
+    endDate: m.endDate ? new Date(m.endDate) : undefined,
+    status: statusMap[m.status] ?? 'inactive',
+    reason: m.reason,
+    ruleId: m.ruleId,
+    createdAt: new Date(m.startDate),
+    updatedAt: new Date(m.lastUsedAt ?? m.startDate),
+    revokedAt: m.revokedAt ? new Date(m.revokedAt) : undefined,
+    revokedBy: m.revokedBy,
+  };
+}
 
 class DelegationsApiService {
   private baseUrl = '/api/bmo/delegations';
@@ -32,7 +79,7 @@ class DelegationsApiService {
     await this.delay(300);
     
     const { mockDelegations } = await import('@/lib/data/delegations-mock-data');
-    let data = [...mockDelegations];
+    let data = mockDelegations.map(mockToDelegation);
 
     // Apply filters
     if (filter) {
@@ -40,7 +87,8 @@ class DelegationsApiService {
         data = data.filter(d => d.type === filter.type);
       }
       if (filter.status) {
-        data = data.filter(d => d.status === filter.status);
+        const statusFilter = filter.status as Delegation['status'];
+        data = data.filter(d => d.status === statusFilter);
       }
       if (filter.bureau) {
         data = data.filter(d => d.fromUser.bureau === filter.bureau);
@@ -67,7 +115,7 @@ class DelegationsApiService {
     // Apply sort
     data.sort((a, b) => {
       if (sort === 'createdAt') {
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        return b.createdAt.getTime() - a.createdAt.getTime();
       }
       return 0;
     });
@@ -90,7 +138,7 @@ class DelegationsApiService {
     const { mockDelegations } = await import('@/lib/data/delegations-mock-data');
     const delegation = mockDelegations.find(d => d.id === id);
     if (!delegation) throw new Error(`Delegation ${id} not found`);
-    return delegation;
+    return mockToDelegation(delegation);
   }
 
   async create(data: DelegationCreateData): Promise<Delegation> {
@@ -164,15 +212,15 @@ class DelegationsApiService {
   async getRules(): Promise<DelegationRule[]> {
     await this.delay(200);
     const { mockDelegationRules } = await import('@/lib/data/delegations-mock-data');
-    return mockDelegationRules.filter(r => r.active);
+    return mockDelegationRules.filter((r: { active: boolean }) => r.active) as DelegationRule[];
   }
 
   async getRuleById(id: string): Promise<DelegationRule> {
     await this.delay(150);
     const { mockDelegationRules } = await import('@/lib/data/delegations-mock-data');
-    const rule = mockDelegationRules.find(r => r.id === id);
+    const rule = mockDelegationRules.find((r: { id: string }) => r.id === id);
     if (!rule) throw new Error(`Rule ${id} not found`);
-    return rule;
+    return rule as unknown as DelegationRule;
   }
 
   async createRule(rule: Omit<DelegationRule, 'id' | 'createdAt'>): Promise<DelegationRule> {
@@ -220,15 +268,15 @@ class DelegationsApiService {
     const { mockEmployees } = await import('@/lib/data/employees-mock-data');
     const { findApplicableRules } = await import('@/lib/data/delegations-mock-data');
     
-    const fromUser = mockEmployees.find(e => e.id === fromUserId);
-    const toUser = mockEmployees.find(e => e.id === toUserId);
+    const fromUser = mockEmployees.find((e: { id: string }) => e.id === fromUserId);
+    const toUser = mockEmployees.find((e: { id: string }) => e.id === toUserId);
     
     if (!fromUser || !toUser) {
       return { canDelegate: false, reason: 'User not found' };
     }
 
     // Check applicable rules
-    const rules = findApplicableRules(fromUser.role, toUser.role, fromUser.bureau);
+    const rules = findApplicableRules(fromUser.role, toUser.role, fromUser.bureau) as DelegationRule[];
     
     if (rules.length > 0) {
       const rule = rules[0];

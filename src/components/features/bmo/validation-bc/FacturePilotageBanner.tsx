@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { TrendingUp, Clock, Ban, DollarSign, CheckCircle, AlertTriangle } from 'lucide-react';
 import type { Invoice } from '@/lib/types/bmo.types';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface FacturePilotageBannerProps {
   factures: Invoice[];

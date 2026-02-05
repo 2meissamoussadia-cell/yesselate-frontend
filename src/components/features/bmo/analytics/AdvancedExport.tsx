@@ -2,7 +2,7 @@
 
 import type { RefObject } from 'react';
 import { useMemo, useState } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useAppStore, useBMOStore } from '@/lib/stores';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

@@ -16,7 +16,7 @@ import type { CalendrierMainCategory, CalendrierNavItem } from '../types/calendr
 export interface NavNode {
   id: string;
   label: string;
-  icon: any;
+  icon?: any;
   badge?: number | string;
   badgeType?: 'default' | 'warning' | 'critical' | 'success';
   children?: NavNode[];

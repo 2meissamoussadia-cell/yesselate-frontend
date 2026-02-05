@@ -361,7 +361,7 @@ class BlockedApiService {
 
     // SLA breached
     if (filters.slaBreached) {
-      data = data.filter(d => (d.delay ?? 0) > (d.sla ?? 30));
+      data = data.filter(d => (d.delay ?? 0) > (typeof d.sla === 'number' ? d.sla : 30));
     }
 
     // Recherche textuelle
@@ -390,7 +390,7 @@ class BlockedApiService {
           default:
             cmp = 0;
         }
-        return sort.order === 'desc' ? -cmp : cmp;
+        return sort.direction === 'desc' ? -cmp : cmp;
       });
     }
 

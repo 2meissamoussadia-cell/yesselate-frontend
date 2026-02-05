@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { financesApiService, type MouvementFinancier } from '@/lib/services/financesApiService';
 import { Search, ArrowUpRight, ArrowDownRight, Clock, CheckCircle, XCircle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 export function FinancesTresorerieView() {
   const [mouvements, setMouvements] = useState<MouvementFinancier[]>([]);
@@ -16,7 +17,7 @@ export function FinancesTresorerieView() {
       try {
         const result = await financesApiService.getMouvements({ search: searchQuery || undefined });
         setMouvements(result.data);
-      } catch (error) { console.error('Failed:', error); }
+      } catch (error) { logger.error('Finances trésorerie load failed', error as Error, { context: 'FinancesTresorerieView' }); }
       finally { setLoading(false); }
     };
     load();

@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { useDepensesWorkspaceStore } from '@/lib/stores/depensesWorkspaceStore';
 import { depensesApiService, type Depense } from '@/lib/services/depensesApiService';
 import { FileText, PiggyBank, FolderTree, CheckSquare, Search, Clock, CheckCircle, XCircle, DollarSign, Building2, Calendar, User, ChevronRight, Eye } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 const STATUS_STYLES = {
   pending: { border: 'border-l-amber-500', badge: 'bg-amber-500/20 text-amber-600' },
@@ -34,7 +35,7 @@ export function DepensesWorkspaceContent() {
         if (searchQuery) filter.search = searchQuery;
         const result = await depensesApiService.getAll(filter, 'date', 1, 50);
         setDepenses(result.data);
-      } catch (error) { console.error('Failed:', error); }
+      } catch (error) { logger.error('Depenses load failed', error as Error, { context: 'DepensesWorkspaceContent' }); }
       finally { setLoading(false); }
     };
     load();

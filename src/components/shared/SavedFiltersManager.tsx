@@ -7,7 +7,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -21,6 +21,7 @@ import {
   Download,
   Upload,
 } from 'lucide-react';
+import { logger } from '@/lib/utils/logger';
 
 export interface SavedFilter<T = any> {
   id: string;
@@ -64,7 +65,7 @@ export function SavedFiltersManager<T = any>({
       try {
         setSavedFilters(JSON.parse(stored));
       } catch (e) {
-        console.error('Failed to load saved filters:', e);
+        logger.error('Failed to load saved filters', e instanceof Error ? e : undefined, { component: 'SavedFiltersManager' });
       }
     }
   }, [module]);
@@ -166,7 +167,7 @@ export function SavedFiltersManager<T = any>({
           persistFilters([...savedFilters, ...imported]);
         }
       } catch (err) {
-        console.error('Failed to import filters:', err);
+        logger.error('Failed to import filters', err instanceof Error ? err : undefined, { component: 'SavedFiltersManager' });
       }
     };
     reader.readAsText(file);

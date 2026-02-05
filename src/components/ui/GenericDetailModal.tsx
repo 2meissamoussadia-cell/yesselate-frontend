@@ -15,7 +15,7 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { X, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 

@@ -9,7 +9,7 @@ import React, { useState, useMemo } from 'react';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { EcheanceOperationnelle } from '@/lib/types/calendrier.types';
 
 interface CalendrierInteractifProps {

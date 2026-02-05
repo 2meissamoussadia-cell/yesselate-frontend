@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { ChevronRight, ChevronDown } from 'lucide-react';
 import { analyticsBTPArchitecture, type AnalyticsDomain, type AnalyticsModule } from '@/lib/config/analyticsBTPArchitecture';
 import { useAnalyticsBTPNavigationStore } from '@/lib/stores/analyticsBTPNavigationStore';

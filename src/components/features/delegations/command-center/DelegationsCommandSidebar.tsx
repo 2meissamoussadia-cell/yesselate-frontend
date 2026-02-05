@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -26,15 +26,26 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
-interface SidebarCategory {
-  id: string;
+export type DelegationsMainCategory =
+  | 'overview'
+  | 'active'
+  | 'expired'
+  | 'revoked'
+  | 'suspended'
+  | 'expiring_soon'
+  | 'history'
+  | 'analytics'
+  | 'settings';
+
+interface DelegationsSidebarCategory {
+  id: DelegationsMainCategory;
   label: string;
   icon: LucideIcon;
   badge?: number | string;
   badgeType?: 'default' | 'warning' | 'critical';
 }
 
-const delegationsCategories: SidebarCategory[] = [
+const delegationsCategories: DelegationsSidebarCategory[] = [
   { id: 'overview', label: "Vue d'ensemble", icon: LayoutDashboard },
   { id: 'active', label: 'Actives', icon: CheckCircle2, badge: 0 },
   { id: 'expired', label: 'Expirées', icon: XCircle },
@@ -47,9 +58,9 @@ const delegationsCategories: SidebarCategory[] = [
 ];
 
 interface DelegationsCommandSidebarProps {
-  activeCategory: string;
+  activeCategory: DelegationsMainCategory;
   collapsed: boolean;
-  onCategoryChange: (category: string) => void;
+  onCategoryChange: (category: DelegationsMainCategory) => void;
   onToggleCollapse: () => void;
   onOpenCommandPalette: () => void;
   stats?: {
@@ -250,5 +261,5 @@ export const DelegationsCommandSidebar = React.memo(function DelegationsCommandS
 });
 
 export { delegationsCategories };
-export type { SidebarCategory };
+export type SidebarCategory = DelegationsSidebarCategory;
 

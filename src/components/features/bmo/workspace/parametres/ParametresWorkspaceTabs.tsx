@@ -1,7 +1,7 @@
 'use client';
 import { useParametresWorkspaceStore } from '@/lib/stores/parametresWorkspaceStore';
 import { X, Settings, Shield, Bell, Plug, Users, Database } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 const tabIcons: Record<string, React.ReactNode> = { general: <Settings className="w-4 h-4" />, security: <Shield className="w-4 h-4" />, notifications: <Bell className="w-4 h-4" />, integrations: <Plug className="w-4 h-4" />, permissions: <Users className="w-4 h-4" />, backup: <Database className="w-4 h-4" /> };
 export function ParametresWorkspaceTabs() {
   const { tabs, activeTabId, setActiveTab, closeTab } = useParametresWorkspaceStore();

@@ -7,7 +7,7 @@
 
 import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { motion, AnimatePresence } from 'framer-motion';
 import { zIndexClass } from '@/modules/dashboard/utils/zIndex';
 

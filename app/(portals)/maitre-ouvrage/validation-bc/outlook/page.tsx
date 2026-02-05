@@ -11,7 +11,7 @@ import { QuickActionsBar } from '@/components/bmo/ui/QuickActionsBar';
 import { validationBcModuleConfig } from '@/lib/config/modules/validation-bc.config';
 import { useValidationData } from '@/modules/validation-bc';
 import type { ValidationFiltres } from '@/modules/validation-bc/types/validationTypes';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 const FOLDER_TO_FILTRES: Record<string, ValidationFiltres> = {
   'a-valider': { statuts: ['EN_ATTENTE'] },

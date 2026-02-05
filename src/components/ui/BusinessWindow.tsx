@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export interface BusinessWindowProps {
   /** Titre affiché dans la barre de la fenêtre (optionnel : si absent, pas de barre de titre) */

@@ -5,7 +5,7 @@ import { FluentModal } from '@/components/ui/fluent-modal';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import {
   FileText, Download, Calendar, Clock, Play, Pause,
   Plus, Edit2, Trash2, RefreshCw, Mail, CheckCircle2,

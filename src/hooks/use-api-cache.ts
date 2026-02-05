@@ -4,6 +4,7 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
+import { logger } from '@/lib/utils/logger';
 
 interface CacheEntry<T> {
   data: T;
@@ -46,7 +47,7 @@ export function useAPICache<T>(
 
       return entry;
     } catch (e) {
-      console.error('Erreur lecture cache:', e);
+      logger.error('Erreur lecture cache', e instanceof Error ? e : undefined, { component: 'useAPICache', key });
       return null;
     }
   }, [key, staleWhileRevalidate]);
@@ -62,7 +63,7 @@ export function useAPICache<T>(
         };
         localStorage.setItem(`api-cache:${key}`, JSON.stringify(entry));
       } catch (e) {
-        console.error('Erreur écriture cache:', e);
+        logger.error('Erreur écriture cache', e instanceof Error ? e : undefined, { component: 'useAPICache', key });
       }
     },
     [key, ttl]
@@ -92,7 +93,7 @@ export function useAPICache<T>(
               setData(fresh);
               writeCache(fresh);
             } catch (e) {
-              console.error('Erreur revalidation:', e);
+              logger.error('Erreur revalidation', e instanceof Error ? e : undefined, { component: 'useAPICache', key });
             } finally {
               setIsValidating(false);
             }

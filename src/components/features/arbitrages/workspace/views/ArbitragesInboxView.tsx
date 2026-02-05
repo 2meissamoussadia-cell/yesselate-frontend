@@ -5,7 +5,7 @@ import { useArbitragesWorkspaceStore, type ArbitragesTab } from '@/lib/stores/ar
 import { FluentButton } from '@/components/ui/fluent-button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import {
   Search, Filter, RefreshCw, ArrowUpDown, Scale, Clock, AlertTriangle,
   CheckCircle, Building2, ChevronRight, Eye

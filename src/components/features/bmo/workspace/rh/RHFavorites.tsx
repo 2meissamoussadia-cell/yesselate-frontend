@@ -4,7 +4,8 @@ import { useState, useCallback, useEffect, createContext, useContext, ReactNode 
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { demandesRH } from '@/lib/data/bmo-mock-2';
 import type { HRRequest } from '@/lib/types/bmo.types';
 import { 
@@ -61,7 +62,7 @@ export function RHFavoritesProvider({ children }: { children: ReactNode }) {
       try {
         setFavorites(JSON.parse(stored));
       } catch (e) {
-        console.error('Error loading favorites:', e);
+        logger.error('Error loading favorites', e as Error, { context: 'RHFavorites' });
       }
     }
   }, []);

@@ -61,8 +61,9 @@ export const useDashboardThemeStore = create<DashboardThemeStore>()(
     }),
     {
       name: STORAGE_KEY,
-      onRehydrate: () => (state) => {
-        if (state?.theme) applyTheme(state.theme);
+      onRehydrateStorage: () => (state: unknown) => {
+        const s = state as { theme?: string } | null;
+        if (s?.theme) applyTheme(s.theme);
       },
     }
   )

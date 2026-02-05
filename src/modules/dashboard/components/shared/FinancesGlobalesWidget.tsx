@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { AlertTriangle, CheckCircle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { formatMoneyCompact } from '@lib-root/dashboard/kpi';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { FinancesGlobalesMock } from '../../data/financesGlobalesMock';

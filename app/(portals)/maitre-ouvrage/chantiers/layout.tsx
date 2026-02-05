@@ -1,28 +1,13 @@
-'use client';
+import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
+import { ChantiersLayoutClient } from './ChantiersLayoutClient';
 
-import React from 'react';
-import { FolderKanban, MapPin, Calendar, LayoutGrid } from 'lucide-react';
-import { PortalModuleCleanLayout } from '@/components/bmo/layout/PortalModuleCleanLayout';
-import type { PortalModuleTab } from '@/components/bmo/layout/PortalModuleCleanLayout';
-import { projectsProgramsSubNav } from '@/lib/navigation/subnav/projectsPrograms';
+export const metadata: Metadata = {
+  title: 'Chantiers | Maître d\'Ouvrage | YESSALATE',
+  description:
+    'Chantiers et programmes - Carte, planning, programmes. Pilotage des chantiers de rénovation BTP.',
+};
 
-const chantiersTabs: PortalModuleTab[] = (projectsProgramsSubNav.tabs ?? []).map((tab: { id: string; label: string; path?: string }) => {
-  const path = tab.path ?? `/maitre-ouvrage/chantiers/${tab.id}`;
-  const icon =
-    tab.id === 'programs'
-      ? LayoutGrid
-      : tab.id === 'projects'
-        ? FolderKanban
-        : tab.id === 'map'
-          ? MapPin
-          : Calendar;
-  return { id: tab.id, label: tab.label, path, icon };
-});
-
-export default function ChantiersLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <PortalModuleCleanLayout title={projectsProgramsSubNav.title} tabs={chantiersTabs}>
-      {children}
-    </PortalModuleCleanLayout>
-  );
+export default function ChantiersLayout({ children }: { children: ReactNode }) {
+  return <ChantiersLayoutClient>{children}</ChantiersLayoutClient>;
 }

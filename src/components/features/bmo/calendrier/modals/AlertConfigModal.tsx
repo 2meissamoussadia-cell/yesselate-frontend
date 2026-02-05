@@ -10,7 +10,7 @@ import { FluentModal } from '@/components/ui/fluent-modal';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Bell, Clock, AlertTriangle, CheckCircle2, Loader2, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { logger } from '@/lib/utils/logger';
 
 interface AlertConfigModalProps {
@@ -88,7 +88,7 @@ export function AlertConfigModal({
         });
       }, 1500);
     } catch (error) {
-      console.error('Erreur lors de la sauvegarde:', error);
+      logger.error('Erreur lors de la sauvegarde', error instanceof Error ? error : undefined, { component: 'AlertConfigModal' });
     } finally {
       setSaving(false);
     }

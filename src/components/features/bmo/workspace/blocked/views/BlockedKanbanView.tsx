@@ -9,6 +9,7 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -116,7 +117,7 @@ export function BlockedKanbanView({ className }: BlockedKanbanViewProps) {
         
         setDossiers(mockDossiers);
       } catch (error) {
-        console.error('Failed to load dossiers:', error);
+        logger.error('Failed to load dossiers', error as Error, { context: 'BlockedKanbanView' });
         // Fallback sur mock data
         const mockDossiers: KanbanDossier[] = blockedMockData.dossiers.map((d, idx) => ({
           ...d,
@@ -221,7 +222,7 @@ export function BlockedKanbanView({ className }: BlockedKanbanViewProps) {
         // Toast notification
         // showToast('success', `Dossier déplacé vers "${COLUMN_CONFIG[targetColumn].label}"`);
       } catch (error) {
-        console.error('Failed to update dossier status:', error);
+        logger.error('Failed to update dossier status', error as Error, { context: 'BlockedKanbanView' });
         // Rollback en cas d'erreur
         setDossiers((prev) =>
           prev.map((d) => (d.id === draggedDossier ? originalDossier : d))

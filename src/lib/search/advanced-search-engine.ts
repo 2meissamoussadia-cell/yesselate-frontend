@@ -2,7 +2,7 @@
  * Moteur de recherche avancé BMO — Fuse.js, filtres, recherches récentes
  */
 
-import Fuse from 'fuse.js';
+import Fuse, { type FuseResult } from 'fuse.js';
 import { create } from 'zustand';
 
 export type SearchableEntityType = 'alert' | 'demande' | 'validation' | 'chantier' | 'document' | 'user';
@@ -101,10 +101,8 @@ export const useSearchStore = create<SearchState>((set, get) => ({
         'metadata.author',
       ],
       includeScore: true,
-      includeMatches: true,
       threshold: 0.4,
-      ignoreLocation: true,
-      minMatchCharLength: 2,
+      ...({ includeMatches: true, ignoreLocation: true, minMatchCharLength: 2 } as Record<string, unknown>),
     });
     set({ index: fuse, entities });
   },
@@ -167,15 +165,19 @@ export const useSearchStore = create<SearchState>((set, get) => ({
       );
     }
 
-    const results: SearchResult[] = fuseResults.map((r) => ({
-      item: r.item,
-      score: r.score ?? 0,
-      matches: (r.matches ?? []).map((m) => ({
-        key: m.key ?? '',
-        value: m.value ?? '',
-        indices: (m.indices ?? []) as [number, number][],
-      })),
-    }));
+    type FuseMatch = { key?: string; value?: string; indices?: number[][] };
+    const results: SearchResult[] = fuseResults.map((r) => {
+      const matches = (r as FuseResult<SearchableEntity> & { matches?: FuseMatch[] }).matches ?? [];
+      return {
+        item: r.item,
+        score: r.score ?? 0,
+        matches: matches.map((m: FuseMatch) => ({
+          key: m.key ?? '',
+          value: m.value ?? '',
+          indices: (m.indices ?? []) as [number, number][],
+        })),
+      };
+    });
 
     set({ results, isSearching: false });
     get().addRecentSearch(query);

@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -29,8 +29,20 @@ import {
 // TYPES
 // ================================
 
+export type DemandesMainCategory =
+  | 'overview'
+  | 'inbox'
+  | 'pending'
+  | 'urgent'
+  | 'in-progress'
+  | 'approved'
+  | 'rejected'
+  | 'assigned'
+  | 'analytics'
+  | 'archive';
+
 export interface DemandesCategory {
-  id: string;
+  id: DemandesMainCategory;
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   badge?: number | string;
@@ -124,8 +136,8 @@ export const demandesCategories: DemandesCategory[] = [
 // ================================
 
 interface DemandesCommandSidebarProps {
-  activeCategory: string;
-  onCategoryChange: (categoryId: string) => void;
+  activeCategory: DemandesMainCategory;
+  onCategoryChange: (categoryId: DemandesMainCategory) => void;
   collapsed?: boolean;
   onToggleCollapse?: () => void;
   stats?: {

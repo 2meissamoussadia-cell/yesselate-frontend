@@ -8,7 +8,7 @@
 import React, { Suspense, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Box } from '@react-three/drei';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import Link from 'next/link';
 
 function ScenePlaceholder() {

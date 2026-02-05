@@ -21,7 +21,7 @@ import {
   XCircle, Bell, BellOff, ArrowUp, Target, TrendingDown,
   Send, Paperclip, MoreHorizontal, ExternalLink, Loader2, Info
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { logger } from '@/lib/utils/logger';
 import { useAlertDetail } from '@/lib/api/hooks/useAnalytics';
 import type { Alert } from '@/domain/analytics/schemas/AlertSchema';
@@ -253,7 +253,7 @@ export function AlertDetailModal({ open, onClose, alertId }: AlertDetailModalPro
     // Simuler API call
     resolveTimerRef.current = setTimeout(() => {
       if (process.env.NODE_ENV === 'development') {
-        console.log('Alert resolved:', resolution);
+        logger.info('Alert resolved', { component: 'AlertDetailModal', resolution });
       }
       setShowResolveDialog(false);
       setResolution('');

@@ -52,8 +52,9 @@ export function VirtualizedAlertsList({
       if (alert.description && alert.description.length > 200) height += 20;
       
       // Ajuster si plusieurs badges (impact, SLA, etc.)
+      const impactMoney = typeof alert.impact === 'object' && alert.impact !== null && 'money' in alert.impact ? (alert.impact as { money: number }).money : undefined;
       const badgeCount = [
-        alert.impact?.money,
+        impactMoney,
         alert.slaDueAt,
         alert.bureau,
       ].filter(Boolean).length;

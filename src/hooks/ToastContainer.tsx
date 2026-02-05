@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { toastManager, type ToastType } from './useDelegationToast';
 import { CheckCircle2, AlertCircle, AlertTriangle, Info, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface Toast {
   id: string;

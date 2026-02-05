@@ -7,7 +7,7 @@
 import React from 'react';
 import { useContratsStats } from '../../hooks';
 import { BarChart3, PieChart, TrendingUp } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export function StatsPage() {
   const { data: stats, isLoading, error } = useContratsStats();

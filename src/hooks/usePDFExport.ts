@@ -3,6 +3,8 @@
 // ============================================
 
 import { useCallback } from 'react';
+import DOMPurify from 'isomorphic-dompurify';
+import { logger } from '@/lib/utils/logger';
 
 interface PDFExportOptions {
   title: string;
@@ -26,9 +28,13 @@ export function usePDFExport() {
       let element: HTMLElement | null = null;
 
       if (typeof content === 'string') {
-        // Créer un élément temporaire avec le contenu HTML
+        // Sanitizer le HTML pour éviter XSS si le contenu provient d'une source utilisateur
+        const sanitized = DOMPurify.sanitize(content, {
+          ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'b', 'i', 'u', 'ul', 'ol', 'li', 'span', 'div', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'h1', 'h2', 'h3'],
+          ALLOWED_ATTR: ['class', 'style'],
+        });
         const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = content;
+        tempDiv.innerHTML = sanitized;
         tempDiv.style.position = 'absolute';
         tempDiv.style.left = '-9999px';
         tempDiv.style.width = '800px';
@@ -49,8 +55,8 @@ export function usePDFExport() {
         logging: false,
       });
 
-      // Créer le PDF
-      const pdf = new jsPDF.jsPDF({
+      // Créer le PDF (jsPDF 4.x : default = constructeur)
+      const pdf = new jsPDF({
         orientation: 'landscape',
         unit: 'mm',
         format: 'a4',
@@ -76,7 +82,7 @@ export function usePDFExport() {
 
       return { success: true };
     } catch (error) {
-      console.error('Erreur lors de l\'export PDF:', error);
+      logger.error('Erreur lors de l\'export PDF', error instanceof Error ? error : undefined, { component: 'usePDFExport' });
       throw error;
     }
   }, []);

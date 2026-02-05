@@ -5,6 +5,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { alertsBtpApi } from '@/lib/api/alerts-btp';
+import { logger } from '@/lib/utils/logger';
 import type { AlerteFilters, AlerteSort } from '@/lib/types/alerts-btp.types';
 
 export function useAlertes(params?: {
@@ -19,7 +20,7 @@ export function useAlertes(params?: {
       try {
         return await alertsBtpApi.getAlertes(params);
       } catch (error) {
-        console.error('[useAlertes] Erreur chargement alertes:', error);
+        logger.error('Erreur chargement alertes', error instanceof Error ? error : undefined, { component: 'useAlertes' });
         // Retourner une structure vide en cas d'erreur
         return {
           data: [],

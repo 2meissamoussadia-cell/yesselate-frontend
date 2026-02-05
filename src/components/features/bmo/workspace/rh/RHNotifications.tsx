@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, createContext, useContext, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { logger } from '@/lib/utils/logger';
 import { 
   CheckCircle2, XCircle, AlertTriangle, Info, X, 
@@ -270,7 +270,7 @@ export function useRHToast() {
         message: `${demandId} - ${agent}`,
         action: {
           label: 'Voir les détails',
-          onClick: () => console.log('Navigate to demand', demandId),
+          onClick: () => logger.info('Navigate to demand', { component: 'RHNotifications', demandId }),
         },
       }),
     

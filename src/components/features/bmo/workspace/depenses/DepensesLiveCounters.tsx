@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { CreditCard, Clock, CheckCircle, XCircle, DollarSign, FolderTree, TrendingUp } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { depensesApiService, type DepensesStats } from '@/lib/services/depensesApiService';
+import { logger } from '@/lib/utils/logger';
 
 interface Props { onOpenQueue: (queue: string, title: string, icon: string) => void; }
 
@@ -14,7 +15,7 @@ export function DepensesLiveCounters({ onOpenQueue }: Props) {
   useEffect(() => {
     const loadStats = async () => {
       try { const data = await depensesApiService.getStats(); setStats(data); }
-      catch (error) { console.error('Failed:', error); }
+      catch (error) { logger.error('Depenses stats failed', error as Error, { context: 'DepensesLiveCounters' }); }
       finally { setLoading(false); }
     };
     loadStats();

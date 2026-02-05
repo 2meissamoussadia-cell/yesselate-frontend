@@ -15,7 +15,7 @@ import {
   X,
   Repeat,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export interface Reminder {
   id: string;

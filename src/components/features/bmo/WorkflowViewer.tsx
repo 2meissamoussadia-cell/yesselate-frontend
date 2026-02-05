@@ -2,7 +2,8 @@
 import { useState, useEffect } from 'react';
 import { workflowService, type WorkflowInstance, type WorkflowStep } from '@lib-root/services/workflowService';
 import { CheckCircle, XCircle, Clock, User, MessageSquare, ArrowRight, Send, AlertCircle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 interface Props {
   instanceId: string;
@@ -27,7 +28,7 @@ export function WorkflowViewer({ instanceId, onComplete, className }: Props) {
       const data = await workflowService.getInstance(instanceId);
       setInstance(data);
     } catch (e) {
-      console.error('Erreur chargement workflow:', e);
+      logger.error('Erreur chargement workflow', e instanceof Error ? e : undefined, { component: 'WorkflowViewer' });
     } finally {
       setLoading(false);
     }
@@ -55,7 +56,7 @@ export function WorkflowViewer({ instanceId, onComplete, className }: Props) {
 
       if (onComplete) onComplete();
     } catch (e) {
-      console.error('Erreur approbation:', e);
+      logger.error('Erreur approbation', e instanceof Error ? e : undefined, { component: 'WorkflowViewer' });
       alert('Erreur lors de l\'approbation');
     } finally {
       setActionLoading(false);
@@ -87,7 +88,7 @@ export function WorkflowViewer({ instanceId, onComplete, className }: Props) {
 
       if (onComplete) onComplete();
     } catch (e) {
-      console.error('Erreur rejet:', e);
+      logger.error('Erreur rejet', e instanceof Error ? e : undefined, { component: 'WorkflowViewer' });
       alert('Erreur lors du rejet');
     } finally {
       setActionLoading(false);
@@ -119,7 +120,7 @@ export function WorkflowViewer({ instanceId, onComplete, className }: Props) {
 
       if (onComplete) onComplete();
     } catch (e) {
-      console.error('Erreur demande modifications:', e);
+      logger.error('Erreur demande modifications', e instanceof Error ? e : undefined, { component: 'WorkflowViewer' });
       alert('Erreur lors de la demande de modifications');
     } finally {
       setActionLoading(false);

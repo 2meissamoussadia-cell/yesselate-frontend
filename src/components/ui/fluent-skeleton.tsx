@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 /**
  * FluentSkeleton - Style Windows 11 avec nouveau système de couleurs

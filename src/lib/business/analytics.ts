@@ -449,7 +449,7 @@ export class DelegationAnalytics {
       d => new Date(d.createdAt) >= midPoint && new Date(d.createdAt) <= endDate
     ).length;
 
-    const creationTrend =
+    const creationTrend: 'increasing' | 'decreasing' | 'stable' =
       secondHalf > firstHalf * 1.1
         ? 'increasing'
         : secondHalf < firstHalf * 0.9

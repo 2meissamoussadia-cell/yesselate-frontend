@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { useArbitragesWorkspaceStore } from '@/lib/stores/arbitragesWorkspaceStore';
 import { Search, ArrowRight, Scale, Clock, CheckCircle, GitBranch, Users, BarChart3, RefreshCw, Download, Filter, Zap, ArrowUp, Gavel } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface Command { id: string; label: string; description?: string; icon: React.ComponentType<{ className?: string }>; category: 'navigation' | 'action' | 'filter'; shortcut?: string; action: () => void; }
 

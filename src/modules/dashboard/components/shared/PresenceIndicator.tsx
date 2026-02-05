@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react';
 import { Users } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { usePresenceStore } from '@/lib/stores/presenceStore';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 

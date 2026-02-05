@@ -14,7 +14,7 @@ import {
   Calendar, Clock, CheckCircle2, AlertCircle,
   Loader2, ClipboardCheck, Users, Target, BarChart3
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface EvaluationsExportModalProps {
   open: boolean;

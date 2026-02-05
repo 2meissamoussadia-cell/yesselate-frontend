@@ -19,7 +19,7 @@ import {
   Users, Calendar, Target, TrendingUp, TrendingDown,
   Check, X, RefreshCw, Download, BarChart3, Filter
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { logger } from '@/lib/utils/logger';
 import { InteractiveChart, ChartGrid } from '../charts';
 

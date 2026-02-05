@@ -6,7 +6,7 @@
 
 import React, { useState } from 'react';
 import { Building2, ChevronDown } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useTenantStore } from '@/lib/stores/tenantStore';
 import {
   DropdownMenu,

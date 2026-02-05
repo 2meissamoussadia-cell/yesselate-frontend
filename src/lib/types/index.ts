@@ -40,8 +40,23 @@ export * from './bmo.types';
 // ============================================
 // TYPES MÉTIER PAR MODULE
 // ============================================
-export * from './alerts.types';
-export * from './demandes.types';
+// Alerts : export explicite pour éviter doublon Alert avec common.types
+export type { AlertSeverity, AlertStatus, AlertCategory, AlertItem, Severity, Incident } from './alerts.types';
+export { fingerprintAlert, correlateAlertsToIncidents } from './alerts.types';
+// Demandes : export explicite pour éviter doublon Document avec common.types
+export type {
+  TypeDemande,
+  StatutDemande,
+  PrioriteDemande,
+  Document as DocumentDemande,
+  Commentaire,
+  HistoriqueAction,
+  Demande,
+  DemandeFilters,
+  DemandeSortField,
+  SortOrder,
+  DemandeSort,
+} from './demandes.types';
 export * from './chantiers.types';
 export * from './gouvernance.types';
 export * from './validation-bc.types';

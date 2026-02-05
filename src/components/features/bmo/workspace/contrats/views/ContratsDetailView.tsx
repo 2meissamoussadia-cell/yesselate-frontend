@@ -8,7 +8,8 @@ import {
   CheckCircle, XCircle, AlertTriangle, MessageSquare, Download, History,
   ChevronRight, Edit, Send, Shield, ArrowUpRight
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 interface Props {
   tabId: string;
@@ -39,7 +40,7 @@ export function ContratsDetailView({ tabId, data }: Props) {
         const result = await contratsApiService.getById(contratId);
         setContrat(result || null);
       } catch (error) {
-        console.error('Failed to load contrat:', error);
+        logger.error('Failed to load contrat', error as Error, { context: 'ContratsDetailView' });
       } finally {
         setLoading(false);
       }
@@ -61,7 +62,7 @@ export function ContratsDetailView({ tabId, data }: Props) {
       addDecision(decision);
       alert('Contrat validé avec succès !');
     } catch (error) {
-      console.error('Failed to validate:', error);
+      logger.error('Failed to validate', error as Error, { context: 'ContratsDetailView' });
     } finally {
       setProcessing(false);
     }
@@ -81,7 +82,7 @@ export function ContratsDetailView({ tabId, data }: Props) {
       addDecision(decision);
       alert('Contrat rejeté');
     } catch (error) {
-      console.error('Failed to reject:', error);
+      logger.error('Failed to reject', error as Error, { context: 'ContratsDetailView' });
     } finally {
       setProcessing(false);
     }

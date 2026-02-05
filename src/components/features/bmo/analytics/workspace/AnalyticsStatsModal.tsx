@@ -15,7 +15,7 @@ import {
   CheckCircle2, Clock, Users, DollarSign, Activity
 } from 'lucide-react';
 import { calculateKPIs, calculateBureauPerformance, detectAlerts, mockComparisons, mockFinancialData, mockOperationalData } from '@/lib/data/analytics';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface AnalyticsStatsModalProps {
   open: boolean;

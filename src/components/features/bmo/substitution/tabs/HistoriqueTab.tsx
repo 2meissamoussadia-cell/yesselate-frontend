@@ -10,6 +10,7 @@
 import { useState, useEffect } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Clock, Filter, Calendar, Search, Loader2 } from 'lucide-react';
+import { logger } from '@/lib/utils/logger';
 import type { TimelineEvent } from '@/lib/types/substitution.types';
 
 export function HistoriqueTab() {
@@ -44,7 +45,7 @@ export function HistoriqueTab() {
       setEvents(sorted);
       setFilteredEvents(sorted);
     } catch (error) {
-      console.error('Error loading events:', error);
+      logger.error('Error loading events', error instanceof Error ? error : undefined, { component: 'HistoriqueTab' });
     } finally {
       setLoading(false);
     }

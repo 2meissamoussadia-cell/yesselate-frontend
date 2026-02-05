@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -28,8 +28,20 @@ import {
 // TYPES
 // ================================
 
+export type EquipementsMainCategory =
+  | 'overview'
+  | 'all-equipment'
+  | 'available'
+  | 'in-use'
+  | 'maintenance'
+  | 'out-of-service'
+  | 'scheduled'
+  | 'by-location'
+  | 'analytics'
+  | 'archive';
+
 export interface EquipementsCategory {
-  id: string;
+  id: EquipementsMainCategory;
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   badge?: number | string;
@@ -123,8 +135,8 @@ export const equipementsCategories: EquipementsCategory[] = [
 // ================================
 
 interface EquipementsCommandSidebarProps {
-  activeCategory: string;
-  onCategoryChange: (categoryId: string) => void;
+  activeCategory: EquipementsMainCategory;
+  onCategoryChange: (categoryId: EquipementsMainCategory) => void;
   collapsed?: boolean;
   onToggleCollapse?: () => void;
   stats?: {

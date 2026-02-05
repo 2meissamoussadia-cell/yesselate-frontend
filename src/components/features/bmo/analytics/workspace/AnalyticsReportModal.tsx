@@ -17,7 +17,7 @@ import {
   BarChart3, PieChart, Activity, AlertTriangle, Target,
   CheckCircle2, Loader2, Download, Eye, Clock, Building2
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface AnalyticsReportModalProps {
   open: boolean;

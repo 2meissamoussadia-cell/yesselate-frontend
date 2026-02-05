@@ -140,9 +140,9 @@ export const enrichedBCs: EnrichedBC[] = [
     references: {
       commandeInterne: 'CMD-INT-2026-0045',
       dossierAchat: 'DOS-ACH-2026-0045',
-      appelOffre: null,
-      contrat: null,
-      bonCommandeClient: null,
+      appelOffre: undefined,
+      contrat: undefined,
+      bonCommandeClient: undefined,
     },
   },
   {
@@ -310,9 +310,9 @@ export const enrichedBCs: EnrichedBC[] = [
     references: {
       commandeInterne: 'CMD-INT-2025-0842',
       dossierAchat: 'DOS-ACH-2025-0156',
-      appelOffre: null,
-      contrat: null,
-      bonCommandeClient: null,
+      appelOffre: undefined,
+      contrat: undefined,
+      bonCommandeClient: undefined,
     },
   },
   {
@@ -448,9 +448,9 @@ export const enrichedBCs: EnrichedBC[] = [
     references: {
       commandeInterne: 'CMD-INT-2025-0155',
       dossierAchat: 'DOS-ACH-2025-0155',
-      appelOffre: null,
-      contrat: null,
-      bonCommandeClient: null,
+      appelOffre: undefined,
+      contrat: undefined,
+      bonCommandeClient: undefined,
     },
   },
 ];

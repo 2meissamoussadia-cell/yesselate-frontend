@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { Key, Loader2, AlertTriangle, History, BarChart3, Settings, TrendingUp, TrendingDown, Calendar, Clock, Shield, Users, FileText } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { DelegationWorkspaceContent } from '@/components/features/delegations/workspace/DelegationWorkspaceContent';
 import { DelegationInboxView } from '@/components/features/delegations/workspace/views/DelegationInboxView';
 import { useDelegationWorkspaceStore } from '@/lib/stores/delegationWorkspaceStore';

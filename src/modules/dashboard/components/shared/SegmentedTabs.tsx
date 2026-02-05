@@ -7,7 +7,7 @@
 'use client';
 
 import React, { memo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 interface SegmentedTabsItem {
   id: string;
   label: string;
@@ -40,10 +40,10 @@ export const SegmentedTabs = memo(function SegmentedTabs({
   if (items.length === 0) return null;
 
   return (
-    <div className={cn('w-full overflow-x-auto', className)}>
+    <div className={cn('w-full min-w-0 overflow-x-auto overflow-y-hidden scrollbar-thin', className)}>
       <div
         className={cn(
-          'inline-flex gap-1 rounded-2xl border border-slate-200 dark:border-slate-800/60 bg-slate-100 dark:bg-slate-950/30 p-1',
+          'inline-flex flex-nowrap items-center gap-1.5 rounded-2xl border border-slate-200 dark:border-slate-800/60 bg-slate-100 dark:bg-slate-950/30 p-1',
           pillClassName
         )}
       >
@@ -57,7 +57,7 @@ export const SegmentedTabs = memo(function SegmentedTabs({
               onClick={() => onChange(it.id)}
               data-state={active ? 'active' : 'inactive'}
               className={cn(
-                'relative inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition-all duration-200',
+                'relative inline-flex flex-shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition-all duration-200',
                 !pillItemClassName &&
                   (active
                     ? 'bg-blue-500/20 text-blue-700 dark:text-blue-200 border border-blue-500/40 shadow-sm shadow-blue-500/20 font-semibold'

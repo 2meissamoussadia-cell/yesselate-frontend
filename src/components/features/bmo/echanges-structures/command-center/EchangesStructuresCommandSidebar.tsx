@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -27,8 +27,19 @@ import {
 } from 'lucide-react';
 import { coordinationStats } from '@/lib/data';
 
-interface SidebarCategory {
-  id: string;
+export type EchangesStructuresMainCategory =
+  | 'overview'
+  | 'ouvert'
+  | 'en_traitement'
+  | 'escalade'
+  | 'resolu'
+  | 'critiques'
+  | 'en_retard'
+  | 'analytics'
+  | 'settings';
+
+interface EchangesStructuresSidebarCategory {
+  id: EchangesStructuresMainCategory;
   label: string;
   icon: LucideIcon;
   badge?: number | string;
@@ -37,7 +48,7 @@ interface SidebarCategory {
 
 const stats = coordinationStats.echanges;
 
-const echangesStructuresCategories: SidebarCategory[] = [
+const echangesStructuresCategories: EchangesStructuresSidebarCategory[] = [
   { id: 'overview', label: "Vue d'ensemble", icon: LayoutDashboard },
   { id: 'ouvert', label: 'Ouverts', icon: Inbox, badge: stats.ouverts, badgeType: 'warning' },
   { id: 'en_traitement', label: 'En traitement', icon: Clock },
@@ -50,9 +61,9 @@ const echangesStructuresCategories: SidebarCategory[] = [
 ];
 
 interface EchangesStructuresCommandSidebarProps {
-  activeCategory: string;
+  activeCategory: EchangesStructuresMainCategory;
   collapsed: boolean;
-  onCategoryChange: (category: string) => void;
+  onCategoryChange: (category: EchangesStructuresMainCategory) => void;
   onToggleCollapse: () => void;
   onOpenCommandPalette: () => void;
 }
@@ -226,5 +237,5 @@ export const EchangesStructuresCommandSidebar = React.memo(function EchangesStru
 });
 
 export { echangesStructuresCategories };
-export type { SidebarCategory };
+export type SidebarCategory = EchangesStructuresSidebarCategory;
 

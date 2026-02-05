@@ -46,11 +46,11 @@ export function calculateProjectHealth(project: Project): Project['healthStatus'
  * Calcule le niveau de criticité d'un risque
  */
 export function calculateRiskCriticality(risk: Risk): number {
-  const probabilityScores = { low: 1, medium: 2, high: 3 };
-  const impactScores = { minor: 1, moderate: 2, major: 3, critical: 4 };
+  const probabilityScores: Record<string, number> = { low: 1, medium: 2, high: 3, 'very-high': 4 };
+  const impactScores: Record<string, number> = { minor: 1, moderate: 2, major: 3, critical: 4, 'very-high': 4, low: 1, medium: 2, high: 3 };
 
-  const probScore = probabilityScores[risk.probability];
-  const impactScore = impactScores[risk.impact];
+  const probScore = probabilityScores[risk.probability as string] ?? 1;
+  const impactScore = impactScores[risk.impact as string] ?? 2;
 
   return probScore * impactScore;
 }
@@ -60,7 +60,8 @@ export function calculateRiskCriticality(risk: Risk): number {
  */
 export function isAlertUrgent(alert: Alert): boolean {
   if (alert.type === 'critical') return true;
-  if (alert.category === 'safety' || alert.category === 'quality') return true;
+  const category = alert.category as string;
+  if (category === 'safety' || category === 'quality') return true;
   
   const hoursSinceCreation = (Date.now() - new Date(alert.createdAt).getTime()) / (1000 * 60 * 60);
   if (hoursSinceCreation > 24 && !alert.isRead) return true;
@@ -175,10 +176,11 @@ export function sortProjects(
       case 'endDate':
         comparison = new Date(a.endDate).getTime() - new Date(b.endDate).getTime();
         break;
-      case 'healthStatus':
-        const healthOrder = { 'on-track': 0, 'at-risk': 1, 'late': 2 };
-        comparison = healthOrder[a.healthStatus] - healthOrder[b.healthStatus];
+      case 'healthStatus': {
+        const healthOrder: Record<string, number> = { 'on-track': 0, 'at-risk': 1, late: 2, blocked: 3 };
+        comparison = (healthOrder[a.healthStatus] ?? 0) - (healthOrder[b.healthStatus] ?? 0);
         break;
+      }
     }
 
     return order === 'asc' ? comparison : -comparison;

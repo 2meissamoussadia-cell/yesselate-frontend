@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { useLitigesWorkspaceStore } from '@/lib/stores/litigesWorkspaceStore';
 import { litigesApiService, type Litige } from '@/lib/services/litigesApiService';
 import { Search, ChevronRight, Scale, AlertTriangle, CheckCircle, MessageSquare, Gavel, Building2, Calendar, User, DollarSign, Eye, Star, StarOff } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 interface Props { tabId: string; data: Record<string, unknown>; }
 
@@ -37,7 +38,7 @@ export function LitigesInboxView({ tabId, data }: Props) {
         let filtered = result.data;
         if (queue === 'high-risk') filtered = filtered.filter(l => l.risque === 'high');
         setLitiges(filtered);
-      } catch (error) { console.error('Failed:', error); }
+      } catch (error) { logger.error('Litiges inbox load failed', error as Error, { context: 'LitigesInboxView' }); }
       finally { setLoading(false); }
     };
     load();

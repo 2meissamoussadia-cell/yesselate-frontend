@@ -6,7 +6,7 @@ import {
   TrendingUp, TrendingDown, Minus, RefreshCw,
   HeartPulse, Wallet, Plane
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { demandesRH } from '@/lib/data/bmo-mock-2';
 
 type Stats = {

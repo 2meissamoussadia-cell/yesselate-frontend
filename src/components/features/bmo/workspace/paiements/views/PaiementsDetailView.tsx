@@ -5,7 +5,8 @@ import { paiementsApiService, type Paiement } from '@/lib/services/paiementsApiS
 import { usePaiementsWorkspaceStore } from '@/lib/stores/paiementsWorkspaceStore';
 import { PaiementValidationModal, type PaiementAction, type PaiementValidationData } from '../modals/PaiementValidationModal';
 import { FileText, Building2, Calendar, DollarSign, User, CheckCircle, XCircle, Clock, Download, History, AlertTriangle, Ban } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 interface Props {
   tabId: string;
@@ -38,7 +39,7 @@ export function PaiementsDetailView({ tabId, data }: Props) {
         const result = await paiementsApiService.getById(paiementId);
         setPaiement(result || null);
       } catch (error) {
-        console.error('Failed to load:', error);
+        logger.error('Failed to load', error as Error, { context: 'PaiementsDetailView' });
       } finally {
         setLoading(false);
       }

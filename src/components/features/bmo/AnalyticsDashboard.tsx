@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react';
 import { analyticsService, type ProjetsAnalytics, type KPIData } from '../../../../lib/services/analyticsService';
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { TrendingUp, TrendingDown, Minus, Download, Calendar } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 interface Props {
   type: 'projets' | 'finances' | 'rh' | 'clients';
@@ -53,7 +54,7 @@ export function AnalyticsDashboard({ type, className }: Props) {
         setKpis(kpiData);
       }
     } catch (e) {
-      console.error('Erreur chargement analytics:', e);
+      logger.error('Erreur chargement analytics', e instanceof Error ? e : undefined, { component: 'AnalyticsDashboard' });
     } finally {
       setLoading(false);
     }
@@ -69,7 +70,7 @@ export function AnalyticsDashboard({ type, className }: Props) {
         await analyticsService.exportToPDF(data, `analytics-${type}-${Date.now()}`);
       }
     } catch (e) {
-      console.error('Erreur export:', e);
+      logger.error('Erreur export', e instanceof Error ? e : undefined, { component: 'AnalyticsDashboard' });
     }
   };
 

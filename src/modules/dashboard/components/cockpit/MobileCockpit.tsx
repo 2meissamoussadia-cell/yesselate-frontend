@@ -10,7 +10,7 @@ import dynamic from 'next/dynamic';
 import { Bell, FileText, Phone, Wallet } from 'lucide-react';
 import { useTouchGestures } from '../../hooks/useTouchGestures';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 const HealthSphereGrid = dynamic(
   () => import('./HealthSphereGrid').then((mod) => ({ default: mod.HealthSphereGrid })),

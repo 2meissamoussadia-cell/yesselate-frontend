@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { useEmployesCommandCenterStore } from '@/lib/stores/employesCommandCenterStore';
 import { employesApiService, type Employe } from '@/lib/services/employesApiService';
+import { logger } from '@/lib/utils/logger';
 
 interface AllEmployeesViewProps {
   subCategory?: string | null;
@@ -65,7 +66,7 @@ export function AllEmployeesView({ subCategory }: AllEmployeesViewProps) {
         const result = await employesApiService.getAll(apiFilters, 'risk', 1, 100);
         setEmployees(result.data);
       } catch (error) {
-        console.error('Error loading employees:', error);
+        logger.error('Error loading employees', error as Error, { context: 'AllEmployeesView' });
       } finally {
         setLoading(false);
       }

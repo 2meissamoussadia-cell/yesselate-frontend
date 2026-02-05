@@ -13,10 +13,10 @@ describe('FilterBar', () => {
     { id: 'pending', label: 'En attente', count: 12 },
   ];
 
-  const filters = [
-    { id: 'unread', label: 'Non lus' },
-    { id: 'starred', label: 'Favoris' },
-    { id: 'attachments', label: 'Avec pièces jointes' },
+  const quickFilters = [
+    { id: 'unread', icon: 'Mail' as const, label: 'Non lus' },
+    { id: 'starred', icon: 'Flag' as const, label: 'Favoris' },
+    { id: 'attachments', icon: 'Paperclip' as const, label: 'Avec pièces jointes' },
   ];
 
   const mockOnViewChange = jest.fn();
@@ -38,7 +38,7 @@ describe('FilterBar', () => {
       );
 
       expect(screen.getByText('Tout')).toBeInTheDocument();
-      expect(screen.getByText('100')).toBeInTheDocument();
+      expect(screen.getByText('99+')).toBeInTheDocument();
       expect(screen.getByText('Critiques')).toBeInTheDocument();
       expect(screen.getByText('5')).toBeInTheDocument();
     });
@@ -93,7 +93,7 @@ describe('FilterBar', () => {
           viewTabs={viewTabs}
           activeView="all"
           onViewChange={mockOnViewChange}
-          filters={filters}
+          quickFilters={quickFilters}
           activeFilters={[]}
           onFilterToggle={mockOnFilterToggle}
         />
@@ -109,7 +109,7 @@ describe('FilterBar', () => {
           viewTabs={viewTabs}
           activeView="all"
           onViewChange={mockOnViewChange}
-          filters={filters}
+          quickFilters={quickFilters}
           activeFilters={['unread']}
           onFilterToggle={mockOnFilterToggle}
         />
@@ -125,7 +125,7 @@ describe('FilterBar', () => {
           viewTabs={viewTabs}
           activeView="all"
           onViewChange={mockOnViewChange}
-          filters={filters}
+          quickFilters={quickFilters}
           activeFilters={[]}
           onFilterToggle={mockOnFilterToggle}
         />
@@ -162,43 +162,41 @@ describe('FilterBar', () => {
         />
       );
 
-      fireEvent.click(screen.getByRole('button', { name: /trier/i }));
+      fireEvent.click(screen.getByRole('button', { name: /Tri : Date/i }));
       expect(mockOnSortClick).toHaveBeenCalled();
     });
   });
 
   describe('Recherche', () => {
-    it('affiche le champ de recherche si searchValue est fourni', () => {
+    it('affiche le champ de recherche si onSearch est fourni', () => {
       render(
         <FilterBar
           viewTabs={viewTabs}
           activeView="all"
           onViewChange={mockOnViewChange}
-          searchValue=""
-          onSearchChange={jest.fn()}
+          onSearch={jest.fn()}
         />
       );
 
       expect(screen.getByPlaceholderText(/rechercher/i)).toBeInTheDocument();
     });
 
-    it('appelle onSearchChange lors de la saisie', () => {
-      const mockOnSearchChange = jest.fn();
+    it('appelle onSearch lors de la saisie', () => {
+      const mockOnSearch = jest.fn();
       
       render(
         <FilterBar
           viewTabs={viewTabs}
           activeView="all"
           onViewChange={mockOnViewChange}
-          searchValue=""
-          onSearchChange={mockOnSearchChange}
+          onSearch={mockOnSearch}
         />
       );
 
       const searchInput = screen.getByPlaceholderText(/rechercher/i);
       fireEvent.change(searchInput, { target: { value: 'test' } });
       
-      expect(mockOnSearchChange).toHaveBeenCalledWith('test');
+      expect(mockOnSearch).toHaveBeenCalledWith('test');
     });
   });
 
@@ -222,14 +220,13 @@ describe('FilterBar', () => {
           viewTabs={viewTabs}
           activeView="all"
           onViewChange={mockOnViewChange}
-          filters={filters}
+          quickFilters={quickFilters}
           activeFilters={[]}
           onFilterToggle={mockOnFilterToggle}
         />
       );
 
-      // Les filtres devraient avoir des labels accessibles
-      filters.forEach((filter) => {
+      quickFilters.forEach((filter) => {
         expect(screen.getByLabelText(new RegExp(filter.label, 'i'))).toBeInTheDocument();
       });
     });

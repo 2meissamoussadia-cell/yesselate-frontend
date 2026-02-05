@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useBlockedCommandCenterStore } from '@/lib/stores/blockedCommandCenterStore';
 import { blockedApi } from '@/lib/services/blockedApiService';
+import { logger } from '@/lib/utils/logger';
 import { BlockedStatsModal } from '../BlockedStatsModal';
 import { BlockedDecisionCenter } from '../BlockedDecisionCenter';
 import { AlertDetailModal } from '../AlertDetailModal';
@@ -197,7 +198,7 @@ function ExportModal({ onClose }: { onClose: () => void }) {
       
       onClose();
     } catch (error) {
-      console.error('Export failed:', error);
+      logger.error('Export failed', error as Error, { context: 'BlockedModals' });
     } finally {
       setExporting(false);
       setSelectedFormat(null);

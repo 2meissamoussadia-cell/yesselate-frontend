@@ -7,7 +7,7 @@
 
 import React, { useMemo, memo, useState, useCallback } from 'react';
 import { ShoppingCart, FileText, Clock, Building2, MapPin } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { SearchFilter } from '../shared/SearchFilter';

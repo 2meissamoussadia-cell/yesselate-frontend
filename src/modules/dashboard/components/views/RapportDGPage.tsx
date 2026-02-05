@@ -13,7 +13,7 @@ import {
   DashboardSection,
   DashboardPanel,
 } from '../shared';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface DGReportData {
   generatedAt: string;

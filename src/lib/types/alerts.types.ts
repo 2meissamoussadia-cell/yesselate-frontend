@@ -6,12 +6,9 @@
  * @deprecated Use types from '@/lib/types/alert.types' instead
  */
 
-export {
-  type AlertSeverity,
-  type AlertStatus,
-  type AlertCategory,
-  type AlertItem,
-} from './alert.types';
+import type { AlertSeverity, AlertStatus, AlertCategory, AlertItem } from './alert.types';
+
+export type { AlertSeverity, AlertStatus, AlertCategory, AlertItem };
 
 // Legacy type aliases for backward compatibility
 export type Severity = AlertSeverity;
@@ -30,12 +27,13 @@ export type Incident = {
 
 export function fingerprintAlert(a: Alert): string {
   const e = a.entity;
+  const obj = typeof e === 'object' && e !== null ? (e as Record<string, unknown>) : null;
   return [
-    a.type,
-    e?.kind ?? 'none',
-    e?.id ?? 'none',
-    e?.projectId ?? 'noproj',
-    e?.supplierId ?? 'nosupplier',
+    a.type ?? 'none',
+    obj?.kind ?? 'none',
+    obj?.id ?? 'none',
+    obj?.projectId ?? 'noproj',
+    obj?.supplierId ?? 'nosupplier',
   ].join('|');
 }
 
@@ -46,7 +44,8 @@ export function correlateAlertsToIncidents(alerts: Alert[]): Incident[] {
     const fp = fingerprintAlert(a);
     const existing = map.get(fp);
 
-    const money = a.impact?.money ?? 0;
+    const impactObj = typeof a.impact === 'object' && a.impact !== null ? (a.impact as Record<string, unknown>) : null;
+    const money = (impactObj?.money as number | undefined) ?? 0;
 
     if (!existing) {
       map.set(fp, {

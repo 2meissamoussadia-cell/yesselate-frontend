@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -29,8 +29,20 @@ import {
 // TYPES
 // ================================
 
+export type RessourcesMainCategory =
+  | 'overview'
+  | 'employees'
+  | 'recruitment'
+  | 'leave'
+  | 'training'
+  | 'evaluations'
+  | 'contracts'
+  | 'teams'
+  | 'analytics'
+  | 'archive';
+
 export interface RessourcesCategory {
-  id: string;
+  id: RessourcesMainCategory;
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   badge?: number | string;
@@ -124,8 +136,8 @@ export const ressourcesCategories: RessourcesCategory[] = [
 // ================================
 
 interface RessourcesCommandSidebarProps {
-  activeCategory: string;
-  onCategoryChange: (categoryId: string) => void;
+  activeCategory: RessourcesMainCategory;
+  onCategoryChange: (categoryId: RessourcesMainCategory) => void;
   collapsed?: boolean;
   onToggleCollapse?: () => void;
   stats?: {

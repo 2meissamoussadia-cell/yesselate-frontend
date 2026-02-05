@@ -2,7 +2,7 @@
 
 import { Download, Upload, FileText, Calendar as CalendarIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useAppStore } from '@/lib/stores';
 import type { CalendarEvent } from '@/lib/types/bmo.types';
 

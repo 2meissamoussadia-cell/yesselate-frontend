@@ -282,3 +282,5 @@ export interface SignatoryProfile {
   active: boolean;
 }
 
+// Ré-export pour compatibilité : ValidationDocument est défini dans validation-bc-api
+export type { ValidationDocument } from '@/lib/services/validation-bc-api';

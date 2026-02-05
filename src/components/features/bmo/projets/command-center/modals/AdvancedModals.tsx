@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { logger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -85,7 +85,7 @@ export function ResolutionWizardModal({
   };
 
   const handleSubmit = () => {
-    console.log('Resolution submitted:', formData);
+    logger.info('Resolution submitted', { component: 'AdvancedModals', ...formData });
     onClose();
   };
 
@@ -499,7 +499,7 @@ export function DecisionCenterModal({ isOpen, onClose }: DecisionCenterProps) {
                     size="sm"
                     variant="outline"
                     className="border-slate-700 text-slate-300 hover:bg-rose-500/10 hover:border-rose-500"
-                    onClick={() => console.log('Reject', decision.id)}
+                    onClick={() => logger.info('Reject', { component: 'AdvancedModals', decisionId: decision.id })}
                   >
                     <X className="w-4 h-4 mr-1" />
                     Rejeter

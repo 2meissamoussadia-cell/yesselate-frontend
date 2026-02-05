@@ -10,6 +10,13 @@ import type { AnalyticsDomain, AnalyticsModule, AnalyticsSubModule } from './ana
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
 
+/** Configuration d'une source de données (utilisé par analyticsDataService) */
+export interface DataSourceConfig {
+  id: string;
+  endpoint?: string;
+  [key: string]: unknown;
+}
+
 export interface KPIDefinition {
   id: string;
   label: string;

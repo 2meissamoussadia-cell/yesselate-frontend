@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { recouvrementsApiService, type RecouvrementsStats } from '@/lib/services/recouvrementsApiService';
+import { logger } from '@/lib/utils/logger';
 import { X, BarChart3, DollarSign, TrendingUp } from 'lucide-react';
 
 interface Props {
@@ -20,7 +21,7 @@ export function RecouvrementsStatsModal({ open, onClose }: Props) {
         setLoading(true);
         setStats(await recouvrementsApiService.getStats());
       } catch (e) {
-        console.error(e);
+        logger.error('Recouvrements stats load failed', e as Error, { context: 'RecouvrementsStatsModal' });
       } finally {
         setLoading(false);
       }

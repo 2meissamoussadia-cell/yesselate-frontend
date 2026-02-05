@@ -9,7 +9,7 @@
 import React, { useState, useMemo, memo } from 'react';
 import { TrendingUp, TrendingDown, Calendar, BarChart3, LineChart, Activity, DollarSign, Users, FileCheck, AlertTriangle } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { mapColorToTone } from '../../utils/colorMapping';

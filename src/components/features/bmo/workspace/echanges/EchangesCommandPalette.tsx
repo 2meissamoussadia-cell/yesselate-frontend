@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { useEchangesWorkspaceStore } from '@/lib/stores/echangesWorkspaceStore';
 import { Search, ArrowRight, MessageSquare, Clock, CheckCircle, ArrowUp, Zap, BarChart3, RefreshCw, Download, Filter, Briefcase } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 interface Command { id: string; label: string; description?: string; icon: React.ComponentType<{ className?: string }>; category: 'navigation' | 'action' | 'filter'; shortcut?: string; action: () => void; }
 interface Props { open: boolean; onClose: () => void; onOpenStats: () => void; onRefresh: () => void; }
 export function EchangesCommandPalette({ open, onClose, onOpenStats, onRefresh }: Props) {

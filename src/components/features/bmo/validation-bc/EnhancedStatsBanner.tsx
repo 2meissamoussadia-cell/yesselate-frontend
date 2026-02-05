@@ -186,5 +186,5 @@ export function EnhancedStatsBanner({ bcs, factures, avenants }: EnhancedStatsBa
   );
 }
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 

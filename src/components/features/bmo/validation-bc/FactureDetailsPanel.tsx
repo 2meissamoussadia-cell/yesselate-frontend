@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useAppStore, useBMOStore } from '@/lib/stores';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';

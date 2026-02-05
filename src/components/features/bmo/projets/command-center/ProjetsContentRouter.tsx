@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { useProjetsCommandCenterStore } from '@/lib/stores/projetsCommandCenterStore';
 import { useProjetsData } from './hooks/useProjetsData';

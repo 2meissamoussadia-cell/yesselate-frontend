@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { Clock, CheckCircle, AlertTriangle, Pause, TrendingUp, DollarSign, Users } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { projetsApiService, type ProjetsStats } from '@/lib/services/projetsApiService';
+import { logger } from '@/lib/utils/logger';
 
 interface Props {
   onOpenQueue: (queue: string, title: string, icon: string) => void;
@@ -19,7 +20,7 @@ export function ProjetsLiveCounters({ onOpenQueue }: Props) {
         const data = await projetsApiService.getStats();
         setStats(data);
       } catch (error) {
-        console.error('Failed:', error);
+        logger.error('Projets stats failed', error as Error, { context: 'ProjetsLiveCounters' });
       } finally {
         setLoading(false);
       }

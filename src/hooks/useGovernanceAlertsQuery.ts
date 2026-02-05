@@ -4,6 +4,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import type { Alert } from '@/lib/types/alerts.types';
+import { logger } from '@/lib/utils/logger';
 import type { GovernanceFilters } from './useGovernanceFilters';
 
 /**
@@ -43,7 +44,7 @@ export function useGovernanceAlertsQuery(filters: GovernanceFilters) {
       queryClient.invalidateQueries({ queryKey: ['governance', 'alerts'] });
     },
     onError: (error) => {
-      console.error('Erreur lors de l\'acquittement:', error);
+      logger.error('Erreur lors de l\'acquittement', error instanceof Error ? error : undefined, { component: 'useGovernanceAlertsQuery' });
     },
   });
 
@@ -62,7 +63,7 @@ export function useGovernanceAlertsQuery(filters: GovernanceFilters) {
       queryClient.invalidateQueries({ queryKey: ['governance', 'alerts'] });
     },
     onError: (error) => {
-      console.error('Erreur lors de la résolution:', error);
+      logger.error('Erreur lors de la résolution', error instanceof Error ? error : undefined, { component: 'useGovernanceAlertsQuery' });
     },
   });
 

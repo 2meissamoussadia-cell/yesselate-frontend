@@ -5,6 +5,7 @@
  */
 
 import axios from 'axios';
+import { logger } from '@/lib/utils/logger';
 import {
   mockOverview,
   mockJalonsResponse,
@@ -99,10 +100,7 @@ export async function getCalendrierOverview(
       return Promise.resolve(mockOverview);
     }
     
-    // Logger uniquement les vraies erreurs (non 404, non timeout)
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Erreur lors de la récupération de la vue d\'ensemble:', error);
-    }
+    logger.error('Erreur lors de la récupération de la vue d\'ensemble', error instanceof Error ? error : undefined, { component: 'calendrierApi', action: 'getCalendrierOverview' });
     // Même en cas d'erreur inconnue, retourner les données mockées pour éviter un écran blanc
     return Promise.resolve(mockOverview);
   }
@@ -129,7 +127,7 @@ export async function getJalons(
     if (isNotFoundError(error)) {
       return mockJalonsResponse;
     }
-    console.error('Erreur lors de la récupération des jalons:', error);
+    logger.error('Erreur lors de la récupération des jalons:', error);
     throw error;
   }
 }
@@ -142,7 +140,7 @@ export async function getJalonsSLARisque(): Promise<Jalon[]> {
     if (isNotFoundError(error)) {
       return mockJalons;
     }
-    console.error('Erreur lors de la récupération des jalons SLA à risque:', error);
+    logger.error('Erreur lors de la récupération des jalons SLA à risque:', error);
     throw error;
   }
 }
@@ -154,12 +152,12 @@ export async function getJalonsRetards(): Promise<Jalon[]> {
   } catch (error: any) {
     if (isNotFoundError(error)) {
       if (process.env.NODE_ENV === 'development') {
-        console.warn('[getJalonsRetards] Endpoint non disponible, utilisation de données mockées');
+        logger.warn('[getJalonsRetards] Endpoint non disponible, utilisation de données mockées');
       }
       return mockJalons;
     }
     if (process.env.NODE_ENV === 'development') {
-      console.error('[getJalonsRetards] Erreur lors de la récupération des jalons en retard:', error);
+      logger.error('[getJalonsRetards] Erreur lors de la récupération des jalons en retard:', error);
     }
     // En production, retourner les données mockées pour éviter un écran blanc
     return mockJalons;
@@ -178,12 +176,12 @@ export async function getJalonsAVenir(
   } catch (error: any) {
     if (isNotFoundError(error)) {
       if (process.env.NODE_ENV === 'development') {
-        console.warn('[getJalonsAVenir] Endpoint non disponible, utilisation de données mockées');
+        logger.warn('[getJalonsAVenir] Endpoint non disponible, utilisation de données mockées');
       }
       return mockJalons;
     }
     if (process.env.NODE_ENV === 'development') {
-      console.error('[getJalonsAVenir] Erreur lors de la récupération des jalons à venir:', error);
+      logger.error('[getJalonsAVenir] Erreur lors de la récupération des jalons à venir:', error);
     }
     // En production, retourner les données mockées pour éviter un écran blanc
     return mockJalons;
@@ -210,12 +208,12 @@ export async function getEvenements(
   } catch (error: any) {
     if (isNotFoundError(error)) {
       if (process.env.NODE_ENV === 'development') {
-        console.warn('[getEvenements] Endpoint non disponible, utilisation de données mockées');
+        logger.warn('[getEvenements] Endpoint non disponible, utilisation de données mockées');
       }
       return mockEvenements;
     }
     if (process.env.NODE_ENV === 'development') {
-      console.error('[getEvenements] Erreur lors de la récupération des événements:', error);
+      logger.error('[getEvenements] Erreur lors de la récupération des événements:', error);
     }
     // En production, retourner les données mockées pour éviter un écran blanc
     return mockEvenements;
@@ -258,7 +256,7 @@ export async function getAbsences(
     if (isNotFoundError(error)) {
       return mockAbsences;
     }
-    console.error('Erreur lors de la récupération des absences:', error);
+    logger.error('Erreur lors de la récupération des absences:', error);
     throw error;
   }
 }
@@ -287,14 +285,14 @@ export async function getSyncStatus(): Promise<SyncStatusResponse> {
     // Retourner des données mockées si 404 (sans logger en production)
     if (isNotFoundError(error)) {
       if (process.env.NODE_ENV === 'development') {
-        console.warn('[getSyncStatus] Endpoint non disponible, utilisation de données mockées');
+        logger.warn('[getSyncStatus] Endpoint non disponible, utilisation de données mockées');
       }
       return mockSyncStatus;
     }
     
     // Logger uniquement les vraies erreurs en développement
     if (process.env.NODE_ENV === 'development') {
-      console.error('[getSyncStatus] Erreur lors de la récupération du statut de synchronisation:', error);
+      logger.error('[getSyncStatus] Erreur lors de la récupération du statut de synchronisation:', error);
     }
     
     // En production, retourner les données mockées pour éviter un écran blanc
@@ -323,12 +321,12 @@ export async function getAffectations(
   } catch (error: any) {
     if (isNotFoundError(error)) {
       if (process.env.NODE_ENV === 'development') {
-        console.warn('[getAffectations] Endpoint non disponible, utilisation de données mockées');
+        logger.warn('[getAffectations] Endpoint non disponible, utilisation de données mockées');
       }
       return mockAffectationsResponse;
     }
     if (process.env.NODE_ENV === 'development') {
-      console.error('[getAffectations] Erreur lors de la récupération des affectations:', error);
+      logger.error('[getAffectations] Erreur lors de la récupération des affectations:', error);
     }
     // En production, retourner les données mockées pour éviter un écran blanc
     return mockAffectationsResponse;
@@ -343,7 +341,7 @@ export async function getSurAllocations(): Promise<Affectation[]> {
     if (isNotFoundError(error)) {
       return mockAffectations.filter(a => a.est_suralloue);
     }
-    console.error('Erreur lors de la récupération des sur-allocations:', error);
+    logger.error('Erreur lors de la récupération des sur-allocations:', error);
     throw error;
   }
 }
@@ -370,7 +368,7 @@ export async function getCalendrierAlertes(
     if (isNotFoundError(error)) {
       return mockAlertesResponse;
     }
-    console.error('Erreur lors de la récupération des alertes:', error);
+    logger.error('Erreur lors de la récupération des alertes:', error);
     throw error;
   }
 }
@@ -383,7 +381,7 @@ export async function getAlertesNonResolues(): Promise<CalendrierAlerte[]> {
     if (isNotFoundError(error)) {
       return mockAlertes.filter(a => !a.est_resolue);
     }
-    console.error('Erreur lors de la récupération des alertes non résolues:', error);
+    logger.error('Erreur lors de la récupération des alertes non résolues:', error);
     throw error;
   }
 }
@@ -407,7 +405,7 @@ export async function createEvenement(data: CreateEvenementData): Promise<Evenem
     return response.data;
   } catch (error: any) {
     if (process.env.NODE_ENV === 'development') {
-      console.error('Erreur lors de la création de l\'événement:', error);
+      logger.error('Erreur lors de la création de l\'événement:', error);
     }
     throw error;
   }
@@ -422,7 +420,7 @@ export async function updateEvenement(
     return response.data;
   } catch (error: any) {
     if (process.env.NODE_ENV === 'development') {
-      console.error('Erreur lors de la mise à jour de l\'événement:', error);
+      logger.error('Erreur lors de la mise à jour de l\'événement:', error);
     }
     throw error;
   }
@@ -439,7 +437,7 @@ export async function linkEvenementToChantier(
     return response.data;
   } catch (error: any) {
     if (process.env.NODE_ENV === 'development') {
-      console.error('Erreur lors de la liaison de l\'événement au chantier:', error);
+      logger.error('Erreur lors de la liaison de l\'événement au chantier:', error);
     }
     throw error;
   }
@@ -464,7 +462,7 @@ export async function createAbsence(data: CreateAbsenceData): Promise<Absence> {
     return response.data;
   } catch (error: any) {
     if (process.env.NODE_ENV === 'development') {
-      console.error('Erreur lors de la création de l\'absence:', error);
+      logger.error('Erreur lors de la création de l\'absence:', error);
     }
     throw error;
   }
@@ -479,7 +477,7 @@ export async function updateAbsence(
     return response.data;
   } catch (error: any) {
     if (process.env.NODE_ENV === 'development') {
-      console.error('Erreur lors de la mise à jour de l\'absence:', error);
+      logger.error('Erreur lors de la mise à jour de l\'absence:', error);
     }
     throw error;
   }
@@ -514,7 +512,7 @@ export async function exportCalendrier(config: ExportCalendrierConfig): Promise<
     return response.data;
   } catch (error: any) {
     if (process.env.NODE_ENV === 'development') {
-      console.error('Erreur lors de l\'export du calendrier:', error);
+      logger.error('Erreur lors de l\'export du calendrier:', error);
     }
     throw error;
   }
@@ -538,7 +536,7 @@ export async function createAlerte(data: CreateAlerteData): Promise<CalendrierAl
     return response.data;
   } catch (error: any) {
     if (process.env.NODE_ENV === 'development') {
-      console.error('Erreur lors de la création de l\'alerte:', error);
+      logger.error('Erreur lors de la création de l\'alerte:', error);
     }
     throw error;
   }

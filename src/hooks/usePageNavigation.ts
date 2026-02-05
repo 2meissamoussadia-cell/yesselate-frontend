@@ -5,6 +5,7 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useMemo } from 'react';
 import { useNavigationStore } from '@/lib/stores';
+import { logger } from '@/lib/utils/logger';
 import { routeMapping, generateNavParams, parseNavParams, createCrossPageLink, getActivePageId } from '@/lib/services/navigation.service';
 
 /**
@@ -53,7 +54,7 @@ export function usePageNavigation(pageId: string) {
       }
     } catch (error) {
       // Ignorer les erreurs d'hydratation
-      console.warn('Erreur lors de la lecture des paramètres URL:', error);
+      logger.warn('Erreur lors de la lecture des paramètres URL', { component: 'usePageNavigation', error: String(error) });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams.toString(), pageId]); // Utiliser searchParams.toString() pour une comparaison stable

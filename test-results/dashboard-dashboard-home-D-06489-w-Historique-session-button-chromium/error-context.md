@@ -1,0 +1,43 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - alert [ref=e2]: YESSALATE Centrale DG - Cockpit Rénovation Digitale
+  - dialog "Cookies et confidentialité" [ref=e3]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - img [ref=e7]
+        - img [ref=e9]
+      - generic [ref=e11]:
+        - heading "Cookies et confidentialité" [level=2] [ref=e12]
+        - paragraph [ref=e13]:
+          - text: Nous utilisons des cookies pour le fonctionnement du site, la sécurité et l'analyse d'usage. En poursuivant, vous acceptez notre
+          - link "politique de confidentialité" [ref=e14] [cursor=pointer]:
+            - /url: /privacy
+          - text: . Vous pouvez refuser les cookies non essentiels.
+      - generic [ref=e15]:
+        - button "Refuser les cookies non essentiels" [ref=e16]
+        - button "Tout accepter" [ref=e17]
+  - generic [ref=e19]:
+    - generic [ref=e20]:
+      - heading "Connexion" [level=1] [ref=e21]
+      - paragraph [ref=e22]: Plateforme BMO — accès réservé aux utilisateurs autorisés
+    - generic [ref=e23]:
+      - generic [ref=e24]:
+        - generic [ref=e25]: Email
+        - textbox "Email" [ref=e26]:
+          - /placeholder: meissamoussadia@yesselate.com
+      - generic [ref=e27]:
+        - generic [ref=e28]: Mot de passe
+        - textbox "Mot de passe" [ref=e29]:
+          - /placeholder: ••••••••
+      - button "Se connecter" [ref=e30]
+    - paragraph [ref=e31]:
+      - text: "Démo : utilisez"
+      - code [ref=e32]: meissamoussadia@yesselate.com
+      - text: et le mot de passe
+      - code [ref=e33]: password
+      - text: .
+    - link "← Retour à l'accueil" [ref=e35] [cursor=pointer]:
+      - /url: /
+```

@@ -21,7 +21,7 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from 'recharts';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 
 export type ChartType = 'line' | 'area' | 'bar';

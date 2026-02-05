@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -26,15 +26,26 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
-interface SidebarCategory {
-  id: string;
+export type SubstitutionMainCategory =
+  | 'overview'
+  | 'critical'
+  | 'pending'
+  | 'absences'
+  | 'delegations'
+  | 'completed'
+  | 'historique'
+  | 'analytics'
+  | 'settings';
+
+interface SubstitutionSidebarCategory {
+  id: SubstitutionMainCategory;
   label: string;
   icon: LucideIcon;
   badge?: number | string;
   badgeType?: 'default' | 'warning' | 'critical';
 }
 
-const substitutionCategories: SidebarCategory[] = [
+const substitutionCategories: SubstitutionSidebarCategory[] = [
   { id: 'overview', label: "Vue d'ensemble", icon: LayoutDashboard },
   { id: 'critical', label: 'Critiques', icon: AlertTriangle, badge: 3, badgeType: 'critical' },
   { id: 'pending', label: 'En Attente', icon: Clock, badge: 12, badgeType: 'warning' },
@@ -47,9 +58,9 @@ const substitutionCategories: SidebarCategory[] = [
 ];
 
 interface SubstitutionCommandSidebarProps {
-  activeCategory: string;
+  activeCategory: SubstitutionMainCategory;
   collapsed: boolean;
-  onCategoryChange: (category: string) => void;
+  onCategoryChange: (category: SubstitutionMainCategory) => void;
   onToggleCollapse: () => void;
   onOpenCommandPalette: () => void;
 }
@@ -223,5 +234,5 @@ export const SubstitutionCommandSidebar = React.memo(function SubstitutionComman
 });
 
 export { substitutionCategories };
-export type { SidebarCategory };
+export type SidebarCategory = SubstitutionSidebarCategory;
 

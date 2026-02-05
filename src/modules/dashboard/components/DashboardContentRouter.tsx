@@ -28,7 +28,7 @@ import {
 } from '@/components/features/bmo/dashboard/command-center/views';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { useLogger } from '@/lib/utils/logger';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { zIndexClass } from '../utils/zIndex';
 
 export interface DashboardContentRouterProps {

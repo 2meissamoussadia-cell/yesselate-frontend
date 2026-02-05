@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { projetsApiService, type Projet } from '@/lib/services/projetsApiService';
 import { Building2, Users, DollarSign, Clock, CheckCircle, AlertTriangle, FileText, TrendingUp, Edit, Calendar } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 interface Props {
   tabId: string;
@@ -32,7 +33,7 @@ export function ProjetsDetailView({ tabId, data }: Props) {
         const result = await projetsApiService.getById(projetId);
         setProjet(result || null);
       } catch (error) {
-        console.error('Failed:', error);
+        logger.error('Projets detail load failed', error as Error, { context: 'ProjetsDetailView' });
       } finally {
         setLoading(false);
       }

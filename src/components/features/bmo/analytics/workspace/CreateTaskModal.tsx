@@ -6,7 +6,7 @@ import { FluentButton } from '@/components/ui/fluent-button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar, User, FileText, AlertCircle, CheckCircle, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { logger } from '@/lib/utils/logger';
 import { useAnalyticsToast } from './AnalyticsToast';
 
@@ -102,7 +102,7 @@ export function CreateTaskModal({ open, onClose, data }: CreateTaskModalProps) {
     } catch (error) {
       toast.error('Erreur', 'Impossible de créer la tâche. Veuillez réessayer.');
       if (process.env.NODE_ENV === 'development') {
-        console.error('Erreur création tâche:', error);
+        logger.error('Erreur création tâche', error instanceof Error ? error : undefined, { component: 'CreateTaskModal' });
       }
     } finally {
       setIsSubmitting(false);

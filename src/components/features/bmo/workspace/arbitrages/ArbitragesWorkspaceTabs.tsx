@@ -2,7 +2,7 @@
 
 import { useArbitragesWorkspaceStore } from '@/lib/stores/arbitragesWorkspaceStore';
 import { X, Scale, FileText, GitBranch, Users, Clock, BarChart3 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 const tabIcons: Record<string, React.ReactNode> = {
   inbox: <Scale className="w-4 h-4" />,

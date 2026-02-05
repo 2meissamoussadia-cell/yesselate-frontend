@@ -8,6 +8,7 @@
 import { useMemo } from 'react';
 import { useDashboardNavigation } from './useDashboardNavigation';
 import { normalizeRoute, isValidRoute } from '../utils/routeValidation';
+import { createLogger } from '../utils/logger';
 
 /**
  * Hook safe pour utiliser la navigation du dashboard
@@ -34,10 +35,7 @@ export function useDashboardNavigationSafe() {
     // Si la route n'est pas valide, utiliser la route par défaut
     if (!isValidRoute(main, sub ?? null, leaf ?? null)) {
       if (process.env.NODE_ENV === 'development') {
-        console.warn(
-          '[useDashboardNavigationSafe] Route invalide, normalisation:',
-          { main, sub, leaf }
-        );
+        createLogger('useDashboardNavigationSafe').warn('Route invalide, normalisation', { main, sub, leaf });
       }
       return normalizeRoute(main, sub ?? null, leaf ?? null);
     }

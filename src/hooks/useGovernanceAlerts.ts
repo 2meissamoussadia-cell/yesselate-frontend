@@ -324,7 +324,7 @@ export function useGovernanceAlerts(
         a.bureau || '',
         a.createdAt ? new Date(a.createdAt).toLocaleDateString('fr-FR') : '',
         a.status || 'open',
-        a.impact?.money ? a.impact.money.toString() : '',
+        (typeof a.impact === 'object' && a.impact !== null && 'money' in a.impact ? (a.impact as { money: number }).money : undefined)?.toString() ?? '',
         a.slaDueAt ? new Date(a.slaDueAt).toLocaleDateString('fr-FR') : '',
         '', // RACI role si disponible
       ])

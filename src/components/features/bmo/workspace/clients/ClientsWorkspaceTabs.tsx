@@ -2,7 +2,7 @@
 
 import { useClientsWorkspaceStore } from '@/lib/stores/clientsWorkspaceStore';
 import { X, Users, FileText, UserPlus, AlertTriangle, History, BarChart3 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 const tabIcons: Record<string, React.ReactNode> = {
   inbox: <Users className="w-4 h-4" />,

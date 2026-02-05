@@ -26,7 +26,7 @@ import {
   getFallbackComponent,
 } from '../utils/routeValidation';
 import { useLogger } from '@/lib/utils/logger';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { ComponentType } from 'react';
 import { useTouchGestures } from '../hooks/useTouchGestures';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';

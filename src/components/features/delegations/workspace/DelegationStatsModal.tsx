@@ -16,7 +16,8 @@ import {
   CheckCircle2, Clock, Users, Shield, Activity,
   XCircle, Pause, Zap, Calendar, FileWarning
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 interface DelegationStatsModalProps {
   open: boolean;
@@ -75,7 +76,7 @@ export function DelegationStatsModal({ open, onClose }: DelegationStatsModalProp
           });
         }
       } catch (e) {
-        console.error('Erreur chargement stats:', e);
+        logger.error('Erreur chargement stats', e instanceof Error ? e : undefined, { component: 'DelegationStatsModal' });
       } finally {
         setLoading(false);
       }

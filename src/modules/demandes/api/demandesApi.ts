@@ -3,6 +3,7 @@
  */
 
 import axios from 'axios';
+import { logger } from '@/lib/utils/logger';
 import type { Demande, DemandeStats, DemandeFilters, DemandeTrend, ServiceStats } from '../types/demandesTypes';
 
 const API_BASE_URL = '/api/demandes';
@@ -60,17 +61,12 @@ export async function getDemandesStats(): Promise<DemandeStats> {
   } catch (error: any) {
     // Retourner des données mockées si 404 (sans logger en production)
     if (error?.response?.status === 404 || !error?.response) {
-      if (process.env.NODE_ENV === 'development') {
-        console.warn('[getDemandesStats] Endpoint non disponible, utilisation de données mockées');
-      }
+      logger.warn('Endpoint non disponible, utilisation de données mockées', { action: 'getDemandesStats' });
       const { mockStats } = await import('../data/demandesMock');
       return mockStats;
     }
-    
-    // Logger uniquement les vraies erreurs en développement
-    if (process.env.NODE_ENV === 'development') {
-      console.error('[getDemandesStats] Erreur lors de la récupération des statistiques:', error);
-    }
+
+    logger.error('Erreur lors de la récupération des statistiques', error instanceof Error ? error : undefined, { action: 'getDemandesStats' });
     
     // En production, retourner les données mockées pour éviter un écran blanc
     const { mockStats } = await import('../data/demandesMock');
@@ -345,9 +341,7 @@ export async function listDemands(queue?: string, search?: string): Promise<Dema
 export async function getDemand(id: string): Promise<{ demand: Demande; item?: Demande }> {
   const demande = await getDemandeById(id);
   return { demand: demande, item: demande };
-}
-
-/**
+}/**
  * @deprecated Utiliser validateDemande(), rejectDemande() à la place
  */
 export async function transitionDemand(

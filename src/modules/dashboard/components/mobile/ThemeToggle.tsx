@@ -8,7 +8,7 @@
 
 import React, { useEffect } from 'react';
 import { Sun, Moon, CloudSun, Monitor } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useDashboardThemeStore, applyTheme, subscribeSystemTheme, type DashboardTheme } from '@/lib/stores/dashboardThemeStore';
 import { touchTarget } from '../../utils/dashboardDesignTokens';
 

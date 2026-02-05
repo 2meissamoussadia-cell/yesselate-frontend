@@ -8,7 +8,7 @@
 import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, CheckCircle2, XCircle, AlertTriangle, Info, Loader2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export type NotificationType = 'success' | 'error' | 'warning' | 'info' | 'loading';
 

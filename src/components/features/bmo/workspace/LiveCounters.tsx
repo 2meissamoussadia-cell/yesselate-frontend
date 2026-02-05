@@ -5,7 +5,8 @@ import {
   Inbox, AlertTriangle, Clock, CheckCircle2, XCircle, 
   TrendingUp, TrendingDown, Minus, RefreshCw
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 type Stats = {
   total: number;
@@ -55,7 +56,7 @@ export function LiveCounters({ onOpenQueue, compact = false }: Props) {
       setStats(data);
       setLastUpdate(new Date());
     } catch (e) {
-      console.error('Erreur stats:', e);
+      logger.error('Erreur stats', e instanceof Error ? e : undefined, { component: 'LiveCounters' });
     } finally {
       setLoading(false);
     }

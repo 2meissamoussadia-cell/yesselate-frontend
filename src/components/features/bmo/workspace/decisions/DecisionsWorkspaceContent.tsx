@@ -4,7 +4,8 @@ import { useDecisionsWorkspaceStore } from '@/lib/stores/decisionsWorkspaceStore
 import { useDecisionsCommandCenterStore } from '@/lib/stores/decisionsCommandCenterStore';
 import { decisionsApiService, type Decision } from '@/lib/services/decisionsApiService';
 import { FileText, Target, Settings, History, BarChart3, Search, ChevronRight, Eye, Star, StarOff, Gavel, User, Clock, Zap, DollarSign, CheckCircle, Users } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 const STATUS_STYLES = { draft: { border: 'border-l-slate-500', badge: 'bg-slate-500/20 text-slate-600' }, pending: { border: 'border-l-amber-500', badge: 'bg-amber-500/20 text-amber-600' }, approved: { border: 'border-l-emerald-500', badge: 'bg-emerald-500/20 text-emerald-600' }, rejected: { border: 'border-l-red-500', badge: 'bg-red-500/20 text-red-600' }, executed: { border: 'border-l-blue-500', badge: 'bg-blue-500/20 text-blue-600' } };
 const IMPACT_STYLES = { critical: { badge: 'bg-red-500/20 text-red-600', icon: Zap }, high: { badge: 'bg-amber-500/20 text-amber-600', icon: Zap }, medium: { badge: 'bg-blue-500/20 text-blue-600', icon: Clock }, low: { badge: 'bg-slate-500/20 text-slate-600', icon: Clock } };
 export function DecisionsWorkspaceContent() {
@@ -12,7 +13,7 @@ export function DecisionsWorkspaceContent() {
   const { openModal, openDetailPanel } = useDecisionsCommandCenterStore();
   const activeTab = tabs.find(t => t.id === activeTabId); const [decisions, setDecisions] = useState<Decision[]>([]); const [loading, setLoading] = useState(true); const [searchQuery, setSearchQuery] = useState(''); const [expandedId, setExpandedId] = useState<string | null>(null);
   const queue = activeTab?.data?.queue as string | undefined;
-  useEffect(() => { const load = async () => { setLoading(true); try { const filter = { ...currentFilter }; if (queue && queue !== 'all') { if (['draft', 'pending', 'approved', 'rejected', 'executed'].includes(queue)) filter.status = queue; else if (['strategique', 'operationnel', 'financier', 'rh', 'technique'].includes(queue)) filter.type = queue; else if (queue === 'critical') filter.status = 'pending'; } if (searchQuery) filter.search = searchQuery; const r = await decisionsApiService.getAll(filter, 'impact', 1, 50); setDecisions(r.data); } catch (e) { console.error(e); } finally { setLoading(false); } }; load(); }, [currentFilter, queue, searchQuery]);
+  useEffect(() => { const load = async () => { setLoading(true); try { const filter = { ...currentFilter }; if (queue && queue !== 'all') { if (['draft', 'pending', 'approved', 'rejected', 'executed'].includes(queue)) filter.status = queue; else if (['strategique', 'operationnel', 'financier', 'rh', 'technique'].includes(queue)) filter.type = queue; else if (queue === 'critical') filter.status = 'pending'; } if (searchQuery) filter.search = searchQuery; const r = await decisionsApiService.getAll(filter, 'impact', 1, 50); setDecisions(r.data); } catch (e) { logger.error('Decisions load failed', e as Error, { context: 'DecisionsWorkspaceContent' }); } finally { setLoading(false); } }; load(); }, [currentFilter, queue, searchQuery]);
   const handleOpenDetail = (dec: Decision, event?: React.MouseEvent) => {
     event?.stopPropagation();
     // Pattern modal overlay - ouvrir la modal au lieu de naviguer

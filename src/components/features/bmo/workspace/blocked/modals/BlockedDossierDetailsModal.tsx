@@ -27,6 +27,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import {
   FileText,
   Building2,
@@ -73,9 +74,16 @@ interface BlockedDossierDetailsModalProps {
   dossierId: string;
 }
 
-interface EnrichedDossier extends Omit<BlockedDossier, 'impact'> {
+type SlaEnriched = { deadline: string; remaining: number; status: 'critical' | 'warning' | 'expired' | 'ok'; alerts: Array<{ level: string; message: string }> };
+
+function isSlaObject(sla: BlockedDossier['sla'] | SlaEnriched | undefined): sla is SlaEnriched {
+  return typeof sla === 'object' && sla !== null && 'status' in sla && 'remaining' in sla;
+}
+
+interface EnrichedDossier extends Omit<BlockedDossier, 'impact' | 'sla'> {
   reference?: string;
   status?: string;
+  sla?: BlockedDossier['sla'] | SlaEnriched;
   impact?: BlockedDossier['impact'] | {
     financial: { amount: number; currency: string; description: string };
     operational: { score: number; description: string; affected: string[] };
@@ -135,12 +143,6 @@ interface EnrichedDossier extends Omit<BlockedDossier, 'impact'> {
     responsable: { id: string; name: string; role: string; bureau: string };
     validateurs: Array<{ id: string; name: string; role: string }>;
     observateurs: Array<{ id: string; name: string; role: string }>;
-  };
-  sla?: {
-    deadline: string;
-    remaining: number;
-    status: 'ok' | 'warning' | 'critical' | 'expired';
-    alerts: Array<{ level: string; message: string }>;
   };
 }
 
@@ -409,7 +411,7 @@ export function BlockedDossierDetailsModal({
       // Recharger documents
       // await refreshDossier();
     } catch (error) {
-      console.error('Upload error:', error);
+      logger.error('Upload error', error as Error, { context: 'BlockedDossierDetailsModal' });
     } finally {
       setUploadingDocument(false);
     }
@@ -431,7 +433,7 @@ export function BlockedDossierDetailsModal({
       a.click();
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Download error:', error);
+      logger.error('Download error', error as Error, { context: 'BlockedDossierDetailsModal' });
     }
   };
 
@@ -532,7 +534,7 @@ export function BlockedDossierDetailsModal({
                 <Badge className={getImpactColor(typeof dossier.impact === 'object' && dossier.impact && 'financial' in dossier.impact ? 'high' : (typeof dossier.impact === 'string' ? dossier.impact : 'medium'))}>
                   Impact: {typeof dossier.impact === 'object' && dossier.impact && 'financial' in dossier.impact ? 'High' : (typeof dossier.impact === 'string' ? dossier.impact : 'Medium')}
                 </Badge>
-                {dossier.sla && (
+                {isSlaObject(dossier.sla) && (
                   <Badge variant="outline" className={cn('border', getSLAColor(dossier.sla.status))}>
                     <Clock className="h-3 w-3 mr-1" />
                     SLA: {dossier.sla.remaining}h restantes
@@ -579,9 +581,9 @@ export function BlockedDossierDetailsModal({
             {/* ONGLET 1: DÉTAILS */}
             <TabsContent value="details" className="space-y-6 m-0">
               {/* Alertes SLA */}
-              {dossier.sla && dossier.sla.alerts.length > 0 && (
+              {isSlaObject(dossier.sla) && dossier.sla.alerts.length > 0 && (
                 <div className="space-y-2">
-                  {dossier.sla.alerts.map((alert, idx) => (
+                  {dossier.sla.alerts.map((alert: { level: string; message: string }, idx: number) => (
                     <div
                       key={idx}
                       className={cn(
@@ -666,9 +668,9 @@ export function BlockedDossierDetailsModal({
                     <div>
                       <label className="text-sm text-slate-400 block mb-1">Échéance SLA</label>
                       <div className="flex items-center gap-2">
-                        <Clock className={cn('h-4 w-4', getSLAColor(dossier.sla.status))} />
+                        <Clock className={cn('h-4 w-4', isSlaObject(dossier.sla) ? getSLAColor(dossier.sla.status) : '')} />
                         <span className="text-white font-medium">
-                          {new Date(dossier.sla.deadline).toLocaleString('fr-FR')}
+                          {isSlaObject(dossier.sla) ? new Date(dossier.sla.deadline).toLocaleString('fr-FR') : ''}
                         </span>
                       </div>
                     </div>
@@ -1326,7 +1328,7 @@ export function BlockedDossierDetailsModal({
                 // await blockedApi.toggleWatchlist(dossier.id);
                 // showToast('success', 'Ajouté à la liste de suivi');
               } catch (error) {
-                console.error('Watchlist error:', error);
+                logger.error('Watchlist error', error as Error, { context: 'BlockedDossierDetailsModal' });
               }
             }}>
               <Eye className="h-4 w-4 mr-2" />
@@ -1339,7 +1341,7 @@ export function BlockedDossierDetailsModal({
                 // downloadFile(pdf, `dossier-${dossier.reference}.pdf`);
                 // showToast('success', 'Export généré');
               } catch (error) {
-                console.error('Export error:', error);
+                logger.error('Export error', error as Error, { context: 'BlockedDossierDetailsModal' });
               }
             }}>
               <Download className="h-4 w-4 mr-2" />

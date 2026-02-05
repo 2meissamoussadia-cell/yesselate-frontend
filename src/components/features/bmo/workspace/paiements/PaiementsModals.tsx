@@ -7,7 +7,8 @@
 'use client';
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -223,7 +224,7 @@ function PaiementsValidationModal({ onClose, data }: { onClose: () => void; data
       onClose();
       data?.onSuccess?.();
     } catch (error) {
-      console.error('Validation failed:', error);
+      logger.error('Validation failed', error instanceof Error ? error : undefined, { component: 'PaiementsModals' });
     } finally {
       setValidating(false);
     }
@@ -348,7 +349,7 @@ function PaiementsRejectionModal({ onClose, data }: { onClose: () => void; data?
       onClose();
       data?.onSuccess?.();
     } catch (error) {
-      console.error('Rejection failed:', error);
+      logger.error('Rejection failed', error instanceof Error ? error : undefined, { component: 'PaiementsModals' });
     } finally {
       setRejecting(false);
     }
@@ -636,7 +637,7 @@ function PaiementsExportModal({ onClose }: { onClose: () => void }) {
       
       onClose();
     } catch (error) {
-      console.error('Export failed:', error);
+      logger.error('Export failed', error instanceof Error ? error : undefined, { component: 'PaiementsModals' });
     } finally {
       setExporting(false);
       setSelectedFormat(null);
@@ -796,7 +797,7 @@ function PaiementsConfirmModal({ onClose, data }: { onClose: () => void; data?: 
       await data?.onConfirm?.();
       onClose();
     } catch (error) {
-      console.error('Confirmation failed:', error);
+      logger.error('Confirmation failed', error instanceof Error ? error : undefined, { component: 'PaiementsModals' });
     } finally {
       setConfirming(false);
     }

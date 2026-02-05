@@ -1,29 +1,13 @@
-'use client';
+import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
+import { AlertsLayoutClient } from './AlertsLayoutClient';
 
-import React from 'react';
-import { LayoutDashboard, AlertTriangle, FolderKanban, Clock, ShieldCheck } from 'lucide-react';
-import { PortalModuleCleanLayout } from '@/components/bmo/layout/PortalModuleCleanLayout';
-import type { PortalModuleTab } from '@/components/bmo/layout/PortalModuleCleanLayout';
-import { alertsCenterSubNav } from '@/lib/navigation/subnav/alertsCenter';
-
-const iconByTabId: Record<string, typeof LayoutDashboard> = {
-  overview: LayoutDashboard,
-  critical: AlertTriangle,
-  projects: FolderKanban,
-  sla: Clock,
-  quality: ShieldCheck,
+export const metadata: Metadata = {
+  title: 'Alertes | Maître d\'Ouvrage | YESSALATE',
+  description:
+    'Centre d\'alertes - Alertes critiques, projets, SLA, qualité. Pilotage et suivi des alertes BTP.',
 };
 
-const alertsTabs: PortalModuleTab[] = (alertsCenterSubNav.tabs ?? []).map((tab: { id: string; label: string; path?: string }) => {
-  const path = tab.path ?? `/maitre-ouvrage/alerts/${tab.id}`;
-  const icon = iconByTabId[tab.id] ?? LayoutDashboard;
-  return { id: tab.id, label: tab.label, path, icon };
-});
-
-export default function AlertsLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <PortalModuleCleanLayout title={alertsCenterSubNav.title} tabs={alertsTabs}>
-      {children}
-    </PortalModuleCleanLayout>
-  );
+export default function AlertsLayout({ children }: { children: ReactNode }) {
+  return <AlertsLayoutClient>{children}</AlertsLayoutClient>;
 }

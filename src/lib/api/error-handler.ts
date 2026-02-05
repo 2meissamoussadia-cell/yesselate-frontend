@@ -3,6 +3,7 @@
  */
 
 import { NextResponse } from 'next/server';
+import { logger } from '@/lib/utils/logger';
 
 export interface ApiErrorResponse {
   error: string;
@@ -88,9 +89,9 @@ export function createErrorResponse(
 
   // Logger l'erreur
   if (statusCode >= 500) {
-    console.error(`[API Error ${statusCode}] ${code}: ${error}`, details);
-  } else if (process.env.NODE_ENV === 'development') {
-    console.warn(`[API Warning ${statusCode}] ${code}: ${error}`, details);
+    logger.error(`[API Error ${statusCode}] ${code}: ${error}`, undefined, { code, statusCode, details });
+  } else {
+    logger.warn(`[API Warning ${statusCode}] ${code}: ${error}`, { code, statusCode, details });
   }
 
   return NextResponse.json(response, { status: statusCode });

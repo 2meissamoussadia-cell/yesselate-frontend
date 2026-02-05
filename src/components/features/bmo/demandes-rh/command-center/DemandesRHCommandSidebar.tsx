@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -26,8 +26,19 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
+export type DemandesRHMainCategory =
+  | 'overview'
+  | 'conges'
+  | 'depenses'
+  | 'deplacements'
+  | 'avances'
+  | 'urgent'
+  | 'pending'
+  | 'validated'
+  | 'analytics';
+
 interface SidebarCategory {
-  id: string;
+  id: DemandesRHMainCategory;
   label: string;
   icon: LucideIcon;
   badge?: number | string;
@@ -47,9 +58,9 @@ const demandesRHCategories: SidebarCategory[] = [
 ];
 
 interface DemandesRHCommandSidebarProps {
-  activeCategory: string;
+  activeCategory: DemandesRHMainCategory;
   collapsed: boolean;
-  onCategoryChange: (category: string) => void;
+  onCategoryChange: (category: DemandesRHMainCategory) => void;
   onToggleCollapse: () => void;
   onOpenCommandPalette: () => void;
 }

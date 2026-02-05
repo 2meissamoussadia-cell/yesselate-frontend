@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import type { Demand } from '@/lib/types/bmo.types';
+import { logger } from '@/lib/utils/logger';
 
 type Action = 'validate' | 'reject' | 'assign' | 'request_complement';
 
@@ -42,7 +43,7 @@ export function useDemandActions() {
     } catch (err) {
       const error = err instanceof Error ? err : new Error('Unknown error');
       setError(error);
-      console.error('Error executing action:', error);
+      logger.error('Error executing action', error, { component: 'useDemandActions' });
       return null;
     } finally {
       setLoading(false);

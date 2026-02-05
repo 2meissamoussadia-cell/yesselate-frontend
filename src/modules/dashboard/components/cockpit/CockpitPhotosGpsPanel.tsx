@@ -7,7 +7,7 @@
 
 import React, { useState, useMemo, useCallback } from 'react';
 import { MapPin, Calendar, ImageIcon } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { colors } from '../../utils/dashboardDesignTokens';
 import type { PhotoGpsMock } from '../../data/photoGpsMock';
 import { photosGps } from '../../data/photoGpsMock';

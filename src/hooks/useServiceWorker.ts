@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import { logger } from '@/lib/utils/logger';
 
 type ServiceWorkerState = 'installing' | 'installed' | 'activating' | 'activated' | 'error' | null;
 
@@ -59,7 +60,7 @@ export function useServiceWorker() {
         }
       })
       .catch((err) => {
-        console.error('[SW] Erreur d\'enregistrement:', err);
+        logger.error('Erreur enregistrement Service Worker', err instanceof Error ? err : undefined, { component: 'useServiceWorker' });
         setSwState('error');
       });
   }, []);

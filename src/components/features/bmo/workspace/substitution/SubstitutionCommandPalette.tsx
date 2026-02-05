@@ -28,8 +28,8 @@ import {
   ArrowRight,
   Command,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { logger } from '@/lib/utils/logger';
+import { cn } from '@/lib/cn';
 import { useSubstitutionWorkspaceStore } from '@/lib/stores/substitutionWorkspaceStore';
 
 interface CommandPaletteProps {
@@ -201,7 +201,7 @@ export function SubstitutionCommandPalette({ open, onClose }: CommandPaletteProp
       icon: <Filter className="w-4 h-4" />,
       category: 'filters',
       action: () => {
-        console.log('Filter by bureau');
+        logger.info('Filter by bureau', { component: 'SubstitutionCommandPalette' });
         onClose();
       },
     },

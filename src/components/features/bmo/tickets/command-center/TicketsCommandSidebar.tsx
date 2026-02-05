@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -29,8 +29,20 @@ import {
 // TYPES
 // ================================
 
+export type TicketsMainCategory =
+  | 'overview'
+  | 'new'
+  | 'in-progress'
+  | 'waiting-customer'
+  | 'escalated'
+  | 'resolved'
+  | 'closed'
+  | 'by-priority'
+  | 'analytics'
+  | 'archive';
+
 export interface TicketsCategory {
-  id: string;
+  id: TicketsMainCategory;
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   badge?: number | string;
@@ -124,8 +136,8 @@ export const ticketsCategories: TicketsCategory[] = [
 // ================================
 
 interface TicketsCommandSidebarProps {
-  activeCategory: string;
-  onCategoryChange: (categoryId: string) => void;
+  activeCategory: TicketsMainCategory;
+  onCategoryChange: (categoryId: TicketsMainCategory) => void;
   collapsed?: boolean;
   onToggleCollapse?: () => void;
   stats?: {

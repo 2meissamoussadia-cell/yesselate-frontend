@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { missionsApiService, type MissionsStats } from '@/lib/services/missionsApiService';
+import { logger } from '@/lib/utils/logger';
 import { X, BarChart3, Plane } from 'lucide-react';
 
 interface Props {
@@ -20,7 +21,7 @@ export function MissionsStatsModal({ open, onClose }: Props) {
         setLoading(true);
         setStats(await missionsApiService.getStats());
       } catch (e) {
-        console.error(e);
+        logger.error('Missions stats load failed', e as Error, { context: 'MissionsStatsModal' });
       } finally {
         setLoading(false);
       }

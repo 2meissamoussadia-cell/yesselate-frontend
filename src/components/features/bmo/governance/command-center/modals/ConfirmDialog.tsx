@@ -6,7 +6,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -84,7 +85,7 @@ export function ConfirmDialog({
       await onConfirm();
       onOpenChange(false);
     } catch (error) {
-      console.error('Confirm action failed:', error);
+      logger.error('Confirm action failed', error instanceof Error ? error : undefined, { component: 'ConfirmDialog' });
     } finally {
       setIsLoading(false);
       setConfirmInput('');

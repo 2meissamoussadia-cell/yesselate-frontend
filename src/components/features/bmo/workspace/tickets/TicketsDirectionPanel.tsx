@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { ticketsApi, type TicketStats } from '@/lib/services/ticketsApiService';
 import { X, Zap, Clock, AlertTriangle, XCircle, ArrowRight, CheckCircle, Ticket } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 interface Props { open: boolean; onClose: () => void; }
 
@@ -14,7 +15,7 @@ export function TicketsDirectionPanel({ open, onClose }: Props) {
     if (!open) return;
     const load = async () => {
       try { const data = await ticketsApi.getStats(); setStats(data); }
-      catch (error) { console.error('Failed:', error); }
+      catch (error) { logger.error('Failed to load stats', error instanceof Error ? error : undefined, { component: 'TicketsDirectionPanel' }); }
     };
     load();
     const interval = setInterval(load, 30000);

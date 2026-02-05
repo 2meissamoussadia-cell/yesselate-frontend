@@ -43,40 +43,44 @@ export const DemandeListRow = React.memo(function DemandeListRow({ demande, sele
       }}
       aria-selected={selected}
       className={cn(
-        'flex flex-col gap-1.5 px-4 py-3 border-b border-slate-100 dark:border-slate-800/40 cursor-pointer transition-all duration-150',
+        'group relative w-full min-w-0 overflow-hidden shrink-0',
+        'grid grid-cols-1 gap-y-1.5 px-4 py-3 border-b border-slate-100 dark:border-slate-800/40',
+        'cursor-pointer transition-all duration-150',
         'hover:bg-slate-50 dark:hover:bg-slate-800/30',
+        'before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[3px] before:bg-transparent before:transition-colors',
+        'hover:before:bg-sky-400',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-inset',
-        selected && 'bg-sky-50 dark:bg-sky-900/20'
+        selected && 'bg-sky-50 dark:bg-sky-900/20 before:bg-sky-500'
       )}
     >
-      <div className="flex justify-between items-start gap-2">
-        <span className="font-medium text-sm text-slate-900 dark:text-slate-100 line-clamp-1">
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 min-w-0">
+        <span className="font-medium text-sm text-slate-900 dark:text-slate-100 truncate min-w-0">
           {demande.title}
         </span>
-        <span className="text-xs text-slate-500 shrink-0">
+        <span className="text-xs text-slate-500 shrink-0 truncate max-w-[90px]">
           {formatDistanceToNow(dateCreation, { addSuffix: true, locale: fr })}
         </span>
       </div>
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="text-xs text-slate-600 dark:text-slate-400">{demande.reference}</span>
-        <span className="text-slate-300 dark:text-slate-600">•</span>
-        <span className="text-xs text-slate-600 dark:text-slate-400 capitalize">{demande.service}</span>
+      <div className="flex items-center gap-2 min-w-0 overflow-hidden flex-nowrap text-xs text-slate-600 dark:text-slate-400">
+        <span className="truncate shrink-0">{demande.reference}</span>
+        <span className="shrink-0 text-slate-300 dark:text-slate-600">•</span>
+        <span className="truncate min-w-0 capitalize">{demande.service}</span>
         {demande.montant != null && demande.montant > 0 && (
           <>
-            <span className="text-slate-300 dark:text-slate-600">•</span>
-            <span className="text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-0.5">
+            <span className="shrink-0 text-slate-300 dark:text-slate-600">•</span>
+            <span className="shrink-0 font-medium text-slate-700 dark:text-slate-300 flex items-center gap-0.5">
               <DollarSign className="h-3 w-3" />
               {demande.montant.toLocaleString()} FCFA
             </span>
           </>
         )}
       </div>
-      <div className="flex items-center gap-2">
-        <Badge variant={statusConf.variant} className={cn('text-[10px] font-medium', statusConf.color)}>
+      <div className="flex items-center gap-2 flex-nowrap min-w-0 overflow-hidden">
+        <Badge variant={statusConf.variant} className={cn('text-[10px] font-medium shrink-0', statusConf.color)}>
           {statusConf.label}
         </Badge>
         {demande.status === 'urgent' && (
-          <Badge variant="destructive" className="text-[10px] gap-0.5">
+          <Badge variant="destructive" className="text-[10px] gap-0.5 shrink-0">
             <AlertCircle className="h-3 w-3" />
             Urgent
           </Badge>

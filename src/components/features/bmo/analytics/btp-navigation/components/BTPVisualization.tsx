@@ -29,7 +29,7 @@ import {
   PolarRadiusAxis,
 } from 'recharts';
 import type { VisualizationDefinition } from '@/lib/config/analyticsDisplayLogic';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { transformTrendDataForChart, transformDataForDonut, transformDataForBar } from '@/lib/utils/dataTransformers';
 
 interface BTPVisualizationProps {

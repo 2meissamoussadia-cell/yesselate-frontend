@@ -4,7 +4,8 @@ import { useState, useEffect, useMemo } from 'react';
 import { usePaiementsWorkspaceStore } from '@/lib/stores/paiementsWorkspaceStore';
 import { paiementsApiService, type Paiement } from '@/lib/services/paiementsApiService';
 import { Search, ChevronRight, Clock, AlertTriangle, CheckCircle, Ban, Building2, Calendar, FileText, Star, StarOff, Eye, CheckSquare, Square } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 interface Props {
   tabId: string;
@@ -54,7 +55,7 @@ export function PaiementsInboxView({ tabId, data }: Props) {
         setPaiements(result.data);
         setTotalPages(result.totalPages);
       } catch (error) {
-        console.error('Failed to load:', error);
+        logger.error('Failed to load', error as Error, { context: 'PaiementsInboxView' });
       } finally {
         setLoading(false);
       }

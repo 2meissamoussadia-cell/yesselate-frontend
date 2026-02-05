@@ -30,7 +30,8 @@ import {
   Download,
   Loader2,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { substitutionApiService } from '@/lib/services/substitutionApiService';
 import type { SubstitutionStats } from '@/lib/services/substitutionApiService';
 
@@ -56,7 +57,7 @@ export function SubstitutionStatsModal({ open, onClose }: StatsModalProps) {
       const data = await substitutionApiService.getStats();
       setStats(data);
     } catch (error) {
-      console.error('Error loading stats:', error);
+      logger.error('Error loading stats', error instanceof Error ? error : undefined, { component: 'SubstitutionStatsModal' });
     } finally {
       setLoading(false);
     }

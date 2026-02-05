@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { LayoutDashboard, BarChart3, CheckCircle, MoreHorizontal } from 'lucide-react';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import type { DashboardMainCategory } from '../../types/dashboardNavigationTypes';

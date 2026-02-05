@@ -8,7 +8,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@lib-root/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 const IDLE_LOGOUT_MS = 30 * 60 * 1000;   // 30 min → déconnexion
 const IDLE_WARN_MS = 25 * 60 * 1000;     // 25 min → afficher avertissement (5 min avant)

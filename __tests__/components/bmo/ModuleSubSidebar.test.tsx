@@ -56,7 +56,7 @@ describe('ModuleSubSidebar', () => {
     const activeButton = screen.getByRole('button', {
       name: /critiques/i,
     });
-    expect(activeButton).toHaveAttribute('aria-current', 'true');
+    expect(activeButton).toHaveAttribute('aria-current', 'page');
   });
 
   it('calls onSelect when item is clicked', async () => {

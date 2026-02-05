@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { User, Search, CheckCircle, X, Mail, Building2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { logger } from '@/lib/utils/logger';
 import { useAnalyticsToast } from './AnalyticsToast';
 
@@ -85,7 +85,7 @@ export function AssignResponsibleModal({ open, onClose, data }: AssignResponsibl
     } catch (error) {
       toast.error('Erreur', 'Impossible d\'assigner le responsable. Veuillez réessayer.');
       if (process.env.NODE_ENV === 'development') {
-        console.error('Erreur assignation responsable:', error);
+        logger.error('Erreur assignation responsable', error instanceof Error ? error : undefined, { component: 'AssignResponsibleModal' });
       }
     } finally {
       setIsSubmitting(false);

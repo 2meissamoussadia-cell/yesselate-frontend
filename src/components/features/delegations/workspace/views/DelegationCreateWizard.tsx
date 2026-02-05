@@ -4,7 +4,7 @@ import { useState, useCallback, useMemo } from 'react';
 import { useDelegationWorkspaceStore, DelegationTab } from '@/lib/stores/delegationWorkspaceStore';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import {
   ChevronLeft, ChevronRight, Key, User, Building2, Calendar,
   FileText, DollarSign, CheckCircle2, AlertTriangle, Loader2, Shield

@@ -13,7 +13,7 @@ import { useAchievementsStore } from '@/lib/stores/achievementsStore';
 import { KPIDrillDownModal } from './KPIDrillDownModal';
 import { Button } from '@/components/ui/button';
 import { zIndexClass } from '../utils/zIndex';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 type KpiType = 'demandes' | 'validations' | 'budget' | 'other';
 

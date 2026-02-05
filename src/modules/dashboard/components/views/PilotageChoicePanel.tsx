@@ -10,7 +10,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { PILOTAGE_HIERARCHY, type PilotageHierarchyNode } from '../../navigation/pilotageHierarchyConfig';
 import { getModuleHref } from '@/lib/navigation/moduleLinks';

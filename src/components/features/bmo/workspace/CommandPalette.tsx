@@ -7,7 +7,7 @@ import {
   BarChart3, Download, FileText, ArrowRight, Command,
   Sun, Moon, Keyboard, RefreshCw
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useWorkspaceStore } from '@/lib/stores/workspaceStore';
 import { useAppStore } from '@/lib/stores';
 

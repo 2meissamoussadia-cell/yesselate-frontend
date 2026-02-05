@@ -8,7 +8,7 @@
 
 import React from 'react';
 import { Clock } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export interface LastUpdateDisplayProps {
   /**

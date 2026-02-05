@@ -6,7 +6,8 @@
 'use client';
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -269,7 +270,7 @@ function ExportModal({ onClose }: { onClose: () => void }) {
       window.URL.revokeObjectURL(url);
       onClose();
     } catch (error) {
-      console.error('Export failed:', error);
+      logger.error('Export failed', error instanceof Error ? error : undefined, { component: 'TicketsModals' });
     } finally {
       setExporting(false);
       setSelectedFormat(null);
@@ -552,7 +553,7 @@ function TicketDetailModal({ onClose, data }: { onClose: () => void; data: Recor
       setTicket(updated);
       setNewMessage('');
     } catch (error) {
-      console.error('Failed to send message:', error);
+      logger.error('Failed to send message', error instanceof Error ? error : undefined, { component: 'TicketsModals' });
     } finally {
       setSending(false);
     }

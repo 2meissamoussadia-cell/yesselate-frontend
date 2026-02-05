@@ -7,7 +7,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Info, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface BTPContextualPopoverProps {

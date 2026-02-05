@@ -8,7 +8,7 @@
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useRef, useMemo } from 'react';
 import type { ReactNode } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface VirtualizedGridProps<T> {
   items: T[];

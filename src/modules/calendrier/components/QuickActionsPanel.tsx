@@ -32,6 +32,7 @@ import {
 import { useCalendrierData } from '../hooks/useCalendrierData';
 import { useCalendrierFilters } from '../hooks/useCalendrierFilters';
 import { useToast } from '@/components/features/bmo/ToastProvider';
+import { logger } from '@/lib/utils/logger';
 
 interface QuickAction {
   id: string;
@@ -115,10 +116,10 @@ export function QuickActionsPanel() {
       
       setCreateEventOpen(false);
       await refetch();
-    } catch (error) {
+    } catch (err) {
       error('Impossible de créer l\'événement. Veuillez réessayer.', { title: 'Erreur' });
       if (process.env.NODE_ENV === 'development') {
-        console.error('Erreur création événement:', error);
+        logger.error('Erreur création événement', err instanceof Error ? err : undefined, { component: 'QuickActionsPanel' });
       }
     } finally {
       setLoading(null);
@@ -148,10 +149,10 @@ export function QuickActionsPanel() {
       
       setAddAbsenceOpen(false);
       await refetch();
-    } catch (error) {
+    } catch (err) {
       error('Impossible d\'ajouter l\'absence. Veuillez réessayer.', { title: 'Erreur' });
       if (process.env.NODE_ENV === 'development') {
-        console.error('Erreur ajout absence:', error);
+        logger.error('Erreur ajout absence', err instanceof Error ? err : undefined, { component: 'QuickActionsPanel' });
       }
     } finally {
       setLoading(null);
@@ -170,10 +171,10 @@ export function QuickActionsPanel() {
       
       setLinkChantierOpen(false);
       await refetch();
-    } catch (error) {
+    } catch (err) {
       error('Impossible de lier l\'événement au chantier. Veuillez réessayer.', { title: 'Erreur' });
       if (process.env.NODE_ENV === 'development') {
-        console.error('Erreur liaison chantier:', error);
+        logger.error('Erreur liaison chantier', err instanceof Error ? err : undefined, { component: 'QuickActionsPanel' });
       }
     } finally {
       setLoading(null);
@@ -206,10 +207,10 @@ export function QuickActionsPanel() {
       success(`Le calendrier a été exporté en ${format.toUpperCase()}.`, { title: 'Export réussi' });
       
       setExportOpen(false);
-    } catch (error) {
+    } catch (err) {
       error('Impossible d\'exporter le calendrier. Veuillez réessayer.', { title: 'Erreur' });
       if (process.env.NODE_ENV === 'development') {
-        console.error('Erreur export:', error);
+        logger.error('Erreur export', err instanceof Error ? err : undefined, { component: 'QuickActionsPanel' });
       }
     } finally {
       setLoading(null);
@@ -232,10 +233,10 @@ export function QuickActionsPanel() {
       
       setAlertOpen(false);
       await refetch();
-    } catch (error) {
+    } catch (err) {
       error('Impossible d\'activer l\'alerte. Veuillez réessayer.', { title: 'Erreur' });
       if (process.env.NODE_ENV === 'development') {
-        console.error('Erreur activation alerte:', error);
+        logger.error('Erreur activation alerte', err instanceof Error ? err : undefined, { component: 'QuickActionsPanel' });
       }
     } finally {
       setLoading(null);

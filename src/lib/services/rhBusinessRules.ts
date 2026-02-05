@@ -3,7 +3,7 @@
  * Règles de gestion, validations automatiques, calculs spécifiques
  */
 
-import { rhBusinessService } from './rhBusinessService';
+import * as rhBusinessService from './rhBusinessService';
 
 // ============================================
 // Types métier avancés

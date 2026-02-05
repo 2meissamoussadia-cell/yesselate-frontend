@@ -9,7 +9,7 @@ import React, { useState } from 'react';
 import { Loader2, Phone, Mail, Send } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export type ActionRapideType = 'appeler' | 'relancer' | 'escalader';
 

@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { litigesApiService, type LitigesStats } from '@/lib/services/litigesApiService';
+import { logger } from '@/lib/utils/logger';
 import { X, BarChart3, Scale } from 'lucide-react';
 
 interface Props {
@@ -20,7 +21,7 @@ export function LitigesStatsModal({ open, onClose }: Props) {
         setLoading(true);
         setStats(await litigesApiService.getStats());
       } catch (e) {
-        console.error(e);
+        logger.error('Litiges stats load failed', e as Error, { context: 'LitigesStatsModal' });
       } finally {
         setLoading(false);
       }

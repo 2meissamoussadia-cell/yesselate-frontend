@@ -35,8 +35,8 @@ function isInScope(
   list: string[] | undefined
 ): boolean {
   if (!value) return true; // Pas de valeur = pas de restriction
-  if (mode === 'ALL') return true;
-  if (!list || list.length === 0) return mode === 'ALL';
+  if ((mode as string) === 'ALL') return true;
+  if (!list || list.length === 0) return (mode as string) === 'ALL';
   
   const inList = list.includes(value);
   return mode === 'INCLUDE' ? inList : !inList;

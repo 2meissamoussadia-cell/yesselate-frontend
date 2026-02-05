@@ -18,10 +18,10 @@ export function transformTrendDataForChart(
   dateKey: string = 'date'
 ): Array<{ date: string; value: number; value_prev?: number; [key: string]: any }> {
   return data.map((item) => ({
-    date: item[dateKey] || item.date || '',
-    value: item[valueKey] || item.value || 0,
-    value_prev: item.value_prev || item.previous || undefined,
     ...item,
+    date: item[dateKey] ?? item.date ?? '',
+    value: item[valueKey] ?? item.value ?? 0,
+    value_prev: item.value_prev ?? item.previous ?? undefined,
   }));
 }
 

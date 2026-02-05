@@ -4,6 +4,7 @@
 
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
+import { logger } from '@/lib/utils/logger';
 
 export interface UndoRedoAction {
   id: string;
@@ -67,7 +68,7 @@ export const useUndoRedoStore = create<UndoRedoState>()(
             future: [action, ...state.future],
           }));
         } catch (error) {
-          console.error('Undo failed:', error);
+          logger.error('Undo failed', error instanceof Error ? error : undefined, { component: 'UndoRedoStore' });
           throw error;
         }
       },
@@ -84,7 +85,7 @@ export const useUndoRedoStore = create<UndoRedoState>()(
             future: state.future.slice(1),
           }));
         } catch (error) {
-          console.error('Redo failed:', error);
+          logger.error('Redo failed', error instanceof Error ? error : undefined, { component: 'UndoRedoStore' });
           throw error;
         }
       },

@@ -6,7 +6,7 @@
 'use client';
 
 import { lazy, Suspense, ComponentType, ReactNode } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 /**
  * Skeleton loader générique

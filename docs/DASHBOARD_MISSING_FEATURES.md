@@ -27,17 +27,17 @@ const urlObj = window.URL.createObjectURL;
 const urlObj = window.URL.createObjectURL(blob);
 ```
 
-### 2. console.log/error/warn encore présents
-**Fichiers concernés** :
-- `useDashboardExport.ts` (ligne 63)
-- `DashboardViewRouter.tsx` (lignes 165, 257)
-- `useDashboardPermissions.ts` (ligne 58)
-- `AlertDetailModal.tsx` (lignes 61, 74, 87)
-- `routeValidation.ts` (ligne 69)
-- `DashboardNavigationContext.tsx` (lignes 35, 40, 45)
-- `useKPIFilter.ts` (lignes 49, 72)
+### 2. console.log/error/warn (✅ partiellement corrigé)
+**Fichiers corrigés** :
+- `AlertDetailModal.tsx` → `createLogger('AlertDetailModal').error`
+- `useDashboardNavigationSafe.ts` → `createLogger(...).warn`
+- `lib/contexts/AuthContext.tsx` → `logger.error`
+- `app/(portals)/maitre-ouvrage/dashboard/layout.tsx` → `createLogger` (logger.server)
+- `app/(portals)/maitre-ouvrage/dashboard/error.tsx` → déjà avec `logger`
+- `RbacAdminPanel.tsx` → `createLogger('RbacAdminPanel').error`
+- `offlineStore.ts` → `createLogger('OfflineStore').warn`
 
-**Action** : Remplacer tous par le système de logging unifié
+**À faire** : DashboardViewRouter, useDashboardPermissions, routeValidation, DashboardNavigationContext, useKPIFilter (si encore présents)
 
 ---
 

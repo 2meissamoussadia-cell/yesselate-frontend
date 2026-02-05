@@ -885,7 +885,7 @@ export const projectBudgets: ProjectBudget[] = [
       { date: '01/03/2025', type: 'depense', montant: 15000000, description: 'Travaux préparatoires', validatedBy: 'F. DIOP' },
       { date: '01/05/2025', type: 'depense', montant: 20000000, description: 'Infrastructure principale', validatedBy: 'F. DIOP' },
       { date: '01/08/2025', type: 'depense', montant: 15000000, description: 'Équipements', validatedBy: 'F. DIOP' },
-      { date: '15/12/2025', type: 'depense', montant: 6000000, description: 'Travaux supplémentaires (dépassement)', validatedBy: null },
+      { date: '15/12/2025', type: 'depense', montant: 6000000, description: 'Travaux supplémentaires (dépassement)', validatedBy: undefined },
     ],
   },
 ];

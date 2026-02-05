@@ -15,7 +15,7 @@ import {
   AlertTriangle, Users, MapPin, Building2,
   CheckCircle2, RefreshCw, ExternalLink, ChevronRight
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 /**
  * CalendarWorkspaceContent

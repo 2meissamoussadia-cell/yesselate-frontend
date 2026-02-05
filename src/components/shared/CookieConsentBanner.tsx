@@ -7,7 +7,7 @@
 
 import { useState, useEffect } from 'react';
 import { Shield, Cookie } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 const STORAGE_KEY = 'yesselate-cookie-consent-v1';
 type ConsentStatus = 'pending' | 'accepted' | 'rejected' | null;

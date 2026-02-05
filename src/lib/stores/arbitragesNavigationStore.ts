@@ -99,8 +99,6 @@ export const useArbitragesNavigationStore = create<ArbitragesNavigationStore>()(
         }
         return persistedState as ArbitragesNavigationState;
       },
-      // Snapshot stable pour SSR
-      getServerSnapshot: () => serverSnapshot,
     }
   )
 );

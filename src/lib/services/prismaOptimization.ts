@@ -534,12 +534,12 @@ function chunkArray<T>(array: T[], size: number): T[][] {
 export function createUserLoader(prisma: PrismaClient) {
   return new DataLoader<string, any>(
     async (userIds) => {
-      const users = await prisma.user.findMany({
+      const users = await (prisma as unknown as { user: { findMany: (args: unknown) => Promise<Array<{ id: string }>> } }).user.findMany({
         where: { id: { in: userIds as string[] } },
       });
 
       // Mapper par ID pour préserver l'ordre
-      const userMap = new Map(users.map(u => [u.id, u]));
+      const userMap = new Map(users.map((u: { id: string }) => [u.id, u]));
       return userIds.map(id => userMap.get(id as string));
     },
     { cache: true }

@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -26,15 +26,26 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
-interface SidebarCategory {
-  id: string;
+export type AuditMainCategory =
+  | 'overview'
+  | 'events'
+  | 'security'
+  | 'compliance'
+  | 'performance'
+  | 'system-logs'
+  | 'traceability'
+  | 'reports'
+  | 'settings';
+
+interface AuditSidebarCategory {
+  id: AuditMainCategory;
   label: string;
   icon: LucideIcon;
   badge?: number | string;
   badgeType?: 'default' | 'warning' | 'critical';
 }
 
-const auditCategories: SidebarCategory[] = [
+const auditCategories: AuditSidebarCategory[] = [
   { id: 'overview', label: "Vue d'ensemble", icon: LayoutDashboard },
   { id: 'events', label: 'Événements', icon: Activity, badge: 156 },
   { id: 'security', label: 'Sécurité', icon: Lock, badge: 12, badgeType: 'warning' },
@@ -47,9 +58,9 @@ const auditCategories: SidebarCategory[] = [
 ];
 
 interface AuditCommandSidebarProps {
-  activeCategory: string;
+  activeCategory: AuditMainCategory;
   collapsed: boolean;
-  onCategoryChange: (category: string) => void;
+  onCategoryChange: (category: AuditMainCategory) => void;
   onToggleCollapse: () => void;
   onOpenCommandPalette: () => void;
 }
@@ -223,5 +234,5 @@ export const AuditCommandSidebar = React.memo(function AuditCommandSidebar({
 });
 
 export { auditCategories };
-export type { SidebarCategory };
+export type SidebarCategory = AuditSidebarCategory;
 

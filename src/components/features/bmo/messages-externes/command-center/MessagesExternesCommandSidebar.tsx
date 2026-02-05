@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -25,15 +25,26 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
-interface SidebarCategory {
-  id: string;
+export type MessagesExternesMainCategory =
+  | 'overview'
+  | 'unread'
+  | 'requires_response'
+  | 'replied'
+  | 'archived'
+  | 'by_type'
+  | 'by_priority'
+  | 'analytics'
+  | 'settings';
+
+interface MessagesExternesSidebarCategory {
+  id: MessagesExternesMainCategory;
   label: string;
   icon: LucideIcon;
   badge?: number | string;
   badgeType?: 'default' | 'warning' | 'critical';
 }
 
-const messagesExternesCategories: SidebarCategory[] = [
+const messagesExternesCategories: MessagesExternesSidebarCategory[] = [
   { id: 'overview', label: "Vue d'ensemble", icon: LayoutDashboard },
   { id: 'unread', label: 'Non lus', icon: Inbox, badge: 0, badgeType: 'critical' },
   { id: 'requires_response', label: 'À répondre', icon: MessageSquare, badge: 0, badgeType: 'warning' },
@@ -46,9 +57,9 @@ const messagesExternesCategories: SidebarCategory[] = [
 ];
 
 interface MessagesExternesCommandSidebarProps {
-  activeCategory: string;
+  activeCategory: MessagesExternesMainCategory;
   collapsed: boolean;
-  onCategoryChange: (category: string) => void;
+  onCategoryChange: (category: MessagesExternesMainCategory) => void;
   onToggleCollapse: () => void;
   onOpenCommandPalette: () => void;
   stats?: {
@@ -249,7 +260,7 @@ export const MessagesExternesCommandSidebar = React.memo(function MessagesExtern
 });
 
 export { messagesExternesCategories };
-export type { SidebarCategory };
+export type SidebarCategory = MessagesExternesSidebarCategory;
 
 
 

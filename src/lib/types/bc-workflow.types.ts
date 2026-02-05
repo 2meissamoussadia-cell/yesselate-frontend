@@ -5,13 +5,13 @@
 
 import type { EnrichedBC, BCLigne, DocumentAnomaly, AnomalySeverity } from './document-validation.types';
 import type { FamilyCode } from '@/domain/nomenclature';
+import type { BCStatus } from '@/domain/bcTypes';
 
 // ============================================
 // State Machine BC
 // ============================================
 
-// Ré-export depuis bcTypes pour cohérence
-export type { BCStatus } from '@/domain/bcTypes';
+export type { BCStatus };
 export type BCWorkflowStatus = BCStatus;
 
 // Alias pour compatibilité ascendante
@@ -73,6 +73,15 @@ export interface BCAuditReport {
   // Blocages
   blocking: boolean; // Si true, ne peut pas être validé
   blockingReasons: string[];
+
+  /** Rapport détaillé par domaine (optionnel, utilisé par le service d'audit) */
+  domainReport?: {
+    recommendation?: 'approve' | 'reject' | 'split_bc' | string;
+    summary?: string;
+    risk?: string;
+    anomalies?: Array<{ id: string; severity: string; title: string; details: string }>;
+    generatedAt?: string;
+  };
 }
 
 export interface BCAuditCheck {

@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { litigesApiService, type Litige } from '@/lib/services/litigesApiService';
 import { Scale, Building2, User, Calendar, DollarSign, AlertTriangle, FileText, History, MessageSquare, Gavel } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 interface Props { tabId: string; data: Record<string, unknown>; }
 
@@ -26,7 +27,7 @@ export function LitigesDetailView({ tabId, data }: Props) {
       if (!litigeId) return;
       setLoading(true);
       try { const result = await litigesApiService.getById(litigeId); setLitige(result || null); }
-      catch (error) { console.error('Failed:', error); }
+      catch (error) { logger.error('Litiges detail load failed', error as Error, { context: 'LitigesDetailView' }); }
       finally { setLoading(false); }
     };
     load();

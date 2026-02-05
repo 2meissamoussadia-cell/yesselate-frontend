@@ -7,7 +7,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { X, ChevronLeft, ChevronRight, MoreHorizontal, Pin } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useGovernanceWorkspaceStore } from '@/lib/stores/governanceWorkspaceStore';
 import { Button } from '@/components/ui/button';
 

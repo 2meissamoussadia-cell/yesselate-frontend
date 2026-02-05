@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useState, useCallback } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ChevronDown, ChevronRight, ChevronLeft, Search, AlertTriangle } from 'lucide-react';
@@ -162,7 +162,7 @@ export function AlertsSidebar({
                       <span className="flex-1 text-left">{node.label}</span>
                       {badge !== undefined && (
                         <Badge
-                          variant={badgeType}
+                          variant={badgeType === 'critical' ? 'destructive' : badgeType}
                           className={cn(
                             'text-[10px] px-1.5 py-0',
                             badgeType === 'critical' &&
@@ -208,7 +208,7 @@ export function AlertsSidebar({
                           <span className="flex-1 text-left">{subNode.label}</span>
                           {subNode.badge !== undefined && (
                             <Badge
-                              variant={subNode.badgeType || 'default'}
+                              variant={subNode.badgeType === 'critical' ? 'destructive' : (subNode.badgeType || 'default')}
                               className="text-[10px] px-1.5 py-0"
                             >
                               {subNode.badge}

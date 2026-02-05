@@ -8,7 +8,7 @@
 import { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useAppStore } from '@/lib/stores';
 import { Calendar, TrendingUp, AlertTriangle } from 'lucide-react';
 import type { Alert } from '@/lib/types/alerts.types';

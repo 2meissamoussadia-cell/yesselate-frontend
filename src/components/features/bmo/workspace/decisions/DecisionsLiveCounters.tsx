@@ -1,12 +1,13 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { Gavel, FileEdit, Clock, CheckCircle, XCircle, Play, Zap, DollarSign } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { decisionsApiService, type DecisionsStats } from '@/lib/services/decisionsApiService';
+import { logger } from '@/lib/utils/logger';
 interface Props { onOpenQueue: (queue: string, title: string, icon: string) => void; }
 export function DecisionsLiveCounters({ onOpenQueue }: Props) {
   const [stats, setStats] = useState<DecisionsStats | null>(null); const [loading, setLoading] = useState(true);
-  useEffect(() => { const load = async () => { try { setStats(await decisionsApiService.getStats()); } catch (e) { console.error(e); } finally { setLoading(false); } }; load(); const i = setInterval(load, 30000); return () => clearInterval(i); }, []);
+  useEffect(() => { const load = async () => { try { setStats(await decisionsApiService.getStats()); } catch (e) { logger.error('Decisions stats failed', e as Error, { context: 'DecisionsLiveCounters' }); } finally { setLoading(false); } }; load(); const i = setInterval(load, 30000); return () => clearInterval(i); }, []);
   if (loading || !stats) return <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3 animate-pulse">{[...Array(8)].map((_, i) => <div key={i} className="h-24 rounded-xl bg-slate-100 dark:bg-slate-800" />)}</div>;
   const counters = [
     { key: 'total', label: 'Total', value: stats.total, icon: Gavel, color: 'rose', action: () => onOpenQueue('all', 'Toutes', '⚖️') },

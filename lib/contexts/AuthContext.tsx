@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { mockEmployes } from '@/lib/mocks';
 import type { User } from '@/lib/types/index';
+import { logger } from '@/lib/utils/logger';
 
 // ============================================
 // TYPES
@@ -51,7 +52,7 @@ export function AuthProvider({ children, initialUser = null }: AuthProviderProps
           setUser(JSON.parse(storedUser));
         }
       } catch (error) {
-        console.error('Erreur initialisation auth:', error);
+        logger.error('Erreur initialisation auth', error instanceof Error ? error : undefined, { component: 'AuthContext' });
       } finally {
         if (!cancelled) setIsLoading(false);
       }
@@ -116,7 +117,7 @@ export function AuthProvider({ children, initialUser = null }: AuthProviderProps
       setIsLoading(false);
       return false;
     } catch (error) {
-      console.error('Erreur login:', error);
+      logger.error('Erreur login', error instanceof Error ? error : undefined, { component: 'AuthContext' });
       setIsLoading(false);
       return false;
     }

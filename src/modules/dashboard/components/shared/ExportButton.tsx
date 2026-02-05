@@ -6,7 +6,7 @@
 
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { Download, FileText, BarChart3, ChevronDown, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { zIndexClass } from '../../utils/zIndex';
 

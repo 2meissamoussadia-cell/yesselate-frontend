@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -29,8 +29,20 @@ import {
 // TYPES
 // ================================
 
+export type DocumentsMainCategory =
+  | 'overview'
+  | 'all-documents'
+  | 'folders'
+  | 'recent'
+  | 'shared'
+  | 'pending'
+  | 'validated'
+  | 'confidential'
+  | 'analytics'
+  | 'trash';
+
 export interface DocumentsCategory {
-  id: string;
+  id: DocumentsMainCategory;
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   badge?: number | string;
@@ -126,8 +138,8 @@ export const documentsCategories: DocumentsCategory[] = [
 // ================================
 
 interface DocumentsCommandSidebarProps {
-  activeCategory: string;
-  onCategoryChange: (categoryId: string) => void;
+  activeCategory: DocumentsMainCategory;
+  onCategoryChange: (categoryId: DocumentsMainCategory) => void;
   collapsed?: boolean;
   onToggleCollapse?: () => void;
   stats?: {

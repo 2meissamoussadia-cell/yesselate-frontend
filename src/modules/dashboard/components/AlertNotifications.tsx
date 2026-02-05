@@ -5,7 +5,7 @@
 
 import React, { useMemo, useState, useCallback } from 'react';
 import { AlertTriangle, X, CheckCircle2, Circle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useOpenAlerts } from '../hooks/useAlerts';
 import { AlertDetailModal } from './AlertDetailModal';
 import type { AlertEvent } from '../hooks/useAlerts';

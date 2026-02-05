@@ -6,7 +6,7 @@
 'use client';
 
 import { ReactNode, useState, useRef } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useClickOutside } from '@/application/hooks/useClickOutside';
 import { FadeIn } from '../Animations';
 

@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { useDecisionsWorkspaceStore } from '@/lib/stores/decisionsWorkspaceStore';
 import { Search, ArrowRight, Gavel, Clock, CheckCircle, Target, Settings, History, BarChart3, RefreshCw, Download, Filter, Zap } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 interface Command { id: string; label: string; description?: string; icon: React.ComponentType<{ className?: string }>; category: 'navigation' | 'action' | 'filter'; shortcut?: string; action: () => void; }
 interface Props { open: boolean; onClose: () => void; onOpenStats: () => void; onRefresh: () => void; }
 export function DecisionsCommandPalette({ open, onClose, onOpenStats, onRefresh }: Props) {

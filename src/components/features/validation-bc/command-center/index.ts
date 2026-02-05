@@ -4,7 +4,7 @@
  */
 
 export { ValidationBCCommandSidebar, validationBCCategories } from './ValidationBCCommandSidebar';
-export type { SidebarCategory } from './ValidationBCCommandSidebar';
+export type { ValidationBCSidebarCategory, ValidationBCMainCategory, SidebarCategory } from './ValidationBCCommandSidebar';
 export { ValidationBCSubNavigation } from './ValidationBCSubNavigation';
 export { ValidationBCKPIBar } from './ValidationBCKPIBar';
 

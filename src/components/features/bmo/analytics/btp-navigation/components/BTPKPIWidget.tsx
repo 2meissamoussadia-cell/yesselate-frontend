@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { CheckCircle2, XCircle, AlertTriangle, Info } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { ProgressRing } from '@/presentation/components/Progress';
 
 interface BTPKPIWidgetProps {

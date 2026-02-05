@@ -6,7 +6,7 @@
  * Inclut tooltip avec date/heure exacte.
  */
 
-import { formatDistanceToNowStrict, format, isToday, isYesterday, isThisWeek, isThisYear } from 'date-fns';
+import { formatDistanceToNowStrict, format, isToday, isYesterday, isThisWeek, isThisYear, type Locale } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
 /**

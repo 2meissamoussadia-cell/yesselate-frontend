@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { useDelegationWorkspaceStore, type DelegationUIState } from '@/lib/stores/delegationWorkspaceStore';
 import { useHotkeys } from '@/hooks/useHotkeys';
@@ -190,7 +191,7 @@ export function DelegationViewer({ tabId, delegationId, onOpenModal }: Props) {
         setDelegation(await res.json());
       }
     } catch (e) {
-      console.error('Erreur chargement délégation:', e);
+      logger.error('Erreur chargement délégation', e instanceof Error ? e : undefined, { component: 'DelegationViewer' });
     } finally {
       setLoading(false);
     }

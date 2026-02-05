@@ -9,7 +9,7 @@
 import React, { useMemo, useCallback, useEffect, useState, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { useQueryClient } from '@tanstack/react-query';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import {
   Activity,
   Building2,

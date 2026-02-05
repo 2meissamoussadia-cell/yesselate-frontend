@@ -635,7 +635,7 @@ export async function runBCAudit(
     recommendations.push({
       id: generateRecommendationId(),
       type: 'split_bc',
-      priority: 'critical',
+      priority: 'high',
       title: 'Rejet recommandé',
       description: domainReport.summary,
       action: 'Rejeter le BC',

@@ -9,7 +9,7 @@ import { Plus } from 'lucide-react';
 import { BmoModulePage } from '@/components/bmo/BmoModulePage';
 import { QuickActionsBar } from '@/components/bmo/ui/QuickActionsBar';
 import { chantiersModuleConfig } from '@/lib/config/modules/chantiers.config';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface ChantierItem {
   id: string;

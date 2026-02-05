@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Loader2, Eye, CheckCircle2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { evaluationsApiService, type EvaluationsFilters } from '@/lib/services/evaluationsApiService';
 import type { Evaluation } from '@/lib/types/bmo.types';
 import { BureauTag } from '@/components/features/bmo/BureauTag';

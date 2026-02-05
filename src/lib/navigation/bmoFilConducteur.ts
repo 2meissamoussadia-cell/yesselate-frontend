@@ -27,7 +27,7 @@ export interface BMOPhaseEntry {
   /** Routes BMO principales couvrant cette phase */
   routes: Array<{ path: string; label: string }>;
   /** Modules sidebar (BMOModuleId) concernés */
-  modules: Array<'cockpit' | 'chantiers' | 'alerts' | 'engagements' | 'governance' | 'quality' | 'documents' | 'support' | 'foncier' | 'conformite' | 'achats' | 'conception' | 'execution' | 'receptions' | 'maintenance'>;
+  modules: Array<'cockpit' | 'chantiers' | 'alerts' | 'engagements' | 'governance' | 'quality' | 'documents' | 'projects' | 'support' | 'foncier' | 'conformite' | 'achats' | 'conception' | 'execution' | 'receptions' | 'maintenance'>;
   /** Module dédié à créer (optionnel) */
   suggestedModule?: string;
 }

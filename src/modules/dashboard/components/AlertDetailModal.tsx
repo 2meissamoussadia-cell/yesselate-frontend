@@ -6,9 +6,10 @@
 import React, { useState } from 'react';
 import { X, AlertTriangle, CheckCircle2, Clock, Calendar, BellOff, Database } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { zIndexClass } from '../utils/zIndex';
 import { useAckAlert, useCloseAlert, useSnoozeAlert, type AlertEvent } from '../hooks/useAlerts';
+import { createLogger } from '../utils/logger';
 
 interface AlertDetailModalProps {
   alert: AlertEvent | null;
@@ -20,6 +21,8 @@ interface AlertDetailModalProps {
  * Modal de détail d'alerte avec actions ACK/Close
  * Phase P15: Moteur d'alertes
  */
+const log = createLogger('AlertDetailModal');
+
 export function AlertDetailModal({ alert, isOpen, onClose }: AlertDetailModalProps) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [snoozeDuration, setSnoozeDuration] = useState<number>(60); // minutes
@@ -59,7 +62,7 @@ export function AlertDetailModal({ alert, isOpen, onClose }: AlertDetailModalPro
       await ackMutation.mutateAsync(alert.id);
       onClose();
     } catch (error) {
-      console.error('Failed to acknowledge alert:', error);
+      log.error('Failed to acknowledge alert', { action: 'ack' }, error instanceof Error ? error : undefined);
     } finally {
       setIsProcessing(false);
     }
@@ -72,7 +75,7 @@ export function AlertDetailModal({ alert, isOpen, onClose }: AlertDetailModalPro
       await closeMutation.mutateAsync(alert.id);
       onClose();
     } catch (error) {
-      console.error('Failed to close alert:', error);
+      log.error('Failed to close alert', { action: 'close' }, error instanceof Error ? error : undefined);
     } finally {
       setIsProcessing(false);
     }
@@ -85,7 +88,7 @@ export function AlertDetailModal({ alert, isOpen, onClose }: AlertDetailModalPro
       await snoozeMutation.mutateAsync({ eventId: alert.id, durationMinutes: snoozeDuration });
       onClose();
     } catch (error) {
-      console.error('Failed to snooze alert:', error);
+      log.error('Failed to snooze alert', { action: 'snooze' }, error instanceof Error ? error : undefined);
     } finally {
       setIsProcessing(false);
     }

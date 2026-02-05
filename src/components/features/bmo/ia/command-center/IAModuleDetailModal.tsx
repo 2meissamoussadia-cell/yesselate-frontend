@@ -35,7 +35,7 @@ import {
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { AIModule } from '@/lib/types/bmo.types';
 import { aiModules, aiHistory } from '@/lib/data';
 

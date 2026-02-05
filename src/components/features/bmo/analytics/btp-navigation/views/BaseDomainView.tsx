@@ -8,7 +8,7 @@
 import React from 'react';
 import { findDomain, findModule, findSubModule, type AnalyticsDomain } from '@/lib/config/analyticsBTPArchitecture';
 import { BarChart3, ChevronRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { BTPDomainView } from '../components/BTPDomainView';
 
 interface BaseDomainViewProps {

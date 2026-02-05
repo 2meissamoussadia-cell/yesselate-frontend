@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useDepensesWorkspaceStore } from '@/lib/stores/depensesWorkspaceStore';
 import { depensesApiService } from '@/lib/services/depensesApiService';
 import { useBMOStore } from '@/lib/stores';

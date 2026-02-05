@@ -75,7 +75,7 @@ export function BudgetChart({
               border: '1px solid var(--border)',
               borderRadius: '8px',
             }}
-            formatter={(value: number) => `${value.toLocaleString('fr-FR')} FCFA`}
+            formatter={(value: number | undefined) => (value != null ? `${value.toLocaleString('fr-FR')} FCFA` : '')}
           />
 
           <Legend />

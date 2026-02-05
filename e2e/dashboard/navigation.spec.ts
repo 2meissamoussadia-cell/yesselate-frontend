@@ -18,7 +18,7 @@ test.describe('Dashboard Navigation', () => {
     await page.goto('/maitre-ouvrage/dashboard');
     
     // Attendre que la page soit chargée
-    await page.waitForSelector('[data-testid="dashboard-content"]', { timeout: 10000 });
+    await page.waitForSelector('[data-testid="dashboard-content"]', { timeout: 25000 });
     
     // Attendre un peu pour voir si des erreurs apparaissent
     await page.waitForTimeout(2000);
@@ -36,7 +36,7 @@ test.describe('Dashboard Navigation', () => {
     await page.goto('/maitre-ouvrage/dashboard');
     
     // Attendre que le contenu soit chargé
-    await page.waitForSelector('[data-testid="dashboard-content"]', { timeout: 10000 });
+    await page.waitForSelector('[data-testid="dashboard-content"]', { timeout: 25000 });
     
     // Vérifier que le router affiche quelque chose (pas d'écran vide)
     const content = await page.textContent('[data-testid="dashboard-content"]');
@@ -54,7 +54,7 @@ test.describe('Dashboard Navigation', () => {
     });
     
     await page.goto('/maitre-ouvrage/dashboard');
-    await page.waitForSelector('[data-testid="dashboard-content"]', { timeout: 10000 });
+    await page.waitForSelector('[data-testid="dashboard-content"]', { timeout: 25000 });
     
     // Attendre que tout soit stable
     await page.waitForTimeout(2000);

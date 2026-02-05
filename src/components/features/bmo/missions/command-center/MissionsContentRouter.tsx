@@ -7,7 +7,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Compass, Loader2, AlertTriangle, FileText, Calendar, MapPin } from 'lucide-react';
 import { MissionsWorkspaceContent } from '@/components/features/bmo/workspace/missions/MissionsWorkspaceContent';
 

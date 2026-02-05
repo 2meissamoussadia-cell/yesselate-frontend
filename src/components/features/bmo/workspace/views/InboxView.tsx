@@ -8,6 +8,7 @@ import {
   Inbox, AlertTriangle, Clock, CheckCircle2, XCircle,
   Building2, ChevronRight, Filter, Download
 } from 'lucide-react';
+import { logger } from '@/lib/utils/logger';
 
 type DemandRow = {
   id: string;
@@ -73,7 +74,7 @@ export function InboxView({ tab }: { tab: WorkspaceTab }) {
         title: `${queueConfig.label} (${loadedItems.length})` 
       });
     } catch (e) {
-      console.error('Erreur chargement inbox:', e);
+      logger.error('Erreur chargement inbox', e as Error, { context: 'InboxView' });
       setItems([]);
     } finally {
       setLoading(false);
@@ -166,7 +167,7 @@ export function InboxView({ tab }: { tab: WorkspaceTab }) {
         setBatchReason('');
       }
     } catch (e) {
-      console.error('Erreur batch:', e);
+      logger.error('Erreur batch', e as Error, { context: 'InboxView' });
     } finally {
       setBatchLoading(false);
     }
@@ -186,7 +187,7 @@ export function InboxView({ tab }: { tab: WorkspaceTab }) {
       a.remove();
       URL.revokeObjectURL(url);
     } catch (e) {
-      console.error('Erreur export:', e);
+      logger.error('Erreur export', e as Error, { context: 'InboxView' });
     }
   };
 

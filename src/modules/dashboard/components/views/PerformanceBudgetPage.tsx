@@ -23,7 +23,7 @@ import { useDashboardData } from '../../hooks/useDashboardData';
 import { exportToCSV, exportToJSON } from '../../utils/exportUtils';
 import type { PerformanceBudgetData } from '../../types/dashboardDataTypes';
 import { formatMoneyEUR } from '../../utils/colorMapping';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export const PerformanceBudgetPage = memo(function PerformanceBudgetPage() {
   // ✅ Charger les données depuis l'API

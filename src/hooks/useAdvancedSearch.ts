@@ -83,10 +83,11 @@ export function useAdvancedSearch(alerts: Alert[]) {
       }
 
       // Filtre par impact financier
-      if (filters.impactMin !== undefined && (alert.impact?.money || 0) < filters.impactMin) {
+      const impactMoney = typeof alert.impact === 'object' && alert.impact !== null && 'money' in alert.impact ? (alert.impact as { money: number }).money : undefined;
+      if (filters.impactMin !== undefined && (impactMoney ?? 0) < filters.impactMin) {
         return false;
       }
-      if (filters.impactMax !== undefined && (alert.impact?.money || 0) > filters.impactMax) {
+      if (filters.impactMax !== undefined && (impactMoney ?? 0) > filters.impactMax) {
         return false;
       }
 

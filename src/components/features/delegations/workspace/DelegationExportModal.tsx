@@ -8,7 +8,8 @@
 import { useState } from 'react';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { FluentButton } from '@/components/ui/fluent-button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import {
   FileSpreadsheet,
   FileJson,
@@ -74,7 +75,7 @@ export function DelegationExportModal({ open, onClose, onExport, format, queue }
         // Simuler l'export
         await new Promise((resolve) => setTimeout(resolve, 1500));
         const filename = `delegations-${new Date().toISOString().split('T')[0]}.${selectedFormat}`;
-        console.log(`Exporting to ${filename}`);
+        logger.info('Exporting delegation', { component: 'DelegationExportModal', filename });
       }
 
       setSuccess(true);
@@ -85,7 +86,7 @@ export function DelegationExportModal({ open, onClose, onExport, format, queue }
       }, 2000);
     } catch (err) {
       setError('Erreur lors de l\'export');
-      console.error(err);
+      logger.error('Delegation export failed', err instanceof Error ? err : undefined, { component: 'DelegationExportModal' });
     } finally {
       setExporting(false);
     }

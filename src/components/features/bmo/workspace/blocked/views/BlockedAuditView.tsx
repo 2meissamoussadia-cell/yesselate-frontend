@@ -9,6 +9,7 @@ import {
 import { cn } from '@/lib/cn';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { blockedApi, type AuditEntry } from '@/lib/services/blockedApiService';
+import { logger } from '@/lib/utils/logger';
 import { useBlockedWorkspaceStore } from '@/lib/stores/blockedWorkspaceStore';
 
 type Props = {
@@ -41,7 +42,7 @@ export function BlockedAuditView({ tabId, data }: Props) {
         const apiEntries = await blockedApi.getAuditLog(undefined, 100);
         setEntries(apiEntries);
       } catch (error) {
-        console.error('Failed to load audit log:', error);
+        logger.error('Failed to load audit log', error as Error, { context: 'BlockedAuditView' });
       } finally {
         setLoading(false);
       }

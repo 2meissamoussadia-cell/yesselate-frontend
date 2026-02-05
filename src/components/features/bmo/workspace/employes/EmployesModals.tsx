@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { logger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -257,7 +257,7 @@ function EmployesExportModal({ onClose }: { onClose: () => void }) {
       
       onClose();
     } catch (error) {
-      console.error('Export failed:', error);
+      logger.error('Export failed', error instanceof Error ? error : undefined, { component: 'EmployesModals' });
     } finally {
       setExporting(false);
       setSelectedFormat(null);
@@ -415,7 +415,7 @@ function EmployesConfirmModal({ onClose, data }: { onClose: () => void; data?: a
       await data?.onConfirm?.();
       onClose();
     } catch (error) {
-      console.error('Confirmation failed:', error);
+      logger.error('Confirmation failed', error instanceof Error ? error : undefined, { component: 'EmployesModals' });
     } finally {
       setConfirming(false);
     }

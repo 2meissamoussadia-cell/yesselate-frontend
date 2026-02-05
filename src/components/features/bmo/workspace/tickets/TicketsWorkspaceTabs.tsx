@@ -2,7 +2,7 @@
 
 import { useTicketsWorkspaceStore } from '@/lib/stores/ticketsWorkspaceStore';
 import { X, Ticket, FileText, AlertTriangle, User, Clock, BarChart3 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 const tabIcons: Record<string, React.ReactNode> = {
   inbox: <Ticket className="w-4 h-4" />,

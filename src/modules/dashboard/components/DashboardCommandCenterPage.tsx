@@ -17,7 +17,7 @@ import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { useAchievementsStore } from '@/lib/stores/achievementsStore';
 import { useI18n } from '@/lib/i18n';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useAuthHeaders } from '../utils/getAuthHeaders';
 import { useVoiceCommands } from '../hooks/useVoiceCommands';
 import { useDashboardLive } from '../hooks/useDashboardLive';

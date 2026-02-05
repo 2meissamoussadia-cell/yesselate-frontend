@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 
 export type CollapsibleSectionPriority = 'critical' | 'normal';

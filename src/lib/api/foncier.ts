@@ -12,7 +12,7 @@ export const foncierApi = {
     return res.json();
   },
 
-  async getFoncier(id) {
+  async getFoncier(id: string) {
     const res = await fetch(`${API_BASE}/Fonciers/${id}`);
     if (!res.ok) throw new Error('Non trouvé');
     return res.json();

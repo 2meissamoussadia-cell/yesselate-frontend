@@ -1,23 +1,13 @@
-'use client';
+import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
+import PerformanceLayoutClient from './PerformanceLayoutClient';
 
-import React from 'react';
-import { Activity } from 'lucide-react';
-import { PortalModuleCleanLayout } from '@/components/bmo/layout/PortalModuleCleanLayout';
-import type { PortalModuleTab } from '@/components/bmo/layout/PortalModuleCleanLayout';
+export const metadata: Metadata = {
+  title: 'Performance & SLA | Maître d\'Ouvrage | YESSALATE',
+  description:
+    'Indicateurs de performance et SLA - Suivi des engagements, délais, qualité. Pilotage BTP.',
+};
 
-const performanceTabs: PortalModuleTab[] = [
-  {
-    id: 'overview',
-    label: 'Indicateurs & SLA',
-    path: '/maitre-ouvrage/performance',
-    icon: Activity,
-  },
-];
-
-export default function PerformanceLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <PortalModuleCleanLayout title="Performance & SLA" tabs={performanceTabs}>
-      {children}
-    </PortalModuleCleanLayout>
-  );
+export default function PerformanceLayout({ children }: { children: ReactNode }) {
+  return <PerformanceLayoutClient>{children}</PerformanceLayoutClient>;
 }

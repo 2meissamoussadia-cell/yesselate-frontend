@@ -7,7 +7,7 @@
 
 import React, { useEffect } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export interface DetailModalProps {
   isOpen: boolean;

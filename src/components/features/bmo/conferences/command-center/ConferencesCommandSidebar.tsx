@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -26,8 +26,19 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
+export type ConferencesMainCategory =
+  | 'overview'
+  | 'planned'
+  | 'ongoing'
+  | 'completed'
+  | 'crisis'
+  | 'arbitrage'
+  | 'revue_projet'
+  | 'comite_direction'
+  | 'resolution_blocage';
+
 interface SidebarCategory {
-  id: string;
+  id: ConferencesMainCategory;
   label: string;
   icon: LucideIcon;
   badge?: number | string;
@@ -47,9 +58,9 @@ const conferencesCategories: SidebarCategory[] = [
 ];
 
 interface ConferencesCommandSidebarProps {
-  activeCategory: string;
+  activeCategory: ConferencesMainCategory;
   collapsed: boolean;
-  onCategoryChange: (category: string) => void;
+  onCategoryChange: (category: ConferencesMainCategory) => void;
   onToggleCollapse: () => void;
   onOpenCommandPalette: () => void;
   stats?: {

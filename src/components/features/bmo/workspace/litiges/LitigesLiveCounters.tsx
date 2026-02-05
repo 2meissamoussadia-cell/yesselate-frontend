@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { Scale, AlertTriangle, CheckCircle, MessageSquare, Gavel, DollarSign, Calendar } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { litigesApiService, type LitigesStats } from '@/lib/services/litigesApiService';
+import { logger } from '@/lib/utils/logger';
 
 interface Props {
   onOpenQueue: (queue: string, title: string, icon: string) => void;
@@ -16,7 +17,7 @@ export function LitigesLiveCounters({ onOpenQueue }: Props) {
   useEffect(() => {
     const loadStats = async () => {
       try { const data = await litigesApiService.getStats(); setStats(data); }
-      catch (error) { console.error('Failed:', error); }
+      catch (error) { logger.error('Litiges stats failed', error as Error, { context: 'LitigesLiveCounters' }); }
       finally { setLoading(false); }
     };
     loadStats();

@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCalendrierStore } from '@/lib/stores/calendrierStore';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { logger } from '@/lib/utils/logger';
 import { EmptyState } from '../components/EmptyState';
 import type { SLA } from '@/lib/types/calendrier.types';

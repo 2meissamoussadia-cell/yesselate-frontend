@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { FluentButton } from '@/components/ui/fluent-button';
 import {
   Activity,
@@ -159,7 +160,7 @@ function HashChainView({ delegationId, delegation }: { delegationId: string; del
         setVerification(data.verification);
       }
     } catch (e) {
-      console.error('Erreur vérification:', e);
+      logger.error('Erreur vérification', e instanceof Error ? e : undefined, { component: 'DelegationAuditSection' });
     } finally {
       setVerifying(false);
     }

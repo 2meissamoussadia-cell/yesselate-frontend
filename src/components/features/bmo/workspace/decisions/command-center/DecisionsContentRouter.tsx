@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Gavel, Clock, Zap, Target, Settings, CheckCircle, History, BarChart3, Tag, Loader2 } from 'lucide-react';
 import { DecisionsWorkspaceContent } from '../DecisionsWorkspaceContent';
 import { useDecisionsWorkspaceStore } from '@/lib/stores/decisionsWorkspaceStore';

@@ -7,7 +7,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface EnhancedTooltipProps {
   content: React.ReactNode;

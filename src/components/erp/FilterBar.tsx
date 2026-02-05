@@ -7,7 +7,7 @@
 'use client';
 
 import React, { useCallback } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Filter, X, Save } from 'lucide-react';
 import { Select as SelectRoot, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { ErpFilters, ErpSavedView } from './types';

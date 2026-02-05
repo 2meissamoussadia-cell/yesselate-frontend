@@ -17,7 +17,7 @@ import type { AlertsMainCategory, AlertsNavItem } from '../types/alertsNavigatio
 export interface NavNode {
   id: string;
   label: string;
-  icon: any;
+  icon?: any;
   badge?: number | string;
   badgeType?: 'default' | 'warning' | 'critical' | 'success';
   children?: NavNode[];

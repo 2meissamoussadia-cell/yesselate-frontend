@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -26,8 +26,20 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
+export type AlertsMainCategory =
+  | 'overview'
+  | 'critical'
+  | 'warning'
+  | 'sla'
+  | 'blocked'
+  | 'acknowledged'
+  | 'resolved'
+  | 'rules'
+  | 'history'
+  | 'favorites';
+
 export interface AlertsSidebarCategory {
-  id: string;
+  id: AlertsMainCategory;
   label: string;
   icon: LucideIcon;
   badge?: number | string;
@@ -48,7 +60,7 @@ export const alertsCategories: AlertsSidebarCategory[] = [
 ];
 
 interface AlertsCommandSidebarProps {
-  activeCategory: string;
+  activeCategory: AlertsMainCategory;
   collapsed: boolean;
   stats?: {
     critical?: number;
@@ -58,7 +70,7 @@ interface AlertsCommandSidebarProps {
     acknowledged?: number;
     resolved?: number;
   };
-  onCategoryChange: (category: string) => void;
+  onCategoryChange: (category: AlertsMainCategory) => void;
   onToggleCollapse: () => void;
   onOpenCommandPalette: () => void;
 }
@@ -72,7 +84,7 @@ export function AlertsCommandSidebar({
   onOpenCommandPalette,
 }: AlertsCommandSidebarProps) {
   // Mise à jour dynamique des badges avec les stats
-  const getCategoryBadge = (categoryId: string): number | string | undefined => {
+  const getCategoryBadge = (categoryId: AlertsMainCategory): number | string | undefined => {
     if (!stats) return alertsCategories.find(c => c.id === categoryId)?.badge;
     
     switch (categoryId) {

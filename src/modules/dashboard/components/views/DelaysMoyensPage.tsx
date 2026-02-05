@@ -24,7 +24,7 @@ import { SearchFilter } from '../shared/SearchFilter';
 import { useDashboardData } from '../../hooks/useDashboardData';
 import { exportToCSV, exportToJSON } from '../../utils/exportUtils';
 import type { DelaysMoyensData } from '../../types/dashboardDataTypes';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export const DelaysMoyensPage = memo(function DelaysMoyensPage() {
   const [searchQuery, setSearchQuery] = useState('');

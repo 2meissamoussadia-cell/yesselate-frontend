@@ -18,7 +18,7 @@ import {
   Users,
   Activity,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface GovernanceStatsProps {
   className?: string;

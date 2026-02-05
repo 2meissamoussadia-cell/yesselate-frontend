@@ -181,9 +181,11 @@ export function PageTemplate({
 
       <div
         className={cn(
-          'flex-1 min-h-0 min-w-0 max-w-full overflow-x-hidden overflow-y-auto bg-gray-50/80 dark:bg-slate-950/30',
+          'flex-1 min-h-0 min-w-0 max-w-full overflow-x-hidden bg-gray-50/80 dark:bg-slate-950/30',
+          useFullPage ? 'overflow-hidden' : 'overflow-y-auto',
           !fullBleed && !useFullPage && 'px-2 sm:px-4 py-2'
         )}
+        aria-label="Contenu principal"
       >
         <div
           className={cn(

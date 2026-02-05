@@ -17,6 +17,7 @@ import {
   adaptCalendrierOverview,
 } from '@/domain/calendrier/adapters';
 import { useCalendrierService } from '@/hooks/useCalendrierService';
+import { logger } from '@/lib/utils/logger';
 import type { CalendrierFilters } from '../types/calendrierTypes';
 import type { CalendrierData } from '@/domain/calendrier/types';
 
@@ -42,7 +43,7 @@ export function useCalendrierDataWithDomain(filters?: Partial<CalendrierFilters>
         apiOverview.alertes || []
       );
     } catch (err) {
-      console.error('[useCalendrierDataWithDomain] Erreur adaptation:', err);
+      logger.error('Erreur adaptation calendrier', err instanceof Error ? err : undefined, { component: 'useCalendrierDataWithDomain' });
       return null;
     }
   }, [apiOverview]);

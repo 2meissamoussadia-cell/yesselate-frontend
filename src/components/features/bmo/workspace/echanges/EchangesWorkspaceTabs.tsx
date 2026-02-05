@@ -1,7 +1,7 @@
 'use client';
 import { useEchangesWorkspaceStore } from '@/lib/stores/echangesWorkspaceStore';
 import { X, MessageSquare, FileText, ArrowUp, Zap, Briefcase, BarChart3 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 const tabIcons: Record<string, React.ReactNode> = { inbox: <MessageSquare className="w-4 h-4" />, detail: <FileText className="w-4 h-4" />, escaladed: <ArrowUp className="w-4 h-4" />, urgent: <Zap className="w-4 h-4" />, projets: <Briefcase className="w-4 h-4" />, analytics: <BarChart3 className="w-4 h-4" /> };
 export function EchangesWorkspaceTabs() {
   const { tabs, activeTabId, setActiveTab, closeTab } = useEchangesWorkspaceStore();

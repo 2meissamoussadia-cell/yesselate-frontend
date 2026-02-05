@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { ChevronRight } from 'lucide-react';
 import type { CalendrierDomain, CalendrierSection, CalendrierView } from '@/lib/types/calendrier.types';
 import { calendrierDomains } from './CalendrierCommandSidebar';

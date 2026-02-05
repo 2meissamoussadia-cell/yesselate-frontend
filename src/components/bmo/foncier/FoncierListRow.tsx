@@ -74,7 +74,8 @@ export const FoncierListRow = React.memo(function FoncierListRow({
         }}
         aria-selected={selected}
         className={cn(
-          'group relative flex items-start gap-3 px-4 py-3',
+          'group relative w-full min-w-0 overflow-hidden shrink-0',
+          'grid grid-cols-1 gap-y-1.5 px-4 py-3',
           'border-b border-slate-100 dark:border-slate-800/40',
           'cursor-pointer transition-all duration-150',
           'hover:bg-slate-50 dark:hover:bg-slate-800/30',
@@ -85,62 +86,62 @@ export const FoncierListRow = React.memo(function FoncierListRow({
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-inset'
         )}
       >
-        <div className="flex-1 min-w-0 space-y-2">
-          <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-            <div className="flex items-center gap-1">
+        <div className="min-w-0 overflow-hidden space-y-1.5">
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 min-w-0 text-xs text-slate-500 dark:text-slate-400">
+            <div className="flex items-center gap-1 min-w-0 overflow-hidden">
               <MapPin className="w-3 h-3 shrink-0" />
               <span className="font-medium truncate">{item.localisation}</span>
             </div>
-            <span className="ml-auto shrink-0">
-              {formatDistanceToNow(dateCreation, { addSuffix: true, locale: fr })}
-            </span>
-            {item.pieceJointes && item.pieceJointes > 0 && (
-              <div className="flex items-center gap-1 shrink-0">
-                <FileText className="w-3 h-3" />
-                {item.pieceJointes}
-              </div>
-            )}
+            <div className="flex items-center gap-1 shrink-0">
+              <span className="truncate max-w-[90px]">
+                {formatDistanceToNow(dateCreation, { addSuffix: true, locale: fr })}
+              </span>
+              {item.pieceJointes && item.pieceJointes > 0 && (
+                <>
+                  <FileText className="w-3 h-3" aria-hidden />
+                  {item.pieceJointes}
+                </>
+              )}
+            </div>
           </div>
 
-          <div className="flex items-start gap-2">
+          <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-2 min-w-0">
             <Badge variant="secondary" className="shrink-0 text-xs font-semibold">
               {item.numero}
             </Badge>
             <Tooltip>
               <TooltipTrigger asChild>
-                <h4 className="font-semibold text-sm line-clamp-1 flex-1 min-w-0 cursor-default">
+                <span className="font-semibold text-sm truncate min-w-0 cursor-default block">
                   {item.titre}
-                </h4>
+                </span>
               </TooltipTrigger>
               <TooltipContent side="top" className="max-w-xs">
                 <p className="text-sm">{item.titre}</p>
               </TooltipContent>
             </Tooltip>
-            <Badge variant="outline" className={cn('shrink-0 text-xs font-medium', typeInfo.color)}>
+            <Badge variant="outline" className={cn('shrink-0 text-xs font-medium truncate max-w-[100px]', typeInfo.color)}>
               <span className="mr-1" aria-hidden>{typeInfo.icon}</span>
               {item.type}
             </Badge>
           </div>
 
-          <div className="flex items-center gap-3 text-xs flex-wrap">
-            <Badge variant="outline" className={cn('text-xs', statutInfo.color)}>
+          <div className="flex items-center gap-2 text-xs flex-nowrap min-w-0 overflow-hidden">
+            <Badge variant="outline" className={cn('text-xs shrink-0', statutInfo.color)}>
               {statutInfo.label}
             </Badge>
-            
             {item.surface && (
-              <div className="flex items-center gap-1 text-slate-600 dark:text-slate-400">
-                <span>{item.surface.toLocaleString()} m²</span>
-              </div>
+              <span className="text-slate-600 dark:text-slate-400 shrink-0">
+                {item.surface.toLocaleString()} m²
+              </span>
             )}
-            
             {item.responsable && (
-              <div className="flex items-center gap-1 ml-auto">
-                <Avatar className="w-5 h-5">
+              <div className="flex items-center gap-1 min-w-0 overflow-hidden ml-auto shrink-0">
+                <Avatar className="w-5 h-5 shrink-0">
                   <AvatarFallback className="text-xs">
                     {item.responsable.nom.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
-                <span className="text-slate-600 dark:text-slate-400">
+                <span className="text-slate-600 dark:text-slate-400 truncate">
                   {item.responsable.nom}
                 </span>
               </div>
@@ -148,7 +149,7 @@ export const FoncierListRow = React.memo(function FoncierListRow({
           </div>
 
           {item.description && (
-            <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">
+            <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 truncate min-w-0">
               {item.description}
             </p>
           )}

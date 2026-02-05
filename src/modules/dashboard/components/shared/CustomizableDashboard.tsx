@@ -8,7 +8,7 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import { Settings2, Save, ChevronUp, ChevronDown, Plus, X, GripVertical } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useAchievementsStore } from '@/lib/stores/achievementsStore';
 import {
   DndContext,

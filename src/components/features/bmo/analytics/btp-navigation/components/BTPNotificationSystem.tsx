@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { X, AlertTriangle, Info, CheckCircle, TrendingUp } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Badge } from '@/components/ui/badge';
 import type { AlertDefinition } from '@/lib/config/analyticsDisplayLogic';
 

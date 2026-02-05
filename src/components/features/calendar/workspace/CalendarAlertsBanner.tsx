@@ -2,7 +2,7 @@
 
 import { AlertTriangle, Clock, Calendar } from 'lucide-react';
 import { useCalendarWorkspaceStore } from '@/lib/stores/calendarWorkspaceStore';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 /**
  * CalendarAlertsBanner

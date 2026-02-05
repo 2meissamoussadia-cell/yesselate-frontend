@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { ticketsApi, type TicketStats, type TicketCategory } from '@/lib/services/ticketsApiService';
 import { BarChart3, X, Ticket, Zap, Clock, CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 const getCategoryLabel = (cat: TicketCategory): string =>
   ({ technique: 'Technique', commercial: 'Commercial', facturation: 'Facturation', livraison: 'Livraison', qualite: 'Qualité', autre: 'Autre' })[cat] ?? cat;
@@ -20,7 +21,7 @@ export function TicketsStatsModal({ open, onClose }: Props) {
     const load = async () => {
       setLoading(true);
       try { const data = await ticketsApi.getStats(); setStats(data); }
-      catch (error) { console.error('Failed:', error); }
+      catch (error) { logger.error('Failed to load stats', error instanceof Error ? error : undefined, { component: 'TicketsStatsModal' }); }
       finally { setLoading(false); }
     };
     load();

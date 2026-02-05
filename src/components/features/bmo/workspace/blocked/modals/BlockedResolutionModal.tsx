@@ -28,6 +28,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
+import { logger } from '@/lib/utils/logger';
 import { cn } from '@/lib/cn';
 import {
   Users,
@@ -195,7 +196,7 @@ export function BlockedResolutionModal({
       onSuccess?.();
       onClose();
     } catch (error) {
-      console.error('Resolution error:', error);
+      logger.error('Resolution error', error as Error, { context: 'BlockedResolutionModal' });
     } finally {
       setSubmitting(false);
     }

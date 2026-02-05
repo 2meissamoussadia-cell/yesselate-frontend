@@ -103,13 +103,12 @@ export function ListItem({
         aria-disabled={disabled}
         data-list-item-id={id}
         className={cn(
-          'group relative flex items-start gap-3 px-4 py-3',
-          'border-b border-slate-100 dark:border-slate-800/40',
+          'group relative w-full min-w-0 overflow-hidden shrink-0',
+          (indicator || urgent) ? 'grid grid-cols-[auto_minmax(0,1fr)] gap-x-3' : 'flex',
+          'px-4 py-3 border-b border-slate-100 dark:border-slate-800/40',
           'transition-all duration-150 ease-out',
-          // Effet hover Outlook : bordure gauche
           'before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[3px]',
           'before:bg-transparent before:transition-colors before:duration-150',
-          // États
           disabled
             ? 'opacity-50 cursor-not-allowed'
             : [
@@ -122,35 +121,29 @@ export function ListItem({
             'before:bg-sky-500',
           ],
           unread && 'font-medium',
-          // Focus visible WCAG
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-inset',
+          quickActions.length > 0 && 'pr-16',
           className
         )}
       >
-        {/* Indicateur de statut */}
-        {indicator && (
-          <div className="flex flex-col items-center gap-2 pt-1 shrink-0">
-            <div className={cn('w-2 h-2 rounded-full', indicatorColors[indicator])} />
+        {/* Colonne indicateurs */}
+        {(indicator || (urgent && !indicator)) && (
+          <div className="flex flex-col items-center gap-2 pt-1 shrink-0 w-6 min-w-6" aria-hidden>
+            {indicator && <div className={cn('w-2 h-2 rounded-full', indicatorColors[indicator])} />}
+            {urgent && !indicator && <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />}
           </div>
         )}
 
-        {/* Indicateur urgent */}
-        {urgent && !indicator && (
-          <div className="flex flex-col items-center gap-2 pt-1 shrink-0">
-            <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-          </div>
-        )}
-
-        {/* Contenu */}
-        <div className="flex-1 min-w-0">
+        {/* Contenu — largeur contrainte */}
+        <div className={cn('min-w-0 overflow-hidden', (indicator || urgent) ? '' : 'flex-1')}>
           {children}
         </div>
 
-        {/* Quick Actions */}
+        {/* Quick Actions — position fixe */}
         {quickActions.length > 0 && (
           <div
             className={cn(
-              'absolute right-2 top-1/2 -translate-y-1/2',
+              'absolute right-2 top-1/2 -translate-y-1/2 z-10',
               'flex items-center gap-1',
               'opacity-0 group-hover:opacity-100 group-focus-within:opacity-100',
               'transition-opacity duration-150',
@@ -216,17 +209,17 @@ export function ListItemContent({
   tags,
 }: ListItemContentProps) {
   return (
-    <div className="space-y-1.5">
+    <div className="space-y-1.5 min-w-0 overflow-hidden">
       {/* Top line - métadonnées */}
       {topLine && (
-        <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+        <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 min-w-0 flex-nowrap">
           {topLine}
         </div>
       )}
 
       {/* Title line */}
-      <div className="flex items-start gap-2">
-        <h4 className="font-semibold text-sm line-clamp-1 flex-1 min-w-0 text-slate-900 dark:text-slate-100">
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 min-w-0">
+        <h4 className="font-semibold text-sm truncate min-w-0 text-slate-900 dark:text-slate-100">
           {title}
         </h4>
         {badge && <div className="shrink-0">{badge}</div>}
@@ -234,21 +227,21 @@ export function ListItemContent({
 
       {/* Subtitle line */}
       {subtitle && (
-        <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
+        <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400 min-w-0 overflow-hidden">
           {subtitle}
         </div>
       )}
 
       {/* Description */}
       {description && (
-        <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">
+        <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 truncate min-w-0">
           {description}
         </p>
       )}
 
-      {/* Tags line */}
+      {/* Tags line — une ligne, pas de wrap pour éviter débordement */}
       {tags && (
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-2 flex-nowrap min-w-0 overflow-hidden">
           {tags}
         </div>
       )}

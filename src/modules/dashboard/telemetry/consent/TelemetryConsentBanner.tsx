@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from 'react';
 import { X, Shield, AlertCircle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useTelemetryConsent } from './useTelemetryConsent';
 
 interface TelemetryConsentBannerProps {

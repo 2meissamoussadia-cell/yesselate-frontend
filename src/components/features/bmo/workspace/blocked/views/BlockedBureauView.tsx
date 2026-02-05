@@ -8,6 +8,7 @@ import {
 import { cn } from '@/lib/cn';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { blockedApi } from '@/lib/services/blockedApiService';
+import { logger } from '@/lib/utils/logger';
 import { useBlockedWorkspaceStore } from '@/lib/stores/blockedWorkspaceStore';
 import type { BlockedDossier } from '@/lib/types/bmo.types';
 
@@ -45,7 +46,7 @@ export function BlockedBureauView({ tabId, data }: Props) {
         const result = await blockedApi.getAll();
         setDossiers(result.data);
       } catch (error) {
-        console.error('Failed to load dossiers:', error);
+        logger.error('Failed to load dossiers', error as Error, { context: 'BlockedBureauView' });
       } finally {
         setLoading(false);
       }

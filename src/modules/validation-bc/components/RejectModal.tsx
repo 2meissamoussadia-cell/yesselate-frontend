@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/dialog';
 import { XCircle, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import type { DocumentValidation } from '../types/validationTypes';
 
 interface RejectModalProps {
@@ -70,7 +71,7 @@ export function RejectModal({
       setComment('');
       onClose();
     } catch (error) {
-      console.error('Erreur de rejet:', error);
+      logger.error('Erreur de rejet', error instanceof Error ? error : undefined, { component: 'RejectModal' });
     } finally {
       setLoading(false);
     }

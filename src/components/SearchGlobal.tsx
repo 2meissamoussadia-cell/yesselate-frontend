@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import { Command } from 'cmdk';
 import { useQuery } from '@tanstack/react-query';
 import { Search } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useSearchGlobalStore } from '@/lib/stores/searchGlobalStore';
 import { isMac } from '@/lib/utils';
 

@@ -19,16 +19,23 @@
  * - enableKeyboardNav: raccourcis Ctrl+[, Ctrl+], Ctrl+\
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { PanelLeft, List, PanelRight } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { useLocalStorage } from '@/application/hooks/useLocalStorage';
 import { useLayoutShortcuts } from '@/hooks/useLayoutShortcuts';
 
+const LIST_WIDTH_MIN = 280;
+const LIST_WIDTH_MAX = 520;
+const LIST_WIDTH_DEFAULT = 420;
+const LIST_WIDTH_MAX_PERCENT = 0.6;
+
 export interface LayoutState {
   subSidebarCollapsed: boolean;
   listCollapsed: boolean;
   detailCollapsed: boolean;
+  /** Largeur de la colonne liste (px), optionnel — si défini, la colonne est redimensionnable et cette valeur est utilisée. */
+  listWidth?: number;
 }
 
 export interface OutlookLikeLayoutProps {
@@ -59,6 +66,7 @@ const defaultLayoutState: LayoutState = {
   subSidebarCollapsed: false,
   listCollapsed: false,
   detailCollapsed: false,
+  listWidth: LIST_WIDTH_DEFAULT,
 };
 
 export function OutlookLikeLayout({
@@ -82,6 +90,18 @@ export function OutlookLikeLayout({
 
   const [localState, setLocalState] = useState(layoutState);
   const state = module ? storedState : localState;
+  const [isResizing, setIsResizing] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isMdUp, setIsMdUp] = useState(true);
+
+  useEffect(() => {
+    const mq = typeof window !== 'undefined' ? window.matchMedia('(min-width: 768px)') : null;
+    if (!mq) return;
+    setIsMdUp(mq.matches);
+    const onChange = () => setIsMdUp(mq.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
 
   const setState = useCallback(
     (updater: LayoutState | ((prev: LayoutState) => LayoutState)) => {
@@ -109,6 +129,42 @@ export function OutlookLikeLayout({
   const toggleDetail = useCallback(() => {
     setState((prev) => ({ ...prev, detailCollapsed: !prev.detailCollapsed }));
   }, [setState]);
+
+  const handleResizeStart = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      setIsResizing(true);
+      const startX = e.clientX;
+      const startWidth = state.listWidth ?? LIST_WIDTH_DEFAULT;
+
+      const onMouseMove = (moveEvent: MouseEvent) => {
+        const delta = moveEvent.clientX - startX;
+        const nextWidth = startWidth + delta;
+        const container = containerRef.current;
+        const maxPx = container
+          ? Math.min(LIST_WIDTH_MAX, container.getBoundingClientRect().width * LIST_WIDTH_MAX_PERCENT)
+          : LIST_WIDTH_MAX;
+        const clamped = Math.round(Math.min(maxPx, Math.max(LIST_WIDTH_MIN, nextWidth)));
+        setState((prev) => ({ ...prev, listWidth: clamped }));
+      };
+
+      const onMouseUp = () => {
+        setIsResizing(false);
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+      };
+
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+    },
+    [setState, state.listWidth]
+  );
+
+  const listWidth = state.listWidth ?? LIST_WIDTH_DEFAULT;
 
   useLayoutShortcuts(
     {
@@ -144,15 +200,21 @@ export function OutlookLikeLayout({
         </div>
       )}
 
-      <div className="flex flex-1 min-h-0 min-w-0 overflow-hidden relative">
-        {/* Colonne 1 : sidebar dossiers — visible lg+ sauf si collapsed */}
+      <div
+        ref={containerRef}
+        className={cn(
+          'flex flex-1 min-h-0 h-0 min-w-0 overflow-hidden relative',
+          isResizing && 'select-none'
+        )}
+      >
+        {/* Colonne 1 : sidebar dossiers — visible lg+ ; figée en hauteur, pas de scroll (seules liste + détail défilent) */}
         {showSidebar && (
           <aside
             className={cn(
-              'hidden lg:flex lg:shrink-0',
+              'hidden lg:flex lg:shrink-0 lg:flex-col lg:min-h-0',
               'lg:w-[220px] lg:min-w-[200px] lg:max-w-[280px]',
               'border-r border-slate-200 dark:border-slate-800/60',
-              'bg-white dark:bg-slate-950/50 overflow-y-auto',
+              'bg-white dark:bg-slate-950/50 overflow-hidden',
               'transition-[width] duration-200 ease-out'
             )}
             aria-label="Dossiers"
@@ -161,15 +223,21 @@ export function OutlookLikeLayout({
           </aside>
         )}
 
-        {/* Colonne 2 : zone liste + filterBar */}
+        {/* Colonne 2 : zone liste — barre filtres figée, seule la liste défile ; scrollbar dans la bande de redimensionnement */}
         {showList && (
           <section
             className={cn(
-              'flex flex-col flex-1 min-w-0',
-              'md:shrink-0 md:w-[400px] md:min-w-[320px] md:max-w-[500px]',
+              'flex flex-col min-h-0 overflow-hidden',
               'border-r border-slate-200 dark:border-slate-800/60',
-              'bg-slate-50/80 dark:bg-slate-900/50 overflow-hidden'
+              'bg-slate-50/80 dark:bg-slate-900/50',
+              'flex-1 min-w-0 md:flex-none md:shrink-0',
+              'max-md:min-w-0 max-md:max-w-full'
             )}
+            style={
+              isMdUp
+                ? { width: listWidth, minWidth: LIST_WIDTH_MIN, maxWidth: '60%' }
+                : undefined
+            }
             aria-label="Liste"
           >
             {filterBar && (
@@ -180,15 +248,45 @@ export function OutlookLikeLayout({
                 {filterBar}
               </div>
             )}
-            <div className="flex-1 min-h-0 overflow-hidden">{list}</div>
+            {/* Liste + bande commune : scrollbar dessinée dans la bande de resize (trait rouge) ; fine bande resize à droite */}
+            <div className="flex flex-1 min-h-0 min-w-0 relative">
+              <div
+                className={cn(
+                  'flex-1 min-h-0 min-w-0 overflow-y-auto overflow-x-hidden scrollbar-dashboard overscroll-contain',
+                  'md:-mr-3 md:z-10'
+                )}
+              >
+                <div className="min-h-full md:pr-3">{list}</div>
+              </div>
+              {showDetail && isMdUp && (
+                <>
+                  <div
+                    className="hidden md:block shrink-0 w-3 pointer-events-none"
+                    aria-hidden
+                  />
+                  <button
+                    type="button"
+                    onClick={(e) => e.preventDefault()}
+                    onMouseDown={handleResizeStart}
+                    className={cn(
+                      'hidden md:flex absolute right-0 top-0 bottom-0 w-1 z-20',
+                      'items-center justify-center cursor-col-resize',
+                      'focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-inset'
+                    )}
+                    aria-label="Redimensionner la colonne liste"
+                    title="Glisser pour redimensionner"
+                  />
+                </>
+              )}
+            </div>
           </section>
         )}
 
-        {/* Colonne 3 : panneau détail */}
+        {/* Colonne 3 : panneau détail — seule la zone détail défile (type Outlook/Gmail), reste figé */}
         {showDetail && (
           <section
             className={cn(
-              'hidden md:flex flex-1 min-w-[400px] overflow-hidden flex-col',
+              'hidden md:flex flex-1 min-w-[280px] min-h-0 overflow-hidden flex-col',
               'bg-white dark:bg-slate-950/40'
             )}
             aria-label="Détail"

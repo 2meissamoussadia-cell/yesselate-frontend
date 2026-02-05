@@ -10,13 +10,16 @@ export interface KPICardData {
   id: string;
   label: string;
   value: string | number;
-  trend?: number;
+  trend?: number | string;
   trendType?: 'up' | 'down' | 'neutral';
   icon?: React.ComponentType<{ className?: string }>;
-  color?: 'blue' | 'emerald' | 'amber' | 'purple' | 'rose' | 'cyan';
+  color?: 'blue' | 'emerald' | 'amber' | 'purple' | 'rose' | 'cyan' | 'slate' | 'red' | 'orange' | 'violet';
   description?: string;
   onClick?: () => void;
   sparkline?: number[];
+  delta?: number;
+  target?: number;
+  average?: number;
 }
 
 export interface KPICardProps {
@@ -33,6 +36,10 @@ const accentByColor: Record<NonNullable<KPICardData['color']>, string> = {
   purple: 'bg-purple-500',
   rose: 'bg-rose-500',
   cyan: 'bg-cyan-500',
+  slate: 'bg-slate-500',
+  red: 'bg-red-500',
+  orange: 'bg-orange-500',
+  violet: 'bg-violet-500',
 };
 
 /** Affiche "—" pour valeurs invalides (audit KPI NaN/undefined/null). Exporté pour tests P4. */

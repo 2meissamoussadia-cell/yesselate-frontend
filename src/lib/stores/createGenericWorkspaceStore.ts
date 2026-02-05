@@ -300,8 +300,4 @@ export function createGenericWorkspaceStore<
   );
 }
 
-// ============================================
-// TYPES EXPORT
-// ============================================
-
-export type { GenericTab, GenericFilter };
+// Types GenericTab, GenericFilter are exported above via interface declarations

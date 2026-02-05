@@ -10,7 +10,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ScreenReaderOnly } from '@/components/ui/screen-reader-only';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { BureauTag } from '@/components/features/bmo/BureauTag';
 import type { Alert } from '@/lib/types/alerts.types';
 
@@ -93,11 +93,14 @@ export const AlertCard = memo(function AlertCard({
                 {alert.severity}
               </Badge>
               {alert.bureau && <BureauTag bureau={alert.bureau} />}
-              {alert.impact?.money && (
-                <span className="text-[9px] sm:text-[10px] font-mono text-slate-400">
-                  {alert.impact.money.toLocaleString('fr-FR')} FCFA
-                </span>
-              )}
+              {(() => {
+                const money = typeof alert.impact === 'object' && alert.impact !== null && 'money' in alert.impact ? (alert.impact as { money: number }).money : undefined;
+                return money != null ? (
+                  <span className="text-[9px] sm:text-[10px] font-mono text-slate-400">
+                    {money.toLocaleString('fr-FR')} FCFA
+                  </span>
+                ) : null;
+              })()}
               {alert.slaDueAt && (
                 <span className="text-[9px] sm:text-[10px] text-slate-400">
                   Échéance: {new Date(alert.slaDueAt).toLocaleDateString('fr-FR')}

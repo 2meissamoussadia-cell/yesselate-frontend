@@ -8,7 +8,7 @@
 import React, { Suspense, useMemo, memo, useCallback, useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import {
   Loader2,
   RefreshCw,
@@ -60,7 +60,6 @@ import {
   DashboardCleanLayout,
   DashboardHome,
   PilotageHome,
-  TickerBar,
   DashboardBottomNav,
   type KpiForStrip,
 } from '@/modules/dashboard';
@@ -313,6 +312,10 @@ function DashboardContent() {
   }, [allKpis]);
 
   const enabledTickerLabels = useTickerCardsSettingsStore((s) => s.enabledLabels);
+  const tickerDisplay = useTickerCardsSettingsStore((s) => s.display);
+  const tickerAnchor = useTickerCardsSettingsStore((s) => s.anchor);
+  const setTickerDisplay = useTickerCardsSettingsStore((s) => s.setDisplay);
+  const setTickerAnchor = useTickerCardsSettingsStore((s) => s.setAnchor);
   const tickerItems = useMemo(() => {
     let source = allKpis;
     if (enabledTickerLabels.length > 0) {
@@ -494,9 +497,6 @@ function DashboardContent() {
   const hasSectionSelected = Boolean(dashboardSectionFocus);
   const usePilotageHome = isCockpitHome && !hasSectionSelected && subSubCategory !== 'cockpit-detail';
   /** Section sélectionnée dans la sidebar (bleu) → détermine si et quoi afficher dans la bande d’actions (rouge). */
-  const selectedSection: string | null = usePilotageHome ? 'tresorerie-synthese' : null;
-  const sectionActions = selectedSection != null ? ACTIONS_BY_SECTION[selectedSection] ?? [] : [];
-  const showActionsStrip = sectionActions.length > 0;
   const useCleanLayout = true; // Refonte UX — layout Procore / SAP Fiori
 
   if (useCleanLayout) {
@@ -508,17 +508,12 @@ function DashboardContent() {
         </Suspense>
         <DashboardCommandPalette kpis={allKpis} />
         <DashboardCleanLayout lastUpdate={formatTimeAgo(lastUpdate)} hideHeader>
-          {/* BmoSidebar (principal) + SubSidebar (dashboard) + colonne SubNav / KPI / toolbar / contenu */}
+          <div className="flex-1 min-h-0 min-w-0 flex flex-col relative z-0 overflow-hidden isolate">
           <div className="flex-1 min-h-0 min-w-0 flex overflow-hidden" role="region" aria-labelledby="dashboard-page-title">
             <h1 id="dashboard-page-title" className="sr-only">{pageTitle}</h1>
             <DashboardSubSidebar />
             <div className="flex-1 min-h-0 min-w-0 flex flex-col overflow-hidden">
-              {/* Topbar : masquée en vue focalisée pour laisser la place à la barre d'outil de la page */}
-              {!hasSectionSelected && (
-              <div className="shrink-0 border-b border-slate-200 bg-white/80 dark:border-slate-800/60 dark:bg-slate-950/50">
-                <DashboardSubNavigation stats={stats} mainTabsOnly />
-              </div>
-              )}
+              {/* Barre des onglets (PILOTAGE, CHANTIERS…) supprimée : la navigation existe déjà dans les sidebars (BMO + SubSidebar). */}
               {/* Toolbar : masquée en vue focalisée (la page focus a sa propre barre) */}
               {!hasSectionSelected && (
               <div className="px-4 sm:px-6 py-2 flex items-center justify-end gap-2 sm:gap-3 border-b border-slate-200 bg-gray-50/80 dark:border-slate-800/60 dark:bg-slate-950/30">
@@ -627,6 +622,45 @@ function DashboardContent() {
                       Paramètres BMO (cartes à défiler)
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
+                    <div className="px-2 py-1.5">
+                      <p className="text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Affichage indicateurs</p>
+                      <div className="flex flex-wrap gap-1">
+                        {(['bar', 'wallet', 'pop'] as const).map((d) => (
+                          <button
+                            key={d}
+                            type="button"
+                            onClick={() => setTickerDisplay(d)}
+                            className={cn(
+                              'px-2 py-1 rounded text-[10px] border transition-colors',
+                              tickerDisplay === d
+                                ? 'bg-sky-500/20 border-sky-500/50 text-sky-700 dark:text-sky-300'
+                                : 'border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800'
+                            )}
+                          >
+                            {d === 'bar' ? 'Barre' : d === 'wallet' ? 'Wallet' : 'Popup'}
+                          </button>
+                        ))}
+                      </div>
+                      <p className="text-[10px] font-medium text-slate-500 dark:text-slate-400 mt-2 mb-1">Position</p>
+                      <div className="flex flex-wrap gap-1">
+                        {(['bottom-left', 'bottom-right', 'bottom-center', 'top-right'] as const).map((a) => (
+                          <button
+                            key={a}
+                            type="button"
+                            onClick={() => setTickerAnchor(a)}
+                            className={cn(
+                              'px-2 py-1 rounded text-[10px] border transition-colors',
+                              tickerAnchor === a
+                                ? 'bg-sky-500/20 border-sky-500/50 text-sky-700 dark:text-sky-300'
+                                : 'border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800'
+                            )}
+                          >
+                            {a === 'bottom-left' ? 'Bas gauche' : a === 'bottom-right' ? 'Bas droite' : a === 'bottom-center' ? 'Bas centre' : 'Haut droite'}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <DropdownMenuSeparator />
                     <DropdownMenuItem
                       onClick={() => refreshAllKPIs()}
                       disabled={isRefreshing}
@@ -659,41 +693,7 @@ function DashboardContent() {
               {isCockpitHome ? (
                 usePilotageHome ? (
                   <div className="flex h-full min-h-0 w-full">
-                    {/* Bande rouge : visible uniquement si une section bleue (sidebar) avec actions est sélectionnée ; contenu dynamique selon la section. */}
-                    {showActionsStrip && (
-                      <aside
-                        className={cn(
-                          'shrink-0 flex flex-col gap-3 py-4 px-3 border-r border-slate-200 dark:border-slate-800/60',
-                          'bg-slate-50/80 dark:bg-slate-950/40 w-[72px] sm:w-20'
-                        )}
-                        aria-label="Actions selon la section sélectionnée"
-                      >
-                        {sectionActions.map((action) => {
-                          const Icon = action.icon;
-                          const toneClasses =
-                            action.tone === 'emerald'
-                              ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-800 dark:text-emerald-200 hover:bg-emerald-500/20 hover:border-emerald-500/60 focus-visible:ring-emerald-500/50'
-                              : 'border-sky-500/40 bg-sky-500/10 text-sky-800 dark:text-sky-200 hover:bg-sky-500/20 hover:border-sky-500/60 focus-visible:ring-sky-500/50';
-                          return (
-                            <Link
-                              key={action.id}
-                              href={action.href}
-                              className={cn(
-                                'flex flex-col items-center gap-1.5 p-2.5 rounded-xl border transition-all duration-200',
-                                'focus:outline-none focus-visible:ring-2',
-                                toneClasses
-                              )}
-                              aria-label={action.label}
-                              title={action.label}
-                            >
-                              <Icon className="h-5 w-5 shrink-0" aria-hidden />
-                              <span className="text-[10px] font-semibold leading-tight">{action.label}</span>
-                            </Link>
-                          );
-                        })}
-                      </aside>
-                    )}
-                    <div className="flex-1 min-h-0 overflow-auto animate-fadeIn">
+                    <div className="flex-1 min-h-0 overflow-auto animate-fadeIn relative z-0" data-testid="dashboard-content-pilotage">
                       <PilotageHome
                         veilleBadges={veilleBadges}
                         kpis={
@@ -720,18 +720,9 @@ function DashboardContent() {
               )}
             </div>
             </div>
+            </div>
           </div>
         </DashboardCleanLayout>
-        {isCockpitHome && tickerItems.length > 0 && (
-          <TickerBar
-            items={tickerItems}
-            intervalMs={5500}
-            onClick={(item) => {
-              const kpi = allKpis.find((k) => k.label === item.label);
-              if (kpi) handleKPIClick(kpi);
-            }}
-          />
-        )}
         <DashboardModals />
         <RisquesCritiquesModal open={risquesModalOpen} onClose={() => setRisquesModalOpen(false)} />
         </>

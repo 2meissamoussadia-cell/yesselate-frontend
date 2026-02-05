@@ -9,7 +9,7 @@ import {
   Users, Calendar, Bell, Settings, Filter, Plus, Zap, 
   Brain, UserCheck, Clock3, Layers, FolderOpen, History
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useRHWorkspaceStore } from '@/lib/stores/rhWorkspaceStore';
 import { useAppStore } from '@/lib/stores';
 

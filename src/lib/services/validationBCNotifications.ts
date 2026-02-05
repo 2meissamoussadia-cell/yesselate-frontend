@@ -135,7 +135,7 @@ async function sendSMSNotification(id: string, payload: NotificationPayload): Pr
  */
 async function triggerWebhooks(id: string, payload: NotificationPayload): Promise<void> {
   // En production, récupérer les webhooks configurés depuis la DB
-  const webhooks = [
+  const webhooks: Array<{ url: string; events?: string[] }> = [
     // { url: 'https://example.com/webhook', events: ['document_validated'] }
   ];
 

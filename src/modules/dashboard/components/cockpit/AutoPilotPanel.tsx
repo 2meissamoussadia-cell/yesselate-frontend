@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Check, X, Zap, AlertTriangle } from 'lucide-react';
 import type { AutoPilotDecision } from '../../types/cockpitV2';
 import { approveDecision } from '../../cockpit-v2/autopilot-engine';

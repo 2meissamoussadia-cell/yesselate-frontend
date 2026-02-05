@@ -26,6 +26,9 @@ import type { ContratFilter, ContratDecisionEntry } from '@/lib/stores/contratsW
 // Types
 // ================================
 
+/** Décision de validation (notes) pour le hook useContratActions */
+export type ContratDecision = { notes: string };
+
 export interface Contrat {
   id: string;
   reference: string;
@@ -566,6 +569,23 @@ export const contratsApiService = {
       details: `Rejet du contrat: ${reason}`,
       hash: `SHA-256:${hash}`,
     };
+  },
+
+  /** Alias pour le hook: négociation avec termes en string (sera splitté en points) */
+  async negotiateContrat(
+    contratId: string,
+    terms: string,
+    userId?: string,
+    userName?: string,
+    userRole?: string
+  ): Promise<ContratDecisionEntry> {
+    return this.requestNegotiation(
+      contratId,
+      terms.trim() ? terms.split(',').map((s) => s.trim()).filter(Boolean) : [terms],
+      userId ?? 'me',
+      userName ?? 'User',
+      userRole ?? 'manager'
+    );
   },
 
   async requestNegotiation(

@@ -19,7 +19,7 @@ import {
   Printer, Share2, BookOpen, Lightbulb, Target, Clock,
   Filter, SortAsc, LayoutGrid, List, ExternalLink
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { KeyboardShortcut } from '@/components/ui/keyboard-shortcut';
 import { searchWithScoring, highlightMatch } from '@/application/utils/searchUtils';
 import { useDebounce } from '@/application/hooks/useDebounce';

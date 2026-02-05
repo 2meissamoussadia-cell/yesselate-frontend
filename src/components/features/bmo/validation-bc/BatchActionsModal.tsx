@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { useAppStore, useBMOStore } from '@/lib/stores';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -158,7 +159,7 @@ export function BatchActionsModal({
         setAssignee('');
       }, 500);
     } catch (error) {
-      console.error('Erreur lors de l\'exécution de l\'action en lot:', error);
+      logger.error('Erreur lors de l\'exécution de l\'action en lot', error instanceof Error ? error : undefined, { component: 'BatchActionsModal' });
       addToast('Erreur lors de l\'exécution de l\'action', 'error');
       setIsProcessing(false);
     }

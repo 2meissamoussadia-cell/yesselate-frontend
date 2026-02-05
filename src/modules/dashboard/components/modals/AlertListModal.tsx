@@ -5,7 +5,7 @@
 
 import React, { useState } from 'react';
 import { X, AlertTriangle, AlertCircle, Info, Clock, CheckCircle2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { zIndexClass } from '../../utils/zIndex';
 import { useAlerts, type AlertEvent } from '../../hooks/useAlerts';
 import { AlertDetailModal } from '../AlertDetailModal';

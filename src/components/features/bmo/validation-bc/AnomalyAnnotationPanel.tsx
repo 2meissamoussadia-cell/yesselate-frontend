@@ -8,7 +8,7 @@
  */
 
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { logger } from '@/lib/utils/logger';
 import { useBMOStore } from '@/lib/stores';
 import { Button } from '@/components/ui/button';
@@ -317,7 +317,7 @@ export function AnomalyAnnotationPanel({
       setShowAddAnnotation(false);
       addToast('Annotation ajoutée avec succès', 'success');
     } catch (error) {
-      console.error('Erreur lors de l\'ajout de l\'annotation:', error);
+      logger.error('Erreur lors de l\'ajout de l\'annotation', error instanceof Error ? error : undefined, { component: 'AnomalyAnnotationPanel' });
       addToast('Erreur lors de l\'ajout de l\'annotation', 'error');
     } finally {
       setIsAdding(false);
@@ -330,7 +330,7 @@ export function AnomalyAnnotationPanel({
       await Promise.resolve(onResolveAnomaly(anomalyId));
       addToast('Anomalie marquée comme résolue', 'success');
     } catch (error) {
-      console.error('Erreur lors de la résolution de l\'anomalie:', error);
+      logger.error('Erreur lors de la résolution de l\'anomalie', error instanceof Error ? error : undefined, { component: 'AnomalyAnnotationPanel' });
       addToast('Erreur lors de la résolution de l\'anomalie', 'error');
     } finally {
       setResolvingAnomalyId(null);
@@ -352,7 +352,7 @@ export function AnomalyAnnotationPanel({
       setEditingComment('');
       addToast('Annotation modifiée avec succès', 'success');
     } catch (error) {
-      console.error('Erreur lors de la modification de l\'annotation:', error);
+      logger.error('Erreur lors de la modification de l\'annotation', error instanceof Error ? error : undefined, { component: 'AnomalyAnnotationPanel' });
       addToast('Erreur lors de la modification de l\'annotation', 'error');
     } finally {
       setIsUpdating(false);
@@ -378,7 +378,7 @@ export function AnomalyAnnotationPanel({
       setConfirmDelete({ open: false, annotationId: null });
       addToast('Annotation supprimée avec succès', 'success');
     } catch (error) {
-      console.error('Erreur lors de la suppression de l\'annotation:', error);
+      logger.error('Erreur lors de la suppression de l\'annotation', error instanceof Error ? error : undefined, { component: 'AnomalyAnnotationPanel' });
       addToast('Erreur lors de la suppression de l\'annotation', 'error');
     } finally {
       setIsDeleting(false);
@@ -397,7 +397,7 @@ export function AnomalyAnnotationPanel({
       addToast('Texte copié dans le presse-papiers', 'success');
       setTimeout(() => setCopiedId(null), 2000);
     } catch (error) {
-      console.error('Erreur lors de la copie:', error);
+      logger.error('Erreur lors de la copie', error instanceof Error ? error : undefined, { component: 'AnomalyAnnotationPanel' });
       addToast('Erreur lors de la copie', 'error');
     }
   };
@@ -471,7 +471,7 @@ export function AnomalyAnnotationPanel({
       handleClearSelection();
       addToast(`${annotationIds.length} annotation(s) supprimée(s)`, 'success');
     } catch (error) {
-      console.error('Erreur lors de la suppression groupée:', error);
+      logger.error('Erreur lors de la suppression groupée', error instanceof Error ? error : undefined, { component: 'AnomalyAnnotationPanel' });
       addToast('Erreur lors de la suppression groupée', 'error');
     } finally {
       setIsBulkDeleting(false);
@@ -507,7 +507,7 @@ export function AnomalyAnnotationPanel({
 
       // Simuler l'export (à remplacer par un vrai export)
       console.log('Export config:', config);
-      console.log('Data to export:', dataToExport);
+      logger.debug('Data to export', { component: 'AnomalyAnnotationPanel', count: dataToExport?.length });
       
       // Ici, vous pouvez appeler votre service d'export
       // await exportService.export(dataToExport, config);

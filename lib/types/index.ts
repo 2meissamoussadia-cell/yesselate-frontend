@@ -19,5 +19,5 @@
  * les imports existants.
  */
 
-// Re-export TOUT depuis src/lib/types
-export * from '../../src/lib/types/index';
+// Re-export TOUT depuis src/lib/types (chemin relatif depuis lib/types/)
+export * from '../../src/lib/types';

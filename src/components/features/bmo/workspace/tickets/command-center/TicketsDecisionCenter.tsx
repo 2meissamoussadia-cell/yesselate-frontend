@@ -6,13 +6,14 @@
 'use client';
 
 import { useState, useMemo, useCallback, useEffect } from 'react';
+import { logger } from '@/lib/utils/logger';
 import { 
   X, Zap, AlertCircle, AlertTriangle, Clock, ArrowUpRight, 
   CheckCircle2, FileText, Users, TrendingUp, ChevronRight, Filter,
   MessageSquare, Loader2, Send, UserPlus, XCircle, RefreshCw,
   Star, Building2, Tag
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -59,7 +60,7 @@ export function TicketsDecisionCenter({ open, onClose }: Props) {
           setAssignees(assigneesRes);
         }
       } catch (error) {
-        console.error('Failed to load data:', error);
+        logger.error('Failed to load data', error instanceof Error ? error : undefined, { component: 'TicketsDecisionCenter' });
         toast.error('Erreur', 'Impossible de charger les données');
       } finally {
         if (!cancelled) setLoading(false);

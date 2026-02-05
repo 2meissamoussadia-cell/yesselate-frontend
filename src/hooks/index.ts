@@ -42,3 +42,6 @@ export type {
   UpdateDelegationData,
   UseMutationResult,
 } from './useDelegationMutations';
+
+export { useBulkOperationProgress } from './useBulkOperationProgress';
+export type { BulkOperationProgress } from './useBulkOperationProgress';

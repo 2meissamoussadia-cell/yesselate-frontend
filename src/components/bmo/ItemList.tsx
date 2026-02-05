@@ -33,7 +33,8 @@ export interface ItemListProps<T extends { id: string }> {
   /** Erreur à afficher */
   error?: Error | null;
   selectedId?: string | null;
-  onSelect?: (id: string) => void;
+  /** (id, event?) pour permettre Ctrl+clic / Shift+clic (sélection multiple) */
+  onSelect?: (id: string, e?: React.MouseEvent) => void;
   /** Rendu personnalisé de chaque ligne */
   renderItem: (item: T, options: { isSelected: boolean }) => React.ReactNode;
   /** Message liste vide (simple) */
@@ -156,13 +157,13 @@ export function ItemList<T extends { id: string }>({
           items={items}
           estimateSize={itemHeight}
           containerHeight="100%"
-          containerClassName="flex-1 overflow-auto"
+          containerClassName="flex-1 overflow-auto min-w-0 overflow-x-hidden"
           renderItem={(item) => (
             <div
               role="option"
               aria-selected={selectedId === item.id}
-              onClick={() => onSelect?.(item.id)}
-              className="cursor-pointer"
+              onClick={(e) => onSelect?.(item.id, e)}
+              className="cursor-pointer shrink-0 overflow-hidden w-full min-w-0"
             >
               {renderItem(item, { isSelected: selectedId === item.id })}
             </div>
@@ -174,7 +175,7 @@ export function ItemList<T extends { id: string }>({
 
   return (
     <div
-      className={cn('flex flex-col h-full overflow-y-auto', className)}
+      className={cn('flex flex-col h-full overflow-y-auto w-full min-w-0', className)}
       role="listbox"
       aria-label="Liste"
       aria-multiselectable="false"
@@ -184,8 +185,8 @@ export function ItemList<T extends { id: string }>({
           key={item.id}
           role="option"
           aria-selected={selectedId === item.id}
-          onClick={() => onSelect?.(item.id)}
-          className="cursor-pointer"
+          onClick={(e) => onSelect?.(item.id, e)}
+          className="cursor-pointer shrink-0 overflow-hidden w-full min-w-0"
         >
           {renderItem(item, { isSelected: selectedId === item.id })}
         </div>

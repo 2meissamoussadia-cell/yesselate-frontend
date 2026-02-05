@@ -329,8 +329,4 @@ export function createGenericCommandCenterStore<
   );
 }
 
-// ============================================
-// TYPES EXPORT
-// ============================================
-
-export type { NavigationState, ModalState, KPIConfig, SavedFilter };
+// Types NavigationState, ModalState, KPIConfig, SavedFilter are exported above via interface declarations

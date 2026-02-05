@@ -19,7 +19,7 @@ import {
   Search, SlidersHorizontal, LayoutGrid, List, ArrowUpDown,
   TrendingUp, TrendingDown, Minus, AlertTriangle, Target, Activity 
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { calculateKPIs, calculateBureauPerformance, detectAlerts } from '@/lib/data/analytics';
 import type { KPIMetric, BureauPerformance, Alert } from '@/lib/data/analytics';
 

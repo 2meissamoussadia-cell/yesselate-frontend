@@ -9,7 +9,7 @@ import { useMemo } from 'react';
 import { useAlerts } from '@/lib/api/hooks/useAnalytics';
 import { FluentCard, FluentCardContent, FluentCardHeader, FluentCardTitle } from '@/components/ui/fluent-card';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { VirtualizedList } from '@/presentation/components/VirtualizedList';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';

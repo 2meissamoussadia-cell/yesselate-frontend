@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { logger } from '@/lib/utils/logger';
 import { arbitragesApiService, type ArbitragesStats } from '@/lib/services/arbitragesApiService';
 import { BarChart3, X, Scale, Zap, Clock, CheckCircle, ArrowUp, GitBranch, Users } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface Props { open: boolean; onClose: () => void; }
 
@@ -17,7 +18,7 @@ export function ArbitragesStatsModal({ open, onClose }: Props) {
     const load = async () => {
       setLoading(true);
       try { const data = await arbitragesApiService.getStats(); setStats(data); }
-      catch (error) { console.error('Failed:', error); }
+      catch (error) { logger.error('Arbitrages stats load failed', error as Error, { context: 'ArbitragesStatsModal' }); }
       finally { setLoading(false); }
     };
     load();

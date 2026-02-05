@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -29,8 +29,20 @@ import {
 // TYPES
 // ================================
 
+export type FinancesMainCategory =
+  | 'overview'
+  | 'revenue'
+  | 'expenses'
+  | 'budget'
+  | 'pending'
+  | 'overdue'
+  | 'validated'
+  | 'reports'
+  | 'analytics'
+  | 'archive';
+
 export interface FinancesCategory {
-  id: string;
+  id: FinancesMainCategory;
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   badge?: number | string;
@@ -124,8 +136,8 @@ export const financesCategories: FinancesCategory[] = [
 // ================================
 
 interface FinancesCommandSidebarProps {
-  activeCategory: string;
-  onCategoryChange: (categoryId: string) => void;
+  activeCategory: FinancesMainCategory;
+  onCategoryChange: (categoryId: FinancesMainCategory) => void;
   collapsed?: boolean;
   onToggleCollapse?: () => void;
   stats?: {

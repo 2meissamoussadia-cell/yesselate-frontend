@@ -18,7 +18,7 @@
 
 import React, { useRef, useCallback } from 'react';
 import { Download } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import {
   DropdownMenu,
   DropdownMenuContent,

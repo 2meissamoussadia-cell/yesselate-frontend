@@ -6,7 +6,7 @@
 
 'use client';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export interface LoadingSkeletonProps {
   className?: string;

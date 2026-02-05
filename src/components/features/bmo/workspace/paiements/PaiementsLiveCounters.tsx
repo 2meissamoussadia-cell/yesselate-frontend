@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { Clock, CheckCircle, XCircle, Calendar, AlertTriangle, DollarSign, Ban } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { paiementsApiService, type PaiementsStats } from '@/lib/services/paiementsApiService';
+import { logger } from '@/lib/utils/logger';
 import { usePaiementsWorkspaceStore } from '@/lib/stores/paiementsWorkspaceStore';
 
 interface Props {
@@ -21,7 +22,7 @@ export function PaiementsLiveCounters({ onOpenQueue }: Props) {
         const data = await paiementsApiService.getStats();
         setStats(data);
       } catch (error) {
-        console.error('Failed to load stats:', error);
+        logger.error('Failed to load stats', error as Error, { context: 'PaiementsLiveCounters' });
       } finally {
         setLoading(false);
       }

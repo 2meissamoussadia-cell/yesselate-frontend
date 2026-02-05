@@ -10,7 +10,7 @@ import { AlertTriangle, TrendingDown, ChevronRight } from 'lucide-react';
 import { formatMoneyCompact } from '@lib-root/dashboard/kpi';
 import type { SmartAlert } from '../../types/smartAlert';
 import { smartAlertsMock } from '../../data/smartAlertsMock';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 const CURRENCY = 'XOF';
 

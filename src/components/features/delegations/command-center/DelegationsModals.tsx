@@ -14,7 +14,7 @@ import { DelegationBatchActions } from '../workspace/DelegationBatchActions';
 import { DelegationDetailModal } from './modals/DelegationDetailModal';
 import { DelegationsFiltersPanel } from './DelegationsFiltersPanel';
 import { FluentModal } from '@/components/ui/fluent-modal';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export function DelegationsModals() {
   const { modal, closeModal } = useDelegationsCommandCenterStore();

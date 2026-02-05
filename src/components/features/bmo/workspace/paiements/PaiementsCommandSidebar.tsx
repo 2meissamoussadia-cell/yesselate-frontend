@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -26,8 +26,19 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
-interface SidebarCategory {
-  id: string;
+export type PaiementsMainCategory =
+  | 'overview'
+  | 'pending'
+  | 'urgent'
+  | 'validated'
+  | 'rejected'
+  | 'scheduled'
+  | 'tresorerie'
+  | 'fournisseurs'
+  | 'audit';
+
+interface PaiementsSidebarCategory {
+  id: PaiementsMainCategory;
   label: string;
   icon: LucideIcon;
   badge?: number | string;
@@ -44,10 +55,10 @@ interface PaiementsStats {
 }
 
 interface PaiementsCommandSidebarProps {
-  activeCategory: string;
+  activeCategory: PaiementsMainCategory;
   collapsed: boolean;
   stats: PaiementsStats | null;
-  onCategoryChange: (category: string) => void;
+  onCategoryChange: (category: PaiementsMainCategory) => void;
   onToggleCollapse: () => void;
   onOpenCommandPalette: () => void;
 }
@@ -61,7 +72,7 @@ export const PaiementsCommandSidebar = React.memo(function PaiementsCommandSideb
   onOpenCommandPalette,
 }: PaiementsCommandSidebarProps) {
   // Calculer les catégories avec badges dynamiques
-  const paiementsCategories: SidebarCategory[] = [
+  const paiementsCategories: PaiementsSidebarCategory[] = [
     { id: 'overview', label: "Vue d'ensemble", icon: LayoutDashboard },
     { 
       id: 'pending', 
@@ -251,5 +262,6 @@ export const PaiementsCommandSidebar = React.memo(function PaiementsCommandSideb
   );
 });
 
-export type { SidebarCategory, PaiementsStats as SidebarPaiementsStats };
+export type SidebarCategory = PaiementsSidebarCategory;
+export type SidebarPaiementsStats = PaiementsStats;
 

@@ -12,7 +12,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -358,7 +359,7 @@ function {{MODULE_NAME}}ConfirmModal({ onClose, data }: { onClose: () => void; d
       await data?.onConfirm?.();
       onClose();
     } catch (error) {
-      console.error('Confirmation failed:', error);
+      logger.error('Confirmation failed', error instanceof Error ? error : undefined, { component: 'GenericModalsTemplate' });
     } finally {
       setConfirming(false);
     }

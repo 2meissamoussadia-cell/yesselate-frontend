@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useParametresWorkspaceStore } from '@/lib/stores/parametresWorkspaceStore';
 import { useBMOStore } from '@/lib/stores';
 import { ParametresWorkspaceTabs, ParametresWorkspaceContent, ParametresCommandPalette } from '@/components/features/bmo/workspace/parametres';

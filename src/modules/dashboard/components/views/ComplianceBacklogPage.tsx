@@ -23,7 +23,7 @@ import { SearchFilter } from '../shared/SearchFilter';
 import { useDashboardData } from '../../hooks/useDashboardData';
 import { exportToCSV, exportToJSON } from '../../utils/exportUtils';
 import type { ComplianceBacklogData } from '../../types/dashboardDataTypes';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export const ComplianceBacklogPage = memo(function ComplianceBacklogPage() {
   const [searchQuery, setSearchQuery] = useState('');

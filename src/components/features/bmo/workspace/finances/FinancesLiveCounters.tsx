@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { Wallet, TrendingUp, TrendingDown, PiggyBank, CreditCard, ArrowUpRight, ArrowDownRight, Percent } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { financesApiService, type FinancesStats } from '@/lib/services/financesApiService';
+import { logger } from '@/lib/utils/logger';
 
 interface Props {
   onOpenView: (view: string, title: string) => void;
@@ -16,7 +17,7 @@ export function FinancesLiveCounters({ onOpenView }: Props) {
   useEffect(() => {
     const loadStats = async () => {
       try { const data = await financesApiService.getStats(); setStats(data); }
-      catch (error) { console.error('Failed:', error); }
+      catch (error) { logger.error('Finances stats failed', error as Error, { context: 'FinancesLiveCounters' }); }
       finally { setLoading(false); }
     };
     loadStats();

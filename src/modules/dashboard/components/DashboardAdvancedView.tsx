@@ -31,7 +31,7 @@ import {
 import { TrendsChart, MonthlyComparisonChart, CategoryDistributionChart } from './DashboardCharts';
 import { KPIDrillDownModal } from './KPIDrillDownModal';
 import { DashboardNotifications, useDashboardNotifications } from './DashboardNotifications';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface DashboardAdvancedViewProps {

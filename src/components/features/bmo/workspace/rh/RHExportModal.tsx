@@ -5,7 +5,8 @@ import { FluentModal } from '@/components/ui/fluent-modal';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { demandesRH } from '@/lib/data/bmo-mock-2';
 import type { HRRequest } from '@/lib/types/bmo.types';
 import { 
@@ -185,7 +186,7 @@ export function RHExportModal({ open, onOpenChange, filteredDemands }: Props) {
       }, 500);
       
     } catch (error) {
-      console.error('Erreur export:', error);
+      logger.error('Erreur export', error as Error, { context: 'RHExportModal' });
     } finally {
       setExporting(false);
     }

@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { Search, X, Loader2, FileText, User, Activity } from 'lucide-react';
 
 interface SearchResult {
@@ -54,7 +55,7 @@ export function DelegationSearchBar({ delegationId, onResultClick, className }: 
         setResults(await res.json());
       }
     } catch (e) {
-      console.error('Erreur recherche:', e);
+      logger.error('Erreur recherche', e instanceof Error ? e : undefined, { component: 'DelegationSearchBar' });
     } finally {
       setLoading(false);
     }

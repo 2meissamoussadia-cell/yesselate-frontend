@@ -24,7 +24,7 @@ import {
 import { calculateBureauPerformance, calculateFinancialPerformance } from '@/lib/data/analytics';
 import { formatFCFA } from '@/lib/utils/format-currency';
 import { bureaux } from '@/lib/data';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface BureauComparisonModalProps {
   open: boolean;

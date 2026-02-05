@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { MessageSquare, Send } from 'lucide-react';
+import { logger } from '@/lib/utils/logger';
 import type { DocumentValidation } from '../types/validationTypes';
 
 interface RequestInfoModalProps {
@@ -36,7 +37,7 @@ export function RequestInfoModal({
       setMessage('');
       onClose();
     } catch (error) {
-      console.error('Erreur lors de la demande:', error);
+      logger.error('Erreur lors de la demande', error instanceof Error ? error : undefined, { component: 'RequestInfoModal' });
     } finally {
       setLoading(false);
     }

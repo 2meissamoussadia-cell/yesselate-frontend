@@ -21,7 +21,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { DisplayLogic } from '@/lib/config/analyticsDisplayLogic';
 
 interface FilterValue {

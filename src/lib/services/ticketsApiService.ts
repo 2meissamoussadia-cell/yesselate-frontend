@@ -278,7 +278,7 @@ function generateMockTickets(count: number = 50): Ticket[] {
   const priorities: TicketPriority[] = ['critical', 'high', 'medium', 'low'];
   const statuses: TicketStatus[] = ['open', 'in_progress', 'pending', 'resolved', 'closed'];
   const categories: TicketCategory[] = ['technique', 'commercial', 'facturation', 'livraison', 'qualite', 'autre'];
-  const sources: Ticket['metadata']['source'][] = ['email', 'phone', 'web', 'api', 'chat'];
+  const sources: Array<'api' | 'email' | 'phone' | 'web' | 'chat'> = ['email', 'phone', 'web', 'api', 'chat'];
   
   const titles = [
     'Problème de facturation récurrent',
@@ -844,5 +844,4 @@ class TicketsApiService {
 // Export singleton instance
 export const ticketsApi = new TicketsApiService();
 
-// Export types for convenience
-export type { Ticket, TicketMessage, TicketAttachment };
+// Ticket, TicketMessage, TicketAttachment are exported above via interface declarations

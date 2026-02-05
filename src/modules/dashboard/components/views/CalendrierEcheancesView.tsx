@@ -11,7 +11,7 @@ import { Calendar as CalendarIcon, AlertTriangle, Clock, CheckCircle } from 'luc
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 type EcheanceType = 'livraison' | 'paiement' | 'administratif' | 'reunion' | 'hse';
 type EcheanceStatut = 'a_venir' | 'en_retard' | 'complete';

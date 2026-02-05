@@ -8,7 +8,7 @@ import {
   MessageSquare, CheckCircle, Shield, BarChart3, Download, RefreshCw,
   Filter, Star, AlertTriangle, XCircle
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface Command {
   id: string;

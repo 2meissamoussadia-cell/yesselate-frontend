@@ -4,6 +4,7 @@ import { useMemo, useState, useEffect } from 'react';
 import { X, TrendingUp, TrendingDown, AlertCircle, Building2, Clock, Wallet, BarChart3, Target, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { blockedApi } from '@/lib/services/blockedApiService';
+import { logger } from '@/lib/utils/logger';
 import type { BlockedDossier } from '@/lib/types/bmo.types';
 
 type Props = {
@@ -43,7 +44,7 @@ export function BlockedStatsModal({ open, onClose }: Props) {
           setData(result.data);
         }
       } catch (error) {
-        console.error('Failed to load data:', error);
+        logger.error('Failed to load data', error as Error, { context: 'BlockedStatsModal' });
       } finally {
         if (!cancelled) {
           setLoading(false);

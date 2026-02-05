@@ -7,7 +7,7 @@
 export type NavigationItemType = 'link' | 'section' | 'divider';
 
 /** Permissions par route (RBAC) */
-export type RoutePermission = 'public' | 'authenticated' | 'admin' | 'manager' | 'dashboard:read';
+export type RoutePermission = 'public' | 'authenticated' | 'user' | 'admin' | 'manager' | 'dashboard:read';
 
 /** Variant de badge pour compteurs temps réel */
 export type NavigationBadgeVariant = 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'gray';

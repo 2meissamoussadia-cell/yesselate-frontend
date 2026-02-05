@@ -7,7 +7,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -301,7 +302,7 @@ export function PaiementDetailsModal({
 
       setFullDetails(mockFullDetails);
     } catch (err) {
-      console.error('Error loading full details:', err);
+      logger.error('Error loading full details', err as Error, { context: 'PaiementDetailsModal' });
       setError(err instanceof Error ? err.message : 'Erreur de chargement');
     } finally {
       setLoading(false);

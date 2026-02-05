@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useMemo, memo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { formatMoneyCompact } from '@lib-root/dashboard/kpi';
 import type { CashflowMonthMock } from '../../data/financesGlobalesMock';
 

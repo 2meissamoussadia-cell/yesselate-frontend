@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import {
   Building2, Users, TrendingUp, AlertTriangle, BarChart2, CheckCircle,
   Clock, RefreshCw, FileText, Target, Zap, Activity

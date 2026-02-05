@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { FluentButton } from '@/components/ui/fluent-button';
 import {
@@ -378,7 +379,7 @@ function ScenariosView({ delegationId, delegation }: { delegationId: string; del
         setResults(prev => ({ ...prev, [scenario.id]: data.evaluation }));
       }
     } catch (e) {
-      console.error('Erreur scénario:', e);
+      logger.error('Erreur scénario', e instanceof Error ? e : undefined, { component: 'DelegationSimulatorSection' });
     } finally {
       setLoading(false);
     }

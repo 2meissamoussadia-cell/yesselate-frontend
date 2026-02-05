@@ -2,7 +2,8 @@
 import { useEffect, useState } from 'react';
 import { financesApiService, type FinancesStats } from '@/lib/services/financesApiService';
 import { X, BarChart3, TrendingUp, TrendingDown, Wallet } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 interface Props {
   open: boolean;
@@ -21,7 +22,7 @@ export function FinancesStatsModal({ open, onClose }: Props) {
         setLoading(true);
         setStats(await financesApiService.getStats());
       } catch (e) {
-        console.error(e);
+        logger.error('Finances stats load failed', e as Error, { context: 'FinancesStatsModal' });
       } finally {
         setLoading(false);
       }

@@ -2,7 +2,7 @@
 
 import { useEffect, useCallback } from 'react';
 import { X, MoreHorizontal, ChevronLeft, ChevronRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useWorkspaceStore } from '@/lib/stores/workspaceStore';
 
 export function WorkspaceTabs() {

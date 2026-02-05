@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -26,15 +26,26 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
-interface SidebarCategory {
-  id: string;
+export type LogsMainCategory =
+  | 'overview'
+  | 'errors'
+  | 'warnings'
+  | 'system'
+  | 'api'
+  | 'security'
+  | 'audit'
+  | 'user-actions'
+  | 'analysis';
+
+interface LogsSidebarCategory {
+  id: LogsMainCategory;
   label: string;
   icon: LucideIcon;
   badge?: number | string;
   badgeType?: 'default' | 'warning' | 'critical';
 }
 
-const logsCategories: SidebarCategory[] = [
+const logsCategories: LogsSidebarCategory[] = [
   { id: 'overview', label: "Vue d'ensemble", icon: LayoutDashboard },
   { id: 'errors', label: 'Erreurs', icon: AlertCircle, badge: 24, badgeType: 'critical' },
   { id: 'warnings', label: 'Avertissements', icon: AlertTriangle, badge: 12, badgeType: 'warning' },
@@ -47,9 +58,9 @@ const logsCategories: SidebarCategory[] = [
 ];
 
 interface LogsCommandSidebarProps {
-  activeCategory: string;
+  activeCategory: LogsMainCategory;
   collapsed: boolean;
-  onCategoryChange: (category: string) => void;
+  onCategoryChange: (category: LogsMainCategory) => void;
   onToggleCollapse: () => void;
   onOpenCommandPalette: () => void;
 }
@@ -223,4 +234,4 @@ export const LogsCommandSidebar = React.memo(function LogsCommandSidebar({
 });
 
 export { logsCategories };
-export type { SidebarCategory };
+export type SidebarCategory = LogsSidebarCategory;

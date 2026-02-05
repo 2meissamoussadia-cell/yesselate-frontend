@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -25,15 +25,26 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
-interface SidebarCategory {
-  id: string;
+export type SystemLogsMainCategory =
+  | 'overview'
+  | 'by-level'
+  | 'by-category'
+  | 'security'
+  | 'incidents'
+  | 'correlation'
+  | 'integrity'
+  | 'exports'
+  | 'advanced-search';
+
+interface SystemLogsSidebarCategory {
+  id: SystemLogsMainCategory;
   label: string;
   icon: LucideIcon;
   badge?: number | string;
   badgeType?: 'default' | 'warning' | 'critical';
 }
 
-const systemLogsCategories: SidebarCategory[] = [
+const systemLogsCategories: SystemLogsSidebarCategory[] = [
   { id: 'overview', label: "Vue d'ensemble", icon: LayoutDashboard },
   { id: 'by-level', label: 'Par niveau', icon: AlertTriangle, badge: 24 },
   { id: 'by-category', label: 'Par catégorie', icon: FileText },
@@ -46,9 +57,9 @@ const systemLogsCategories: SidebarCategory[] = [
 ];
 
 interface SystemLogsCommandSidebarProps {
-  activeCategory: string;
+  activeCategory: SystemLogsMainCategory;
   collapsed: boolean;
-  onCategoryChange: (category: string) => void;
+  onCategoryChange: (category: SystemLogsMainCategory) => void;
   onToggleCollapse: () => void;
   onOpenCommandPalette: () => void;
 }
@@ -222,5 +233,5 @@ export const SystemLogsCommandSidebar = React.memo(function SystemLogsCommandSid
 });
 
 export { systemLogsCategories };
-export type { SidebarCategory };
+export type SidebarCategory = SystemLogsSidebarCategory;
 

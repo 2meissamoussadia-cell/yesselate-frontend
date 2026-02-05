@@ -4,7 +4,7 @@ import { useParametresWorkspaceStore } from '@/lib/stores/parametresWorkspaceSto
 import { useTickerCardsSettingsStore } from '@/lib/stores/tickerCardsSettingsStore';
 import { AVAILABLE_TICKER_CRITERIA } from '@/lib/mappings/dashboardKPIMapping';
 import { Settings, Shield, Bell, Plug, Users, Database, Save, Globe, Building2, Moon, Sun, Monitor, ChevronRight, Check, AlertTriangle, RefreshCw, LayoutDashboard, RotateCcw } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { UserRoleManager } from '@/components/admin';
 import { BtpSecurityWidget } from '@/components/bmo/security/BtpSecurityWidget';

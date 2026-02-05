@@ -5,7 +5,7 @@ import { FluentModal } from '@/components/ui/fluent-modal';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar, Clock, Users, MapPin, FileText, CheckCircle, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { logger } from '@/lib/utils/logger';
 import { useAnalyticsToast } from './AnalyticsToast';
 
@@ -115,7 +115,7 @@ export function ScheduleMeetingModal({ open, onClose, data }: ScheduleMeetingMod
     } catch (error) {
       toast.error('Erreur', 'Impossible de planifier la réunion. Veuillez réessayer.');
       if (process.env.NODE_ENV === 'development') {
-        console.error('Erreur planification réunion:', error);
+        logger.error('Erreur planification réunion', error instanceof Error ? error : undefined, { component: 'ScheduleMeetingModal' });
       }
     } finally {
       setIsSubmitting(false);

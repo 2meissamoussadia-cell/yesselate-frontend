@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { useDelegationWorkspaceStore } from '@/lib/stores/delegationWorkspaceStore';
 import {
   Bell,
@@ -135,7 +136,7 @@ export function DelegationNotifications() {
         setLastFetch(new Date());
       }
     } catch (e) {
-      console.error('Erreur chargement notifications:', e);
+      logger.error('Erreur chargement notifications', e instanceof Error ? e : undefined, { component: 'DelegationNotifications' });
     } finally {
       setLoading(false);
     }
@@ -186,7 +187,7 @@ export function DelegationNotifications() {
         method: 'POST',
       });
     } catch (e) {
-      console.error('Erreur marquage notifications:', e);
+      logger.error('Erreur marquage notifications', e instanceof Error ? e : undefined, { component: 'DelegationNotifications' });
     }
   }, []);
 
@@ -199,7 +200,7 @@ export function DelegationNotifications() {
         method: 'DELETE',
       });
     } catch (e) {
-      console.error('Erreur suppression notification:', e);
+      logger.error('Erreur suppression notification', e instanceof Error ? e : undefined, { component: 'DelegationNotifications' });
     }
   }, []);
 

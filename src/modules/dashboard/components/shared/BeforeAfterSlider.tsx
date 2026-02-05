@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export interface BeforeAfterSliderProps {
   /** Image "avant" (plan ou ancienne photo) */

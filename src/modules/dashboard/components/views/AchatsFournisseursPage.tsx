@@ -7,7 +7,7 @@
 
 import React, { useMemo, memo, useState, useCallback } from 'react';
 import { Building2, Users } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { SearchFilter } from '../shared/SearchFilter';
 import { EmptyState } from '../shared/EmptyState';

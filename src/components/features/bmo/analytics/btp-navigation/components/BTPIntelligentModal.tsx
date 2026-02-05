@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { X, Save, Download, Share2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { zIndexClass } from '@/modules/dashboard/utils/zIndex';

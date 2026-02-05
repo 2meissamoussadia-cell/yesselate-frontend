@@ -12,6 +12,7 @@ import {
 import { FluentButton } from '@/components/ui/fluent-button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { filterAlertsByQueue, searchAlerts, type Alert } from '@/lib/data/alerts';
 import { useAlertToast } from '@/components/ui/toast';
 import { AlertInboxSkeleton } from '@/components/ui/alert-skeletons';
@@ -270,7 +271,7 @@ export function AlertInboxView({ tab }: { tab: AlertTab }) {
       clearSelection();
       refetch(); // Utiliser refetch de React Query au lieu de load()
     } catch (error) {
-      console.error('Erreur action bulk:', error);
+      logger.error('Erreur action bulk', error instanceof Error ? error : undefined, { component: 'AlertInboxView', action });
       toast.actionError(action);
     }
   };

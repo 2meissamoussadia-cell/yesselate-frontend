@@ -34,6 +34,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { formatDistanceToNow, format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { cn } from '@/lib/cn';
@@ -44,6 +45,11 @@ export interface AlertDetailPanelProps {
   onClose?: () => void;
   onPrevious?: () => void;
   onNext?: () => void;
+  onTraiter?: () => void;
+  onAssigner?: () => void;
+  onCloturer?: () => void;
+  onArchiver?: () => void;
+  onCommentSubmit?: (text: string) => void;
   loading?: boolean;
 }
 
@@ -57,9 +63,45 @@ export function AlertDetailPanel({
   onClose,
   onPrevious,
   onNext,
+  onTraiter,
+  onAssigner,
+  onCloturer,
+  onArchiver,
+  onCommentSubmit,
   loading,
 }: AlertDetailPanelProps) {
   const [commentText, setCommentText] = useState('');
+
+  const handleDownload = () => {
+    if (!alerte) return;
+    const blob = new Blob(
+      [
+        JSON.stringify(
+          {
+            numero: alerte.numero,
+            titre: alerte.titre,
+            description: alerte.description,
+            niveau: alerte.niveau,
+            statut: alerte.statut,
+            dateCreation: alerte.dateCreation,
+            chantier: alerte.chantier?.nom,
+          },
+          null,
+          2
+        ),
+      ],
+      { type: 'application/json' }
+    );
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${alerte.numero}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+  const handlePrint = () => {
+    if (typeof window !== 'undefined') window.print();
+  };
 
   if (!alerte) {
     return (
@@ -74,6 +116,20 @@ export function AlertDetailPanel({
     );
   }
 
+  if (loading) {
+    return (
+      <div className="flex flex-col h-full bg-white dark:bg-slate-950/40 animate-pulse">
+        <div className="shrink-0 h-14 bg-slate-100 dark:bg-slate-800/50" />
+        <div className="flex-1 p-6 space-y-4">
+          <div className="h-6 bg-slate-200 dark:bg-slate-700 rounded w-1/3" />
+          <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-full" />
+          <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-2/3" />
+          <div className="h-20 bg-slate-100 dark:bg-slate-800 rounded w-full" />
+        </div>
+      </div>
+    );
+  }
+
   const dateEcheance = alerte.dateEcheance
     ? (alerte.dateEcheance instanceof Date ? alerte.dateEcheance : new Date(alerte.dateEcheance))
     : null;
@@ -82,60 +138,84 @@ export function AlertDetailPanel({
   const pieceJointes = alerte.pieceJointes ?? [];
   const commentaires = alerte.commentaires ?? [];
 
+  const iconSize = 'h-[16px] w-[16px] shrink-0';
+
   return (
     <div className="flex flex-col h-full bg-white dark:bg-slate-950/40">
       <div className="shrink-0 border-b border-slate-200 dark:border-slate-800">
         <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-slate-800/60">
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" onClick={onPrevious} disabled={!onPrevious}>
-              <ChevronLeft className="w-4 h-4" />
+            <Button variant="ghost" size="sm" onClick={onPrevious} disabled={!onPrevious} aria-label="Alerte précédente">
+              <ChevronLeft className={iconSize} />
             </Button>
-            <Button variant="ghost" size="sm" onClick={onNext} disabled={!onNext}>
-              <ChevronRight className="w-4 h-4" />
+            <Button variant="ghost" size="sm" onClick={onNext} disabled={!onNext} aria-label="Alerte suivante">
+              <ChevronRight className={iconSize} />
             </Button>
             <Separator orientation="vertical" className="h-6" />
-            <Button size="sm">
-              <Check className="w-4 h-4 mr-2" />
+            <Button size="sm" onClick={onTraiter} disabled={!onTraiter}>
+              <Check className={iconSize + ' mr-2'} />
               Traiter
             </Button>
-            <Button size="sm" variant="outline">
-              <UserPlus className="w-4 h-4 mr-2" />
+            <Button size="sm" variant="outline" onClick={onAssigner} disabled={!onAssigner}>
+              <UserPlus className={iconSize + ' mr-2'} />
               Assigner
             </Button>
           </div>
-          <div className="flex items-center gap-1">
-            <Button size="sm" variant="ghost">
-              <Download className="w-4 h-4" />
-            </Button>
-            <Button size="sm" variant="ghost">
-              <Printer className="w-4 h-4" />
-            </Button>
-            <Button size="sm" variant="ghost">
-              <Share2 className="w-4 h-4" />
-            </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button size="sm" variant="ghost">
-                  <MoreHorizontal className="w-4 h-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>
-                  <CheckCircle className="w-4 h-4 mr-2" />
-                  Clôturer
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Archive className="w-4 h-4 mr-2" />
-                  Archiver
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            {onClose && (
-              <Button size="sm" variant="ghost" onClick={onClose}>
-                <X className="w-4 h-4" />
-              </Button>
-            )}
-          </div>
+          <TooltipProvider delayDuration={300}>
+            <div className="flex items-center gap-1">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button size="icon" variant="ghost" className="h-8 w-8 shrink-0" aria-label="Télécharger" onClick={handleDownload}>
+                    <Download className={iconSize} />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">Télécharger (JSON)</TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button size="icon" variant="ghost" className="h-8 w-8 shrink-0" aria-label="Imprimer" onClick={handlePrint}>
+                    <Printer className={iconSize} />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">Imprimer</TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button size="icon" variant="ghost" className="h-8 w-8 shrink-0" aria-label="Partager">
+                    <Share2 className={iconSize} />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">Partager</TooltipContent>
+              </Tooltip>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button size="icon" variant="ghost" className="h-8 w-8 shrink-0" aria-label="Plus d'actions">
+                    <MoreHorizontal className={iconSize} />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={onCloturer} disabled={!onCloturer}>
+                    <CheckCircle className={iconSize + ' mr-2'} />
+                    Clôturer
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={onArchiver} disabled={!onArchiver}>
+                    <Archive className={iconSize + ' mr-2'} />
+                    Archiver
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              {onClose && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button size="icon" variant="ghost" className="h-8 w-8 shrink-0" onClick={onClose} aria-label="Fermer">
+                      <X className={iconSize} />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom">Fermer</TooltipContent>
+                </Tooltip>
+              )}
+            </div>
+          </TooltipProvider>
         </div>
 
         <div className="px-6 py-4 space-y-3">
@@ -150,7 +230,8 @@ export function AlertDetailPanel({
               className={cn(
                 alerte.niveau === 'critique' && 'bg-red-600 text-white border-red-600',
                 alerte.niveau === 'important' && 'bg-orange-600 text-white border-orange-600',
-                alerte.niveau === 'normal' && 'bg-blue-600 text-white border-blue-600'
+                alerte.niveau === 'normal' && 'bg-blue-600 text-white border-blue-600',
+                alerte.niveau === 'faible' && 'bg-slate-500 text-white border-slate-500'
               )}
             >
               {alerte.niveau.toUpperCase()}
@@ -303,9 +384,17 @@ export function AlertDetailPanel({
                         {(doc.taille / 1024).toFixed(0)} Ko • {doc.uploadePar?.nom}
                       </div>
                     </div>
-                    <Button size="sm" variant="ghost">
-                      <Download className="w-4 h-4" />
-                    </Button>
+                    {doc.url ? (
+                      <Button size="sm" variant="ghost" asChild>
+                        <a href={doc.url} download={doc.nom} target="_blank" rel="noopener noreferrer" aria-label={`Télécharger ${doc.nom}`}>
+                          <Download className="w-4 h-4" />
+                        </a>
+                      </Button>
+                    ) : (
+                      <Button size="sm" variant="ghost" disabled aria-label={`Télécharger ${doc.nom} (indisponible)`}>
+                        <Download className="w-4 h-4" />
+                      </Button>
+                    )}
                   </div>
                 ))}
               </div>
@@ -401,7 +490,16 @@ export function AlertDetailPanel({
               <Button size="sm" variant="outline" onClick={() => setCommentText('')}>
                 Annuler
               </Button>
-              <Button size="sm" disabled={!commentText.trim()}>
+              <Button
+                size="sm"
+                disabled={!commentText.trim() || !onCommentSubmit}
+                onClick={() => {
+                  if (commentText.trim() && onCommentSubmit) {
+                    onCommentSubmit(commentText.trim());
+                    setCommentText('');
+                  }
+                }}
+              >
                 Envoyer
               </Button>
             </div>

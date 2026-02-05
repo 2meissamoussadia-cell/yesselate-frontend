@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { logger } from '@/lib/utils/logger';
 
 export interface DelegationPreferences {
   autoRefresh: boolean;
@@ -41,7 +42,7 @@ export function useUserPreferences() {
         return { ...DEFAULT_PREFERENCES, ...parsed };
       }
     } catch (error) {
-      console.error('[useUserPreferences] Error loading preferences:', error);
+      logger.error('Error loading preferences', error instanceof Error ? error : undefined, { component: 'useUserPreferences' });
     }
     
     return DEFAULT_PREFERENCES;
@@ -52,7 +53,7 @@ export function useUserPreferences() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
     } catch (error) {
-      console.error('[useUserPreferences] Error saving preferences:', error);
+      logger.error('Error saving preferences', error instanceof Error ? error : undefined, { component: 'useUserPreferences' });
     }
   }, []);
 
@@ -79,7 +80,7 @@ export function useUserPreferences() {
           const parsed = JSON.parse(e.newValue);
           setPreferencesState({ ...DEFAULT_PREFERENCES, ...parsed });
         } catch (error) {
-          console.error('[useUserPreferences] Error parsing storage event:', error);
+          logger.error('Error parsing storage event', error instanceof Error ? error : undefined, { component: 'useUserPreferences' });
         }
       }
     };

@@ -7,7 +7,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -46,6 +46,7 @@ import {
 import type { Paiement } from '@/lib/services/paiementsApiService';
 import { useToast } from '@/components/features/bmo/ToastProvider';
 import { useDashboardPermissions } from '@/modules/dashboard/hooks/useDashboardPermissions';
+import { logger } from '@/lib/utils/logger';
 
 // ================================
 // Types
@@ -259,7 +260,7 @@ export function PaiementValidationModal({
       }
       onClose();
     } catch (error) {
-      console.error('Validation failed:', error);
+      logger.error('Validation failed', error as Error, { context: 'PaiementValidationModal' });
       const msg = 'Une erreur est survenue. Veuillez réessayer.';
       toast.error(msg, { title: 'Erreur' });
       setFormErrors(prev => ({ ...prev, submit: msg }));

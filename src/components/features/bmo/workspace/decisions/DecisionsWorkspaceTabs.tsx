@@ -1,7 +1,7 @@
 'use client';
 import { useDecisionsWorkspaceStore } from '@/lib/stores/decisionsWorkspaceStore';
 import { X, Gavel, FileText, Target, Settings, History, BarChart3 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 const tabIcons: Record<string, React.ReactNode> = { inbox: <Gavel className="w-4 h-4" />, detail: <FileText className="w-4 h-4" />, strategique: <Target className="w-4 h-4" />, operationnel: <Settings className="w-4 h-4" />, historique: <History className="w-4 h-4" />, analytics: <BarChart3 className="w-4 h-4" /> };
 export function DecisionsWorkspaceTabs() {
   const { tabs, activeTabId, setActiveTab, closeTab } = useDecisionsWorkspaceStore();

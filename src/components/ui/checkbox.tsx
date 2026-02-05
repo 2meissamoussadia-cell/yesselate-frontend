@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Check } from 'lucide-react';
 
 export interface CheckboxProps
@@ -25,8 +25,9 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
         aria-checked={checked}
         disabled={disabled}
         onClick={handleClick}
+        style={{ width: 16, height: 16, minWidth: 16, minHeight: 16, maxWidth: 16, maxHeight: 16 }}
         className={cn(
-          'peer h-4 w-4 shrink-0 rounded-sm border border-slate-600 ring-offset-slate-950',
+          'peer shrink-0 flex items-center justify-center rounded-sm border border-slate-600 ring-offset-slate-950',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
           'disabled:cursor-not-allowed disabled:opacity-50',
           'transition-colors',
@@ -37,7 +38,7 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
         )}
       >
         {checked && (
-          <Check className="h-3 w-3 text-white" strokeWidth={3} />
+          <Check className="h-[9px] w-[9px] text-white shrink-0" strokeWidth={2.5} />
         )}
         <input
           type="checkbox"

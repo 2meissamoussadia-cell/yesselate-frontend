@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { logger } from '@/lib/utils/logger';
 
 export interface DemandsStats {
   total: number;
@@ -35,7 +36,7 @@ export function useDemandsStats() {
     } catch (err) {
       const error = err instanceof Error ? err : new Error('Unknown error');
       setError(error);
-      console.error('Error fetching stats:', error);
+      logger.error('Error fetching stats', error, { component: 'useDemandsStats' });
       return null;
     } finally {
       setLoading(false);

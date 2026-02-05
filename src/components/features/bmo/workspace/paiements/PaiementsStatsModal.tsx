@@ -6,10 +6,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { paiementsApiService, type PaiementsStats } from '@/lib/services/paiementsApiService';
+import { logger } from '@/lib/utils/logger';
 import {
   X,
   BarChart3,
@@ -42,7 +43,7 @@ export function PaiementsStatsModal({ open, onClose }: PaiementsStatsModalProps)
       const data = await paiementsApiService.getStats();
       setStats(data);
     } catch (error) {
-      console.error('Failed to load stats:', error);
+      logger.error('Failed to load stats', error as Error, { context: 'PaiementsStatsModal' });
     } finally {
       setLoading(false);
       setRefreshing(false);

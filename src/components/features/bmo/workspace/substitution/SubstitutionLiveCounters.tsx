@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { RefreshCw, AlertTriangle, Clock, CheckCircle, XCircle, Users, Calendar, TrendingUp, Zap } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { substitutionApiService, type SubstitutionStats } from '@/lib/services/substitutionApiService';
 
 interface Props { onOpenQueue: (queue: string, title: string, icon: string) => void; }
@@ -14,7 +15,7 @@ export function SubstitutionLiveCounters({ onOpenQueue }: Props) {
   useEffect(() => {
     const loadStats = async () => {
       try { const data = await substitutionApiService.getStats(); setStats(data); }
-      catch (error) { console.error('Failed:', error); }
+      catch (error) { logger.error('Failed to load stats', error instanceof Error ? error : undefined, { component: 'SubstitutionLiveCounters' }); }
       finally { setLoading(false); }
     };
     loadStats();

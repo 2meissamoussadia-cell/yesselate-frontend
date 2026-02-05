@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { X, User, Image } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { ChantierMock } from '../../data/chantiersMock';
 import { OrangeMoneyButton } from '../cockpit/OrangeMoneyButton';
 

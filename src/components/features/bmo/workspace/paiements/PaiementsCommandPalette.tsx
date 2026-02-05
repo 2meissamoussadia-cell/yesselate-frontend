@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { usePaiementsWorkspaceStore } from '@/lib/stores/paiementsWorkspaceStore';
 import { Search, ArrowRight, ClipboardList, FileText, Calendar, DollarSign, Building2, CheckCircle, Shield, BarChart3, Download, RefreshCw, Filter, AlertTriangle, Ban } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface Command {
   id: string;

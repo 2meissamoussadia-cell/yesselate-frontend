@@ -7,7 +7,7 @@
 'use client';
 
 import React, { useCallback, useState } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import type { ErpColumnDef } from './types';
 

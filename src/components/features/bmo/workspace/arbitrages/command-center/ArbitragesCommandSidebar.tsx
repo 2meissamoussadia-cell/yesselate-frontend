@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -27,15 +27,26 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
-interface SidebarCategory {
-  id: string;
+export type WorkspaceArbitragesMainCategory =
+  | 'overview'
+  | 'critical'
+  | 'pending'
+  | 'resolved'
+  | 'escalated'
+  | 'goulots'
+  | 'categories'
+  | 'bureaux'
+  | 'analytics';
+
+interface WorkspaceArbitragesSidebarCategory {
+  id: WorkspaceArbitragesMainCategory;
   label: string;
   icon: LucideIcon;
   badge?: number | string;
   badgeType?: 'default' | 'warning' | 'critical';
 }
 
-export const arbitragesCategories: SidebarCategory[] = [
+export const arbitragesCategories: WorkspaceArbitragesSidebarCategory[] = [
   { id: 'overview', label: "Vue d'ensemble", icon: LayoutDashboard },
   { id: 'critical', label: 'Critiques', icon: AlertCircle, badge: 7, badgeType: 'critical' },
   { id: 'pending', label: 'En attente', icon: Clock, badge: 23, badgeType: 'warning' },
@@ -48,9 +59,9 @@ export const arbitragesCategories: SidebarCategory[] = [
 ];
 
 interface ArbitragesCommandSidebarProps {
-  activeCategory: string;
+  activeCategory: WorkspaceArbitragesMainCategory;
   collapsed: boolean;
-  onCategoryChange: (category: string) => void;
+  onCategoryChange: (category: WorkspaceArbitragesMainCategory) => void;
   onToggleCollapse: () => void;
   onOpenCommandPalette: () => void;
 }
@@ -223,5 +234,5 @@ export const ArbitragesCommandSidebar = React.memo(function ArbitragesCommandSid
   );
 });
 
-export type { SidebarCategory };
+export type SidebarCategory = WorkspaceArbitragesSidebarCategory;
 

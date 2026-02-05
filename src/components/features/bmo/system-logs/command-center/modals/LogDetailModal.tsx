@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { toCsv, downloadBlob } from '@/lib/utils/export';
 import { logger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';

@@ -9,7 +9,7 @@ import { Plus, Check } from 'lucide-react';
 import { BmoModulePage } from '@/components/bmo/BmoModulePage';
 import { QuickActionsBar } from '@/components/bmo/ui/QuickActionsBar';
 import { governanceModuleConfig } from '@/lib/config/modules/governance.config';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface ArbitrageItem {
   id: string;

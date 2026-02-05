@@ -10,7 +10,7 @@ import { Download, FileText, FileSpreadsheet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useDashboardExport } from '../../hooks/useDashboardExport';
 import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 type Format = 'pdf' | 'excel';
 

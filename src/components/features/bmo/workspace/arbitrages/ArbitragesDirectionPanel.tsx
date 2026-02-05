@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { arbitragesApiService, type ArbitragesStats } from '@/lib/services/arbitragesApiService';
 import { X, Zap, Clock, Scale, ArrowUp, GitBranch, AlertTriangle, ArrowRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 interface Props { open: boolean; onClose: () => void; }
 
@@ -14,7 +15,7 @@ export function ArbitragesDirectionPanel({ open, onClose }: Props) {
     if (!open) return;
     const load = async () => {
       try { const data = await arbitragesApiService.getStats(); setStats(data); }
-      catch (error) { console.error('Failed:', error); }
+      catch (error) { logger.error('Arbitrages stats failed', error as Error, { context: 'ArbitragesDirectionPanel' }); }
     };
     load();
     const interval = setInterval(load, 30000);

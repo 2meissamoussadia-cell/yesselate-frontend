@@ -8,7 +8,7 @@
 
 import { useState } from 'react';
 import { X, Download, FileText, FileSpreadsheet, FileJson, Loader2, CheckCircle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 

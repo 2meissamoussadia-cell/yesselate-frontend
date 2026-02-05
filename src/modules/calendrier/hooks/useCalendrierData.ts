@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   getCalendrierOverview,
   getJalons,
@@ -181,7 +182,7 @@ export function useEvenements(params?: {
       if (!mountedRef.current) return;
       
       if (process.env.NODE_ENV === 'development') {
-        console.warn('useEvenements - Erreur ou timeout:', err);
+        logger.warn('useEvenements - Erreur ou timeout', { component: 'useCalendrierData', error: String(err) });
       }
       // En cas d'erreur, retourner un tableau vide
       setEvenements([]);
@@ -255,7 +256,7 @@ export function useAbsences(params?: {
       if (!mountedRef.current) return;
       
       if (process.env.NODE_ENV === 'development') {
-        console.warn('useAbsences - Erreur ou timeout:', err);
+        logger.warn('useAbsences - Erreur ou timeout', { component: 'useCalendrierData', error: String(err) });
       }
       // En cas d'erreur, retourner un tableau vide
       setAbsences([]);

@@ -8,7 +8,7 @@
 import React, { useState } from 'react';
 import { X, FileText, CheckCircle, XCircle } from 'lucide-react';
 import { useToast } from '@/components/ui/toast';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { formatMoneyCompact } from '@lib-root/dashboard/kpi';
 import type { ValidationEnAttente } from '../../types/cockpitModals';
 

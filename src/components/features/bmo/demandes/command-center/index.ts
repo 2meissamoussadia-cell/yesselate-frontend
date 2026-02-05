@@ -3,7 +3,7 @@
  */
 
 export { DemandesCommandSidebar, demandesCategories } from './DemandesCommandSidebar';
-export type { DemandesCategory } from './DemandesCommandSidebar';
+export type { DemandesCategory, DemandesMainCategory } from './DemandesCommandSidebar';
 
 export { DemandesSidebar } from './DemandesSidebar';
 

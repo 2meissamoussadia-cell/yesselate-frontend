@@ -5,8 +5,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { cn } from '@/lib/utils';
-import type { BulkOperationProgress } from '@/hooks/useBulkOperationProgress';
+import { cn } from '@/lib/cn';
+import type { BulkOperationProgress } from '@/hooks';
 
 interface BulkProgressModalProps {
   progress: BulkOperationProgress;

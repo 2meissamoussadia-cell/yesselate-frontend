@@ -25,7 +25,7 @@ import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronLeft, ChevronRight, type LucideIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/cn';
 
 // ---------------------------------------------------------------------------
 // Types

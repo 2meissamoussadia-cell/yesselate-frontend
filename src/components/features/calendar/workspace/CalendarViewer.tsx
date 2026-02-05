@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { useCalendarWorkspaceStore, type CalendarUIState } from '@/lib/stores/calendarWorkspaceStore';
 import {

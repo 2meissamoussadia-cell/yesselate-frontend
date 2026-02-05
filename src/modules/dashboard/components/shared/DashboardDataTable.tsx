@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { DataTable as BaseDataTable, type Column } from '@/presentation/components/DataTable/DataTable';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export interface DashboardDataTableProps<T extends Record<string, any>> {
   data: T[];

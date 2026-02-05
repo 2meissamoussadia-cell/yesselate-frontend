@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Calendar, User, Clock, Filter, Plus, TrendingUp, AlertCircle, Loader2, Eye } from 'lucide-react';
 import { absencesApiService } from '@/lib/services/absencesApiService';
 import { AbsenceDetailModal } from '@/components/features/bmo/substitution/modals';
+import { logger } from '@/lib/utils/logger';
 import type { Absence, AbsenceStats, AbsenceFilter } from '@/lib/types/substitution.types';
 
 export function AbsencesTab() {
@@ -54,7 +55,7 @@ export function AbsencesTab() {
       setAbsences(data);
       setStats(statsData);
     } catch (error) {
-      console.error('Error loading absences:', error);
+      logger.error('Error loading absences', error instanceof Error ? error : undefined, { component: 'AbsencesTab' });
     } finally {
       setLoading(false);
     }

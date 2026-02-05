@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { logger } from '@/lib/utils/logger';
 import { getSyncStatus } from '../api/calendrierApi';
 import { mockSyncStatus } from '../api/calendrierApiMock';
 import type { SyncStatus } from '../types/calendrierTypes';
@@ -48,7 +49,7 @@ export function useCalendrierSyncStatus(): UseCalendrierSyncStatusResult {
       if (!mountedRef.current) return;
       
       if (process.env.NODE_ENV === 'development') {
-        console.warn('useCalendrierSyncStatus - Erreur ou timeout, utilisation des données mockées:', err);
+        logger.warn('useCalendrierSyncStatus - Erreur ou timeout, utilisation des données mockées', { component: 'useCalendrierSyncStatus', error: String(err) });
       }
       // En cas d'erreur ou timeout, utiliser les données mockées
       setStatuts(mockSyncStatus.statuts);

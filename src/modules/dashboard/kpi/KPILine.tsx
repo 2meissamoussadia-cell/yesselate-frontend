@@ -18,7 +18,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { parseTrendPercent, toneToColor } from '@lib-root/dashboard/kpi';
 import type { TrendDir, Tone } from '@lib-root/dashboard/kpi';
 

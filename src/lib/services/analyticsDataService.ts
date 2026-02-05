@@ -98,7 +98,8 @@ class AnalyticsDataService {
 
     try {
       // Construire l'URL
-      const url = new URL(dataSource.endpoint, window.location.origin);
+      const endpoint = dataSource.endpoint ?? '/api/analytics';
+      const url = new URL(endpoint, window.location.origin);
       
       // Ajouter les paramètres
       if (dataSource.params) {
@@ -112,11 +113,12 @@ class AnalyticsDataService {
       // En mode développement, utiliser les données mockées si disponibles
       if (process.env.NODE_ENV === 'development') {
         const { mockApiResponse } = await import('@/lib/mocks/analyticsMockData');
-        const mockData = mockApiResponse(dataSource.endpoint);
+        const mockData = mockApiResponse(endpoint);
         
         if (mockData !== null) {
           const timestamp = Date.now();
-          const ttl = dataSource.cache?.ttl || 300000;
+          const cacheOpts = dataSource.cache as { ttl?: number } | undefined;
+          const ttl = cacheOpts?.ttl ?? 300000;
           
           if (useCache) {
             this.cache.set(cacheKey, { data: mockData, timestamp, ttl });
@@ -143,7 +145,8 @@ class AnalyticsDataService {
 
       const data = await response.json();
       const timestamp = Date.now();
-      const ttl = dataSource.cache?.ttl || 300000; // 5 minutes par défaut
+      const cacheOpts = dataSource.cache as { ttl?: number } | undefined;
+      const ttl = cacheOpts?.ttl ?? 300000;
 
       // Mettre en cache
       if (useCache) {
@@ -224,7 +227,8 @@ class AnalyticsDataService {
     const paramsKey = dataSource.params
       ? JSON.stringify(dataSource.params)
       : '';
-    return `${dataSource.cache?.key || dataSource.id}-${paramsKey}`;
+    const cacheOpts = dataSource.cache as { key?: string } | undefined;
+    return `${cacheOpts?.key ?? dataSource.id}-${paramsKey}`;
   }
 
   /**

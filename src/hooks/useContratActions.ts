@@ -7,6 +7,7 @@
 
 import { useState, useCallback } from 'react';
 import { useContratToast } from './useContratToast';
+import { logger } from '@/lib/utils/logger';
 import { contratsApiService, type ContratDecision } from '@/lib/services/contratsApiService';
 
 export interface UseContratActionsReturn {
@@ -26,6 +27,8 @@ export interface UseContratActionsReturn {
   bulkProgress: { current: number; total: number } | null;
 }
 
+const USER_PLACEHOLDER = { id: 'me', name: 'User', role: 'manager' };
+
 export function useContratActions(): UseContratActionsReturn {
   const toast = useContratToast();
   const [loading, setLoading] = useState(false);
@@ -37,11 +40,12 @@ export function useContratActions(): UseContratActionsReturn {
   const validate = useCallback(async (id: string, decision: ContratDecision) => {
     try {
       setLoading(true);
-      await contratsApiService.validateContrat(id, decision);
+      const notes = typeof decision === 'string' ? decision : decision.notes;
+      await contratsApiService.validateContrat(id, notes, USER_PLACEHOLDER.id, USER_PLACEHOLDER.name, USER_PLACEHOLDER.role);
       toast.contratValidated(id);
       return { success: true };
     } catch (error) {
-      console.error('Erreur validation:', error);
+      logger.error('Erreur validation', error instanceof Error ? error : undefined, { component: 'useContratActions' });
       toast.actionError('validation');
       return { success: false, error };
     } finally {
@@ -60,11 +64,11 @@ export function useContratActions(): UseContratActionsReturn {
 
     try {
       setLoading(true);
-      await contratsApiService.rejectContrat(id, reason);
+      await contratsApiService.rejectContrat(id, reason, USER_PLACEHOLDER.id, USER_PLACEHOLDER.name, USER_PLACEHOLDER.role);
       toast.contratRejected(id);
       return { success: true };
     } catch (error) {
-      console.error('Erreur rejet:', error);
+      logger.error('Erreur rejet', error instanceof Error ? error : undefined, { component: 'useContratActions' });
       toast.actionError('rejet');
       return { success: false, error };
     } finally {
@@ -83,11 +87,11 @@ export function useContratActions(): UseContratActionsReturn {
 
     try {
       setLoading(true);
-      await contratsApiService.negotiateContrat(id, terms);
+      await contratsApiService.negotiateContrat(id, terms, USER_PLACEHOLDER.id, USER_PLACEHOLDER.name, USER_PLACEHOLDER.role);
       toast.contratNegotiation(id);
       return { success: true };
     } catch (error) {
-      console.error('Erreur négociation:', error);
+      logger.error('Erreur négociation', error instanceof Error ? error : undefined, { component: 'useContratActions' });
       toast.actionError('négociation');
       return { success: false, error };
     } finally {
@@ -106,11 +110,11 @@ export function useContratActions(): UseContratActionsReturn {
 
     try {
       setLoading(true);
-      await contratsApiService.escalateContrat(id, to, reason);
+      await contratsApiService.escalateContrat(id, reason, to, USER_PLACEHOLDER.id, USER_PLACEHOLDER.name, USER_PLACEHOLDER.role);
       toast.contratEscalated(id);
       return { success: true };
     } catch (error) {
-      console.error('Erreur escalade:', error);
+      logger.error('Erreur escalade', error instanceof Error ? error : undefined, { component: 'useContratActions' });
       toast.actionError('escalade');
       return { success: false, error };
     } finally {
@@ -137,12 +141,7 @@ export function useContratActions(): UseContratActionsReturn {
         setBulkProgress({ current: i + 1, total: ids.length });
         
         // Appel API (mockée actuellement)
-        await contratsApiService.validateContrat(ids[i], {
-          approved: true,
-          approvedBy: 'current-user',
-          approvedAt: new Date().toISOString(),
-          comment: note || 'Validation groupée',
-        });
+        await contratsApiService.validateContrat(ids[i], note || 'Validation groupée', USER_PLACEHOLDER.id, USER_PLACEHOLDER.name, USER_PLACEHOLDER.role);
         
         results.push({ id: ids[i], success: true });
         
@@ -153,7 +152,7 @@ export function useContratActions(): UseContratActionsReturn {
       toast.contratsValidated(ids.length);
       return { success: true, results };
     } catch (error) {
-      console.error('Erreur validation groupée:', error);
+      logger.error('Erreur validation groupée', error instanceof Error ? error : undefined, { component: 'useContratActions' });
       toast.actionError('validation groupée');
       return { success: false, error };
     } finally {
@@ -184,7 +183,7 @@ export function useContratActions(): UseContratActionsReturn {
       for (let i = 0; i < ids.length; i++) {
         setBulkProgress({ current: i + 1, total: ids.length });
         
-        await contratsApiService.rejectContrat(ids[i], reason);
+        await contratsApiService.rejectContrat(ids[i], reason, USER_PLACEHOLDER.id, USER_PLACEHOLDER.name, USER_PLACEHOLDER.role);
         results.push({ id: ids[i], success: true });
         
         await new Promise(r => setTimeout(r, 200));
@@ -193,7 +192,7 @@ export function useContratActions(): UseContratActionsReturn {
       toast.contratsRejected(ids.length);
       return { success: true, results };
     } catch (error) {
-      console.error('Erreur rejet groupé:', error);
+      logger.error('Erreur rejet groupé', error instanceof Error ? error : undefined, { component: 'useContratActions' });
       toast.actionError('rejet groupé');
       return { success: false, error };
     } finally {
@@ -224,7 +223,7 @@ export function useContratActions(): UseContratActionsReturn {
       for (let i = 0; i < ids.length; i++) {
         setBulkProgress({ current: i + 1, total: ids.length });
         
-        await contratsApiService.escalateContrat(ids[i], to, reason);
+        await contratsApiService.escalateContrat(ids[i], reason, to, USER_PLACEHOLDER.id, USER_PLACEHOLDER.name, USER_PLACEHOLDER.role);
         results.push({ id: ids[i], success: true });
         
         await new Promise(r => setTimeout(r, 200));
@@ -233,7 +232,7 @@ export function useContratActions(): UseContratActionsReturn {
       toast.contratsEscalated(ids.length);
       return { success: true, results };
     } catch (error) {
-      console.error('Erreur escalade groupée:', error);
+      logger.error('Erreur escalade groupée', error instanceof Error ? error : undefined, { component: 'useContratActions' });
       toast.actionError('escalade groupée');
       return { success: false, error };
     } finally {

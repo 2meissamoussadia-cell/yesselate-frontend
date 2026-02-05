@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -27,15 +27,27 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
-export interface SidebarCategory {
-  id: string;
+export type ValidationBCMainCategory =
+  | 'overview'
+  | 'bc'
+  | 'factures'
+  | 'avenants'
+  | 'urgents'
+  | 'historique'
+  | 'tendances'
+  | 'validateurs'
+  | 'services'
+  | 'regles';
+
+export interface ValidationBCSidebarCategory {
+  id: ValidationBCMainCategory;
   label: string;
   icon: LucideIcon;
   badge?: number | string;
   badgeType?: 'default' | 'warning' | 'critical';
 }
 
-export const validationBCCategories: SidebarCategory[] = [
+export const validationBCCategories: ValidationBCSidebarCategory[] = [
   { id: 'overview', label: "Vue d'ensemble", icon: LayoutDashboard },
   { id: 'bc', label: 'Bons de Commande', icon: ShoppingCart, badge: 23, badgeType: 'warning' },
   { id: 'factures', label: 'Factures', icon: Receipt, badge: 15, badgeType: 'warning' },
@@ -49,13 +61,15 @@ export const validationBCCategories: SidebarCategory[] = [
 ];
 
 interface ValidationBCCommandSidebarProps {
-  activeCategory: string;
+  activeCategory: ValidationBCMainCategory;
   collapsed: boolean;
-  onCategoryChange: (category: string) => void;
+  onCategoryChange: (category: ValidationBCMainCategory) => void;
   onToggleCollapse: () => void;
   onOpenCommandPalette: () => void;
-  categories?: SidebarCategory[]; // ← Optionnel, utilise validationBCCategories par défaut
+  categories?: ValidationBCSidebarCategory[];
 }
+
+export type SidebarCategory = ValidationBCSidebarCategory;
 
 export function ValidationBCCommandSidebar({
   activeCategory,
@@ -63,7 +77,7 @@ export function ValidationBCCommandSidebar({
   onCategoryChange,
   onToggleCollapse,
   onOpenCommandPalette,
-  categories = validationBCCategories, // ← Valeur par défaut
+  categories = validationBCCategories,
 }: ValidationBCCommandSidebarProps) {
   return (
     <aside

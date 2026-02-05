@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { useLogsWorkspaceStore } from '@/lib/stores/logsWorkspaceStore';
 import { Search, ArrowRight, Terminal, AlertCircle, AlertTriangle, Info, Server, Globe, BarChart3, RefreshCw, Download, Filter } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 interface Command { id: string; label: string; description?: string; icon: React.ComponentType<{ className?: string }>; category: 'navigation' | 'action' | 'filter'; shortcut?: string; action: () => void; }
 interface Props { open: boolean; onClose: () => void; onOpenStats: () => void; onRefresh: () => void; }
 export function LogsCommandPalette({ open, onClose, onOpenStats, onRefresh }: Props) {

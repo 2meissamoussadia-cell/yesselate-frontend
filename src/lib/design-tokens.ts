@@ -31,6 +31,7 @@ export {
 // Layout BMO (sidebar, breakpoints, z-index)
 export {
   SIDEBAR_MOBILE_BREAKPOINT,
+  SIDEBAR_WIDTH,
   SIDEBAR_WIDTH_CLASS,
   Z_INDEX,
 } from './design-tokens/index';

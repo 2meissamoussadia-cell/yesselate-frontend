@@ -6,7 +6,7 @@
 'use client';
 
 import React, { memo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Clock, User, AlertTriangle, FileText, Scale, CreditCard, ArrowRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 

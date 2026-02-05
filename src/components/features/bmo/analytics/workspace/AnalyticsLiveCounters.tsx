@@ -12,7 +12,7 @@ import { useMemo } from 'react';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { demands } from '@/lib/data';
 import type { Demand } from '@/lib/types/bmo.types';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 const calcDelay = (dateStr: string) => {
   const [d, m, y] = (dateStr ?? '').split('/').map(Number);

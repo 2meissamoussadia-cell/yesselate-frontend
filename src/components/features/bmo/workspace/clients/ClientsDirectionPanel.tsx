@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { clientsApiService, type ClientsStats } from '@/lib/services/clientsApiService';
 import { X, AlertTriangle, DollarSign, TrendingUp, Users, ArrowRight, Crown, Building2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 interface Props { open: boolean; onClose: () => void; }
 
@@ -14,7 +15,7 @@ export function ClientsDirectionPanel({ open, onClose }: Props) {
     if (!open) return;
     const load = async () => {
       try { const data = await clientsApiService.getStats(); setStats(data); }
-      catch (error) { console.error('Failed:', error); }
+      catch (error) { logger.error('Clients stats failed', error as Error, { context: 'ClientsDirectionPanel' }); }
     };
     load();
     const interval = setInterval(load, 30000);

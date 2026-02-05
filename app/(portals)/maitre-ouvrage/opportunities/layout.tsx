@@ -1,23 +1,13 @@
-'use client';
+import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
+import OpportunitiesLayoutClient from './OpportunitiesLayoutClient';
 
-import React from 'react';
-import { Layers } from 'lucide-react';
-import { PortalModuleCleanLayout } from '@/components/bmo/layout/PortalModuleCleanLayout';
-import type { PortalModuleTab } from '@/components/bmo/layout/PortalModuleCleanLayout';
+export const metadata: Metadata = {
+  title: 'Opportunités & Programmes | Maître d\'Ouvrage | YESSALATE',
+  description:
+    'Pipeline d\'opportunités et programmes - Phase 0-2, vue Table/Kanban. Pilotage projets BTP.',
+};
 
-const opportunitiesTabs: PortalModuleTab[] = [
-  {
-    id: 'pipeline',
-    label: 'Pipeline',
-    path: '/maitre-ouvrage/opportunities',
-    icon: Layers,
-  },
-];
-
-export default function OpportunitiesLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <PortalModuleCleanLayout title="Opportunités & Programmes" tabs={opportunitiesTabs}>
-      {children}
-    </PortalModuleCleanLayout>
-  );
+export default function OpportunitiesLayout({ children }: { children: ReactNode }) {
+  return <OpportunitiesLayoutClient>{children}</OpportunitiesLayoutClient>;
 }

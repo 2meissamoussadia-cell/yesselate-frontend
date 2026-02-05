@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useAppStore } from '@/lib/stores';
 import { useBMOStore } from '@/lib/stores/bmo-store';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

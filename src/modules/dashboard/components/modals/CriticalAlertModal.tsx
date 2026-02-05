@@ -8,7 +8,7 @@
 import React from 'react';
 import { AlertTriangle, X, Phone, ExternalLink, Mail, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export interface CriticalAlertPayload {
   id: string;

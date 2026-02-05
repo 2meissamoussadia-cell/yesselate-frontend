@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { Users, CheckCircle, AlertTriangle, Clock, UserPlus, Building2, Crown, DollarSign } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { clientsApiService, type ClientsStats } from '@/lib/services/clientsApiService';
+import { logger } from '@/lib/utils/logger';
 
 interface Props { onOpenQueue: (queue: string, title: string, icon: string) => void; }
 
@@ -14,7 +15,7 @@ export function ClientsLiveCounters({ onOpenQueue }: Props) {
   useEffect(() => {
     const loadStats = async () => {
       try { const data = await clientsApiService.getStats(); setStats(data); }
-      catch (error) { console.error('Failed:', error); }
+      catch (error) { logger.error('Clients stats failed', error as Error, { context: 'ClientsLiveCounters' }); }
       finally { setLoading(false); }
     };
     loadStats();

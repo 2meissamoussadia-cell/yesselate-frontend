@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -26,15 +26,26 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
-interface SidebarCategory {
-  id: string;
+export type OrganigrammeMainCategory =
+  | 'overview'
+  | 'hierarchy'
+  | 'changes'
+  | 'positions'
+  | 'bureaux'
+  | 'teams'
+  | 'skills'
+  | 'history'
+  | 'analytics';
+
+interface OrganigrammeSidebarCategory {
+  id: OrganigrammeMainCategory;
   label: string;
   icon: LucideIcon;
   badge?: number | string;
   badgeType?: 'default' | 'warning' | 'critical';
 }
 
-const organigrammeCategories: SidebarCategory[] = [
+const organigrammeCategories: OrganigrammeSidebarCategory[] = [
   { id: 'overview', label: "Vue d'ensemble", icon: LayoutDashboard },
   { id: 'hierarchy', label: 'Hiérarchie', icon: Network },
   { id: 'changes', label: 'Changements', icon: GitBranch, badge: 12 },
@@ -47,9 +58,9 @@ const organigrammeCategories: SidebarCategory[] = [
 ];
 
 interface OrganigrammeCommandSidebarProps {
-  activeCategory: string;
+  activeCategory: OrganigrammeMainCategory;
   collapsed: boolean;
-  onCategoryChange: (category: string) => void;
+  onCategoryChange: (category: OrganigrammeMainCategory) => void;
   onToggleCollapse: () => void;
   onOpenCommandPalette: () => void;
 }
@@ -223,5 +234,5 @@ export const OrganigrammeCommandSidebar = React.memo(function OrganigrammeComman
 });
 
 export { organigrammeCategories };
-export type { SidebarCategory };
+export type SidebarCategory = OrganigrammeSidebarCategory;
 

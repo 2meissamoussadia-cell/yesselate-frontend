@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, ReactNode } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface LazySectionProps {
   children: ReactNode;

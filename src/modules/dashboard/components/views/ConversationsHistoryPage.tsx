@@ -7,7 +7,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { MessageSquare, Building2, ChevronRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { getThreads } from '../../data/chantierChatStore';
 import { chantiers } from '../../data/chantiersMock';
 import type { ChantierMock } from '../../data/chantiersMock';

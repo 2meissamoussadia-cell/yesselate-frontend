@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/dialog';
 import { CheckCircle2, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import type { DocumentValidation } from '../types/validationTypes';
 
 interface ValidationModalProps {
@@ -43,7 +44,7 @@ export function ValidationModal({
       setComment('');
       onClose();
     } catch (error) {
-      console.error('Erreur de validation:', error);
+      logger.error('Erreur de validation', error instanceof Error ? error : undefined, { component: 'ValidationModal' });
     } finally {
       setLoading(false);
     }

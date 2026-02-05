@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useDelegationWorkspaceStore } from '@/lib/stores/delegationWorkspaceStore';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { 
   Shield, Clock, XCircle, Pause, Activity, RefreshCw 
 } from 'lucide-react';

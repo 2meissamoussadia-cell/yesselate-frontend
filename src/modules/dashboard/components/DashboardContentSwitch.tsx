@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState, memo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DashboardLoadingFallback } from './shared/DashboardLoadingFallback';

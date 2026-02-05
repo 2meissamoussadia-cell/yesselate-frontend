@@ -7,7 +7,7 @@
 
 import React, { useState, useCallback } from 'react';
 import { Shield, Copy, Check, ExternalLink } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 

@@ -20,16 +20,17 @@ test.describe('BMO Topbar', () => {
   });
 
   test('menu Fichier opens and contains expected items', async ({ page }) => {
-    await page.getByTestId('topbar-menu-fichier').click();
-    const content = page.getByTestId('topbar-menu-fichier-content');
-    await expect(content).toBeVisible();
-    await expect(content).toContainText('Nouvelle demande');
-    await expect(content).toContainText('Ouvrir / Documents');
-    await expect(content).toContainText('Exporter');
+    await page.getByTestId('topbar-menu-more').click();
+    await page.getByRole('menuitem', { name: /Fichier/ }).click();
+    const menu = page.getByRole('menu');
+    await expect(menu.getByText('Nouvelle demande')).toBeVisible();
+    await expect(menu.getByText('Ouvrir / Documents')).toBeVisible();
+    await expect(menu.getByText(/Exporter/)).toBeVisible();
   });
 
   test('menu Paramétrage opens and contains Langue (not separate language dropdown on right)', async ({ page }) => {
-    await page.getByTestId('topbar-menu-parametrage').click();
+    await page.getByTestId('topbar-menu-more').click();
+    await page.getByRole('menuitem', { name: 'Paramétrage' }).click();
     const content = page.getByTestId('topbar-menu-parametrage-content');
     await expect(content).toBeVisible();
     await expect(content).toContainText('Langue');
@@ -38,7 +39,8 @@ test.describe('BMO Topbar', () => {
   });
 
   test('menu Réglage opens and contains Taille du texte (Réduire / Normal / Augmenter)', async ({ page }) => {
-    await page.getByTestId('topbar-menu-reglage').click();
+    await page.getByTestId('topbar-menu-more').click();
+    await page.getByRole('menuitem', { name: 'Réglage' }).click();
     const content = page.getByTestId('topbar-menu-reglage-content');
     await expect(content).toBeVisible();
     await expect(content).toContainText('Taille du texte');
@@ -50,7 +52,8 @@ test.describe('BMO Topbar', () => {
   test('Réglage font size: selecting Augmenter applies larger font to main content', async ({ page }) => {
     const main = page.locator('main#main-content');
     await expect(main).toBeVisible();
-    await page.getByTestId('topbar-menu-reglage').click();
+    await page.getByTestId('topbar-menu-more').click();
+    await page.getByRole('menuitem', { name: 'Réglage' }).click();
     await page.getByTestId('topbar-menu-reglage-content').getByRole('menuitem', { name: 'Augmenter' }).click();
     await page.waitForTimeout(300);
     await expect(main).toHaveClass(/bmo-font-large|text-\[112\.5%\]/);

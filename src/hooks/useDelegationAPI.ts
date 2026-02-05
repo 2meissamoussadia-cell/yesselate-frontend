@@ -7,6 +7,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { logger } from '@/lib/utils/logger';
 
 // ============================================
 // TYPES
@@ -229,7 +230,7 @@ export function useDelegations(options: UseDelegationsOptions = {}): UseDelegati
       setTotal(result.total ?? 0);
     } catch (err: any) {
       if (err.name !== 'AbortError') {
-        console.error('Erreur chargement délégations:', err);
+        logger.error('Erreur chargement délégations', err instanceof Error ? err : undefined, { component: 'useDelegationAPI' });
         setError(err.message || 'Erreur inconnue');
       }
     } finally {
@@ -305,7 +306,7 @@ export function useDelegationStats(options: { autoRefresh?: boolean; refreshInte
       setData(result);
     } catch (err: any) {
       if (err.name !== 'AbortError') {
-        console.error('Erreur chargement stats:', err);
+        logger.error('Erreur chargement stats', err instanceof Error ? err : undefined, { component: 'useDelegationAPI' });
         setError(err.message || 'Erreur inconnue');
       }
     } finally {
@@ -387,7 +388,7 @@ export function useDelegationAlerts(options: { autoRefresh?: boolean; refreshInt
       });
     } catch (err: any) {
       if (err.name !== 'AbortError') {
-        console.error('Erreur chargement alertes:', err);
+        logger.error('Erreur chargement alertes', err instanceof Error ? err : undefined, { component: 'useDelegationAPI' });
         setError(err.message || 'Erreur inconnue');
       }
     } finally {
@@ -472,7 +473,7 @@ export function useDelegationInsights(options: { autoRefresh?: boolean; refreshI
       setData(result);
     } catch (err: any) {
       if (err.name !== 'AbortError') {
-        console.error('Erreur chargement insights:', err);
+        logger.error('Erreur chargement insights', err instanceof Error ? err : undefined, { component: 'useDelegationAPI' });
         setError(err.message || 'Erreur inconnue');
       }
     } finally {

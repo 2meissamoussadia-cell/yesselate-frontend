@@ -2,7 +2,7 @@
 
 import { useFinancesWorkspaceStore } from '@/lib/stores/financesWorkspaceStore';
 import { X, LayoutDashboard, Wallet, PiggyBank, CreditCard, TrendingUp, Shield } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 const tabIcons: Record<string, React.ReactNode> = {
   dashboard: <LayoutDashboard className="w-4 h-4" />,

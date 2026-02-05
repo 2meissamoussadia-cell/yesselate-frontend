@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useGovernanceWorkspaceStore } from '@/lib/stores/governanceWorkspaceStore';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';

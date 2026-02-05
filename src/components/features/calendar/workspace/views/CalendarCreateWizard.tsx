@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { CalendarTab } from '@/lib/stores/calendarWorkspaceStore';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import {
   Calendar,
   Clock,

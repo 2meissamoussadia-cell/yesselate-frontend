@@ -18,7 +18,7 @@ import {
   Calendar, Clock, CheckCircle2, AlertCircle,
   Loader2, BarChart3, TrendingUp, DollarSign, Users
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface AnalyticsExportModalProps {
   open: boolean;

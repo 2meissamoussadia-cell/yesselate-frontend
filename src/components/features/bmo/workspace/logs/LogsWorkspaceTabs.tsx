@@ -1,7 +1,7 @@
 'use client';
 import { useLogsWorkspaceStore } from '@/lib/stores/logsWorkspaceStore';
 import { X, Terminal, FileText, AlertCircle, Server, Globe, BarChart3 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 const tabIcons: Record<string, React.ReactNode> = { inbox: <Terminal className="w-4 h-4" />, detail: <FileText className="w-4 h-4" />, errors: <AlertCircle className="w-4 h-4" />, system: <Server className="w-4 h-4" />, api: <Globe className="w-4 h-4" />, analytics: <BarChart3 className="w-4 h-4" /> };
 export function LogsWorkspaceTabs() {
   const { tabs, activeTabId, setActiveTab, closeTab } = useLogsWorkspaceStore();

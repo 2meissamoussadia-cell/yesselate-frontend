@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Loader2, Building2, Eye, Users } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { evaluationsApiService, type EvaluationsFilters } from '@/lib/services/evaluationsApiService';
 import type { Evaluation } from '@/lib/types/bmo.types';
 import { BureauTag } from '@/components/features/bmo/BureauTag';

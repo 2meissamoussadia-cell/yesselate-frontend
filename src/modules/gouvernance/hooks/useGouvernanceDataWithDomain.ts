@@ -20,6 +20,7 @@ import {
   adaptTendanceMensuelle,
 } from '@/domain/gouvernance/adapters';
 import { useGouvernanceService } from '@/hooks/useGouvernanceService';
+import { logger } from '@/lib/utils/logger';
 import type { GouvernanceSection } from '../types/gouvernanceTypes';
 import type { GouvernanceData } from '@/domain/gouvernance/types';
 
@@ -109,7 +110,7 @@ export function useGouvernanceDataWithDomain(section: GouvernanceSection) {
           return null;
       }
     } catch (err) {
-      console.error('[useGouvernanceDataWithDomain] Erreur adaptation:', err);
+      logger.error('Erreur adaptation gouvernance', err instanceof Error ? err : undefined, { component: 'useGouvernanceDataWithDomain' });
       return null;
     }
   }, [apiData, section]);

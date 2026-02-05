@@ -13,7 +13,7 @@
 
 import React, { useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 

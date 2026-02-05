@@ -312,6 +312,24 @@
   background: transparent;
 }
 
+/* Mode sombre : piste et pouce foncés pour cohérence avec le thème */
+.dark .scrollbar-dashboard,
+[data-theme="dark"] .scrollbar-dashboard {
+  scrollbar-color: rgb(71, 85, 105) rgb(30, 41, 59);
+}
+.dark .scrollbar-dashboard::-webkit-scrollbar-track,
+[data-theme="dark"] .scrollbar-dashboard::-webkit-scrollbar-track {
+  background: rgb(30, 41, 59);
+}
+.dark .scrollbar-dashboard::-webkit-scrollbar-thumb,
+[data-theme="dark"] .scrollbar-dashboard::-webkit-scrollbar-thumb {
+  background: rgb(71, 85, 105);
+}
+.dark .scrollbar-dashboard::-webkit-scrollbar-thumb:hover,
+[data-theme="dark"] .scrollbar-dashboard::-webkit-scrollbar-thumb:hover {
+  background: rgb(100, 116, 139);
+}
+
 /* Ticker / Marquee (style tableau de bourse) */
 @keyframes ticker-scroll {
   0% {

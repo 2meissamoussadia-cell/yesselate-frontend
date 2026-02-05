@@ -8,7 +8,7 @@
 
 import React, { memo } from 'react';
 import { ShieldAlert, FileCheck, AlertTriangle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export interface DocConformite {
   doc: string;

@@ -70,7 +70,7 @@ export function DashboardShell() {
           <DashboardKPIBar onExport={onExport} />
           <DashboardSubNavigation />
         </div>
-        <div id="dashboard-main-content" className="p-4" aria-label="Contenu du tableau de bord">
+        <div id="dashboard-main-content" className="p-4" aria-label="Contenu du tableau de bord" data-testid="dashboard-content">
           <ErrorBoundary
             fallback={
               <div className="rounded-xl border border-slate-700/60 bg-slate-900/40 p-6 min-h-[200px] flex items-center justify-center">

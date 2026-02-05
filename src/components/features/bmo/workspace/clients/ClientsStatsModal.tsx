@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { clientsApiService, type ClientsStats } from '@/lib/services/clientsApiService';
 import { BarChart3, X, Users, CheckCircle, AlertTriangle, UserPlus, DollarSign, Building2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 interface Props { open: boolean; onClose: () => void; }
 
@@ -17,7 +18,7 @@ export function ClientsStatsModal({ open, onClose }: Props) {
     const load = async () => {
       setLoading(true);
       try { const data = await clientsApiService.getStats(); setStats(data); }
-      catch (error) { console.error('Failed:', error); }
+      catch (error) { logger.error('Clients stats load failed', error as Error, { context: 'ClientsStatsModal' }); }
       finally { setLoading(false); }
     };
     load();

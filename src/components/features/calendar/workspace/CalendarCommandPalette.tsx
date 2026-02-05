@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useCalendarWorkspaceStore } from '@/lib/stores/calendarWorkspaceStore';
 import { FluentModal } from '@/components/ui/fluent-modal';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { 
   Search, CalendarIcon, CalendarDays, Clock, AlertTriangle, Activity,
   Download, Sun, Moon, RefreshCw, ChevronRight, Keyboard,

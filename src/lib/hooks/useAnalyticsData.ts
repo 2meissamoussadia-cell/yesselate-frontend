@@ -74,9 +74,15 @@ export function useAnalyticsData<T = any>({
     staleTime: dataSource.cache?.ttl || 300000, // 5 minutes par défaut
     gcTime: dataSource.cache?.ttl ? dataSource.cache.ttl * 2 : 600000, // 10 minutes par défaut
     refetchInterval,
-    onSuccess,
-    onError,
   });
+
+  // React Query v5 : onSuccess/onError supprimés → effet de bord via useEffect
+  useEffect(() => {
+    if (data !== undefined && onSuccess) onSuccess(data);
+  }, [data, onSuccess]);
+  useEffect(() => {
+    if (isError && error && onError) onError(error as Error);
+  }, [isError, error, onError]);
 
   // Invalider le cache manuellement si nécessaire
   const invalidateCache = useCallback(() => {

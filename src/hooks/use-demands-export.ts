@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { logger } from '@/lib/utils/logger';
 
 type ExportFormat = 'csv' | 'json';
 type QueueFilter = 'pending' | 'validated' | 'rejected' | 'urgent' | 'all';
@@ -49,7 +50,7 @@ export function useDemandsExport() {
     } catch (err) {
       const error = err instanceof Error ? err : new Error('Unknown error');
       setError(error);
-      console.error('Error exporting demands:', error);
+      logger.error('Error exporting demands', error, { component: 'useDemandsExport' });
       return false;
     } finally {
       setLoading(false);

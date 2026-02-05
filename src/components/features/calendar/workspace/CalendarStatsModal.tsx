@@ -16,7 +16,7 @@ import {
   CheckCircle2, Clock, Calendar, Activity,
   AlertCircle, Zap, Users, BarChart3, Calendar as CalendarIcon2
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface CalendarStatsModalProps {
   open: boolean;

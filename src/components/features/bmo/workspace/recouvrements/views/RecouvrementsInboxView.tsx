@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { useRecouvrementsWorkspaceStore } from '@/lib/stores/recouvrementsWorkspaceStore';
 import { recouvrementsApiService, type Creance } from '@/lib/services/recouvrementsApiService';
 import { Search, ChevronRight, DollarSign, Clock, CheckCircle, AlertTriangle, XCircle, Building2, Calendar, Eye, Star, StarOff, Bell, TrendingUp } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 interface Props { tabId: string; data: Record<string, unknown>; }
 
@@ -37,7 +38,7 @@ export function RecouvrementsInboxView({ tabId, data }: Props) {
         if (searchQuery) filter.search = searchQuery;
         const result = await recouvrementsApiService.getAll(filter, 'amount', 1, 50);
         setCreances(result.data);
-      } catch (error) { console.error('Failed:', error); }
+      } catch (error) { logger.error('Recouvrements inbox load failed', error as Error, { context: 'RecouvrementsInboxView' }); }
       finally { setLoading(false); }
     };
     load();

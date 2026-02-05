@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import type { DashboardMainCategory as MainDashboardCategory } from '@/lib/stores/dashboardCommandCenterStore';
 

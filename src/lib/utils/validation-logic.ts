@@ -4,9 +4,6 @@
 // ============================================
 
 import type {
-  PurchaseOrder,
-  Invoice,
-  Amendment,
   BCEscalationReason,
   FactureEscalationReason,
   AvenantEscalationReason,
@@ -17,6 +14,7 @@ import type {
   PilotageRule,
   ControlParameter,
 } from '@/lib/types/validation.types';
+import type { PurchaseOrder, Invoice, Amendment } from '@/lib/types/bmo.types';
 
 // ============================================
 // Analyse d'un BC pour déterminer pourquoi il arrive au BMO

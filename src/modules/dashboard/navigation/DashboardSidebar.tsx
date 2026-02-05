@@ -7,7 +7,7 @@
 'use client';
 
 import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ChevronRight, Star } from 'lucide-react';

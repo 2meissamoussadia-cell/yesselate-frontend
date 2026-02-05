@@ -80,14 +80,15 @@ export function PortalModuleCleanLayout({
           onMouseLeave={() => setExpanded(false)}
           className={cn(
             'shrink-0 flex flex-col border-r overflow-y-auto overflow-x-hidden scrollbar-dashboard transition-[width] duration-200 ease-out',
-            'border-slate-200 bg-white dark:border-slate-800/70 dark:bg-slate-950/60',
-            expanded ? 'w-52' : 'w-14'
+            'border-slate-200 bg-slate-50/80 dark:border-slate-800/70 dark:bg-slate-950/60',
+            'min-w-0',
+            expanded ? 'w-52 min-w-[208px]' : 'w-14 min-w-[56px]'
           )}
           aria-label={`Sections ${title}`}
           aria-expanded={expanded}
         >
-          <div className="py-3 px-2">
-            <nav className="space-y-0.5" aria-label={`Sections ${title}`}>
+          <div className="py-3 px-2 flex flex-col min-h-0 min-w-0">
+            <nav className="space-y-0.5 min-w-0" aria-label={`Sections ${title}`}>
               {tabs.map((tab) => {
                 const href = tab.path;
                 const active = tab.id === activeTabId;
@@ -129,7 +130,7 @@ export function PortalModuleCleanLayout({
           </div>
         </aside>
 
-        {/* Zone principale */}
+        {/* Zone principale — overflow-hidden pour que le contenu (ex. OutlookLikeLayout) gère son propre scroll interne */}
         <div
           className="flex-1 min-h-0 min-w-0 flex flex-col overflow-hidden"
           role="region"
@@ -153,7 +154,7 @@ export function PortalModuleCleanLayout({
             </div>
           )}
           <div
-            className="flex-1 min-h-0 min-w-0 overflow-x-hidden overflow-y-auto px-2 sm:px-4 py-2"
+            className="flex-1 min-h-0 min-w-0 overflow-hidden flex flex-col px-0 sm:px-2 py-0"
             aria-labelledby={showModuleTitle ? 'module-title' : undefined}
           >
             {children}

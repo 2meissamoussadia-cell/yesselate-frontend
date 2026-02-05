@@ -6,7 +6,7 @@
 'use client';
 
 import { useMemo, memo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { ChevronRight, Home } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { getBreadcrumbLabels } from '../utils/navigationLabels';

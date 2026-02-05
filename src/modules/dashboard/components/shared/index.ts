@@ -88,4 +88,4 @@ export { CollapsibleSection } from './CollapsibleSection';
 export type { CollapsibleSectionProps, CollapsibleSectionPriority } from './CollapsibleSection';
 
 export { TickerBar } from './TickerBar';
-export type { TickerItem } from './TickerBar';
+export type { TickerItem, TickerBarProps, TickerDisplay, TickerAnchor } from './TickerBar';

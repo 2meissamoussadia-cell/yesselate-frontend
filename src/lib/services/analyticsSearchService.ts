@@ -3,7 +3,12 @@
  * Gère la recherche dans tous les éléments analytics avec scoring
  */
 
-import { analyticsBTPArchitecture } from '@/lib/config/analyticsBTPArchitecture';
+import {
+  analyticsBTPArchitecture,
+  type AnalyticsDomain,
+  type AnalyticsModule,
+  type AnalyticsSubModule,
+} from '@/lib/config/analyticsBTPArchitecture';
 import { searchWithScoring } from '@/application/utils/searchUtils';
 
 export interface SearchableItem {
@@ -28,42 +33,38 @@ export interface SearchResult extends SearchableItem {
 function buildSearchIndex(): SearchableItem[] {
   const items: SearchableItem[] = [];
 
-  // Parcourir tous les domaines
-  analyticsBTPArchitecture.domains.forEach((domain) => {
-    // Ajouter le domaine
+  // Parcourir tous les domaines (analyticsBTPArchitecture est AnalyticsDomain[])
+  analyticsBTPArchitecture.forEach((domain: AnalyticsDomain) => {
     items.push({
       id: domain.id,
       type: 'domain',
-      label: domain.name,
+      label: domain.label,
       description: domain.description,
-      path: [domain.name],
+      path: [domain.label],
       domainId: domain.id,
     });
 
-    // Parcourir les modules du domaine
-    domain.modules.forEach((module) => {
-      // Ajouter le module
+    domain.modules.forEach((mod: AnalyticsModule) => {
       items.push({
-        id: module.id,
+        id: mod.id,
         type: 'module',
-        label: module.name,
-        description: module.description,
-        path: [domain.name, module.name],
+        label: mod.label,
+        description: mod.description,
+        path: [domain.label, mod.label],
         domainId: domain.id,
-        moduleId: module.id,
+        moduleId: mod.id,
       });
 
-      // Parcourir les sous-modules
-      module.subModules?.forEach((subModule) => {
+      mod.subModules?.forEach((subMod: AnalyticsSubModule) => {
         items.push({
-          id: subModule.id,
+          id: subMod.id,
           type: 'submodule',
-          label: subModule.name,
-          description: subModule.description,
-          path: [domain.name, module.name, subModule.name],
+          label: subMod.label,
+          description: subMod.description,
+          path: [domain.label, mod.label, subMod.label],
           domainId: domain.id,
-          moduleId: module.id,
-          subModuleId: subModule.id,
+          moduleId: mod.id,
+          subModuleId: subMod.id,
         });
       });
     });
@@ -115,7 +116,7 @@ export function searchAnalytics(
     items,
     query,
     ['label', 'description', 'path']
-  ) as SearchResult[];
+  ) as unknown as SearchResult[];
 
   // Trier par score et limiter
   return results

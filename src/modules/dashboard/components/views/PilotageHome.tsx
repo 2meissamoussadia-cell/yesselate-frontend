@@ -14,7 +14,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Search } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { VEILLE_SIGNALS, getModuleHref } from '@/lib/navigation/moduleLinks';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 

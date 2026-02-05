@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Brain, TrendingUp, AlertTriangle, Lightbulb, ChevronDown, ChevronUp } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useAchievementsStore } from '@/lib/stores/achievementsStore';
 
 export type SuggestionType = 'prediction' | 'anomaly' | 'recommendation';

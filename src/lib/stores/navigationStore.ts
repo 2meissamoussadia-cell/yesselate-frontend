@@ -63,10 +63,6 @@ export const useNavigationStore = create<NavigationStore>()(
     }),
     {
       name: 'general-navigation-storage', // Nom de la clé dans localStorage (évite les conflits de noms)
-      // ✅ NOUVEAU: getServerSnapshot pour SSR
-      getServerSnapshot,
-      // Optionnel: ne persister que certaines clés
-      // partialize: (state) => ({ main: state.main, sub: state.sub }),
     }
   )
 );

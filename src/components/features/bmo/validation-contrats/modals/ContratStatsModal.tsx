@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dialog';
 import { Download, TrendingUp, TrendingDown, Loader2 } from 'lucide-react';
 import { contratsApiService, type ContratsStats } from '@/lib/services/contratsApiService';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface ContratStatsModalProps {
   open: boolean;

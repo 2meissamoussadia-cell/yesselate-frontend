@@ -8,7 +8,7 @@
 
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { Settings2, Save, Plus, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import {
   ResponsiveGridLayout,
   useContainerWidth,

@@ -3,13 +3,14 @@ import { useState, useEffect } from 'react';
 import { useLogsWorkspaceStore } from '@/lib/stores/logsWorkspaceStore';
 import { logsApiService, type LogEntry } from '@/lib/services/logsApiService';
 import { FileText, AlertCircle, Server, Globe, BarChart3, Search, ChevronRight, Eye, Star, StarOff, Terminal, Clock, User, Activity, Hash } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 const LEVEL_STYLES = { error: { border: 'border-l-red-500', badge: 'bg-red-500/20 text-red-600', icon: AlertCircle }, warn: { border: 'border-l-amber-500', badge: 'bg-amber-500/20 text-amber-600', icon: AlertCircle }, info: { border: 'border-l-blue-500', badge: 'bg-blue-500/20 text-blue-600', icon: Terminal }, debug: { border: 'border-l-slate-500', badge: 'bg-slate-500/20 text-slate-600', icon: Terminal } };
 export function LogsWorkspaceContent() {
   const { tabs, activeTabId, openTab, currentFilter, watchlist, addToWatchlist, removeFromWatchlist } = useLogsWorkspaceStore();
   const activeTab = tabs.find(t => t.id === activeTabId); const [logs, setLogs] = useState<LogEntry[]>([]); const [loading, setLoading] = useState(true); const [searchQuery, setSearchQuery] = useState(''); const [expandedId, setExpandedId] = useState<string | null>(null);
   const queue = activeTab?.data?.queue as string | undefined;
-  useEffect(() => { const load = async () => { setLoading(true); try { const filter = { ...currentFilter }; if (queue && queue !== 'all') { if (['error', 'warn', 'info', 'debug'].includes(queue)) filter.level = queue; else if (['system', 'api', 'database', 'auth', 'business'].includes(queue)) filter.source = queue; } if (searchQuery) filter.search = searchQuery; const r = await logsApiService.getAll(filter, 'timestamp', 1, 100); setLogs(r.data); } catch (e) { console.error(e); } finally { setLoading(false); } }; load(); }, [currentFilter, queue, searchQuery]);
+  useEffect(() => { const load = async () => { setLoading(true); try { const filter = { ...currentFilter }; if (queue && queue !== 'all') { if (['error', 'warn', 'info', 'debug'].includes(queue)) filter.level = queue; else if (['system', 'api', 'database', 'auth', 'business'].includes(queue)) filter.source = queue; } if (searchQuery) filter.search = searchQuery; const r = await logsApiService.getAll(filter, 'timestamp', 1, 100); setLogs(r.data); } catch (e) { logger.error('Logs load failed', e as Error, { context: 'LogsWorkspaceContent' }); } finally { setLoading(false); } }; load(); }, [currentFilter, queue, searchQuery]);
   const handleOpenDetail = (log: LogEntry) => openTab({ type: 'detail', id: `detail:${log.id}`, title: log.module, icon: '📋', data: { logId: log.id } });
   if (!activeTab) return <div className="flex items-center justify-center h-64 text-slate-400"><Terminal className="w-12 h-12 opacity-30" /></div>;
   if (activeTab.type === 'errors') return <PlaceholderView icon={<AlertCircle className="w-12 h-12" />} title="Logs d'erreurs" />;

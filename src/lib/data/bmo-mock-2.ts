@@ -23,12 +23,12 @@ import type {
 
 // --- Bons de commande à valider ---
 export const bcToValidate: PurchaseOrder[] = [
-  { id: 'BC-2025-0156', project: 'PRJ-0018', subject: 'Ciment Portland 500T', supplier: 'SOCOCIM', amount: '4,250,000', requestedBy: 'A. SECK', bureau: 'BA', date: '22/12/2025', priority: 'urgent', status: 'pending' },
-  { id: 'BC-2025-0155', project: 'PRJ-0017', subject: 'Location engins TP', supplier: 'MATFORCE', amount: '8,500,000', requestedBy: 'C. GUEYE', bureau: 'BCT', date: '22/12/2025', priority: 'high', status: 'pending' },
-  { id: 'BC-2025-0154', project: 'PRJ-0018', subject: 'Fer à béton 12mm', supplier: 'SENFER', amount: '2,150,000', requestedBy: 'A. SECK', bureau: 'BA', date: '21/12/2025', priority: 'normal', status: 'pending' },
-  { id: 'BC-2025-0153', project: 'PRJ-0016', subject: 'Carrelage importé', supplier: 'COMPTOIR CERAM', amount: '3,800,000', requestedBy: 'A. SECK', bureau: 'BA', date: '21/12/2025', priority: 'normal', status: 'pending' },
-  { id: 'BC-2025-0152', project: 'PRJ-0017', subject: 'Bitume 60/70', supplier: 'SAR', amount: '12,500,000', requestedBy: 'M. BA', bureau: 'BM', date: '20/12/2025', priority: 'high', status: 'pending' },
-  { id: 'BC-2025-0151', project: 'PRJ-0018', subject: 'Menuiserie aluminium', supplier: 'ALSEN', amount: '5,200,000', requestedBy: 'A. SECK', bureau: 'BA', date: '20/12/2025', priority: 'normal', status: 'pending' },
+  { id: 'BC-2025-0156', project: 'PRJ-0018', projectId: 'PRJ-0018', familyCode: 'F10-01' as const, subject: 'Ciment Portland 500T', supplier: 'SOCOCIM', amount: '4,250,000', requestedBy: 'A. SECK', bureau: 'BA', date: '22/12/2025', priority: 'urgent', status: 'pending' },
+  { id: 'BC-2025-0155', project: 'PRJ-0017', projectId: 'PRJ-0017', familyCode: 'S10-01' as const, subject: 'Location engins TP', supplier: 'MATFORCE', amount: '8,500,000', requestedBy: 'C. GUEYE', bureau: 'BCT', date: '22/12/2025', priority: 'high', status: 'pending' },
+  { id: 'BC-2025-0154', project: 'PRJ-0018', projectId: 'PRJ-0018', familyCode: 'F10-01' as const, subject: 'Fer à béton 12mm', supplier: 'SENFER', amount: '2,150,000', requestedBy: 'A. SECK', bureau: 'BA', date: '21/12/2025', priority: 'normal', status: 'pending' },
+  { id: 'BC-2025-0153', project: 'PRJ-0016', projectId: 'PRJ-0016', familyCode: 'F10-01' as const, subject: 'Carrelage importé', supplier: 'COMPTOIR CERAM', amount: '3,800,000', requestedBy: 'A. SECK', bureau: 'BA', date: '21/12/2025', priority: 'normal', status: 'pending' },
+  { id: 'BC-2025-0152', project: 'PRJ-0017', projectId: 'PRJ-0017', familyCode: 'F10-01' as const, subject: 'Bitume 60/70', supplier: 'SAR', amount: '12,500,000', requestedBy: 'M. BA', bureau: 'BM', date: '20/12/2025', priority: 'high', status: 'pending' },
+  { id: 'BC-2025-0151', project: 'PRJ-0018', projectId: 'PRJ-0018', familyCode: 'F10-01' as const, subject: 'Menuiserie aluminium', supplier: 'ALSEN', amount: '5,200,000', requestedBy: 'A. SECK', bureau: 'BA', date: '20/12/2025', priority: 'normal', status: 'pending' },
 ];
 
 // --- Contrats à signer ---
@@ -279,7 +279,7 @@ export const arbitrages: Arbitration[] = [
   { id: 'ARB-2025-0023', subject: 'Conflit priorité ressources BCT/BA', parties: ['BCT', 'BA'], description: "Conflit sur l'allocation du camion-grue entre chantier Diamniadio et livraisons Almadies", requestedBy: 'C. GUEYE', date: '22/12/2025', status: 'pending', impact: 'high', deadline: '24/12/2025' },
   { id: 'ARB-2025-0022', subject: 'Dépassement budget non autorisé', parties: ['BF', 'BCT'], description: 'Dépenses supplémentaires de 2.3M sur PRJ-0017 sans validation préalable', requestedBy: 'F. DIOP', date: '21/12/2025', status: 'pending', impact: 'critical', deadline: '23/12/2025' },
   { id: 'ARB-2025-0021', subject: 'Litige qualité matériaux fournisseur', parties: ['BA', 'BQC'], description: 'Désaccord sur la conformité du lot de carrelage reçu - BA veut accepter, BQC refuse', requestedBy: 'S. MBAYE', date: '20/12/2025', status: 'pending', impact: 'medium', deadline: '26/12/2025' },
-  { id: 'ARB-2025-0020', subject: 'Retard paiement sous-traitant', parties: ['BF', 'BM'], description: 'PLOMBERIE MODERNE menace arrêt travaux si paiement non effectué sous 48h', requestedBy: 'M. BA', date: '19/12/2025', status: 'resolved', impact: 'high', resolution: 'Paiement prioritaire autorisé' },
+  { id: 'ARB-2025-0020', subject: 'Retard paiement sous-traitant', parties: ['BF', 'BM'], description: 'PLOMBERIE MODERNE menace arrêt travaux si paiement non effectué sous 48h', requestedBy: 'M. BA', date: '19/12/2025', status: 'resolved', impact: 'high', deadline: '19/12/2025', resolution: 'Paiement prioritaire autorisé' },
 ];
 
 // --- Messages externes ---

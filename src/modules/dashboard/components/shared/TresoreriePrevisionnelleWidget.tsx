@@ -32,7 +32,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { exportChartAsPng, exportChartAsSvg } from '@/modules/dashboard/charts/ChartKit/chartExportUtils';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { toast } from 'sonner';
 import { formatMoneyCompact } from '@lib-root/dashboard/kpi';
 import type { CashFlowPrevision, ScenarioTresorerie } from '../../types/tresoreriePrevisionnelle';

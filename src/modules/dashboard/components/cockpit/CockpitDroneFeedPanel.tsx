@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { Video, WifiOff } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { colors } from '../../utils/dashboardDesignTokens';
 
 const DRONE_FEED_URL = process.env.NEXT_PUBLIC_DRONE_FEED_URL || '';

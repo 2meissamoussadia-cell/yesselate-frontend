@@ -9,7 +9,7 @@
 import React, { Component, ReactNode, ErrorInfo } from 'react';
 import { AlertTriangle, RefreshCw, Bug, Home } from 'lucide-react';
 import { FluentButton } from '@/components/ui/fluent-button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface AnalyticsErrorBoundaryProps {
   children: ReactNode;

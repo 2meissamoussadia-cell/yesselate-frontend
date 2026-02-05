@@ -1,0 +1,599 @@
+﻿app/(portals)/maitre-ouvrage/page.tsx(118,33): error TS2322: Type 'DashboardAlerte[]' is not assignable to type 'Alerte[]'.
+  Type 'DashboardAlerte' is not assignable to type 'Alerte'.
+    Types of property 'chantier' are incompatible.
+      Type 'string | { nom: string; } | undefined' is not assignable to type 'string | { nom: string; }'.
+        Type 'undefined' is not assignable to type 'string | { nom: string; }'.
+app/(portals)/maitre-ouvrage/page.tsx(136,31): error TS2322: Type 'DashboardBudgetPoint[]' is not assignable to type 'BudgetData[]'.
+  Type 'DashboardBudgetPoint' is not assignable to type 'BudgetData'.
+    Types of property 'previsionnel' are incompatible.
+      Type 'number | undefined' is not assignable to type 'number'.
+        Type 'undefined' is not assignable to type 'number'.
+src/components/features/bmo/workspace/blocked/modals/BlockedDossierDetailsModal.tsx(77,11): error TS2430: Interface 'EnrichedDossier' incorrectly extends interface 'Omit<BlockedDossier, "impact">'.
+  Types of property 'sla' are incompatible.
+    Type '{ deadline: string; remaining: number; status: "critical" | "warning" | "expired" | "ok"; alerts: { level: string; message: string; }[]; } | undefined' is not assignable to type 'string | { ok?: boolean | undefined; atRisk?: boolean | undefined; breached?: boolean | undefined; } | undefined'.
+      Type '{ deadline: string; remaining: number; status: "critical" | "warning" | "expired" | "ok"; alerts: { level: string; message: string; }[]; }' is not assignable to type 'string | { ok?: boolean | undefined; atRisk?: boolean | undefined; breached?: boolean | undefined; } | undefined'.
+src/hooks/useContratActions.ts(11,35): error TS2305: Module '"@/lib/services/contratsApiService"' has no exported member 'ContratDecision'.
+src/hooks/useContratActions.ts(41,32): error TS2554: Expected 5 arguments, but got 2.
+src/hooks/useContratActions.ts(64,32): error TS2554: Expected 5 arguments, but got 2.
+src/hooks/useContratActions.ts(87,32): error TS2339: Property 'negotiateContrat' does not exist on type '{ getAll(filter?: ContratFilter | undefined, sortBy?: string | undefined, page?: number, limit?: number): Promise<{ data: Contrat[]; total: number; page: number; totalPages: number; }>; ... 15 more ...; getTypeLabel(type: string): string; }'.
+src/hooks/useContratActions.ts(110,32): error TS2554: Expected 6 arguments, but got 3.
+src/hooks/useContratActions.ts(141,34): error TS2554: Expected 5 arguments, but got 2.
+src/hooks/useContratActions.ts(188,34): error TS2554: Expected 5 arguments, but got 2.
+src/hooks/useContratActions.ts(228,34): error TS2554: Expected 6 arguments, but got 3.
+src/lib/business/analytics.ts(167,7): error TS2322: Type '{ creationTrend: string; usageTrend: "stable"; expirationRate: number; renewalRate: number; }' is not assignable to type '{ creationTrend: "stable" | "increasing" | "decreasing"; usageTrend: "stable" | "increasing" | "decreasing"; expirationRate: number; renewalRate: number; }'.
+  Types of property 'creationTrend' are incompatible.
+    Type 'string' is not assignable to type '"stable" | "increasing" | "decreasing"'.
+src/lib/data/bmo-mock-2.ts(26,3): error TS2739: Type '{ id: string; project: string; subject: string; supplier: string; amount: string; requestedBy: string; bureau: string; date: string; priority: "urgent"; status: "pending"; }' is missing the following properties from type 'PurchaseOrder': projectId, familyCode
+src/lib/data/bmo-mock-2.ts(27,3): error TS2739: Type '{ id: string; project: string; subject: string; supplier: string; amount: string; requestedBy: string; bureau: string; date: string; priority: "high"; status: "pending"; }' is missing the following properties from type 'PurchaseOrder': projectId, familyCode
+src/lib/data/bmo-mock-2.ts(28,3): error TS2739: Type '{ id: string; project: string; subject: string; supplier: string; amount: string; requestedBy: string; bureau: string; date: string; priority: "normal"; status: "pending"; }' is missing the following properties from type 'PurchaseOrder': projectId, familyCode
+src/lib/data/bmo-mock-2.ts(29,3): error TS2739: Type '{ id: string; project: string; subject: string; supplier: string; amount: string; requestedBy: string; bureau: string; date: string; priority: "normal"; status: "pending"; }' is missing the following properties from type 'PurchaseOrder': projectId, familyCode
+src/lib/data/bmo-mock-2.ts(30,3): error TS2739: Type '{ id: string; project: string; subject: string; supplier: string; amount: string; requestedBy: string; bureau: string; date: string; priority: "high"; status: "pending"; }' is missing the following properties from type 'PurchaseOrder': projectId, familyCode
+src/lib/data/bmo-mock-2.ts(31,3): error TS2739: Type '{ id: string; project: string; subject: string; supplier: string; amount: string; requestedBy: string; bureau: string; date: string; priority: "normal"; status: "pending"; }' is missing the following properties from type 'PurchaseOrder': projectId, familyCode
+src/lib/data/bmo-mock-2.ts(282,3): error TS2741: Property 'deadline' is missing in type '{ id: string; subject: string; parties: string[]; description: string; requestedBy: string; date: string; status: "resolved"; impact: "high"; resolution: string; }' but required in type 'Arbitration'.
+src/lib/data/bmo-mock-3.ts(888,118): error TS2322: Type 'null' is not assignable to type 'string | undefined'.
+src/lib/data/bmo-mock-5.ts(188,5): error TS2353: Object literal may only specify known properties, and 'bureau' does not exist in type 'DelegationEnriched'.
+src/lib/data/bmo-mock-5.ts(209,5): error TS2353: Object literal may only specify known properties, and 'bureau' does not exist in type 'DelegationEnriched'.
+src/lib/data/bmo-mock-5.ts(229,5): error TS2353: Object literal may only specify known properties, and 'bureau' does not exist in type 'DelegationEnriched'.
+src/lib/data/bmo-mock-5.ts(248,5): error TS2353: Object literal may only specify known properties, and 'bureau' does not exist in type 'DelegationEnriched'.
+src/lib/data/bmo-mock.ts(349,3): error TS2739: Type '{ id: string; name: string; client: string; budget: string; spent: string; progress: number; status: "active"; bureau: string; team: number; }' is missing the following properties from type 'Project': clientIds, buildingIds, domains, nomenclatureFamilies
+src/lib/data/bmo-mock.ts(350,3): error TS2739: Type '{ id: string; name: string; client: string; budget: string; spent: string; progress: number; status: "active"; bureau: string; team: number; }' is missing the following properties from type 'Project': clientIds, buildingIds, domains, nomenclatureFamilies
+src/lib/data/bmo-mock.ts(351,3): error TS2739: Type '{ id: string; name: string; client: string; budget: string; spent: string; progress: number; status: "active"; bureau: string; team: number; }' is missing the following properties from type 'Project': clientIds, buildingIds, domains, nomenclatureFamilies
+src/lib/data/bmo-mock.ts(352,3): error TS2739: Type '{ id: string; name: string; client: string; budget: string; spent: string; progress: number; status: "completed"; bureau: string; team: number; }' is missing the following properties from type 'Project': clientIds, buildingIds, domains, nomenclatureFamilies
+src/lib/data/bmo-mock.ts(353,3): error TS2739: Type '{ id: string; name: string; client: string; budget: string; spent: string; progress: number; status: "blocked"; bureau: string; team: number; }' is missing the following properties from type 'Project': clientIds, buildingIds, domains, nomenclatureFamilies
+src/lib/delegation/policy-engine.ts(39,42): error TS2367: This comparison appears to be unintentional because the types '"INCLUDE" | "EXCLUDE"' and '"ALL"' have no overlap.
+src/lib/hooks/useRealtimeBlocked.ts(161,43): error TS2345: Argument of type '{}' is not assignable to parameter of type 'string'.
+src/lib/hooks/useRealtimeBlocked.ts(175,45): error TS2345: Argument of type '{}' is not assignable to parameter of type 'string'.
+src/lib/hooks/useRealtimeBlocked.ts(184,47): error TS2345: Argument of type '{}' is not assignable to parameter of type 'string'.
+src/lib/hooks/useRealtimeTickets.ts(78,3): error TS2322: Type '"ticket:message_added"' is not assignable to type 'WSEventType'.
+src/lib/hooks/useRealtimeTickets.ts(79,3): error TS2322: Type '"ticket:deleted"' is not assignable to type 'WSEventType'.
+src/lib/hooks/useRealtimeTickets.ts(81,3): error TS2322: Type '"sla:breached"' is not assignable to type 'WSEventType'.
+src/lib/hooks/useRealtimeTickets.ts(82,3): error TS2322: Type '"sla:warning"' is not assignable to type 'WSEventType'.
+src/lib/hooks/useRealtimeTickets.ts(177,69): error TS2554: Expected 1 arguments, but got 2.
+src/lib/hooks/useRealtimeTickets.ts(180,70): error TS2554: Expected 1 arguments, but got 2.
+src/lib/hooks/useRealtimeTickets.ts(194,14): error TS2678: Type '"sla:breached"' is not comparable to type 'WSEventType'.
+src/lib/hooks/useRealtimeTickets.ts(200,14): error TS2678: Type '"sla:warning"' is not comparable to type 'WSEventType'.
+src/lib/i18n/I18nProviderWrapper.tsx(82,28): error TS18047: 'bundle' is possibly 'null'.
+src/lib/mocks/blockedMockData.ts(477,5): error TS2353: Object literal may only specify known properties, and 'reference' does not exist in type 'BlockedDossier'.
+src/lib/mocks/blockedMockData.ts(494,5): error TS2353: Object literal may only specify known properties, and 'reference' does not exist in type 'BlockedDossier'.
+src/lib/mocks/blockedMockData.ts(511,5): error TS2353: Object literal may only specify known properties, and 'reference' does not exist in type 'BlockedDossier'.
+src/lib/mocks/blockedMockData.ts(582,46): error TS2339: Property 'impactLevel' does not exist on type 'BlockedDossier'.
+src/lib/mocks/blockedMockData.ts(593,50): error TS2339: Property 'impactLevel' does not exist on type 'BlockedDossier'.
+src/lib/mocks/blockedMockData.ts(604,28): error TS2339: Property 'delayDays' does not exist on type 'BlockedDossier'.
+src/lib/mocks/blockedMockData.ts(606,23): error TS2339: Property 'delayDays' does not exist on type 'BlockedDossier'.
+src/lib/mocks/blockedMockData.ts(608,23): error TS2339: Property 'delayDays' does not exist on type 'BlockedDossier'.
+src/lib/mocks/blockedMockData.ts(612,25): error TS2339: Property 'delayDays' does not exist on type 'BlockedDossier'.
+src/lib/mocks/blockedMockData.ts(615,36): error TS2339: Property 'delayDays' does not exist on type 'BlockedDossier'.
+src/lib/mocks/blockedMockData.ts(617,31): error TS2339: Property 'delayDays' does not exist on type 'BlockedDossier'.
+src/lib/mocks/blockedMockData.ts(624,39): error TS2339: Property 'impactLevel' does not exist on type 'BlockedDossier'.
+src/lib/mocks/blockedMockData.ts(638,25): error TS2339: Property 'impactLevel' does not exist on type 'BlockedDossier'.
+src/lib/mocks/blockedMockData.ts(638,63): error TS2339: Property 'impactLevel' does not exist on type 'BlockedDossier'.
+src/lib/mocks/blockedMockData.ts(642,48): error TS2339: Property 'impactLevel' does not exist on type 'BlockedDossier'.
+src/lib/mocks/blockedMockData.ts(643,31): error TS2339: Property 'relatedDocument' does not exist on type 'BlockedDossier'.
+src/lib/mocks/blockedMockData.ts(644,39): error TS2339: Property 'relatedDocument' does not exist on type 'BlockedDossier'.
+src/lib/navigation/bmoFilConducteur.ts(142,15): error TS2322: Type '"projects"' is not assignable to type '"achats" | "maintenance" | "support" | "execution" | "documents" | "governance" | "alerts" | "quality" | "chantiers" | "conformite" | "engagements" | "cockpit" | "conception" | "receptions" | "foncier"'.
+src/lib/navigation/permissions.ts(15,3): error TS2353: Object literal may only specify known properties, and 'user' does not exist in type 'Record<RoutePermission, number>'.
+src/lib/search/advanced-search-engine.ts(104,7): error TS2353: Object literal may only specify known properties, and 'includeMatches' does not exist in type 'IFuseOptions<SearchableEntity>'.
+src/lib/search/advanced-search-engine.ts(173,19): error TS2339: Property 'matches' does not exist on type 'FuseResult<SearchableEntity>'.
+src/lib/search/advanced-search-engine.ts(173,39): error TS7006: Parameter 'm' implicitly has an 'any' type.
+src/lib/services/analyticsDataService.ts(6,15): error TS2305: Module '"@/lib/config/analyticsDisplayLogic"' has no exported member 'DataSourceConfig'.
+src/lib/services/analyticsSearchService.ts(32,28): error TS2339: Property 'domains' does not exist on type 'AnalyticsDomain[]'.
+src/lib/services/analyticsSearchService.ts(32,45): error TS7006: Parameter 'domain' implicitly has an 'any' type.
+src/lib/services/analyticsSearchService.ts(44,29): error TS7006: Parameter 'module' implicitly has an 'any' type.
+src/lib/services/analyticsSearchService.ts(57,35): error TS7006: Parameter 'subModule' implicitly has an 'any' type.
+src/lib/services/analyticsSearchService.ts(114,19): error TS2352: Conversion of type 'SearchResult<SearchableItem>[]' to type 'SearchResult[]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'SearchResult<SearchableItem>' is missing the following properties from type 'SearchResult': id, type, label, path
+src/lib/services/blockedApiService.ts(364,31): error TS2365: Operator '>' cannot be applied to types 'number' and 'string | number | { ok?: boolean | undefined; atRisk?: boolean | undefined; breached?: boolean | undefined; }'.
+src/lib/services/blockedApiService.ts(393,21): error TS2339: Property 'order' does not exist on type 'BlockedSort'.
+src/lib/services/blockedNotifications.ts(86,9): error TS2353: Object literal may only specify known properties, and 'vibrate' does not exist in type 'NotificationOptions'.
+src/lib/services/delegationsApiService.ts(46,35): error TS2551: Property 'fromUser' does not exist on type 'MockDelegation'. Did you mean 'fromUserId'?
+src/lib/services/delegationsApiService.ts(61,13): error TS2551: Property 'fromUser' does not exist on type 'MockDelegation'. Did you mean 'fromUserId'?
+src/lib/services/delegationsApiService.ts(62,13): error TS2551: Property 'toUser' does not exist on type 'MockDelegation'. Did you mean 'toUserId'?
+src/lib/services/delegationsApiService.ts(70,27): error TS2339: Property 'createdAt' does not exist on type 'MockDelegation'.
+src/lib/services/delegationsApiService.ts(70,61): error TS2339: Property 'createdAt' does not exist on type 'MockDelegation'.
+src/lib/services/delegationsApiService.ts(80,7): error TS2322: Type 'MockDelegation[]' is not assignable to type 'Delegation[]'.
+  Type 'MockDelegation' is missing the following properties from type 'Delegation': fromUser, toUser, createdAt, updatedAt
+src/lib/services/delegationsApiService.ts(93,5): error TS2739: Type 'MockDelegation' is missing the following properties from type 'Delegation': fromUser, toUser, createdAt, updatedAt
+src/lib/services/delegationsApiService.ts(166,13): error TS2339: Property 'mockDelegationRules' does not exist on type 'typeof import("C:/Users/nomade/Documents/GitHub/yesselate-frontend/src/lib/data/delegations-mock-data")'.
+src/lib/services/delegationsApiService.ts(167,39): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/lib/services/delegationsApiService.ts(172,13): error TS2339: Property 'mockDelegationRules' does not exist on type 'typeof import("C:/Users/nomade/Documents/GitHub/yesselate-frontend/src/lib/data/delegations-mock-data")'.
+src/lib/services/delegationsApiService.ts(173,43): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/lib/services/delegationsApiService.ts(221,13): error TS2339: Property 'findApplicableRules' does not exist on type 'typeof import("C:/Users/nomade/Documents/GitHub/yesselate-frontend/src/lib/data/delegations-mock-data")'.
+src/lib/services/document-verification.service.ts(259,5): error TS2322: Type 'string' is not assignable to type 'boolean'.
+src/lib/services/document-verification.service.ts(464,5): error TS2322: Type 'string' is not assignable to type 'boolean'.
+src/lib/services/governanceBackup.ts(67,41): error TS2339: Property 'rACIMatrix' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/lib/services/governanceBackup.ts(76,35): error TS2339: Property 'governanceAlert' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/lib/services/governanceBackup.ts(135,41): error TS2339: Property 'rACIMatrix' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/lib/services/governanceBackup.ts(150,35): error TS2339: Property 'governanceAlert' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/lib/services/prismaOptimization.ts(537,34): error TS2339: Property 'user' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/lib/services/prismaOptimization.ts(542,41): error TS7006: Parameter 'u' implicitly has an 'any' type.
+src/lib/services/rhApiService.ts(1260,13): error TS2448: Block-scoped variable 'settingsAPI' used before its declaration.
+src/lib/services/rhApiService.ts(1260,13): error TS2454: Variable 'settingsAPI' is used before being assigned.
+src/lib/services/rhBusinessRules.ts(6,10): error TS2305: Module '"./rhBusinessService"' has no exported member 'rhBusinessService'.
+src/lib/services/ticketsApiService.ts(281,37): error TS2339: Property 'source' does not exist on type '{ source: "api" | "email" | "phone" | "web" | "chat"; channel?: string | undefined; browser?: string | undefined; os?: string | undefined; ip?: string | undefined; } | undefined'.
+src/lib/services/ticketsApiService.ts(848,15): error TS2484: Export declaration conflicts with exported declaration of 'Ticket'.
+src/lib/services/ticketsApiService.ts(848,23): error TS2484: Export declaration conflicts with exported declaration of 'TicketMessage'.
+src/lib/services/ticketsApiService.ts(848,38): error TS2484: Export declaration conflicts with exported declaration of 'TicketAttachment'.
+src/lib/services/ticketsWebSocketService.ts(106,23): error TS2531: Object is possibly 'null'.
+src/lib/services/ticketsWebSocketService.ts(107,16): error TS2531: Object is possibly 'null'.
+src/lib/services/validationBCNotifications.ts(138,9): error TS7034: Variable 'webhooks' implicitly has type 'any[]' in some locations where its type cannot be determined.
+src/lib/services/validationBCNotifications.ts(142,25): error TS7005: Variable 'webhooks' implicitly has an 'any[]' type.
+src/lib/stores/arbitragesNavigationStore.ts(103,7): error TS2353: Object literal may only specify known properties, and 'getServerSnapshot' does not exist in type 'PersistOptions<ArbitragesNavigationStore, unknown, unknown>'.
+src/lib/stores/clientsWorkspaceStore.ts(42,14): error TS2323: Cannot redeclare exported variable 'subCategoriesMap'.
+src/lib/stores/clientsWorkspaceStore.ts(240,10): error TS2323: Cannot redeclare exported variable 'subCategoriesMap'.
+src/lib/stores/clientsWorkspaceStore.ts(240,10): error TS2484: Export declaration conflicts with exported declaration of 'subCategoriesMap'.
+src/lib/stores/createGenericCommandCenterStore.ts(336,15): error TS2484: Export declaration conflicts with exported declaration of 'NavigationState'.
+src/lib/stores/createGenericCommandCenterStore.ts(336,32): error TS2484: Export declaration conflicts with exported declaration of 'ModalState'.
+src/lib/stores/createGenericCommandCenterStore.ts(336,44): error TS2484: Export declaration conflicts with exported declaration of 'KPIConfig'.
+src/lib/stores/createGenericCommandCenterStore.ts(336,55): error TS2484: Export declaration conflicts with exported declaration of 'SavedFilter'.
+src/lib/stores/createGenericWorkspaceStore.ts(307,15): error TS2484: Export declaration conflicts with exported declaration of 'GenericTab'.
+src/lib/stores/createGenericWorkspaceStore.ts(307,27): error TS2484: Export declaration conflicts with exported declaration of 'GenericFilter'.
+src/lib/stores/dashboardThemeStore.ts(64,7): error TS2353: Object literal may only specify known properties, and 'onRehydrate' does not exist in type 'PersistOptions<DashboardThemeStore, DashboardThemeStore, unknown>'.
+src/lib/stores/dashboardThemeStore.ts(64,27): error TS7006: Parameter 'state' implicitly has an 'any' type.
+src/lib/stores/navigationStore.ts(67,7): error TS2353: Object literal may only specify known properties, and 'getServerSnapshot' does not exist in type 'PersistOptions<NavigationStore, NavigationStore, unknown>'.
+src/lib/stores/paymentValidationWorkspaceStore.ts(354,39): error TS2339: Property 'selection' does not exist on type '{ tabs: PaymentTab[]; activeTabId: string | null; filters: PaymentFilters; viewMode: "dashboard" | "workspace"; sidebarOpen: boolean; autoRefresh: boolean; compactMode: boolean; watchlist: string[]; }'.
+src/lib/stores/paymentValidationWorkspaceStore.ts(355,32): error TS2339: Property 'selection' does not exist on type '{ tabs: PaymentTab[]; activeTabId: string | null; filters: PaymentFilters; viewMode: "dashboard" | "workspace"; sidebarOpen: boolean; autoRefresh: boolean; compactMode: boolean; watchlist: string[]; }'.
+src/lib/stores/paymentValidationWorkspaceStore.ts(356,45): error TS2339: Property 'selection' does not exist on type '{ tabs: PaymentTab[]; activeTabId: string | null; filters: PaymentFilters; viewMode: "dashboard" | "workspace"; sidebarOpen: boolean; autoRefresh: boolean; compactMode: boolean; watchlist: string[]; }'.
+src/lib/stores/searchGlobalStore.ts(70,7): error TS2561: Object literal may only specify known properties, but 'getStorage' does not exist in type 'PersistOptions<SearchGlobalStore, SearchGlobalStore, unknown>'. Did you mean to write 'storage'?
+src/lib/stores/searchGlobalStore.ts(73,14): error TS2352: Conversion of type '{ getItem: () => null; setItem: () => void; removeItem: () => void; }' to type 'Storage' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ getItem: () => null; setItem: () => void; removeItem: () => void; }' is missing the following properties from type 'Storage': length, clear, key
+src/lib/stores/ticketsWorkspaceStore.ts(234,9): error TS2353: Object literal may only specify known properties, and 'agents' does not exist in type 'TicketsActiveFilters'.
+src/lib/stores/ticketsWorkspaceStore.ts(371,11): error TS2353: Object literal may only specify known properties, and 'agents' does not exist in type 'TicketsActiveFilters'.
+src/lib/types/alerts.types.ts(17,24): error TS2304: Cannot find name 'AlertSeverity'.
+src/lib/types/alerts.types.ts(18,21): error TS2304: Cannot find name 'AlertItem'.
+src/lib/types/alerts.types.ts(67,38): error TS7053: Element implicitly has an 'any' type because expression of type 'AlertSeverity' can't be used to index type '{ critical: number; warning: number; info: number; success: number; }'.
+src/lib/types/alerts.types.ts(76,36): error TS7053: Element implicitly has an 'any' type because expression of type 'AlertSeverity' can't be used to index type '{ critical: number; warning: number; info: number; success: number; }'.
+src/lib/types/bmo.types.ts(1598,18): error TS2430: Interface 'BureauExchangeEnriched' incorrectly extends interface 'BureauExchange'.
+  Types of property 'attachments' are incompatible.
+    Type 'ExchangeAttachment[]' is not assignable to type 'number'.
+src/lib/utils/governanceHelpers.ts(52,21): error TS7053: Element implicitly has an 'any' type because expression of type '"low" | "medium" | "high" | "very-high"' can't be used to index type '{ low: number; medium: number; high: number; }'.
+  Property 'very-high' does not exist on type '{ low: number; medium: number; high: number; }'.
+src/modules/alertes/navigation/AlertesSidebar.tsx(314,9): error TS2322: Type 'boolean | undefined' is not assignable to type 'boolean'.
+  Type 'undefined' is not assignable to type 'boolean'.
+src/modules/alerts/components/AlertsContentRouter.tsx(185,15): error TS2367: This comparison appears to be unintentional because the types '"week" | "month" | "summary" | "today" | "recent" | undefined' and '"critical"' have no overlap.
+src/modules/api/components/APIContentRouter.tsx(19,11): error TS2739: Type '{}' is missing the following properties from type 'ContentRouterProps': category, subCategory
+src/modules/arbitrages-vivants/navigation/ArbitragesSidebar.tsx(153,14): error TS18048: 'node.children' is possibly 'undefined'.
+src/modules/audit/components/AuditContentRouter.tsx(20,57): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/modules/blocked/navigation/BlockedSidebar.tsx(173,14): error TS18048: 'node.children' is possibly 'undefined'.
+src/modules/calendrier/components/GanttStatsCharts.tsx(191,60): error TS18048: 'percent' is possibly 'undefined'.
+src/modules/calendrier/hooks/useCalendrierDataWithDomain.ts(109,5): error TS2783: 'data' is specified more than once, so this usage will be overwritten.
+src/modules/calendrier/hooks/useCalendrierDataWithDomain.ts(110,5): error TS2783: 'overview' is specified more than once, so this usage will be overwritten.
+src/modules/calendrier/navigation/CalendrierSidebar3Levels.tsx(162,27): error TS2322: Type '"critical" | "warning" | "success" | "default"' is not assignable to type '"warning" | "info" | "success" | "default" | "urgent" | "outline" | "destructive" | "secondary" | "gold" | "gray" | null | undefined'.
+  Type '"critical"' is not assignable to type '"warning" | "info" | "success" | "default" | "urgent" | "outline" | "destructive" | "secondary" | "gold" | "gray" | null | undefined'.
+src/modules/calendrier/navigation/CalendrierSidebar3Levels.tsx(206,31): error TS2322: Type '"critical" | "warning" | "success" | "default"' is not assignable to type '"warning" | "info" | "success" | "default" | "urgent" | "outline" | "destructive" | "secondary" | "gold" | "gray" | null | undefined'.
+  Type '"critical"' is not assignable to type '"warning" | "info" | "success" | "default" | "urgent" | "outline" | "destructive" | "secondary" | "gold" | "gray" | null | undefined'.
+src/modules/calendrier/navigation/CalendrierSubNavigation.tsx(112,21): error TS2322: Type '"critical" | "warning" | "success" | "default"' is not assignable to type '"warning" | "info" | "success" | "default" | "urgent" | "outline" | "destructive" | "secondary" | "gold" | "gray" | null | undefined'.
+  Type '"critical"' is not assignable to type '"warning" | "info" | "success" | "default" | "urgent" | "outline" | "destructive" | "secondary" | "gold" | "gray" | null | undefined'.
+src/modules/calendrier/pages/evenements/ReunionsDecisionnellesPage.tsx(14,58): error TS2322: Type '"REUNION"' is not assignable to type '"EVENEMENT" | "REUNION_PROJET" | "REUNION_DECISIONNELLE" | undefined'.
+src/modules/calendrier/pages/evenements/ReunionsProjetsPage.tsx(13,58): error TS2322: Type '"REUNION"' is not assignable to type '"EVENEMENT" | "REUNION_PROJET" | "REUNION_DECISIONNELLE" | undefined'.
+src/modules/calendrier/pages/overview/CalendrierOverviewPage.tsx(48,22): error TS2339: Property 'chantiers' does not exist on type 'CalendrierData'.
+src/modules/calendrier/pages/overview/CalendrierOverviewPage.tsx(53,30): error TS2339: Property 'stats' does not exist on type 'CalendrierData'.
+src/modules/calendrier/pages/overview/CalendrierOverviewPage.tsx(65,24): error TS2339: Property 'stats' does not exist on type 'CalendrierData'.
+src/modules/calendrier/pages/overview/CalendrierOverviewPage.tsx(66,23): error TS2339: Property 'stats' does not exist on type 'CalendrierData'.
+src/modules/calendrier/pages/overview/CalendrierOverviewPage.tsx(69,26): error TS2339: Property 'stats' does not exist on type 'CalendrierData'.
+src/modules/calendrier/pages/overview/CalendrierOverviewPage.tsx(94,37): error TS2339: Property 'chantiers' does not exist on type 'CalendrierData | { jalons: Jalon[]; evenements: Evenement[]; absences: Absence[]; chantiers: any; }'.
+  Property 'chantiers' does not exist on type 'CalendrierData'.
+src/modules/clients/navigation/ClientsSidebar.tsx(155,14): error TS18048: 'node.children' is possibly 'undefined'.
+src/modules/dashboard/api/loaders.ts(122,9): error TS2345: Argument of type 'NavKey & { main: Main; sub: Sub; leaf: Leaf; }' is not assignable to parameter of type 'TData'.
+  'NavKey & { main: Main; sub: Sub; leaf: Leaf; }' is assignable to the constraint of type 'TData', but 'TData' could be instantiated with a different subtype of constraint 'any'.
+src/modules/dashboard/charts/ChartKit/AreaChartImpl.tsx(30,11): error TS2322: Type '(value: number) => string' is not assignable to type 'Formatter<number, NameType>'.
+  Types of parameters 'value' and 'value' are incompatible.
+    Type 'number | undefined' is not assignable to type 'number'.
+      Type 'undefined' is not assignable to type 'number'.
+src/modules/dashboard/charts/ChartKit/examples/LazyChartsExample.tsx(25,32): error TS2339: Property 'series' does not exist on type 'LineChartImplProps'.
+src/modules/dashboard/charts/ChartKit/examples/LazyChartsExample.tsx(33,7): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(props: LineChartImplProps, context?: any): string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | ... 4 more ... | undefined', gave the following error.
+    Type '{ data: { date: string; demandes: number; validations: number; }[]; xAxisKey: string; series: any; title: string; showLegend: boolean; }' is not assignable to type 'IntrinsicAttributes & LineChartImplProps'.
+      Property 'xAxisKey' does not exist on type 'IntrinsicAttributes & LineChartImplProps'.
+  Overload 2 of 2, '(props: LineChartImplProps): string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | ... 4 more ... | undefined', gave the following error.
+    Type '{ data: { date: string; demandes: number; validations: number; }[]; xAxisKey: string; series: any; title: string; showLegend: boolean; }' is not assignable to type 'IntrinsicAttributes & LineChartImplProps'.
+      Property 'xAxisKey' does not exist on type 'IntrinsicAttributes & LineChartImplProps'.
+src/modules/dashboard/charts/ChartKit/examples/LazyChartsExample.tsx(80,7): error TS2353: Object literal may only specify known properties, and 'dataKey' does not exist in type '{ key: string; label: string; color: string; }'.
+src/modules/dashboard/charts/ChartKit/examples/LazyChartsExample.tsx(81,7): error TS2353: Object literal may only specify known properties, and 'dataKey' does not exist in type '{ key: string; label: string; color: string; }'.
+src/modules/dashboard/charts/ChartKit/examples/LazyChartsExample.tsx(87,7): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(props: { data: any[]; series: { key: string; label: string; color: string; }[]; }, context?: any): string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | ... 4 more ... | undefined', gave the following error.
+    Type '{ data: { jour: string; actif: number; inactif: number; }[]; xAxisKey: string; series: { key: string; label: string; color: string; }[]; title: string; showLegend: boolean; }' is not assignable to type 'IntrinsicAttributes & { data: any[]; series: { key: string; label: string; color: string; }[]; }'.
+      Property 'xAxisKey' does not exist on type 'IntrinsicAttributes & { data: any[]; series: { key: string; label: string; color: string; }[]; }'.
+  Overload 2 of 2, '(props: { data: any[]; series: { key: string; label: string; color: string; }[]; }): string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | ... 4 more ... | undefined', gave the following error.
+    Type '{ data: { jour: string; actif: number; inactif: number; }[]; xAxisKey: string; series: { key: string; label: string; color: string; }[]; title: string; showLegend: boolean; }' is not assignable to type 'IntrinsicAttributes & { data: any[]; series: { key: string; label: string; color: string; }[]; }'.
+      Property 'xAxisKey' does not exist on type 'IntrinsicAttributes & { data: any[]; series: { key: string; label: string; color: string; }[]; }'.
+src/modules/dashboard/charts/ChartKit/LineChartImpl.tsx(76,13): error TS2783: 'stroke' is specified more than once, so this usage will be overwritten.
+src/modules/dashboard/charts/ChartKit/LineChartImpl.tsx(81,13): error TS2783: 'stroke' is specified more than once, so this usage will be overwritten.
+src/modules/dashboard/charts/ChartKit/LineChartImpl.tsx(86,13): error TS2322: Type '(value: number) => string' is not assignable to type 'Formatter<number, NameType>'.
+  Types of parameters 'value' and 'value' are incompatible.
+    Type 'number | undefined' is not assignable to type 'number'.
+      Type 'undefined' is not assignable to type 'number'.
+src/modules/dashboard/charts/ChartKit/PieChartImpl.tsx(41,3): error TS4104: The type 'readonly ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#06b6d4", "#f97316", "#ec4899"]' is 'readonly' and cannot be assigned to the mutable type 'string[]'.
+src/modules/dashboard/charts/ChartKit/PieChartImpl.tsx(62,56): error TS18048: 'percent' is possibly 'undefined'.
+src/modules/dashboard/charts/ChartKit/types.ts(6,10): error TS2305: Module '"recharts"' has no exported member 'Margin'.
+src/modules/dashboard/components/admin/RbacAdminPanel.tsx(58,26): error TS2322: Type '{ children: Element; title: string; description: string; }' is not assignable to type 'IntrinsicAttributes & DashboardPageLayoutProps'.
+  Property 'title' does not exist on type 'IntrinsicAttributes & DashboardPageLayoutProps'.
+src/modules/dashboard/components/charts/CategoryDistributionChart.tsx(52,29): error TS2339: Property 'percentage' does not exist on type 'PieLabelRenderProps'.
+src/modules/dashboard/components/charts/CategoryDistributionChart.tsx(66,13): error TS2322: Type '(value: number, name: string, props: any) => [string, string]' is not assignable to type 'Formatter<number, string>'.
+  Types of parameters 'value' and 'value' are incompatible.
+    Type 'number | undefined' is not assignable to type 'number'.
+      Type 'undefined' is not assignable to type 'number'.
+src/modules/dashboard/components/charts/CategoryDistributionChart.tsx(73,13): error TS2322: Type '"right"' is not assignable to type 'VerticalAlignmentType | undefined'.
+src/modules/dashboard/components/charts/MonthlyComparisonChart.tsx(50,13): error TS2322: Type '(value: number) => string' is not assignable to type 'Formatter<number, NameType>'.
+  Types of parameters 'value' and 'value' are incompatible.
+    Type 'number | undefined' is not assignable to type 'number'.
+      Type 'undefined' is not assignable to type 'number'.
+src/modules/dashboard/components/charts/TrendsChart.tsx(65,13): error TS2322: Type '(value: number) => string' is not assignable to type 'Formatter<number, NameType>'.
+  Types of parameters 'value' and 'value' are incompatible.
+    Type 'number | undefined' is not assignable to type 'number'.
+      Type 'undefined' is not assignable to type 'number'.
+src/modules/dashboard/components/cockpit/CockpitPhotosGpsPanel.tsx(53,10): error TS2304: Cannot find name 'Select'.
+src/modules/dashboard/components/cockpit/CockpitPhotosGpsPanel.tsx(53,69): error TS7006: Parameter 'v' implicitly has an 'any' type.
+src/modules/dashboard/components/cockpit/CockpitPhotosGpsPanel.tsx(54,12): error TS2304: Cannot find name 'SelectTrigger'.
+src/modules/dashboard/components/cockpit/CockpitPhotosGpsPanel.tsx(55,14): error TS2304: Cannot find name 'SelectValue'.
+src/modules/dashboard/components/cockpit/CockpitPhotosGpsPanel.tsx(56,13): error TS2304: Cannot find name 'SelectTrigger'.
+src/modules/dashboard/components/cockpit/CockpitPhotosGpsPanel.tsx(57,12): error TS2304: Cannot find name 'SelectContent'.
+src/modules/dashboard/components/cockpit/CockpitPhotosGpsPanel.tsx(58,14): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/cockpit/CockpitPhotosGpsPanel.tsx(58,47): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/cockpit/CockpitPhotosGpsPanel.tsx(60,16): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/cockpit/CockpitPhotosGpsPanel.tsx(60,53): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/cockpit/CockpitPhotosGpsPanel.tsx(62,13): error TS2304: Cannot find name 'SelectContent'.
+src/modules/dashboard/components/cockpit/CockpitPhotosGpsPanel.tsx(63,11): error TS2304: Cannot find name 'Select'.
+src/modules/dashboard/components/cockpit/ExecutiveControls.tsx(25,35): error TS2304: Cannot find name 'SpeechRecognition'.
+src/modules/dashboard/components/cockpit/ExecutiveControls.tsx(26,41): error TS2304: Cannot find name 'SpeechRecognition'.
+src/modules/dashboard/components/cockpit/ExecutiveControls.tsx(60,33): error TS2304: Cannot find name 'SpeechRecognition'.
+src/modules/dashboard/components/cockpit/ExecutiveControls.tsx(167,36): error TS2304: Cannot find name 'SpeechRecognitionEvent'.
+src/modules/dashboard/components/cockpit/MobileCockpit.tsx(58,14): error TS2304: Cannot find name 'AlertTriangle'.
+src/modules/dashboard/components/cockpit/MobileCockpit.tsx(61,14): error TS2304: Cannot find name 'Mic'.
+src/modules/dashboard/components/compliance/ComplianceDocumentsPage.tsx(17,28): error TS2322: Type '{ children: Element; title: string; description: string; }' is not assignable to type 'IntrinsicAttributes & DashboardPageLayoutProps'.
+  Property 'title' does not exist on type 'IntrinsicAttributes & DashboardPageLayoutProps'.
+src/modules/dashboard/components/compliance/ComplianceDocumentsPage.tsx(24,26): error TS2322: Type '{ children: Element; title: string; description: string; }' is not assignable to type 'IntrinsicAttributes & DashboardPageLayoutProps'.
+  Property 'title' does not exist on type 'IntrinsicAttributes & DashboardPageLayoutProps'.
+src/modules/dashboard/components/compliance/ComplianceLotsPage.tsx(19,26): error TS2322: Type '{ children: Element; title: string; description: string; }' is not assignable to type 'IntrinsicAttributes & DashboardPageLayoutProps'.
+  Property 'title' does not exist on type 'IntrinsicAttributes & DashboardPageLayoutProps'.
+src/modules/dashboard/components/compliance/ComplianceTrendsPage.tsx(15,26): error TS2322: Type '{ children: Element; title: string; description: string; }' is not assignable to type 'IntrinsicAttributes & DashboardPageLayoutProps'.
+  Property 'title' does not exist on type 'IntrinsicAttributes & DashboardPageLayoutProps'.
+src/modules/dashboard/components/compliance/ComplianceWorkflowsPage.tsx(17,28): error TS2322: Type '{ children: Element; title: string; description: string; }' is not assignable to type 'IntrinsicAttributes & DashboardPageLayoutProps'.
+  Property 'title' does not exist on type 'IntrinsicAttributes & DashboardPageLayoutProps'.
+src/modules/dashboard/components/compliance/ComplianceWorkflowsPage.tsx(24,26): error TS2322: Type '{ children: Element; title: string; description: string; }' is not assignable to type 'IntrinsicAttributes & DashboardPageLayoutProps'.
+  Property 'title' does not exist on type 'IntrinsicAttributes & DashboardPageLayoutProps'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(286,18): error TS2304: Cannot find name 'Select'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(286,64): error TS7006: Parameter 'v' implicitly has an 'any' type.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(287,20): error TS2304: Cannot find name 'SelectTrigger'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(288,22): error TS2304: Cannot find name 'SelectValue'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(289,21): error TS2304: Cannot find name 'SelectTrigger'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(290,20): error TS2304: Cannot find name 'SelectContent'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(291,22): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(291,62): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(292,22): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(292,64): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(293,22): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(293,64): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(294,22): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(294,51): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(295,21): error TS2304: Cannot find name 'SelectContent'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(296,19): error TS2304: Cannot find name 'Select'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(301,18): error TS2304: Cannot find name 'Select'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(301,66): error TS7006: Parameter 'v' implicitly has an 'any' type.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(302,20): error TS2304: Cannot find name 'SelectTrigger'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(303,22): error TS2304: Cannot find name 'SelectValue'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(304,21): error TS2304: Cannot find name 'SelectTrigger'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(305,20): error TS2304: Cannot find name 'SelectContent'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(306,22): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(306,53): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(307,22): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(307,57): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(308,22): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(308,59): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(309,22): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(309,61): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(310,22): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(310,57): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(311,21): error TS2304: Cannot find name 'SelectContent'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(312,19): error TS2304: Cannot find name 'Select'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(317,18): error TS2304: Cannot find name 'Select'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(317,64): error TS7006: Parameter 'v' implicitly has an 'any' type.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(318,20): error TS2304: Cannot find name 'SelectTrigger'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(319,22): error TS2304: Cannot find name 'SelectValue'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(320,21): error TS2304: Cannot find name 'SelectTrigger'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(321,20): error TS2304: Cannot find name 'SelectContent'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(322,22): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(322,51): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(323,22): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(323,56): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(324,22): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(324,64): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(325,22): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(325,60): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(326,22): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(326,56): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(327,21): error TS2304: Cannot find name 'SelectContent'.
+src/modules/dashboard/components/DashboardAdvancedView.tsx(328,19): error TS2304: Cannot find name 'Select'.
+src/modules/dashboard/components/DashboardAlertProvider.tsx(38,5): error TS2322: Type '{ label: string; onClick: undefined; primary: boolean | undefined; }[]' is not assignable to type '{ label: string; onClick: () => void; primary?: boolean | undefined; }[]'.
+  Type '{ label: string; onClick: undefined; primary: boolean | undefined; }' is not assignable to type '{ label: string; onClick: () => void; primary?: boolean | undefined; }'.
+    Types of property 'onClick' are incompatible.
+      Type 'undefined' is not assignable to type '() => void'.
+src/modules/dashboard/components/DashboardCommandCenterPage.tsx(47,52): error TS2448: Block-scoped variable 'unlockAchievement' used before its declaration.
+src/modules/dashboard/components/DashboardCommandCenterPage.tsx(47,52): error TS2454: Variable 'unlockAchievement' is used before being assigned.
+src/modules/dashboard/components/DashboardCommandCenterPage.tsx(107,7): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(input: string | URL | Request, init?: RequestInit | undefined): Promise<Response>', gave the following error.
+    Type 'AuthHeaders' is not assignable to type 'HeadersInit | undefined'.
+      Type 'AuthHeaders' is not assignable to type 'Record<string, string>'.
+        Index signature for type 'string' is missing in type 'AuthHeaders'.
+  Overload 2 of 2, '(input: URL | RequestInfo, init?: RequestInit | undefined): Promise<Response>', gave the following error.
+    Type 'AuthHeaders' is not assignable to type 'HeadersInit | undefined'.
+      Type 'AuthHeaders' is not assignable to type 'Record<string, string>'.
+        Index signature for type 'string' is missing in type 'AuthHeaders'.
+src/modules/dashboard/components/DashboardFooter.tsx(104,72): error TS2304: Cannot find name 'wsConnected'.
+src/modules/dashboard/components/DashboardModals.tsx(32,23): error TS2304: Cannot find name 'useAuthHeaders'.
+src/modules/dashboard/components/DashboardModals.tsx(33,32): error TS2304: Cannot find name 'useI18n'.
+src/modules/dashboard/components/DashboardModals.tsx(35,33): error TS2304: Cannot find name 'useState'.
+src/modules/dashboard/components/DashboardModals.tsx(37,24): error TS2304: Cannot find name 'useCallback'.
+src/modules/dashboard/components/DashboardModals.tsx(79,14): error TS2304: Cannot find name 'Download'.
+src/modules/dashboard/components/DashboardRegistryView.tsx(27,59): error TS2339: Property 'subSub' does not exist on type 'NavKey'.
+src/modules/dashboard/components/DashboardRegistryView.tsx(40,59): error TS2339: Property 'subSub' does not exist on type 'NavKey'.
+src/modules/dashboard/components/modals/AlertListModal.tsx(64,23): error TS2339: Property 'modalOverlay' does not exist on type '(level: "select" | "navigation" | "base" | "alert" | "modal" | "tooltip" | "notification" | "popover" | "overlay" | "loading" | "sidebar" | "breadcrumbs" | "subNavigation" | "subnav" | ... 7 more ... | "modalHighest") => string'.
+src/modules/dashboard/components/modals/AlertListModal.tsx(77,23): error TS2339: Property 'modal' does not exist on type '(level: "select" | "navigation" | "base" | "alert" | "modal" | "tooltip" | "notification" | "popover" | "overlay" | "loading" | "sidebar" | "breadcrumbs" | "subNavigation" | "subnav" | ... 7 more ... | "modalHighest") => string'.
+src/modules/dashboard/components/modals/BlocageDetailModal.tsx(61,23): error TS2339: Property 'modalOverlay' does not exist on type '(level: "select" | "navigation" | "base" | "alert" | "modal" | "tooltip" | "notification" | "popover" | "overlay" | "loading" | "sidebar" | "breadcrumbs" | "subNavigation" | "subnav" | ... 7 more ... | "modalHighest") => string'.
+src/modules/dashboard/components/modals/BlocageDetailModal.tsx(74,23): error TS2339: Property 'modal' does not exist on type '(level: "select" | "navigation" | "base" | "alert" | "modal" | "tooltip" | "notification" | "popover" | "overlay" | "loading" | "sidebar" | "breadcrumbs" | "subNavigation" | "subnav" | ... 7 more ... | "modalHighest") => string'.
+src/modules/dashboard/components/modals/BudgetConsommeModal.tsx(201,25): error TS2304: Cannot find name 'toast'.
+src/modules/dashboard/components/modals/BudgetConsommeModal.tsx(213,40): error TS2304: Cannot find name 'toast'.
+src/modules/dashboard/components/modals/BudgetDetailModal.tsx(41,23): error TS2339: Property 'modalOverlay' does not exist on type '(level: "select" | "navigation" | "base" | "alert" | "modal" | "tooltip" | "notification" | "popover" | "overlay" | "loading" | "sidebar" | "breadcrumbs" | "subNavigation" | "subnav" | ... 7 more ... | "modalHighest") => string'.
+src/modules/dashboard/components/modals/BudgetDetailModal.tsx(54,23): error TS2339: Property 'modal' does not exist on type '(level: "select" | "navigation" | "base" | "alert" | "modal" | "tooltip" | "notification" | "popover" | "overlay" | "loading" | "sidebar" | "breadcrumbs" | "subNavigation" | "subnav" | ... 7 more ... | "modalHighest") => string'.
+src/modules/dashboard/components/modals/RiskDetailModal.tsx(63,23): error TS2339: Property 'modalOverlay' does not exist on type '(level: "select" | "navigation" | "base" | "alert" | "modal" | "tooltip" | "notification" | "popover" | "overlay" | "loading" | "sidebar" | "breadcrumbs" | "subNavigation" | "subnav" | ... 7 more ... | "modalHighest") => string'.
+src/modules/dashboard/components/modals/RiskDetailModal.tsx(76,23): error TS2339: Property 'modal' does not exist on type '(level: "select" | "navigation" | "base" | "alert" | "modal" | "tooltip" | "notification" | "popover" | "overlay" | "loading" | "sidebar" | "breadcrumbs" | "subNavigation" | "subnav" | ... 7 more ... | "modalHighest") => string'.
+src/modules/dashboard/components/modals/RiskDetailModal.tsx(123,19): error TS2339: Property 'trendIcon' does not exist on type 'JSX.IntrinsicElements'.
+src/modules/dashboard/components/shared/DashboardCleanLayout.tsx(197,34): error TS2304: Cannot find name 'LastUpdateDisplay'.
+src/modules/dashboard/components/shared/GridCustomizableDashboard.tsx(196,38): error TS2353: Object literal may only specify known properties, and 'md' does not exist in type 'Breakpoints<"lg">'.
+src/modules/dashboard/components/shared/GridCustomizableDashboard.tsx(197,29): error TS2353: Object literal may only specify known properties, and 'md' does not exist in type 'Breakpoints<"lg">'.
+src/modules/dashboard/components/shared/KPICard.tsx(64,63): error TS2345: Argument of type 'string | number | undefined' is not assignable to parameter of type 'number | undefined'.
+  Type 'string' is not assignable to type 'number'.
+src/modules/dashboard/components/shared/KPICard.tsx(65,65): error TS2345: Argument of type 'string | number | undefined' is not assignable to parameter of type 'number | undefined'.
+  Type 'string' is not assignable to type 'number'.
+src/modules/dashboard/components/views/ActionsInboxPersonnaliseesPage.tsx(142,31): error TS7006: Parameter 'row' implicitly has an 'any' type.
+src/modules/dashboard/components/views/ActionsInboxPersonnaliseesPage.tsx(156,16): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/modules/dashboard/components/views/ActionsInboxPersonnaliseesPage.tsx(156,23): error TS7006: Parameter 'row' implicitly has an 'any' type.
+src/modules/dashboard/components/views/ActionsTypeArbitragesPage.tsx(37,16): error TS2345: Argument of type '(prev: ErpFilters) => { [x: string]: unknown; programme?: string | undefined; chantier?: string | undefined; entreprise?: string | undefined; statut?: string | string[] | undefined; ... 9 more ...; risques?: string | ... 1 more ... | undefined; }' is not assignable to parameter of type 'SetStateAction<ErpFilters>'.
+  Type '(prev: ErpFilters) => { [x: string]: unknown; programme?: string | undefined; chantier?: string | undefined; entreprise?: string | undefined; statut?: string | string[] | undefined; ... 9 more ...; risques?: string | ... 1 more ... | undefined; }' is not assignable to type '(prevState: ErpFilters) => ErpFilters'.
+    Type '{ [x: string]: unknown; programme?: string; chantier?: string; entreprise?: string; statut?: string | string[]; priorite?: string | string[]; gravite?: string | string[]; periode?: string; dateDebut?: string; ... 5 more ...; risques?: string | string[]; }' is not assignable to type 'ErpFilters'.
+      'string' index signatures are incompatible.
+        Type 'unknown' is not assignable to type 'ErpFilterValue | undefined'.
+src/modules/dashboard/components/views/AlertsActivesPage.tsx(37,16): error TS2345: Argument of type '(prev: ErpFilters) => { [x: string]: unknown; programme?: string | undefined; chantier?: string | undefined; entreprise?: string | undefined; statut?: string | string[] | undefined; ... 9 more ...; risques?: string | ... 1 more ... | undefined; }' is not assignable to parameter of type 'SetStateAction<ErpFilters>'.
+  Type '(prev: ErpFilters) => { [x: string]: unknown; programme?: string | undefined; chantier?: string | undefined; entreprise?: string | undefined; statut?: string | string[] | undefined; ... 9 more ...; risques?: string | ... 1 more ... | undefined; }' is not assignable to type '(prevState: ErpFilters) => ErpFilters'.
+    Type '{ [x: string]: unknown; programme?: string; chantier?: string; entreprise?: string; statut?: string | string[]; priorite?: string | string[]; gravite?: string | string[]; periode?: string; dateDebut?: string; ... 5 more ...; risques?: string | string[]; }' is not assignable to type 'ErpFilters'.
+      'string' index signatures are incompatible.
+        Type 'unknown' is not assignable to type 'ErpFilterValue | undefined'.
+src/modules/dashboard/components/views/BudgetPrevisionsPage.tsx(156,43): error TS7006: Parameter 'row' implicitly has an 'any' type.
+src/modules/dashboard/components/views/ConducteurTravauxPage.tsx(68,11): error TS2339: Property 'go' does not exist on type 'DashboardCommandCenterStore'.
+src/modules/dashboard/components/views/DirecteurTravauxPage.tsx(73,11): error TS2339: Property 'go' does not exist on type 'DashboardCommandCenterStore'.
+src/modules/dashboard/components/views/KpiOverviewPage.tsx(130,9): error TS2322: Type 'string' is not assignable to type 'number'.
+src/modules/dashboard/components/views/MaterielKpiPage.tsx(60,26): error TS2322: Type '{ children: Element; title: string; description: string; }' is not assignable to type 'IntrinsicAttributes & DashboardPageLayoutProps'.
+  Property 'title' does not exist on type 'IntrinsicAttributes & DashboardPageLayoutProps'.
+src/modules/dashboard/components/views/MaterielKpiPage.tsx(62,24): error TS2322: Type '{ children: Element[]; cols: number; }' is not assignable to type 'IntrinsicAttributes & DashboardGridProps'.
+  Property 'cols' does not exist on type 'IntrinsicAttributes & DashboardGridProps'.
+src/modules/dashboard/components/views/MaterielKpiPage.tsx(66,15): error TS2322: Type '{ key: number; label: string; value: string | number; icon: ComponentType<{ className?: string | undefined; }>; color: "blue" | "emerald" | "amber" | "red"; trend: string | undefined; }' is not assignable to type 'IntrinsicAttributes & KPICardProps'.
+  Property 'label' does not exist on type 'IntrinsicAttributes & KPICardProps'.
+src/modules/dashboard/components/views/OverviewPage.tsx(187,9): error TS2322: Type '({ id: string; label: string; value: number; target: number; average: number; color: "blue"; } | { id: string; label: string; value: number; target: number; average: number; color: "orange"; } | { id: string; ... 4 more ...; color: "purple"; } | { ...; })[]' is not assignable to type 'WorkflowStage[]'.
+  Type '{ id: string; label: string; value: number; target: number; average: number; color: "blue"; } | { id: string; label: string; value: number; target: number; average: number; color: "orange"; } | { id: string; ... 4 more ...; color: "purple"; } | { ...; }' is not assignable to type 'WorkflowStage'.
+    Type '{ id: string; label: string; value: number; target: number; average: number; color: "blue"; }' is missing the following properties from type 'WorkflowStage': count, avgTime, targetTime, isBottleneck
+src/modules/dashboard/components/views/PerformanceDemandesPage.tsx(42,16): error TS2345: Argument of type '(prev: ErpFilters) => { [x: string]: unknown; programme?: string | undefined; chantier?: string | undefined; entreprise?: string | undefined; statut?: string | string[] | undefined; ... 9 more ...; risques?: string | ... 1 more ... | undefined; }' is not assignable to parameter of type 'SetStateAction<ErpFilters>'.
+  Type '(prev: ErpFilters) => { [x: string]: unknown; programme?: string | undefined; chantier?: string | undefined; entreprise?: string | undefined; statut?: string | string[] | undefined; ... 9 more ...; risques?: string | ... 1 more ... | undefined; }' is not assignable to type '(prevState: ErpFilters) => ErpFilters'.
+    Type '{ [x: string]: unknown; programme?: string; chantier?: string; entreprise?: string; statut?: string | string[]; priorite?: string | string[]; gravite?: string | string[]; periode?: string; dateDebut?: string; ... 5 more ...; risques?: string | string[]; }' is not assignable to type 'ErpFilters'.
+      'string' index signatures are incompatible.
+        Type 'unknown' is not assignable to type 'ErpFilterValue | undefined'.
+src/modules/dashboard/components/views/PortefeuilleChantiersPage.tsx(336,11): error TS2304: Cannot find name 'ConfirmActionType'.
+src/modules/dashboard/components/views/PortefeuilleChantiersPage.tsx(380,16): error TS2345: Argument of type '(prev: ErpFilters) => { [x: string]: unknown; programme?: string | undefined; chantier?: string | undefined; entreprise?: string | undefined; statut?: string | string[] | undefined; ... 9 more ...; risques?: string | ... 1 more ... | undefined; }' is not assignable to parameter of type 'SetStateAction<ErpFilters>'.
+  Type '(prev: ErpFilters) => { [x: string]: unknown; programme?: string | undefined; chantier?: string | undefined; entreprise?: string | undefined; statut?: string | string[] | undefined; ... 9 more ...; risques?: string | ... 1 more ... | undefined; }' is not assignable to type '(prevState: ErpFilters) => ErpFilters'.
+    Type '{ [x: string]: unknown; programme?: string; chantier?: string; entreprise?: string; statut?: string | string[]; priorite?: string | string[]; gravite?: string | string[]; periode?: string; dateDebut?: string; ... 5 more ...; risques?: string | string[]; }' is not assignable to type 'ErpFilters'.
+      'string' index signatures are incompatible.
+        Type 'unknown' is not assignable to type 'ErpFilterValue | undefined'.
+src/modules/dashboard/components/views/PortefeuilleChantiersPage.tsx(451,23): error TS2339: Property 'exportSuccess' does not exist on type '((message: titleT, data?: ExternalToast | undefined) => string | number) & { success: (message: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | ... 5 more ... | undefined, data?: ExternalToast | undefined) => string | number; ... 7 more ...; loading: (message: string...'.
+src/modules/dashboard/components/views/PortefeuilleChantiersPage.tsx(532,60): error TS2322: Type '{ children: string; className: string; title: string; }' is not assignable to type 'IntrinsicAttributes & { children: ReactNode; className?: string | undefined; }'.
+  Property 'title' does not exist on type 'IntrinsicAttributes & { children: ReactNode; className?: string | undefined; }'.
+src/modules/dashboard/components/views/PortefeuilleChantiersPage.tsx(582,10): error TS2304: Cannot find name 'ConfirmActionModal'.
+src/modules/dashboard/components/views/StocksKpiPage.tsx(64,26): error TS2322: Type '{ children: (false | Element | undefined)[]; title: string; description: string; }' is not assignable to type 'IntrinsicAttributes & DashboardPageLayoutProps'.
+  Property 'title' does not exist on type 'IntrinsicAttributes & DashboardPageLayoutProps'.
+src/modules/dashboard/components/views/StocksKpiPage.tsx(66,24): error TS2322: Type '{ children: Element[]; cols: number; }' is not assignable to type 'IntrinsicAttributes & DashboardGridProps'.
+  Property 'cols' does not exist on type 'IntrinsicAttributes & DashboardGridProps'.
+src/modules/dashboard/components/views/StocksKpiPage.tsx(70,15): error TS2322: Type '{ key: number; label: string; value: string | number; icon: ComponentType<{ className?: string | undefined; }>; color: "blue" | "emerald" | "amber" | "red"; trend: string | undefined; }' is not assignable to type 'IntrinsicAttributes & KPICardProps'.
+  Property 'label' does not exist on type 'IntrinsicAttributes & KPICardProps'.
+src/modules/dashboard/components/views/ValidationPaiementsPage.tsx(142,8): error TS2552: Cannot find name 'Select'. Did you mean 'onselect'?
+src/modules/dashboard/components/views/ValidationPaiementsPage.tsx(143,10): error TS2304: Cannot find name 'SelectTrigger'.
+src/modules/dashboard/components/views/ValidationPaiementsPage.tsx(144,12): error TS2304: Cannot find name 'SelectValue'.
+src/modules/dashboard/components/views/ValidationPaiementsPage.tsx(145,11): error TS2304: Cannot find name 'SelectTrigger'.
+src/modules/dashboard/components/views/ValidationPaiementsPage.tsx(146,10): error TS2304: Cannot find name 'SelectContent'.
+src/modules/dashboard/components/views/ValidationPaiementsPage.tsx(148,14): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/views/ValidationPaiementsPage.tsx(148,54): error TS2304: Cannot find name 'SelectItem'.
+src/modules/dashboard/components/views/ValidationPaiementsPage.tsx(150,11): error TS2304: Cannot find name 'SelectContent'.
+src/modules/dashboard/components/views/ValidationPaiementsPage.tsx(151,9): error TS2304: Cannot find name 'Select'.
+src/modules/dashboard/components/views/ValidationPaiementsPage.tsx(418,60): error TS2322: Type '{ children: string; className: string; title: string; }' is not assignable to type 'IntrinsicAttributes & { children: ReactNode; className?: string | undefined; }'.
+  Property 'title' does not exist on type 'IntrinsicAttributes & { children: ReactNode; className?: string | undefined; }'.
+src/modules/dashboard/DashboardShell.tsx(47,7): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(input: string | URL | Request, init?: RequestInit | undefined): Promise<Response>', gave the following error.
+    Type 'AuthHeaders' is not assignable to type 'HeadersInit | undefined'.
+      Type 'AuthHeaders' is not assignable to type 'Record<string, string>'.
+        Index signature for type 'string' is missing in type 'AuthHeaders'.
+  Overload 2 of 2, '(input: URL | RequestInfo, init?: RequestInit | undefined): Promise<Response>', gave the following error.
+    Type 'AuthHeaders' is not assignable to type 'HeadersInit | undefined'.
+      Type 'AuthHeaders' is not assignable to type 'Record<string, string>'.
+        Index signature for type 'string' is missing in type 'AuthHeaders'.
+src/modules/dashboard/domain/validations.ts(39,38): error TS2367: This comparison appears to be unintentional because the types '"pending" | "cancelled" | "rejected"' and '"approuv├®e"' have no overlap.
+src/modules/dashboard/domain/validations.ts(39,101): error TS2367: This comparison appears to be unintentional because the types '"pending" | "cancelled"' and '"rejet├®e"' have no overlap.
+src/modules/dashboard/hooks/useAutoRefresh.ts(131,11): error TS2322: Type 'number' is not assignable to type 'Timeout'.
+src/modules/dashboard/hooks/useCockpitChantiers.ts(50,33): error TS2352: Conversion of type 'AuthHeaders' to type 'Record<string, string>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Index signature for type 'string' is missing in type 'AuthHeaders'.
+src/modules/dashboard/hooks/useDashboardExport.ts(37,9): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(input: string | URL | Request, init?: RequestInit | undefined): Promise<Response>', gave the following error.
+    Type 'AuthHeaders' is not assignable to type 'HeadersInit | undefined'.
+      Type 'AuthHeaders' is not assignable to type 'Record<string, string>'.
+        Index signature for type 'string' is missing in type 'AuthHeaders'.
+  Overload 2 of 2, '(input: URL | RequestInfo, init?: RequestInit | undefined): Promise<Response>', gave the following error.
+    Type 'AuthHeaders' is not assignable to type 'HeadersInit | undefined'.
+      Type 'AuthHeaders' is not assignable to type 'Record<string, string>'.
+        Index signature for type 'string' is missing in type 'AuthHeaders'.
+src/modules/dashboard/hooks/useDashboardPermissions.ts(41,33): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(input: string | URL | Request, init?: RequestInit | undefined): Promise<Response>', gave the following error.
+    Type 'AuthHeaders' is not assignable to type 'HeadersInit | undefined'.
+      Type 'AuthHeaders' is not assignable to type 'Record<string, string>'.
+        Index signature for type 'string' is missing in type 'AuthHeaders'.
+  Overload 2 of 2, '(input: URL | RequestInfo, init?: RequestInit | undefined): Promise<Response>', gave the following error.
+    Type 'AuthHeaders' is not assignable to type 'HeadersInit | undefined'.
+      Type 'AuthHeaders' is not assignable to type 'Record<string, string>'.
+        Index signature for type 'string' is missing in type 'AuthHeaders'.
+src/modules/dashboard/hooks/useDashboardPermissions.ts(42,40): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(input: string | URL | Request, init?: RequestInit | undefined): Promise<Response>', gave the following error.
+    Type 'AuthHeaders' is not assignable to type 'HeadersInit | undefined'.
+      Type 'AuthHeaders' is not assignable to type 'Record<string, string>'.
+        Index signature for type 'string' is missing in type 'AuthHeaders'.
+  Overload 2 of 2, '(input: URL | RequestInfo, init?: RequestInit | undefined): Promise<Response>', gave the following error.
+    Type 'AuthHeaders' is not assignable to type 'HeadersInit | undefined'.
+      Type 'AuthHeaders' is not assignable to type 'Record<string, string>'.
+        Index signature for type 'string' is missing in type 'AuthHeaders'.
+src/modules/dashboard/hooks/usePerformanceMetrics.ts(136,33): error TS2345: Argument of type 'WebVitals' is not assignable to parameter of type 'Omit<LogContext, "component">'.
+  Index signature for type 'string' is missing in type 'WebVitals'.
+src/modules/dashboard/hooks/usePushConsent.ts(69,9): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'string | BufferSource | null | undefined'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/modules/dashboard/hooks/usePushNotifications.ts(46,9): error TS2353: Object literal may only specify known properties, and 'vibrate' does not exist in type 'NotificationOptions'.
+src/modules/dashboard/hooks/useVoiceCommands.ts(11,37): error TS2304: Cannot find name 'SpeechRecognition'.
+src/modules/dashboard/hooks/useVoiceCommands.ts(14,35): error TS2304: Cannot find name 'SpeechRecognition'.
+src/modules/dashboard/hooks/useVoiceCommands.ts(15,41): error TS2304: Cannot find name 'SpeechRecognition'.
+src/modules/dashboard/hooks/useVoiceCommands.ts(31,34): error TS2304: Cannot find name 'SpeechRecognition'.
+src/modules/dashboard/hooks/useVoiceCommands.ts(38,33): error TS2304: Cannot find name 'SpeechRecognition'.
+src/modules/dashboard/hooks/useVoiceCommands.ts(71,28): error TS2304: Cannot find name 'SpeechRecognitionEvent'.
+src/modules/dashboard/index.ts(38,1): error TS2308: Module './registry' has already exported a member named 'OverviewSummaryDashboardData'. Consider explicitly re-exporting to resolve the ambiguity.
+src/modules/dashboard/index.ts(38,1): error TS2308: Module './registry' has already exported a member named 'TypedLoaderFn'. Consider explicitly re-exporting to resolve the ambiguity.
+src/modules/dashboard/index.ts(54,1): error TS2308: Module './components' has already exported a member named 'KPITone'. Consider explicitly re-exporting to resolve the ambiguity.
+src/modules/dashboard/index.ts(61,1): error TS2308: Module './registry' has already exported a member named 'TypedLoaderFn'. Consider explicitly re-exporting to resolve the ambiguity.
+src/modules/dashboard/registry/registryUnified.tsx(39,27): error TS2339: Property 'displayName' does not exist on type '(args: ViewRenderArgs<any>) => ReactElement<unknown, string | JSXElementConstructor<any>>'.
+src/modules/dashboard/registry/simpleRegistry.tsx(150,36): error TS2304: Cannot find name 'ViewLoadingFallback'.
+src/modules/dashboard/types/dashboardDataTypes.ts(1214,5): error TS2552: Cannot find name 'ReportingOverviewCombinedData'. Did you mean 'ReportingOverviewData'?
+src/modules/dashboard/types/dashboardDataTypes.ts(1215,5): error TS2552: Cannot find name 'ReportingOverviewMonthlyData'. Did you mean 'ReportingOverviewData'?
+src/modules/dashboard/types/dashboardDataTypes.ts(1216,5): error TS2552: Cannot find name 'ReportingDSOMonthlyData'. Did you mean 'ReportingTrendsMonthlyData'?
+src/modules/dashboard/types/dashboardDataTypes.ts(1217,5): error TS2552: Cannot find name 'ReportingByBureauMonthlyData'. Did you mean 'ReportingByBureauData'?
+src/modules/dashboard/types/dashboardDataTypes.ts(1218,5): error TS2552: Cannot find name 'ReportingByChantierMonthlyData'. Did you mean 'ReportingByChantierData'?
+src/modules/dashboard/utils/loadComponent.ts(42,28): error TS2322: Type 'Promise<typeof import("C:/Users/nomade/Documents/GitHub/yesselate-frontend/src/modules/dashboard/components/views/SummaryPointsPage")>' is not assignable to type 'Promise<{ [key: string]: ComponentType | undefined; default?: ComponentType | undefined; }>'.
+  Type 'typeof import("C:/Users/nomade/Documents/GitHub/yesselate-frontend/src/modules/dashboard/components/views/SummaryPointsPage")' is not assignable to type '{ [key: string]: ComponentType | undefined; default?: ComponentType | undefined; }'.
+    Types of property 'default' are incompatible.
+      Type '({ data }: SummaryPointsPageProps) => Element' is not assignable to type 'ComponentType | undefined'.
+        Type '({ data }: SummaryPointsPageProps) => Element' is not assignable to type 'FunctionComponent<{}>'.
+          Types of parameters '__0' and 'props' are incompatible.
+            Property 'data' is missing in type '{}' but required in type 'SummaryPointsPageProps'.
+src/modules/dashboard/utils/loadComponent.ts(85,33): error TS2322: Type 'Promise<typeof import("C:/Users/nomade/Documents/GitHub/yesselate-frontend/src/modules/dashboard/components/compliance/ComplianceOverviewPage")>' is not assignable to type 'Promise<{ [key: string]: ComponentType | undefined; default?: ComponentType | undefined; }>'.
+  Type 'typeof import("C:/Users/nomade/Documents/GitHub/yesselate-frontend/src/modules/dashboard/components/compliance/ComplianceOverviewPage")' is not assignable to type '{ [key: string]: ComponentType | undefined; default?: ComponentType | undefined; }'.
+    Types of property 'default' are incompatible.
+      Type '({ data }: { data: { ratio_completude_procedure: number; delai_visa_moy_j: number; lots_non_attribues: number; avenants_en_visa: number; contrats_pieces_incompletes: number; }; }) => Element' is not assignable to type 'ComponentType | undefined'.
+        Type '({ data }: { data: { ratio_completude_procedure: number; delai_visa_moy_j: number; lots_non_attribues: number; avenants_en_visa: number; contrats_pieces_incompletes: number; }; }) => Element' is not assignable to type 'FunctionComponent<{}>'.
+          Types of parameters '__0' and 'props' are incompatible.
+            Property 'data' is missing in type '{}' but required in type '{ data: { ratio_completude_procedure: number; delai_visa_moy_j: number; lots_non_attribues: number; avenants_en_visa: number; contrats_pieces_incompletes: number; }; }'.
+src/modules/dashboard/utils/loadComponent.ts(91,32): error TS2322: Type 'Promise<typeof import("C:/Users/nomade/Documents/GitHub/yesselate-frontend/src/modules/dashboard/components/reporting/ReportingOverviewPage")>' is not assignable to type 'Promise<{ [key: string]: ComponentType | undefined; default?: ComponentType | undefined; }>'.
+  Type 'typeof import("C:/Users/nomade/Documents/GitHub/yesselate-frontend/src/modules/dashboard/components/reporting/ReportingOverviewPage")' is not assignable to type '{ [key: string]: ComponentType | undefined; default?: ComponentType | undefined; }'.
+    Types of property 'default' are incompatible.
+      Type '({ data }: { data: ReportingOverviewCombinedData; }) => Element' is not assignable to type 'ComponentType | undefined'.
+        Type '({ data }: { data: ReportingOverviewCombinedData; }) => Element' is not assignable to type 'FunctionComponent<{}>'.
+          Types of parameters '__0' and 'props' are incompatible.
+            Property 'data' is missing in type '{}' but required in type '{ data: ReportingOverviewCombinedData; }'.
+src/modules/dashboard/utils/logger.ts(89,11): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/modules/dashboard/utils/routeValidation.ts(124,42): error TS2345: Argument of type 'boolean | undefined' is not assignable to parameter of type 'boolean'.
+  Type 'undefined' is not assignable to type 'boolean'.
+src/modules/dashboard/utils/routeValidation.ts(125,7): error TS2322: Type 'boolean | undefined' is not assignable to type 'boolean'.
+  Type 'undefined' is not assignable to type 'boolean'.
+src/modules/dashboard/utils/routeValidation.ts(137,42): error TS2345: Argument of type 'boolean | undefined' is not assignable to parameter of type 'boolean'.
+  Type 'undefined' is not assignable to type 'boolean'.
+src/modules/dashboard/utils/routeValidation.ts(138,7): error TS2322: Type 'boolean | undefined' is not assignable to type 'boolean'.
+  Type 'undefined' is not assignable to type 'boolean'.
+src/modules/dashboard/utils/routeValidation.ts(425,11): error TS7022: 'subConfig' implicitly has type 'any' because it does not have a type annotation and is referenced directly or indirectly in its own initializer.
+src/modules/dashboard/utils/securityGuards.ts(45,9): error TS2304: Cannot find name 'User'.
+src/modules/delegations/navigation/DelegationsSidebar.tsx(153,14): error TS18048: 'node.children' is possibly 'undefined'.
+src/modules/demandes-rh/navigation/DemandesRhSidebar.tsx(155,14): error TS18048: 'node.children' is possibly 'undefined'.
+src/modules/demandes/api/demandesApi.ts(297,11): error TS2367: This comparison appears to be unintentional because the types '"csv" | "xlsx"' and '"json"' have no overlap.
+src/modules/demandes/components/DemandeDetailModal.tsx(146,29): error TS2559: Type 'string' has no properties in common with type 'Omit<Toast, "message" | "type" | "id">'.
+src/modules/demandes/components/DemandesFiltersModal.tsx(24,20): error TS2339: Property 'setFilter' does not exist on type 'DemandesFiltersStore'.
+src/modules/demandes/components/Modals.tsx(86,9): error TS2322: Type '(id: string, comment?: string) => void' is not assignable to type '(id: string, comment?: string | undefined) => Promise<void>'.
+  Type 'void' is not assignable to type 'Promise<void>'.
+src/modules/demandes/components/Modals.tsx(87,9): error TS2322: Type '(id: string, reason: string) => void' is not assignable to type '(id: string, reason: string) => Promise<void>'.
+  Type 'void' is not assignable to type 'Promise<void>'.
+src/modules/demandes/components/Modals.tsx(88,9): error TS2322: Type '(id: string, message: string) => void' is not assignable to type '(id: string, message: string) => Promise<void>'.
+  Type 'void' is not assignable to type 'Promise<void>'.
+src/modules/demandes/hooks/useDemandesMutations.ts(130,29): error TS2559: Type 'string' has no properties in common with type 'Omit<Toast, "message" | "type" | "id">'.
+src/modules/demandes/hooks/useDemandesMutations.ts(186,29): error TS2559: Type 'string' has no properties in common with type 'Omit<Toast, "message" | "type" | "id">'.
+src/modules/demandes/hooks/useDemandesMutations.ts(210,29): error TS2559: Type 'string' has no properties in common with type 'Omit<Toast, "message" | "type" | "id">'.
+src/modules/demandes/hooks/useDemandesMutations.ts(257,29): error TS2559: Type 'string' has no properties in common with type 'Omit<Toast, "message" | "type" | "id">'.
+src/modules/demandes/hooks/useDemandesMutations.ts(304,29): error TS2559: Type 'string' has no properties in common with type 'Omit<Toast, "message" | "type" | "id">'.
+src/modules/demandes/index.ts(68,1): error TS2308: Module './api/demandesApi' has already exported a member named 'getDemandeById'. Consider explicitly re-exporting to resolve the ambiguity.
+src/modules/demandes/index.ts(68,1): error TS2308: Module './api/demandesApi' has already exported a member named 'getDemandesByService'. Consider explicitly re-exporting to resolve the ambiguity.
+src/modules/demandes/index.ts(68,1): error TS2308: Module './api/demandesApi' has already exported a member named 'getDemandesByStatus'. Consider explicitly re-exporting to resolve the ambiguity.
+src/modules/demandes/pages/overview/StatsPage.tsx(155,62): error TS18048: 'percent' is possibly 'undefined'.
+src/modules/demandes/pages/overview/TrendsPage.tsx(113,60): error TS18048: 'percent' is possibly 'undefined'.
+src/modules/employes/navigation/EmployesSidebar.tsx(153,14): error TS18048: 'node.children' is possibly 'undefined'.
+src/modules/evaluations/navigation/EvaluationsSidebar.tsx(153,14): error TS18048: 'node.children' is possibly 'undefined'.
+src/modules/finances/navigation/FinancesSidebar.tsx(155,14): error TS18048: 'node.children' is possibly 'undefined'.
+src/modules/gouvernance/api/gouvernanceApi.ts(119,16): error TS2339: Property 'isNotFound' does not exist on type '{}'.
+src/modules/gouvernance/api/gouvernanceApi.ts(119,37): error TS2339: Property 'response' does not exist on type '{}'.
+src/modules/gouvernance/api/gouvernanceApi.ts(146,18): error TS2339: Property 'isNotFound' does not exist on type '{}'.
+src/modules/gouvernance/api/gouvernanceApi.ts(146,39): error TS2339: Property 'response' does not exist on type '{}'.
+src/modules/gouvernance/api/gouvernanceApi.ts(167,16): error TS2339: Property 'isNotFound' does not exist on type '{}'.
+src/modules/gouvernance/api/gouvernanceApi.ts(167,37): error TS2339: Property 'response' does not exist on type '{}'.
+src/modules/gouvernance/hooks/useGouvernanceDataWithDomain.ts(223,5): error TS2783: 'data' is specified more than once, so this usage will be overwritten.
+src/modules/gouvernance/hooks/useGouvernanceStatsWithDomain.ts(125,5): error TS2783: 'stats' is specified more than once, so this usage will be overwritten.
+src/modules/gouvernance/pages/arbitrages/ArbitragesEnAttentePage.tsx(24,16): error TS2345: Argument of type '(prev: ErpFilters) => { [x: string]: unknown; programme?: string | undefined; chantier?: string | undefined; entreprise?: string | undefined; statut?: string | string[] | undefined; ... 9 more ...; risques?: string | ... 1 more ... | undefined; }' is not assignable to parameter of type 'SetStateAction<ErpFilters>'.
+  Type '(prev: ErpFilters) => { [x: string]: unknown; programme?: string | undefined; chantier?: string | undefined; entreprise?: string | undefined; statut?: string | string[] | undefined; ... 9 more ...; risques?: string | ... 1 more ... | undefined; }' is not assignable to type '(prevState: ErpFilters) => ErpFilters'.
+    Type '{ [x: string]: unknown; programme?: string; chantier?: string; entreprise?: string; statut?: string | string[]; priorite?: string | string[]; gravite?: string | string[]; periode?: string; dateDebut?: string; ... 5 more ...; risques?: string | string[]; }' is not assignable to type 'ErpFilters'.
+      'string' index signatures are incompatible.
+        Type 'unknown' is not assignable to type 'ErpFilterValue | undefined'.
+src/modules/gouvernance/pages/dashboard/TableauBordPage.tsx(37,41): error TS2339: Property 'points_attention' does not exist on type 'GouvernanceData'.
+src/modules/ia/components/IAContentRouter.tsx(20,54): error TS2322: Type '{ category: IAMainCategory; subCategory: string | undefined; }' is not assignable to type 'IntrinsicAttributes & IAContentRouterProps'.
+  Property 'subCategory' does not exist on type 'IntrinsicAttributes & IAContentRouterProps'. Did you mean 'category'?
+src/modules/litiges/navigation/LitigesSidebar.tsx(155,14): error TS18048: 'node.children' is possibly 'undefined'.
+src/modules/logs/components/LogsContentRouter.tsx(20,56): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/modules/missions/navigation/MissionsSidebar.tsx(155,14): error TS18048: 'node.children' is possibly 'undefined'.
+src/modules/organigramme/navigation/OrganigrammeSidebar.tsx(153,14): error TS18048: 'node.children' is possibly 'undefined'.
+src/modules/projets-en-cours/navigation/ProjetsSidebar.tsx(155,14): error TS18048: 'node.children' is possibly 'undefined'.
+src/modules/recouvrements/navigation/RecouvrementsSidebar.tsx(155,14): error TS18048: 'node.children' is possibly 'undefined'.
+src/modules/substitution/navigation/SubstitutionSidebar.tsx(154,14): error TS18048: 'node.children' is possibly 'undefined'.
+src/modules/tickets-clients/navigation/TicketsSidebar.tsx(155,14): error TS18048: 'node.children' is possibly 'undefined'.
+src/modules/validation-bc/components/FilterBar.tsx(33,5): error TS18048: 'filtres.types.length' is possibly 'undefined'.
+src/modules/validation-bc/components/FilterBar.tsx(34,5): error TS18048: 'filtres.statuts.length' is possibly 'undefined'.
+src/modules/validation-bc/components/FilterBar.tsx(35,5): error TS18048: 'filtres.services.length' is possibly 'undefined'.
+src/modules/validation-bc/index.ts(22,1): error TS2308: Module './navigation' has already exported a member named 'ValidationNavItem'. Consider explicitly re-exporting to resolve the ambiguity.
+src/modules/validation-bc/pages/overview/IndicateursPage.tsx(168,25): error TS2367: This comparison appears to be unintentional because the types '"positive" | "negative"' and '"neutral"' have no overlap.
+src/modules/validation-contrats/components/FilterBar.tsx(23,5): error TS18048: 'activeFilters.statuts' is possibly 'undefined'.
+src/modules/validation-contrats/components/FilterBar.tsx(24,5): error TS18048: 'activeFilters.types' is possibly 'undefined'.
+src/modules/validation-contrats/components/FilterBar.tsx(25,5): error TS18048: 'activeFilters.priorites' is possibly 'undefined'.
+src/modules/validation-contrats/components/FilterBar.tsx(26,5): error TS18048: 'activeFilters.recherche' is possibly 'undefined'.
+src/modules/validation-contrats/components/FilterBar.tsx(29,24): error TS18048: 'activeFilters.statuts' is possibly 'undefined'.
+src/modules/validation-contrats/components/FilterBar.tsx(34,22): error TS18048: 'activeFilters.types' is possibly 'undefined'.
+src/modules/validation-contrats/components/FilterBar.tsx(39,26): error TS18048: 'activeFilters.priorites' is possibly 'undefined'.
+src/modules/validation-contrats/components/FilterBar.tsx(57,8): error TS18048: 'activeFilters.statuts' is possibly 'undefined'.
+src/modules/validation-contrats/components/FilterBar.tsx(73,8): error TS18048: 'activeFilters.types' is possibly 'undefined'.
+src/modules/validation-contrats/components/FilterBar.tsx(86,8): error TS18048: 'activeFilters.priorites' is possibly 'undefined'.
+src/modules/validation-contrats/navigation/ContratsSidebar.tsx(179,14): error TS18048: 'node.children' is possibly 'undefined'.
+src/modules/validation-contrats/pages/overview/IndicateursPage.tsx(86,13): error TS2322: Type 'string' is not assignable to type '"red" | "yellow" | "green" | "blue" | "purple" | undefined'.
+src/modules/validation-contrats/stores/contratsFiltersStore.ts(145,7): error TS2322: Type '() => { periode: PeriodeContrat; dateDebut: string | null; dateFin: string | null; statuts: any[]; types: any[]; priorites: any[]; montantMin: number | null; montantMax: number | null; ... 7 more ...; recherche: string; }' is not assignable to type '() => ContratsFilters'.
+  Call signature return types '{ periode: PeriodeContrat; dateDebut: string | null; dateFin: string | null; statuts: any[]; types: any[]; priorites: any[]; montantMin: number | null; montantMax: number | null; ... 7 more ...; recherche: string; }' and 'ContratsFilters' are incompatible.
+    The types of 'montantMin' are incompatible between these types.
+      Type 'number | null' is not assignable to type 'number | undefined'.
+        Type 'null' is not assignable to type 'number | undefined'.
+src/modules/validation-paiements/navigation/PaiementsSidebar.tsx(172,14): error TS18048: 'node.children' is possibly 'undefined'.
+src/presentation/components/Charts/ChartTooltip.tsx(20,3): error TS2339: Property 'payload' does not exist on type 'CustomTooltipProps'.
+src/presentation/components/Charts/ChartTooltip.tsx(21,3): error TS2339: Property 'label' does not exist on type 'CustomTooltipProps'.
+src/presentation/components/Charts/ChartTooltip.tsx(44,23): error TS7006: Parameter 'entry' implicitly has an 'any' type.
+src/presentation/components/Charts/ChartTooltip.tsx(44,30): error TS7006: Parameter 'index' implicitly has an 'any' type.
+src/presentation/components/Charts/ChartWrapper.tsx(71,41): error TS2322: Type 'string | number' is not assignable to type 'number | `${number}%` | undefined'.
+  Type 'string' is not assignable to type 'number | `${number}%` | undefined'.
+src/presentation/components/DragDrop/index.ts(9,10): error TS2459: Module '"./DragDropContext"' declares 'DragDropContext' locally, but it is not exported.
+src/presentation/components/Dropdown/Dropdown.tsx(44,19): error TS2345: Argument of type 'RefObject<HTMLDivElement | null>' is not assignable to parameter of type 'RefObject<HTMLElement>'.
+  Type 'HTMLDivElement | null' is not assignable to type 'HTMLElement'.
+    Type 'null' is not assignable to type 'HTMLElement'.
+src/presentation/components/FilterPanel/FilterPanel.tsx(195,43): error TS7006: Parameter 'v' implicitly has an 'any' type.
+src/presentation/components/Modal/EnhancedModal.tsx(53,19): error TS2345: Argument of type 'RefObject<HTMLDivElement | null>' is not assignable to parameter of type 'RefObject<HTMLElement>'.
+  Type 'HTMLDivElement | null' is not assignable to type 'HTMLElement'.
+    Type 'null' is not assignable to type 'HTMLElement'.
+src/presentation/components/Popover/Popover.tsx(60,19): error TS2345: Argument of type 'RefObject<HTMLDivElement | null>' is not assignable to parameter of type 'RefObject<HTMLElement>'.
+  Type 'HTMLDivElement | null' is not assignable to type 'HTMLElement'.
+    Type 'null' is not assignable to type 'HTMLElement'.
+src/workers/analytics.worker.ts(33,8): error TS2352: Conversion of type 'Window & typeof globalThis' to type 'Worker' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Property 'terminate' is missing in type 'Window & typeof globalThis' but required in type 'Worker'.
+src/workers/analytics.worker.ts(37,8): error TS2352: Conversion of type 'Window & typeof globalThis' to type 'Worker' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Property 'terminate' is missing in type 'Window & typeof globalThis' but required in type 'Worker'.
+src/workers/analytics.worker.ts(40,8): error TS2352: Conversion of type 'Window & typeof globalThis' to type 'Worker' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Property 'terminate' is missing in type 'Window & typeof globalThis' but required in type 'Worker'.

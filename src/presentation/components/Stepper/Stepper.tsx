@@ -7,7 +7,7 @@
 
 import { ReactNode } from 'react';
 import { Check } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export interface Step {
   id: string;

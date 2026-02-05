@@ -54,7 +54,7 @@ export function CommentsModal({
       const entityComments = getCommentsByEntity(entityType, entityId);
       setComments(entityComments);
     } catch (error) {
-      console.error('Error loading comments:', error);
+      logger.error('Error loading comments', error instanceof Error ? error : undefined, { component: 'CommentsModal' });
     } finally {
       setLoading(false);
     }

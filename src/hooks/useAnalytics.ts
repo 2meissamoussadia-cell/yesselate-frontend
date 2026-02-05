@@ -3,6 +3,7 @@
 // ============================================
 
 import { useCallback } from 'react';
+import { logger } from '@/lib/utils/logger';
 
 interface AnalyticsEvent {
   event: string;
@@ -46,9 +47,8 @@ export function useAnalytics() {
       // Ignorer les erreurs
     }
 
-    // Log en développement
     if (process.env.NODE_ENV === 'development') {
-      console.log('[Analytics]', eventName, properties);
+      logger.info('[Analytics]', { component: 'useAnalytics', event: eventName, ...properties });
     }
   }, []);
 

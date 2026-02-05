@@ -29,6 +29,7 @@ import {
   Receipt,
 } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import type { DocumentValidation } from '../types/validationTypes';
 import { getValidationDocumentById } from '../api/validationApi';
 import { ValidationModal } from './ValidationModal';
@@ -72,7 +73,7 @@ export function DocumentDetailsModal({
       const full = await getValidationDocumentById(document.id);
       setFullDocument(full || document);
     } catch (error) {
-      console.error('Erreur chargement document:', error);
+      logger.error('Erreur chargement document', error instanceof Error ? error : undefined, { component: 'DocumentDetailsModal' });
       setFullDocument(document);
     } finally {
       setLoading(false);

@@ -9,7 +9,7 @@ import { Plus } from 'lucide-react';
 import { BmoModulePage } from '@/components/bmo/BmoModulePage';
 import { QuickActionsBar } from '@/components/bmo/ui/QuickActionsBar';
 import { qualiteModuleConfig } from '@/lib/config/modules/qualite.config';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface ControleItem {
   id: string;

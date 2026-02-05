@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useState, useCallback } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { LayoutDashboard, FolderKanban, Users, Wallet, Bell, Settings, Search } from 'lucide-react';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 

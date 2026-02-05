@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useSystemLogsCommandCenterStore } from '@/lib/stores/systemLogsCommandCenterStore';
 import { systemLogsCategories } from './SystemLogsCommandSidebar';
 import {

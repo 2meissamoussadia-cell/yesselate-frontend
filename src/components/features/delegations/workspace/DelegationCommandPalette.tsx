@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useDelegationWorkspaceStore } from '@/lib/stores/delegationWorkspaceStore';
 import { FluentModal } from '@/components/ui/fluent-modal';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { 
   Search, Key, Shield, Clock, XCircle, Pause, Activity,
   Download, Sun, Moon, RefreshCw, ChevronRight, Keyboard,

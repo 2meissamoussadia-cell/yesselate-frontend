@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { WifiOff } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export function OfflineBanner() {
   const [isOnline, setIsOnline] = useState(true);

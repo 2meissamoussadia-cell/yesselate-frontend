@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { Plane, Clock, CheckCircle, PlayCircle, XCircle, DollarSign, MapPin, Receipt } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { missionsApiService, type MissionsStats } from '@/lib/services/missionsApiService';
+import { logger } from '@/lib/utils/logger';
 
 interface Props { onOpenQueue: (queue: string, title: string, icon: string) => void; }
 
@@ -14,7 +15,7 @@ export function MissionsLiveCounters({ onOpenQueue }: Props) {
   useEffect(() => {
     const loadStats = async () => {
       try { const data = await missionsApiService.getStats(); setStats(data); }
-      catch (error) { console.error('Failed:', error); }
+      catch (error) { logger.error('Missions stats failed', error as Error, { context: 'MissionsLiveCounters' }); }
       finally { setLoading(false); }
     };
     loadStats();

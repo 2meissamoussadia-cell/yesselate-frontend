@@ -9,6 +9,7 @@ import {
 import { cn } from '@/lib/cn';
 import { useBlockedCommandCenterStore } from '@/lib/stores/blockedCommandCenterStore';
 import { blockedApi } from '@/lib/services/blockedApiService';
+import { logger } from '@/lib/utils/logger';
 import { useBlockedToast } from './BlockedToast';
 import type { BlockedDossier } from '@/lib/types/bmo.types';
 
@@ -74,7 +75,7 @@ export function BlockedDecisionCenter({ open, onClose }: Props) {
           setData(result.data);
         }
       } catch (error) {
-        console.error('Failed to load blocked dossiers:', error);
+        logger.error('Failed to load blocked dossiers', error as Error, { context: 'BlockedDecisionCenter' });
         toast.error('Erreur', 'Impossible de charger les dossiers');
       } finally {
         if (!cancelled) {

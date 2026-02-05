@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useCallback, memo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { ChevronRight } from 'lucide-react';
 import {
   dashboardNavigationConfig,
@@ -214,12 +214,12 @@ export const DashboardSubNavigation = memo(function DashboardSubNavigation({
   return (
     <div
       className={cn(
-        'border-b border-slate-200 bg-white/95 dark:border-slate-800/80 dark:bg-slate-950/80',
+        'min-w-0 border-b border-slate-200 bg-white/95 dark:border-slate-800/80 dark:bg-slate-950/80',
         zIndexClass('subnav')
       )}
     >
-      {/* NIVEAU 1 : TABS PRINCIPAUX (6 BLOCS DG) — header breadcrumb supprimé (présent dans la topbar) */}
-      <div className="px-3 pb-2 pt-1">
+      {/* NIVEAU 1 : TABS PRINCIPAUX (6 BLOCS DG) — une ligne, scroll horizontal si besoin */}
+      <div className="min-w-0 px-3 pb-2 pt-1">
         <SegmentedTabs
           value={currentMainCategory}
           onChange={(val) => {

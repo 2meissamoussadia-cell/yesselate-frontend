@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Activity, Thermometer, Droplets, Wrench, AlertCircle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import Link from 'next/link';
 
 type SensorType = 'temperature' | 'humidity' | 'equipment';

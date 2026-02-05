@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { FluentButton } from '@/components/ui/fluent-button';
 import {
   Users,

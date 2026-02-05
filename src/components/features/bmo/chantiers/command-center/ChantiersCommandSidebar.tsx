@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -30,8 +30,20 @@ import {
 // TYPES
 // ================================
 
+export type ChantiersMainCategory =
+  | 'overview'
+  | 'active'
+  | 'planning'
+  | 'delayed'
+  | 'completed'
+  | 'inspection'
+  | 'by-phase'
+  | 'by-location'
+  | 'analytics'
+  | 'archive';
+
 export interface ChantiersCategory {
-  id: string;
+  id: ChantiersMainCategory;
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   badge?: number | string;
@@ -125,8 +137,8 @@ export const chantiersCategories: ChantiersCategory[] = [
 // ================================
 
 interface ChantiersCommandSidebarProps {
-  activeCategory: string;
-  onCategoryChange: (categoryId: string) => void;
+  activeCategory: ChantiersMainCategory;
+  onCategoryChange: (categoryId: ChantiersMainCategory) => void;
   collapsed?: boolean;
   onToggleCollapse?: () => void;
   stats?: {

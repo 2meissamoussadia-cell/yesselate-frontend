@@ -9,7 +9,7 @@ import React, { useState } from 'react';
 import { X, Calendar } from 'lucide-react';
 import { useToast } from '@/components/ui/toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export interface ScheduleVisitModalProps {
   isOpen: boolean;

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { TrendingUp, Clock, Ban, DollarSign, CheckCircle, AlertTriangle, FileText } from 'lucide-react';
 import type { Amendment } from '@/lib/types/bmo.types';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface AvenantPilotageBannerProps {
   avenants: Amendment[];

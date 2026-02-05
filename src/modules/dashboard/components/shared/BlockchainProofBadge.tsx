@@ -7,7 +7,7 @@
 
 import React, { useState, useCallback } from 'react';
 import { Shield, Copy, Check } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface BlockchainProofBadgeProps {
   documentId: string;

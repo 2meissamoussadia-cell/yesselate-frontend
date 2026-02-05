@@ -9,7 +9,7 @@ import React, { useState, useCallback, useMemo, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import type { ChantierMock } from '../../data/chantiersMock';
 import { ChantierSphere } from './ChantierSphere';
 import { GpsPhotosOrbits } from './GpsPhotosOrbits';

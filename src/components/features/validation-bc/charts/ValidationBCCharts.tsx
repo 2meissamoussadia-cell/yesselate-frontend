@@ -18,7 +18,7 @@ import {
   Area,
   AreaChart,
 } from 'recharts';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 // ============================================
 // Types

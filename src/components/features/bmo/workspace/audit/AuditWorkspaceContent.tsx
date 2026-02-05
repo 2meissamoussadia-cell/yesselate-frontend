@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react';
 import { useAuditWorkspaceStore } from '@/lib/stores/auditWorkspaceStore';
 import { auditApiService, type AuditEvent } from '@/lib/services/auditApiService';
 import { FileText, Lock, DollarSign, ClipboardCheck, BarChart3, Search, ChevronRight, Eye, Star, StarOff, Shield, User, Clock, Zap, Server, Target } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 const STATUS_STYLES = { new: { border: 'border-l-amber-500', badge: 'bg-amber-500/20 text-amber-600' }, reviewed: { border: 'border-l-blue-500', badge: 'bg-blue-500/20 text-blue-600' }, resolved: { border: 'border-l-emerald-500', badge: 'bg-emerald-500/20 text-emerald-600' }, escalated: { border: 'border-l-red-500', badge: 'bg-red-500/20 text-red-600' } };
 const SEVERITY_STYLES = { critical: { badge: 'bg-red-500/20 text-red-600', icon: Zap }, high: { badge: 'bg-amber-500/20 text-amber-600', icon: Zap }, medium: { badge: 'bg-yellow-500/20 text-yellow-600', icon: Clock }, low: { badge: 'bg-blue-500/20 text-blue-600', icon: Clock }, info: { badge: 'bg-slate-500/20 text-slate-600', icon: Clock } };
 const TYPE_ICONS = { security: Lock, financial: DollarSign, compliance: ClipboardCheck, system: Server, user: User };
@@ -11,7 +12,7 @@ export function AuditWorkspaceContent() {
   const { tabs, activeTabId, openTab, currentFilter, watchlist, addToWatchlist, removeFromWatchlist } = useAuditWorkspaceStore();
   const activeTab = tabs.find(t => t.id === activeTabId); const [events, setEvents] = useState<AuditEvent[]>([]); const [loading, setLoading] = useState(true); const [searchQuery, setSearchQuery] = useState(''); const [expandedId, setExpandedId] = useState<string | null>(null);
   const queue = activeTab?.data?.queue as string | undefined;
-  useEffect(() => { const load = async () => { setLoading(true); try { const filter = { ...currentFilter }; if (queue && queue !== 'all') { if (['new', 'reviewed', 'resolved', 'escalated'].includes(queue)) filter.status = queue; else if (['security', 'financial', 'compliance', 'system', 'user'].includes(queue)) filter.type = queue; else if (queue === 'critical') filter.severity = 'critical'; } if (searchQuery) filter.search = searchQuery; const r = await auditApiService.getAll(filter, 'severity', 1, 50); setEvents(r.data); } catch (e) { console.error(e); } finally { setLoading(false); } }; load(); }, [currentFilter, queue, searchQuery]);
+  useEffect(() => { const load = async () => { setLoading(true); try { const filter = { ...currentFilter }; if (queue && queue !== 'all') { if (['new', 'reviewed', 'resolved', 'escalated'].includes(queue)) filter.status = queue; else if (['security', 'financial', 'compliance', 'system', 'user'].includes(queue)) filter.type = queue; else if (queue === 'critical') filter.severity = 'critical'; } if (searchQuery) filter.search = searchQuery; const r = await auditApiService.getAll(filter, 'severity', 1, 50); setEvents(r.data); } catch (e) { logger.error('Audit load failed', e as Error, { context: 'AuditWorkspaceContent' }); } finally { setLoading(false); } }; load(); }, [currentFilter, queue, searchQuery]);
   const handleOpenDetail = (evt: AuditEvent) => openTab({ type: 'detail', id: `detail:${evt.id}`, title: evt.ref, icon: '🔍', data: { eventId: evt.id } });
   if (!activeTab) return <div className="flex items-center justify-center h-64 text-slate-400"><Shield className="w-12 h-12 opacity-30" /></div>;
   if (activeTab.type === 'security') return <PlaceholderView icon={<Lock className="w-12 h-12" />} title="Événements de sécurité" />;

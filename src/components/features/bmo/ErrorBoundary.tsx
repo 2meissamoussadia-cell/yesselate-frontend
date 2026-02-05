@@ -1,7 +1,8 @@
 'use client';
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw, Home, Mail } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 interface Props {
   children: ReactNode;
@@ -105,13 +106,13 @@ export class ErrorBoundary extends Component<Props, State> {
 
     // Si trop d'erreurs en peu de temps, empêcher les mises à jour pour éviter la boucle infinie
     if (this.errorCount > this.MAX_ERRORS) {
-      console.error('ErrorBoundary: Trop d\'erreurs capturées en peu de temps, arrêt de la capture pour éviter une boucle infinie');
+      logger.error('ErrorBoundary: Trop d\'erreurs capturées en peu de temps, arrêt de la capture pour éviter une boucle infinie', undefined, { component: 'ErrorBoundary' });
       return;
     }
 
     // Log l'erreur seulement si c'est une nouvelle erreur
     if (!this.state.hasError || this.state.error !== error) {
-      console.error('ErrorBoundary caught an error:', error, errorInfo);
+      logger.error('ErrorBoundary caught an error', error, { component: 'ErrorBoundary', componentStack: errorInfo?.componentStack });
     }
 
     // Utiliser setState de manière sécurisée pour éviter les boucles
@@ -126,7 +127,7 @@ export class ErrorBoundary extends Component<Props, State> {
       try {
         this.props.onError(error, errorInfo);
       } catch (callbackError) {
-        console.error('ErrorBoundary: Erreur dans le callback onError:', callbackError);
+        logger.error('ErrorBoundary: Erreur dans le callback onError', callbackError instanceof Error ? callbackError : undefined, { component: 'ErrorBoundary' });
       }
     }
 
@@ -300,7 +301,7 @@ export function withErrorBoundary<P extends object>(
 ) {
   // Protection contre les composants undefined
   if (!Component) {
-    console.error('[withErrorBoundary] Component is undefined or null');
+    logger.error('[withErrorBoundary] Component is undefined or null', undefined, { component: 'withErrorBoundary' });
     // Retourner un composant placeholder qui affiche une erreur
     const FallbackComponent = () => (
       <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">

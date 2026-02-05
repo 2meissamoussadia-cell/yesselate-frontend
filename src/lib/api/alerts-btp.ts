@@ -103,6 +103,13 @@ export const alertsBtpApi = {
       qs.set('sortBy', params.sort.field === 'date' ? 'createdAt' : params.sort.field);
       qs.set('sortOrder', params.sort.order);
     }
+    const f = params?.filters;
+    if (f?.niveaux?.length) qs.set('niveau', f.niveaux.join(','));
+    if (f?.statuts?.length) qs.set('status', f.statuts.join(','));
+    if (f?.categories?.length) qs.set('category', f.categories.join(','));
+    if (f?.dateDebut) qs.set('dateFrom', f.dateDebut.toISOString());
+    if (f?.dateFin) qs.set('dateTo', f.dateFin.toISOString());
+    if (f?.urgent === true) qs.set('urgent', 'true');
 
     const res = await fetch(`${API_BASE}?${qs}`);
     if (!res.ok) throw new Error('Erreur récupération alertes');

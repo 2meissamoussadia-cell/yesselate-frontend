@@ -3,7 +3,7 @@
 import { useArbitragesWorkspaceStore } from '@/lib/stores/arbitragesWorkspaceStore';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { AlertTriangle, Clock, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 type Alert = {
   id: string;

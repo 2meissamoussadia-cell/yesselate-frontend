@@ -8,7 +8,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle, CheckCircle2, XCircle, Info } from 'lucide-react';
 import { FluentButton } from '@/components/ui/fluent-button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface ConfirmationDialogProps {
   open: boolean;

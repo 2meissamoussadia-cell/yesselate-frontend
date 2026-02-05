@@ -5,7 +5,7 @@ import { useCalendarWorkspaceStore } from '@/lib/stores/calendarWorkspaceStore';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import {
   ChevronLeft,
   ChevronRight,

@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useCalendrierStore } from '@/lib/stores/calendrierStore';
 import type { ModuleSource, Criticite, FiltresCalendrier } from '@/lib/types/calendrier.types';
 

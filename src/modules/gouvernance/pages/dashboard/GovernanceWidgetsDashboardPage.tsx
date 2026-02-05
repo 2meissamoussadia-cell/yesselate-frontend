@@ -8,6 +8,7 @@
 import React from 'react';
 import { useGouvernanceStats } from '../../hooks/useGouvernanceStats';
 import { DashboardViewLayout } from '@/components/bmo/layout/DashboardViewLayout';
+import { logger } from '@/lib/utils/logger';
 import { ModuleSubSidebar } from '@/components/bmo/ModuleSubSidebar';
 import { governanceModuleConfig } from '@/lib/config/modules/governance.config';
 import { cn } from '@/lib/cn';
@@ -248,7 +249,7 @@ export default function GovernanceWidgetsDashboardPage() {
           window.location.reload();
         }}
         onWidgetExport={(id, format) => {
-          console.log('Export', id, format);
+          logger.info('Export widget', { component: 'GovernanceWidgetsDashboardPage', widgetId: id, format });
         }}
       />
     </div>

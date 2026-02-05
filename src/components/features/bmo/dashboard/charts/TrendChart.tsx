@@ -16,7 +16,7 @@ import {
   ResponsiveContainer,
   Legend,
 } from 'recharts';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface TrendChartProps {
   data: Array<{

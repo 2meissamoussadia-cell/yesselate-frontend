@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { Search, X, Filter, Calendar, Tag, Users, Building2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useAppStore } from '@/lib/stores';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';

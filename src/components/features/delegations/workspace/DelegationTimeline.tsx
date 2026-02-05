@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import { logger } from '@/lib/utils/logger';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { FluentButton } from '@/components/ui/fluent-button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import {
   History,
   Plus,
@@ -155,7 +156,7 @@ export function DelegationTimeline({ delegationId, open, onClose }: Props) {
       setEvents(data.events || []);
     } catch (e) {
       setError('Impossible de charger l\'historique');
-      console.error(e);
+      logger.error('DelegationTimeline error', e instanceof Error ? e : undefined, { component: 'DelegationTimeline' });
     } finally {
       setLoading(false);
     }

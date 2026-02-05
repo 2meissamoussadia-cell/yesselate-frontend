@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { AccessibleButton } from '@/components/ui/AccessibleButton';
 import { FileSpreadsheet, FileText } from 'lucide-react';
 

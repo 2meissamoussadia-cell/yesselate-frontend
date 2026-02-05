@@ -1,7 +1,7 @@
 'use client';
 
 import { FluentModal } from '@/components/ui/fluent-modal';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import {
   Keyboard, Search, Download, BarChart3, Calendar, Users,
   Filter, Plus, Zap, Brain, Bell, Shield, FileText, Star,

@@ -6,7 +6,7 @@ import { FluentButton } from '@/components/ui/fluent-button';
 import { FluentModal } from '@/components/ui/fluent-modal';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import {
   Scale, AlertTriangle, Clock, CheckCircle, Users, FileText, Calendar,
   TrendingUp, Shield, Hash, RefreshCw, Gavel, CalendarPlus, MessageSquare,

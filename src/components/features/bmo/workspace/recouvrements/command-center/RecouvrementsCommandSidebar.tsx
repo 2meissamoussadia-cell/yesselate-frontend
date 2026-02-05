@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -27,15 +27,27 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
-export interface SidebarCategory {
-  id: string;
+export type RecouvrementsMainCategory =
+  | 'overview'
+  | 'pending'
+  | 'in_progress'
+  | 'paid'
+  | 'litige'
+  | 'overdue'
+  | 'irrecoverable'
+  | 'relances'
+  | 'contentieux'
+  | 'statistiques';
+
+export interface RecouvrementsSidebarCategory {
+  id: RecouvrementsMainCategory;
   label: string;
   icon: LucideIcon;
   badge?: number | string;
   badgeType?: 'default' | 'warning' | 'critical';
 }
 
-export const recouvrementsCategories: SidebarCategory[] = [
+export const recouvrementsCategories: RecouvrementsSidebarCategory[] = [
   { id: 'overview', label: "Vue d'ensemble", icon: LayoutDashboard },
   { id: 'pending', label: 'En attente', icon: Clock, badge: 0, badgeType: 'warning' },
   { id: 'in_progress', label: 'En cours', icon: TrendingUp, badge: 0 },
@@ -49,13 +61,15 @@ export const recouvrementsCategories: SidebarCategory[] = [
 ];
 
 interface RecouvrementsCommandSidebarProps {
-  activeCategory: string;
+  activeCategory: RecouvrementsMainCategory;
   collapsed: boolean;
-  onCategoryChange: (category: string) => void;
+  onCategoryChange: (category: RecouvrementsMainCategory) => void;
   onToggleCollapse: () => void;
   onOpenCommandPalette: () => void;
-  categories?: SidebarCategory[];
+  categories?: RecouvrementsSidebarCategory[];
 }
+
+export type SidebarCategory = RecouvrementsSidebarCategory;
 
 export function RecouvrementsCommandSidebar({
   activeCategory,

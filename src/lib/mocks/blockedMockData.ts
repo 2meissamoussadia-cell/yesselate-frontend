@@ -476,10 +476,17 @@ export const mockBlockedDossiers: BlockedDossier[] = [
     id: 'blocked-001',
     reference: 'BLOCK-2026-001',
     type: 'signature-manquante',
+    subject: 'BC SENELEC bloqué - Validateur principal absent (congé maladie)',
+    amount: '15000000',
+    bureau: 'Dakar',
+    responsible: '',
+    blockedSince: '2026-01-08T10:00:00.000Z',
+    delay: 2,
+    reason: 'BC SENELEC bloqué - Validateur principal absent (congé maladie)',
+    project: '',
+    impact: 'high',
     status: 'escalated',
     impactLevel: 'high',
-    bureau: 'Dakar',
-    blockedSince: '2026-01-08T10:00:00.000Z',
     delayDays: 2,
     description: 'BC SENELEC bloqué - Validateur principal absent (congé maladie)',
     relatedDocument: {
@@ -493,10 +500,17 @@ export const mockBlockedDossiers: BlockedDossier[] = [
     id: 'blocked-002',
     reference: 'BLOCK-2026-002',
     type: 'document-invalide',
+    subject: 'Facture SDE - RIB invalide',
+    amount: '5000000',
+    bureau: 'Thiès',
+    responsible: '',
+    blockedSince: '2026-01-09T14:00:00.000Z',
+    delay: 1,
+    reason: 'Facture SDE - RIB invalide',
+    project: '',
+    impact: 'medium',
     status: 'pending',
     impactLevel: 'medium',
-    bureau: 'Thiès',
-    blockedSince: '2026-01-09T14:00:00.000Z',
     delayDays: 1,
     description: 'Facture SDE - RIB invalide',
     relatedDocument: {
@@ -510,10 +524,17 @@ export const mockBlockedDossiers: BlockedDossier[] = [
     id: 'blocked-003',
     reference: 'BLOCK-2026-003',
     type: 'budget-insuffisant',
+    subject: 'BC Travaux - Enveloppe budgétaire projet dépassée',
+    amount: '25000000',
+    bureau: 'Saint-Louis',
+    responsible: '',
+    blockedSince: '2026-01-07T09:00:00.000Z',
+    delay: 3,
+    reason: 'BC Travaux - Enveloppe budgétaire projet dépassée',
+    project: '',
+    impact: 'critical',
     status: 'pending',
     impactLevel: 'critical',
-    bureau: 'Saint-Louis',
-    blockedSince: '2026-01-07T09:00:00.000Z',
     delayDays: 3,
     description: 'BC Travaux - Enveloppe budgétaire projet dépassée',
     relatedDocument: {
@@ -601,20 +622,20 @@ export const createEnrichedDossier = (baseDossier: BlockedDossier) => {
             (1000 * 60 * 60)
         )
       ),
-      status: (baseDossier.delayDays >= 5
+      status: ((baseDossier.delayDays ?? 0) >= 5
         ? 'expired'
-        : baseDossier.delayDays >= 3
+        : (baseDossier.delayDays ?? 0) >= 3
         ? 'critical'
-        : baseDossier.delayDays >= 2
+        : (baseDossier.delayDays ?? 0) >= 2
         ? 'warning'
         : 'ok') as 'ok' | 'warning' | 'critical' | 'expired',
       alerts: [
-        ...(baseDossier.delayDays >= 2
+        ...((baseDossier.delayDays ?? 0) >= 2
           ? [
               {
-                level: baseDossier.delayDays >= 5 ? 'critical' : 'warning',
+                level: (baseDossier.delayDays ?? 0) >= 5 ? 'critical' : 'warning',
                 message: `SLA ${
-                  baseDossier.delayDays >= 5 ? 'expiré' : 'critique'
+                  (baseDossier.delayDays ?? 0) >= 5 ? 'expiré' : 'critique'
                 } : ${Math.max(
                   0,
                   Math.floor(
@@ -640,7 +661,7 @@ export const createEnrichedDossier = (baseDossier: BlockedDossier) => {
               {
                 level: 'warning',
                 message: `Impact ${baseDossier.impactLevel} : ${
-                  baseDossier.relatedDocument?.amount
+                  typeof baseDossier.relatedDocument === 'object' && baseDossier.relatedDocument?.amount
                     ? `${(baseDossier.relatedDocument.amount / 1000000).toFixed(1)}M FCFA`
                     : 'montant significatif'
                 }`,

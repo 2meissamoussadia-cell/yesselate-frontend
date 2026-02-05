@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -26,15 +26,26 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
-interface SidebarCategory {
-  id: string;
+export type WorkspaceDecisionsMainCategory =
+  | 'overview'
+  | 'pending'
+  | 'critical'
+  | 'strategique'
+  | 'operationnel'
+  | 'approved'
+  | 'history'
+  | 'analytics'
+  | 'types';
+
+interface WorkspaceDecisionsSidebarCategory {
+  id: WorkspaceDecisionsMainCategory;
   label: string;
   icon: LucideIcon;
   badge?: number | string;
   badgeType?: 'default' | 'warning' | 'critical';
 }
 
-const decisionsCategories: SidebarCategory[] = [
+const decisionsCategories: WorkspaceDecisionsSidebarCategory[] = [
   { id: 'overview', label: "Vue d'ensemble", icon: LayoutDashboard },
   { id: 'pending', label: 'En attente', icon: Clock, badge: 23, badgeType: 'warning' },
   { id: 'critical', label: 'Critiques', icon: Zap, badge: 7, badgeType: 'critical' },
@@ -47,9 +58,9 @@ const decisionsCategories: SidebarCategory[] = [
 ];
 
 interface DecisionsCommandSidebarProps {
-  activeCategory: string;
+  activeCategory: WorkspaceDecisionsMainCategory;
   collapsed: boolean;
-  onCategoryChange: (category: string) => void;
+  onCategoryChange: (category: WorkspaceDecisionsMainCategory) => void;
   onToggleCollapse: () => void;
   onOpenCommandPalette: () => void;
 }
@@ -223,5 +234,5 @@ export const DecisionsCommandSidebar = React.memo(function DecisionsCommandSideb
 });
 
 export { decisionsCategories };
-export type { SidebarCategory };
+export type SidebarCategory = WorkspaceDecisionsSidebarCategory;
 

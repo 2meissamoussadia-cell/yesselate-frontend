@@ -6,6 +6,7 @@ import {
   type Stakeholder,
   type AddStakeholderPayload,
 } from '@/lib/api/stakeholdersClient';
+import { logger } from '@/lib/utils/logger';
 
 export function useStakeholders(demandId: string) {
   const [stakeholders, setStakeholders] = useState<Stakeholder[]>([]);
@@ -22,7 +23,7 @@ export function useStakeholders(demandId: string) {
       setStakeholders(data);
     } catch (e: unknown) {
       setError(e as Error);
-      console.error('Failed to fetch stakeholders:', e);
+      logger.error('Failed to fetch stakeholders', e instanceof Error ? e : undefined, { component: 'useStakeholders', demandId });
     } finally {
       setLoading(false);
     }
@@ -40,7 +41,7 @@ export function useStakeholders(demandId: string) {
         return stakeholder;
       } catch (e: unknown) {
         setError(e as Error);
-        console.error('Failed to add stakeholder:', e);
+        logger.error('Failed to add stakeholder', e instanceof Error ? e : undefined, { component: 'useStakeholders', demandId });
         return null;
       } finally {
         setLoading(false);
@@ -61,7 +62,7 @@ export function useStakeholders(demandId: string) {
         return true;
       } catch (e: unknown) {
         setError(e as Error);
-        console.error('Failed to remove stakeholder:', e);
+        logger.error('Failed to remove stakeholder', e instanceof Error ? e : undefined, { component: 'useStakeholders', demandId });
         return false;
       } finally {
         setLoading(false);

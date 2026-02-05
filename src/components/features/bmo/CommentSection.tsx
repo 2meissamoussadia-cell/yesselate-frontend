@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react';
 import { commentsService, type Comment, type CommentThread } from '@/lib/services/commentsService';
 import { documentService } from '@/lib/services/documentService';
 import { MessageSquare, Send, Paperclip, Smile, MoreHorizontal, Edit2, Trash2, Reply } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 interface Props {
   entityType: string;
@@ -29,7 +30,7 @@ export function CommentSection({ entityType, entityId, className }: Props) {
       const data = await commentsService.getThreads(entityType, entityId);
       setThreads(data);
     } catch (e) {
-      console.error('Erreur chargement commentaires:', e);
+      logger.error('Erreur chargement commentaires', e instanceof Error ? e : undefined, { component: 'CommentSection' });
     } finally {
       setLoading(false);
     }
@@ -51,7 +52,7 @@ export function CommentSection({ entityType, entityId, className }: Props) {
       setReplyTo(null);
       await loadComments();
     } catch (e) {
-      console.error('Erreur ajout commentaire:', e);
+      logger.error('Erreur ajout commentaire', e instanceof Error ? e : undefined, { component: 'CommentSection' });
     }
   };
 
@@ -64,7 +65,7 @@ export function CommentSection({ entityType, entityId, className }: Props) {
       setEditContent('');
       await loadComments();
     } catch (e) {
-      console.error('Erreur édition commentaire:', e);
+      logger.error('Erreur édition commentaire', e instanceof Error ? e : undefined, { component: 'CommentSection' });
     }
   };
 
@@ -75,7 +76,7 @@ export function CommentSection({ entityType, entityId, className }: Props) {
       await commentsService.deleteComment(commentId);
       await loadComments();
     } catch (e) {
-      console.error('Erreur suppression commentaire:', e);
+      logger.error('Erreur suppression commentaire', e instanceof Error ? e : undefined, { component: 'CommentSection' });
     }
   };
 
@@ -84,7 +85,7 @@ export function CommentSection({ entityType, entityId, className }: Props) {
       await commentsService.addReaction(commentId, emoji);
       await loadComments();
     } catch (e) {
-      console.error('Erreur ajout réaction:', e);
+      logger.error('Erreur ajout réaction', e instanceof Error ? e : undefined, { component: 'CommentSection' });
     }
   };
 

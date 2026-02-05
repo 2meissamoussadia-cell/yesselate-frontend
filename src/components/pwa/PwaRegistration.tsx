@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { logger } from '@/lib/utils/logger';
 
 const PWA_LOG_KEY = '__pwa_registration_logged';
 
@@ -20,11 +21,11 @@ export function PwaRegistration() {
       .then((reg) => {
         if (process.env.NODE_ENV === 'development' && !sessionStorage.getItem(PWA_LOG_KEY)) {
           sessionStorage.setItem(PWA_LOG_KEY, '1');
-          console.log('[PWA] Service worker enregistré', reg.scope);
+          logger.info('Service worker enregistré', { component: 'PwaRegistration', scope: reg.scope });
         }
       })
       .catch((err) => {
-        console.error('[PWA] Erreur enregistrement service worker:', err);
+        logger.error('Erreur enregistrement service worker', err instanceof Error ? err : undefined, { component: 'PwaRegistration' });
       });
   }, []);
 

@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { demandesRH } from '@/lib/data/bmo-mock-2';
 import { 
   ChevronLeft, ChevronRight, Calendar, Users, AlertTriangle,

@@ -1,12 +1,13 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { Shield, AlertCircle, Eye, CheckCircle, ArrowUp, Zap, Lock, Clock } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { auditApiService, type AuditStats } from '@/lib/services/auditApiService';
+import { logger } from '@/lib/utils/logger';
 interface Props { onOpenQueue: (queue: string, title: string, icon: string) => void; }
 export function AuditLiveCounters({ onOpenQueue }: Props) {
   const [stats, setStats] = useState<AuditStats | null>(null); const [loading, setLoading] = useState(true);
-  useEffect(() => { const load = async () => { try { setStats(await auditApiService.getStats()); } catch (e) { console.error(e); } finally { setLoading(false); } }; load(); const i = setInterval(load, 30000); return () => clearInterval(i); }, []);
+  useEffect(() => { const load = async () => { try { setStats(await auditApiService.getStats()); } catch (e) { logger.error('Audit stats failed', e as Error, { context: 'AuditLiveCounters' }); } finally { setLoading(false); } }; load(); const i = setInterval(load, 30000); return () => clearInterval(i); }, []);
   if (loading || !stats) return <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3 animate-pulse">{[...Array(8)].map((_, i) => <div key={i} className="h-24 rounded-xl bg-slate-100 dark:bg-slate-800" />)}</div>;
   const counters = [
     { key: 'total', label: 'Total', value: stats.total, icon: Shield, color: 'cyan', action: () => onOpenQueue('all', 'Tous', '🔍') },

@@ -6,7 +6,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -194,7 +195,7 @@ function ContratValidationModal({ onClose, data }: { onClose: () => void; data?:
       onClose();
       data?.onSuccess?.('Contrat validé avec succès');
     } catch (error) {
-      console.error('Validation failed:', error);
+      logger.error('Validation failed', error instanceof Error ? error : undefined, { component: 'ValidationContratsModals' });
     } finally {
       setValidating(false);
     }
@@ -283,7 +284,7 @@ function ContratRejectionModal({ onClose, data }: { onClose: () => void; data?: 
       onClose();
       data?.onSuccess?.('Contrat rejeté');
     } catch (error) {
-      console.error('Rejection failed:', error);
+      logger.error('Rejection failed', error instanceof Error ? error : undefined, { component: 'ValidationContratsModals' });
     } finally {
       setRejecting(false);
     }
@@ -482,7 +483,7 @@ function ContratsExportModal({ onClose }: { onClose: () => void }) {
       await new Promise(resolve => setTimeout(resolve, 1500));
       onClose();
     } catch (error) {
-      console.error('Export failed:', error);
+      logger.error('Export failed', error instanceof Error ? error : undefined, { component: 'ValidationContratsModals' });
     } finally {
       setExporting(false);
       setSelectedFormat(null);
@@ -642,7 +643,7 @@ function ContratsConfirmModal({ onClose, data }: { onClose: () => void; data?: a
       await data?.onConfirm?.();
       onClose();
     } catch (error) {
-      console.error('Confirmation failed:', error);
+      logger.error('Confirmation failed', error instanceof Error ? error : undefined, { component: 'ValidationContratsModals' });
     } finally {
       setConfirming(false);
     }
@@ -750,4 +751,3 @@ function InfoItem({ icon, label, value }: { icon: React.ReactNode; label: string
     </div>
   );
 }
-

@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { X, CheckCircle, AlertCircle, AlertTriangle, Info, Loader2 } from 'lucide-react';
 import { createPortal } from 'react-dom';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 // ============================================
 // TYPES

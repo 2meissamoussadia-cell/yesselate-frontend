@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { useTicketsWorkspaceStore } from '@/lib/stores/ticketsWorkspaceStore';
 import { ticketsApi, type Ticket } from '@/lib/services/ticketsApiService';
 import { FileText, AlertTriangle, User, Clock, BarChart3, Search, ChevronRight, Eye, Star, StarOff, MessageSquare, Paperclip, Zap, Building2, Timer, XCircle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 
 const STATUS_STYLES = {
   open: { border: 'border-l-blue-500', badge: 'bg-blue-500/20 text-blue-600' },
@@ -46,7 +47,7 @@ export function TicketsWorkspaceContent() {
         if (searchQuery) filter.search = searchQuery;
         const result = await ticketsApi.getAll(filter, { field: 'priority', direction: 'desc' }, 1, 50);
         setTickets(result.data);
-      } catch (error) { console.error('Failed:', error); }
+      } catch (error) { logger.error('Failed to load tickets', error instanceof Error ? error : undefined, { component: 'TicketsWorkspaceContent' }); }
       finally { setLoading(false); }
     };
     load();

@@ -149,10 +149,10 @@ export interface Project {
   id: string;
   name: string;
   client: string; // ⚠️ Conservé pour compatibilité rétroactive
-  clientIds: string[];        // ✅ Plusieurs clients
-  buildingIds: string[];      // ✅ Plusieurs bâtiments
-  domains: ProjectDomain[];   // ✅ Multi-domaine
-  nomenclatureFamilies: string[]; // ex: ['F10-02', 'S20-01', 'C10-01']
+  clientIds?: string[];        // ✅ Plusieurs clients (optionnel pour mocks)
+  buildingIds?: string[];      // ✅ Plusieurs bâtiments
+  domains?: ProjectDomain[];   // ✅ Multi-domaine
+  nomenclatureFamilies?: string[]; // ex: ['F10-02', 'S20-01', 'C10-01']
   budget: string;
   spent: string;
   progress: number;
@@ -373,6 +373,14 @@ export interface BlockedDossier {
   sla?: string | { ok?: boolean; atRisk?: boolean; breached?: boolean };
   /** Description détaillée (optionnel) */
   description?: string;
+  /** Référence (optionnel, mocks) */
+  reference?: string;
+  /** Niveau d'impact détaillé (optionnel, mocks) */
+  impactLevel?: string;
+  /** Jours de retard (optionnel, mocks) */
+  delayDays?: number;
+  /** Document lié (optionnel, mocks) - string (ref) ou objet enrichi */
+  relatedDocument?: string | { type: string; id: string; reference: string; amount?: number };
 }
 
 // --- Demande RH (enrichi avec traçabilité audit) ---
@@ -1525,6 +1533,7 @@ export interface DelegationEnriched extends Delegation {
   history: DelegationHistoryEntry[];
   decisionId: string; // lien vers registre décisions
   hash: string;
+  bureau?: string; // optionnel (mocks / affichage)
 }
 
 export interface DelegationHistoryEntry {
@@ -1595,7 +1604,7 @@ export interface AuditAction {
 }
 
 // --- Échange inter-bureaux enrichi ---
-export interface BureauExchangeEnriched extends BureauExchange {
+export interface BureauExchangeEnriched extends Omit<BureauExchange, 'attachments'> {
   attachments: ExchangeAttachment[];
   responses: ExchangeResponse[];
   escalatedAt?: string;

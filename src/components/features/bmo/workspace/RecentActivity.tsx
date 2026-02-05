@@ -5,7 +5,8 @@ import {
   CheckCircle2, XCircle, FileText, UserPlus, MessageSquare, 
   Clock, AlertTriangle, RefreshCw
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { useWorkspaceStore } from '@/lib/stores/workspaceStore';
 
 type ActivityItem = {
@@ -90,7 +91,7 @@ export function RecentActivity({ limit = 10, className }: Props) {
         allActivities.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         setActivities(allActivities.slice(0, limit));
       } catch (e) {
-        console.error('Erreur chargement activités:', e);
+        logger.error('Erreur chargement activités', e instanceof Error ? e : undefined, { component: 'RecentActivity' });
       } finally {
         setLoading(false);
       }

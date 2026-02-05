@@ -9,7 +9,7 @@
 import { memo, useCallback, useMemo } from 'react';
 import { Info, Focus, Mic, MicOff } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { safeArea } from '../utils/safeArea';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { LiveIndicator } from './shared/LiveIndicator';

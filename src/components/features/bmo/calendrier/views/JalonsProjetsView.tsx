@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCalendrierStore } from '@/lib/stores/calendrierStore';
 import { EmptyState } from '../components/EmptyState';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface JalonsProjetsViewProps {
   view?: string | null;

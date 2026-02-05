@@ -6,7 +6,8 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { logger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -120,7 +121,7 @@ export function ContratDetailModal({
       setEscalateTo('');
       onClose();
     } catch (error) {
-      console.error('Erreur action:', error);
+      logger.error('Erreur action', error instanceof Error ? error : undefined, { component: 'ContratDetailModal' });
     }
   };
 

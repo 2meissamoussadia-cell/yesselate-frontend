@@ -8,7 +8,7 @@
 import { ReactNode, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { useClickOutside } from '@/application/hooks/useClickOutside';
 import { useRef } from 'react';
 

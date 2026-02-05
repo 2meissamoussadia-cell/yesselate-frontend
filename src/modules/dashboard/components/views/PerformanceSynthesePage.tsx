@@ -22,7 +22,7 @@ import { ExportButton } from '../shared/ExportButton';
 import { useDashboardData } from '../../hooks/useDashboardData';
 import { exportToCSV, exportToJSON } from '../../utils/exportUtils';
 import type { PerformanceSyntheseData } from '../../types/dashboardDataTypes';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 export const PerformanceSynthesePage = memo(function PerformanceSynthesePage() {
   // ✅ Charger les données depuis l'API

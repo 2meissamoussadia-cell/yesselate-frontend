@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { KeyboardShortcut } from '@/components/ui/keyboard-shortcut';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -27,8 +27,19 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
+export type AnalyticsMainCategory =
+  | 'overview'
+  | 'performance'
+  | 'financial'
+  | 'trends'
+  | 'alerts'
+  | 'reports'
+  | 'kpis'
+  | 'comparison'
+  | 'bureaux';
+
 interface SidebarCategory {
-  id: string;
+  id: AnalyticsMainCategory;
   label: string;
   icon: LucideIcon;
   badge?: number | string;
@@ -48,9 +59,9 @@ const analyticsCategories: SidebarCategory[] = [
 ];
 
 interface AnalyticsCommandSidebarProps {
-  activeCategory: string;
+  activeCategory: AnalyticsMainCategory;
   collapsed: boolean;
-  onCategoryChange: (category: string) => void;
+  onCategoryChange: (category: AnalyticsMainCategory) => void;
   onToggleCollapse: () => void;
   onOpenCommandPalette: () => void;
 }

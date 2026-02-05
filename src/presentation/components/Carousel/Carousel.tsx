@@ -7,7 +7,7 @@
 
 import { ReactNode, useState, useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface CarouselProps {

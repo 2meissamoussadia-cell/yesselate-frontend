@@ -6,7 +6,7 @@
 'use client';
 
 import { forwardRef } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface FormSwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
   label?: string;

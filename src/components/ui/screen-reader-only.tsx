@@ -2,7 +2,7 @@
 // Composant pour masquer visuellement mais garder accessible
 // ============================================
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface ScreenReaderOnlyProps {
   children: React.ReactNode;

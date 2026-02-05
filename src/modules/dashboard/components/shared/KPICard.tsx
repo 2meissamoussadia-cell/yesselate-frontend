@@ -23,7 +23,13 @@ export interface KPICardData {
 }
 
 export interface KPICardProps {
-  kpi: KPICardData;
+  /** Données KPI (ou props détaillées via label/value/icon/color/trend pour compat) */
+  kpi?: KPICardData;
+  label?: string;
+  value?: string | number;
+  icon?: React.ComponentType<{ className?: string }>;
+  color?: KPICardData['color'];
+  trend?: number | string;
   /** Spec audit : XL = KPIs critiques (CA, Trésorerie), L = importants, M = secondaires, S = détails */
   size?: 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
@@ -55,7 +61,15 @@ const sizeTokens = {
   xl: { root: 'p-5 sm:p-6', label: 'text-xs sm:text-sm', value: 'text-2xl sm:text-3xl', icon: 'h-4 w-4' },
 } as const;
 
-export const KPICard = memo(function KPICard({ kpi, size = 'md', className }: KPICardProps) {
+export const KPICard = memo(function KPICard({ kpi: kpiProp, label, value, icon, color: colorProp, trend, size = 'md', className }: KPICardProps) {
+  const kpi: KPICardData = kpiProp ?? {
+    id: '',
+    label: label ?? '',
+    value: value ?? '—',
+    icon: icon ?? BarChart2,
+    color: colorProp,
+    trend,
+  };
   const Icon = kpi.icon ?? BarChart2;
   const tokens = sizeTokens[size];
   const color = kpi.color ?? 'blue';

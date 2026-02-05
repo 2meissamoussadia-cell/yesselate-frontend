@@ -33,10 +33,14 @@ function mapApiToAlerteBTP(raw: Record<string, unknown>): AlerteBTP {
     closed: 'cloture',
   };
 
+  const projectRaw = (raw as { project?: string }).project ?? raw.relatedId ?? raw.projectId;
+  const chantierNom = projectRaw != null && String(projectRaw).trim() !== ''
+    ? String(projectRaw).trim()
+    : 'Sans chantier';
   const chantier: ChantierRef = {
-    id: String((raw as { project?: string }).project ?? raw.relatedId ?? ''),
-    nom: String((raw as { project?: string }).project ?? '—'),
-    code: String((raw as { project?: string }).project ?? ''),
+    id: String(projectRaw ?? raw.relatedId ?? ''),
+    nom: chantierNom,
+    code: String(projectRaw ?? ''),
   };
 
   const emetteur: ActeurRef = {

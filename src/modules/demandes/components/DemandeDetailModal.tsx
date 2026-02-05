@@ -143,7 +143,7 @@ export function DemandeDetailModal({
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Une erreur est survenue lors de l\'action';
-      toast.error('Erreur', errorMessage);
+      toast.error(errorMessage);
       // Log uniquement en développement
       if (process.env.NODE_ENV === 'development') {
         logger.error('Action error', error instanceof Error ? error : undefined, { component: 'DemandeDetailModal' });

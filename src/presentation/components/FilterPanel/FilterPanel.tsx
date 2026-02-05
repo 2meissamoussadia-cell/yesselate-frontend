@@ -192,7 +192,7 @@ export function FilterPanel({
                     const selected = Array.isArray(values[filter.key]) ? values[filter.key] : [];
                     const toggle = (value: string) => {
                       const next = selected.includes(value)
-                        ? selected.filter(v => v !== value)
+                        ? selected.filter((v: string) => v !== value)
                         : [...selected, value];
                       handleFilterChange(filter.key, next);
                     };

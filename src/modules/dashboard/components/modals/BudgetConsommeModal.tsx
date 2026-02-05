@@ -20,6 +20,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/cn';
+import { toast } from 'sonner';
 
 interface ChantierBudget {
   id: string;

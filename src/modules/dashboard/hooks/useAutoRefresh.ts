@@ -66,8 +66,8 @@ export function useAutoRefresh({
   const onRefreshRef = useRef(onRefresh);
   const isOnlineRef = useRef(isOnline);
   const isTabVisibleRef = useRef(isTabVisible);
-  const refreshIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const refreshIntervalRef = useRef<number | null>(null);
+  const reconnectTimeoutRef = useRef<number | null>(null);
   const isMountedRef = useRef(true);
   
   // Synchroniser les refs avec les états

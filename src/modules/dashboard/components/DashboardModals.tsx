@@ -5,9 +5,11 @@
 
 'use client';
 
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { X } from 'lucide-react';
+import { X, Download } from 'lucide-react';
+import { useAuthHeaders } from '../utils/getAuthHeaders';
+import { useI18n } from '@/lib/i18n';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { useAchievementsStore } from '@/lib/stores/achievementsStore';
 import { KPIDrillDownModal } from './KPIDrillDownModal';

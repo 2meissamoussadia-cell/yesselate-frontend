@@ -119,14 +119,23 @@ export class ErrorBoundary extends Component<Props, State> {
                 </p>
               </div>
 
-              {/* Détails de l'erreur (développement uniquement) */}
-              {this.props.showDetails && this.state.error && (
-                <div className="mb-6 p-4 rounded-xl bg-slate-900/50 border border-slate-700/50">
-                  <h3 className="text-sm font-semibold text-red-400 mb-2">Détails de l'erreur:</h3>
-                  <pre className="text-xs text-slate-300 font-mono overflow-auto max-h-48">
-                    {this.state.error.toString()}
-                    {this.state.errorInfo?.componentStack}
-                  </pre>
+              {/* Détails de l'erreur : en dev toujours visibles, en prod si showDetails */}
+              {(process.env.NODE_ENV !== 'production' || this.props.showDetails) && this.state.error && (
+                <div className="mb-6 p-4 rounded-xl bg-slate-900/50 border border-slate-700/50" role="region" aria-label="Détails de l'erreur">
+                  <h3 className="text-sm font-semibold text-red-400 mb-2">
+                    Détails de l'erreur {process.env.NODE_ENV !== 'production' && '(développement)'}
+                  </h3>
+                  <p className="text-sm text-slate-300 mb-2 font-mono break-all">
+                    {this.state.error.message}
+                  </p>
+                  {this.state.errorInfo?.componentStack && (
+                    <details className="mt-2">
+                      <summary className="text-xs text-slate-400 cursor-pointer hover:text-slate-300">Composants concernés</summary>
+                      <pre className="mt-2 text-xs text-slate-400 font-mono overflow-auto max-h-40 whitespace-pre-wrap break-words">
+                        {this.state.errorInfo.componentStack.trim()}
+                      </pre>
+                    </details>
+                  )}
                 </div>
               )}
 

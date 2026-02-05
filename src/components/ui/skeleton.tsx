@@ -10,7 +10,7 @@ interface SkeletonProps {
   variant?: 'default' | 'text' | 'circular' | 'rectangular';
   width?: string | number;
   height?: string | number;
-  animation?: 'pulse' | 'wave' | 'none';
+  animation?: 'pulse' | 'pulse-slow' | 'wave' | 'none';
 }
 
 /**
@@ -34,6 +34,7 @@ export function Skeleton({
 
   const animationClasses = {
     pulse: 'animate-pulse',
+    'pulse-slow': 'animate-pulse-slow',
     wave: 'animate-[shimmer_2s_infinite]',
     none: '',
   };

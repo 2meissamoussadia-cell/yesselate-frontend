@@ -8,7 +8,7 @@
  * - Page gère : état des vues/filtres/tri, application des filtres sur les données.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Mail,
   Flag,
@@ -71,7 +71,12 @@ export interface FilterBarProps {
   onSortChange?: (sort: { field: string; order: 'asc' | 'desc' }) => void;
   /** Recherche */
   searchPlaceholder?: string;
+  /** Limite de caractères (évite débordement et abus) */
+  searchMaxLength?: number;
   onSearch?: (query: string) => void;
+  /** Valeur contrôlée de la recherche (affiche "Recherche active" + bouton effacer si fourni) */
+  searchValue?: string;
+  onSearchClear?: () => void;
   /** Filtres rapides config (icon keys) */
   quickFilters?: QuickFilterConfig[];
   /** Filtres avancés (entonnoir) */
@@ -121,18 +126,50 @@ export const FilterBar = React.memo(function FilterBar({
   currentSort,
   onSortChange,
   searchPlaceholder = 'Rechercher...',
+  searchMaxLength = 120,
   onSearch,
+  searchValue: searchValueControlled,
+  onSearchClear,
   quickFilters,
   onAdvancedFilterClick,
   advancedFilterCount: advancedFilterCountProp,
   className,
 }: FilterBarProps) {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQueryLocal, setSearchQueryLocal] = useState('');
+  const searchQuery = searchValueControlled !== undefined ? searchValueControlled : searchQueryLocal;
+  const setSearchQuery = (q: string) => {
+    if (searchValueControlled === undefined) setSearchQueryLocal(q);
+  };
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>(currentSort?.order ?? 'desc');
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const SEARCH_DEBOUNCE_MS = 400;
+  const isSearchActive = (searchQuery?.trim() ?? '').length > 0;
+
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, []);
 
   const handleSearch = (q: string) => {
     setSearchQuery(q);
-    onSearch?.(q);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (searchValueControlled !== undefined) {
+      onSearch?.(q);
+      return;
+    }
+    debounceRef.current = setTimeout(() => {
+      onSearch?.(q);
+      debounceRef.current = null;
+    }, SEARCH_DEBOUNCE_MS);
+  };
+
+  const handleSearchClear = () => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = null;
+    setSearchQuery('');
+    onSearch?.('');
+    onSearchClear?.();
   };
 
   const toggleQuickFilter = (id: string) => {
@@ -190,13 +227,17 @@ export const FilterBar = React.memo(function FilterBar({
                 >
                   {tab.label}
                   {tab.count != null && tab.count > 0 && (
-                    <span className={cn(
-                      'inline-flex items-center justify-center ml-2 min-w-[20px] h-5 px-1.5',
-                      'text-xs font-semibold rounded-full',
-                      isActive
-                        ? 'bg-sky-600 text-white'
-                        : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
-                    )}>
+                    <span
+                      title={tab.count > 99 ? `${tab.count} alerte${tab.count > 1 ? 's' : ''}` : undefined}
+                      className={cn(
+                        'inline-flex items-center justify-center ml-2 min-w-[20px] h-5 px-1.5 rounded-full text-xs font-semibold',
+                        isActive && tab.color === 'red'
+                          ? 'bg-red-600 text-white'
+                          : isActive
+                            ? 'bg-sky-600 text-white'
+                            : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
+                      )}
+                    >
                       {tab.count > 99 ? '99+' : tab.count}
                     </span>
                   )}
@@ -305,23 +346,40 @@ export const FilterBar = React.memo(function FilterBar({
       {(onSearch != null || effectiveQuickFilters.length > 0) && (
       <div className="flex items-center gap-3 px-4 py-2 border-t border-slate-100 dark:border-slate-800/60">
         {onSearch != null && (
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <Input
-              value={searchQuery}
-              onChange={(e) => handleSearch(e.target.value)}
-              placeholder={searchPlaceholder}
-              className="pl-9 pr-9"
-            />
-            {searchQuery && (
-              <button
-                type="button"
-                onClick={() => handleSearch('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                aria-label="Effacer"
-              >
-                <X className="w-4 h-4" />
-              </button>
+          <div className="flex items-center gap-2 flex-1 max-w-md flex-wrap">
+            <div className="relative flex-1 min-w-[200px]">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" aria-hidden />
+              <Input
+                value={searchQuery}
+                onChange={(e) => handleSearch(e.target.value)}
+                placeholder={searchPlaceholder}
+                className="pl-9 pr-9"
+                maxLength={searchMaxLength}
+                aria-describedby={searchMaxLength ? 'search-char-hint' : undefined}
+                aria-label="Rechercher"
+              />
+              {searchMaxLength > 0 && (
+                <span id="search-char-hint" className="sr-only">
+                  Maximum {searchMaxLength} caractères
+                </span>
+              )}
+              {isSearchActive && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+                  onClick={handleSearchClear}
+                  aria-label="Effacer la recherche"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              )}
+            </div>
+            {isSearchActive && (
+              <Badge variant="secondary" className="shrink-0 text-xs font-normal">
+                Recherche active{searchQuery.trim().length > 0 ? ` : « ${searchQuery.trim().length > 20 ? searchQuery.trim().slice(0, 20) + '…' : searchQuery.trim()} »` : ''}
+              </Badge>
             )}
           </div>
         )}

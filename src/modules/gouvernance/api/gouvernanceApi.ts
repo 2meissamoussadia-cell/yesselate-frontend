@@ -116,7 +116,8 @@ export async function getGouvernanceOverview(
     return response.data;
   } catch (error) {
     // Retourner des données mockées si 404 (sans logger en production)
-    if (error?.isNotFound || error?.response?.status === 404) {
+    const err = error as { isNotFound?: boolean; response?: { status?: number } };
+    if (err?.isNotFound || err?.response?.status === 404) {
       if (process.env.NODE_ENV === 'development') {
         logger.warn('Endpoint non disponible, fallback données mockées', { action: 'getGouvernanceOverview' });
       }
@@ -143,7 +144,8 @@ export async function getGouvernanceStats(
     return response.data;
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
-      if (error?.isNotFound || error?.response?.status === 404) {
+      const err = error as { isNotFound?: boolean; response?: { status?: number } };
+      if (err?.isNotFound || err?.response?.status === 404) {
         logger.warn('Endpoint non disponible, fallback données mockées', { action: 'getGouvernanceStats' });
       } else {
         logger.warn('Erreur, fallback données mockées', { action: 'getGouvernanceStats' });
@@ -164,7 +166,8 @@ export async function getTendancesMensuelles(
     return response.data;
   } catch (error) {
     // Retourner des tendances mockées si 404 (sans logger en production)
-    if (error?.isNotFound || error?.response?.status === 404) {
+    const err = error as { isNotFound?: boolean; response?: { status?: number } };
+    if (err?.isNotFound || err?.response?.status === 404) {
       if (process.env.NODE_ENV === 'development') {
         logger.warn('Endpoint non disponible, fallback données mockées', { action: 'getTendancesMensuelles' });
       }

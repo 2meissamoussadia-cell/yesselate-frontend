@@ -27,6 +27,7 @@ import {
   AtSign,
   Hash,
 } from 'lucide-react';
+import { sanitizeHtmlForDisplay } from '@/lib/utils/sanitize';
 
 // ================================
 // TYPES
@@ -288,7 +289,7 @@ export function CommentModal({ open, onClose, alert, onConfirm }: CommentModalPr
           {showPreview ? (
             <div
               className="min-h-[200px] max-h-[400px] overflow-y-auto p-4 rounded-lg bg-slate-800/30 border border-slate-700/50 text-sm text-slate-200 prose prose-invert prose-sm max-w-none"
-              dangerouslySetInnerHTML={{ __html: renderMarkdown(content || '_Aucun contenu..._') }}
+              dangerouslySetInnerHTML={{ __html: sanitizeHtmlForDisplay(renderMarkdown(content || '_Aucun contenu..._')) }}
             />
           ) : (
             <div className="relative">

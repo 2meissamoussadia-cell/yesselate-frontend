@@ -2,6 +2,20 @@
    Animations & Transitions pour Validation BC
    ============================================ */
 
+/* Skeleton pulse lent (0.5–1 Hz, moins anxiogène) */
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 2s ease-in-out infinite;
+}
+
 /* Fade In Animation */
 @keyframes fadeIn {
   from {

@@ -38,7 +38,7 @@ export function BudgetDetailModal({ isOpen, onClose, kpi }: BudgetDetailModalPro
       <div
         className={cn(
           'fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity',
-          zIndexClass.modalOverlay,
+          zIndexClass('modalOverlay'),
           isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
         )}
         onClick={onClose}
@@ -51,7 +51,7 @@ export function BudgetDetailModal({ isOpen, onClose, kpi }: BudgetDetailModalPro
           'md:w-[90vw] md:max-w-2xl',
           'bg-slate-900 border border-slate-700 rounded-xl shadow-2xl',
           'flex flex-col',
-          zIndexClass.modal,
+          zIndexClass('modal'),
           isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
         )}
       >

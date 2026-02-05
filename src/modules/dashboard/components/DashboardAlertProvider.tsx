@@ -37,7 +37,7 @@ function buildCriticalPayload(detail: CockpitUrgentDetail): CriticalAlertPayload
     impact,
     actions: actions.map((a) => ({
       label: typeof a === 'string' ? a : a.label,
-      onClick: undefined,
+      onClick: () => {},
       primary: typeof a === 'object' && a.primary,
     })),
     payload: d,

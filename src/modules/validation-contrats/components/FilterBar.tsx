@@ -20,10 +20,10 @@ export function FilterBar({ onFiltersChange }: FilterBarProps) {
   const activeFilters = filters.getFilters();
 
   const hasActiveFilters =
-    activeFilters.statuts.length > 0 ||
-    activeFilters.types.length > 0 ||
-    activeFilters.priorites.length > 0 ||
-    activeFilters.recherche.length > 0;
+    (activeFilters.statuts?.length ?? 0) > 0 ||
+    (activeFilters.types?.length ?? 0) > 0 ||
+    (activeFilters.priorites?.length ?? 0) > 0 ||
+    (activeFilters.recherche?.length ?? 0) > 0;
 
   const handleRemoveStatut = (statut: StatutContrat) => {
     filters.setStatuts(activeFilters.statuts.filter((s) => s !== statut));
@@ -31,12 +31,12 @@ export function FilterBar({ onFiltersChange }: FilterBarProps) {
   };
 
   const handleRemoveType = (type: TypeContrat) => {
-    filters.setTypes(activeFilters.types.filter((t) => t !== type));
+    filters.setTypes((activeFilters.types ?? []).filter((t) => t !== type));
     onFiltersChange?.();
   };
 
   const handleRemovePriorite = (priorite: PrioriteContrat) => {
-    filters.setPriorites(activeFilters.priorites.filter((p) => p !== priorite));
+    filters.setPriorites((activeFilters.priorites ?? []).filter((p) => p !== priorite));
     onFiltersChange?.();
   };
 
@@ -54,7 +54,7 @@ export function FilterBar({ onFiltersChange }: FilterBarProps) {
       <Filter className="h-4 w-4 text-slate-400" />
       <span className="text-sm text-slate-400">Filtres actifs:</span>
 
-      {activeFilters.statuts.map((statut) => (
+      {(activeFilters.statuts ?? []).map((statut) => (
         <Badge
           key={statut}
           variant="secondary"
@@ -83,7 +83,7 @@ export function FilterBar({ onFiltersChange }: FilterBarProps) {
         </Badge>
       ))}
 
-      {activeFilters.priorites.map((priorite) => (
+      {(activeFilters.priorites ?? []).map((priorite) => (
         <Badge
           key={priorite}
           variant="secondary"

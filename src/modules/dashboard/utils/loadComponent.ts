@@ -34,7 +34,8 @@ const log = {
  * Mapping des noms de composants vers leurs chemins d'import
  * Permet de charger dynamiquement les composants sans hardcoder les chemins
  */
-const componentMap: Record<string, () => Promise<{ default?: ComponentType; [key: string]: ComponentType | undefined }>> = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const componentMap: Record<string, () => Promise<{ default?: ComponentType<any>; [key: string]: ComponentType<any> | undefined }>> = {
   // Pages Overview
   OverviewPage: () => import('../components/views/OverviewPage'),
   SummaryPage: () => import('../components/views/SummaryPage'),

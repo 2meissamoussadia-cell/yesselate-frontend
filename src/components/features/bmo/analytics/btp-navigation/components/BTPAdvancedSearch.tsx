@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/cn';
 import { useDebounce } from '@/application/hooks/useDebounce';
 import { highlightMatch } from '@/application/utils/searchUtils';
+import { sanitizeHighlightHtml } from '@/lib/utils/sanitize';
 import { searchAnalytics, type SearchResult as ServiceSearchResult } from '@/lib/services/analyticsSearchService';
 
 interface SearchResult {
@@ -293,7 +294,7 @@ export function BTPAdvancedSearch({
                       <span
                         className="text-sm font-medium text-slate-200"
                         dangerouslySetInnerHTML={{
-                          __html: highlightMatch(result.label, debouncedQuery),
+                          __html: sanitizeHighlightHtml(highlightMatch(result.label, debouncedQuery)),
                         }}
                       />
                       <Badge variant="default" className="text-xs">

@@ -271,7 +271,9 @@ function ItemRow({
           <TooltipContent side="right" className="max-w-xs">
             <p className="font-medium">{item.label}</p>
             {item.badge != null && item.badge > 0 && (
-              <p className="text-xs text-slate-500">{item.badge} élément{item.badge > 1 ? 's' : ''}</p>
+              <p className="text-xs text-slate-500">
+                {item.badge > 99 ? '99+' : item.badge} élément{(item.badge > 99 ? 99 : item.badge) > 1 ? 's' : ''}
+              </p>
             )}
           </TooltipContent>
         </Tooltip>

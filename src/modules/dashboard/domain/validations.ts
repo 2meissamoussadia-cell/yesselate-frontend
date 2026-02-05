@@ -31,12 +31,17 @@ export interface ValidationDataLike {
  * Construit une Validation domaine à partir des données API.
  */
 export function toDomainValidation(data: ValidationDataLike): Validation {
-  const statut = (data.statut?.toLowerCase() ?? 'pending') as Validation['statut'];
+  const statutRaw = (data.statut?.toLowerCase() ?? 'pending') as string;
+  const statut: Validation['statut'] =
+    statutRaw === 'approved' || statutRaw === 'approuvée' ? 'approved'
+    : statutRaw === 'rejected' || statutRaw === 'rejetée' ? 'rejected'
+    : statutRaw === 'cancelled' ? 'cancelled'
+    : 'pending';
   return {
     id: data.id ?? 0,
     type: data.type ?? '',
     objet: data.objet ?? '',
-    statut: statut === 'approved' || statut === 'approuvée' ? 'approved' : statut === 'rejected' || statut === 'rejetée' ? 'rejected' : statut === 'cancelled' ? 'cancelled' : 'pending',
+    statut,
     date_demande: data.date_demande,
     date_validation: data.date_validation,
     bureau: data.bureau,

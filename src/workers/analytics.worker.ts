@@ -30,14 +30,14 @@ self.addEventListener('message', (e: MessageEvent<WorkerRequest>) => {
     case 'compute_health_scores': {
       const chantiers = (data as { chantiers?: Array<{ id: string; sante?: number; ca?: number }> })?.chantiers ?? [];
       const scores = computeHealthScores(chantiers);
-      (self as Worker).postMessage({ type: 'health_scores_ready', scores } as WorkerResponse);
+      (self as unknown as Worker).postMessage({ type: 'health_scores_ready', scores } as WorkerResponse);
       break;
     }
     case 'predict_delays':
-      (self as Worker).postMessage({ type: 'predictions_ready', predictions: [] } as WorkerResponse);
+      (self as unknown as Worker).postMessage({ type: 'predictions_ready', predictions: [] } as WorkerResponse);
       break;
     case 'optimize_resources':
-      (self as Worker).postMessage({ type: 'optimization_ready', allocation: {} } as WorkerResponse);
+      (self as unknown as Worker).postMessage({ type: 'optimization_ready', allocation: {} } as WorkerResponse);
       break;
     default:
       break;

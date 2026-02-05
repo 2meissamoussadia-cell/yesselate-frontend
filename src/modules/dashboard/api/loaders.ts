@@ -117,11 +117,8 @@ function createApiLoader<TData extends DashboardViewData>(
       // Récupérer les headers d'authentification
       const authHeaders = getAuthHeadersSync();
       
-      // Appel API avec typage strict et headers d'auth
-      const data = await fetchDashboardView<TData>(
-        targetNav as NavKey & { main: typeof targetNav.main; sub: typeof targetNav.sub; leaf: typeof targetNav.leaf },
-        { headers: authHeaders }
-      );
+      // Appel API avec typage strict et headers d'auth (TNav = type de la nav, pas TData)
+      const data = await fetchDashboardView(targetNav, { headers: authHeaders });
       
       return {
         key: cacheKey,

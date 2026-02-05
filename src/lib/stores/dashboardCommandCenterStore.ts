@@ -78,6 +78,8 @@ export interface DashboardCommandCenterStore {
     subCategory?: string | null, 
     filter?: string | null
   ) => void;
+  /** Navigation par objet { main, sub?, leaf? } (compat vues dashboard). */
+  go: (nav: { main: DashboardMainCategory; sub?: string | null; leaf?: string | null }) => void;
   /**
    * Alias compat: certains composants/historiques utilisent `navigateTo`.
    * Même signature que `navigate`.
@@ -210,6 +212,9 @@ export const useDashboardCommandCenterStore = create<DashboardCommandCenterStore
       },
 
       // Navigate simplifié selon la structure proposée
+      go: (nav) => {
+        get().navigate(nav.main, nav.sub ?? null, nav.leaf ?? null);
+      },
       navigate: (mainCategory, subCategory = null, subSubCategory = null) => {
         const current = get().navigation;
         const newNavigation: DashboardNavigation = {

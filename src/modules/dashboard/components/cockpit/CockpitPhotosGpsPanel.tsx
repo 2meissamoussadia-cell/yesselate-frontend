@@ -7,6 +7,7 @@
 
 import React, { useState, useMemo, useCallback } from 'react';
 import { MapPin, Calendar, ImageIcon } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/cn';
 import { colors } from '../../utils/dashboardDesignTokens';
 import type { PhotoGpsMock } from '../../data/photoGpsMock';
@@ -50,7 +51,7 @@ export function CockpitPhotosGpsPanel() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Chantier</span>
-        <Select value={chantierFilter || '__all__'} onValueChange={(v) => setChantierFilter(v === '__all__' ? '' : v)}>
+        <Select value={chantierFilter || '__all__'} onValueChange={(v: string) => setChantierFilter(v === '__all__' ? '' : v)}>
           <SelectTrigger className={cn('min-w-[140px] rounded-xl bg-slate-900/60 px-3 py-2 text-sm text-slate-200', colors.border.default, 'focus:ring-sky-500/50')} aria-label="Filtrer par chantier">
             <SelectValue placeholder="Tous" />
           </SelectTrigger>

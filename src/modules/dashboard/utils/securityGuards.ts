@@ -42,7 +42,7 @@ export function canAccessView(entry: ViewEntry | undefined, user: UserLike): boo
  */
 export function canAccessViewByTenant(
   entry: ViewEntry | undefined,
-  user: User | null,
+  user: UserLike | null,
   currentTenant?: string
 ): boolean {
   if (!entry) return false;

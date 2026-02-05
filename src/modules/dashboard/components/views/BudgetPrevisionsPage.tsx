@@ -153,7 +153,7 @@ export const BudgetPrevisionsPage = memo(function BudgetPrevisionsPage() {
       label: 'Variance',
       sortable: true,
       align: 'right' as const,
-      render: (value: number | undefined, row) => {
+      render: (value: number | undefined, row: Record<string, unknown>) => {
         if (value === undefined) return <span className="text-slate-400">-</span>;
         const isPositive = value > 0;
         return (

@@ -51,14 +51,15 @@ export * from './utils/routeValidation';
 export { buildDashboardPathUrl, parseDashboardPath, isDashboardPathUrl } from './utils/dashboardPathUrl';
 export * from './utils/navigationLabels';
 export * from './utils/routeAliases';
-export * from './utils/colorMapping';
+export type { KPICardColor, KpiStatCardTone, TrendDirection } from './utils/colorMapping';
+export { mapColorToTone, mapToneToColor, parseTrendPercent, getTrendDirection, formatMoneyXOF, formatMoneyEUR, formatMoney, formatMoneyCompact } from './utils/colorMapping';
 export * from './utils/kpiHelpers';
 export * from './utils/navAdapter';
 export * from './utils/kpi';
 
-// Types
+// Types (TypedLoaderFn et OverviewSummaryDashboardData viennent de dashboardDataTypes ; éviter doublons avec dashboardRegistryTypes)
+export type { ViewEntry, Loader, LoaderResult, ViewRenderArgs, DashboardRegistry } from './types/dashboardRegistryTypes';
 export * from './types/dashboard';
-export * from './types/dashboardRegistryTypes';
 
 // Hooks
 export * from './hooks/useDashboardData';

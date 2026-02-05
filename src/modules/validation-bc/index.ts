@@ -18,8 +18,18 @@ export * from './components';
 // Hooks
 export * from './hooks';
 
-// Types
-export * from './types/validationTypes';
+// Types (ValidationNavItem vient de ./navigation pour éviter doublon)
+export type {
+  TypeDocument,
+  StatutDocument,
+  PrioriteDocument,
+  Service,
+  DocumentValidation,
+  ValidationStats,
+  ValidationFiltres,
+  Validateur,
+  RegleMetier,
+} from './types/validationTypes';
 
 // API
 export * from './api/validationApi';

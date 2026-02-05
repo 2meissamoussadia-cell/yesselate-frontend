@@ -34,7 +34,8 @@ export type AlertsSubSubCategory =
   | 'today'
   | 'week'
   | 'month'
-  | 'all';
+  | 'all'
+  | 'critical';
 
 export interface AlertsNavItem {
   id: string;

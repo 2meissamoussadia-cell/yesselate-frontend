@@ -14,14 +14,14 @@ import { cn } from '@/lib/cn';
 import { exportDataAsCSV } from '@/lib/utils/export';
 import { normalizeToArray } from '../../utils/dataNormalization';
 import { FilterBar } from '@/components/erp';
-import type { ErpFilters } from '@/components/erp';
+import type { ErpFilters, ErpFilterValue } from '@/components/erp';
 
 export default function ArbitragesEnAttentePage() {
   const { data, isLoading } = useGouvernanceData('arbitrages-en-attente');
   const [filters, setFilters] = useState<ErpFilters>({ gravite: '' });
 
   const onFilterChange = useCallback((key: string, value: unknown) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
+    setFilters((prev) => ({ ...prev, [key]: value as ErpFilterValue }));
   }, []);
 
   const arbitrages = useMemo(() => normalizeToArray<ArbitrageGouvernance>(data), [data]);

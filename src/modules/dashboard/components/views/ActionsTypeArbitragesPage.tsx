@@ -24,7 +24,7 @@ import { useDashboardData } from '../../hooks/useDashboardData';
 import { exportToCSV, exportToJSON } from '../../utils/exportUtils';
 import type { ActionsViewData } from '../../types/dashboardDataTypes';
 import { FilterBar } from '@/components/erp';
-import type { ErpFilters } from '@/components/erp';
+import type { ErpFilters, ErpFilterValue } from '@/components/erp';
 
 type ActionRow = ActionsViewData['rows'][number];
 
@@ -34,7 +34,7 @@ export const ActionsTypeArbitragesPage = memo(function ActionsTypeArbitragesPage
   const { data, isLoading, error } = useDashboardData<ActionsViewData>();
 
   const onFilterChange = useCallback((key: string, value: unknown) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
+    setFilters((prev) => ({ ...prev, [key]: value as ErpFilterValue }));
   }, []);
 
   const stats = useMemo(() => ({ total: data?.stats?.total ?? 0, ...data?.stats }), [data]);

@@ -176,7 +176,7 @@ export function ContratsSidebar({
         {/* Children */}
         {hasChildren && isExpanded && !collapsed && (
           <div className="mt-1 space-y-1">
-            {node.children.map((child) => (
+            {(node.children ?? []).map((child) => (
               <NavNodeComponent key={child.id} node={child} level={level + 1} />
             ))}
           </div>

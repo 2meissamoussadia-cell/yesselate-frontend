@@ -218,17 +218,14 @@ export function useGouvernanceDataWithDomain(section: GouvernanceSection) {
     }
   };
 
+  const { data: _domainDataProp, ...domainRest } = domainService;
   return {
     // Données brutes API (pour compatibilité)
     data: apiData,
-    
     // Données adaptées Domain
     domainData,
-    
-    // Services domain avec calculs
-    ...domainService,
-    
-    // États
+    // Services domain avec calculs (sans data pour éviter doublon)
+    ...domainRest,
     isLoading,
     error,
     refetch,

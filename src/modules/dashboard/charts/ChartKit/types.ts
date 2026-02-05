@@ -3,8 +3,15 @@
  */
 
 import { ReactNode } from 'react';
-import { Margin } from 'recharts';
 import { chartHeights, chartMargins } from './chartTheme';
+
+/** Marges du chart (compatible Recharts) */
+export interface ChartMargin {
+  top?: number;
+  right?: number;
+  bottom?: number;
+  left?: number;
+}
 
 // ============================================
 // PROPS DU CHART CONTAINER
@@ -69,7 +76,7 @@ export interface ChartContainerProps {
    * Marges du chart (Recharts Margin)
    * @default chartMargins.default
    */
-  margin?: Margin;
+  margin?: ChartMargin;
 
   /**
    * Activer le lazy loading (Suspense)
@@ -240,5 +247,5 @@ export interface ChartConfig {
   /**
    * Marges
    */
-  margin?: Margin;
+  margin?: ChartMargin;
 }

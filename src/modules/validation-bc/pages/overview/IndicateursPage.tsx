@@ -165,7 +165,7 @@ export function IndicateursPage() {
                         'text-xs font-medium',
                         card.changeType === 'positive' && 'text-emerald-400',
                         card.changeType === 'negative' && 'text-amber-400',
-                        card.changeType === 'neutral' && 'text-slate-400'
+                        (card.changeType as string) === 'neutral' && 'text-slate-400'
                       )}
                     >
                       {card.change}

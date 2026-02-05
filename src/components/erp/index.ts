@@ -12,4 +12,4 @@ export type { ErpDataTableProps } from './ErpDataTable';
 export { ErpButton } from './ErpButton';
 export type { ErpButtonProps } from './ErpButton';
 
-export type { ErpFilters, ErpSavedView, ErpColumnDef, ErpRowState } from './types';
+export type { ErpFilters, ErpFilterValue, ErpSavedView, ErpColumnDef, ErpRowState } from './types';

@@ -238,7 +238,14 @@ export const useTicketsWorkspaceStore = create<TicketsWorkspaceState>()(
         dateRange: undefined,
         tags: [],
         sla: [],
-      },
+        assigneeId: null,
+        clientId: null,
+        slaBreached: null,
+        unassigned: null,
+        vipOnly: false,
+        dateFrom: '',
+        dateTo: '',
+      } as TicketsActiveFilters,
       liveStats: null,
       isRefreshing: false,
 
@@ -375,7 +382,14 @@ export const useTicketsWorkspaceStore = create<TicketsWorkspaceState>()(
           dateRange: undefined,
           tags: [],
           sla: [],
-        }
+          assigneeId: null,
+          clientId: null,
+          slaBreached: null,
+          unassigned: null,
+          vipOnly: false,
+          dateFrom: '',
+          dateTo: '',
+        } as TicketsActiveFilters,
       }),
       
       // Stats actions

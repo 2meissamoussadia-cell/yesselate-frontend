@@ -47,7 +47,7 @@ export function MonthlyComparisonChart({ data }: { data?: MonthlyComparisonData[
           <YAxis {...chartStyles.axis} />
           <Tooltip 
             {...chartStyles.tooltip}
-            formatter={(value: number) => fmt.number(value)}
+            formatter={(value: number | undefined) => fmt.number(value ?? 0)}
           />
           <Legend {...chartStyles.legend} />
           {chartData.length > 8 && (

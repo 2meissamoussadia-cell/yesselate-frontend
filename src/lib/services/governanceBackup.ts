@@ -73,7 +73,7 @@ export class GovernanceBackupService {
       });
 
       // Récupérer toutes les alertes
-      const alerts = await prisma.governanceAlert.findMany({
+      const alerts = await (prisma as unknown as { governanceAlert: { findMany: (args: { include: { actions: boolean } }) => Promise<unknown[]> } }).governanceAlert.findMany({
         include: {
           actions: true,
         },

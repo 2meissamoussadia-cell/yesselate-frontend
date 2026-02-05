@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -12,7 +12,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useCreateAlerte } from '@/hooks/alerts';
+import { sanitizeTextForComment } from '@/lib/utils/sanitize';
 import type { AlerteBTP } from '@/lib/types/alerts-btp.types';
+
+const MAX_TITRE_LENGTH = 200;
+const MAX_DESCRIPTION_LENGTH = 2000;
 
 export interface CreateAlertDialogProps {
   open: boolean;
@@ -39,18 +43,36 @@ const CATEGORIES: { id: AlerteBTP['categorie']; label: string }[] = [
 export function CreateAlertDialog({ open, onOpenChange, type = 'technique' }: CreateAlertDialogProps) {
   const [titre, setTitre] = useState('');
   const [description, setDescription] = useState('');
+  const [titreError, setTitreError] = useState(false);
   const [niveau, setNiveau] = useState<AlerteBTP['niveau']>('normal');
   const [categorie, setCategorie] = useState<AlerteBTP['categorie']>(type as AlerteBTP['categorie']);
   const createMutation = useCreateAlerte();
 
+  useEffect(() => {
+    if (open) setTitreError(false);
+  }, [open]);
+
+  const titreTrimmed = titre.trim();
+  const isFormValid = titreTrimmed.length > 0 && titreTrimmed.length <= MAX_TITRE_LENGTH && description.length <= MAX_DESCRIPTION_LENGTH;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!titre.trim()) return;
+    if (!titreTrimmed) {
+      setTitreError(true);
+      return;
+    }
+    setTitreError(false);
+    const safeTitre = sanitizeTextForComment(titreTrimmed).slice(0, MAX_TITRE_LENGTH);
+    const safeDescription = sanitizeTextForComment(description.trim()).slice(0, MAX_DESCRIPTION_LENGTH);
+    if (!safeTitre) {
+      setTitreError(true);
+      return;
+    }
 
     createMutation.mutate(
       {
-        titre: titre.trim(),
-        description: description.trim(),
+        titre: safeTitre,
+        description: safeDescription,
         niveau,
         statut: 'non-traite',
         categorie,
@@ -99,20 +121,41 @@ export function CreateAlertDialog({ open, onOpenChange, type = 'technique' }: Cr
             <Input
               id="titre"
               value={titre}
-              onChange={(e) => setTitre(e.target.value)}
+              onChange={(e) => {
+                setTitre(e.target.value.slice(0, MAX_TITRE_LENGTH));
+                setTitreError(false);
+              }}
+              onBlur={() => setTitreError((prev) => prev || !titre.trim())}
               placeholder="Titre de l'alerte"
+              maxLength={MAX_TITRE_LENGTH}
               required
+              aria-invalid={titreError}
+              aria-describedby={titreError ? 'titre-error' : undefined}
+              className={titreError ? 'border-red-500 dark:border-red-500' : ''}
             />
+            {titreError && (
+              <p id="titre-error" className="text-xs text-red-600 dark:text-red-400 mt-1" role="alert">
+                Le titre est obligatoire.
+              </p>
+            )}
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 tabular-nums">
+              {titre.length} / {MAX_TITRE_LENGTH}
+            </p>
           </div>
           <div>
             <Label htmlFor="description">Description</Label>
             <textarea
               id="description"
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Description..."
-              className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              onChange={(e) => setDescription(e.target.value.slice(0, MAX_DESCRIPTION_LENGTH))}
+              placeholder="Description (max. 2000 caractères)"
+              maxLength={MAX_DESCRIPTION_LENGTH}
+              className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm resize-y max-h-[200px] overflow-y-auto"
+              aria-describedby="description-count"
             />
+            <p id="description-count" className="text-xs text-slate-500 dark:text-slate-400 mt-1 tabular-nums">
+              {description.length} / {MAX_DESCRIPTION_LENGTH}
+            </p>
           </div>
           <div>
             <Label htmlFor="niveau">Niveau</Label>
@@ -148,7 +191,7 @@ export function CreateAlertDialog({ open, onOpenChange, type = 'technique' }: Cr
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Annuler
             </Button>
-            <Button type="submit" disabled={createMutation.isPending || !titre.trim()}>
+            <Button type="submit" disabled={createMutation.isPending || !isFormValid}>
               {createMutation.isPending ? 'Création...' : 'Créer'}
             </Button>
           </div>

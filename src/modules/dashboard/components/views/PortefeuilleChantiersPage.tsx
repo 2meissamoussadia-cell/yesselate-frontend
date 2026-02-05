@@ -15,9 +15,17 @@ import { Download, Plus, Eye, AlertTriangle, Ban, FileText, ChevronUp, ChevronDo
 import { ChantierDetailModal } from '../modals/ChantierDetailModal';
 import type { ChantierMock } from '../../data/chantiersMock';
 import { FilterBar, ErpButton } from '@/components/erp';
-import type { ErpFilters } from '@/components/erp';
+import type { ErpFilters, ErpFilterValue } from '@/components/erp';
 import { useAlertToast } from '@/components/ui/toast';
 import { toast } from 'sonner';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -40,6 +48,8 @@ interface ChantierRow {
 type SortKey = keyof ChantierRow;
 
 type SummaryTone = 'neutral' | 'good' | 'bad';
+
+type ConfirmActionType = 'prioriser' | 'bloquer' | 'huissier';
 
 // ---------------------------------------------------------------------------
 // Données de référence (à brancher sur API)
@@ -327,6 +337,40 @@ const INITIAL_FILTERS: ErpFilters = {
 
 const RISQUE_ORDER: Record<RisqueLevel, number> = { Aucun: 0, Moyen: 1, Critique: 2 };
 
+function ConfirmActionModal({
+  type,
+  chantierId,
+  onConfirm,
+  onCancel,
+}: {
+  type: ConfirmActionType;
+  chantierId: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+}) {
+  const labels: Record<ConfirmActionType, string> = {
+    prioriser: 'Prioriser le chantier',
+    bloquer: 'Bloquer le chantier',
+    huissier: 'Envoyer à l\'huissier',
+  };
+  return (
+    <Dialog open onOpenChange={(open) => !open && onCancel()}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{labels[type]}</DialogTitle>
+        </DialogHeader>
+        <p className="text-sm text-slate-500">
+          Chantier {chantierId}. Confirmer l&apos;action ?
+        </p>
+        <DialogFooter>
+          <Button variant="outline" onClick={onCancel}>Annuler</Button>
+          <Button onClick={onConfirm}>Confirmer</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 export function PortefeuilleChantiersPage() {
   const [filters, setFilters] = useState<ErpFilters>(INITIAL_FILTERS);
   const [sortBy, setSortBy] = useState<SortKey | null>(null);
@@ -377,7 +421,7 @@ export function PortefeuilleChantiersPage() {
   }, []);
 
   const onFilterChange = useCallback((key: string, value: unknown) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
+    setFilters((prev) => ({ ...prev, [key]: value as ErpFilterValue }));
   }, []);
 
   const filterOptions = useMemo(
@@ -448,7 +492,7 @@ export function PortefeuilleChantiersPage() {
               setExporting(true);
               setTimeout(() => {
                 setExporting(false);
-                toast.exportSuccess('CSV');
+                toast.success('Export CSV réussi');
               }, 1200);
             }}
           >
@@ -529,8 +573,8 @@ export function PortefeuilleChantiersPage() {
                     </Td>
                     <Td>{c.client}</Td>
                     <Td>{c.segment}</Td>
-                    <Td className="truncate max-w-[160px]" title={c.prestation}>
-                      {c.prestation}
+                    <Td className="truncate max-w-[160px]">
+                      <span title={c.prestation}>{c.prestation}</span>
                     </Td>
                     <Td>{c.phase}</Td>
                     <Td>

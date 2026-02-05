@@ -193,8 +193,8 @@ export function GridCustomizableDashboard({
             width={width}
             className="layout"
             layouts={layouts}
-            breakpoints={{ lg: 1200, md: 996, sm: 768 }}
-            cols={{ lg: 12, md: 10, sm: 6 }}
+            breakpoints={{ lg: 1200, md: 996, sm: 768 } as { lg: number } & Record<string, number>}
+            cols={{ lg: 12, md: 10, sm: 6 } as { lg: number } & Record<string, number>}
             rowHeight={80}
             margin={[16, 16]}
             containerPadding={[0, 0]}

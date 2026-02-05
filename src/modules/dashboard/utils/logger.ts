@@ -82,17 +82,17 @@ class DashboardLogger {
         extra: {
           ...context,
           message,
-          component: context?.component || this.context,
+          component: (context?.component ?? this.context) ?? '',
         },
         tags: {
-          component: context?.component || this.context,
+          component: (context?.component ?? this.context) ?? '',
           action: context?.action,
         },
       });
     } else {
       captureMessage(message, 'error', {
         ...context,
-        component: context?.component || this.context,
+        component: (context?.component ?? this.context) ?? '',
       });
     }
   }

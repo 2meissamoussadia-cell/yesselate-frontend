@@ -51,6 +51,7 @@ export const DashboardFooter = memo(function DashboardFooter({
   refreshInterval = 60000,
   onShowShortcuts,
   lastUpdate,
+  wsConnected,
   onToggleFocus,
   focusMode = false,
   showPresence = false,

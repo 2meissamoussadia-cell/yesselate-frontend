@@ -61,8 +61,21 @@ export {
   useBatchRejectDemandes,
 } from './hooks/useDemandesMutations';
 
-// API
-export * from './api/demandesApi';
+// API (exports explicites pour éviter doublons avec hooks/useDemandesData)
+export {
+  getDemandes,
+  getDemandeById,
+  getDemandesByStatus,
+  getDemandesByService,
+  createDemande,
+  validateDemande,
+  rejectDemande,
+  requestComplementDemande,
+  batchValidateDemandes,
+  batchRejectDemandes,
+  exportDemandes,
+} from './api/demandesApi';
+export type { DemandeFilters as ApiDemandeFilters } from './api/demandesApi';
 
 // Mock Data (pour développement)
 export * from './data/demandesMock';

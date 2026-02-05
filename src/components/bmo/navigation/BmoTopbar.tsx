@@ -10,6 +10,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { Menu, Search, Bell, ChevronRight, ChevronLeft, ChevronDown, MoreVertical, Sun, Moon } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import { formatKeyboardShortcut } from '@/lib/utils';
 import { getModuleByPath, bmoModuleGroupLabels } from '@/lib/navigation/bmoModules';
 import {
   DropdownMenu,
@@ -24,6 +25,15 @@ import { useAppStore, type SupportedLocale } from '@/lib/stores/app-store';
 import { useShallow } from 'zustand/react/shallow';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 import { dashboardNavigationConfig } from '@/modules/dashboard/navigation/dashboardNavigationConfig';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 
 const LOCALE_OPTIONS: { value: SupportedLocale; label: string }[] = [
   { value: 'fr-FR', label: 'Français' },
@@ -100,6 +110,10 @@ export function BmoTopbar({
   const router = useRouter();
   const { darkMode, setDarkMode, localeOverride, setLocaleOverride, fontSizeScale, setFontSizeScale } = useAppStore();
   const isDashboard = pathname?.includes('/maitre-ouvrage/dashboard') ?? false;
+  const isAlertsModule = pathname?.includes('/alerts') ?? false;
+  const [exportModalOpen, setExportModalOpen] = useState(false);
+  const [exportFormat, setExportFormat] = useState<'pdf' | 'excel' | 'csv'>('pdf');
+  const [exportScope, setExportScope] = useState<'page' | 'all'>('page');
 
   const dashboard = useDashboardCommandCenterStore(
     useShallow((s) => ({
@@ -415,7 +429,7 @@ export function BmoTopbar({
         </DropdownMenu>
 
         {/* Menu trois points : 5 sous-menus (Fichier, Édition, Affichage, Paramétrage, Réglage) — clic pour afficher le contenu */}
-        <DropdownMenu onOpenChange={(open) => !open && setMoreMenuSub(null)}>
+        <DropdownMenu onOpenChange={(open) => { if (!open) setMoreMenuSub(null); }}>
           <DropdownMenuTrigger asChild>
             <button
               type="button"
@@ -458,11 +472,11 @@ export function BmoTopbar({
                 Réglage <ChevronRight className="ml-auto h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden />
               </DropdownMenuSubTrigger>
             </div>
-            {/* Contenu du sous-menu sélectionné — panneau à droite, sans chevaucher la liste */}
+            {/* Contenu du sous-menu sélectionné — panneau à droite, sans scroll si possible */}
             {moreMenuSub && (
               <div
                 className={cn(
-                  'flex flex-col w-[280px] shrink-0 max-h-[85vh] overflow-y-auto py-1 pl-2',
+                  'flex flex-col w-[280px] shrink-0 max-h-[85vh] overflow-y-auto overflow-x-hidden py-1 pl-2',
                   'bg-slate-50/80 dark:bg-slate-900/50'
                 )}
               >
@@ -470,34 +484,41 @@ export function BmoTopbar({
                   <>
                     <DropdownMenuItem onClick={() => router.push('/maitre-ouvrage/demandes')}>Nouvelle demande</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => router.push('/maitre-ouvrage/documents')}>Ouvrir / Documents</DropdownMenuItem>
-                    <DropdownMenuItem>Nouveau chantier</DropdownMenuItem>
-                    <DropdownMenuItem>Nouveau devis</DropdownMenuItem>
+                    {!isAlertsModule && (
+                      <>
+                        <DropdownMenuItem>Nouveau chantier</DropdownMenuItem>
+                        <DropdownMenuItem>Nouveau devis</DropdownMenuItem>
+                      </>
+                    )}
                     <DropdownMenuItem>Importer des données</DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Enregistrer <kbd className="ml-auto text-xs">⌘S</kbd></DropdownMenuItem>
+                    <DropdownMenuItem>Enregistrer <kbd className="ml-auto text-xs">{formatKeyboardShortcut('⌘S')}</kbd></DropdownMenuItem>
                     <DropdownMenuItem>Enregistrer sous</DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Exporter (PDF)</DropdownMenuItem>
-                    <DropdownMenuItem>Exporter (Excel)</DropdownMenuItem>
-                    <DropdownMenuItem>Exporter (CSV)</DropdownMenuItem>
-                    <DropdownMenuItem>Imprimer <kbd className="ml-auto text-xs">⌘P</kbd></DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setExportModalOpen(true)}>Exporter…</DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => window.print()}
+                      title="Aperçu avant impression"
+                    >
+                      Imprimer… <kbd className="ml-auto text-xs">{formatKeyboardShortcut('⌘P')}</kbd>
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>Modèles et modèles de documents</DropdownMenuItem>
-                    <DropdownMenuItem>Fermer</DropdownMenuItem>
+                    <DropdownMenuItem title="Fermer ce menu">Fermer le menu</DropdownMenuItem>
                   </>
                 )}
                 {moreMenuSub === 'edition' && (
                   <>
-                    <DropdownMenuItem>Annuler <kbd className="ml-auto text-xs">⌘Z</kbd></DropdownMenuItem>
-                    <DropdownMenuItem>Rétablir <kbd className="ml-auto text-xs">⌘⇧Z</kbd></DropdownMenuItem>
+                    <DropdownMenuItem>Annuler <kbd className="ml-auto text-xs">{formatKeyboardShortcut('⌘Z')}</kbd></DropdownMenuItem>
+                    <DropdownMenuItem>Rétablir <kbd className="ml-auto text-xs">{formatKeyboardShortcut('⌘⇧Z')}</kbd></DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Copier <kbd className="ml-auto text-xs">⌘C</kbd></DropdownMenuItem>
-                    <DropdownMenuItem>Coller <kbd className="ml-auto text-xs">⌘V</kbd></DropdownMenuItem>
-                    <DropdownMenuItem>Couper <kbd className="ml-auto text-xs">⌘X</kbd></DropdownMenuItem>
+                    <DropdownMenuItem>Copier <kbd className="ml-auto text-xs">{formatKeyboardShortcut('⌘C')}</kbd></DropdownMenuItem>
+                    <DropdownMenuItem>Coller <kbd className="ml-auto text-xs">{formatKeyboardShortcut('⌘V')}</kbd></DropdownMenuItem>
+                    <DropdownMenuItem>Couper <kbd className="ml-auto text-xs">{formatKeyboardShortcut('⌘X')}</kbd></DropdownMenuItem>
                     <DropdownMenuItem>Dupliquer</DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Tout sélectionner <kbd className="ml-auto text-xs">⌘A</kbd></DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => onSearchClick?.()}>Rechercher <kbd className="ml-auto text-xs">⌘K</kbd></DropdownMenuItem>
+                    <DropdownMenuItem>Tout sélectionner <kbd className="ml-auto text-xs">{formatKeyboardShortcut('⌘A')}</kbd></DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onSearchClick?.()}>Rechercher <kbd className="ml-auto text-xs">{formatKeyboardShortcut('⌘K')}</kbd></DropdownMenuItem>
                     <DropdownMenuItem>Rechercher et remplacer</DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>Préférences d&apos;édition</DropdownMenuItem>
@@ -505,9 +526,9 @@ export function BmoTopbar({
                 )}
                 {moreMenuSub === 'affichage' && (
                   <>
-                    <DropdownMenuItem>Zoom + <kbd className="ml-auto text-xs">⌘+</kbd></DropdownMenuItem>
-                    <DropdownMenuItem>Zoom − <kbd className="ml-auto text-xs">⌘-</kbd></DropdownMenuItem>
-                    <DropdownMenuItem>Taille réelle <kbd className="ml-auto text-xs">⌘0</kbd></DropdownMenuItem>
+                    <DropdownMenuItem>Zoom + <kbd className="ml-auto text-xs">{formatKeyboardShortcut('⌘+')}</kbd></DropdownMenuItem>
+                    <DropdownMenuItem>Zoom − <kbd className="ml-auto text-xs">{formatKeyboardShortcut('⌘-')}</kbd></DropdownMenuItem>
+                    <DropdownMenuItem>Taille réelle <kbd className="ml-auto text-xs">{formatKeyboardShortcut('⌘0')}</kbd></DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>Plein écran <kbd className="ml-auto text-xs">F11</kbd></DropdownMenuItem>
                     <DropdownMenuItem onClick={toggleSidebar}>Replier / Déplier la barre latérale</DropdownMenuItem>
@@ -581,6 +602,75 @@ export function BmoTopbar({
             )}
           </DropdownMenuContent>
         </DropdownMenu>
+
+        {/* Modal configuration export (PDF / Excel / CSV) — périmètre page ou toutes */}
+        <Dialog open={exportModalOpen} onOpenChange={setExportModalOpen}>
+          <DialogContent
+            className="sm:max-w-md"
+            onClose={() => setExportModalOpen(false)}
+          >
+            <DialogHeader>
+              <DialogTitle>Exporter les données</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label>Format</Label>
+                <div className="flex gap-2 flex-wrap">
+                  {(['pdf', 'excel', 'csv'] as const).map((fmt) => (
+                    <Button
+                      key={fmt}
+                      type="button"
+                      variant={exportFormat === fmt ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setExportFormat(fmt)}
+                    >
+                      {fmt === 'pdf' ? 'PDF' : fmt === 'excel' ? 'Excel' : 'CSV'}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+              <div className="grid gap-2">
+                <Label>Périmètre</Label>
+                <div className="flex gap-2 flex-wrap">
+                  <Button
+                    type="button"
+                    variant={exportScope === 'page' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setExportScope('page')}
+                  >
+                    Page actuelle
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={exportScope === 'all' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setExportScope('all')}
+                  >
+                    Toutes les données
+                  </Button>
+                </div>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Le module actif peut proposer des options supplémentaires (ex. sélection d&apos;alertes).
+              </p>
+            </div>
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setExportModalOpen(false)}>
+                Annuler
+              </Button>
+              <Button
+                type="button"
+                onClick={() => {
+                  setExportModalOpen(false);
+                  if (exportFormat === 'pdf') window.print();
+                  // TODO: Excel/CSV via module ou API
+                }}
+              >
+                Exporter
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </header>
   );

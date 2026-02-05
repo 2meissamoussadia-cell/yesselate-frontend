@@ -575,21 +575,32 @@ export function searchAlerts(query: string): Alert[] {
  * Générer des alertes mockées pour les APIs
  * Compatible avec la structure AlertItem de l'API
  */
+/** Noms de chantiers/opérations pour les mocks — évite "Sans chantier" sur 100 % des alertes */
+const MOCK_PROJECT_NAMES = [
+  'Opération Nord', 'Chantier A - Lot 1', 'PRJ-INFRA-2025', 'PRJ-0017', 'PRJ-0018',
+  'Contrat SOGEA SATOM', 'BC Validation Zone C', 'Budget INFRA', 'Demande Zone Sud',
+  'Paiements Q1', 'Contrats cadre', 'SLA Validation BC', 'Autorisation travaux',
+];
+
 export function generateMockAlerts(count: number = 100) {
   const mockAlerts = [];
   const severities: ('critical' | 'warning' | 'info' | 'success')[] = ['critical', 'warning', 'info', 'success'];
   const statuses: ('open' | 'acknowledged' | 'resolved' | 'escalated')[] = ['open', 'acknowledged', 'resolved', 'escalated'];
-  const queues: ('critical' | 'warning' | 'sla' | 'blocked' | 'acknowledged' | 'resolved' | 'info')[] = 
+  const queues: ('critical' | 'warning' | 'sla' | 'blocked' | 'acknowledged' | 'resolved' | 'info')[] =
     ['critical', 'warning', 'sla', 'blocked', 'acknowledged', 'resolved', 'info'];
-  
+
   const sources = ['System', 'Validation BC', 'Paiements', 'Contrats', 'Budget', 'RH', 'Projets'];
   const tags = ['urgent', 'finance', 'contrat', 'validation', 'sla', 'blocage', 'rh', 'projet'];
 
   for (let i = 0; i < count; i++) {
     const type = severities[Math.floor(Math.random() * severities.length)];
     const status = statuses[Math.floor(Math.random() * statuses.length)];
-    const createdAt = new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000); // Derniers 30 jours
-    
+    const createdAt = new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000);
+    // ~85 % avec chantier, ~15 % sans (pour tester le libellé "Sans chantier")
+    const projectName = Math.random() < 0.85
+      ? MOCK_PROJECT_NAMES[Math.floor(Math.random() * MOCK_PROJECT_NAMES.length)]
+      : undefined;
+
     mockAlerts.push({
       id: `alert-${i + 1}`,
       type,
@@ -601,8 +612,10 @@ export function generateMockAlerts(count: number = 100) {
       status,
       priority: Math.floor(Math.random() * 10) + 1,
       assignedTo: Math.random() > 0.5 ? `user-${Math.floor(Math.random() * 10) + 1}` : null,
-      queue: type as any,
+      queue: type as (typeof queues)[number],
       tags: [tags[Math.floor(Math.random() * tags.length)], tags[Math.floor(Math.random() * tags.length)]],
+      project: projectName ?? null,
+      relatedId: projectName ? `PRJ-${String(i + 1).padStart(4, '0')}` : undefined,
       metadata: {
         blocked: Math.random() > 0.9,
         slaReason: Math.random() > 0.8 ? 'Délai de traitement dépassé' : undefined,

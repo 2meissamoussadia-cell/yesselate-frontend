@@ -12,6 +12,8 @@ import { cn } from '@/lib/cn';
 export interface DashboardPageLayoutProps {
   children: React.ReactNode;
   className?: string;
+  title?: string;
+  description?: string;
   maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
   padding?: 'sm' | 'md' | 'lg';
 }
@@ -38,11 +40,19 @@ const paddingClasses = {
 export function DashboardPageLayout({
   children,
   className,
+  title,
+  description,
   maxWidth = 'xl',
   padding = 'md',
 }: DashboardPageLayoutProps) {
   return (
     <div className={cn('w-full min-w-0 max-w-full overflow-x-hidden mx-auto', maxWidthClasses[maxWidth], paddingClasses[padding], className)}>
+      {(title ?? description) && (
+        <div className="space-y-1 mb-4">
+          {title && <h1 className="text-xl font-semibold text-slate-900 dark:text-slate-100">{title}</h1>}
+          {description && <p className="text-sm text-slate-500 dark:text-slate-400">{description}</p>}
+        </div>
+      )}
       <div className="space-y-4 sm:space-y-6 min-w-0">
         {children}
       </div>
@@ -116,7 +126,9 @@ export function DashboardSection({
  */
 export interface DashboardGridProps {
   children: React.ReactNode;
+  /** Nombre de colonnes (alias: cols) */
   columns?: 1 | 2 | 3 | 4 | 5 | 6;
+  cols?: 1 | 2 | 3 | 4 | 5 | 6;
   gap?: 'sm' | 'md' | 'lg';
   className?: string;
 }
@@ -138,12 +150,14 @@ const gridGapClasses = {
 
 export function DashboardGrid({
   children,
-  columns = 3,
+  columns,
+  cols,
   gap = 'md',
   className,
 }: DashboardGridProps) {
+  const columnsResolved = columns ?? cols ?? 3;
   return (
-    <div className={cn('grid min-w-0', gridColumnsClasses[columns], gridGapClasses[gap], className)}>
+    <div className={cn('grid min-w-0', gridColumnsClasses[columnsResolved], gridGapClasses[gap], className)}>
       {children}
     </div>
   );

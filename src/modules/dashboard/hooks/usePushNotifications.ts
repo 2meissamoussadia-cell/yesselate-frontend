@@ -39,7 +39,7 @@ export function usePushNotifications(): UsePushNotificationsResult {
   const sendCriticalAlert = useCallback(
     (chantierId: string, message: string) => {
       if (!isSupported) return;
-      const opts: NotificationOptions = {
+      const opts: NotificationOptions & { vibrate?: number[]; actions?: Array<{ action: string; title: string }> } = {
         body: message,
         icon: ICON,
         badge: FALLBACK_ICON,

@@ -14,8 +14,7 @@ interface APIContentRouterProps {
   subSubCategory?: string;
 }
 
-export function APIContentRouter({ mainCategory, subCategory, subSubCategory }: APIContentRouterProps) {
-  // TODO: Créer des pages spécifiques pour chaque niveau
-  return <OldAPIContentRouter />;
+export function APIContentRouter({ mainCategory, subCategory }: APIContentRouterProps) {
+  return <OldAPIContentRouter category={mainCategory} subCategory={subCategory ?? 'overview'} />;
 }
 

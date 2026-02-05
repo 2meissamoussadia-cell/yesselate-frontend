@@ -27,7 +27,7 @@ export default function AreaChartImpl({ data, series }: { data: any[]; series: A
         />
         <Tooltip 
           contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569', borderRadius: 8, color: '#e2e8f0' }}
-          formatter={(value: number) => fmt.number(value)}
+          formatter={(value: number | undefined) => fmt.number(value ?? 0)}
           labelFormatter={(label) => {
             if (typeof label === 'string') {
               const date = new Date(label);

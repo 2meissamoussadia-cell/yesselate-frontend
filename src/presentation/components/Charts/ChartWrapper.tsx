@@ -16,7 +16,7 @@ interface ChartWrapperProps {
   description?: string;
   isLoading?: boolean;
   error?: string | Error | null;
-  height?: number | string;
+  height?: number | `${number}%`;
   className?: string;
   emptyMessage?: string;
   hasData?: boolean;
@@ -68,7 +68,7 @@ export function ChartWrapper({
           {description && <p className="text-sm text-slate-400">{description}</p>}
         </div>
       )}
-      <ResponsiveContainer width="100%" height={height}>
+      <ResponsiveContainer width="100%" height={typeof height === 'string' && height.endsWith('%') ? height : Number(height) || 300}>
         {children}
       </ResponsiveContainer>
     </div>

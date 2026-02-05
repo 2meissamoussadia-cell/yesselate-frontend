@@ -17,3 +17,4 @@ export {
 } from './bmo-stats';
 export { buildWorkInboxItems } from './work-inbox-builder';
 export { verifyDecisionHash, useHashVerification } from './verifyHash';
+export { sanitizeTextForComment, sanitizeHtmlForDisplay, sanitizeHighlightHtml } from './sanitize';

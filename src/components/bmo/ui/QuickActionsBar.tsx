@@ -22,6 +22,8 @@ export interface QuickActionItem {
   variant?: 'primary' | 'secondary' | 'ghost';
   disabled?: boolean;
   hasDropdown?: boolean;
+  /** Tooltip affiché quand le bouton est désactivé (ex. "Sélectionnez au moins une alerte") */
+  disabledTooltip?: string;
   onClick: () => void;
 }
 
@@ -38,6 +40,8 @@ export interface QuickActionsBarProps {
   selectedCount?: number;
   /** Menu overflow "..." (optionnel) */
   onMoreClick?: () => void;
+  /** Contenu optionnel à droite (ex. bouton aide raccourcis) */
+  trailing?: React.ReactNode;
   className?: string;
 }
 
@@ -77,6 +81,7 @@ export const QuickActionsBar = React.memo(function QuickActionsBar({
   actions = defaultActions,
   selectedCount = 0,
   onMoreClick,
+  trailing,
   className,
 }: QuickActionsBarProps) {
   const hasSelection = selectedCount > 0;
@@ -113,6 +118,10 @@ export const QuickActionsBar = React.memo(function QuickActionsBar({
           const isDisabledBySelection = !hasSelection && ['delete', 'archive', 'mark'].includes(action.id);
           const isDisabled = action.disabled ?? isDisabledBySelection;
 
+          const tooltipText = isDisabledBySelection
+            ? (action.disabledTooltip ?? 'Sélectionnez un élément pour utiliser cette action')
+            : action.label;
+
           return (
             <Tooltip key={action.id}>
               <TooltipTrigger asChild>
@@ -120,7 +129,7 @@ export const QuickActionsBar = React.memo(function QuickActionsBar({
                   <Button
                     variant={action.variant === 'primary' ? 'default' : (action.variant ?? 'ghost')}
                     size="sm"
-                    className="gap-1.5 text-sm h-8 text-slate-700 dark:text-slate-300"
+                    className="gap-1.5 text-sm min-h-[44px] min-w-[44px] h-11 px-3 text-slate-700 dark:text-slate-300"
                     disabled={isDisabled}
                     onClick={action.onClick}
                     aria-label={action.label}
@@ -132,11 +141,7 @@ export const QuickActionsBar = React.memo(function QuickActionsBar({
                 </span>
               </TooltipTrigger>
               <TooltipContent side="bottom">
-                {isDisabledBySelection ? (
-                  <span>Sélectionnez un élément pour utiliser cette action</span>
-                ) : (
-                  <span>{action.label}</span>
-                )}
+                {tooltipText}
               </TooltipContent>
             </Tooltip>
           );
@@ -158,10 +163,24 @@ export const QuickActionsBar = React.memo(function QuickActionsBar({
         </>
       )}
 
-      {hasSelection && (
-        <span className="ml-auto text-xs text-slate-600 dark:text-slate-400">
-          {selectedCount} élément{selectedCount > 1 ? 's' : ''} sélectionné{selectedCount > 1 ? 's' : ''}
+      {hasSelection ? (
+        <span
+          role="status"
+          aria-live="polite"
+          className="ml-auto text-xs font-semibold text-sky-700 dark:text-sky-300 bg-sky-100 dark:bg-sky-900/40 px-2 py-1 rounded-md"
+        >
+          {selectedCount} alerte{selectedCount > 1 ? 's' : ''} sélectionnée{selectedCount > 1 ? 's' : ''}
         </span>
+      ) : (
+        <span className="ml-auto text-xs text-slate-500 dark:text-slate-400" role="status">
+          Sélectionnez des alertes pour activer les actions
+        </span>
+      )}
+      {trailing != null && (
+        <>
+          <div className="w-px h-5 bg-slate-200 dark:bg-slate-700 self-center" aria-hidden />
+          {trailing}
+        </>
       )}
     </div>
   );

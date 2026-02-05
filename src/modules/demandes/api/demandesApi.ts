@@ -274,10 +274,10 @@ export async function batchRejectDemandes(ids: string[], reason?: string): Promi
 /**
  * Exporte les demandes
  */
-export async function exportDemandes(filters?: DemandeFilters, format: 'xlsx' | 'csv' = 'xlsx'): Promise<Blob> {
+export async function exportDemandes(filters?: DemandeFilters, format: 'xlsx' | 'csv' | 'json' = 'xlsx'): Promise<Blob> {
   try {
     const response = await axios.get(`${API_BASE_URL}/export`, {
-      params: { ...filters, format },
+      params: { ...filters, format: format === 'json' ? 'xlsx' : format },
       responseType: 'blob',
     });
     return response.data;

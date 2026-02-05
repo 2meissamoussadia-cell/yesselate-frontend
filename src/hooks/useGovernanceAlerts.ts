@@ -300,7 +300,12 @@ export function useGovernanceAlerts(
   ) => {
     const now = new Date();
     const criticalCount = filteredAlerts.filter(a => a.severity === 'critical').length;
-    const totalImpact = filteredAlerts.reduce((sum, a) => sum + (a.impact?.money || 0), 0);
+    const totalImpact = filteredAlerts.reduce((sum, a) => {
+      const money = typeof a.impact === 'object' && a.impact !== null && 'money' in a.impact
+        ? (a.impact as { money?: number }).money
+        : 0;
+      return sum + (money ?? 0);
+    }, 0);
     
     const header = [
       `Rapport d'Alertes - Export ${now.toLocaleDateString('fr-FR')} ${now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`,

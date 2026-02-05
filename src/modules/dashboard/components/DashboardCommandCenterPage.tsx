@@ -35,6 +35,7 @@ export function DashboardCommandCenterPage() {
   const lastUpdateDate = liveStats.lastUpdate ? new Date(liveStats.lastUpdate) : new Date();
   const focusMode = displayConfig.focusMode ?? false;
   const [voiceEnabled, setVoiceEnabled] = useState(false);
+  const unlockAchievement = useAchievementsStore((s) => s.unlock);
   const { supported: voiceSupported, listening: voiceListening, startListening, stopListening } = useVoiceCommands(voiceEnabled);
   const { isConnected: wsConnected } = useDashboardLive({ enabled: true });
   const onVoiceToggle = useCallback(() => {
@@ -47,7 +48,6 @@ export function DashboardCommandCenterPage() {
   }, [voiceEnabled, startListening, stopListening, unlockAchievement]);
 
   // Phase 4 : débloquer badge "Première connexion" au premier chargement
-  const unlockAchievement = useAchievementsStore((s) => s.unlock);
   useEffect(() => {
     unlockAchievement('first_login');
   }, [unlockAchievement]);

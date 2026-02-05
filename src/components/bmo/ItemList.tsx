@@ -14,7 +14,8 @@
 import React from 'react';
 import { VirtualizedList } from '@/components/shared/VirtualizedList';
 import { Button } from '@/components/ui/button';
-import { Loader2, AlertTriangle } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
+import { AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/cn';
 
 export interface EmptyStateConfig {
@@ -45,6 +46,8 @@ export interface ItemListProps<T extends { id: string }> {
   virtualizeThreshold?: number;
   /** Hauteur estimée par item pour virtualisation (défaut 64) */
   itemHeight?: number;
+  /** Animation du skeleton : 'default' (pulse) ou 'slow' (pulse-slow, plus apaisant) */
+  skeletonAnimation?: 'default' | 'slow';
   /** Callback pour menu contextuel (clic droit ou bouton …) */
   onContextMenuRequest?: (item: T, event: { clientX: number; clientY: number }) => void;
   /** Callback retry en cas d'erreur */
@@ -63,23 +66,38 @@ export function ItemList<T extends { id: string }>({
   emptyState,
   virtualizeThreshold = 30,
   itemHeight = 64,
+  skeletonAnimation = 'default',
   onRetry,
   className,
 }: ItemListProps<T>) {
   const useVirtualization = items.length > virtualizeThreshold;
+  const skeletonAnim = skeletonAnimation === 'slow' ? 'pulse-slow' : 'pulse';
 
   if (isLoading) {
     return (
       <div
         className={cn(
-          'flex items-center justify-center h-full bg-slate-50 dark:bg-slate-900/50',
+          'flex flex-col h-full w-full min-w-0 px-4 py-2 space-y-2 bg-slate-50 dark:bg-slate-900/50',
           className
         )}
+        role="status"
+        aria-label="Chargement de la liste"
       >
-        <div className="text-center space-y-2">
-          <Loader2 className="w-8 h-8 text-sky-600 dark:text-sky-400 animate-spin mx-auto" />
-          <p className="text-sm text-slate-500 dark:text-slate-400">Chargement...</p>
-        </div>
+        {[1, 2, 3, 4, 5, 6].map((i) => (
+          <div key={i} className="flex items-center gap-3 py-2.5 border-b border-slate-100 dark:border-slate-800/40">
+            <Skeleton animation={skeletonAnim as 'pulse' | 'pulse-slow'} className="h-4 w-4 shrink-0 rounded-sm" />
+            <Skeleton animation={skeletonAnim as 'pulse' | 'pulse-slow'} className="h-4 w-4 shrink-0 rounded-sm" />
+            <div className="flex-1 min-w-0 space-y-1.5">
+              <div className="flex items-center gap-2">
+                <Skeleton animation={skeletonAnim as 'pulse' | 'pulse-slow'} className="h-5 w-16" />
+                <Skeleton animation={skeletonAnim as 'pulse' | 'pulse-slow'} className="h-4 flex-1 max-w-[60%]" />
+                <Skeleton animation={skeletonAnim as 'pulse' | 'pulse-slow'} className="h-5 w-14" />
+                <Skeleton animation={skeletonAnim as 'pulse' | 'pulse-slow'} className="h-4 w-20" />
+              </div>
+              <Skeleton animation={skeletonAnim as 'pulse' | 'pulse-slow'} className="h-3 w-3/4" />
+            </div>
+          </div>
+        ))}
       </div>
     );
   }

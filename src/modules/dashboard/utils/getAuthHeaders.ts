@@ -6,12 +6,13 @@
 import { useMemo } from 'react';
 import type { User } from '@/lib/types/index';
 
-export interface AuthHeaders {
+/** Headers d'auth compatibles avec fetch (Record pour index signature) */
+export type AuthHeaders = Record<string, string> & {
   'x-tenant-id': string;
   'x-user-id': string;
   'x-roles'?: string;
   'x-scopes'?: string;
-}
+};
 
 /**
  * Récupère les headers d'authentification depuis un utilisateur
@@ -27,12 +28,12 @@ export function getAuthHeaders(
   const headers: AuthHeaders = {
     'x-tenant-id': tenantId || user?.bureauId || 'default',
     'x-user-id': user?.id || 'anonymous',
-  };
+  } as AuthHeaders;
 
   // Ajouter les rôles si disponibles
   if (user?.role) {
-    headers['x-roles'] = Array.isArray(user.role) 
-      ? user.role.join(',') 
+    (headers as Record<string, string>)['x-roles'] = Array.isArray(user.role)
+      ? user.role.join(',')
       : user.role;
   }
 

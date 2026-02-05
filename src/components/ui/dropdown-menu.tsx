@@ -96,6 +96,15 @@ interface DropdownMenuContentProps {
   children: React.ReactNode;
 }
 
+const FOCUSABLE_MENU_SELECTOR =
+  '[role="menuitem"]:not([disabled]), button:not([disabled]), [role="menulistitem"]:not([disabled])';
+
+function getMenuFocusable(container: HTMLElement): HTMLElement[] {
+  return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_MENU_SELECTOR)).filter(
+    (el) => el.offsetParent !== null && !el.hasAttribute('aria-hidden')
+  );
+}
+
 function DropdownMenuContent({
   align = 'end',
   sideOffset,
@@ -105,7 +114,7 @@ function DropdownMenuContent({
   const { open, setOpen, onOpenChange } = useDropdownContext();
   const ref = React.useRef<HTMLDivElement>(null);
 
-  // Close on click outside
+  // Close on click outside + Escape
   React.useEffect(() => {
     if (!open) return;
 
@@ -130,6 +139,36 @@ function DropdownMenuContent({
     };
   }, [open, setOpen]);
 
+  // Focus trap : focus premier élément à l'ouverture
+  React.useEffect(() => {
+    if (!open || !ref.current) return;
+    const focusable = getMenuFocusable(ref.current);
+    const first = focusable[0];
+    if (first) {
+      requestAnimationFrame(() => (first as HTMLElement).focus());
+    }
+  }, [open]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== 'Tab' || !ref.current) return;
+    const focusable = getMenuFocusable(ref.current);
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    const current = document.activeElement as HTMLElement;
+    if (e.shiftKey) {
+      if (current === first) {
+        e.preventDefault();
+        last.focus();
+      }
+    } else {
+      if (current === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  };
+
   if (!open) return null;
 
   const alignClasses = {
@@ -152,6 +191,7 @@ function DropdownMenuContent({
       )}
       role="menu"
       aria-orientation="vertical"
+      onKeyDown={handleKeyDown}
     >
       {children}
     </div>

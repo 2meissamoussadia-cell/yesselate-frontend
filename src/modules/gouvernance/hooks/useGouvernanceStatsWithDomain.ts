@@ -120,17 +120,12 @@ export function useGouvernanceStatsWithDomain() {
     }
   };
 
+  const { stats: _domainStatsProp, ...domainRest } = domainService;
   return {
     // Stats API (pour compatibilité)
     stats: apiStats,
-    
-    // Stats adaptées Domain
     domainStats,
-    
-    // Services domain avec calculs avancés
-    ...domainService,
-    
-    // États
+    ...domainRest,
     isLoading,
     error,
     refetch,

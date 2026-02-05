@@ -120,7 +120,7 @@ export function isValidRoute(
 
     // Si pas de sub, la route est valide (main seul) - mais vérifier qu'il y a au moins un sub disponible
     if (!sub) {
-      const hasSubs = navConfig[main]?.sub && Object.keys(navConfig[main].sub).length > 0;
+      const hasSubs = !!(navConfig[main]?.sub && Object.keys(navConfig[main].sub).length > 0);
       routeValidationCache.set(cacheKey, hasSubs);
       return hasSubs;
     }
@@ -133,7 +133,7 @@ export function isValidRoute(
 
     // Si pas de leaf, la route est valide (main + sub) - mais vérifier qu'il y a au moins un leaf disponible
     if (!leaf) {
-      const hasLeaves = navConfig[main]?.sub?.[sub]?.leaf && Object.keys(navConfig[main].sub[sub].leaf || {}).length > 0;
+      const hasLeaves = !!(navConfig[main]?.sub?.[sub]?.leaf && Object.keys(navConfig[main].sub[sub].leaf || {}).length > 0);
       routeValidationCache.set(cacheKey, hasLeaves);
       return hasLeaves;
     }
@@ -421,8 +421,9 @@ export function getFallbackComponent(main: string): string | null {
   }
 
   // Stratégie 4: main -> premier sub -> premier leaf disponible
+  type SubConfig = { leaf?: Record<string, { component?: string }> };
   for (const sub of subs) {
-    const subConfig = mainConfig.sub[sub];
+    const subConfig = mainConfig.sub[sub] as SubConfig | undefined;
     if (subConfig?.leaf) {
       const firstLeaf = Object.keys(subConfig.leaf)[0];
       if (firstLeaf && subConfig.leaf[firstLeaf]?.component) {

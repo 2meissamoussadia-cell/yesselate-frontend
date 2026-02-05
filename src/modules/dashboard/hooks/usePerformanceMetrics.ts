@@ -133,7 +133,7 @@ export function usePerformanceMetrics({
     if (process.env.NODE_ENV === 'development') {
       log.performance('Load time', loadTime);
       if (Object.keys(webVitals).length > 0) {
-        log.debug('Web Vitals', webVitals);
+        log.debug('Web Vitals', webVitals as unknown as Record<string, unknown>);
       }
     }
   };

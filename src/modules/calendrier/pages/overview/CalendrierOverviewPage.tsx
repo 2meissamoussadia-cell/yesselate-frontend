@@ -40,21 +40,20 @@ export function CalendrierOverviewPage() {
     error 
   } = useCalendrierDataWithDomain(filters);
 
-  // Utiliser les données domain si disponibles, sinon fallback sur API
+  type DataWithExtras = typeof data & { chantiers?: unknown[]; stats?: Record<string, unknown> };
+  const dataExt = data as DataWithExtras | null | undefined;
   const displayData = domainData ? {
     jalons: domainData.jalons,
     evenements: domainData.evenements,
     absences: domainData.absences,
-    chantiers: data?.chantiers || [],
-  } : data;
+    chantiers: dataExt?.chantiers ?? [],
+  } : (dataExt ?? undefined);
 
   // Mettre à jour les stats dans le store
   React.useEffect(() => {
-    if (domainStats || data?.stats) {
+    if (domainStats || dataExt?.stats) {
       const { setStats } = useCalendrierFiltersStore.getState();
-      // Utiliser domainStats si disponible, sinon fallback sur API stats
       if (domainStats) {
-        // Adapter domainStats vers format store si nécessaire
         setStats({
           jalons_at_risk_count: domainStats.jalons_sla_risque || 0,
           jalons_retard_count: domainStats.jalons_retard || 0,
@@ -62,11 +61,11 @@ export function CalendrierOverviewPage() {
           retards_detectes_count: domainStats.jalons_retard || 0,
           sur_allocation_ressources_count: domainStats.sur_allocations || 0,
         });
-      } else if (data?.stats) {
-        setStats(data.stats);
+      } else if (dataExt?.stats) {
+        setStats(dataExt.stats);
       }
     }
-  }, [domainStats, data?.stats]);
+  }, [domainStats, dataExt?.stats]);
 
   const renderMainView = () => {
     if (loading) {

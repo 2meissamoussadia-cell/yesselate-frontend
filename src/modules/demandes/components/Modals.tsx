@@ -64,15 +64,15 @@ export function DemandesModals() {
     }
   };
 
-  const handleValidate = (id: string, comment?: string) => {
+  const handleValidate = async (id: string, comment?: string) => {
     validateDemande({ id, comment });
   };
 
-  const handleReject = (id: string, reason: string) => {
+  const handleReject = async (id: string, reason: string) => {
     rejectDemande({ id, reason });
   };
 
-  const handleRequestComplement = (id: string, message: string) => {
+  const handleRequestComplement = async (id: string, message: string) => {
     requestComplement({ id, message });
   };
 

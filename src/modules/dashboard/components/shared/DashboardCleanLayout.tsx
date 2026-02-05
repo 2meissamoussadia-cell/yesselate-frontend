@@ -8,6 +8,7 @@
 import React, { useState, useCallback } from 'react';
 import { cn } from '@/lib/cn';
 import { LayoutDashboard, FolderKanban, Users, Wallet, Bell, Settings, Search } from 'lucide-react';
+import { LastUpdateDisplay } from './LastUpdateDisplay';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 
 const SIDEBAR_ITEMS = [

@@ -73,17 +73,15 @@ export default function LineChartImpl({ data, title, className }: LineChartImplP
           <XAxis 
             dataKey="date" 
             tickFormatter={(v) => fmt.date(v, { month: 'short', day: '2-digit' })}
-            stroke={chartUI.axis.stroke}
             {...chartStyles.axis}
           />
           <YAxis 
-            tickFormatter={(v) => fmt.number(v)}
-            stroke={chartUI.axis.stroke}
+            tickFormatter={(v: number | undefined) => fmt.number(v ?? 0)}
             {...chartStyles.axis}
           />
           <Tooltip 
             {...chartStyles.tooltip}
-            formatter={(value: number) => fmt.number(value)}
+            formatter={(value: number | undefined) => fmt.number(value ?? 0)}
             labelFormatter={(label) => {
               if (typeof label === 'string') {
                 const date = new Date(label);

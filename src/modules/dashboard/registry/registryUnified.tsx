@@ -36,8 +36,8 @@ function mergeRegistries(): DashboardRegistry {
       if (incoming.render && typeof incoming.render === 'function') {
         // Vérifier si c'est un composant React (a une propriété displayName ou $$typeof)
         const isReactComponent = 
-          incoming.render.displayName || 
-          (incoming.render as any).$$typeof === Symbol.for('react.element');
+          (incoming.render as { displayName?: string }).displayName != null || 
+          (incoming.render as { $$typeof?: symbol }).$$typeof === Symbol.for('react.element');
         
         if (isReactComponent || !existing.render) {
           logger.debug(`Merging registry entry: ${key}`, { 

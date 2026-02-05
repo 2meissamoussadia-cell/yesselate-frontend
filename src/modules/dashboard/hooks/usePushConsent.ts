@@ -66,7 +66,7 @@ export function usePushConsent(): UsePushConsentResult {
       const reg = await navigator.serviceWorker.ready;
       const sub = await reg.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(publicKey),
+        applicationServerKey: urlBase64ToUint8Array(publicKey) as BufferSource,
       });
 
       const resSub = await fetch('/api/push/subscribe', {

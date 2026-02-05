@@ -139,7 +139,7 @@ export const ActionsInboxPersonnaliseesPage = memo(function ActionsInboxPersonna
       key: 'type',
       label: 'Type',
       sortable: true,
-      render: (value: string, row) => {
+      render: (value: string, row: Record<string, unknown>) => {
         const Icon = typeIcons[value as keyof typeof typeIcons] || FileText;
         return (
           <div className="flex items-center gap-2">
@@ -153,10 +153,10 @@ export const ActionsInboxPersonnaliseesPage = memo(function ActionsInboxPersonna
       key: 'title',
       label: 'Titre',
       sortable: true,
-      render: (value, row) => (
+      render: (value: unknown, row: Record<string, unknown>) => (
         <div>
-          <div className="font-medium text-slate-200">{value}</div>
-          <div className="text-xs text-slate-400 mt-0.5">{row.description}</div>
+          <div className="font-medium text-slate-200">{String(value)}</div>
+          <div className="text-xs text-slate-400 mt-0.5">{String(row.description ?? '')}</div>
         </div>
       ),
     },
@@ -164,8 +164,8 @@ export const ActionsInboxPersonnaliseesPage = memo(function ActionsInboxPersonna
       key: 'bureau',
       label: 'Bureau',
       sortable: true,
-      render: (value) => (
-        <span className="text-slate-300">{value}</span>
+      render: (value: unknown) => (
+        <span className="text-slate-300">{String(value)}</span>
       ),
     },
     {

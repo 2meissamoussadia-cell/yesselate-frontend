@@ -22,6 +22,7 @@ import {
 import { cn } from '@/lib/cn';
 import { KeyboardShortcut } from '@/components/ui/keyboard-shortcut';
 import { searchWithScoring, highlightMatch } from '@/application/utils/searchUtils';
+import { sanitizeHighlightHtml } from '@/lib/utils/sanitize';
 import { useDebounce } from '@/application/hooks/useDebounce';
 import { FadeIn } from '@/presentation/components/Animations';
 
@@ -578,9 +579,11 @@ export function AnalyticsCommandPalette() {
                             <span 
                               className="font-medium text-sm truncate"
                               dangerouslySetInnerHTML={{ 
-                                __html: debouncedSearch 
-                                  ? highlightMatch(cmd.label, debouncedSearch)
-                                  : cmd.label
+                                __html: sanitizeHighlightHtml(
+                                  debouncedSearch 
+                                    ? highlightMatch(cmd.label, debouncedSearch)
+                                    : cmd.label
+                                )
                               }}
                             />
                             {cmd.badge && (

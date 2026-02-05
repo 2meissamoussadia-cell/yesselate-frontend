@@ -25,7 +25,7 @@ import { exportToCSV, exportToJSON } from '../../utils/exportUtils';
 import type { PerformanceDemandesData } from '../../types/dashboardDataTypes';
 import { cn } from '@/lib/cn';
 import { FilterBar } from '@/components/erp';
-import type { ErpFilters } from '@/components/erp';
+import type { ErpFilters, ErpFilterValue } from '@/components/erp';
 
 const STATUT_TO_API: Record<string, string> = {
   '': '',
@@ -39,7 +39,7 @@ export const PerformanceDemandesPage = memo(function PerformanceDemandesPage() {
   const [filters, setFilters] = useState<ErpFilters>({ statut: '', priorite: '' });
 
   const onFilterChange = useCallback((key: string, value: unknown) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
+    setFilters((prev) => ({ ...prev, [key]: value as ErpFilterValue }));
   }, []);
   
   // ✅ Charger les données depuis l'API

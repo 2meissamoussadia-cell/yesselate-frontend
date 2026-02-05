@@ -11,11 +11,15 @@ import {
   Flag,
   Circle,
   Building2,
+  Wrench,
+  Shield,
+  Star,
+  Scale,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow, format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { cn } from '@/lib/cn';
 import {
@@ -36,6 +40,8 @@ export interface AlertListRowProps {
   checked?: boolean;
   /** Clic sur la case (stopPropagation pour ne pas déclencher le clic ligne) */
   onCheckboxChange?: (checked: boolean) => void;
+  /** Densité compacte (moins de padding) */
+  compact?: boolean;
 }
 
 const niveauConfig: Record<
@@ -61,21 +67,55 @@ const niveauConfig: Record<
     icon: Circle,
   },
   faible: {
-    color: 'bg-gray-50 dark:bg-gray-900/30 border-gray-200 text-gray-700 dark:text-gray-300',
-    badge: 'bg-gray-600 text-white',
-    dot: 'bg-gray-600',
+    color: 'bg-slate-100 dark:bg-slate-800/50 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200',
+    badge: 'bg-slate-600 text-white dark:bg-slate-500 dark:text-slate-100',
+    dot: 'bg-slate-500',
     icon: Circle,
   },
 };
 
-const categorieConfig: Record<string, { icon: string; color: string }> = {
-  technique: { icon: '🔧', color: 'text-blue-600 bg-blue-50 dark:bg-blue-950/50' },
-  budget: { icon: '💰', color: 'text-green-600 bg-green-50 dark:bg-green-950/50' },
-  financier: { icon: '💰', color: 'text-green-600 bg-green-50 dark:bg-green-950/50' },
-  planning: { icon: '📅', color: 'text-orange-600 bg-orange-50 dark:bg-orange-950/50' },
-  securite: { icon: '🛡️', color: 'text-red-600 bg-red-50 dark:bg-red-950/50' },
-  qualite: { icon: '⭐', color: 'text-purple-600 bg-purple-50 dark:bg-purple-950/50' },
-  juridique: { icon: '⚖️', color: 'text-pink-600 bg-pink-50 dark:bg-pink-950/50' },
+/** Couleurs catégories : contraste WCAG AA (4.5:1) — tons plus soutenus en dark */
+interface CategorieIconProps {
+  className?: string;
+  'aria-hidden'?: boolean;
+}
+type CategorieIcon = React.ComponentType<CategorieIconProps>;
+const categorieConfig: Record<string, { Icon: CategorieIcon; color: string; label: string }> = {
+  technique: {
+    Icon: Wrench,
+    color: 'text-blue-700 bg-blue-100 dark:text-sky-300 dark:bg-blue-950/60',
+    label: 'Technique',
+  },
+  budget: {
+    Icon: DollarSign,
+    color: 'text-green-700 bg-green-100 dark:text-green-300 dark:bg-green-950/50',
+    label: 'Budget',
+  },
+  financier: {
+    Icon: DollarSign,
+    color: 'text-green-700 bg-green-100 dark:text-green-300 dark:bg-green-950/50',
+    label: 'Financier',
+  },
+  planning: {
+    Icon: Calendar,
+    color: 'text-orange-700 bg-orange-100 dark:text-orange-300 dark:bg-orange-950/50',
+    label: 'Planning',
+  },
+  securite: {
+    Icon: Shield,
+    color: 'text-red-700 bg-red-100 dark:text-red-300 dark:bg-red-950/50',
+    label: 'Sécurité',
+  },
+  qualite: {
+    Icon: Star,
+    color: 'text-purple-700 bg-purple-100 dark:text-purple-300 dark:bg-purple-950/50',
+    label: 'Qualité',
+  },
+  juridique: {
+    Icon: Scale,
+    color: 'text-pink-700 bg-pink-100 dark:text-pink-300 dark:bg-pink-950/50',
+    label: 'Juridique',
+  },
 };
 
 /**
@@ -96,9 +136,11 @@ export const AlertListRow = React.memo(function AlertListRow({
   showCheckbox = false,
   checked = false,
   onCheckboxChange,
+  compact = false,
 }: AlertListRowProps) {
   const config = niveauConfig[alerte.niveau];
   const catConfig = categorieConfig[alerte.categorie] ?? categorieConfig.technique;
+  const CategoryIcon = catConfig.Icon;
 
   const dateCreation = alerte.dateCreation instanceof Date
     ? alerte.dateCreation
@@ -156,29 +198,48 @@ export const AlertListRow = React.memo(function AlertListRow({
         className={cn(
           'group relative w-full min-w-0 overflow-hidden shrink-0',
           showCheckbox ? 'grid grid-cols-[auto_auto_minmax(0,1fr)] gap-x-3' : 'grid grid-cols-[auto_minmax(0,1fr)] gap-x-3',
-          'px-4 py-2.5 border-b border-slate-100 dark:border-slate-800/40',
+          compact ? 'px-3 py-1.5' : 'px-4 py-2.5',
+          'border-b border-slate-100 dark:border-slate-800/40',
           'cursor-pointer transition-all duration-150',
           'hover:bg-slate-50 dark:hover:bg-slate-800/30',
           'before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[3px]',
           'before:bg-transparent before:transition-colors before:duration-150',
           'hover:before:bg-sky-400',
           selected && 'bg-sky-50 dark:bg-sky-900/20 before:bg-sky-500',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-inset',
+          alerte.niveau === 'critique' && 'before:w-[6px] before:bg-red-600 dark:before:bg-red-500 before:animate-pulse',
+          alerte.niveau === 'critique' && !selected && 'bg-red-50/80 dark:bg-red-950/30',
+          (alerte.statut === 'traite' || alerte.statut === 'cloture') && !selected && 'bg-slate-50/50 dark:bg-slate-800/30',
+          alerte.niveau === 'normal' && !selected && !(alerte.statut === 'traite' || alerte.statut === 'cloture') && 'before:bg-blue-400/50',
+          alerte.niveau === 'faible' && !selected && 'before:bg-slate-400/50',
+          isUnread && !selected && 'bg-slate-50/80 dark:bg-slate-800/40',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-900 focus-visible:ring-inset',
           isUnread && 'font-medium'
         )}
       >
-        {/* Colonne checkbox — 16px strict (même taille que icônes barre Supprimer / Marquer important) */}
+        {/* Colonne checkbox — zone tactile 44×44px min (WCAG / tactile) */}
         {showCheckbox && (
           <div
-            className="flex items-center justify-center shrink-0 w-[16px] min-w-[16px] h-[16px]"
-            onClick={(e) => e.stopPropagation()}
-            onKeyDown={(e) => e.stopPropagation()}
-            role="presentation"
+            className="flex items-center justify-center shrink-0 min-w-[44px] min-h-[44px] w-[44px] h-[44px] -m-1 cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              onCheckboxChange?.(!checked);
+            }}
+            onKeyDown={(e) => {
+              e.stopPropagation();
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onCheckboxChange?.(!checked);
+              }
+            }}
+            role="button"
+            tabIndex={0}
+            aria-label={checked ? `Désélectionner ${alerte.numero}` : `Sélectionner ${alerte.numero}`}
           >
             <Checkbox
               checked={checked}
               onCheckedChange={(value) => onCheckboxChange?.(!!value)}
-              aria-label={`Sélectionner l'alerte ${alerte.numero}`}
+              aria-hidden
+              className="pointer-events-none"
             />
           </div>
         )}
@@ -192,40 +253,66 @@ export const AlertListRow = React.memo(function AlertListRow({
 
         {/* Colonne contenu — grille stricte, largeur contrainte ; pr-24 = zone réservée pour les actions rapides (encadrement droit) */}
         <div className="min-w-0 overflow-hidden pr-24 grid grid-cols-1 gap-y-1.5">
-          {/* Ligne 1 : ID | Titre | Catégorie | Date — texte sm pour titre, xs pour métadonnées */}
-          <div className="grid grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center gap-x-1.5 min-w-0">
-            <Badge variant="secondary" className="text-xs font-semibold px-1.5 py-0 shrink-0 justify-self-start">
-              {alerte.numero}
-            </Badge>
+          {/* Ligne 1 : Titre (2 lignes max + tooltip) | Code | Catégorie | Date */}
+          <div className="grid grid-cols-[minmax(0,1fr)_auto_auto_auto] items-start gap-x-2 min-w-0">
             <Tooltip>
               <TooltipTrigger asChild>
                 <span
-                  className="font-semibold text-sm truncate min-w-0 cursor-default text-left block"
+                  className="font-semibold text-sm min-w-0 cursor-default text-left block text-slate-900 dark:text-slate-100 line-clamp-2"
                   title={alerte.titre}
                 >
                   {alerte.titre}
                 </span>
               </TooltipTrigger>
-              <TooltipContent side="top" className="max-w-xs text-sm">
-                <p>{alerte.titre}</p>
+              <TooltipContent side="top" className="max-w-sm text-sm p-3">
+                <p className="whitespace-pre-wrap break-words">{alerte.titre}</p>
               </TooltipContent>
             </Tooltip>
+            <span className="text-xs text-slate-500 dark:text-slate-400 shrink-0 tabular-nums pt-0.5" title={alerte.numero}>
+              {alerte.numero}
+            </span>
             <span
+              role="img"
+              aria-label={catConfig.label}
               className={cn(
-                'text-xs font-medium px-1.5 py-0.5 rounded shrink-0 truncate max-w-[72px] justify-self-end',
+                'text-xs font-medium px-1.5 py-0.5 rounded shrink-0 truncate max-w-[72px] justify-self-end inline-flex items-center gap-1',
                 catConfig.color
               )}
-              title={alerte.categorie}
+              title={catConfig.label}
             >
-              {catConfig.icon} {alerte.categorie}
+              <CategoryIcon className="h-3.5 w-3.5 shrink-0" aria-hidden />
+              <span>{alerte.categorie}</span>
             </span>
-            <span
-              className="text-xs text-slate-500 dark:text-slate-400 shrink-0 truncate max-w-[90px] justify-self-end"
-              title={dateCreation.toLocaleString()}
-            >
-              {formatDistanceToNow(dateCreation, { addSuffix: true, locale: fr })}
-            </span>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span
+                  className="text-xs text-slate-600 dark:text-slate-300 shrink-0 truncate max-w-[90px] justify-self-end tabular-nums"
+                  title={dateCreation.toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' })}
+                >
+                  {format(dateCreation, "dd/MM à HH'h'mm", { locale: fr })}
+                </span>
+              </TooltipTrigger>
+              <TooltipContent side="top" className="text-xs">
+                {formatDistanceToNow(dateCreation, { addSuffix: true, locale: fr })} — {dateCreation.toLocaleString('fr-FR')}
+              </TooltipContent>
+            </Tooltip>
           </div>
+          {/* Criticité XXL pour niveau critique — bien visible */}
+          {alerte.niveau === 'critique' && (
+            <div className="flex items-center gap-1.5 min-w-0">
+              <Badge className="text-xs font-bold px-2 py-0.5 bg-red-600 text-white border-0 shrink-0 animate-pulse">
+                CRITIQUE
+              </Badge>
+            </div>
+          )}
+          {/* Action requise — contraste WCAG AA */}
+          {isUnread && alerte.niveau !== 'critique' && (
+            <div className="flex items-center gap-1.5 min-w-0">
+              <Badge variant="outline" className="text-[11px] px-1.5 py-0.5 bg-amber-100 text-amber-900 dark:bg-amber-900/70 dark:text-amber-100 border-amber-300 dark:border-amber-700 shrink-0 font-medium">
+                Action requise
+              </Badge>
+            </div>
+          )}
 
           {/* Ligne 2 : texte xs, icônes 3.5 */}
           {showLine2 && (
@@ -317,10 +404,11 @@ export const AlertListRow = React.memo(function AlertListRow({
           className={cn(
             'absolute right-2 top-1/2 -translate-y-1/2 z-10',
             'grid grid-cols-3 gap-0.5 w-[4.5rem] shrink-0 overflow-hidden',
-            'opacity-0 group-hover:opacity-100 group-focus-within:opacity-100',
             'transition-opacity duration-150',
             'bg-white dark:bg-slate-900 rounded-md shadow-md',
-            'border border-slate-200 dark:border-slate-700 p-0.5'
+            'border border-slate-200 dark:border-slate-700 p-0.5',
+            'opacity-0 group-hover:opacity-100 group-focus-within:opacity-100',
+            selected && 'opacity-100'
           )}
           role="group"
           aria-label="Actions rapides"
@@ -330,7 +418,7 @@ export const AlertListRow = React.memo(function AlertListRow({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7 shrink-0 text-slate-600 dark:text-slate-300 hover:text-sky-600 hover:bg-sky-50 dark:hover:bg-sky-900/30 transition-colors"
+                className="h-8 w-8 shrink-0 text-slate-600 dark:text-slate-300 hover:text-sky-600 hover:bg-sky-50 dark:hover:bg-sky-900/30 transition-colors focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-1"
                 onClick={(e) => e.stopPropagation()}
                 aria-label="Marquer comme traité"
               >
@@ -358,7 +446,7 @@ export const AlertListRow = React.memo(function AlertListRow({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7 shrink-0 text-slate-600 dark:text-slate-300 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
+                className="h-8 w-8 shrink-0 text-slate-600 dark:text-slate-300 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-1"
                 onClick={(e) => e.stopPropagation()}
                 aria-label="Supprimer"
               >

@@ -9,9 +9,11 @@ import { TooltipProps } from 'recharts';
 import { cn } from '@/lib/cn';
 import { formatNumber, formatCurrency, formatPercent, formatDate } from '@/application/utils';
 
-interface CustomTooltipProps extends TooltipProps<any, any> {
-  formatter?: (value: any) => string;
-  labelFormatter?: (label: any) => string;
+interface CustomTooltipProps extends TooltipProps<unknown, string> {
+  payload?: Array<{ name?: string; value?: unknown; color?: string; [k: string]: unknown }>;
+  label?: string | number;
+  formatter?: (value: unknown) => string;
+  labelFormatter?: (label: unknown) => string;
   showLabel?: boolean;
 }
 
@@ -41,7 +43,7 @@ export function ChartTooltip({
         </p>
       )}
       <div className="space-y-1.5">
-        {payload.map((entry, index) => {
+        {payload.map((entry: { name?: string; value?: unknown; color?: string; [k: string]: unknown }, index: number) => {
           const value = formatter
             ? formatter(entry.value)
             : typeof entry.value === 'number'

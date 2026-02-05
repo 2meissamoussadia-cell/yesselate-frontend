@@ -10,6 +10,7 @@
 
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { cn } from '@/lib/cn';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   DashboardPageLayout,
   DashboardSection,
@@ -415,8 +416,8 @@ export function ValidationPaiementsPage({ data: apiData }: ValidationPaiementsPa
                     <Td className="font-mono text-slate-300">{p.id}</Td>
                     <Td>{p.chantier}</Td>
                     <Td>{p.jalon}</Td>
-                    <Td className="truncate max-w-[160px]" title={p.beneficiaire}>
-                      {p.beneficiaire}
+                    <Td className="truncate max-w-[160px]">
+                      <span title={p.beneficiaire}>{p.beneficiaire}</span>
                     </Td>
                     <Td className="tabular-nums text-slate-200">{formatCFA(p.montant)}</Td>
                     <Td>{p.mode}</Td>

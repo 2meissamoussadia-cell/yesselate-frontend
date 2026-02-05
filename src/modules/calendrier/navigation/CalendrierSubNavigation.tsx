@@ -109,7 +109,7 @@ export function CalendrierSubNavigation({
                 {subCat.label}
                 {badge !== undefined && (
                   <Badge
-                    variant={badgeType}
+                    variant={badgeType === 'critical' ? 'destructive' : badgeType}
                     className={cn(
                       'ml-2 text-[10px] px-1.5 py-0',
                       badgeType === 'critical' && 'bg-red-500/20 text-red-400 border-red-500/30',

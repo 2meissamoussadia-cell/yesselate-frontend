@@ -10,7 +10,7 @@ import { useEvenements } from '../../hooks/useCalendrierData';
 import { CalendarClock, Users } from 'lucide-react';
 
 export function ReunionsProjetsPage() {
-  const { evenements, loading, error } = useEvenements({ type: 'REUNION' });
+  const { evenements, loading, error } = useEvenements({ type: 'REUNION_PROJET' });
 
   if (loading) {
     return (

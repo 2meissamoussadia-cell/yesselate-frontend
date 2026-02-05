@@ -33,6 +33,7 @@ import { KPIDrillDownModal } from './KPIDrillDownModal';
 import { DashboardNotifications, useDashboardNotifications } from './DashboardNotifications';
 import { cn } from '@/lib/cn';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface DashboardAdvancedViewProps {
   data: {
@@ -283,7 +284,7 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
                 <label className="text-xs text-slate-400 mb-1 block">Période</label>
-                <Select value={filters.period} onValueChange={(v) => setFilters(prev => ({ ...prev, period: v }))}>
+                <Select value={filters.period} onValueChange={(v: string) => setFilters(prev => ({ ...prev, period: v }))}>
                   <SelectTrigger className="w-full px-3 py-2 bg-slate-900/50 border-slate-700/50 rounded-xl text-sm text-slate-200 focus:ring-sky-500/50" aria-label="Période">
                     <SelectValue placeholder="Période" />
                   </SelectTrigger>
@@ -298,7 +299,7 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
 
               <div>
                 <label className="text-xs text-slate-400 mb-1 block">Catégorie</label>
-                <Select value={filters.category} onValueChange={(v) => setFilters(prev => ({ ...prev, category: v }))}>
+                <Select value={filters.category} onValueChange={(v: string) => setFilters(prev => ({ ...prev, category: v }))}>
                   <SelectTrigger className="w-full px-3 py-2 bg-slate-900/50 border-slate-700/50 rounded-xl text-sm text-slate-200 focus:ring-sky-500/50" aria-label="Catégorie">
                     <SelectValue placeholder="Catégorie" />
                   </SelectTrigger>
@@ -314,7 +315,7 @@ export function DashboardAdvancedView({ data }: DashboardAdvancedViewProps) {
 
               <div>
                 <label className="text-xs text-slate-400 mb-1 block">Statut</label>
-                <Select value={filters.statut} onValueChange={(v) => setFilters(prev => ({ ...prev, statut: v }))}>
+                <Select value={filters.statut} onValueChange={(v: string) => setFilters(prev => ({ ...prev, statut: v }))}>
                   <SelectTrigger className="w-full px-3 py-2 bg-slate-900/50 border-slate-700/50 rounded-xl text-sm text-slate-200 focus:ring-sky-500/50" aria-label="Statut">
                     <SelectValue placeholder="Statut" />
                   </SelectTrigger>

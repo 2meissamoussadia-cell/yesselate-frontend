@@ -104,18 +104,12 @@ export function useCalendrierDataWithDomain(filters?: Partial<CalendrierFilters>
     return adaptCalendrierOverview(apiOverview);
   }, [apiOverview]);
 
+  const { data: _svcData, overview: _svcOverview, ...restDomainService } = domainService;
   return {
-    // Données brutes API (pour compatibilité)
     data: apiOverview,
     overview: adaptedOverview,
-    
-    // Données adaptées Domain
     domainData,
-    
-    // Services domain avec calculs
-    ...domainService,
-    
-    // États
+    ...restDomainService,
     isLoading,
     error,
     refetch,

@@ -30,9 +30,9 @@ export function FilterBar({ open = false, onToggle }: FilterBarProps) {
   const { filtres, setFiltres, resetFiltres } = useValidationFilters();
 
   const hasActiveFilters =
-    filtres.types?.length > 0 ||
-    filtres.statuts?.length > 0 ||
-    filtres.services?.length > 0 ||
+    (filtres.types?.length ?? 0) > 0 ||
+    (filtres.statuts?.length ?? 0) > 0 ||
+    (filtres.services?.length ?? 0) > 0 ||
     filtres.recherche ||
     filtres.montantMin ||
     filtres.montantMax;

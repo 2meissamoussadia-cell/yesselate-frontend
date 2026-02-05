@@ -11,7 +11,7 @@ import { CalendarClock, Gavel } from 'lucide-react';
 
 export function ReunionsDecisionnellesPage() {
   // Les réunions décisionnelles sont des réunions liées à la gouvernance
-  const { evenements, loading, error } = useEvenements({ type: 'REUNION' });
+  const { evenements, loading, error } = useEvenements({ type: 'REUNION_DECISIONNELLE' });
 
   if (loading) {
     return (

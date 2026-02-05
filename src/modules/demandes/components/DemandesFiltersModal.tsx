@@ -21,7 +21,7 @@ interface DemandesFiltersModalProps {
 }
 
 export function DemandesFiltersModal({ isOpen, onClose }: DemandesFiltersModalProps) {
-  const { filters, setFilter, resetFilters } = useDemandesFilters();
+  const { filters, setFilters, resetFilters } = useDemandesFilters();
 
   const statusOptions: DemandeStatus[] = ['pending', 'urgent', 'validated', 'rejected', 'overdue'];
   const priorityOptions: DemandePriority[] = ['low', 'normal', 'high', 'critical'];
@@ -39,7 +39,7 @@ export function DemandesFiltersModal({ isOpen, onClose }: DemandesFiltersModalPr
     const newStatus = current.includes(status)
       ? current.filter(s => s !== status)
       : [...current, status];
-    setFilter('status', newStatus.length > 0 ? newStatus : undefined);
+    setFilters({ ...filters, status: newStatus.length > 0 ? newStatus : undefined });
   };
 
   const handlePriorityToggle = (priority: DemandePriority) => {
@@ -47,7 +47,7 @@ export function DemandesFiltersModal({ isOpen, onClose }: DemandesFiltersModalPr
     const newPriority = current.includes(priority)
       ? current.filter(p => p !== priority)
       : [...current, priority];
-    setFilter('priority', newPriority.length > 0 ? newPriority : undefined);
+    setFilters({ ...filters, priority: newPriority.length > 0 ? newPriority : undefined });
   };
 
   const handleServiceToggle = (service: DemandeService) => {
@@ -55,7 +55,7 @@ export function DemandesFiltersModal({ isOpen, onClose }: DemandesFiltersModalPr
     const newService = current.includes(service)
       ? current.filter(s => s !== service)
       : [...current, service];
-    setFilter('service', newService.length > 0 ? newService : undefined);
+    setFilters({ ...filters, service: newService.length > 0 ? newService : undefined });
   };
 
   return (
@@ -129,7 +129,7 @@ export function DemandesFiltersModal({ isOpen, onClose }: DemandesFiltersModalPr
             <Label className="text-xs font-medium text-slate-400 mb-2 block">Recherche</Label>
             <Input
               value={filters.search || ''}
-              onChange={(e) => setFilter('search', e.target.value || undefined)}
+              onChange={(e) => setFilters({ ...filters, search: e.target.value || undefined })}
               placeholder="Rechercher par titre, référence..."
               className="bg-slate-800/50 border-slate-700 text-slate-200"
             />

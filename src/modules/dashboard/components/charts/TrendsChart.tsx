@@ -62,7 +62,7 @@ export function TrendsChart({ trends }: { trends?: TrendData[] }) {
           />
           <Tooltip 
             {...chartStyles.tooltip}
-            formatter={(value: number) => fmt.number(value)}
+            formatter={(value: number | undefined) => fmt.number(value ?? 0)}
             labelFormatter={(label) => label}
           />
           <Legend {...chartStyles.legend} />

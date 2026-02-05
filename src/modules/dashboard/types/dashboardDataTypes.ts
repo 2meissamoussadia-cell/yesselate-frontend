@@ -6,6 +6,12 @@
  */
 
 import type { NavKey } from './dashboard';
+import type {
+  ReportingOverviewData,
+  ReportingTrendsMonthlyData,
+  ReportingByBureauData,
+  ReportingByChantierData,
+} from './dashboard.readmodels';
 
 // ============================================
 // TYPES DE BASE
@@ -1211,11 +1217,11 @@ export type DashboardViewData =
   | ValidationsGlobalData
   | KpisAchatsData
   | AlertsActivesData
-  | ReportingOverviewCombinedData
-  | ReportingOverviewMonthlyData[]
-  | ReportingDSOMonthlyData[]
-  | ReportingByBureauMonthlyData[]
-  | ReportingByChantierMonthlyData[]
+  | ReportingOverviewData
+  | ReportingOverviewData[]
+  | ReportingTrendsMonthlyData[]
+  | ReportingByBureauData[]
+  | ReportingByChantierData[]
   | AlertsActivesData
   | AlertsUrgentesData
   | ActionsInboxUrgentesData

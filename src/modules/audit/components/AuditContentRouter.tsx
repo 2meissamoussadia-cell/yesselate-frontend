@@ -17,6 +17,6 @@ interface AuditContentRouterProps {
 export function AuditContentRouter({ mainCategory, subCategory, subSubCategory }: AuditContentRouterProps) {
   // Utiliser l'ancien router pour l'instant, mais avec les nouvelles props
   // TODO: Adapter l'ancien router pour accepter les nouvelles props ou créer des pages spécifiques
-  return <OldAuditContentRouter category={mainCategory} subCategory={subCategory} />;
+  return <OldAuditContentRouter category={mainCategory} subCategory={subCategory ?? ''} />;
 }
 

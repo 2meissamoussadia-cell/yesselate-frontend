@@ -49,7 +49,7 @@ export function CategoryDistributionChart({ data }: { data?: CategoryDistributio
             cx="50%"
             cy="50%"
             labelLine={false}
-            label={({ name, percentage }) => `${name}: ${percentage}%`}
+            label={({ name, percent }) => `${name}: ${((percent ?? 0) * 100).toFixed(0)}%`}
             outerRadius={80}
             fill="#8884d8"
             dataKey="value"
@@ -63,14 +63,14 @@ export function CategoryDistributionChart({ data }: { data?: CategoryDistributio
           </Pie>
           <Tooltip
             {...chartStyles.tooltip}
-            formatter={(value: number, name: string, props: any) => [
-              `${fmt.number(value)} (${fmt.percent(props.payload.percentage / 100)})`,
-              name,
+            formatter={(value: number | undefined, name: string | undefined, props: unknown) => [
+              `${fmt.number(value ?? 0)} (${fmt.percent((props && typeof props === 'object' && 'payload' in props && props.payload && typeof props.payload === 'object' && 'percent' in props.payload ? Number((props.payload as { percent?: number }).percent) : 0))})`,
+              name ?? '',
             ]}
           />
           <Legend
             {...chartStyles.legend}
-            verticalAlign="right"
+            verticalAlign="middle"
             align="center"
           />
         </PieChart>

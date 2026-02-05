@@ -12,7 +12,7 @@ export function isMac(): boolean {
 
 /**
  * Format keyboard shortcut for display
- * Returns ⌘ on Mac, Ctrl on Windows/Linux
+ * Returns ⌘ on Mac, Ctrl+ on Windows/Linux (ex. ⌘S → Ctrl+S, ⌘⇧Z → Ctrl+Shift+Z)
  */
 export function formatKeyboardShortcut(shortcut: string): string {
   if (typeof window === 'undefined') return shortcut;
@@ -20,6 +20,10 @@ export function formatKeyboardShortcut(shortcut: string): string {
   if (isMacPlatform) {
     return shortcut;
   }
-  // Replace ⌘ with Ctrl on Windows/Linux
-  return shortcut.replace(/⌘/g, 'Ctrl');
+  // Replace ⌘ with Ctrl+ on Windows/Linux
+  let out = shortcut.replace(/⌘/g, 'Ctrl+');
+  // ⇧ = Shift
+  out = out.replace(/⇧/g, 'Shift+');
+  // Remove trailing + if any
+  return out.replace(/\+$/, '') || shortcut;
 }

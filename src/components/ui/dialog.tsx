@@ -22,8 +22,8 @@ const Dialog = ({ open, onOpenChange, children }: DialogProps) => {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50">
-      {/* Overlay */}
+    <div className="fixed inset-0 z-[100]">
+      {/* Overlay — au-dessus des tooltips (z-50) pour les masquer */}
       <div
         className="fixed inset-0 bg-black/80 backdrop-blur-sm"
         onClick={() => onOpenChange(false)}
@@ -107,6 +107,7 @@ const DialogContent = React.forwardRef<
       role="dialog"
       aria-modal="true"
       aria-describedby={undefined}
+      tabIndex={-1}
       className={cn(
         'fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%]',
         'w-full max-w-lg max-h-[90vh] overflow-auto',

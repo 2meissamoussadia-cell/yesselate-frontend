@@ -159,7 +159,7 @@ export function CalendrierSidebar3Levels({
                       <span className="flex-1 text-left">{node.label}</span>
                       {badge !== undefined && (
                         <Badge
-                          variant={badgeType}
+                          variant={badgeType === 'critical' ? 'destructive' : badgeType}
                           className={cn(
                             'text-[10px] px-1.5 py-0',
                             badgeType === 'critical' &&
@@ -203,7 +203,7 @@ export function CalendrierSidebar3Levels({
                           <span className="flex-1 text-left">{subNode.label}</span>
                           {subNode.badge !== undefined && (
                             <Badge
-                              variant={subNode.badgeType || 'default'}
+                              variant={subNode.badgeType === 'critical' ? 'destructive' : (subNode.badgeType || 'default')}
                               className="text-[10px] px-1.5 py-0"
                             >
                               {subNode.badge}

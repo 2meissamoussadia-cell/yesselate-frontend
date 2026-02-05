@@ -4,7 +4,7 @@
  */
 
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, type PersistStorage } from 'zustand/middleware';
 
 export interface RecentSearchEntry {
   /** Query tapée par l'utilisateur */
@@ -69,7 +69,7 @@ export const useSearchGlobalStore = create<SearchGlobalStore>()(
       name: 'search-global-recent',
       storage:
         typeof window !== 'undefined'
-          ? localStorage
+          ? (localStorage as unknown as PersistStorage<SearchGlobalStore>)
           : {
               getItem: () => null,
               setItem: () => {},

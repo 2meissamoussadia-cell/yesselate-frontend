@@ -147,7 +147,7 @@ export const dashboardRegistry: Record<string, ViewEntry<any>> = {
         import('../components/views/SummaryPointsPage').then(m => ({ default: m.SummaryPointsPage }))
       );
       return (
-        <React.Suspense fallback={<ViewLoadingFallback />}>
+        <React.Suspense fallback={<ContentLoadingSkeleton />}>
           <SummaryPointsPage data={data} />
         </React.Suspense>
       );

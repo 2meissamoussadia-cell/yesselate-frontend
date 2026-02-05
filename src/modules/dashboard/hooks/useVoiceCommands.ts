@@ -8,7 +8,6 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { useDashboardCommandCenterStore } from '@/lib/stores/dashboardCommandCenterStore';
 
-type SpeechRecognitionType = typeof SpeechRecognition | undefined;
 declare global {
   interface Window {
     SpeechRecognition?: new () => SpeechRecognition;
@@ -31,7 +30,7 @@ const KEYWORDS: Record<string, (store: ReturnType<typeof useDashboardCommandCent
 function getSpeechRecognition(): SpeechRecognition | null {
   if (typeof window === 'undefined') return null;
   const SR = window.SpeechRecognition ?? window.webkitSpeechRecognition;
-  return SR ? new SR() : null;
+  return SR ? new (SR as new () => SpeechRecognition)() : null;
 }
 
 export function useVoiceCommands(enabled: boolean) {

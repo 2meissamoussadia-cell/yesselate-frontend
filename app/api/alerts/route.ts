@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateMockAlerts } from '@/lib/data/alerts';
+import { sanitizeTextForComment } from '@/lib/utils/sanitize';
+
+// Cache des alertes mock pour la durée du process : même jeu de données entre requêtes,
+// afin que le tri (asc/desc) soit observable (même liste, ordre inversé).
+let cachedMockAlerts: ReturnType<typeof generateMockAlerts> | null = null;
 
 // Types
 interface AlertFilters {
@@ -42,8 +47,9 @@ export async function GET(request: NextRequest) {
     const page = parseInt(filters.page || '1');
     const limit = parseInt(filters.limit || '20');
 
-    // Générer ou récupérer les alertes mockées
-    let alerts = generateMockAlerts(100);
+    // Réutiliser le même jeu d'alertes mock pour que le tri asc/desc soit visible
+    if (!cachedMockAlerts) cachedMockAlerts = generateMockAlerts(100);
+    let alerts = [...cachedMockAlerts];
 
     // Appliquer les filtres
     if (filters.status) {
@@ -80,16 +86,16 @@ export async function GET(request: NextRequest) {
       alerts = alerts.filter(a => new Date(a.createdAt) <= new Date(filters.dateTo!));
     }
 
-    // Tri
+    // Tri (sortBy = createdAt par défaut, sortOrder = asc | desc)
+    const sortKey = filters.sortBy || 'createdAt';
     alerts.sort((a, b) => {
-      const aVal = a[filters.sortBy as keyof typeof a];
-      const bVal = b[filters.sortBy as keyof typeof b];
-      
-      if (filters.sortOrder === 'asc') {
-        return aVal > bVal ? 1 : -1;
-      } else {
-        return aVal < bVal ? 1 : -1;
-      }
+      const aVal = a[sortKey as keyof typeof a];
+      const bVal = b[sortKey as keyof typeof b];
+      if (aVal == null && bVal == null) return 0;
+      if (aVal == null) return 1;
+      if (bVal == null) return -1;
+      const cmp = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+      return filters.sortOrder === 'asc' ? cmp : -cmp;
     });
 
     // Pagination
@@ -130,12 +136,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Sanitization anti-XSS (défense en profondeur)
+    const title = sanitizeTextForComment(String(body.title)).slice(0, 200);
+    const description = sanitizeTextForComment(String(body.description ?? '')).slice(0, 2000);
+    if (!title) {
+      return NextResponse.json(
+        { error: 'Invalid title after sanitization' },
+        { status: 400 }
+      );
+    }
+
     // Créer la nouvelle alerte
     const newAlert = {
       id: `alert-${Date.now()}`,
       type: body.type,
-      title: body.title,
-      description: body.description || '',
+      title,
+      description,
       source: body.source || 'system',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),

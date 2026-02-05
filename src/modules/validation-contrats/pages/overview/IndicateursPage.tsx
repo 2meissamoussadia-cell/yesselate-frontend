@@ -83,7 +83,7 @@ export function IndicateursPage() {
             value={card.value}
             change={card.change}
             changeType={card.changeType}
-            color={card.color}
+            color={card.color as 'red' | 'yellow' | 'green' | 'blue' | 'purple' | undefined}
           />
         ))}
       </div>

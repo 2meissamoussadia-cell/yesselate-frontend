@@ -24,7 +24,7 @@ export function DashboardRegistryView() {
           Erreur: {error.message}
         </div>
         <div className="text-slate-400 text-xs mt-2">
-          Clé: {navKey.main}::{navKey.sub ?? ''}::{navKey.subSub ?? ''}
+          Clé: {navKey.main}::{navKey.sub ?? ''}::{navKey.leaf ?? ''}
         </div>
       </div>
     );
@@ -37,7 +37,7 @@ export function DashboardRegistryView() {
           Vue non trouvée dans le registry
         </div>
         <div className="text-slate-400 text-xs mt-2">
-          Clé: {navKey.main}::{navKey.sub ?? ''}::{navKey.subSub ?? ''}
+          Clé: {navKey.main}::{navKey.sub ?? ''}::{navKey.leaf ?? ''}
         </div>
       </div>
     );

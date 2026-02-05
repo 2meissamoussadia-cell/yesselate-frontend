@@ -21,7 +21,7 @@ interface DragDropContextValue {
   endDrag: () => void;
 }
 
-const DragDropContext = createContext<DragDropContextValue | undefined>(
+export const DragDropContext = createContext<DragDropContextValue | undefined>(
   undefined
 );
 

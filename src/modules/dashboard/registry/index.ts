@@ -8,12 +8,10 @@
 export { dashboardRegistry, navToKey } from './dashboardRegistry';
 export type { NavKey } from './dashboardRegistry';
 
-export type { OverviewSummaryDashboardData } from '../types/dashboard.readmodels';
 export type { ViewEntry, Loader, LoaderResult } from '../types/dashboard';
 export type {
   DataResult,
   LoaderFn,
-  TypedLoaderFn,
   DashboardRegistry,
 } from './dashboardRegistry';
 

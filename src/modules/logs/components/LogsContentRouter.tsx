@@ -17,6 +17,6 @@ interface LogsContentRouterProps {
 export function LogsContentRouter({ mainCategory, subCategory, subSubCategory }: LogsContentRouterProps) {
   // Utiliser l'ancien router pour l'instant, mais avec les nouvelles props
   // TODO: Adapter l'ancien router pour accepter les nouvelles props ou créer des pages spécifiques
-  return <OldLogsContentRouter category={mainCategory} subCategory={subCategory} />;
+  return <OldLogsContentRouter category={mainCategory} subCategory={subCategory ?? ''} />;
 }
 

@@ -38,7 +38,14 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { formatDistanceToNow, format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { cn } from '@/lib/cn';
+import { sanitizeTextForComment } from '@/lib/utils/sanitize';
 import type { AlerteBTP } from '@/lib/types/alerts-btp.types';
+
+export interface AlertDetailPanelRecapStats {
+  total: number;
+  critiques: number;
+  enAttente: number;
+}
 
 export interface AlertDetailPanelProps {
   alerte: AlerteBTP | null;
@@ -50,13 +57,26 @@ export interface AlertDetailPanelProps {
   onCloturer?: () => void;
   onArchiver?: () => void;
   onCommentSubmit?: (text: string) => void;
+  onViewChantier?: (chantierId: string) => void;
+  /** Mini récap affiché quand aucune alerte sélectionnée (vision globale) */
+  recapStats?: AlertDetailPanelRecapStats | null;
   loading?: boolean;
+  /** Vue d'origine pour le breadcrumb (ex. "critiques", "toutes") */
+  activeView?: string;
+  /** Position dans la liste (1-based) pour affichage "2 / 100" */
+  positionIndex?: number;
+  positionTotal?: number;
 }
 
 function formatDate(d: Date | string): string {
   const date = d instanceof Date ? d : new Date(d);
   return format(date, 'dd/MM/yyyy HH:mm', { locale: fr });
 }
+
+const VIEW_LABELS: Record<string, string> = {
+  critiques: 'Critiques',
+  toutes: 'Toutes',
+};
 
 export function AlertDetailPanel({
   alerte,
@@ -68,9 +88,15 @@ export function AlertDetailPanel({
   onCloturer,
   onArchiver,
   onCommentSubmit,
+  onViewChantier,
+  recapStats,
   loading,
+  activeView,
+  positionIndex,
+  positionTotal,
 }: AlertDetailPanelProps) {
   const [commentText, setCommentText] = useState('');
+  const viewLabel = activeView ? (VIEW_LABELS[activeView] ?? activeView) : null;
 
   const handleDownload = () => {
     if (!alerte) return;
@@ -103,19 +129,6 @@ export function AlertDetailPanel({
     if (typeof window !== 'undefined') window.print();
   };
 
-  if (!alerte) {
-    return (
-      <div className="flex items-center justify-center h-full bg-slate-50 dark:bg-slate-900/50">
-        <div className="text-center space-y-2">
-          <AlertTriangle className="w-12 h-12 text-slate-400 mx-auto" />
-          <p className="text-sm text-slate-500">
-            Sélectionnez une alerte pour voir les détails
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   if (loading) {
     return (
       <div className="flex flex-col h-full bg-white dark:bg-slate-950/40 animate-pulse">
@@ -125,6 +138,48 @@ export function AlertDetailPanel({
           <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-full" />
           <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-2/3" />
           <div className="h-20 bg-slate-100 dark:bg-slate-800 rounded w-full" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!alerte) {
+    return (
+      <div className="flex flex-col h-full bg-slate-50 dark:bg-slate-900/50 p-6 overflow-y-auto">
+        <div className="text-center space-y-3 flex-1 flex flex-col justify-center">
+          <AlertTriangle className="w-12 h-12 text-slate-400 mx-auto shrink-0" aria-hidden />
+          <p className="text-sm text-slate-600 dark:text-slate-400 font-medium">
+            Sélectionnez une alerte pour voir les détails
+          </p>
+          {recapStats && recapStats.total > 0 && (
+            <div
+              className="mt-4 p-4 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 text-left max-w-xs mx-auto"
+              role="status"
+              aria-label="Récapitulatif des alertes"
+            >
+              <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
+                Vision globale
+              </p>
+              <ul className="space-y-1.5 text-sm text-slate-700 dark:text-slate-300">
+                <li className="flex justify-between gap-3">
+                  <span>Total</span>
+                  <span className="font-semibold tabular-nums">{recapStats.total}</span>
+                </li>
+                {recapStats.critiques > 0 && (
+                  <li className="flex justify-between gap-3 text-red-700 dark:text-red-300">
+                    <span>Critiques</span>
+                    <span className="font-semibold tabular-nums">{recapStats.critiques}</span>
+                  </li>
+                )}
+                {recapStats.enAttente > 0 && (
+                  <li className="flex justify-between gap-3 text-amber-700 dark:text-amber-300">
+                    <span>En attente</span>
+                    <span className="font-semibold tabular-nums">{recapStats.enAttente}</span>
+                  </li>
+                )}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -144,19 +199,35 @@ export function AlertDetailPanel({
     <div className="flex flex-col h-full bg-white dark:bg-slate-950/40">
       <div className="shrink-0 border-b border-slate-200 dark:border-slate-800">
         <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-slate-800/60">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <Button variant="ghost" size="sm" onClick={onPrevious} disabled={!onPrevious} aria-label="Alerte précédente">
               <ChevronLeft className={iconSize} />
             </Button>
             <Button variant="ghost" size="sm" onClick={onNext} disabled={!onNext} aria-label="Alerte suivante">
               <ChevronRight className={iconSize} />
             </Button>
+            {positionIndex != null && positionTotal != null && positionTotal > 0 && (
+              <span className="text-xs text-slate-500 dark:text-slate-400 tabular-nums px-1" aria-live="polite">
+                {positionIndex} / {positionTotal}
+              </span>
+            )}
             <Separator orientation="vertical" className="h-6" />
-            <Button size="sm" onClick={onTraiter} disabled={!onTraiter}>
+            <Button
+              size="sm"
+              onClick={onTraiter}
+              disabled={!onTraiter}
+              aria-label={alerte ? `Marquer ${alerte.numero} comme traité` : undefined}
+            >
               <Check className={iconSize + ' mr-2'} />
               Traiter
             </Button>
-            <Button size="sm" variant="outline" onClick={onAssigner} disabled={!onAssigner}>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={onAssigner}
+              disabled={!onAssigner}
+              aria-label={alerte ? `Assigner l'alerte ${alerte.numero}` : undefined}
+            >
               <UserPlus className={iconSize + ' mr-2'} />
               Assigner
             </Button>
@@ -194,11 +265,19 @@ export function AlertDetailPanel({
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={onCloturer} disabled={!onCloturer}>
+                  <DropdownMenuItem
+                    onClick={onCloturer}
+                    disabled={!onCloturer}
+                    aria-label={alerte ? `Clôturer l'alerte ${alerte.numero}` : undefined}
+                  >
                     <CheckCircle className={iconSize + ' mr-2'} />
                     Clôturer
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={onArchiver} disabled={!onArchiver}>
+                  <DropdownMenuItem
+                    onClick={onArchiver}
+                    disabled={!onArchiver}
+                    aria-label={alerte ? `Archiver l'alerte ${alerte.numero}` : undefined}
+                  >
                     <Archive className={iconSize + ' mr-2'} />
                     Archiver
                   </DropdownMenuItem>
@@ -219,38 +298,88 @@ export function AlertDetailPanel({
         </div>
 
         <div className="px-6 py-4 space-y-3">
-          <div className="flex items-center gap-2 text-xs text-slate-500">
+          <nav aria-label="Fil d'Ariane" className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 flex-wrap">
             <span>Centre d&apos;alertes</span>
-            <span>›</span>
-            <span className="font-medium text-slate-900 dark:text-slate-100">{alerte.numero}</span>
-          </div>
+            {viewLabel && (
+              <>
+                <span aria-hidden>›</span>
+                <span>{viewLabel}</span>
+              </>
+            )}
+            <span aria-hidden>›</span>
+            <span className="font-medium text-slate-600 dark:text-slate-300">{alerte.numero}</span>
+          </nav>
           <div className="flex items-center gap-2 flex-wrap">
-            <Badge
-              variant="outline"
-              className={cn(
-                alerte.niveau === 'critique' && 'bg-red-600 text-white border-red-600',
-                alerte.niveau === 'important' && 'bg-orange-600 text-white border-orange-600',
-                alerte.niveau === 'normal' && 'bg-blue-600 text-white border-blue-600',
-                alerte.niveau === 'faible' && 'bg-slate-500 text-white border-slate-500'
-              )}
-            >
-              {alerte.niveau.toUpperCase()}
-            </Badge>
-            <Badge variant="outline">
+            {/* Priorité exclusive : une seule priorité affichée (critique/urgent > important > niveau) */}
+            {(alerte.urgent || alerte.niveau === 'critique') ? (
+              <Badge variant="destructive" className="shrink-0">
+                {alerte.niveau === 'critique' ? 'CRITIQUE' : 'URGENT'}
+              </Badge>
+            ) : alerte.niveau === 'important' ? (
+              <Badge
+                variant="outline"
+                className="bg-orange-600 text-white border-orange-600 shrink-0"
+              >
+                IMPORTANT
+              </Badge>
+            ) : (
+              <Badge
+                variant="outline"
+                className={cn(
+                  alerte.niveau === 'normal' && 'bg-blue-600 text-white border-blue-600',
+                  alerte.niveau === 'faible' && 'bg-slate-500 text-white border-slate-500'
+                )}
+              >
+                {alerte.niveau.toUpperCase()}
+              </Badge>
+            )}
+            <Badge variant="outline" className="shrink-0">
               {alerte.statut.replace('-', ' ')}
             </Badge>
-            {alerte.urgent && <Badge variant="destructive">URGENT</Badge>}
           </div>
-          <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">{alerte.titre}</h1>
+          {/* Impact € / jours — contexte actionnable en tête (Sprint 0) */}
+          {(alerte.impactBudget || alerte.impactPlanning) && (
+            <div className="flex flex-wrap items-center gap-3 py-2 px-3 rounded-lg bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Impact</span>
+              {alerte.impactBudget && (
+                <span className="text-sm font-bold text-green-700 dark:text-green-300">
+                  +{alerte.impactBudget.montant.toLocaleString('fr-FR')} {alerte.impactBudget.devise}
+                </span>
+              )}
+              {alerte.impactBudget && alerte.impactPlanning && (
+                <span className="text-slate-400 dark:text-slate-500" aria-hidden>•</span>
+              )}
+              {alerte.impactPlanning && (
+                <span className="text-sm font-bold text-orange-700 dark:text-orange-300">
+                  +{alerte.impactPlanning.retard} {alerte.impactPlanning.unite === 'semaines' ? 'sem.' : 'j'} retard
+                </span>
+              )}
+            </div>
+          )}
+          <h1 className="text-base font-bold text-slate-900 dark:text-slate-100">{alerte.titre}</h1>
           <div className="grid grid-cols-2 gap-4 pt-2">
             <div className="space-y-1">
               <div className="text-xs text-slate-500">Chantier</div>
-              <div className="flex items-center gap-2">
-                <Building2 className="w-4 h-4 text-slate-400" />
-                <div>
-                  <div className="text-sm font-medium">{alerte.chantier?.nom ?? '—'}</div>
-                  <div className="text-xs text-slate-500">{alerte.chantier?.code ?? ''}</div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <Building2 className="w-4 h-4 text-slate-400 shrink-0" aria-hidden />
+                <div className="min-w-0 flex-1">
+                  <div className="text-sm font-medium">{alerte.chantier?.nom?.trim() || 'Sans chantier'}</div>
+                  {alerte.chantier?.code?.trim() && (
+                    <div className="text-xs text-slate-500">{alerte.chantier.code}</div>
+                  )}
                 </div>
+                {alerte.chantier?.id && onViewChantier && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="shrink-0"
+                    onClick={() => onViewChantier(alerte.chantier!.id)}
+                    aria-label={`Voir le chantier ${alerte.chantier?.nom ?? alerte.chantier?.id}`}
+                  >
+                    <Building2 className="h-3.5 w-3.5 mr-1.5" aria-hidden />
+                    Voir le chantier
+                  </Button>
+                )}
               </div>
             </div>
             <div className="space-y-1">
@@ -282,9 +411,9 @@ export function AlertDetailPanel({
                 </div>
               </div>
             )}
-            {alerte.assigneA && (
-              <div className="space-y-1">
-                <div className="text-xs text-slate-500">Assignée à</div>
+            <div className="space-y-1">
+              <div className="text-xs text-slate-500">Assignation</div>
+              {alerte.assigneA ? (
                 <div className="flex items-center gap-2">
                   <Avatar className="w-6 h-6">
                     <AvatarImage src={alerte.assigneA.avatar} />
@@ -292,11 +421,13 @@ export function AlertDetailPanel({
                   </Avatar>
                   <div>
                     <div className="text-sm font-medium">{alerte.assigneA.nom}</div>
-                    <div className="text-xs text-slate-500">{alerte.assigneA.role}</div>
+                    <div className="text-xs text-slate-500">{alerte.assigneA.role ?? '—'}</div>
                   </div>
                 </div>
-              </div>
-            )}
+              ) : (
+                <p className="text-sm text-slate-500 dark:text-slate-400 italic">Non assignée</p>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -308,7 +439,7 @@ export function AlertDetailPanel({
               <Info className="w-4 h-4" />
               Description
             </h3>
-            <p className="text-slate-700 dark:text-slate-300 whitespace-pre-wrap">
+            <p className="text-sm text-slate-700 dark:text-slate-300 whitespace-pre-wrap">
               {alerte.description || '—'}
             </p>
           </section>
@@ -317,7 +448,7 @@ export function AlertDetailPanel({
             <section>
               <h3 className="flex items-center gap-2 text-sm font-semibold mb-3">
                 <TrendingDown className="w-4 h-4" />
-                Impacts identifiés
+                Impact métier
               </h3>
               <div className="grid gap-3">
                 {alerte.impactBudget && (
@@ -422,7 +553,7 @@ export function AlertDetailPanel({
                           : formatDistanceToNow(new Date(c.date), { addSuffix: true, locale: fr })}
                       </span>
                     </div>
-                    <p className="text-sm text-slate-700 dark:text-slate-300 whitespace-pre-wrap">
+                    <p className="text-sm text-slate-700 dark:text-slate-300 whitespace-pre-wrap break-words">
                       {c.contenu}
                     </p>
                   </div>
@@ -483,25 +614,63 @@ export function AlertDetailPanel({
             <textarea
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
-              placeholder="Ajouter un commentaire..."
-              className="w-full min-h-[80px] rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm resize-none"
+              placeholder="Écrire un commentaire (max. 500 caractères)"
+              maxLength={500}
+              rows={4}
+              className="w-full min-h-[100px] max-h-[200px] rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm resize-y overflow-y-auto"
+              aria-describedby="comment-char-count comment-error"
+              aria-invalid={commentText.trim() === '' && commentText.length > 0}
             />
-            <div className="flex justify-end gap-2">
-              <Button size="sm" variant="outline" onClick={() => setCommentText('')}>
-                Annuler
-              </Button>
-              <Button
-                size="sm"
-                disabled={!commentText.trim() || !onCommentSubmit}
-                onClick={() => {
-                  if (commentText.trim() && onCommentSubmit) {
-                    onCommentSubmit(commentText.trim());
-                    setCommentText('');
-                  }
-                }}
+            {commentText.length > 0 && commentText.trim() === '' && (
+              <p id="comment-error" className="text-xs text-red-600 dark:text-red-400" role="alert">
+                Le commentaire ne peut pas être vide.
+              </p>
+            )}
+            <div className="flex justify-between items-center gap-2 flex-wrap">
+              <span
+                id="comment-char-count"
+                className={cn(
+                  'text-xs tabular-nums',
+                  commentText.length >= 500
+                    ? 'text-red-600 dark:text-red-400 font-medium'
+                    : commentText.length >= 450
+                      ? 'text-amber-600 dark:text-amber-400'
+                      : 'text-slate-500 dark:text-slate-400'
+                )}
               >
-                Envoyer
-              </Button>
+                {commentText.length} / 500
+                {commentText.length >= 450 && commentText.length < 500 && ' — bientôt la limite'}
+              </span>
+              <div className="flex gap-2 justify-end flex-1 min-w-0">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setCommentText('')}
+                  className="order-1"
+                  aria-label="Annuler et vider le commentaire"
+                >
+                  Annuler
+                </Button>
+                <Button
+                  size="sm"
+                  variant="default"
+                  disabled={!commentText.trim() || !onCommentSubmit || commentText.length > 500}
+                  onClick={() => {
+                    const raw = commentText.trim();
+                    if (!raw || !onCommentSubmit) return;
+                    const safe = sanitizeTextForComment(raw);
+                    if (safe) {
+                      onCommentSubmit(safe);
+                      setCommentText('');
+                    }
+                  }}
+                  aria-describedby={!commentText.trim() && commentText.length > 0 ? 'comment-error' : undefined}
+                  className="order-2 min-w-[5rem]"
+                  aria-label="Envoyer le commentaire"
+                >
+                  Envoyer
+                </Button>
+              </div>
             </div>
           </div>
         </div>

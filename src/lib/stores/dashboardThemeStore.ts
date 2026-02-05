@@ -43,10 +43,10 @@ interface DashboardThemeStore {
 }
 
 export const useDashboardThemeStore = create<DashboardThemeStore>()(
-  persist(
+  persist<DashboardThemeStore>(
     (set, get) => ({
       theme: 'system',
-      setTheme: (theme) => {
+      setTheme: (theme: DashboardTheme) => {
         set({ theme });
         applyTheme(theme);
       },
@@ -56,13 +56,13 @@ export const useDashboardThemeStore = create<DashboardThemeStore>()(
         const idx = order.indexOf(current);
         const next = order[(idx + 1) % order.length];
         set({ theme: next });
-        applyTheme(next);
+        applyTheme(next as DashboardTheme);
       },
     }),
     {
       name: STORAGE_KEY,
-      onRehydrateStorage: () => (state: unknown) => {
-        const s = state as { theme?: string } | null;
+      onRehydrateStorage: () => (state) => {
+        const s = state as DashboardThemeStore | null;
         if (s?.theme) applyTheme(s.theme);
       },
     }

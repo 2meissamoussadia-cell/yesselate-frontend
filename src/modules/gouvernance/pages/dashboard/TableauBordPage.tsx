@@ -34,7 +34,7 @@ export default function TableauBordPage() {
   const displayStats = domainStats || stats;
   const displayOverview = domainOverview || statsOverview;
   
-  const pointsAttention = overviewData?.points_attention || [];
+  const pointsAttention = (overviewData as { points_attention?: unknown[] })?.points_attention ?? [];
 
   return (
     <div className="h-full w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-white p-6">

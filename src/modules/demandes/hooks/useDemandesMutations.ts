@@ -61,7 +61,7 @@ export function useCreateDemande(options?: UseDemandeMutationOptions) {
     mutationFn: (data: CreateDemandeParams) => createDemande(data),
     onSuccess: (newDemande) => {
       queryClient.invalidateQueries({ queryKey: ['demandes'] });
-      toast.success('Demande créée', { title: newDemande.reference });
+      toast.success(`Demande créée: ${newDemande.reference}`);
       options?.onSuccess?.();
     },
     onError: (error: Error) => {
@@ -127,7 +127,7 @@ export function useValidateDemande(options?: UseDemandeMutationOptions) {
       }
       
       const errorMessage = error.message || 'Erreur lors de la validation';
-      toast.error('Erreur', errorMessage);
+      toast.error(errorMessage);
       options?.onError?.(error);
     },
   });
@@ -183,7 +183,7 @@ export function useRejectDemande(options?: UseDemandeMutationOptions) {
       }
       
       const errorMessage = error.message || 'Erreur lors du rejet';
-      toast.error('Erreur', errorMessage);
+      toast.error(errorMessage);
       options?.onError?.(error);
     },
   });
@@ -207,7 +207,7 @@ export function useRequestComplement(options?: UseDemandeMutationOptions) {
 
     onError: (error: Error) => {
       const errorMessage = error.message || 'Erreur lors de la demande de complément';
-      toast.error('Erreur', errorMessage);
+      toast.error(errorMessage);
       options?.onError?.(error);
     },
   });
@@ -254,7 +254,7 @@ export function useBatchValidateDemandes(options?: UseDemandeMutationOptions) {
       }
       
       const errorMessage = error.message || 'Erreur lors de la validation en masse';
-      toast.error('Erreur', errorMessage);
+      toast.error(errorMessage);
       options?.onError?.(error);
     },
   });
@@ -301,7 +301,7 @@ export function useBatchRejectDemandes(options?: UseDemandeMutationOptions) {
       }
       
       const errorMessage = error.message || 'Erreur lors du rejet en masse';
-      toast.error('Erreur', errorMessage);
+      toast.error(errorMessage);
       options?.onError?.(error);
     },
   });

@@ -126,11 +126,11 @@ export const KpiOverviewPage = memo(function KpiOverviewPage() {
       kpi={{
         id: `${stat.label}-${index}`,
         label: stat.label,
-        value: stat.value,
-        delta: `${stat.trend} ce mois`,
+        value: stat.value as string | number,
         trendType: stat.trendType,
         icon: stat.icon,
         color: stat.color,
+        description: `${stat.trend} ce mois`,
       }}
       size="md"
     />

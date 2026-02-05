@@ -26,7 +26,7 @@ import type { AlertsActivesData } from '../../types/dashboardDataTypes';
 import { AlertDetailModal } from '../AlertDetailModal';
 import type { AlertEvent } from '../../hooks/useAlerts';
 import { FilterBar } from '@/components/erp';
-import type { ErpFilters } from '@/components/erp';
+import type { ErpFilters, ErpFilterValue } from '@/components/erp';
 
 export const AlertsActivesPage = memo(function AlertsActivesPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -34,7 +34,7 @@ export const AlertsActivesPage = memo(function AlertsActivesPage() {
   const [selectedAlert, setSelectedAlert] = useState<AlertEvent | null>(null);
 
   const onFilterChange = useCallback((key: string, value: unknown) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
+    setFilters((prev) => ({ ...prev, [key]: value as ErpFilterValue }));
   }, []);
   
   // ✅ Charger les données depuis l'API

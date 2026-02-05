@@ -51,7 +51,7 @@ export function RiskDetailModal({ isOpen, onClose, risk }: RiskDetailModalProps)
   };
 
   const config = severityConfig[risk.severity];
-  const trendIcon = risk.trend.includes('+') ? TrendingUp : risk.trend.includes('-') ? TrendingDown : Minus;
+  const TrendIcon = risk.trend.includes('+') ? TrendingUp : risk.trend.includes('-') ? TrendingDown : Minus;
   const trendColor = risk.trend.includes('+') ? 'text-red-400' : risk.trend.includes('-') ? 'text-green-400' : 'text-slate-400';
 
   return (
@@ -60,7 +60,7 @@ export function RiskDetailModal({ isOpen, onClose, risk }: RiskDetailModalProps)
       <div
         className={cn(
           'fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity',
-          zIndexClass.modalOverlay,
+          zIndexClass('modalOverlay'),
           isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
         )}
         onClick={onClose}
@@ -73,7 +73,7 @@ export function RiskDetailModal({ isOpen, onClose, risk }: RiskDetailModalProps)
           'md:w-[90vw] md:max-w-2xl',
           'bg-slate-900 border border-slate-700 rounded-xl shadow-2xl',
           'flex flex-col',
-          zIndexClass.modal,
+          zIndexClass('modal'),
           isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
         )}
       >
@@ -120,7 +120,7 @@ export function RiskDetailModal({ isOpen, onClose, risk }: RiskDetailModalProps)
               <div>
                 <div className="text-sm text-slate-400 mb-1">Tendance</div>
                 <div className="flex items-center gap-2">
-                  <trendIcon className={cn('w-5 h-5', trendColor)} />
+                  <TrendIcon className={cn('w-5 h-5', trendColor)} />
                   <span className={cn('text-lg font-semibold', trendColor)}>
                     {risk.trend}
                   </span>

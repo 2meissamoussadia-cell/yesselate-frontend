@@ -17,23 +17,15 @@ import type { LineChartProps, BarChartProps, AreaChartProps, PieChartProps } fro
 
 export function LineChartExample() {
   const data = [
-    { date: '2024-01', demandes: 120, validations: 95 },
-    { date: '2024-02', demandes: 150, validations: 120 },
-    { date: '2024-03', demandes: 180, validations: 140 },
-  ];
-
-  const series: LineChartProps['series'] = [
-    { dataKey: 'demandes', name: 'Demandes', color: '#3b82f6' },
-    { dataKey: 'validations', name: 'Validations', color: '#10b981' },
+    { date: '2024-01', demandes: 120, validations: 95, budget: 100 },
+    { date: '2024-02', demandes: 150, validations: 120, budget: 110 },
+    { date: '2024-03', demandes: 180, validations: 140, budget: 130 },
   ];
 
   return (
     <LineChart
       data={data}
-      xAxisKey="date"
-      series={series}
       title="Évolution des demandes"
-      showLegend={true}
     />
   );
 }
@@ -77,17 +69,14 @@ export function AreaChartExample() {
   ];
 
   const series: AreaChartProps['series'] = [
-    { dataKey: 'actif', name: 'Projets actifs', opacity: 0.3 },
-    { dataKey: 'inactif', name: 'Projets inactifs', opacity: 0.2 },
+    { key: 'actif', label: 'Projets actifs', color: '#3b82f6' },
+    { key: 'inactif', label: 'Projets inactifs', color: '#10b981' },
   ];
 
   return (
     <AreaChart
       data={data}
-      xAxisKey="jour"
       series={series}
-      title="Répartition des projets"
-      showLegend={true}
     />
   );
 }
